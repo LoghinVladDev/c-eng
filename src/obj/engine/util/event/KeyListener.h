@@ -24,12 +24,16 @@ public:
 
 private:
     KeyModifier keyModifier {KeyModifier::NONE};
+    void* _parent {nullptr};
 
 public:
     [[maybe_unused]] [[nodiscard]] inline KeyModifier getKeyModifier() noexcept { return this->keyModifier; }
 
-    [[maybe_unused]] virtual void keyPressed(uint16 keyCode);
-    [[maybe_unused]] virtual void keyReleased(uint16 keyCode);
+    [[maybe_unused]] virtual void keyPressed(uint16 keyCode) noexcept;
+    [[maybe_unused]] virtual void keyReleased(uint16 keyCode) noexcept;
+
+    [[maybe_unused]] inline void setParent( void* parent ) noexcept { this->_parent = parent; }
+    [[maybe_unused]] inline void* getParent () noexcept { return this->_parent; }
 
 protected:
     KeyListener() = default;

@@ -51,3 +51,20 @@ add_executable( inputTest
 )
 
 target_link_libraries(inputTest -lOpenGL32 -lfreeGLUT -lglu32)
+
+add_executable( cameraMovement
+        src/exec/tests/cameraMovement.cpp
+        src/obj/engine/window/Window.cpp
+        src/obj/engine/window/Window.h
+        src/obj/engine/util/Size.cpp
+        src/obj/engine/util/Size.h
+        src/obj/engine/util/geom/Point.cpp
+        src/obj/engine/util/geom/Point.h
+        src/obj/engine/util/defs/types.h
+        src/obj/engine/Engine.cpp
+        src/obj/engine/Engine.h
+        src/obj/engine/util/event/KeyListener.cpp
+        src/obj/engine/util/event/KeyListener.h
+)
+
+target_link_libraries(cameraMovement -lOpenGL32 -lfreeGLUT -lglu32)

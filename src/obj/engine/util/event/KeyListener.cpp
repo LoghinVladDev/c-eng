@@ -4,10 +4,10 @@
 
 #include "KeyListener.h"
 
-[[maybe_unused]] void KeyListener::keyPressed(uint16 keyCode) {
+[[maybe_unused]] void KeyListener::keyPressed(uint16 keyCode) noexcept {
     this->keyModifier = (KeyModifier)glutGetModifiers();
 }
 
-[[maybe_unused]] void KeyListener::keyReleased(uint16 keyCode) {
+[[maybe_unused]] void KeyListener::keyReleased(uint16 keyCode) noexcept {
     this->keyModifier = (KeyModifier)glutGetModifiers();
 }

@@ -56,49 +56,44 @@ void reshapeFunction(int newWidth, int newHeight){
     glMatrixMode(GL_MODELVIEW);
 }
 
-void normalKey(unsigned char key, int x, int y){
-    std::cout << key << "\n";
-
-    if(key == KEY_ESCAPE)
-        exit(0);
-}
-
-void specialKey(int key, int x, int y){
-    switch(key + sizeof(uint8)){
-        case KEY_F1 :
-            red = 1.0f;
-            green = 0.0f;
-            blue = 0.0f;
-            break;
-        case KEY_F2 :
-            red = 0.0f;
-            green = 1.0f;
-            blue = 0.0f;
-            break;
-        case KEY_F3:
-            red = 0.0f;
-            green = 0.0f;
-            blue = 1.0f;
-            break;
-        default:
-            red = 0.0f;
-            green = 0.0f;
-            blue = 0.0f;
-    }
-}
-
 class TestInput : public KeyListener {
-    void keyPressed(uint16 keyCode) override {
+    void keyPressed(uint16 keyCode) noexcept override {
         KeyListener::keyPressed(keyCode);
-        std::cout << "key = " << keyCode << " pressed\n";
+        std::cout << "key = " << keyCode << " pressed, modifier : " << this->getKeyModifier() << '\n';
+
+        if(keyCode == KEY_ESCAPE){
+            exit(0);
+        }
+
+        switch(keyCode){
+            case KEY_F1 :
+                red = 1.0f;
+                green = 0.0f;
+                blue = 0.0f;
+                break;
+            case KEY_F2 :
+                red = 0.0f;
+                green = 1.0f;
+                blue = 0.0f;
+                break;
+            case KEY_F3:
+                red = 0.0f;
+                green = 0.0f;
+                blue = 1.0f;
+                break;
+            default:
+                red = 0.0f;
+                green = 0.0f;
+                blue = 0.0f;
+        }
     }
-    void keyReleased(uint16 keyCode) override {
+    void keyReleased(uint16 keyCode) noexcept override {
         KeyListener::keyReleased(keyCode);
-        std::cout << "key = " << keyCode << " released\n";
+        std::cout << "key = " << keyCode << " released, modifier : " << this->getKeyModifier() << '\n';
     }
 };
 
-TestInput testInput;
+TestInput *testInput;
 
 int main(int argc, char** argv){
     auto* window = new Window();
@@ -107,6 +102,8 @@ int main(int argc, char** argv){
     rotateY = 0.0f;
     rotateZ = 0.0f;
 
+    testInput = new TestInput;
+
     window->setReshapeFunctionCallback(reshapeFunction);
     window->setDisplayFunctionCallback(displayFunction);
     window->setRedrawFunctionCallback(displayFunction);
@@ -114,7 +111,9 @@ int main(int argc, char** argv){
 //    window->setKeyHandlerCallback(normalKey);
 //    window->setSpecialKeyHandlerCallback(specialKey);
 
-    window->addKeyListener(testInput);
+    window->addKeyListener(new TestInput);
 
     window->run(argc, argv);
+
+    delete testInput;
 }

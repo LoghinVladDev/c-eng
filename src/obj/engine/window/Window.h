@@ -9,10 +9,12 @@
 #include "../util/geom/Point.h"
 #include "../util/defs/types.h"
 #include "../util/event/KeyListener.h"
-#include <GL/glu.h>
-#include <list>
 
+#include <GL/glu.h>
 #include <GL/freeglut.h>
+
+#include <list>
+//#include <hash_set>
 
 #ifndef DEFAULT_WINDOW_WIDTH
 #define DEFAULT_WINDOW_WIDTH 1366
@@ -41,6 +43,8 @@
 #define DEFAULT_CLEAR_MASK_FLAGS (uint32) GL_COLOR_BUFFER_BIT | (uint32) GL_DEPTH_BUFFER_BIT
 #endif
 
+//#define KEYS_CNT 512
+
 class [[maybe_unused]] Window {
 private:
     Point _position     { DEFAULT_WINDOW_STARTING_POSITION_X, DEFAULT_WINDOW_STARTING_POSITION_Y };
@@ -52,13 +56,14 @@ private:
 
     void init(int, char**) noexcept;
 
-    static std::list<KeyListener> keyListeners;
+    static std::list<KeyListener*> keyListeners;
+//    static bool pressedKeysArray [KEYS_CNT];
 
     static void defaultDisplayFunction();
     static void defaultReshapeFunction(int, int);
     static void defaultRedrawFunction();
 
-    static void defaultKeyboardHandlerFunction(uint8, int, int);
+    static void defaultKeyboardHandlerFunction(uint8, [[maybe_unused]] int, int);
     static void defaultSpecialKeyHandlerFunction(int, int, int);
 
     static void defaultKeyUpHandlerFunction(uint8, int, int);
@@ -72,6 +77,8 @@ private:
     void (*_specialKeyHandlerFunction)  (int, int, int)     = defaultSpecialKeyHandlerFunction;
     void (*_keyUpHandlerFunction)       (uint8, int, int)   = defaultKeyUpHandlerFunction;
     void (*_specKeyUpHandlerFunction)   (int, int, int)     = defaultSpecUpHandlerFunction;
+
+    static void _keyConversionFormatting(uint16 &);
 
 public:
     [[maybe_unused]] explicit Window(
@@ -105,7 +112,10 @@ public:
     [[maybe_unused]] [[nodiscard]] inline Point&        getPosition()    noexcept { return this->_position; }
     [[maybe_unused]] [[nodiscard]] inline const char*   getTitle() const noexcept { return this->_title; }
 
-    [[maybe_unused]] inline void addKeyListener(const KeyListener& listener) noexcept { Window::keyListeners.push_back(listener); }
+    [[maybe_unused]] inline void addKeyListener(KeyListener* listener) noexcept { listener->setParent(this); Window::keyListeners.push_back(listener); }
+
+    [[maybe_unused]] static inline void disableKeyRepeats() { glutIgnoreKeyRepeat(1); }
+    [[maybe_unused]] static inline void enableKeyRepeats() { glutIgnoreKeyRepeat(0); }
 
     [[maybe_unused]] void run(int = 1, char** = nullptr) noexcept;
 };

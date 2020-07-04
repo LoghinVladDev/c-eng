@@ -5,7 +5,8 @@
 #include <iostream>
 #include "Window.h"
 
-std::list<KeyListener> Window::keyListeners = std::list<KeyListener> ();
+std::list<KeyListener*> Window::keyListeners = std::list<KeyListener*> ();
+//bool Window::pressedKeysArray[KEYS_CNT];
 
 [[maybe_unused]] Window::Window(int width, int height, int x, int y, const char * title) noexcept :
     _position(x, y),
@@ -34,36 +35,55 @@ void Window::defaultDisplayFunction() {
     glutSwapBuffers();
 }
 
-void Window::defaultKeyboardHandlerFunction(uint8 key, int x, int y) {
-    //TODO : figure out how to add handlers
-
-    std::cout << "REG KEY, key = " << key << ", x = " << x << ", y = " << y << '\n';
-
-    for(KeyListener listener : Window::keyListeners){
-        listener.keyPressed(key);
+void Window::_keyConversionFormatting(uint16 & key) {
+    if(key >= 'A' && key <= 'Z'){
+        key +=32;
+        return;
     }
 }
 
-void Window::defaultSpecialKeyHandlerFunction(int key, int x, int y) {
-    //TODO : figure out how to add handlers
+void Window::defaultKeyboardHandlerFunction(uint8 key, [[maybe_unused]] int x, [[maybe_unused]] int y) {
+    uint16 _key = key;
+    Window::_keyConversionFormatting(_key);
 
-//    std::cout << "REG KEY, key = " << key << ", x = " << x << ", y = " << y << '\n';
+//    if(!Window::pressedKeysArray[key])
+    for(KeyListener *listener : Window::keyListeners)
+        listener->keyPressed(_key);
 
-    for(KeyListener listener : Window::keyListeners){
-        listener.keyPressed(key + sizeof(uint8));
-    }
+//    Window::pressedKeysArray[key] = true;
 }
 
-void Window::defaultKeyUpHandlerFunction(uint8 key, int x, int y) {
-    for(KeyListener listener : Window::keyListeners){
-        listener.keyReleased(key);
-    }
+void Window::defaultSpecialKeyHandlerFunction(int key,[[maybe_unused]] int x,[[maybe_unused]] int y) {
+    uint16 _key = key + UINT8_MAX;
+    Window::_keyConversionFormatting(_key);
+
+//    if(!Window::pressedKeysArray[key])
+    for(KeyListener *listener : Window::keyListeners)
+        listener->keyPressed(_key);
+
+//    Window::pressedKeysArray[key] = true;
 }
 
-void Window::defaultSpecUpHandlerFunction(int key, int x, int y) {
-    for(KeyListener listener : Window::keyListeners){
-        listener.keyReleased(key + sizeof(uint8));
-    }
+void Window::defaultKeyUpHandlerFunction(uint8 key,[[maybe_unused]] int x,[[maybe_unused]] int y) {
+    uint16 _key = key;
+    Window::_keyConversionFormatting(_key);
+
+//    if(Window::pressedKeysArray[key])
+    for(KeyListener *listener : Window::keyListeners)
+        listener->keyReleased(_key);
+
+//    Window::pressedKeysArray[key] = false;
+}
+
+void Window::defaultSpecUpHandlerFunction(int key,[[maybe_unused]] int x,[[maybe_unused]] int y) {
+    uint16 _key = key + UINT8_MAX;
+    Window::_keyConversionFormatting(_key);
+
+//    if(Window::pressedKeysArray[key])
+    for(KeyListener *listener : Window::keyListeners)
+        listener->keyReleased(_key);
+
+//    Window::pressedKeysArray[key] = false;
 }
 
 void Window::defaultReshapeFunction(int newWidth, int newHeight){
@@ -92,5 +112,8 @@ void Window::defaultReshapeFunction(int newWidth, int newHeight){
     glutSpecialFunc(this->_specialKeyHandlerFunction);
     glutSpecialUpFunc(this->_specKeyUpHandlerFunction);
 
+    glutIgnoreKeyRepeat(1);
+
     glutMainLoop();
 }
+
