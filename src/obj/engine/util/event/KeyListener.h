@@ -9,6 +9,8 @@
 
 #include "../defs/types.h"
 
+typedef void (*ptr_KL_override) (uint16);
+
 class KeyListener {
 public:
     enum KeyModifier{
@@ -25,17 +27,37 @@ public:
 private:
     KeyModifier keyModifier {KeyModifier::NONE};
     void* _parent {nullptr};
-
-public:
-    [[maybe_unused]] [[nodiscard]] inline KeyModifier getKeyModifier() noexcept { return this->keyModifier; }
-
-    [[maybe_unused]] virtual void keyPressed(uint16 keyCode) noexcept;
-    [[maybe_unused]] virtual void keyReleased(uint16 keyCode) noexcept;
-
-    [[maybe_unused]] inline void setParent( void* parent ) noexcept { this->_parent = parent; }
-    [[maybe_unused]] inline void* getParent () noexcept { return this->_parent; }
-
 protected:
+    void (*_boundKeyPressedPtr) (uint16) = nullptr;
+    void (*_boundKeyReleasedPtr) (uint16) = nullptr;
+public:
+    [[maybe_unused]] [[nodiscard]] KeyModifier getKeyModifier() noexcept;
+
+    [[maybe_unused]] ptr_KL_override getBoundKeyPressedEvent() {
+        return this->_boundKeyPressedPtr;
+    }
+
+    [[maybe_unused]] ptr_KL_override getBoundKeyReleasedEvent() {
+        return this->_boundKeyReleasedPtr;
+    }
+
+    [[maybe_unused]] virtual void keyPressed(uint16) noexcept;
+    [[maybe_unused]] virtual void keyReleased(uint16) noexcept;
+
+    [[maybe_unused]] void bindKeyPressedEvent( void (*callback) (uint16) ) {
+        this->_boundKeyPressedPtr = callback;
+    }
+
+    [[maybe_unused]] void bindKeyReleasedEvent( void (*callback) (uint16) ) {
+        this->_boundKeyReleasedPtr = callback;
+    }
+
+    [[maybe_unused]] void setParent( void* parent ) noexcept{
+        this->_parent = parent;
+    }
+
+    [[maybe_unused]] void* getParent () noexcept;
+
     KeyListener() = default;
 };
 

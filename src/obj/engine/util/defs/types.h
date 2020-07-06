@@ -14,6 +14,11 @@
 [[maybe_unused]] typedef unsigned int uint32;
 [[maybe_unused]] typedef unsigned long int uint64;
 
+[[maybe_unused]] typedef char int8;
+[[maybe_unused]] typedef short int16;
+[[maybe_unused]] typedef int int32;
+[[maybe_unused]] typedef long long int64;
+
 #define KEY_ESCAPE 27
 
 #ifndef UINT8_MAX
@@ -25,6 +30,9 @@
 #endif
 
 [[maybe_unused]] constexpr uint16 KEY_A             = ( 'a' );
+[[maybe_unused]] constexpr uint16 KEY_D             = ( 'd' );
+[[maybe_unused]] constexpr uint16 KEY_S             = ( 's' );
+[[maybe_unused]] constexpr uint16 KEY_W             = ( 'w' );
 
 [[maybe_unused]] constexpr uint16 KEY_F1            = ( GLUT_KEY_F1         + UINT8_MAX );
 [[maybe_unused]] constexpr uint16 KEY_F2            = ( GLUT_KEY_F2         + UINT8_MAX );

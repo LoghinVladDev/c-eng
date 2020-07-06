@@ -3,8 +3,11 @@
 //
 
 #include <iostream>
+#include <list>
 #include "../../obj/engine/Engine.h"
+#include "../../obj/engine/util/obj/standardObj/Camera.h"
 #include <cmath>
+#include <ctime>
 
 float angle = 0.0f;
 float rx = 0.0f;
@@ -127,20 +130,117 @@ class TestInput : public KeyListener {
     }
 };
 
+class ACamera : public Camera {
+public:
+    class TestInputListener : public KeyListener {
+    private:
+        bool forwardPressed{false};
+        bool backwardsPressed{false};
+        bool leftPressed{false};
+        bool rightPressed{false};
+    public:
+        [[nodiscard]] bool isForwardsPressed() const { return this->forwardPressed; }
+        [[nodiscard]] bool isBackwardsPressed() const { return this->backwardsPressed; }
+        [[nodiscard]] bool isLeftPressed() const { return this->leftPressed; }
+        [[nodiscard]] bool isRightPressed() const { return this->rightPressed; }
+
+        void keyPressed(uint16 keyCode) noexcept override{
+            switch(keyCode) {
+                case KEY_A : case KEY_LEFT_ARROW :
+                    leftPressed = true;
+                    break;
+                case KEY_D : case KEY_RIGHT_ARROW :
+                    rightPressed = true;
+                    break;
+                case KEY_W : case KEY_UP_ARROW :
+                    forwardPressed = true;
+                    break;
+                case KEY_S : case KEY_DOWN_ARROW :
+                    backwardsPressed = true;
+                    break;
+                default: break;
+            }
+        }
+
+        void keyReleased(uint16 keyCode) noexcept override{
+            switch(keyCode) {
+                case KEY_A : case KEY_LEFT_ARROW :
+                    leftPressed = false;
+                    break;
+                case KEY_D : case KEY_RIGHT_ARROW :
+                    rightPressed = false;
+                    break;
+                case KEY_W : case KEY_UP_ARROW :
+                    forwardPressed = false;
+                    break;
+                case KEY_S : case KEY_DOWN_ARROW :
+                    backwardsPressed = false;
+                    break;
+                default: break;
+            }
+        }
+
+        [[nodiscard]] std::string toString() const {
+            return
+                "{ forward = " +
+                std::to_string(this->forwardPressed) +
+                ", backwards = " +
+                std::to_string(this->backwardsPressed) +
+                ", left = " +
+                std::to_string(this->leftPressed) +
+                ", right = " +
+                std::to_string(this->rightPressed) +
+                " }";
+        }
+    };
+public:
+    TestInputListener* listener {nullptr};
+    ACamera() : Camera() {
+        this->listener = new TestInputListener;
+        this->addKeyListener(this->listener);
+    }
+
+public:
+    void update() noexcept override {
+        Camera::update();
+        if( this->listener->isForwardsPressed() && !this->listener->isBackwardsPressed() )
+            deltaMove = 0.5f;
+        else if( !this->listener->isForwardsPressed() && this->listener->isBackwardsPressed() )
+            deltaMove = -0.5f;
+        else
+            deltaMove = 0.0f;
+
+        if( this->listener->isLeftPressed() && !this->listener->isRightPressed() )
+            deltaAngle = -0.01f;
+        else if( !this->listener->isLeftPressed() && this->listener->isRightPressed() )
+            deltaAngle = 0.01f;
+        else
+            deltaAngle = 0.0f;
+
+//        std::cout << deltaMove << ' ' << deltaAngle << '\n';
+//        std::cout << this->listener->toString() << '\n';
+    }
+};
+
+static VectorF colorsArr[100];
+
 int main(int argc, char** argv) {
 //    auto* window = new Window();
+    srand(time(0));
 
-    Engine eng = Engine::EngineBuilder()
+    Engine* eng = Engine::EngineBuilder()
             .withMainWindowLocation(50, 50)
             .withMainWindowResolution(Size(1280, 720))
             .build();
 
-    eng.getMainWindow().setDisplayFunctionCallback(renderScene);
-    eng.getMainWindow().setRedrawFunctionCallback(renderScene);
 
-    eng.addKeyListener(new TestInput);
+    auto* camera = new ACamera;
 
-    eng.start();
+    eng->addGameObject(camera);
+
+//    std::cout << eng->getAllGameObjects().size() << '\n';
+
+    eng->start(argc, argv);
 
 //    window->setReshapeFunctionCallback(reshapeFunction);
 //    window->setDisplayFunctionCallback(renderScene);

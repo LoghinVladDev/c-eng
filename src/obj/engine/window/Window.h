@@ -5,8 +5,8 @@
 #ifndef ENG1_WINDOW_H
 #define ENG1_WINDOW_H
 
-#include "../util/Size.h"
-#include "../util/geom/Point.h"
+
+#include "../preCompiledHeaders.h"
 #include "../util/defs/types.h"
 #include "../util/event/KeyListener.h"
 
@@ -59,15 +59,15 @@ private:
     static std::list<KeyListener*> keyListeners;
 //    static bool pressedKeysArray [KEYS_CNT];
 
-    static void defaultDisplayFunction();
-    static void defaultReshapeFunction(int, int);
-    static void defaultRedrawFunction();
+    static void defaultDisplayFunction()            noexcept;
+    static void defaultReshapeFunction(int, int)    noexcept;
+    static void defaultRedrawFunction()             noexcept;
 
-    static void defaultKeyboardHandlerFunction(uint8, [[maybe_unused]] int, int);
-    static void defaultSpecialKeyHandlerFunction(int, int, int);
+    static void defaultKeyboardHandlerFunction(uint8, [[maybe_unused]] int, int)    noexcept;
+    static void defaultSpecialKeyHandlerFunction(int, int, int)                     noexcept;
 
-    static void defaultKeyUpHandlerFunction(uint8, int, int);
-    static void defaultSpecUpHandlerFunction(int, int, int);
+    static void defaultKeyUpHandlerFunction(uint8, int, int)                        noexcept;
+    static void defaultSpecUpHandlerFunction(int, int, int)                         noexcept;
 
     void (*_displayFunction) () = defaultDisplayFunction;
     void (*_reshapeFunction) (int, int) = defaultReshapeFunction;
@@ -78,44 +78,71 @@ private:
     void (*_keyUpHandlerFunction)       (uint8, int, int)   = defaultKeyUpHandlerFunction;
     void (*_specKeyUpHandlerFunction)   (int, int, int)     = defaultSpecUpHandlerFunction;
 
-    static void _keyConversionFormatting(uint16 &);
+    static void _keyConversionFormatting(uint16 &) noexcept;
 
 public:
     [[maybe_unused]] explicit Window(
-        int = DEFAULT_WINDOW_WIDTH,
-        int = DEFAULT_WINDOW_HEIGHT,
-        int = DEFAULT_WINDOW_STARTING_POSITION_X,
-        int = DEFAULT_WINDOW_STARTING_POSITION_Y,
-        const char* = DEFAULT_WINDOW_TITLE
+            int = DEFAULT_WINDOW_WIDTH,
+            int = DEFAULT_WINDOW_HEIGHT,
+            int = DEFAULT_WINDOW_STARTING_POSITION_X,
+            int = DEFAULT_WINDOW_STARTING_POSITION_Y,
+            const char* = DEFAULT_WINDOW_TITLE
     ) noexcept;
 
-    [[maybe_unused]] inline void setSize        (const Size& size)      noexcept { this->_size = size; }
-    [[maybe_unused]] inline void setSize        (int width, int height) noexcept {this->_size = Size(width, height);}
+    [[maybe_unused]] explicit Window(
+            const Size& resolution,
+            const Point& location,
+            const char* title= DEFAULT_WINDOW_TITLE
+    ) noexcept :
+        _position(location),
+         _size(resolution),
+         _title(title) {
 
-    [[maybe_unused]] inline void setPosition    (const Point& point) noexcept { this->_position = point; }
-    [[maybe_unused]] inline void setPosition    (int x, int y)       noexcept { this->_position = Point(x,y); }
+    }
 
-    [[maybe_unused]] inline void setTitle       (const char* title)  noexcept { this->_title = title; }
-    [[maybe_unused]] inline void setDisplayMode (int displayMode)    noexcept { this->_displayMode = displayMode; }
+    [[maybe_unused]] void setSize        (const Size& size)  noexcept {
+        this->_size = size;
+    }
 
-    [[maybe_unused]] inline void setDisplayFunctionCallback     ( void (*callback) ()                = defaultDisplayFunction )              noexcept { this->_displayFunction           = callback; }
-    [[maybe_unused]] inline void setReshapeFunctionCallback     ( void (*callback) (int, int)        = defaultReshapeFunction )              noexcept { this->_reshapeFunction           = callback; }
-    [[maybe_unused]] inline void setRedrawFunctionCallback      ( void (*callback) ()                = defaultRedrawFunction  )              noexcept { this->_redrawFunction            = callback; }
+    [[maybe_unused]] void setSize        (int ,int)     noexcept;
 
-    [[maybe_unused]] inline void setKeyHandlerCallback          ( void (*callback) (uint8, int, int) = defaultKeyboardHandlerFunction )      noexcept { this->_keyHandlerFunction        = callback; }
-    [[maybe_unused]] inline void setSpecialKeyHandlerCallback   ( void (*callback) (int, int, int)   = defaultSpecialKeyHandlerFunction )    noexcept { this->_specialKeyHandlerFunction = callback; }
+    [[maybe_unused]] void setPosition    (const Point& point) noexcept {
+        this->_position = point;
+    }
 
-    [[maybe_unused]] inline void setKeyUpHandlerCallback        ( void (*callback) (uint8, int, int) = defaultKeyUpHandlerFunction )         noexcept { this->_keyUpHandlerFunction      = callback; }
-    [[maybe_unused]] inline void setSpecKeyUpHandlerCallback    ( void (*callback) (int, int, int)   = defaultSpecUpHandlerFunction )        noexcept { this->_specKeyUpHandlerFunction  = callback; }
+    [[maybe_unused]] void setPosition    (int, int)     noexcept;
 
-    [[maybe_unused]] [[nodiscard]] inline Size&         getSize()        noexcept { return this->_size; }
-    [[maybe_unused]] [[nodiscard]] inline Point&        getPosition()    noexcept { return this->_position; }
-    [[maybe_unused]] [[nodiscard]] inline const char*   getTitle() const noexcept { return this->_title; }
+    [[maybe_unused]] void setTitle       (const char* title)  noexcept {
+        this->_title = title;
+    }
 
-    [[maybe_unused]] inline void addKeyListener(KeyListener* listener) noexcept { listener->setParent(this); Window::keyListeners.push_back(listener); }
+    [[maybe_unused]] void setDisplayMode (int)          noexcept;
 
-    [[maybe_unused]] static inline void disableKeyRepeats() { glutIgnoreKeyRepeat(1); }
-    [[maybe_unused]] static inline void enableKeyRepeats() { glutIgnoreKeyRepeat(0); }
+    [[maybe_unused]] void setDisplayFunctionCallback     ( void (*) ()                = defaultDisplayFunction )              noexcept;
+    [[maybe_unused]] void setReshapeFunctionCallback     ( void (*) (int, int)        = defaultReshapeFunction )              noexcept;
+    [[maybe_unused]] void setRedrawFunctionCallback      ( void (*) ()                = defaultRedrawFunction  )              noexcept;
+
+    [[maybe_unused]] void setKeyHandlerCallback          ( void (*) (uint8, int, int) = defaultKeyboardHandlerFunction )      noexcept;
+    [[maybe_unused]] void setSpecialKeyHandlerCallback   ( void (*) (int, int, int)   = defaultSpecialKeyHandlerFunction )    noexcept;
+
+    [[maybe_unused]] void setKeyUpHandlerCallback        ( void (*) (uint8, int, int) = defaultKeyUpHandlerFunction )         noexcept;
+    [[maybe_unused]] void setSpecKeyUpHandlerCallback    ( void (*) (int, int, int)   = defaultSpecUpHandlerFunction )        noexcept;
+
+    [[maybe_unused]] [[nodiscard]] Size&         getSize()        noexcept;
+    [[maybe_unused]] [[nodiscard]] Point&        getPosition()    noexcept;
+    [[maybe_unused]] [[nodiscard]] const char*   getTitle() const noexcept;
+
+    [[maybe_unused]] void addKeyListener(KeyListener* listener) noexcept {
+        listener->setParent(this);
+        Window::keyListeners.push_back(listener);
+    }
+
+    [[maybe_unused]] static std::list <KeyListener*> & getActiveKeyListeners () noexcept {
+        return Window::keyListeners;
+    }
+
+    [[maybe_unused]] static void disableKeyRepeats() noexcept;
+    [[maybe_unused]] static void enableKeyRepeats()  noexcept;
 
     [[maybe_unused]] void run(int = 1, char** = nullptr) noexcept;
 };

@@ -6,15 +6,14 @@
 #include "Window.h"
 
 std::list<KeyListener*> Window::keyListeners = std::list<KeyListener*> ();
-//bool Window::pressedKeysArray[KEYS_CNT];
 
-[[maybe_unused]] Window::Window(int width, int height, int x, int y, const char * title) noexcept :
+[[maybe_unused]] inline Window::Window(int width, int height, int x, int y, const char * title) noexcept :
     _position(x, y),
     _size(width, height),
     _title(title)
 { }
 
-void Window::defaultRedrawFunction() {
+void Window::defaultRedrawFunction() noexcept {
     Window::defaultDisplayFunction();
 }
 
@@ -29,64 +28,112 @@ void Window::init(int argumentCounter, char** argumentVector) noexcept {
     glutCreateWindow( this->_title );
 }
 
-void Window::defaultDisplayFunction() {
+[[maybe_unused]] inline void Window::setSize (int width, int height) noexcept {
+    this->_size = Size(width, height);
+}
+
+[[maybe_unused]] inline void Window::setPosition (int x, int y) noexcept {
+    this->_position = Point(x,y);
+}
+
+[[maybe_unused]] inline void Window::setDisplayMode (int displayMode) noexcept {
+    this->_displayMode = displayMode;
+}
+
+[[maybe_unused]] void Window::setDisplayFunctionCallback ( void (*callback)() ) noexcept {
+    this->_displayFunction = callback;
+}
+
+[[maybe_unused]] inline void Window::setReshapeFunctionCallback ( void (*callback) (int, int) ) noexcept {
+    this->_reshapeFunction = callback;
+}
+
+[[maybe_unused]] void Window::setRedrawFunctionCallback ( void (*callback) () ) noexcept {
+    this->_redrawFunction = callback;
+}
+
+[[maybe_unused]] inline void Window::setKeyHandlerCallback ( void (*callback) (uint8, int, int) ) noexcept {
+    this->_keyHandlerFunction = callback;
+}
+
+[[maybe_unused]] inline void Window::setSpecialKeyHandlerCallback ( void (*callback) (int, int, int) ) noexcept {
+    this->_specialKeyHandlerFunction = callback;
+}
+
+[[maybe_unused]] inline void Window::setKeyUpHandlerCallback ( void (*callback) (uint8, int, int) ) noexcept {
+    this->_keyUpHandlerFunction = callback;
+}
+
+[[maybe_unused]] inline void Window::setSpecKeyUpHandlerCallback ( void (*callback) (int, int, int) ) noexcept {
+    this->_specKeyUpHandlerFunction = callback;
+}
+
+[[maybe_unused]] [[nodiscard]] inline Size& Window::getSize() noexcept {
+    return this->_size;
+}
+
+[[maybe_unused]] [[nodiscard]] inline Point& Window::getPosition() noexcept {
+    return this->_position;
+}
+
+[[maybe_unused]] [[nodiscard]] inline const char* Window::getTitle() const noexcept {
+    return this->_title;
+}
+
+[[maybe_unused]] inline void Window::disableKeyRepeats() noexcept {
+    glutIgnoreKeyRepeat(1);
+}
+
+[[maybe_unused]] inline void Window::enableKeyRepeats() noexcept {
+    glutIgnoreKeyRepeat(0);
+}
+
+void Window::defaultDisplayFunction() noexcept {
     glClear(DEFAULT_CLEAR_MASK_FLAGS);
 
     glutSwapBuffers();
 }
 
-void Window::_keyConversionFormatting(uint16 & key) {
+void Window::_keyConversionFormatting(uint16 & key) noexcept {
     if(key >= 'A' && key <= 'Z'){
         key +=32;
         return;
     }
 }
 
-void Window::defaultKeyboardHandlerFunction(uint8 key, [[maybe_unused]] int x, [[maybe_unused]] int y) {
+void Window::defaultKeyboardHandlerFunction(uint8 key, [[maybe_unused]] int x, [[maybe_unused]] int y) noexcept {
     uint16 _key = key;
     Window::_keyConversionFormatting(_key);
 
-//    if(!Window::pressedKeysArray[key])
     for(KeyListener *listener : Window::keyListeners)
         listener->keyPressed(_key);
-
-//    Window::pressedKeysArray[key] = true;
 }
 
-void Window::defaultSpecialKeyHandlerFunction(int key,[[maybe_unused]] int x,[[maybe_unused]] int y) {
+void Window::defaultSpecialKeyHandlerFunction(int key,[[maybe_unused]] int x,[[maybe_unused]] int y) noexcept {
     uint16 _key = key + UINT8_MAX;
     Window::_keyConversionFormatting(_key);
 
-//    if(!Window::pressedKeysArray[key])
     for(KeyListener *listener : Window::keyListeners)
         listener->keyPressed(_key);
-
-//    Window::pressedKeysArray[key] = true;
 }
 
-void Window::defaultKeyUpHandlerFunction(uint8 key,[[maybe_unused]] int x,[[maybe_unused]] int y) {
+void Window::defaultKeyUpHandlerFunction(uint8 key,[[maybe_unused]] int x,[[maybe_unused]] int y) noexcept {
     uint16 _key = key;
     Window::_keyConversionFormatting(_key);
 
-//    if(Window::pressedKeysArray[key])
     for(KeyListener *listener : Window::keyListeners)
         listener->keyReleased(_key);
-
-//    Window::pressedKeysArray[key] = false;
 }
 
-void Window::defaultSpecUpHandlerFunction(int key,[[maybe_unused]] int x,[[maybe_unused]] int y) {
+void Window::defaultSpecUpHandlerFunction(int key,[[maybe_unused]] int x,[[maybe_unused]] int y) noexcept {
     uint16 _key = key + UINT8_MAX;
     Window::_keyConversionFormatting(_key);
 
-//    if(Window::pressedKeysArray[key])
     for(KeyListener *listener : Window::keyListeners)
         listener->keyReleased(_key);
-
-//    Window::pressedKeysArray[key] = false;
 }
 
-void Window::defaultReshapeFunction(int newWidth, int newHeight){
+void Window::defaultReshapeFunction(int newWidth, int newHeight) noexcept {
     if( newHeight == 0 )
         newHeight = 1;
 
