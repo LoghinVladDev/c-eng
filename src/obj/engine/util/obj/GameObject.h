@@ -12,6 +12,8 @@
 #include "../event/KeyListener.h"
 #include "../../Engine.h"
 
+class KeyListener;
+
 class [[maybe_unused]] GameObject {
 
 protected:

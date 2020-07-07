@@ -164,3 +164,6 @@ void Window::defaultReshapeFunction(int newWidth, int newHeight) noexcept {
     glutMainLoop();
 }
 
+[[maybe_unused]] std::list <KeyListener*> & Window::getActiveKeyListeners() noexcept  {
+    return Window::keyListeners;
+}

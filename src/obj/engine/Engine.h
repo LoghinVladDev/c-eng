@@ -15,6 +15,8 @@ class GameObject;
 #include "./util/obj/GameObject.h"
 #include <random>
 
+class Window;
+
 class Engine {
 private:
     Window mainWindow {

@@ -137,9 +137,7 @@ public:
         Window::keyListeners.push_back(listener);
     }
 
-    [[maybe_unused]] static std::list <KeyListener*> & getActiveKeyListeners () noexcept {
-        return Window::keyListeners;
-    }
+    [[maybe_unused]] static std::list <KeyListener*> & getActiveKeyListeners () noexcept;
 
     [[maybe_unused]] static void disableKeyRepeats() noexcept;
     [[maybe_unused]] static void enableKeyRepeats()  noexcept;

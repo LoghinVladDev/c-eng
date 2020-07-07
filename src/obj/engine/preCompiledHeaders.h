@@ -10,5 +10,6 @@
 #include "util/geom/Vector.h"
 #include "util/Size.h"
 #include "util/geom/Point.h"
+#include "util/event/KeyListener.h"
 
 #endif //ENG1_PRECOMPILEDHEADERS_H

@@ -8,9 +8,11 @@
 #define ENG1_KEYLISTENER_H
 
 #include "../defs/types.h"
+//#include "../obj/GameObject.h"
+
+class GameObject;
 
 typedef void (*ptr_KL_override) (uint16);
-
 class KeyListener {
 public:
     enum KeyModifier{
@@ -24,10 +26,11 @@ public:
         CTRL_ALT_SHIFT  [[maybe_unused]] = MODIFIER_ACTIVE_CTRL_ALT_SHIFT
     };
 
-private:
+protected:
     KeyModifier keyModifier {KeyModifier::NONE};
     void* _parent {nullptr};
 protected:
+
     void (*_boundKeyPressedPtr) (uint16) = nullptr;
     void (*_boundKeyReleasedPtr) (uint16) = nullptr;
 public:
@@ -59,6 +62,26 @@ public:
     [[maybe_unused]] void* getParent () noexcept;
 
     KeyListener() = default;
+};
+
+class GameObject;
+
+class BoundKeyListener : public KeyListener {
+protected:
+    GameObject* __parentReceiver;
+
+    explicit BoundKeyListener(GameObject* parent) : KeyListener(), __parentReceiver(parent) { }
+
+//public:
+//    BoundKeyListener() {}
+
+public:
+    BoundKeyListener() = delete;
+
+protected:
+
+    void keyPressed (uint16) noexcept override = 0;
+    void keyReleased(uint16) noexcept override = 0;
 };
 
 

@@ -216,16 +216,12 @@ public:
             deltaAngle = 0.01f;
         else
             deltaAngle = 0.0f;
-
-//        std::cout << deltaMove << ' ' << deltaAngle << '\n';
-//        std::cout << this->listener->toString() << '\n';
     }
 };
 
 static VectorF colorsArr[100];
 
 int main(int argc, char** argv) {
-//    auto* window = new Window();
     srand(time(0));
 
     Engine* eng = Engine::EngineBuilder()
@@ -238,20 +234,5 @@ int main(int argc, char** argv) {
 
     eng->addGameObject(camera);
 
-//    std::cout << eng->getAllGameObjects().size() << '\n';
-
     eng->start(argc, argv);
-
-//    window->setReshapeFunctionCallback(reshapeFunction);
-//    window->setDisplayFunctionCallback(renderScene);
-//    window->setRedrawFunctionCallback(renderScene);
-
-//    window->setKeyHandlerCallback(normalKey);
-//    window->setSpecialKeyHandlerCallback(specialKey);
-
-
-//    window->addKeyListener(new TestInput);
-
-//    Window::disableKeyRepeats();
-//    window->run(argc, argv);
 }
