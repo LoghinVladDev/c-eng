@@ -21,12 +21,32 @@ private:
     constexpr static const float DEFAULT_Z_AXIS_SPEED_INCREASE  = 0.25f;
     constexpr static const float DEFAULT_Z_AXIS_SPEED_DECREASE  = 0.15f;
 
-    Vector _location {0.0f, 0.0f, 0.0f};
-    Vector _rotation {0.0f, 0.0f, 0.0f}; // Maybe rotor not vector?
-    Vector _scale {0.0f, 0.0f, 0.0f};
+    constexpr static const float DEFAULT_LOCATION_X = 0.0f;
+    constexpr static const float DEFAULT_LOCATION_Y = 0.0f;
+    constexpr static const float DEFAULT_LOCATION_Z = 0.0f;
 
-    Vector _velocity {0.0f, 0.0f, 0.0f};
-    Vector _velocityTarget {0.0f, 0.0f, 0.0f};
+    constexpr static const float DEFAULT_ROTATION_X = 0.0f;
+    constexpr static const float DEFAULT_ROTATION_Y = 0.0f;
+    constexpr static const float DEFAULT_ROTATION_Z = 0.0f;
+
+    constexpr static const float DEFAULT_SCALE_X = 1.0f;
+    constexpr static const float DEFAULT_SCALE_Y = 1.0f;
+    constexpr static const float DEFAULT_SCALE_Z = 1.0f;
+
+    constexpr static const float DEFAULT_VELOCITY_X = 0.0f;
+    constexpr static const float DEFAULT_VELOCITY_Y = 0.0f;
+    constexpr static const float DEFAULT_VELOCITY_Z = 0.0f;
+
+    constexpr static const float DEFAULT_VELOCITY_TARGET_X = 0.0f;
+    constexpr static const float DEFAULT_VELOCITY_TARGET_Y = 0.0f;
+    constexpr static const float DEFAULT_VELOCITY_TARGET_Z = 0.0f;
+
+    Vector _location {DEFAULT_LOCATION_X, DEFAULT_LOCATION_Y, DEFAULT_LOCATION_Z};
+    Vector _rotation {DEFAULT_ROTATION_X, DEFAULT_ROTATION_Y, DEFAULT_ROTATION_Z}; // Maybe rotor not vector?
+    Vector _scale {DEFAULT_SCALE_X, DEFAULT_SCALE_Y, DEFAULT_SCALE_Z};
+
+    Vector _velocity {DEFAULT_VELOCITY_X, DEFAULT_VELOCITY_Y, DEFAULT_VELOCITY_Z};
+    Vector _velocityTarget {DEFAULT_VELOCITY_TARGET_X, DEFAULT_VELOCITY_TARGET_Y, DEFAULT_VELOCITY_TARGET_Z};
     Vector _velocityIncrease {DEFAULT_X_AXIS_SPEED_INCREASE, DEFAULT_Y_AXIS_SPEED_INCREASE, DEFAULT_Z_AXIS_SPEED_INCREASE};
     Vector _velocityDecrease {DEFAULT_X_AXIS_SPEED_DECREASE, DEFAULT_Y_AXIS_SPEED_DECREASE, DEFAULT_Z_AXIS_SPEED_DECREASE};
     Vector _velocityCapacity {DEFAULT_X_AXIS_SPEED_CAPACITY, DEFAULT_Y_AXIS_SPEED_CAPACITY, DEFAULT_Z_AXIS_SPEED_CAPACITY};

@@ -22,8 +22,8 @@ void drawSnowMan(){
     glColor3f(1.0f, 1.0f, 1.0f);
 
     glTranslatef(0.0f, 0.75f, 0.0f);
-    glutSolidSphere(0.75f, 20, 20);
-
+//    glutSolidSphere(0.75f, 20, 20);
+    glutWireSphere(0.75f, 20, 20);
 //    glTranslatef(0.0f, 1.0f, 0.0f);
 //    glutSolidSphere(0.25f, 20, 20);
 //

@@ -14,12 +14,13 @@
 
 class KeyListener;
 
-class [[maybe_unused]] GameObject {
+class [[maybe_unused]] GameObject{
 
 protected:
     Transform _transform;
     EngineUtility::Array<std::string> _tagsArray;
 
+    bool _wireDraw {false};
     bool _destroyed { false };
     bool _visible { true };
     bool _simulatePhysics { true };
@@ -49,6 +50,8 @@ public:
 
     [[maybe_unused]] virtual void simulatePhysics(bool toggle)      noexcept { this->_simulatePhysics = toggle; }
     [[maybe_unused]] virtual bool doesSimulatePhysics()             noexcept { return this->_simulatePhysics; }
+
+    [[maybe_unused]] virtual void drawMeshOnly()                    noexcept { this->_wireDraw = true; }
 };
 
 

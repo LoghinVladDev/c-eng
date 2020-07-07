@@ -2,28 +2,26 @@
 // Created by vladl on 07/07/2020.
 //
 
+#include <ctime>
 #include <iostream>
-#include <list>
 #include "../../obj/engine/Engine.h"
 #include "../../obj/engine/util/obj/standardObj/Camera.h"
-#include <cmath>
-#include <ctime>
 
 class ACamera : public Camera{
 public:
     void keyPressed(uint16 keyCode) noexcept {
         std::cout << "pressed\n";
         switch ( keyCode ) {
-        case KEY_A : case KEY_LEFT_ARROW :
-            deltaAngle = deltaAngle - 0.01f;    break;
-        case KEY_D : case KEY_RIGHT_ARROW :
-            deltaAngle = deltaAngle + 0.01f;    break;
-        case KEY_W : case KEY_UP_ARROW :
-            deltaMove = deltaMove + 0.5f;       break;
-        case KEY_S : case KEY_DOWN_ARROW :
-            deltaMove = deltaMove -0.5f;        break;
-        default:
-            break;
+            case KEY_A : case KEY_LEFT_ARROW :
+                deltaAngle = deltaAngle - 0.01f;    break;
+            case KEY_D : case KEY_RIGHT_ARROW :
+                deltaAngle = deltaAngle + 0.01f;    break;
+            case KEY_W : case KEY_UP_ARROW :
+                deltaMove = deltaMove + 0.5f;       break;
+            case KEY_S : case KEY_DOWN_ARROW :
+                deltaMove = deltaMove -0.5f;        break;
+            default:
+                break;
         }
     }
 
@@ -74,6 +72,8 @@ int main(int argc, char** argv) {
             .withMainWindowResolution(Size(1280, 720))
             .build();
 
+
+    //TODO : test sphere
 
     auto *camera = new ACamera;
 

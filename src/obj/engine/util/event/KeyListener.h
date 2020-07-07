@@ -66,23 +66,23 @@ public:
 
 class GameObject;
 
-class BoundKeyListener : public KeyListener {
-protected:
-    GameObject* __parentReceiver;
-
-    explicit BoundKeyListener(GameObject* parent) : KeyListener(), __parentReceiver(parent) { }
-
+//class BoundKeyListener : public KeyListener {
+//protected:
+//    GameObject* __parentReceiver;
+//
+//    explicit BoundKeyListener(GameObject* parent) : KeyListener(), __parentReceiver(parent) { }
+//
 //public:
 //    BoundKeyListener() {}
+//
+//public:
+//    BoundKeyListener() = delete;
+//
+//protected:
 
-public:
-    BoundKeyListener() = delete;
-
-protected:
-
-    void keyPressed (uint16) noexcept override = 0;
-    void keyReleased(uint16) noexcept override = 0;
-};
+//    void keyPressed (uint16) noexcept override = 0;
+//    void keyReleased(uint16) noexcept override = 0;
+//};
 
 
 #endif //ENG1_KEYLISTENER_H
