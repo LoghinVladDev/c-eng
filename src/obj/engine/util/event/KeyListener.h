@@ -9,33 +9,18 @@
 
 #include "../defs/types.h"
 //#include "../obj/GameObject.h"
+#include "./InputListener.h"
 
 class GameObject;
 
 typedef void (*ptr_KL_override) (uint16);
-class KeyListener {
+class KeyListener : public InputListener {
 public:
-    enum KeyModifier{
-        NONE            [[maybe_unused]] = MODIFIER_ACTIVE_NONE,
-        SHIFT           [[maybe_unused]] = MODIFIER_ACTIVE_SHIFT,
-        CTRL            [[maybe_unused]] = MODIFIER_ACTIVE_CTRL,
-        ALT             [[maybe_unused]] = MODIFIER_ACTIVE_ALT,
-        CTRL_SHIFT      [[maybe_unused]] = MODIFIER_ACTIVE_CTRL_SHIFT,
-        CTRL_ALT        [[maybe_unused]] = MODIFIER_ACTIVE_CTRL_ALT,
-        ALT_SHIFT       [[maybe_unused]] = MODIFIER_ACTIVE_ALT_SHIFT,
-        CTRL_ALT_SHIFT  [[maybe_unused]] = MODIFIER_ACTIVE_CTRL_ALT_SHIFT
-    };
 
 protected:
-    KeyModifier keyModifier {KeyModifier::NONE};
-    void* _parent {nullptr};
-protected:
-
     void (*_boundKeyPressedPtr) (uint16) = nullptr;
     void (*_boundKeyReleasedPtr) (uint16) = nullptr;
 public:
-    [[maybe_unused]] [[nodiscard]] KeyModifier getKeyModifier() noexcept;
-
     [[maybe_unused]] ptr_KL_override getBoundKeyPressedEvent() {
         return this->_boundKeyPressedPtr;
     }
@@ -54,12 +39,6 @@ public:
     [[maybe_unused]] void bindKeyReleasedEvent( void (*callback) (uint16) ) {
         this->_boundKeyReleasedPtr = callback;
     }
-
-    [[maybe_unused]] void setParent( void* parent ) noexcept{
-        this->_parent = parent;
-    }
-
-    [[maybe_unused]] void* getParent () noexcept;
 
     KeyListener() = default;
 };

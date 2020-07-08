@@ -6,7 +6,7 @@
 
 [[maybe_unused]] inline VectorF::VectorF() noexcept = default;
 
-[[maybe_unused]] inline VectorF::VectorF(const VectorF & vector) noexcept = default;
+//[[maybe_unused]] inline VectorF::VectorF(const VectorF & vector) noexcept = default;
 
 [[maybe_unused]] [[nodiscard]] inline bool VectorF::isNull() const noexcept {
     return this->_x == 0 && this->_y == 0 && this->_z == 0;
@@ -205,6 +205,28 @@ bool operator!=(const VectorF& a, const VectorF& b) noexcept {
     return a._x != b._z || a._y != b._y || a._z != b._z;
 }
 
+VectorF::operator VectorD() const {
+    return VectorD(
+        (double) this->_x,
+        (double) this->_y,
+        (double) this->_z
+    );
+}
+
+VectorF::VectorF(const VectorD &obj) noexcept {
+    this->_x = (float)obj.getX();
+    this->_y = (float)obj.getY();
+    this->_z = (float)obj.getZ();
+}
+
+VectorF &VectorF::operator=(const VectorD & obj) noexcept {
+    this->_x = (float)obj.getX();
+    this->_y = (float)obj.getY();
+    this->_z = (float)obj.getZ();
+
+    return *this;
+}
+
 VectorD operator+ (const VectorD& a ,const VectorD& b) noexcept {
     VectorD r;
     r._x = a._x + b._x;
@@ -326,4 +348,22 @@ bool operator==(const VectorD& a, const VectorD& b) noexcept {
 
 bool operator!=(const VectorD& a, const VectorD& b) noexcept {
     return a._x != b._z || a._y != b._y || a._z != b._z;
+}
+
+[[maybe_unused]] VectorD::VectorD(const VectorF & obj) noexcept {
+    this->_x = (double)obj.getX();
+    this->_y = (double)obj.getY();
+    this->_z = (double)obj.getZ();
+}
+
+VectorD::operator VectorF() const {
+    return VectorF(*this);
+}
+
+VectorD &VectorD::operator=(const VectorF & obj) noexcept {
+    this->_x = (double)obj.getX();
+    this->_y = (double)obj.getY();
+    this->_z = (double)obj.getZ();
+
+    return *this;
 }

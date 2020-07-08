@@ -16,7 +16,10 @@ class KeyListener;
 
 class [[maybe_unused]] GameObject{
 
+private:
+
 protected:
+    VectorF _scaleBeforeSetterCall {0.0f, 0.0f, 0.0f} ;
     Transform _transform;
     EngineUtility::Array<std::string> _tagsArray;
 
@@ -24,6 +27,9 @@ protected:
     bool _destroyed { false };
     bool _visible { true };
     bool _simulatePhysics { true };
+    bool _enableDebugTracking { false };
+
+    uint8 _drawPriority { UINT8_MAX };
 
     GameObject() noexcept ;
 
@@ -35,6 +41,7 @@ public:
     [[maybe_unused]] void realUpdate() noexcept;
 
     [[maybe_unused]] virtual void addKeyListener(KeyListener* listener) noexcept;
+    [[maybe_unused]] virtual void addMouseListener(MouseListener* listener) noexcept;
 
     [[maybe_unused]] EngineUtility::Array<std::string>& getTags()   noexcept { return this->_tagsArray; }
     [[maybe_unused]] Transform& getTransform()                      noexcept { return this->_transform; }
@@ -52,6 +59,15 @@ public:
     [[maybe_unused]] virtual bool doesSimulatePhysics()             noexcept { return this->_simulatePhysics; }
 
     [[maybe_unused]] virtual void drawMeshOnly()                    noexcept { this->_wireDraw = true; }
+
+    [[maybe_unused]] virtual std::string toString()                 noexcept;
+    [[maybe_unused]] void setDebugTrackObject(bool toggle)          noexcept { this->_enableDebugTracking = toggle; }
+
+    friend bool operator< (const GameObject&, const GameObject&);
+    friend bool operator> (const GameObject&, const GameObject&);
+    friend bool operator<= (const GameObject&, const GameObject&);
+    friend bool operator>= (const GameObject&, const GameObject&);
+    friend bool operator== (const GameObject&, const GameObject&);
 };
 
 

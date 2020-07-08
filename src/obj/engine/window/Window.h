@@ -9,6 +9,7 @@
 #include "../preCompiledHeaders.h"
 #include "../util/defs/types.h"
 #include "../util/event/KeyListener.h"
+#include "../util/event/MouseListener.h"
 
 #include <GL/glu.h>
 #include <GL/freeglut.h>
@@ -54,10 +55,12 @@ private:
 
     int _displayMode    { DEFAULT_DISPLAY_MODE_FLAGS};
 
+    static bool _mouseMoving;
+
     void init(int, char**) noexcept;
 
     static std::list<KeyListener*> keyListeners;
-//    static bool pressedKeysArray [KEYS_CNT];
+    static std::list<MouseListener*> mouseListeners;
 
     static void defaultDisplayFunction()            noexcept;
     static void defaultReshapeFunction(int, int)    noexcept;
@@ -69,6 +72,9 @@ private:
     static void defaultKeyUpHandlerFunction(uint8, int, int)                        noexcept;
     static void defaultSpecUpHandlerFunction(int, int, int)                         noexcept;
 
+    static void defaultMouseHandlerFunction(int, int, int, int)                     noexcept;
+    static void defaultMouseMoveFunction(int, int)                                  noexcept;
+
     void (*_displayFunction) () = defaultDisplayFunction;
     void (*_reshapeFunction) (int, int) = defaultReshapeFunction;
     void (*_redrawFunction)  () = defaultRedrawFunction;
@@ -77,6 +83,9 @@ private:
     void (*_specialKeyHandlerFunction)  (int, int, int)     = defaultSpecialKeyHandlerFunction;
     void (*_keyUpHandlerFunction)       (uint8, int, int)   = defaultKeyUpHandlerFunction;
     void (*_specKeyUpHandlerFunction)   (int, int, int)     = defaultSpecUpHandlerFunction;
+
+    void (*_mouseButtonFunction)        (int, int, int, int)= defaultMouseHandlerFunction;
+    void (*_mouseMoveFunction)          (int, int)          = defaultMouseMoveFunction;
 
     static void _keyConversionFormatting(uint16 &) noexcept;
 
@@ -98,6 +107,12 @@ public:
          _size(resolution),
          _title(title) {
 
+    }
+
+    [[maybe_unused]] bool isMouseMoving() {
+        bool cpy = this->_mouseMoving;
+        this->_mouseMoving = false;
+        return cpy;
     }
 
     [[maybe_unused]] void setSize        (const Size& size)  noexcept {
@@ -128,6 +143,9 @@ public:
     [[maybe_unused]] void setKeyUpHandlerCallback        ( void (*) (uint8, int, int) = defaultKeyUpHandlerFunction )         noexcept;
     [[maybe_unused]] void setSpecKeyUpHandlerCallback    ( void (*) (int, int, int)   = defaultSpecUpHandlerFunction )        noexcept;
 
+    [[maybe_unused]] void setMouseButtonCallback         ( void (*) (int,int,int,int) = defaultMouseHandlerFunction )         noexcept;
+    [[maybe_unused]] void setMouseMoveCallback           ( void (*) (int, int)        = defaultMouseMoveFunction )            noexcept;
+
     [[maybe_unused]] [[nodiscard]] Size&         getSize()        noexcept;
     [[maybe_unused]] [[nodiscard]] Point&        getPosition()    noexcept;
     [[maybe_unused]] [[nodiscard]] const char*   getTitle() const noexcept;
@@ -135,6 +153,11 @@ public:
     [[maybe_unused]] void addKeyListener(KeyListener* listener) noexcept {
         listener->setParent(this);
         Window::keyListeners.push_back(listener);
+    }
+
+    [[maybe_unused]] void addMouseListener(MouseListener* listener) noexcept {
+        listener->setParent(this);
+        Window::mouseListeners.push_back(listener);
     }
 
     [[maybe_unused]] static std::list <KeyListener*> & getActiveKeyListeners () noexcept;

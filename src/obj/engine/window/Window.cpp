@@ -6,6 +6,8 @@
 #include "Window.h"
 
 std::list<KeyListener*> Window::keyListeners = std::list<KeyListener*> ();
+std::list<MouseListener*> Window::mouseListeners = std::list<MouseListener*> ();
+bool Window::_mouseMoving = false;
 
 [[maybe_unused]] inline Window::Window(int width, int height, int x, int y, const char * title) noexcept :
     _position(x, y),
@@ -68,6 +70,14 @@ void Window::init(int argumentCounter, char** argumentVector) noexcept {
     this->_specKeyUpHandlerFunction = callback;
 }
 
+[[maybe_unused]] inline void Window::setMouseButtonCallback(void (*callback)(int, int, int, int)) noexcept {
+    this->_mouseButtonFunction = callback;
+}
+
+[[maybe_unused]] inline void Window::setMouseMoveCallback(void (*callback)(int, int)) noexcept {
+    this->_mouseMoveFunction = callback;
+}
+
 [[maybe_unused]] [[nodiscard]] inline Size& Window::getSize() noexcept {
     return this->_size;
 }
@@ -125,6 +135,19 @@ void Window::defaultKeyUpHandlerFunction(uint8 key,[[maybe_unused]] int x,[[mayb
         listener->keyReleased(_key);
 }
 
+void Window::defaultMouseHandlerFunction(int button, int state, int x, int y) noexcept {
+    for(MouseListener *listener : Window::mouseListeners)
+        listener->buttonPressed( (uint16) button, (uint16) state, x, y);
+}
+
+void Window::defaultMouseMoveFunction(int x, int y) noexcept {
+//    std::cout << x << ' ' << y << '\n';
+    Window::_mouseMoving = true;
+    for(MouseListener* listener : Window::mouseListeners){
+        listener->moveEvent(x, y);
+    }
+}
+
 void Window::defaultSpecUpHandlerFunction(int key,[[maybe_unused]] int x,[[maybe_unused]] int y) noexcept {
     uint16 _key = key + UINT8_MAX;
     Window::_keyConversionFormatting(_key);
@@ -158,6 +181,10 @@ void Window::defaultReshapeFunction(int newWidth, int newHeight) noexcept {
 
     glutSpecialFunc(this->_specialKeyHandlerFunction);
     glutSpecialUpFunc(this->_specKeyUpHandlerFunction);
+
+    glutMouseFunc(this->_mouseButtonFunction);
+    glutMotionFunc(this->_mouseMoveFunction);
+    glutPassiveMotionFunc(this->_mouseMoveFunction);
 
     glutIgnoreKeyRepeat(1);
 

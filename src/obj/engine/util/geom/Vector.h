@@ -17,6 +17,8 @@ class [[maybe_unused]] EngineVectorDivByZero : public std::exception {
     }
 };
 
+class VectorD;
+
 class [[maybe_unused]] VectorF {
 private:
     float _x {0.0f};
@@ -24,12 +26,15 @@ private:
     float _z {0.0f};
 
 public:
+    [[maybe_unused]] [[maybe_unused]] static VectorF nullVector;
+
     [[maybe_unused]] VectorF() noexcept;
     [[maybe_unused]] VectorF(float x, float y, float z) noexcept :
-        _x(x), _y(y), _z(y) {
+        _x(x), _y(y), _z(z) {
 
     }
-    [[maybe_unused]] VectorF(const VectorF&) noexcept;
+    [[maybe_unused]] VectorF(const VectorF&) noexcept = default;
+    [[maybe_unused]] explicit VectorF(const VectorD&) noexcept;
 
     [[maybe_unused]] [[nodiscard]] bool isNull() const noexcept;
 
@@ -62,6 +67,7 @@ public:
 
     [[maybe_unused]] [[nodiscard]] std::string toString() const noexcept;
     [[maybe_unused]] explicit operator std::string () const;
+    [[maybe_unused]] explicit operator VectorD () const;
 
     friend VectorF operator+ (const VectorF&, const VectorF&) noexcept;
     friend VectorF operator- (const VectorF&, const VectorF&) noexcept;
@@ -72,7 +78,8 @@ public:
     friend VectorF operator^ (const VectorF&, float) noexcept;
     friend VectorF operator^ (const VectorF&, int) noexcept;
 
-    VectorF& operator= (const VectorF&) noexcept;
+    VectorF& operator=  (const VectorF&) noexcept;
+    VectorF& operator=  (const VectorD&) noexcept;
     VectorF& operator+= (const VectorF&) noexcept;
     VectorF& operator-= (const VectorF&) noexcept;
     VectorF& operator*= (float) noexcept;
@@ -93,9 +100,12 @@ private:
     double _z {0.0f};
 
 public:
+    [[maybe_unused]] static VectorD nullVector;
+
     [[maybe_unused]] VectorD() noexcept;
     [[maybe_unused]] VectorD(double x, double y, double z) noexcept;
     [[maybe_unused]] VectorD(const VectorD&) noexcept;
+    [[maybe_unused]] explicit VectorD(const VectorF&) noexcept;
 
     [[maybe_unused]] [[nodiscard]] bool isNull() const noexcept;
 
@@ -109,6 +119,7 @@ public:
 
     [[maybe_unused]] [[nodiscard]] std::string toString() const noexcept;
     [[maybe_unused]] explicit operator std::string () const;
+    [[maybe_unused]] explicit operator VectorF() const;
 
     friend VectorD operator+ (const VectorD&, const VectorD&) noexcept;
     friend VectorD operator- (const VectorD&, const VectorD&) noexcept;
@@ -120,6 +131,7 @@ public:
     friend VectorD operator^ (const VectorD&, int) noexcept;
 
     VectorD& operator= (const VectorD&) noexcept;
+    VectorD& operator= (const VectorF&) noexcept;
     VectorD& operator+= (const VectorD&) noexcept;
     VectorD& operator-= (const VectorD&) noexcept;
     VectorD& operator*= (double) noexcept;
@@ -134,5 +146,11 @@ public:
 };
 
 [[maybe_unused]] typedef VectorF Vector;
+//[[maybe_unused]] VectorF VectorF::nullVector = VectorF(0.0f, 0.0f, 0.0f);
+//[[maybe_unused]] VectorD VectorD::nullVector = VectorD(0.0,  0.0,  0.0);
+
+#ifndef nullvec
+#define nullvec VectorF::nullVector
+#endif
 
 #endif //ENG1_VECTOR_H

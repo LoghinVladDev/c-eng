@@ -74,6 +74,16 @@ public:
 
         glColor3f(_convert.getX(), _convert.getY(), _convert.getY());
     }
+
+    [[maybe_unused]] [[nodiscard]] std::string toString() const noexcept {
+        return "Color { red = " +
+            std::to_string(this->_red) +
+            ", blue = " +
+            std::to_string(this->_blue) +
+            ", green = " +
+            std::to_string(this->_green) +
+            "}";
+    }
 };
 
 

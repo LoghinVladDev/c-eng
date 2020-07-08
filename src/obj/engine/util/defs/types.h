@@ -8,6 +8,7 @@
 #define ENG1_TYPES_H
 
 #include <GL/freeglut_std.h>
+#include <cmath>
 
 [[maybe_unused]] typedef unsigned char uint8;
 [[maybe_unused]] typedef unsigned short uint16;
@@ -27,6 +28,12 @@
 
 #ifndef UINT8_MIN
 #define UINT8_MIN 0x00U;
+#endif
+
+#ifdef ENG1_VECTOR_H
+#ifndef nullvec
+#define nullvec VectorF::nullVector
+#endif
 #endif
 
 [[maybe_unused]] constexpr uint16 KEY_A             = ( 'a' );
@@ -66,5 +73,6 @@ constexpr uint8 MODIFIER_ACTIVE_CTRL_SHIFT          = (uint8) GLUT_ACTIVE_CTRL |
 constexpr uint8 MODIFIER_ACTIVE_CTRL_ALT            = (uint8) GLUT_ACTIVE_CTRL | GLUT_ACTIVE_ALT;
 constexpr uint8 MODIFIER_ACTIVE_ALT_SHIFT           = (uint8) GLUT_ACTIVE_ALT  | GLUT_ACTIVE_SHIFT;
 constexpr uint8 MODIFIER_ACTIVE_CTRL_ALT_SHIFT      = (uint8) GLUT_ACTIVE_CTRL | GLUT_ACTIVE_ALT | GLUT_ACTIVE_SHIFT;
+
 
 #endif //ENG1_TYPES_H

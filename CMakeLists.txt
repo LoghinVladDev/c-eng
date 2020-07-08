@@ -3,6 +3,11 @@ project(eng1)
 
 set(CMAKE_CXX_STANDARD 20)
 
+add_executable(
+        sandbox src/exec/sandbox.cpp
+
+)
+
 add_executable( drawReshapeTest
         src/exec/tests/drawReshapeTest.cpp
         src/obj/engine/window/Window.cpp
@@ -14,7 +19,8 @@ add_executable( drawReshapeTest
         src/obj/engine/util/defs/types.h
         src/obj/engine/Engine.cpp
         src/obj/engine/Engine.h
-        src/obj/engine/preCompiledHeaders.h)
+        src/obj/engine/preCompiledHeaders.h
+)
 
 target_link_libraries(drawReshapeTest -lOpenGL32 -lfreeGLUT -lglu32)
 
@@ -166,6 +172,12 @@ add_executable( objectTests
         src/obj/engine/util/obj/standardObj/Camera.h
         src/obj/engine/util/dataStructures/Color.cpp
         src/obj/engine/util/dataStructures/Color.h
+        src/obj/engine/util/obj/standardObj/Sphere.cpp
+        src/obj/engine/util/obj/standardObj/Sphere.h
+        src/obj/engine/util/event/MouseListener.cpp
+        src/obj/engine/util/event/MouseListener.h
+        src/obj/engine/util/event/InputListener.cpp
+        src/obj/engine/util/event/InputListener.h
 )
 
 target_link_libraries(objectTests -lOpenGL32 -lfreeGLUT -lglu32)

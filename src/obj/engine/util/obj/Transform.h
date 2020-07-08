@@ -52,6 +52,7 @@ private:
     Vector _velocityCapacity {DEFAULT_X_AXIS_SPEED_CAPACITY, DEFAULT_Y_AXIS_SPEED_CAPACITY, DEFAULT_Z_AXIS_SPEED_CAPACITY};
 
     bool _applyFriction { true };
+    bool _scaleModified { false };
 
 public:
     [[maybe_unused]] Transform() noexcept;
@@ -60,7 +61,23 @@ public:
     [[maybe_unused]] void setApplyFriction(bool) noexcept;
     [[maybe_unused]] [[nodiscard]] bool isFrictionActive() const noexcept;
 
-    [[maybe_unused]] [[nodiscard]] std::string toString() const noexcept;
+    [[maybe_unused]] [[nodiscard]] std::string toString() const noexcept {
+        return "Transform { location = " +
+               this->_location.toString() +
+               ", rotation = " +
+               this->_rotation.toString() +
+               ", velocity = " +
+               this->_velocity.toString() +
+               ", scale = " +
+               this->_scale.toString() +
+               " }";
+    }
+
+    [[maybe_unused]] [[nodiscard]] bool scaleModifiedRecently() {
+        bool copy = this->_scaleModified;
+        this->_scaleModified = false;
+        return copy;
+    }
 
     [[maybe_unused]] [[nodiscard]] Vector& getLocation() noexcept  {
         return this->_location;
@@ -71,14 +88,20 @@ public:
     }
 
     [[maybe_unused]] [[nodiscard]] Vector& getVelocity() noexcept;
-    [[maybe_unused]] [[nodiscard]] Vector& getScale() noexcept;
+
+    [[maybe_unused]] [[nodiscard]] Vector& getScale() noexcept {
+        return this->_scale;
+    }
 
     [[maybe_unused]] [[nodiscard]] Vector& getVelocityTarget() noexcept;
     [[maybe_unused]] [[nodiscard]] Vector& getVelocityIncrease() noexcept;
     [[maybe_unused]] [[nodiscard]] Vector& getVelocityDecrease() noexcept;
     [[maybe_unused]] [[nodiscard]] Vector& getVelocityCapacity() noexcept;
 
-    [[maybe_unused]] Transform& setLocation(const Vector&) noexcept;
+    [[maybe_unused]] Transform& setLocation(const Vector& location) noexcept {
+        this->_location = location;
+        return *this;
+    }
     [[maybe_unused]] Transform& setRotation(const Vector&) noexcept;
     [[maybe_unused]] Transform& setVelocity(const Vector&) noexcept;
     [[maybe_unused]] Transform& setScale(const Vector&) noexcept;

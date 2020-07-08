@@ -13,8 +13,11 @@ class GameObject;
 #include "./window/Window.h"
 #include "./util/dataStructures/Array.h"
 #include "./util/obj/GameObject.h"
+//#include "util/obj/standardObj/Camera.h"
 #include <random>
 
+
+class Camera;
 class Window;
 
 class Engine {
@@ -27,9 +30,13 @@ private:
 
     std::list<GameObject*> _allGameObjects {std::list<GameObject*>()};
 
+    Camera* _activeCamera;
+
     static Engine* _instance;
 
     Engine() noexcept;
+
+    void _sortObjectsByDrawPriority() noexcept ;
 
     static void update() noexcept;
     static void render() noexcept;
@@ -38,13 +45,26 @@ public:
     ~Engine() noexcept;
 
     [[maybe_unused]] void start(int = 0, char** = nullptr) noexcept;
-    [[maybe_unused]] Window& getMainWindow() noexcept;
+    [[maybe_unused]] Window& getMainWindow() noexcept {
+        return this->mainWindow;
+    }
 
     [[maybe_unused]] [[nodiscard]] std::list<GameObject*>& getAllGameObjects() noexcept;
     [[maybe_unused]] void addGameObject(GameObject*) noexcept;
+    [[maybe_unused]] void setActiveCamera(Camera* camera) noexcept {
+        if(this->_activeCamera != nullptr)
+            this->_allGameObjects.push_back((GameObject*) camera);
+
+        this->_activeCamera = camera;
+        this->_allGameObjects.remove((GameObject*) camera);
+    }
 
     [[maybe_unused]] void addKeyListener(KeyListener* listener) noexcept {
         this->mainWindow.addKeyListener(listener);
+    }
+
+    [[maybe_unused]] void addMouseListener(MouseListener* listener) noexcept{
+        this->mainWindow.addMouseListener(listener);
     }
 
     [[maybe_unused]] [[nodiscard]] static Engine* getInstance() noexcept;

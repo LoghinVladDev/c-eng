@@ -3,12 +3,11 @@
 //
 
 #include "Camera.h"
-#include <algorithm>
 
 Camera::Camera() {
     this->_transform.getLocation().setY(1.0f);
-
     this->_transform.getRotation().setZ(-1.0f);
+    this->_drawPriority = UINT8_MIN;
 }
 
 [[maybe_unused]] Camera::Camera(const Transform& vector) {
@@ -23,7 +22,7 @@ void Camera::update() noexcept {
             .setZ( this->_transform.getLocation().getZ() + this->deltaMove * this->_transform.getRotation().getZ() * 0.1f );
     }
 
-    if( this->deltaAngle != 0.0f ){
+    if( Engine::getInstance()->getMainWindow().isMouseMoving()){
         this->angle += this->deltaAngle;
         this->_transform.getRotation()
             .setX(std::sin(this->angle))

@@ -16,24 +16,8 @@
     return this->_applyFriction;
 }
 
-[[maybe_unused]] [[nodiscard]] inline std::string Transform::toString() const noexcept {
-    return "Transform { location = " +
-        this->_location.toString() +
-        ", rotation = " +
-        this->_rotation.toString() +
-        ", velocity = " +
-        this->_velocity.toString() +
-        ", scale = " +
-        this->_scale.toString() +
-        " }";
-}
-
 [[maybe_unused]] [[nodiscard]] inline Vector& Transform::getVelocity() noexcept {
     return this->_velocity;
-}
-
-[[maybe_unused]] [[nodiscard]] inline Vector& Transform::getScale() noexcept {
-    return this->_scale;
 }
 
 [[maybe_unused]] [[nodiscard]] inline Vector& Transform::getVelocityTarget() noexcept {
@@ -52,11 +36,6 @@
     return this->_velocityCapacity;
 }
 
-[[maybe_unused]] inline Transform &Transform::setLocation(const Vector & location) noexcept {
-    this->_location = location;
-    return *this;
-}
-
 [[maybe_unused]] inline Transform &Transform::setRotation(const Vector & rotation) noexcept {
     this->_rotation = rotation;
     return *this;
@@ -69,6 +48,7 @@
 
 [[maybe_unused]] inline Transform &Transform::setScale(const Vector & scale) noexcept {
     this->_scale = scale;
+    this->_scaleModified = true;
     return *this;
 }
 

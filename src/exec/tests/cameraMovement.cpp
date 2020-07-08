@@ -17,77 +17,77 @@ float z = 0.0f;
 
 float deltaAngle = 0.0f;
 float deltaMove = 0.0f;
-
-void drawSnowMan(){
-    glColor3f(1.0f, 1.0f, 1.0f);
-
-    glTranslatef(0.0f, 0.75f, 0.0f);
-//    glutSolidSphere(0.75f, 20, 20);
-    glutWireSphere(0.75f, 20, 20);
-//    glTranslatef(0.0f, 1.0f, 0.0f);
-//    glutSolidSphere(0.25f, 20, 20);
 //
-//    glPushMatrix();
-//    glColor3f(0.0f, 0.0f, 0.0f);
-//    glTranslatef(0.05, 0.10f, 0.18f);
+//void drawSnowMan(){
+//    glColor3f(1.0f, 1.0f, 1.0f);
 //
-//    glutSolidSphere(0.05f, 10, 10);
+//    glTranslatef(0.0f, 0.75f, 0.0f);
+////    glutSolidSphere(0.75f, 20, 20);
+//    glutWireSphere(0.75f, 20, 20);
+////    glTranslatef(0.0f, 1.0f, 0.0f);
+////    glutSolidSphere(0.25f, 20, 20);
+////
+////    glPushMatrix();
+////    glColor3f(0.0f, 0.0f, 0.0f);
+////    glTranslatef(0.05, 0.10f, 0.18f);
+////
+////    glutSolidSphere(0.05f, 10, 10);
+////
+////    glTranslatef(-0.1f, 0.0f, 0.0f);
+////    glutSolidSphere(0.05f, 10, 10);
+////    glPopMatrix();
+////
+////    glColor3f(1.0f, 0.5f, 0.5f);
+////    glutSolidCone(0.08f, 0.5f, 10, 2);
+//}
 //
-//    glTranslatef(-0.1f, 0.0f, 0.0f);
-//    glutSolidSphere(0.05f, 10, 10);
-//    glPopMatrix();
+//void computePos(float deltaMove){
+//    x += deltaMove * rx * 0.1f;
+//    z += deltaMove * rz * 0.1f;
+//}
 //
-//    glColor3f(1.0f, 0.5f, 0.5f);
-//    glutSolidCone(0.08f, 0.5f, 10, 2);
-}
-
-void computePos(float deltaMove){
-    x += deltaMove * rx * 0.1f;
-    z += deltaMove * rz * 0.1f;
-}
-
-void computeDir(float deltaAngle){
-    angle += deltaAngle;
-    rx = sin(angle);
-    rz = -cos(angle);
-}
-
-void renderScene() {
-    if(deltaMove)
-        computePos(deltaMove);
-
-    if(deltaAngle)
-        computeDir(deltaAngle);
-
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    glLoadIdentity();
-
-    gluLookAt(
-        x, 1.0f, z,
-        x + rx, 1.0f, z + rz,
-        0.0f, 1.0f, 0.0f
-    );
-
-    glColor3f( 0.9f, 0.9f, 0.9f );
-
-    glBegin(GL_QUADS);
-    glVertex3f( -100.0f, 0.0f, -100.0f );
-    glVertex3f( -100.0f, 0.0f, 100.0f );
-    glVertex3f( 100.0f, 0.0f, 100.0f );
-    glVertex3f( 100.0f, 0.0f, -100.0f );
-    glEnd();
-
-    for(int i = -3; i < 3; i++)
-        for(int j = -3; j < 3; j++){
-            glPushMatrix();
-            glTranslatef(i * 10.0f, 0, j * 10.0f);
-            drawSnowMan();
-            glPopMatrix();
-        }
-
-    glutSwapBuffers();
-}
+//void computeDir(float deltaAngle){
+//    angle += deltaAngle;
+//    rx = sin(angle);
+//    rz = -cos(angle);
+//}
+//
+//void renderScene() {
+//    if(deltaMove)
+//        computePos(deltaMove);
+//
+//    if(deltaAngle)
+//        computeDir(deltaAngle);
+//
+//    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+//
+//    glLoadIdentity();
+//
+//    gluLookAt(
+//        x, 1.0f, z,
+//        x + rx, 1.0f, z + rz,
+//        0.0f, 1.0f, 0.0f
+//    );
+//
+//    glColor3f( 0.9f, 0.9f, 0.9f );
+//
+//    glBegin(GL_QUADS);
+//    glVertex3f( -100.0f, 0.0f, -100.0f );
+//    glVertex3f( -100.0f, 0.0f, 100.0f );
+//    glVertex3f( 100.0f, 0.0f, 100.0f );
+//    glVertex3f( 100.0f, 0.0f, -100.0f );
+//    glEnd();
+//
+//    for(int i = -3; i < 3; i++)
+//        for(int j = -3; j < 3; j++){
+//            glPushMatrix();
+//            glTranslatef(i * 10.0f, 0, j * 10.0f);
+//            drawSnowMan();
+//            glPopMatrix();
+//        }
+//
+//    glutSwapBuffers();
+//}
 
 constexpr float fraction = 0.5f;
 
@@ -231,6 +231,8 @@ int main(int argc, char** argv) {
 
 
     auto* camera = new ACamera;
+
+//    eng->getMainWindow().setRedrawFunctionCallback(renderScene);
 
     eng->addGameObject(camera);
 
