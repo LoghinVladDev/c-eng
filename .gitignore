@@ -1,2 +1,4 @@
 .idea/*
 ./cmake-build-debug/*
+./src/glfw_src/*
+./glad/*

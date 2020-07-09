@@ -120,5 +120,5 @@ int main(int argc, char** argv) {
     eng->start(argc, argv);
 
     delete camera;
-return 0;
+    return 0;
 }
