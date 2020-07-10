@@ -2,8 +2,8 @@
 // Created by vladl on 09/07/2020.
 //
 
-#ifndef ENG1_ENGINEPREPROCESSHEADERS_H
-#define ENG1_ENGINEPREPROCESSHEADERS_H
+#ifndef ENG1_ENGINEPREPROC_H
+#define ENG1_ENGINEPREPROC_H
 
 #ifndef _glfw3_h_
 #include <glad/glad.h>
@@ -17,8 +17,9 @@
 #include <obj/util/geom/Point.h>
 #include <obj/util/geom/Size.h>
 #include <obj/util/event/KeyListener.h>
+#include <obj/util/event/MouseListener.h>
 #include <exception>
 #include <list>
 #include <map>
 
-#endif //ENG1_ENGINEPREPROCESSHEADERS_H
+#endif //ENG1_ENGINEPREPROC_H

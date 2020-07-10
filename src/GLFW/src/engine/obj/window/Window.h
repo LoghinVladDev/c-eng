@@ -5,7 +5,7 @@
 #ifndef ENG1_WINDOW_H
 #define ENG1_WINDOW_H
 
-#include <enginePreprocessHeaders.h>
+#include <enginePreproc.h>
 #include <iterator>
 
 #ifndef DEFAULT_WINDOW_WIDTH
@@ -27,7 +27,7 @@
 #define DEFAULT_WINDOW_STARTING_POSITION_Y 100
 #endif
 
-namespace Engine {
+namespace engine {
 
     class [[maybe_unused]] WindowCreateNullException : public std::exception{
         public:
@@ -38,15 +38,20 @@ namespace Engine {
 
     class [[maybe_unused]] Window {
     private:
+        friend class Engine;
+
         constexpr static float MIN_OPENGL_VERSION = _GL_MIN_VER;
         constexpr static float MAX_OPENGL_VERSION = _GL_MAX_VER;
 
         Point _position     { DEFAULT_WINDOW_STARTING_POSITION_X, DEFAULT_WINDOW_STARTING_POSITION_Y };
         Size _size          { DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT } ;
 
+        int _viewportWidth   { 0 };
+        int _viewportHeight  { 0 };
+
         const char* _title  { DEFAULT_WINDOW_TITLE};
 
-        GLFWwindow* _window;
+        GLFWwindow* _window {nullptr} ;
 
         static std::map <GLFWwindow*, Window*> GLFWWindowToWindowMap;
 
@@ -57,10 +62,21 @@ namespace Engine {
         void init(int, char**) noexcept;
 
         std::list <KeyListener*> keyListeners { std::list<KeyListener*>() } ;
+        std::list <MouseListener*> mouseListeners { std::list<MouseListener*>() };
 
+        static void defaultResizeWindowCallback(GLFWwindow*, int, int) noexcept;
+
+        static void defaultMouseMoveHandlerCallback(GLFWwindow*, double, double) noexcept;
+        static void defaultMouseClickedHandlerCallback(GLFWwindow*, int, int, int) noexcept;
+        static void defaultMouseScrolledHandlerCallback(GLFWwindow*, double, double) noexcept;
         static void defaultHandlerKeyCallback(GLFWwindow*, int, int, int, int) noexcept;
 
+        void (*_mouseMoveCallback)  (GLFWwindow*, double, double)     = defaultMouseMoveHandlerCallback;
+        void (*_mouseClickCallback) (GLFWwindow*, int, int, int)           = defaultMouseClickedHandlerCallback;
+        void (*_mouseScrollCallback)(GLFWwindow*, double, double)     = defaultMouseScrolledHandlerCallback;
         void (*_keyHandlerCallback) (GLFWwindow*, int, int, int, int) = defaultHandlerKeyCallback;
+
+        void (*_resizeWindowCallback) (GLFWwindow*, int, int) = defaultResizeWindowCallback;
 
 //        static std::list<KeyListener*> keyListeners;
 //        static std::list<MouseListener*> mouseListeners;
@@ -111,19 +127,12 @@ namespace Engine {
                 int x               = DEFAULT_WINDOW_STARTING_POSITION_X,
                 int y               = DEFAULT_WINDOW_STARTING_POSITION_Y,
                 const char* title   = DEFAULT_WINDOW_TITLE
-        ) noexcept (false) :
+        ) noexcept :
                 _position(x, y),
                 _size(width, height),
                 _title(title) {
             glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, MIN_OPENGL_VERSION);
             glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, MAX_OPENGL_VERSION);
-
-            this->_window = glfwCreateWindow(width, height, title, nullptr, nullptr);
-
-            if(this->_window == nullptr)
-                throw WindowCreateNullException();
-
-            Window::GLFWWindowToWindowMap.insert(std::pair<GLFWwindow*, Window*> ( this->_window, this ) );
         }
 
         /**
@@ -141,23 +150,20 @@ namespace Engine {
                 const Size& resolution,
                 const Point& location,
                 const char* title= DEFAULT_WINDOW_TITLE
-        ) noexcept (false) :
+        ) noexcept :
                 _position(location),
                 _size(resolution),
                 _title(title) {
             glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, MIN_OPENGL_VERSION);
             glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, MAX_OPENGL_VERSION);
-
-            this->_window = glfwCreateWindow(resolution.getWidth(), resolution.getHeight(), title, nullptr, nullptr);
-
-            if(this->_window == nullptr)
-                throw WindowCreateNullException();
-
-            Window::GLFWWindowToWindowMap.insert(std::pair<GLFWwindow*, Window*> ( this->_window, this ) );
         }
 
         [[maybe_unused]] ~Window() {
             glfwDestroyWindow( this->_window );
+
+            for( KeyListener* listener : this->keyListeners ){
+                delete listener;
+            }
         }
 //        [[maybe_unused]] bool isMouseMoving() {
 //            bool cpy = this->_mouseMoving;
@@ -165,11 +171,33 @@ namespace Engine {
 //            return cpy;
 //        }
 
-        [[maybe_unused]] static Window* getWindowByGLFWWindow(GLFWwindow* window) noexcept {
+        [[maybe_unused]] void disableMouseCursor() noexcept {
+            glfwSetInputMode(this->_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        }
+
+        [[maybe_unused]] void hideMouseCursor() noexcept {
+            glfwSetInputMode(this->_window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+        }
+
+        [[maybe_unused]] void enableMouseCursor() noexcept {
+            glfwSetInputMode(this->_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+        }
+
+        [[maybe_unused]] void enableRawMouseInput() noexcept {
+            if(glfwRawMouseMotionSupported())
+                glfwSetInputMode(this->_window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
+        }
+
+        [[maybe_unused]] void disableRawMouseInput() noexcept {
+            if(glfwRawMouseMotionSupported())
+                glfwSetInputMode(this->_window, GLFW_RAW_MOUSE_MOTION, GLFW_FALSE);
+        }
+
+        [[maybe_unused]] [[nodiscard]] static Window* getWindowByGLFWWindow(GLFWwindow* window) noexcept {
             return Window::GLFWWindowToWindowMap[window];
         }
 
-        [[maybe_unused]] bool willClose() noexcept {
+        [[maybe_unused]] [[nodiscard]] bool willClose() noexcept {
             return glfwWindowShouldClose(this->_window);
         }
 
@@ -214,6 +242,18 @@ namespace Engine {
 //        [[maybe_unused]] void setMouseButtonCallback         ( void (*) (int,int,int,int) = defaultMouseHandlerFunction )         noexcept;
 //        [[maybe_unused]] void setMouseMoveCallback           ( void (*) (int, int)        = defaultMouseMoveFunction )            noexcept;
 
+        [[maybe_unused]] void setMouseMoveHandlerCallback ( void (* callback) (GLFWwindow*, double, double) = defaultMouseMoveHandlerCallback ) noexcept {
+            this->_mouseMoveCallback = callback;
+        }
+
+        [[maybe_unused]] void setMouseClickHandlerCallback ( void (* callback) (GLFWwindow*, int, int, int) = defaultMouseClickedHandlerCallback ) noexcept {
+            this->_mouseClickCallback = callback;
+        }
+
+        [[maybe_unused]] void setMouseScrollHandlerCallback ( void (* callback) (GLFWwindow*, double, double) = defaultMouseScrolledHandlerCallback ) noexcept {
+            this->_mouseScrollCallback = callback;
+        }
+
         [[maybe_unused]] void setKeyHandlerCallback (void (* callback ) (GLFWwindow*, int, int, int, int) = defaultHandlerKeyCallback ) noexcept {
             this->_keyHandlerCallback = callback;
         }
@@ -234,8 +274,22 @@ namespace Engine {
             return this->_window;
         }
 
+    private:
+        [[maybe_unused]] [[nodiscard]] int&          getViewportWidth() noexcept {
+            return this->_viewportWidth;
+        }
+
+        [[maybe_unused]] [[nodiscard]] int&          getViewportHeight() noexcept {
+            return this->_viewportHeight;
+        }
+    public:
+
         [[maybe_unused]] void addKeyListener(KeyListener* listener) noexcept {
-            Window::keyListeners.push_back(listener);
+            this->keyListeners.push_back(listener);
+        }
+
+        [[maybe_unused]] void addMouseListener(MouseListener* listener) noexcept {
+            this->mouseListeners.push_back(listener);
         }
 //
 //        [[maybe_unused]] void addMouseListener(MouseListener* listener) noexcept {
@@ -248,7 +302,10 @@ namespace Engine {
 //        [[maybe_unused]] static void disableKeyRepeats() noexcept;
 //        [[maybe_unused]] static void enableKeyRepeats()  noexcept;
 
-        [[maybe_unused]] void run(int = 1, char** = nullptr) noexcept;
+        [[maybe_unused]] void run(int = 1, char** = nullptr) noexcept (false);
+
+//        virtual void update() noexcept ;
+//        virtual void render() noexcept ;
     };
 
 }

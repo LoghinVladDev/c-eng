@@ -1,3 +1,5 @@
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "hicpp-signed-bitwise"
 //
 // Created by vladl on 09/07/2020.
 //
@@ -8,6 +10,11 @@
 //#ifndef _glfw3_h_
 //#include <GL/freeglut_std.h>
 //#endif
+
+#ifndef _glfw3_h_
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
+#endif
 
 #include <cmath>
 
@@ -74,13 +81,15 @@
 //[[maybe_unused]] constexpr uint16 KEY_PAGE_END      = ( GLUT_KEY_END        + UINT8_MAX );
 //[[maybe_unused]] constexpr uint16 KEY_PAGE_INSERT   = ( GLUT_KEY_INSERT     + UINT8_MAX );
 //
-//constexpr uint8 MODIFIER_ACTIVE_NONE                = (uint8) 0x00;
-//constexpr uint8 MODIFIER_ACTIVE_SHIFT               = (uint8) GLUT_ACTIVE_SHIFT;
-//constexpr uint8 MODIFIER_ACTIVE_CTRL                = (uint8) GLUT_ACTIVE_CTRL;
-//constexpr uint8 MODIFIER_ACTIVE_ALT                 = (uint8) GLUT_ACTIVE_ALT;
-//constexpr uint8 MODIFIER_ACTIVE_CTRL_SHIFT          = (uint8) GLUT_ACTIVE_CTRL | GLUT_ACTIVE_SHIFT;
-//constexpr uint8 MODIFIER_ACTIVE_CTRL_ALT            = (uint8) GLUT_ACTIVE_CTRL | GLUT_ACTIVE_ALT;
-//constexpr uint8 MODIFIER_ACTIVE_ALT_SHIFT           = (uint8) GLUT_ACTIVE_ALT  | GLUT_ACTIVE_SHIFT;
-//constexpr uint8 MODIFIER_ACTIVE_CTRL_ALT_SHIFT      = (uint8) GLUT_ACTIVE_CTRL | GLUT_ACTIVE_ALT | GLUT_ACTIVE_SHIFT;
-//
+constexpr uint8 MODIFIER_ACTIVE_NONE                = (uint8) 0x00;
+constexpr uint8 MODIFIER_ACTIVE_SHIFT               = (uint8) GLFW_MOD_SHIFT;
+constexpr uint8 MODIFIER_ACTIVE_CTRL                = (uint8) GLFW_MOD_CONTROL;
+constexpr uint8 MODIFIER_ACTIVE_ALT                 = (uint8) GLFW_MOD_ALT;
+constexpr uint8 MODIFIER_ACTIVE_CTRL_SHIFT          = (uint8) GLFW_MOD_CONTROL  | (uint8) GLFW_MOD_SHIFT;
+constexpr uint8 MODIFIER_ACTIVE_CTRL_ALT            = (uint8) GLFW_MOD_CONTROL  | (uint8) GLFW_MOD_ALT;
+constexpr uint8 MODIFIER_ACTIVE_ALT_SHIFT           = (uint8) GLFW_MOD_ALT      | (uint8) GLFW_MOD_SHIFT;
+constexpr uint8 MODIFIER_ACTIVE_CTRL_ALT_SHIFT      = ( (uint8) GLFW_MOD_CONTROL ) | ( (uint8) GLFW_MOD_ALT ) | ( (uint8) GLFW_MOD_SHIFT );
+
+#pragma clang diagnostic pop
+
 #endif //ENG1_TYPES_H

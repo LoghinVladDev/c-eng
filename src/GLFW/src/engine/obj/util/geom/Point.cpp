@@ -4,15 +4,15 @@
 
 #include "Point.h"
 
-[[maybe_unused]] inline void Point::setX(int x) noexcept {
+[[maybe_unused]] inline void engine::Point::setX(int x) noexcept {
     this->_x = x;
 }
 
-[[maybe_unused]] inline void Point::setY(int y) noexcept {
+[[maybe_unused]] inline void engine::Point::setY(int y) noexcept {
     this->_y = y;
 }
 
-[[maybe_unused]] Point::operator std::string() const {
+[[maybe_unused]] engine::Point::operator std::string() const {
     return "Point = { x = " +
            std::to_string(this->_x) +
            ", y = " +

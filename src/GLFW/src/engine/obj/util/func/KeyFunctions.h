@@ -5,10 +5,12 @@
 #ifndef ENG1_KEYFUNCTIONS_H
 #define ENG1_KEYFUNCTIONS_H
 
+namespace engine {
 
-class KeyFunctions {
+    class KeyFunctions {
 
-};
+    };
 
+}
 
 #endif //ENG1_KEYFUNCTIONS_H

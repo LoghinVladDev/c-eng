@@ -3,6 +3,7 @@
 //
 
 #include "Diagnostic.h"
+#include <obj/util/event/InputListener.h>
 
-Engine::Diagnostic::DiagnosticResultStructure Engine::Diagnostic::diagStr;
-void (* Engine::Diagnostic::_errorCallbackPtr) (int, const char *) = Engine::Diagnostic::GLFWErrorCallback;
+engine::Diagnostic::DiagnosticResultStructure engine::Diagnostic::diagStr;
+void (* engine::Diagnostic::_errorCallbackPtr) (int, const char *) = engine::Diagnostic::GLFWErrorCallback;

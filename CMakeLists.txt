@@ -91,7 +91,7 @@ add_executable( animateTest
         src/obj/engine/util/dataStructures/Array.cpp
         src/obj/engine/util/dataStructures/Array.h
         src/obj/engine/preCompiledHeaders.h
-        src/GLFW/src/engine/enginePreprocessHeaders.h src/GLFW/src/engine/obj/util/func/KeyFunctions.cpp src/GLFW/src/engine/obj/util/func/KeyFunctions.h)
+        src/GLFW/src/engine/enginePreproc.h src/GLFW/src/engine/obj/util/func/KeyFunctions.cpp src/GLFW/src/engine/obj/util/func/KeyFunctions.h)
 
 target_link_libraries(animateTest -lOpenGL32 -lfreeGLUT -lglu32)
 
@@ -265,7 +265,7 @@ target_link_libraries(UITests -lOpenGL32 -lfreeGLUT -lglu32)
 
 add_executable( GLFWInitWindow
         src/GLFW/src/engine/tests/testInitWindow.cpp
-        src/GLFW/src/engine/obj/util/diag/Diagnostic.cpp src/GLFW/src/engine/obj/util/diag/Diagnostic.h src/GLFW/src/engine/enginePreprocessHeaders.h src/GLFW/src/engine/types.h)
+        src/GLFW/src/engine/obj/util/diag/Diagnostic.cpp src/GLFW/src/engine/obj/util/diag/Diagnostic.h src/GLFW/src/engine/enginePreproc.h src/GLFW/src/engine/types.h)
 
 target_link_libraries( GLFWInitWindow glfw ${GLFW_LIBRARIES} )
 
@@ -288,7 +288,11 @@ add_executable( GLFWPortOfFreeGLUT
         src/GLFW/src/engine/obj/util/event/InputListener.h
         src/GLFW/src/engine/obj/util/event/KeyListener.cpp
         src/GLFW/src/engine/obj/util/event/KeyListener.h
-)
+        src/GLFW/src/engine/Engine.cpp
+        src/GLFW/src/engine/Engine.h
+        src/GLFW/src/engine/types.h
+        src/GLFW/src/engine/enginePreproc.h
+        src/GLFW/src/engine/obj/util/event/MouseListener.cpp src/GLFW/src/engine/obj/util/event/MouseListener.h)
 
 target_link_libraries( GLFWPortOfFreeGLUT glfw ${GLFW_LIBRARIES} )
 

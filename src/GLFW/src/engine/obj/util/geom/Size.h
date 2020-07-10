@@ -5,31 +5,35 @@
 
 #include <string>
 
-class Size {
-private:
-    int _width;
-    int _height;
+namespace engine {
 
-public:
+    class Size {
+    private:
+        int _width;
+        int _height;
 
-    explicit Size(int width, int height) noexcept :
-        _width(width), _height(height) {
+    public:
 
-    }
+        explicit Size(int width, int height) noexcept:
+                _width(width), _height(height) {
 
-    [[nodiscard]] int getWidth() const noexcept {
-        return this->_width;
-    }
+        }
 
-    [[nodiscard]] int getHeight() const noexcept {
-        return this->_height;
-    }
+        [[nodiscard]] int getWidth() const noexcept {
+            return this->_width;
+        }
 
-    [[maybe_unused]] void setHeight (int) noexcept;
-    [[maybe_unused]] void setWidth  (int)  noexcept;
+        [[nodiscard]] int getHeight() const noexcept {
+            return this->_height;
+        }
 
-    [[maybe_unused]] explicit operator std::string () const;
-};
+        [[maybe_unused]] void setHeight(int) noexcept;
 
+        [[maybe_unused]] void setWidth(int) noexcept;
+
+        [[maybe_unused]] explicit operator std::string() const;
+    };
+
+}
 
 #endif //ENG1_SIZE_H
