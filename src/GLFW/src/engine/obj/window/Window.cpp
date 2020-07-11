@@ -4,6 +4,9 @@
 
 #include "Window.h"
 
+#include <Engine.h>
+#include <obj/util/struct/inputAxisFunc.h>
+
 std::map <GLFWwindow*, engine::Window*> engine::Window::GLFWWindowToWindowMap = std::map <GLFWwindow*, engine::Window*>();
 
 void engine::Window::init(int, char **) noexcept {
@@ -33,15 +36,17 @@ void engine::Window::defaultHandlerKeyCallback(GLFWwindow * window, int key, int
 void engine::Window::defaultMouseMoveHandlerCallback(GLFWwindow * window, double xPos, double yPos) noexcept {
     Window* windowObj = Window::getWindowByGLFWWindow(window);
 
+    updateInputAxis((int) xPos, (int) yPos);
+
     for(MouseListener* listener : windowObj->mouseListeners)
         listener->mouseMoved(xPos, yPos);
 }
 
-void engine::Window::defaultMouseScrolledHandlerCallback(GLFWwindow * window, double xOff, double yOff) noexcept {
+void engine::Window::defaultMouseScrollHandlerCallback(GLFWwindow * window, double xOffset, double yOffset) noexcept {
     Window* windowObj = Window::getWindowByGLFWWindow(window);
 
     for(MouseListener* listener : windowObj->mouseListeners)
-        listener->mouseScrolled(xOff, yOff);
+        listener->mouseScrolled(xOffset, yOffset);
 }
 
 void engine::Window::defaultMouseClickedHandlerCallback(GLFWwindow * window, int button, int action, int mods) noexcept {
@@ -66,14 +71,16 @@ void engine::Window::run(int argc, char ** argv) noexcept(false) {
 
     Window::GLFWWindowToWindowMap.insert(std::pair<GLFWwindow*, Window*> ( this->_window, this ) );
 
+    this->_setCallbacks();
+    this->_setMouseOptions();
+}
+
+void engine::Window::_setCallbacks() noexcept {
     glfwSetKeyCallback( this->_window, this->_keyHandlerCallback );
     glfwSetFramebufferSizeCallback(this->_window, this->_resizeWindowCallback);
     glfwSetCursorPosCallback(this->_window, this->_mouseMoveCallback);
     glfwSetMouseButtonCallback(this->_window, this->_mouseClickCallback);
     glfwSetScrollCallback(this->_window, this->_mouseScrollCallback);
-
-    this->disableMouseCursor();
-    this->enableRawMouseInput();
 }
 
 void engine::Window::defaultResizeWindowCallback(GLFWwindow * window, int width, int height) noexcept {
@@ -83,5 +90,16 @@ void engine::Window::defaultResizeWindowCallback(GLFWwindow * window, int width,
     obj->_viewportHeight = height;
 
     glViewport(0, 0, width, height);
+}
+
+void engine::Window::_setMouseOptions() noexcept {
+    if(this->_mouseModifiers & CURSOR_MOUSE_SHOWN)
+        this->enableMouseCursor();
+    if(this->_mouseModifiers & CURSOR_MOUSE_HIDDEN)
+        this->hideMouseCursor();
+    if(this->_mouseModifiers & CURSOR_MOUSE_DISABLED)
+        this->disableMouseCursor();
+    if(this->_mouseModifiers & CURSOR_RAW_INPUT)
+        this->enableRawMouseInput();
 }
 

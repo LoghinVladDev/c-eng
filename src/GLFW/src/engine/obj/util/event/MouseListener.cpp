@@ -4,9 +4,10 @@
 
 #include "MouseListener.h"
 #include <cstdio>
+#include <iostream>
 
 void engine::MouseListener::mouseMoved(double xPos, double yPos) noexcept {
-    std::fprintf(stdout, "[Mouse moved] : { x = %lf, y = %lf }\n", xPos, yPos);
+//    std::fprintf(stdout, "[Mouse moved] : { x = %lf, y = %lf }\n", xPos, yPos);
 }
 
 void engine::MouseListener::mouseClicked(int button, int mods) noexcept {
@@ -18,5 +19,5 @@ void engine::MouseListener::mouseReleased(int button, int mods) noexcept {
 }
 
 void engine::MouseListener::mouseScrolled(double xOffset, double yOffset) noexcept {
-    std::fprintf(stdout, "[Mouse scrolled] : { xOff = %d, yOff = %d }\n", xOffset, yOffset);
+    std::fprintf(stdout, "[Mouse scrolled] : { xOff = %lf, yOff = %lf }\n", xOffset, yOffset);
 }

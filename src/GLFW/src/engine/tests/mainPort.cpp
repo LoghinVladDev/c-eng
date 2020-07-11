@@ -41,6 +41,9 @@ int main(int argc, char** argv) {
             .withMainWindowTitle("GLFWPort")
             .build();
 
+    eng->getMainWindow()->enableRawMouseInput();
+    eng->getMainWindow()->disableMouseCursor();
+
     eng->addKeyListener(new DerivedKeyListener);
     eng->addMouseListener(new MouseListener);
 

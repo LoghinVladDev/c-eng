@@ -292,7 +292,7 @@ add_executable( GLFWPortOfFreeGLUT
         src/GLFW/src/engine/Engine.h
         src/GLFW/src/engine/types.h
         src/GLFW/src/engine/enginePreproc.h
-        src/GLFW/src/engine/obj/util/event/MouseListener.cpp src/GLFW/src/engine/obj/util/event/MouseListener.h)
+        src/GLFW/src/engine/obj/util/event/MouseListener.cpp src/GLFW/src/engine/obj/util/event/MouseListener.h src/GLFW/src/engine/obj/util/struct/inputAxisFunc.h src/GLFW/src/engine/obj/util/struct/inputAxisFunc.c)
 
 target_link_libraries( GLFWPortOfFreeGLUT glfw ${GLFW_LIBRARIES} )
 

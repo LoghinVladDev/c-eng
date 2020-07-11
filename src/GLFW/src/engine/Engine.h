@@ -18,6 +18,7 @@ class GameObject;
 
 #include <enginePreproc.h>
 #include <obj/window/Window.h>
+#include <obj/util/struct/inputAxisFunc.h>
 
 class Camera;
 class Window;
@@ -34,6 +35,8 @@ namespace engine {
         static Engine *_instance;
 
         Engine() noexcept;
+
+        struct INPUT_AXIS* _ptrToInputAxisStr {nullptr} ;
 
 //        void _sortObjectsByDrawPriority() noexcept;
 
@@ -62,6 +65,9 @@ namespace engine {
 //            this->_activeCamera = camera;
 //            this->_allGameObjects.remove((GameObject *) camera);
 //        }
+        [[maybe_unused]] [[nodiscard]] struct INPUT_AXIS* getInputAxisStructure() noexcept {
+            return this->_ptrToInputAxisStr;
+        }
 
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "bugprone-branch-clone"

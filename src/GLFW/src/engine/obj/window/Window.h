@@ -43,13 +43,18 @@ namespace engine {
         constexpr static float MIN_OPENGL_VERSION = _GL_MIN_VER;
         constexpr static float MAX_OPENGL_VERSION = _GL_MAX_VER;
 
+        constexpr static uint8 CURSOR_MOUSE_SHOWN           = 0x01;
+        constexpr static uint8 CURSOR_MOUSE_HIDDEN          = 0x02;
+        constexpr static uint8 CURSOR_MOUSE_DISABLED        = 0x04;
+        constexpr static uint8 CURSOR_RAW_INPUT             = 0x08;
+
         Point _position     { DEFAULT_WINDOW_STARTING_POSITION_X, DEFAULT_WINDOW_STARTING_POSITION_Y };
         Size _size          { DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT } ;
 
         int _viewportWidth   { 0 };
         int _viewportHeight  { 0 };
 
-        const char* _title  { DEFAULT_WINDOW_TITLE};
+        const char* _title  { DEFAULT_WINDOW_TITLE };
 
         GLFWwindow* _window {nullptr} ;
 
@@ -60,6 +65,8 @@ namespace engine {
 //        static bool _mouseMoving;
 
         void init(int, char**) noexcept;
+        void _setCallbacks() noexcept;
+        void _setMouseOptions() noexcept;
 
         std::list <KeyListener*> keyListeners { std::list<KeyListener*>() } ;
         std::list <MouseListener*> mouseListeners { std::list<MouseListener*>() };
@@ -68,44 +75,17 @@ namespace engine {
 
         static void defaultMouseMoveHandlerCallback(GLFWwindow*, double, double) noexcept;
         static void defaultMouseClickedHandlerCallback(GLFWwindow*, int, int, int) noexcept;
-        static void defaultMouseScrolledHandlerCallback(GLFWwindow*, double, double) noexcept;
+        static void defaultMouseScrollHandlerCallback(GLFWwindow*, double, double) noexcept;
         static void defaultHandlerKeyCallback(GLFWwindow*, int, int, int, int) noexcept;
 
         void (*_mouseMoveCallback)  (GLFWwindow*, double, double)     = defaultMouseMoveHandlerCallback;
-        void (*_mouseClickCallback) (GLFWwindow*, int, int, int)           = defaultMouseClickedHandlerCallback;
-        void (*_mouseScrollCallback)(GLFWwindow*, double, double)     = defaultMouseScrolledHandlerCallback;
+        void (*_mouseClickCallback) (GLFWwindow*, int, int, int)      = defaultMouseClickedHandlerCallback;
+        void (*_mouseScrollCallback)(GLFWwindow*, double, double)     = defaultMouseScrollHandlerCallback;
         void (*_keyHandlerCallback) (GLFWwindow*, int, int, int, int) = defaultHandlerKeyCallback;
 
         void (*_resizeWindowCallback) (GLFWwindow*, int, int) = defaultResizeWindowCallback;
 
-//        static std::list<KeyListener*> keyListeners;
-//        static std::list<MouseListener*> mouseListeners;
-
-//        static void defaultDisplayFunction()            noexcept;
-//        static void defaultReshapeFunction(int, int)    noexcept;
-//        static void defaultRedrawFunction()             noexcept;
-//
-//        static void defaultKeyboardHandlerFunction(uint8, [[maybe_unused]] int, int)    noexcept;
-//        static void defaultSpecialKeyHandlerFunction(int, int, int)                     noexcept;
-//
-//        static void defaultKeyUpHandlerFunction(uint8, int, int)                        noexcept;
-//        static void defaultSpecUpHandlerFunction(int, int, int)                         noexcept;
-//
-//        static void defaultMouseHandlerFunction(int, int, int, int)                     noexcept;
-//        static void defaultMouseMoveFunction(int, int)                                  noexcept;
-
-//        void (*_displayFunction) () = defaultDisplayFunction;
-//        void (*_reshapeFunction) (int, int) = defaultReshapeFunction;
-//        void (*_redrawFunction)  () = defaultRedrawFunction;
-//
-//        void (*_keyHandlerFunction)         (uint8, int, int)   = defaultKeyboardHandlerFunction;
-//        void (*_specialKeyHandlerFunction)  (int, int, int)     = defaultSpecialKeyHandlerFunction;
-//        void (*_keyUpHandlerFunction)       (uint8, int, int)   = defaultKeyUpHandlerFunction;
-//        void (*_specKeyUpHandlerFunction)   (int, int, int)     = defaultSpecUpHandlerFunction;
-//
-//        void (*_mouseButtonFunction)        (int, int, int, int)= defaultMouseHandlerFunction;
-//        void (*_mouseMoveFunction)          (int, int)          = defaultMouseMoveFunction;
-
+        uint8 _mouseModifiers = CURSOR_MOUSE_SHOWN;
     public:
 
         /**
@@ -172,25 +152,36 @@ namespace engine {
 //        }
 
         [[maybe_unused]] void disableMouseCursor() noexcept {
-            glfwSetInputMode(this->_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+            if(this->_window != nullptr)
+                glfwSetInputMode(this->_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+            this->_mouseModifiers = CURSOR_MOUSE_DISABLED;
         }
 
         [[maybe_unused]] void hideMouseCursor() noexcept {
-            glfwSetInputMode(this->_window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+            if(this->_window != nullptr)
+                glfwSetInputMode(this->_window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+            this->_mouseModifiers = CURSOR_MOUSE_HIDDEN;
         }
 
         [[maybe_unused]] void enableMouseCursor() noexcept {
-            glfwSetInputMode(this->_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+            if(this->_window != nullptr)
+                glfwSetInputMode(this->_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+            this->_mouseModifiers = CURSOR_MOUSE_SHOWN;
         }
 
         [[maybe_unused]] void enableRawMouseInput() noexcept {
-            if(glfwRawMouseMotionSupported())
-                glfwSetInputMode(this->_window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
+            if(this->_window != nullptr)
+                if(glfwRawMouseMotionSupported())
+                    glfwSetInputMode(this->_window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
+            this->_mouseModifiers |= CURSOR_RAW_INPUT;
         }
 
         [[maybe_unused]] void disableRawMouseInput() noexcept {
-            if(glfwRawMouseMotionSupported())
-                glfwSetInputMode(this->_window, GLFW_RAW_MOUSE_MOTION, GLFW_FALSE);
+            if(this->_window != nullptr)
+                if(glfwRawMouseMotionSupported())
+                    glfwSetInputMode(this->_window, GLFW_RAW_MOUSE_MOTION, GLFW_FALSE);
+            if(this->_mouseModifiers & CURSOR_RAW_INPUT)
+                this->_mouseModifiers ^= CURSOR_RAW_INPUT;
         }
 
         [[maybe_unused]] [[nodiscard]] static Window* getWindowByGLFWWindow(GLFWwindow* window) noexcept {
@@ -250,7 +241,7 @@ namespace engine {
             this->_mouseClickCallback = callback;
         }
 
-        [[maybe_unused]] void setMouseScrollHandlerCallback ( void (* callback) (GLFWwindow*, double, double) = defaultMouseScrolledHandlerCallback ) noexcept {
+        [[maybe_unused]] void setMouseScrollHandlerCallback ( void (* callback) (GLFWwindow*, double, double) = defaultMouseScrollHandlerCallback ) noexcept {
             this->_mouseScrollCallback = callback;
         }
 

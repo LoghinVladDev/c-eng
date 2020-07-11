@@ -6,7 +6,10 @@
 
 engine::Engine *engine::Engine::_instance = nullptr;
 
-engine::Engine::Engine() noexcept = default;
+engine::Engine::Engine() noexcept {
+    this->_ptrToInputAxisStr = getInputAxisVar();
+//    fprintf(stdout, "addr of str : %lld\n", this->_ptrToInputAxisStr);
+}
 
 [[maybe_unused]] [[nodiscard]] engine::Engine *engine::Engine::getInstance() noexcept {
     if( Engine::Engine::_instance == nullptr )
@@ -34,6 +37,8 @@ engine::Engine::~Engine() noexcept {
 }
 
 void engine::Engine::update() noexcept {
+
+//    fprintf(stdout, "input axis : x = %d, y = %d\n", engine::Engine::getInstance()->getInputAxisStructure()->xAxis, engine::Engine::getInstance()->getInputAxisStructure()->yAxis);
 
 }
 
