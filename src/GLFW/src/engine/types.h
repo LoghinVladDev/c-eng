@@ -45,11 +45,11 @@
 #endif
 
 #ifndef _GL_MIN_VER
-#define _GL_MIN_VER 0.0f
+#define _GL_MIN_VER 3
 #endif
 
 #ifndef _GL_MAX_VER
-#define _GL_MAX_VER 2.0f
+#define _GL_MAX_VER 3
 #endif
 
 //[[maybe_unused]] constexpr uint16 KEY_A             = ( 'a' );

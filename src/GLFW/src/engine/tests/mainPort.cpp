@@ -29,12 +29,15 @@ class DerivedKeyListener : public KeyListener{
 };
 
 int main(int argc, char** argv) {
-    if ( ! glfwInit() ) {
-        std::fprintf(stderr, "init error\n");
-        exit(1);
-    }
-
-    glfwSetErrorCallback( Diagnostic::GLFWErrorCallback );
+    /**
+     * moved to Engine::build()
+     */
+//    if ( ! glfwInit() ) {
+//        std::fprintf(stderr, "init error\n");
+//        exit(1);
+//    }
+//
+//    glfwSetErrorCallback( Diagnostic::GLFWErrorCallback );
 
     auto* eng = Engine::EngineBuilder()
             .withMainWindowResolution(1280, 720)

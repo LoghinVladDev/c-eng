@@ -103,3 +103,6 @@ void engine::Window::_setMouseOptions() noexcept {
         this->enableRawMouseInput();
 }
 
+[[maybe_unused]] void engine::Window::close() noexcept {
+    glfwSetWindowShouldClose(this->_window, true);
+}

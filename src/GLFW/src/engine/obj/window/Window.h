@@ -113,6 +113,7 @@ namespace engine {
                 _title(title) {
             glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, MIN_OPENGL_VERSION);
             glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, MAX_OPENGL_VERSION);
+            glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         }
 
         /**
@@ -217,6 +218,8 @@ namespace engine {
         [[maybe_unused]] void setTitle       (const char* title)  noexcept {
             this->_title = title;
         }
+
+        [[maybe_unused]] void close() noexcept;
 
 //        [[maybe_unused]] void setDisplayMode (int)          noexcept;
 

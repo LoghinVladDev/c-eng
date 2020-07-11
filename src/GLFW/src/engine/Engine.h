@@ -19,10 +19,17 @@ class GameObject;
 #include <enginePreproc.h>
 #include <obj/window/Window.h>
 #include <obj/util/struct/inputAxisFunc.h>
+#include <exception>
 
 class Camera;
 class Window;
 namespace engine {
+
+    class EngineGLFWInitFailure : public std::exception {
+        [[nodiscard]] const char * what() const noexcept override {
+            return "Initialization of Graphics Library Framework failed!";
+        }
+    };
 
     class Engine {
     private:
@@ -128,7 +135,7 @@ namespace engine {
                 return *this;
             }
 
-            [[maybe_unused]] Engine *build() noexcept;
+            [[maybe_unused]] Engine *build() noexcept(false);
         };
 
     };

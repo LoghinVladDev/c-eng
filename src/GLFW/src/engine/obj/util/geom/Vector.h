@@ -180,8 +180,6 @@ namespace engine {
 
     [[maybe_unused]] typedef VectorF Vector;
 }
-[[maybe_unused]] engine::VectorF engine::VectorF::nullVector = VectorF(0.0f, 0.0f, 0.0f);
-[[maybe_unused]] engine::VectorD engine::VectorD::nullVector = VectorD(0.0,  0.0,  0.0);
 
 #ifndef nullvec
 #define nullvec engine::VectorF::nullVector

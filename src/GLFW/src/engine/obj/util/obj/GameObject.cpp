@@ -4,7 +4,7 @@
 
 #include "GameObject.h"
 
-engine::GameObject::GameObject() noexcept : _transform(Transform()), _tagsArray(EngineUtility::Array<std::string>()) {
+engine::GameObject::GameObject() noexcept : _transform(Transform()), _tagsArray(engine::Array<std::string>()) {
 //    this->_transform = Transform();
 //    this->_tagsArray = EngineUtility::Array<std::string>();
 }

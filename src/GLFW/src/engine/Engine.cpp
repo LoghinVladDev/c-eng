@@ -3,6 +3,7 @@
 //
 
 #include "Engine.h"
+#include <obj/util/diag/Diagnostic.h>
 
 engine::Engine *engine::Engine::_instance = nullptr;
 
@@ -43,31 +44,39 @@ void engine::Engine::update() noexcept {
 }
 
 void engine::Engine::render() noexcept {
+    glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    double ratio = (double)this->mainWindow->getViewportWidth() / this->mainWindow->getViewportHeight();
-
-    glLoadIdentity();
-    glColor3f( 0.5f, 0.5f, 0.5f );
-    glOrtho(-ratio, ratio, -1.f, 1.f, 1.f, -1.f);
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-    glRotatef((float) glfwGetTime() * 50.f, 0.f, 0.f, 1.f);
-    glBegin(GL_TRIANGLES);
-    glColor3f(1.f, 0.f, 0.f);
-    glVertex3f(-0.6f, -0.4f, 0.f);
-    glColor3f(0.f, 1.f, 0.f);
-    glVertex3f(0.6f, -0.4f, 0.f);
-    glColor3f(0.f, 0.f, 1.f);
-    glVertex3f(0.f, 0.6f, 0.f);
-    glEnd();
+//    double ratio = (double)this->mainWindow->getViewportWidth() / this->mainWindow->getViewportHeight();
+//
+//    glLoadIdentity();
+//    glColor3f( 0.5f, 0.5f, 0.5f );
+//    glOrtho(-ratio, ratio, -1.f, 1.f, 1.f, -1.f);
+//    glMatrixMode(GL_MODELVIEW);
+//    glLoadIdentity();
+//    glRotatef((float) glfwGetTime() * 50.f, 0.f, 0.f, 1.f);
+//    glBegin(GL_TRIANGLES);
+//    glColor3f(1.f, 0.f, 0.f);
+//    glVertex3f(-0.6f, -0.4f, 0.f);
+//    glColor3f(0.f, 1.f, 0.f);
+//    glVertex3f(0.6f, -0.4f, 0.f);
+//    glColor3f(0.f, 0.f, 1.f);
+//    glVertex3f(0.f, 0.6f, 0.f);
+//    glEnd();
 
     glfwSwapBuffers(this->mainWindow->getGLFWWindow());
     glfwPollEvents();
 //    glfwWaitEventsTimeout(0.7);
 }
 
-engine::Engine* engine::Engine::EngineBuilder::build() noexcept {
+engine::Engine* engine::Engine::EngineBuilder::build() noexcept(false) {
+
+    if (glfwInit() == engine::Diagnostic::DIAG_INIT_FAIL){
+        throw EngineGLFWInitFailure();
+    }
+
+    glfwSetErrorCallback( Diagnostic::GLFWErrorCallback );
+
     Engine* instance = Engine::getInstance();
 
     try {

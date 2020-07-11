@@ -284,6 +284,8 @@ add_executable( GLFWPortOfFreeGLUT
         src/GLFW/src/engine/obj/util/geom/Point.h
         src/GLFW/src/engine/obj/util/geom/Vector.cpp
         src/GLFW/src/engine/obj/util/geom/Vector.h
+        src/GLFW/src/engine/obj/util/geom/Vector4.cpp
+        src/GLFW/src/engine/obj/util/geom/Vector4.h
         src/GLFW/src/engine/obj/util/event/InputListener.cpp
         src/GLFW/src/engine/obj/util/event/InputListener.h
         src/GLFW/src/engine/obj/util/event/KeyListener.cpp
@@ -304,6 +306,8 @@ add_executable( GLFWPortOfFreeGLUT
         src/GLFW/src/engine/obj/util/data/Color.h
         src/GLFW/src/engine/obj/util/data/Array.cpp
         src/GLFW/src/engine/obj/util/data/Array.h
+        src/GLFW/src/engine/obj/util/obj/stdObj/Camera.cpp
+        src/GLFW/src/engine/obj/util/obj/stdObj/Camera.h
 )
 
 target_link_libraries( GLFWPortOfFreeGLUT glfw ${GLFW_LIBRARIES} )
