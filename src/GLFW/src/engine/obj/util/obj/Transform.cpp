@@ -16,23 +16,23 @@
     return this->_applyFriction;
 }
 
-[[maybe_unused]] [[nodiscard]] inline Vector& engine::Transform::getVelocity() noexcept {
+[[maybe_unused]] [[nodiscard]] inline engine::Vector& engine::Transform::getVelocity() noexcept {
     return this->_velocity;
 }
 
-[[maybe_unused]] [[nodiscard]] inline Vector& engine::Transform::getVelocityTarget() noexcept {
+[[maybe_unused]] [[nodiscard]] inline engine::Vector& engine::Transform::getVelocityTarget() noexcept {
     return this->_velocityTarget;
 }
 
-[[maybe_unused]] [[nodiscard]] inline Vector& engine::Transform::getVelocityIncrease() noexcept {
+[[maybe_unused]] [[nodiscard]] inline engine::Vector& engine::Transform::getVelocityIncrease() noexcept {
     return this->_velocityIncrease;
 }
 
-[[maybe_unused]] [[nodiscard]] inline Vector& engine::Transform::getVelocityDecrease() noexcept {
+[[maybe_unused]] [[nodiscard]] inline engine::Vector& engine::Transform::getVelocityDecrease() noexcept {
     return this->_velocityDecrease;
 }
 
-[[maybe_unused]] [[nodiscard]] inline Vector& engine::Transform::getVelocityCapacity() noexcept {
+[[maybe_unused]] [[nodiscard]] inline engine::Vector& engine::Transform::getVelocityCapacity() noexcept {
     return this->_velocityCapacity;
 }
 

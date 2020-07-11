@@ -32,27 +32,27 @@ engine::GameObject::GameObject() noexcept : _transform(Transform()), _tagsArray(
     Engine::getInstance()->addMouseListener(listener);
 }
 
-inline bool operator<(const GameObject & leftOperand, const GameObject & rightOperand) {
+inline bool operator<(const engine::GameObject & leftOperand, const engine::GameObject & rightOperand) {
     return leftOperand._drawPriority < rightOperand._drawPriority;
 }
 
-inline bool operator>(const GameObject & leftOperand, const GameObject & rightOperand) {
+inline bool operator>(const engine::GameObject & leftOperand, const engine::GameObject & rightOperand) {
     return leftOperand._drawPriority > rightOperand._drawPriority;
 }
 
-inline bool operator<=(const GameObject & leftOperand, const GameObject & rightOperand) {
+inline bool operator<=(const engine::GameObject & leftOperand, const engine::GameObject & rightOperand) {
     return leftOperand._drawPriority <= rightOperand._drawPriority;
 }
 
-inline bool operator>=(const GameObject & leftOperand, const GameObject & rightOperand) {
+inline bool operator>=(const engine::GameObject & leftOperand, const engine::GameObject & rightOperand) {
     return leftOperand._drawPriority >= rightOperand._drawPriority;
 }
 
-inline bool operator==(const GameObject & leftOperand, const GameObject & rightOperand) {
+inline bool operator==(const engine::GameObject & leftOperand, const engine::GameObject & rightOperand) {
     return leftOperand._drawPriority == rightOperand._drawPriority;
 }
 
-[[maybe_unused]] std::string GameObject::toString() noexcept {
+[[maybe_unused]] std::string engine::GameObject::toString() noexcept {
     return " gameObject { transform = " +
         this->_transform.toString() +
         ", visible = " +

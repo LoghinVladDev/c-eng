@@ -7,7 +7,6 @@
 #ifndef ENG1_ENGINE_H
 #define ENG1_ENGINE_H
 
-class GameObject;
 
 #include "preCompiledHeaders.h"
 #include "./window/Window.h"
@@ -16,9 +15,11 @@ class GameObject;
 //#include "util/obj/standardObj/Camera.h"
 #include <random>
 
-
-class Camera;
-class Window;
+namespace engine {
+    class GameObject;
+    class Camera;
+    class Window;
+}
 
 class Engine {
 private:

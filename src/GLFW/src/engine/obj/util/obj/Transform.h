@@ -101,11 +101,8 @@ namespace engine {
         }
 
         [[maybe_unused]] [[nodiscard]] Vector &getVelocityTarget() noexcept;
-
         [[maybe_unused]] [[nodiscard]] Vector &getVelocityIncrease() noexcept;
-
         [[maybe_unused]] [[nodiscard]] Vector &getVelocityDecrease() noexcept;
-
         [[maybe_unused]] [[nodiscard]] Vector &getVelocityCapacity() noexcept;
 
         [[maybe_unused]] Transform &setLocation(const Vector &location) noexcept {
@@ -114,17 +111,11 @@ namespace engine {
         }
 
         [[maybe_unused]] Transform &setRotation(const Vector &) noexcept;
-
         [[maybe_unused]] Transform &setVelocity(const Vector &) noexcept;
-
         [[maybe_unused]] Transform &setScale(const Vector &) noexcept;
-
         [[maybe_unused]] Transform &setVelocityTarget(const Vector &) noexcept;
-
         [[maybe_unused]] Transform &setVelocityIncrease(const Vector &) noexcept;
-
         [[maybe_unused]] Transform &setVelocityDecrease(const Vector &) noexcept;
-
         [[maybe_unused]] Transform &setVelocityCapacity(const Vector &) noexcept;
     };
 

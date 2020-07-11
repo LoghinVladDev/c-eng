@@ -292,7 +292,19 @@ add_executable( GLFWPortOfFreeGLUT
         src/GLFW/src/engine/Engine.h
         src/GLFW/src/engine/types.h
         src/GLFW/src/engine/enginePreproc.h
-        src/GLFW/src/engine/obj/util/event/MouseListener.cpp src/GLFW/src/engine/obj/util/event/MouseListener.h src/GLFW/src/engine/obj/util/struct/inputAxisFunc.h src/GLFW/src/engine/obj/util/struct/inputAxisFunc.c)
+        src/GLFW/src/engine/obj/util/event/MouseListener.cpp
+        src/GLFW/src/engine/obj/util/event/MouseListener.h
+        src/GLFW/src/engine/obj/util/struct/inputAxisFunc.h
+        src/GLFW/src/engine/obj/util/struct/inputAxisFunc.c
+        src/GLFW/src/engine/obj/util/obj/Transform.cpp
+        src/GLFW/src/engine/obj/util/obj/Transform.h
+        src/GLFW/src/engine/obj/util/obj/GameObject.cpp
+        src/GLFW/src/engine/obj/util/obj/GameObject.h
+        src/GLFW/src/engine/obj/util/data/Color.cpp
+        src/GLFW/src/engine/obj/util/data/Color.h
+        src/GLFW/src/engine/obj/util/data/Array.cpp
+        src/GLFW/src/engine/obj/util/data/Array.h
+)
 
 target_link_libraries( GLFWPortOfFreeGLUT glfw ${GLFW_LIBRARIES} )
 
