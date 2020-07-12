@@ -49,6 +49,7 @@ namespace engine {
 
         void update() noexcept;
         void render() noexcept;
+        [[maybe_unused]] void sandboxFunction() noexcept;
 
 //        static void renderOnce() noexcept;
 

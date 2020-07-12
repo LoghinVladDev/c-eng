@@ -59,7 +59,7 @@ namespace engine {
     public:
         [[maybe_unused]] [[maybe_unused]] static VectorF nullVector;
 
-        [[maybe_unused]] VectorF() noexcept;
+        [[maybe_unused]] VectorF() noexcept = default;
 
         [[maybe_unused]] VectorF(float x, float y, float z) noexcept:
                 _x(x), _y(y), _z(z) {

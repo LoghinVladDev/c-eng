@@ -6,7 +6,7 @@
 
 [[maybe_unused]] engine::VectorF engine::VectorF::nullVector = VectorF(0.0f, 0.0f, 0.0f);
 [[maybe_unused]] engine::VectorD engine::VectorD::nullVector = VectorD(0.0,  0.0,  0.0);
-[[maybe_unused]] inline engine::VectorF::VectorF() noexcept = default;
+//[[maybe_unused]] inline engine::VectorF::VectorF() noexcept = default;
 
 //[[maybe_unused]] inline VectorF::VectorF(const VectorF & vector) noexcept = default;
 

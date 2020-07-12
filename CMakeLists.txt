@@ -308,7 +308,14 @@ add_executable( GLFWPortOfFreeGLUT
         src/GLFW/src/engine/obj/util/data/Array.h
         src/GLFW/src/engine/obj/util/obj/stdObj/Camera.cpp
         src/GLFW/src/engine/obj/util/obj/stdObj/Camera.h
-)
+        src/GLFW/src/engine/obj/util/shader/Shader.cpp src/GLFW/src/engine/obj/util/shader/Shader.h)
 
 target_link_libraries( GLFWPortOfFreeGLUT glfw ${GLFW_LIBRARIES} )
 
+add_executable( drawTests src/GLFW/src/engine/tests/drawTests.cpp
+        glad/src/glad.c
+        glad/src/glad.h
+        glad/src/khrplatform.h
+        src/GLFW/src/engine/obj/util/shader/Shader.cpp src/GLFW/src/engine/obj/util/shader/Shader.h)
+
+target_link_libraries( drawTests glfw ${GLFW_LIBRARIES} )

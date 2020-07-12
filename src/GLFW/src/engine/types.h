@@ -16,6 +16,14 @@
 #include <GLFW/glfw3.h>
 #endif
 
+#ifndef ENG1_VECTOR_H
+#include <obj/util/geom/Vector.h>
+#endif
+
+#ifndef ENG1_VECTOR4_H
+#include <obj/util/geom/Vector4.h>
+#endif
+
 #include <cmath>
 
 [[maybe_unused]] typedef unsigned char uint8;
