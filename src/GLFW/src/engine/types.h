@@ -24,6 +24,7 @@
 #include <obj/util/geom/Vector4.h>
 #endif
 
+#include <string>
 #include <cmath>
 
 [[maybe_unused]] typedef unsigned char uint8;
@@ -58,6 +59,17 @@
 
 #ifndef _GL_MAX_VER
 #define _GL_MAX_VER 3
+#endif
+
+#ifndef __PROJ_PATHS__
+
+constexpr const char* __PROJECT_PATH__ = "./../";
+constexpr const char* __SHADERS_PATH__ = "./../data/shaders/";
+constexpr const char* __TEXTURES_PATH__ = "./../data/textures/";
+
+constexpr const char* __NO_PATH_GIVEN__ = "./";
+
+#define __PROJ_PATHS__
 #endif
 
 //[[maybe_unused]] constexpr uint16 KEY_A             = ( 'a' );

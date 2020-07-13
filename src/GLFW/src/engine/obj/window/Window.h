@@ -137,6 +137,7 @@ namespace engine {
                 _title(title) {
             glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, MIN_OPENGL_VERSION);
             glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, MAX_OPENGL_VERSION);
+            glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         }
 
         [[maybe_unused]] ~Window() {

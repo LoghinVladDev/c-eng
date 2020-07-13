@@ -2,7 +2,8 @@
 // Created by vladl on 08/07/2020.
 //
 #include <iostream>
-
+#include <string>
+#include <vector>
 /*
  * private = accesibil in clasa curenta si in prieteni
  * protected = accesibil in clasa curenta, prieteni si in mostenitori ( derivate )
@@ -45,6 +46,12 @@
  *  - polimorfismu
  */
 
+
 int main(){
 
+    void *v;
+
+    std::printf("%lld\n", &v);
+
+    return 0;
 }

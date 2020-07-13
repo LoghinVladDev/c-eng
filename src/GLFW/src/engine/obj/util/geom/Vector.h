@@ -1,5 +1,4 @@
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "NotImplementedFunctions"
+
 //
 // Created by vladl on 05/07/2020.
 //
@@ -16,7 +15,9 @@
 
 namespace engine { class VectorF; class VectorD; }
 
-engine::VectorF (operator+)(const engine::VectorF &, const engine::VectorF &) noexcept;
+engine::VectorF operator+(const engine::VectorF &, float) noexcept;
+engine::VectorF operator-(const engine::VectorF &, float) noexcept;
+engine::VectorF operator+(const engine::VectorF &, const engine::VectorF &) noexcept;
 engine::VectorF operator-(const engine::VectorF &, const engine::VectorF &) noexcept;
 engine::VectorF operator*(const engine::VectorF &, float) noexcept;
 engine::VectorF operator*(const engine::VectorF &, int) noexcept;
@@ -24,6 +25,9 @@ engine::VectorF operator/(const engine::VectorF &, float) noexcept(false);
 engine::VectorF operator/(const engine::VectorF &, int) noexcept(false);
 engine::VectorF operator^(const engine::VectorF &, float) noexcept;
 engine::VectorF operator^(const engine::VectorF &, int) noexcept;
+engine::VectorF operator^(const engine::VectorF&, const engine::VectorF&) noexcept;
+
+float operator*(const engine::VectorF&, const engine::VectorF&) noexcept;
 
 engine::VectorD operator+(const engine::VectorD &, const engine::VectorD &) noexcept;
 engine::VectorD operator-(const engine::VectorD &, const engine::VectorD &) noexcept;
@@ -33,6 +37,9 @@ engine::VectorD operator/(const engine::VectorD &, double) noexcept(false);
 engine::VectorD operator/(const engine::VectorD &, int) noexcept(false);
 engine::VectorD operator^(const engine::VectorD &, double) noexcept;
 engine::VectorD operator^(const engine::VectorD &, int) noexcept;
+engine::VectorD operator^(const engine::VectorD&, const engine::VectorD&) noexcept;
+
+double operator*(const engine::VectorD&, const engine::VectorD&) noexcept;
 
 bool operator==(const engine::VectorD &, const engine::VectorD &) noexcept;
 bool operator!=(const engine::VectorD &, const engine::VectorD &) noexcept;
@@ -98,10 +105,19 @@ namespace engine {
             return this->_z;
         }
 
+        [[maybe_unused]] [[nodiscard]] float length() const noexcept;
+        [[maybe_unused]] [[nodiscard]] VectorF normalize() const noexcept;
+        [[maybe_unused]] [[nodiscard]] static float getAngle(const VectorF&, const VectorF&) noexcept;
+
         [[maybe_unused]] [[nodiscard]] std::string toString() const noexcept;
         [[maybe_unused]] explicit operator std::string() const;
         [[maybe_unused]] explicit operator VectorD() const;
 
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "NotImplementedFunctions"
+
+        friend VectorF (::operator+)(const VectorF &, float) noexcept; // w + v = composition ( diamond diagonal )
+        friend VectorF (::operator-)(const VectorF &, float) noexcept; // w - v = vector from v end to w end
         friend VectorF (::operator+)(const VectorF &, const VectorF &) noexcept;
         friend VectorF (::operator-)(const VectorF &, const VectorF &) noexcept;
         friend VectorF (::operator*)(const VectorF &, float) noexcept;
@@ -110,7 +126,13 @@ namespace engine {
         friend VectorF (::operator/)(const VectorF &, int) noexcept(false);
         friend VectorF (::operator^)(const VectorF &, float) noexcept;
         friend VectorF (::operator^)(const VectorF &, int) noexcept;
+        friend VectorF (::operator^)(const VectorF &, const VectorF&) noexcept;
 
+        friend float (::operator*)(const VectorF&, const VectorF&) noexcept;
+
+#pragma clang diagnostic pop
+
+        VectorF operator-() const noexcept;
         VectorF &operator=(const VectorF &) noexcept;
         VectorF &operator=(const VectorD &) noexcept;
         VectorF &operator+=(const VectorF &) noexcept;
@@ -149,10 +171,18 @@ namespace engine {
         [[maybe_unused]] [[nodiscard]] double getX() const noexcept;
         [[maybe_unused]] [[nodiscard]] double getY() const noexcept;
         [[maybe_unused]] [[nodiscard]] double getZ() const noexcept;
+        [[maybe_unused]] [[nodiscard]] double length() const noexcept;
+        [[maybe_unused]] [[nodiscard]] VectorD normalize() const noexcept;
+        [[maybe_unused]] [[nodiscard]] static double getAngle(const VectorD&, const VectorD&) noexcept;
 
         [[maybe_unused]] [[nodiscard]] std::string toString() const noexcept;
         [[maybe_unused]] explicit operator std::string() const;
         [[maybe_unused]] explicit operator VectorF() const;
+
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "NotImplementedFunctions"
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "UnusedGlobalDeclarationInspection"
 
         friend VectorD (::operator+)(const VectorD &, const VectorD &) noexcept;
         friend VectorD (::operator-)(const VectorD &, const VectorD &) noexcept;
@@ -162,6 +192,12 @@ namespace engine {
         friend VectorD (::operator/)(const VectorD &, int) noexcept(false);
         friend VectorD (::operator^)(const VectorD &, double) noexcept;
         friend VectorD (::operator^)(const VectorD &, int) noexcept;
+        friend VectorD (::operator^)(const VectorD &, const VectorD&) noexcept;
+
+        friend double (::operator*)(const VectorD&, const VectorD&) noexcept;
+
+#pragma clang diagnostic pop
+#pragma clang diagnostic pop
 
         VectorD &operator=(const VectorD &) noexcept;
         VectorD &operator=(const VectorF &) noexcept;
@@ -185,5 +221,4 @@ namespace engine {
 #define nullvec engine::VectorF::nullVector
 #endif
 
-#pragma clang diagnostic pop
 #endif //ENG1_VECTOR_H

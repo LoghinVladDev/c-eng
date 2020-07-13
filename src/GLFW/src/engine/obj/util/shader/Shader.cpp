@@ -4,7 +4,9 @@
 
 #include "Shader.h"
 
-[[maybe_unused]] engine::Shader::Shader(const char *vertexPath, const char *fragmentPath, bool enableDiagnostic) noexcept {
+std::string engine::Shader::_pathToShadersFolder = std::string(__NO_PATH_GIVEN__);
+
+[[maybe_unused]] engine::Shader::Shader(const char *vertexPath, const char *fragmentPath, bool relativePath, bool enableDiagnostic) noexcept {
     std::string vertexCode;
     std::string fragmentCode;
     std::ifstream vertexFile;
@@ -14,8 +16,78 @@
     fragmentFile.exceptions( std::ifstream::failbit | std::ifstream::badbit );
 
     try{
-        vertexFile.open(vertexPath);
-        fragmentFile.open(fragmentPath);
+        if( !relativePath ) {
+            vertexFile.open( vertexPath );
+            fragmentFile.open( fragmentPath );
+        } else {
+            vertexFile.open( Shader::_pathToShadersFolder + vertexPath );
+            fragmentFile.open( Shader::_pathToShadersFolder + fragmentPath );
+        }
+        std::stringstream vertexStream;
+        std::stringstream fragmentStream;
+
+        vertexStream << vertexFile.rdbuf();
+        fragmentStream << fragmentFile.rdbuf();
+
+        vertexFile.close();
+        fragmentFile.close();
+
+        vertexCode = vertexStream.str();
+        fragmentCode = fragmentStream.str();
+    } catch (std::ifstream::failure& exception) {
+        std::cout << "Shader read exception : " << exception.what() << std::endl;
+        this->failed = true;
+        return;
+    }
+
+    int32 vertexID;
+    int32 fragmentID;
+    const char* vertexCodePtr = vertexCode.c_str();
+    const char* fragmentCodePtr = fragmentCode.c_str();
+
+    vertexID = glCreateShader(GL_VERTEX_SHADER);
+    glShaderSource(vertexID, 1, &vertexCodePtr, nullptr);
+    glCompileShader(vertexID);
+
+    if(enableDiagnostic)
+        Shader::diagnoseShaderCompilation(vertexID);
+
+    fragmentID = glCreateShader(GL_FRAGMENT_SHADER);
+    glShaderSource(fragmentID, 1, &fragmentCodePtr, nullptr);
+    glCompileShader(fragmentID);
+
+    if(enableDiagnostic)
+        Shader::diagnoseShaderCompilation(fragmentID);
+
+    this->ID = glCreateProgram();
+    glAttachShader(this->ID, vertexID);
+    glAttachShader(this->ID, fragmentID);
+    glLinkProgram(this->ID);
+
+    if(enableDiagnostic)
+        Shader::diagnoseProgramCompilation(this->ID);
+
+    glDeleteShader(vertexID);
+    glDeleteShader(fragmentID);
+}
+
+[[maybe_unused]] engine::Shader::Shader(const std::string & vertexPath, const std::string & fragmentPath, bool relativePath, bool enableDiagnostic) noexcept {
+    std::string vertexCode;
+    std::string fragmentCode;
+    std::ifstream vertexFile;
+    std::ifstream fragmentFile;
+
+    vertexFile.exceptions( std::ifstream::failbit | std::ifstream::badbit );
+    fragmentFile.exceptions( std::ifstream::failbit | std::ifstream::badbit );
+
+    try{
+        if( !relativePath ) {
+            vertexFile.open( vertexPath );
+            fragmentFile.open( fragmentPath );
+        } else {
+            vertexFile.open( Shader::_pathToShadersFolder + vertexPath );
+            fragmentFile.open( Shader::_pathToShadersFolder + fragmentPath );
+        }
         std::stringstream vertexStream;
         std::stringstream fragmentStream;
 
@@ -116,6 +188,8 @@ void engine::Shader::diagnoseProgramCompilation(int programID) noexcept {
     if( !successStatus ){
         glGetProgramInfoLog( programID, 512, nullptr, infoLog );
         std::cout << "Shader linking failed" << infoLog << std::endl;
+    } else {
+        std::cout << "Shader compilation success" << std::endl;
     }
 }
 
@@ -127,6 +201,8 @@ void engine::Shader::diagnoseShaderCompilation(int shaderID) noexcept {
     if( !successStatus ) {
         glGetShaderInfoLog( shaderID, 512, nullptr, infoLog );
         std::cout << "Shader compilation failed : " << infoLog << std::endl;
+    } else {
+        std::cout << "Shader compilation success" << std::endl;
     }
 }
 
@@ -137,3 +213,13 @@ void engine::Shader::diagnoseShaderCompilation(int shaderID) noexcept {
 engine::Shader::~Shader() {
     glDeleteProgram(this->ID);
 }
+
+void engine::Shader::setShadersFolder(const std::string & path) noexcept {
+    Shader::_pathToShadersFolder = path;
+}
+
+void engine::Shader::setShadersFolder(const char * path) noexcept {
+    Shader::_pathToShadersFolder = std::string(path);
+}
+
+

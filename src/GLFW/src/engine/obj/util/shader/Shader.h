@@ -17,6 +17,8 @@ namespace engine {
 
     class [[maybe_unused]] Shader {
     private:
+        static std::string _pathToShadersFolder;
+
         bool failed { false };
 
         uint32 ID;
@@ -28,7 +30,11 @@ namespace engine {
         Shader() = delete;
         ~Shader();
 
-        [[maybe_unused]] Shader(const char *, const char *, bool = false) noexcept;
+        [[maybe_unused]] static void setShadersFolder(const std::string&) noexcept;
+        [[maybe_unused]] static void setShadersFolder(const char*) noexcept;
+
+        [[maybe_unused]] Shader(const char *, const char *, bool = false, bool = false) noexcept;
+        [[maybe_unused]] Shader(const std::string&, const std::string&, bool = false, bool = false) noexcept;
 
         [[maybe_unused]] void use() const noexcept;
 

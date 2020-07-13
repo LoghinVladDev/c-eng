@@ -84,6 +84,22 @@
     return this->toString();
 }
 
+engine::VectorF operator+ (const engine::VectorF& a, const float b) noexcept {
+    engine::VectorF r;
+    r._x = a._x + b;
+    r._y = a._y + b;
+    r._z = a._z + b;
+    return r;
+}
+
+engine::VectorF operator- (const engine::VectorF& a, const float b) noexcept {
+    engine::VectorF r;
+    r._x = a._x - b;
+    r._y = a._y - b;
+    r._z = a._z - b;
+    return r;
+}
+
 engine::VectorF operator+ (const engine::VectorF& a ,const engine::VectorF& b) noexcept {
     engine::VectorF r;
     r._x = a._x + b._x;
@@ -98,6 +114,10 @@ engine::VectorF operator- (const engine::VectorF& a, const engine::VectorF& b) n
     r._y = a._y - b._y;
     r._z = a._z - b._z;
     return r;
+}
+
+engine::VectorF engine::VectorF::operator-() const noexcept {
+    return VectorF(-(this->_x), -(this->_y), -(this->_z));
 }
 
 engine::VectorF operator*(const engine::VectorF& a, float b) noexcept {
@@ -221,12 +241,44 @@ engine::VectorF::VectorF(const VectorD &obj) noexcept {
     this->_z = (float)obj.getZ();
 }
 
+[[maybe_unused]] [[nodiscard]] float engine::VectorF::length() const noexcept {
+    return sqrtf( powf(this->_x, 2.0f) + powf(this->_y, 2.0f) + powf(this->_z, 2.0f) );
+}
+
 engine::VectorF &engine::VectorF::operator=(const VectorD & obj) noexcept {
     this->_x = (float)obj.getX();
     this->_y = (float)obj.getY();
     this->_z = (float)obj.getZ();
 
     return *this;
+}
+
+[[maybe_unused]] [[nodiscard]] engine::VectorF engine::VectorF::normalize() const noexcept {
+    return (*this) / this->length();
+}
+
+float engine::VectorF::getAngle(const engine::VectorF & a, const engine::VectorF & b) noexcept {
+    return std::acos((a * b) / (a.length() * b.length()));
+}
+
+double engine::VectorD::getAngle(const VectorD & a, const VectorD & b) noexcept {
+    return std::acos((a * b) / (a.length() * b.length()));
+}
+
+engine::VectorF operator^ (const engine::VectorF& a, const engine::VectorF& b) noexcept {
+    return engine::VectorF(
+            a._y * b._z - a._z * b._y,
+            a._z * b._x - a._x * b._z,
+            a._x * b._y - a._y * b._x
+    );
+}
+
+engine::VectorD operator^ (const engine::VectorD& a, const engine::VectorD& b) noexcept {
+    return engine::VectorD(
+            a._y * b._z - a._z * b._y,
+            a._z * b._x - a._x * b._z,
+            a._x * b._y - a._y * b._x
+    );
 }
 
 engine::VectorD operator+ (const engine::VectorD& a ,const engine::VectorD& b) noexcept {
@@ -361,11 +413,27 @@ bool operator!=(const engine::VectorD& a, const engine::VectorD& b) noexcept {
 engine::VectorD::operator VectorF() const {
     return VectorF(*this);
 }
-
+ // v * w = len(v) * len(w) * cos(angl)
 engine::VectorD &engine::VectorD::operator=(const VectorF & obj) noexcept {
     this->_x = (double)obj.getX();
     this->_y = (double)obj.getY();
     this->_z = (double)obj.getZ();
 
     return *this;
+}
+
+[[maybe_unused]] [[nodiscard]] double engine::VectorD::length() const noexcept {
+    return sqrt( pow(this->_x, 2.0) + pow(this->_y, 2.0) + pow(this->_z, 2.0) );
+}
+
+[[maybe_unused]] [[nodiscard]] engine::VectorD engine::VectorD::normalize() const noexcept {
+    return (*this) / this->length();
+}
+
+float operator* (const engine::VectorF& a, const engine::VectorF& b) noexcept {
+    return a._x * b._x + a._y * b._y + a._z * b._z;
+}
+
+double operator* (const engine::VectorD& a, const engine::VectorD& b) noexcept {
+    return a._x * b._x + a._y * b._y + a._z * b._z;
 }

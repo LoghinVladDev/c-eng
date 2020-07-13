@@ -18,9 +18,11 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 add_subdirectory(src/glfw_src)
 add_subdirectory(glad)
+
 include_directories(src/glfw_src/include)
 include_directories(src/GLFW/src/engine)
 include_directories(glad/include)
+include_directories(stb_image)
 
 find_package(OpenGL REQUIRED)
 find_package(Qt5 COMPONENTS Widgets REQUIRED)
@@ -53,6 +55,8 @@ target_link_libraries( editorHelloWorld PRIVATE Qt5::Widgets )
 
 add_executable(
         sandbox src/exec/sandbox.cpp
+        src/GLFW/src/engine/obj/util/data/Array.cpp
+        src/GLFW/src/engine/obj/util/data/Array.h
 )
 
 add_executable( drawReshapeTest
@@ -308,7 +312,8 @@ add_executable( GLFWPortOfFreeGLUT
         src/GLFW/src/engine/obj/util/data/Array.h
         src/GLFW/src/engine/obj/util/obj/stdObj/Camera.cpp
         src/GLFW/src/engine/obj/util/obj/stdObj/Camera.h
-        src/GLFW/src/engine/obj/util/shader/Shader.cpp src/GLFW/src/engine/obj/util/shader/Shader.h)
+        src/GLFW/src/engine/obj/util/shader/Shader.cpp
+        src/GLFW/src/engine/obj/util/shader/Shader.h stb_image/stb-image.h src/GLFW/src/engine/obj/util/geom/Vector2.cpp src/GLFW/src/engine/obj/util/geom/Vector2.h src/GLFW/src/engine/obj/util/data/Matrix.cpp src/GLFW/src/engine/obj/util/data/Matrix.h)
 
 target_link_libraries( GLFWPortOfFreeGLUT glfw ${GLFW_LIBRARIES} )
 
@@ -316,6 +321,21 @@ add_executable( drawTests src/GLFW/src/engine/tests/drawTests.cpp
         glad/src/glad.c
         glad/src/glad.h
         glad/src/khrplatform.h
-        src/GLFW/src/engine/obj/util/shader/Shader.cpp src/GLFW/src/engine/obj/util/shader/Shader.h)
+        src/GLFW/src/engine/obj/util/shader/Shader.cpp
+        src/GLFW/src/engine/obj/util/shader/Shader.h
+        src/GLFW/src/engine/obj/util/diag/Diagnostic.cpp
+        src/GLFW/src/engine/obj/util/diag/Diagnostic.h
+        stb_image/stb-image.h src/GLFW/src/engine/obj/util/geom/Vector2.cpp src/GLFW/src/engine/obj/util/geom/Vector2.h src/GLFW/src/engine/obj/util/data/Matrix.cpp src/GLFW/src/engine/obj/util/data/Matrix.h)
 
 target_link_libraries( drawTests glfw ${GLFW_LIBRARIES} )
+
+#set_target_properties(
+#        drawTests
+#        GLFWPortOfFreeGLUT
+#
+#        PROPERTIES
+#
+#        RUNTIME_OUTPUT_DIRECTORY "/build/bin/"
+#        ARCHIVE_OUTPUT_DIRECTORY "/build/lib/"
+#        LIBRARY_OUTPUT_DIRECTORY "/build/lib/"
+#)

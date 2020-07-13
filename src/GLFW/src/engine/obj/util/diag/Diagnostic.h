@@ -27,6 +27,8 @@ namespace engine {
     public:
         Diagnostic() = delete;
 
+//        [[maybe_unused]] static std::string getRelativePath() noexcept;
+
         [[maybe_unused]] static void initTest() noexcept {
             Diagnostic::diagStr.initializeResult = glfwInit();
         }

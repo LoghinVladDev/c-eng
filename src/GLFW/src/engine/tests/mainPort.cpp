@@ -37,7 +37,7 @@ int main(int argc, char** argv) {
 //        exit(1);
 //    }
 //
-//    glfwSetErrorCallback( Diagnostic::GLFWErrorCallback );
+    glfwSetErrorCallback( Diagnostic::GLFWErrorCallback );
 
     auto* eng = Engine::EngineBuilder()
             .withMainWindowResolution(1280, 720)
