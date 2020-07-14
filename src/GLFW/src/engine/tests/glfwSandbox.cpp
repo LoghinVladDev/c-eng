@@ -19,5 +19,8 @@ int main(){
     B[1][0] = 7;
     B[1][1] = 8;
 
-    std::cout << (A + B) << '\n';
+    std::cout << ( A * B ) << '\n';
+
+//    engine::Matrix<int> C(3, 3);
+//    engine::Matrix<int> D(3, 3);
 }
