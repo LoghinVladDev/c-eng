@@ -62,38 +62,38 @@ namespace engine {
                 return f;
             }
 
-            template <class U> friend Row operator+ (const Row& a, const Row& b) noexcept (false){
+            friend Row operator+ (const Row& a, const Row& b) noexcept (false){
                 if(a._m != b._m)
                     throw engine::MatrixRequiredSameSize();
 
-                typename engine::Matrix<U>::Row r(a);
+                typename engine::Matrix<T>::Row r(a);
 
                 for(std::size_t i = 0, length = a._m; i < length; i++)
                     * ( r._row[i] ) += * ( b._row[i] );
                 return r;
             };
 
-            template <class U> friend Row operator- (const Row& a, const Row& b) noexcept (false){
+            friend Row operator- (const Row& a, const Row& b) noexcept (false){
                 if(a._m != b._m)
                     throw engine::MatrixRequiredSameSize();
 
-                typename engine::Matrix<U>::Row r(a);
+                typename engine::Matrix<T>::Row r(a);
 
                 for(std::size_t i = 0, length = a._m; i < length; i++)
                     * ( r._row[i] ) -= * ( b._row[i] );
                 return r;
             }
 
-            template <class U> friend Row operator* (const Row& a, U b) noexcept {
-                typename engine::Matrix<U>::Row r(a);
+            friend Row operator* (const Row& a, T b) noexcept {
+                typename engine::Matrix<T>::Row r(a);
 
                 for(std::size_t i = 0, length = a._m; i < length; i++)
                     (* (a._row[i]) ) *= b;
                 return r;
             }
 
-            template <class U> friend Row operator* (U a, const Row& b) noexcept {
-                typename engine::Matrix<U>::Row r(b);
+            friend Row operator* (T a, const Row& b) noexcept {
+                typename engine::Matrix<T>::Row r(b);
 
                 for(std::size_t i = 0, length = b._m; i < length; i++)
                     (* (b._row[i]) ) *= a;
@@ -128,40 +128,39 @@ namespace engine {
         Row& operator[] (std::size_t) noexcept;
         const Row& operator[] (std::size_t) const noexcept;
 
-        template <class U>
-        friend std::ostream& operator << (std::ostream& f, const Matrix<U>& x){
+        friend std::ostream& operator << (std::ostream& f, const Matrix<T>& x){
             for(std::size_t i = 0; i < x._n; i++)
                 f << (*( x._matrix[i] ) ) << '\n';
             return f;
         }
 
-        template <class U> friend Matrix<U> operator+ (const Matrix<U>& a, const Matrix<U>& b) noexcept(false){
+        friend Matrix<T> operator+ (const Matrix<T>& a, const Matrix<T>& b) noexcept(false){
             if( a._n != b._n )
                 throw engine::MatrixRequiredSameSize();
 
-            engine::Matrix<U> r(a);
+            engine::Matrix<T> r(a);
 
             for(std::size_t i = 0, length = r._n; i < length; i++)
                 (* (r._matrix[i]) ) += (* (b._matrix[i]) );
             return r;
         }
 
-        template <class U> friend Matrix<U> operator- (const Matrix<U>& a, const Matrix<U>& b) noexcept(false) {
+        friend Matrix<T> operator- (const Matrix<T>& a, const Matrix<T>& b) noexcept(false) {
             if( a._n != b._n )
                 throw engine::MatrixRequiredSameSize();
 
-            engine::Matrix<U> r(a);
+            engine::Matrix<T> r(a);
 
             for(std::size_t i = 0, length = r._n; i < length; i++)
                 (* (r._matrix[i]) ) -= (* (b._matrix[i]) );
             return r;
         }
 
-        template <class U> friend Matrix<U> operator* (const Matrix<U>& a, const Matrix<U>& b) noexcept(false) {
+        friend Matrix<T> operator* (const Matrix<T>& a, const Matrix<T>& b) noexcept(false) {
             if( a.getM() != b._n )
                 throw engine::MatrixRequiredTransposedSize();
 
-            engine::Matrix<U> r(b._n, b.getM());
+            engine::Matrix<T> r(b._n, b.getM());
 
             for(std::size_t i = 0, height = r._n; i < height; i++)
                 for(std::size_t j = 0, width = r.getM(); j < width; j++) {
@@ -174,21 +173,32 @@ namespace engine {
             return r;
         }
 
-        template <class U> friend Matrix<U> operator* (const Matrix<U>& a, U b) noexcept {
-            engine::Matrix<U> r(a);
+        friend Matrix<T> operator* (const Matrix<T>& a, T b) noexcept {
+            engine::Matrix<T> r(a);
 
             for(std::size_t i = 0, length = r._n; i < length; i++)
                 (* (r._matrix[i]) ) *= b;
             return r;
         }
 
-        template <class U> friend Matrix operator* (U a, const Matrix<U>& b) noexcept {
-            engine::Matrix<U> r(b);
+        friend Matrix operator* (T a, const Matrix<T>& b) noexcept {
+            engine::Matrix<T> r(b);
 
             for(std::size_t i = 0, length = r._n; i < length; i++)
                 (* (r._matrix[i]) ) *= a;
             return r;
         }
+
+//        template <typename U>
+//        [[nodiscard]] static Matrix identity(std::size_t) noexcept;
+//        template <>
+//        [[nodiscard]] static Matrix identity<int>(std::size_t) noexcept;
+//        [[nodiscard]] static Matrix<float> identity(std::size_t, float dummyParam = 0) noexcept;
+//        [[nodiscard]] static Matrix<double> identity(std::size_t, double dummyParam = 0.0) noexcept;
+//        [[nodiscard]] static Matrix<bool> identity(std::size_t, bool dummyParam = false) noexcept;
+//        [[nodiscard]] static Matrix<unsigned int> identity(std::size_t, unsigned int dummyParam = 0) noexcept;
+//        [[nodiscard]] static Matrix<long long> identity(std::size_t, long long dummyParam = 0) noexcept;
+//        [[nodiscard]] static Matrix<unsigned long long> identity(std::size_t, unsigned long long dummyParam = 0) noexcept;
 
         Matrix& operator =  (const Matrix&) noexcept;
         Matrix& operator += (const Matrix&) noexcept (false);
@@ -385,6 +395,92 @@ engine::Matrix<T>& engine::Matrix<T>::operator *= (T obj) noexcept{
         (* (this->_matrix[i]) ) *= obj;
     return *this;
 }
+
+//template<class T>
+//template<>
+//engine::Matrix<T> engine::Matrix<T>::identity<int>(std::size_t) noexcept {
+//    return engine::Matrix<T>();
+//}
+
+//template<class T>
+//template<typename U>
+//engine::Matrix<T> engine::Matrix<T>::identity(std::size_t) noexcept {
+//    return engine::Matrix<T>(2,2);
+//}
+//
+//template <class T>
+//engine::Matrix<int> engine::Matrix<int>::identity<int>(std::size_t size) noexcept {
+//    engine::Matrix<int> r(size, size);
+//    for(std::size_t i = 0; i < size; i++)
+//        for(std::size_t j = 0; j < size; j++)
+//            if(i == j)
+//                r[i][j] = 1;
+//            else
+//                r[i][j] = 0;
+//}
+
+//template <class T>
+//engine::Matrix<float> engine::Matrix<T>::identity(std::size_t size, [[maybe_unused]] float dummyParam) noexcept {
+//    engine::Matrix<float> r(size, size);
+//    for(std::size_t i = 0; i < size; i++)
+//        for(std::size_t j = 0; j < size; j++)
+//            if(i == j)
+//                r[i][j] = 1.0f;
+//            else
+//                r[i][j] = 0.0f;
+//}
+//
+//template <class T>
+//engine::Matrix<double> engine::Matrix<T>::identity(std::size_t size, [[maybe_unused]] double dummyParam) noexcept {
+//    engine::Matrix<double> r(size, size);
+//    for(std::size_t i = 0; i < size; i++)
+//        for(std::size_t j = 0; j < size; j++)
+//            if(i == j)
+//                r[i][j] = 1.0;
+//            else
+//                r[i][j] = 0.0;
+//}
+//
+//template <class T>
+//engine::Matrix<bool> engine::Matrix<T>::identity(std::size_t size, [[maybe_unused]] bool dummyParam) noexcept {
+//    engine::Matrix<bool> r(size, size);
+//    for(std::size_t i = 0; i < size; i++)
+//        for(std::size_t j = 0; j < size; j++)
+//            r[i][j] = i == j;
+//}
+//
+//template <class T>
+//engine::Matrix<unsigned int> engine::Matrix<T>::identity(std::size_t size, [[maybe_unused]] unsigned int dummyParam) noexcept {
+//    engine::Matrix<unsigned int> r(size, size);
+//    for(std::size_t i = 0; i < size; i++)
+//        for(std::size_t j = 0; j < size; j++)
+//            if(i == j)
+//                r[i][j] = 1U;
+//            else
+//                r[i][j] = 0U;
+//}
+//
+//template <class T>
+//engine::Matrix<long long int> engine::Matrix<T>::identity(std::size_t size, [[maybe_unused]] long long int dummyParam) noexcept {
+//    engine::Matrix<long long int> r(size, size);
+//    for(std::size_t i = 0; i < size; i++)
+//        for(std::size_t j = 0; j < size; j++)
+//            if(i == j)
+//                r[i][j] = 1LL;
+//            else
+//                r[i][j] = 0LL;
+//}
+//
+//template <class T>
+//engine::Matrix<unsigned long long int> engine::Matrix<T>::identity(std::size_t size, [[maybe_unused]] unsigned long long int dummyParam) noexcept {
+//    engine::Matrix<unsigned long long int> r(size, size);
+//    for(std::size_t i = 0; i < size; i++)
+//        for(std::size_t j = 0; j < size; j++)
+//            if(i == j)
+//                r[i][j] = 1ULL;
+//            else
+//                r[i][j] = 0ULL;
+//}
 
 #endif //ENG1_MATRIX_H
 
