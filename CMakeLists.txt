@@ -275,8 +275,8 @@ target_link_libraries( GLFWInitWindow glfw ${GLFW_LIBRARIES} )
 
 add_executable( GLFWPortOfFreeGLUT
         glad/src/glad.c
-        glad/src/glad.h
-        glad/src/khrplatform.h
+        glad/include/glad/glad.h
+        glad/include/KHR/khrplatform.h
         src/GLFW/src/engine/tests/mainPort.cpp
         src/GLFW/src/engine/obj/window/Window.cpp
         src/GLFW/src/engine/obj/window/Window.h
@@ -319,8 +319,8 @@ target_link_libraries( GLFWPortOfFreeGLUT glfw ${GLFW_LIBRARIES} )
 
 add_executable( drawTests src/GLFW/src/engine/tests/drawTests.cpp
         glad/src/glad.c
-        glad/src/glad.h
-        glad/src/khrplatform.h
+        glad/include/glad/glad.h
+        glad/include/KHR/khrplatform.h
         src/GLFW/src/engine/obj/util/shader/Shader.cpp
         src/GLFW/src/engine/obj/util/shader/Shader.h
         src/GLFW/src/engine/obj/util/diag/Diagnostic.cpp
@@ -328,6 +328,12 @@ add_executable( drawTests src/GLFW/src/engine/tests/drawTests.cpp
         stb_image/stb-image.h src/GLFW/src/engine/obj/util/geom/Vector2.cpp src/GLFW/src/engine/obj/util/geom/Vector2.h src/GLFW/src/engine/obj/util/data/Matrix.cpp src/GLFW/src/engine/obj/util/data/Matrix.h)
 
 target_link_libraries( drawTests glfw ${GLFW_LIBRARIES} )
+
+add_executable( glfwSandbox
+        src/GLFW/src/engine/tests/glfwSandbox.cpp
+        src/GLFW/src/engine/obj/util/data/Matrix.h
+        src/GLFW/src/engine/obj/util/data/Matrix.cpp
+)
 
 #set_target_properties(
 #        drawTests
