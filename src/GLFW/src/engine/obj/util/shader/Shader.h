@@ -12,6 +12,9 @@
 #include <sstream>
 #include <iostream>
 #include <types.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 namespace engine {
 
@@ -49,6 +52,10 @@ namespace engine {
         [[maybe_unused]] Shader& setVec4(const std::string &, const engine::Vector4F&) noexcept;
         [[maybe_unused]] Shader& setVec3d(const std::string &, const engine::VectorD&) noexcept;
         [[maybe_unused]] Shader& setVec4d(const std::string &, const engine::Vector4D&) noexcept;
+        [[maybe_unused]] Shader& setVec3(const std::string &, const glm::vec3&) noexcept;
+        [[maybe_unused]] Shader& setVec4(const std::string &, const glm::vec4&) noexcept;
+        [[maybe_unused]] Shader& setMat3(const std::string &, const glm::mat3&) noexcept;
+        [[maybe_unused]] Shader& setMat4(const std::string &, const glm::mat4&) noexcept;
 
 #pragma clang diagnostic pop
 

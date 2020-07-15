@@ -14,14 +14,6 @@
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-
-//float vertices[] = {
-//    0.5f, 0.5f, 0.0f,      1.0f, 0.0f, 0.0f,      1.0f, 1.0f, //tr
-//    0.5f,-0.5f, 0.0f,      0.0f, 1.0f, 0.0f,      1.0f, 0.0f, //br
-//   -0.5f,-0.5f, 0.0f,      0.0f, 0.0f, 1.0f,      0.0f, 0.0f, //bl
-//   -0.5f, 0.5f, 0.0f,      1.0f, 1.0f, 0.0f,      0.0f, 1.0f  //br
-//};
 
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
@@ -72,25 +64,22 @@ float vertices[] = {
 };
 
 glm::vec3 cubePositions[] = {
-    glm::vec3( 0.0f,  0.0f,  0.0f),
-    glm::vec3( 2.0f,  5.0f, -15.0f),
-    glm::vec3(-1.5f, -2.2f, -2.5f),
-    glm::vec3(-3.8f, -2.0f, -12.3f),
-    glm::vec3( 2.4f, -0.4f, -3.5f),
-    glm::vec3(-1.7f,  3.0f, -7.5f),
-    glm::vec3( 1.3f, -2.0f, -2.5f),
-    glm::vec3( 1.5f,  2.0f, -2.5f),
-    glm::vec3( 1.5f,  0.2f, -1.5f),
-    glm::vec3(-1.3f,  1.0f, -1.5f)
+        glm::vec3( 0.0f,  0.0f,  0.0f),
+        glm::vec3( 2.0f,  5.0f, -15.0f),
+        glm::vec3(-1.5f, -2.2f, -2.5f),
+        glm::vec3(-3.8f, -2.0f, -12.3f),
+        glm::vec3( 2.4f, -0.4f, -3.5f),
+        glm::vec3(-1.7f,  3.0f, -7.5f),
+        glm::vec3( 1.3f, -2.0f, -2.5f),
+        glm::vec3( 1.5f,  2.0f, -2.5f),
+        glm::vec3( 1.5f,  0.2f, -1.5f),
+        glm::vec3(-1.3f,  1.0f, -1.5f)
 };
 
 unsigned int indices[] = {
-    0, 1, 2,
-    0, 2, 3
+        0, 1, 2,
+        0, 2, 3
 };
-
-bool upPressed;
-bool downPressed;
 
 bool firstMouseCallback = true;
 
@@ -129,7 +118,6 @@ uint8* data;
 float yaw = -90.0f;
 float pitch;
 
-//glm::vec4 vec(1.0f, 0.0f, 0.0f, 1.0f);
 glm::mat4 trans = glm::mat4(1.0f);
 
 
@@ -172,10 +160,10 @@ int main() {
     engine::Shader::setShadersFolder(__SHADERS_PATH__);
 
     shader = new engine::Shader(
-        "triangle.vert",
-        "triangle.frag",
-        true,
-        true
+            "triangle.vert",
+            "triangle.frag",
+            true,
+            true
     );
 
     linkElementBufferObject();
@@ -290,8 +278,7 @@ void linkVertexAttributes() {
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*) 0 );
     glEnableVertexAttribArray(0);
-//    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*) (3 * sizeof(float)));
-//    glEnableVertexAttribArray(1);
+
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*) (3 * sizeof(float)));
     glEnableVertexAttribArray(1);
 }
@@ -333,40 +320,19 @@ inline void render() noexcept {
     shader->use();
     shader->setFloat("interpolation", interpolationVisibility);
 
-//    glm::mat4 model = glm::mat4(1.0f);
-//    model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-//    trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
-//    trans = glm::rotate(trans, (float)glfwGetTime(), glm::vec3(0.0, 0.0, 1.0));
-//    trans = glm::scale(trans, glm::vec3(0.5f, 0.5f, 0.5f));
-//    model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.5f, 1.0f, 1.0f));
-
-//    glm::mat4 view = glm::mat4(1.0f);
-//    view = glm::rotate(view, glm::radians(cameraRotate), glm::vec3(0.0f, 1.0f, 0.0f));
-//    view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f)); // objects in front of camera => camera pos reversed
-
     constexpr float rad = 10.0f;
 
-    float camX = std::sin((float)glfwGetTime()) * rad;
-    float camZ = std::cos((float)glfwGetTime()) * rad;
-
     glm::mat4 view = glm::lookAt(
-        glm::vec3(cameraPos.x, 0.0f, cameraPos.z), //pos
-//        cameraPos + cameraFront, //tar,
-        glm::vec3(cameraPos.x + cameraFront.x, cameraFront.y, cameraPos.z + cameraFront.z),
-        cameraUp //up
+            glm::vec3(cameraPos.x, 0.0f, cameraPos.z), //pos
+            glm::vec3(cameraPos.x + cameraFront.x, cameraFront.y, cameraPos.z + cameraFront.z),
+            cameraUp //up
     );
 
     glm::mat4 projection;
     projection = glm::perspective(glm::radians(fov), ratio, 0.1f, 100.0f);
 
-//    shader->setMat4("model", model);
     shader->setMat4("view", view);
     shader->setMat4("projection", projection);
-
-//    std::cout << glfwGetTime() << '\n';
-
-//    transformLoc = glGetUniformLocation(shader->getID(), "transform");
-//    glUniformMatrix4fv (transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture1);
@@ -375,8 +341,6 @@ inline void render() noexcept {
     glBindTexture(GL_TEXTURE_2D, texture2);
 
     glBindVertexArray(vertexArrayObject);
-
-//    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
     for(std::size_t i = 0; i < 10; i++) {
         glm::mat4 model = glm::mat4(1.0f);
@@ -389,28 +353,6 @@ inline void render() noexcept {
 
         glDrawArrays(GL_TRIANGLES, 0, 36);
     }
-
-//    shader->use();
-//    shader->setFloat("interpolation", interpolationVisibility);
-//
-//    trans = glm::mat4(1.0f);
-//    trans = glm::translate(trans, glm::vec3(-0.5f, 0.5f, 0.0f));
-//    trans = glm::rotate(trans, (float)std::sin(glfwGetTime()), glm::vec3(0.0, 0.0, 1.0));
-//    trans = glm::scale(trans, glm::vec3(0.5f, 0.5f, 0.5f));
-//
-//    transformLoc = glGetUniformLocation(shader->getID(), "transform");
-//    glUniformMatrix4fv (transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
-//
-//    glActiveTexture(GL_TEXTURE0);
-//    glBindTexture(GL_TEXTURE_2D, texture1);
-//
-//    glActiveTexture(GL_TEXTURE1);
-//    glBindTexture(GL_TEXTURE_2D, texture2);
-//
-//    glBindVertexArray(vertexArrayObject);
-//
-//    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-
 }
 
 void deleteShaders() {
@@ -493,8 +435,6 @@ float lastY;
 
 
 void mouseCallback(GLFWwindow* window, double xPos, double yPos){
-//    std::cout << xPos << ' ' << yPos << '\n';
-
     if (firstMouseCallback){
         lastX = (float) xPos;
         lastY = (float) yPos;
@@ -521,18 +461,13 @@ void mouseCallback(GLFWwindow* window, double xPos, double yPos){
     if(pitch < -89.0f)
         pitch = -89.0f;
 
-//    std::cout << yaw << ' ' << pitch << '\n';
-
     glm::vec3 direction;
-//    direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-//    direction.y = sin(glm::radians(pitch));
-//    direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
 
     forwardMovementVec.x = cos(glm::radians(yaw));
-    direction.y = sin(glm::radians(pitch));
     forwardMovementVec.z = sin(glm::radians(yaw));
 
     direction.x = forwardMovementVec.x * cos(glm::radians(pitch));
+    direction.y = sin(glm::radians(pitch));
     direction.z = forwardMovementVec.z * cos(glm::radians(pitch));
 
     cameraFront = glm::normalize(direction);

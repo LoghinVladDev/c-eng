@@ -7,6 +7,7 @@
 
 #include <exception>
 #include <iostream>
+#include <type_traits>
 
 //namespace engine { template <class T> class Matrix { public: class Row; }; }
 
@@ -189,6 +190,56 @@ namespace engine {
             return r;
         }
 
+        enum IdentityType {
+            SINT8,
+            SINT16,
+            SINT32,
+            SINT64,
+            UINT8,
+            UINT16,
+            UINT32,
+            UINT64,
+            FLOAT32,
+            FLOAT64,
+
+            CHAR = SINT8,
+
+            BYTE = UINT8,
+            BOOL = UINT8,
+
+            SHORT = SINT16,
+            SHORT_INT = SINT16,
+
+            UNSIGNED_SHORT = UINT16,
+            UNSIGNED_SHORT_INT = UINT16,
+
+            INT = SINT32,
+
+            UNSIGNED = UINT32,
+            UNSIGNED_INT = UINT32,
+
+            LONG = SINT64,
+            LONG_LONG = SINT64,
+            LONG_LONG_INT = SINT64,
+
+            UNSIGNED_LONG = UINT64,
+            UNSIGNED_LONG_LONG = UINT64,
+            UNSIGNED_LONG_LONG_INT = UINT64,
+
+            FLOAT = FLOAT32,
+            DOUBLE = FLOAT64
+        };
+
+        [[nodiscard]] static Matrix<T> identity(std::size_t) noexcept;
+
+//        [[nodiscard]] static Matrix<int> identityInt(std::size_t) noexcept;
+//        [[nodiscard]] static Matrix<float> identityFloat(std::size_t) noexcept;
+//        [[nodiscard]] static Matrix<double> identityDouble(std::size_t) noexcept;
+//        [[nodiscard]] static Matrix<bool> identityBool(std::size_t) noexcept;
+//        [[nodiscard]] static Matrix<unsigned int> identityUInt(std::size_t) noexcept;
+//        [[nodiscard]] static Matrix<long long> identityLong(std::size_t) noexcept;
+//        [[nodiscard]] static Matrix<unsigned long long> identityULong(std::size_t) noexcept;
+//
 //        template <typename U>
 //        [[nodiscard]] static Matrix identity(std::size_t) noexcept;
 //        template <>
@@ -199,6 +250,8 @@ namespace engine {
 //        [[nodiscard]] static Matrix<unsigned int> identity(std::size_t, unsigned int dummyParam = 0) noexcept;
 //        [[nodiscard]] static Matrix<long long> identity(std::size_t, long long dummyParam = 0) noexcept;
 //        [[nodiscard]] static Matrix<unsigned long long> identity(std::size_t, unsigned long long dummyParam = 0) noexcept;
+
+
 
         Matrix& operator =  (const Matrix&) noexcept;
         Matrix& operator += (const Matrix&) noexcept (false);
@@ -396,6 +449,51 @@ engine::Matrix<T>& engine::Matrix<T>::operator *= (T obj) noexcept{
     return *this;
 }
 
+#define __GEN_ID_MAT__( _null_val_, _valid_val_, _type_, _size_)        \
+    engine::Matrix<_type_> r(_size_, _size_);                           \
+    for(std::size_t i = 0; i < _size_; i++)                             \
+        for(std::size_t j = 0; j < _size_; j++)                         \
+            if( i == j )                                                \
+                r[i][j] = _valid_val_;                                  \
+            else                                                        \
+                r[i][j] = _null_val_;                                   \
+    return r;
+
+
+template <class T>
+[[nodiscard]] engine::Matrix<T> engine::Matrix<T>::identity(std::size_t size) noexcept {
+    if constexpr ( std::is_same_v<T, int> ) {
+        __GEN_ID_MAT__(0, 1, int, size)
+    } else if constexpr ( std::is_same_v<T, float> ) {
+        __GEN_ID_MAT__(0.0f, 1.0f, float, size)
+    } else if constexpr ( std::is_same_v<T, double> ) {
+        __GEN_ID_MAT__(0.0, 1.0, double, size)
+    } else if constexpr ( std::is_same_v<T, bool> ) {
+        __GEN_ID_MAT__(false, true, bool, size)
+    } else if constexpr ( std::is_same_v<T, unsigned int> ) {
+        __GEN_ID_MAT__(0U, 1U, unsigned int, size)
+    } else if constexpr ( std::is_same_v<T, long long int> ) {
+        __GEN_ID_MAT__(0LL, 1LL, long long int, size)
+    } else if constexpr ( std::is_same_v<T, unsigned long long int> ) {
+        __GEN_ID_MAT__(0ULL, 1ULL, unsigned long long int, size)
+    } else {
+        engine::Matrix<T> r(1,1);
+        return r;
+    }
+
+//    return r;
+}
+//template <class T>
+//engine::Matrix<int> engine::Matrix<int>::identity<int>(std::size_t size) noexcept {
+//    engine::Matrix<int> r(size, size);
+//    for(std::size_t i = 0; i < size; i++)
+//        for(std::size_t j = 0; j < size; j++)
+//            if(i == j)
+//                r[i][j] = 1;
+//            else
+//                r[i][j] = 0;
+//}
+
 //template<class T>
 //template<>
 //engine::Matrix<T> engine::Matrix<T>::identity<int>(std::size_t) noexcept {
@@ -408,16 +506,6 @@ engine::Matrix<T>& engine::Matrix<T>::operator *= (T obj) noexcept{
 //    return engine::Matrix<T>(2,2);
 //}
 //
-//template <class T>
-//engine::Matrix<int> engine::Matrix<int>::identity<int>(std::size_t size) noexcept {
-//    engine::Matrix<int> r(size, size);
-//    for(std::size_t i = 0; i < size; i++)
-//        for(std::size_t j = 0; j < size; j++)
-//            if(i == j)
-//                r[i][j] = 1;
-//            else
-//                r[i][j] = 0;
-//}
 
 //template <class T>
 //engine::Matrix<float> engine::Matrix<T>::identity(std::size_t size, [[maybe_unused]] float dummyParam) noexcept {

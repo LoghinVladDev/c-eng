@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.5)
 project(eng1)
 
 set(CMAKE_CXX_STANDARD 20)
+set(OpenGL_GL_PREFERENCE GLVND)
 #set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
@@ -18,7 +19,11 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 add_subdirectory(src/glfw_src)
 add_subdirectory(glad)
+add_subdirectory(glm)
+#add_subdirectory(glm/glm)
 
+#include_directories(glm/glm)
+include_directories(glm)
 include_directories(src/glfw_src/include)
 include_directories(src/GLFW/src/engine)
 include_directories(glad/include)
@@ -334,6 +339,33 @@ add_executable( glfwSandbox
         src/GLFW/src/engine/obj/util/data/Matrix.h
         src/GLFW/src/engine/obj/util/data/Matrix.cpp
 )
+
+add_executable( glfwSandbox2
+        glad/src/glad.c
+        glad/include/glad/glad.h
+        glad/include/KHR/khrplatform.h
+        src/GLFW/src/engine/tests/sandbox/glfwSandbox2.cpp
+)
+
+target_link_libraries( glfwSandbox2 glfw ${GLFW_LIBRARIES} )
+
+add_executable( glfwWhiteboard1
+        glad/src/glad.c
+        glad/include/glad/glad.h
+        glad/include/KHR/khrplatform.h
+        src/GLFW/src/engine/tests/sandbox/whiteboard1.cpp
+)
+
+target_link_libraries( glfwWhiteboard1 glfw ${GLFW_LIBRARIES} )
+
+add_executable( glfwWhiteboard2
+        glad/src/glad.c
+        glad/include/glad/glad.h
+        glad/include/KHR/khrplatform.h
+        src/GLFW/src/engine/tests/sandbox/whiteboard2.cpp
+)
+
+target_link_libraries( glfwWhiteboard2 glfw ${GLFW_LIBRARIES} )
 
 #set_target_properties(
 #        drawTests

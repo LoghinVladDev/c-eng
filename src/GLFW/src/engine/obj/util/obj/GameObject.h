@@ -30,17 +30,17 @@ namespace engine {
     private:
 
     protected:
-        VectorF _scaleBeforeSetterCall{0.0f, 0.0f, 0.0f};
+//        VectorF _scaleBeforeSetterCall{0.0f, 0.0f, 0.0f};
         Transform _transform;
-        engine::Array <std::string> _tagsArray;
+//        engine::Array <std::string> _tagsArray;
 
-        bool _wireDraw{false};
+//        bool _wireDraw{false};
         bool _destroyed{false};
         bool _visible{true};
         bool _simulatePhysics{true};
-        bool _enableDebugTracking{false};
+//        bool _enableDebugTracking{false};
 
-        uint8 _drawPriority{UINT8_MAX};
+//        uint8 _drawPriority{UINT8_MAX};
 
         GameObject() noexcept;
 
@@ -57,7 +57,7 @@ namespace engine {
 
         [[maybe_unused]] virtual void addMouseListener(MouseListener *listener) noexcept;
 
-        [[maybe_unused]] engine::Array <std::string> &getTags() noexcept { return this->_tagsArray; }
+//        [[maybe_unused]] engine::Array <std::string> &getTags() noexcept { return this->_tagsArray; }
 
         [[maybe_unused]] Transform &getTransform() noexcept { return this->_transform; }
 
@@ -70,11 +70,11 @@ namespace engine {
         [[maybe_unused]] virtual void setVisibility(bool visible) noexcept { this->_visible = visible; }
         [[maybe_unused]] virtual void simulatePhysics(bool toggle) noexcept { this->_simulatePhysics = toggle; }
         [[maybe_unused]] virtual bool doesSimulatePhysics() noexcept { return this->_simulatePhysics; }
-        [[maybe_unused]] virtual void drawMeshOnly() noexcept { this->_wireDraw = true; }
+//        [[maybe_unused]] virtual void drawMeshOnly() noexcept { this->_wireDraw = true; }
 
         [[maybe_unused]] virtual std::string toString() noexcept;
 
-        [[maybe_unused]] void setDebugTrackObject(bool toggle) noexcept { this->_enableDebugTracking = toggle; }
+//        [[maybe_unused]] void setDebugTrackObject(bool toggle) noexcept { this->_enableDebugTracking = toggle; }
 
         friend bool (::operator<)(const GameObject &, const GameObject &);
         friend bool (::operator>)(const GameObject &, const GameObject &);

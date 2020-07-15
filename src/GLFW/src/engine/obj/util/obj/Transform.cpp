@@ -47,8 +47,14 @@
 }
 
 [[maybe_unused]] inline engine::Transform &engine::Transform::setScale(const Vector & scale) noexcept {
+    this->_scale.x = scale.getX();
+    this->_scale.y = scale.getY();
+    this->_scale.z = scale.getZ();
+    return *this;
+}
+
+[[maybe_unused]] inline engine::Transform& engine::Transform::setScale(const glm::vec3& scale) noexcept {
     this->_scale = scale;
-    this->_scaleModified = true;
     return *this;
 }
 

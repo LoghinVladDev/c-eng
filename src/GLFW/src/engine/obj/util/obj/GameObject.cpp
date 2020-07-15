@@ -4,14 +4,14 @@
 
 #include "GameObject.h"
 
-engine::GameObject::GameObject() noexcept : _transform(Transform()), _tagsArray(engine::Array<std::string>()) {
+engine::GameObject::GameObject() noexcept : _transform(Transform()) { //, _tagsArray(engine::Array<std::string>()) {
 //    this->_transform = Transform();
 //    this->_tagsArray = EngineUtility::Array<std::string>();
 }
 
 [[maybe_unused]] engine::GameObject::GameObject(const GameObject& obj) noexcept {
     this->_transform = obj._transform;
-    this->_tagsArray = obj._tagsArray;
+//    this->_tagsArray = obj._tagsArray;
 }
 
 [[maybe_unused]] void engine::GameObject::realUpdate() noexcept {
@@ -33,23 +33,28 @@ engine::GameObject::GameObject() noexcept : _transform(Transform()), _tagsArray(
 }
 
 inline bool operator<(const engine::GameObject & leftOperand, const engine::GameObject & rightOperand) {
-    return leftOperand._drawPriority < rightOperand._drawPriority;
+//    return leftOperand._drawPriority < rightOperand._drawPriority;
+    return false;
 }
 
 inline bool operator>(const engine::GameObject & leftOperand, const engine::GameObject & rightOperand) {
-    return leftOperand._drawPriority > rightOperand._drawPriority;
+//    return leftOperand._drawPriority > rightOperand._drawPriority;
+    return false;
 }
 
 inline bool operator<=(const engine::GameObject & leftOperand, const engine::GameObject & rightOperand) {
-    return leftOperand._drawPriority <= rightOperand._drawPriority;
+//    return leftOperand._drawPriority <= rightOperand._drawPriority;
+    return false;
 }
 
 inline bool operator>=(const engine::GameObject & leftOperand, const engine::GameObject & rightOperand) {
-    return leftOperand._drawPriority >= rightOperand._drawPriority;
+//    return leftOperand._drawPriority >= rightOperand._drawPriority;
+    return false;
 }
 
 inline bool operator==(const engine::GameObject & leftOperand, const engine::GameObject & rightOperand) {
-    return leftOperand._drawPriority == rightOperand._drawPriority;
+//    return leftOperand._drawPriority == rightOperand._drawPriority;
+    return false;
 }
 
 [[maybe_unused]] std::string engine::GameObject::toString() noexcept {
@@ -59,10 +64,10 @@ inline bool operator==(const engine::GameObject & leftOperand, const engine::Gam
         std::to_string(this->_visible) +
         ", destroyed = " +
         std::to_string(this->_destroyed) +
-        ", tags = " +
-        this->_tagsArray.toString() +
-        ", render priority = " +
-        std::to_string(this->_drawPriority) +
+//        ", tags = " +
+//        this->_tagsArray.toString() +
+//        ", render priority = " +
+//        std::to_string(this->_drawPriority) +
         " }";
 }
 

@@ -180,6 +180,26 @@ std::string engine::Shader::_pathToShadersFolder = std::string(__NO_PATH_GIVEN__
     return *this;
 }
 
+engine::Shader &engine::Shader::setVec3(const std::string & name, const glm::vec3 & value) noexcept {
+    glUniform3f ( glGetUniformLocation(ID, name.c_str()), value.x, value.y, value.z );
+    return *this;
+}
+
+engine::Shader &engine::Shader::setVec4(const std::string & name, const glm::vec4 & value) noexcept {
+    glUniform4f ( glGetUniformLocation(ID, name.c_str()), value.x, value.y, value.z, value.w );
+    return *this;
+}
+
+engine::Shader &engine::Shader::setMat3(const std::string & name, const glm::mat3 & value) noexcept {
+    glUniformMatrix3fv ( glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, glm::value_ptr(value) );
+    return *this;
+}
+
+engine::Shader &engine::Shader::setMat4(const std::string & name, const glm::mat4 & value) noexcept {
+    glUniformMatrix4fv ( glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, glm::value_ptr(value) );
+    return *this;
+}
+
 void engine::Shader::diagnoseProgramCompilation(int programID) noexcept {
     int32 successStatus;
     char infoLog[512];
