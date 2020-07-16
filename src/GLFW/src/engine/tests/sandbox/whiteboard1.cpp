@@ -14,6 +14,7 @@
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <src/GLFW/src/engine/obj/util/obj/stdObj/Camera.h>
 
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
@@ -96,6 +97,7 @@ uint32 texture1;
 uint32 texture2;
 
 engine::Shader *shader;
+engine::Camera *camera;
 
 void mouseCallback(GLFWwindow*, double, double);
 void framebufferSizeCallback(GLFWwindow* window, int width, int height);
@@ -157,6 +159,7 @@ int main() {
 
     prepareVBO();
 
+    camera = new engine::Camera(glm::vec3(0.0f, 0.0f, 0.6f));
     engine::Shader::setShadersFolder(__SHADERS_PATH__);
 
     shader = new engine::Shader(
@@ -231,6 +234,8 @@ int main() {
         glfwPollEvents();
     }
 
+    delete camera;
+
     glDeleteVertexArrays(1, &vertexArrayObject);
     glDeleteBuffers(1, &vertexBufferObject);
     glDeleteBuffers(1, &elementBufferObject);
@@ -293,24 +298,23 @@ bool left = false;
 bool right = false;
 
 float ratio = 800.0f / 600.0f;
-float fov=45.0f;
+float fov=85.0f;
 void update() noexcept {
-    float cameraSpeed = 2.5f * deltaTime;
-//    constexpr float cameraSpeed = 0.05f;
+//    float cameraSpeed = 2.5f * deltaTime;
 
-    if( up && down ) {
+//    if( up && down ) {
 
-    } else if( up )
-        cameraPos += cameraSpeed * forwardMovementVec;
-    else if( down )
-        cameraPos -= cameraSpeed * forwardMovementVec;
+//    } else if( up )
+//        cameraPos += cameraSpeed * forwardMovementVec;
+//    else if( down )
+//        cameraPos -= cameraSpeed * forwardMovementVec;
 
-    if( left && right ) {
-
-    } else if( left )
-        cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
-    else if ( right )
-        cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+//    if( left && right ) {
+//
+//    } else if( left )
+//        cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+//    else if ( right )
+//        cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
 }
 
 unsigned int transformLoc;
@@ -322,11 +326,13 @@ inline void render() noexcept {
 
     constexpr float rad = 10.0f;
 
-    glm::mat4 view = glm::lookAt(
-            glm::vec3(cameraPos.x, 0.0f, cameraPos.z), //pos
-            glm::vec3(cameraPos.x + cameraFront.x, cameraFront.y, cameraPos.z + cameraFront.z),
-            cameraUp //up
-    );
+    glm::mat4 view = camera->getViewMatrix();
+
+//    glm::mat4 view = glm::lookAt(
+//            glm::vec3(cameraPos.x, 0.0f, cameraPos.z), //pos
+//            glm::vec3(cameraPos.x + cameraFront.x, cameraFront.y, cameraPos.z + cameraFront.z),
+//            cameraUp //up
+//    );
 
     glm::mat4 projection;
     projection = glm::perspective(glm::radians(fov), ratio, 0.1f, 100.0f);
@@ -346,8 +352,8 @@ inline void render() noexcept {
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model, cubePositions[i]);
         float angle = 20.0f * i;
-        if(i == 0 || i % 3 == 0)
-            model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.5f, 1.0f, 1.0f));
+//        if(i == 0 || i % 3 == 0)
+//            model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.5f, 1.0f, 1.0f));
         model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
         shader->setMat4("model", model);
 
@@ -440,35 +446,37 @@ void mouseCallback(GLFWwindow* window, double xPos, double yPos){
         lastY = (float) yPos;
         firstMouseCallback = false;
     }
-
+//
     auto xPosF = (float) xPos;
     auto yPosF = (float) yPos;
-
+//
     float xOffset = xPosF - lastX;
     float yOffset = lastY - yPosF;
     lastX = xPosF;
     lastY = yPosF;
-
+//
     constexpr float sensitivity = 0.1f;
     xOffset *= sensitivity;
     yOffset *= sensitivity;
 
-    yaw += xOffset;
-    pitch += yOffset;
-
-    if(pitch > 89.0f)
-        pitch = 89.0f;
-    if(pitch < -89.0f)
-        pitch = -89.0f;
-
-    glm::vec3 direction;
-
-    forwardMovementVec.x = cos(glm::radians(yaw));
-    forwardMovementVec.z = sin(glm::radians(yaw));
-
-    direction.x = forwardMovementVec.x * cos(glm::radians(pitch));
-    direction.y = sin(glm::radians(pitch));
-    direction.z = forwardMovementVec.z * cos(glm::radians(pitch));
-
-    cameraFront = glm::normalize(direction);
+    camera->processOrientation(xOffset, yOffset, true);
+//
+//    yaw += xOffset;
+//    pitch += yOffset;
+//
+//    if(pitch > 89.0f)
+//        pitch = 89.0f;
+//    if(pitch < -89.0f)
+//        pitch = -89.0f;
+//
+//    glm::vec3 direction;
+//
+//    forwardMovementVec.x = cos(glm::radians(yaw));
+//    forwardMovementVec.z = sin(glm::radians(yaw));
+//
+//    direction.x = forwardMovementVec.x * cos(glm::radians(pitch));
+//    direction.y = sin(glm::radians(pitch));
+//    direction.z = forwardMovementVec.z * cos(glm::radians(pitch));
+//
+//    cameraFront = glm::normalize(direction);
 }

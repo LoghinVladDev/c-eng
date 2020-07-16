@@ -39,7 +39,9 @@ namespace engine {
     public:
 //        Camera() = delete;
 
-        [[maybe_unused]] Camera(
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "cppcoreguidelines-pro-type-member-init"
+        [[maybe_unused]] explicit Camera(
                 glm::vec3 location = glm::vec3(0.0f, 0.0f, 0.0f),
                 glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f),
                 float yaw = DEFAULT_YAW,
@@ -53,6 +55,7 @@ namespace engine {
             this->_transform.setLocation(location);
             this->updateCameraVectors();
         }
+#pragma clang diagnostic pop
 
         [[maybe_unused]] explicit Camera(const Transform &);
 

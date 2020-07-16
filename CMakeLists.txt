@@ -330,7 +330,12 @@ add_executable( drawTests src/GLFW/src/engine/tests/drawTests.cpp
         src/GLFW/src/engine/obj/util/shader/Shader.h
         src/GLFW/src/engine/obj/util/diag/Diagnostic.cpp
         src/GLFW/src/engine/obj/util/diag/Diagnostic.h
-        stb_image/stb-image.h src/GLFW/src/engine/obj/util/geom/Vector2.cpp src/GLFW/src/engine/obj/util/geom/Vector2.h src/GLFW/src/engine/obj/util/data/Matrix.cpp src/GLFW/src/engine/obj/util/data/Matrix.h)
+        stb_image/stb-image.h
+        src/GLFW/src/engine/obj/util/geom/Vector2.cpp
+        src/GLFW/src/engine/obj/util/geom/Vector2.h
+        src/GLFW/src/engine/obj/util/data/Matrix.cpp
+        src/GLFW/src/engine/obj/util/data/Matrix.h
+)
 
 target_link_libraries( drawTests glfw ${GLFW_LIBRARIES} )
 
@@ -338,13 +343,23 @@ add_executable( glfwSandbox
         src/GLFW/src/engine/tests/glfwSandbox.cpp
         src/GLFW/src/engine/obj/util/data/Matrix.h
         src/GLFW/src/engine/obj/util/data/Matrix.cpp
-)
+        src/GLFW/src/engine/obj/util/shader/Shader.cpp
+        src/GLFW/src/engine/obj/util/shader/Shader.h
+        src/GLFW/src/engine/obj/util/diag/Diagnostic.cpp
+        src/GLFW/src/engine/obj/util/diag/Diagnostic.h
+        stb_image/stb-image.h
+    )
 
 add_executable( glfwSandbox2
         glad/src/glad.c
         glad/include/glad/glad.h
         glad/include/KHR/khrplatform.h
         src/GLFW/src/engine/tests/sandbox/glfwSandbox2.cpp
+        src/GLFW/src/engine/obj/util/shader/Shader.cpp
+        src/GLFW/src/engine/obj/util/shader/Shader.h
+        src/GLFW/src/engine/obj/util/diag/Diagnostic.cpp
+        src/GLFW/src/engine/obj/util/diag/Diagnostic.h
+        stb_image/stb-image.h
 )
 
 target_link_libraries( glfwSandbox2 glfw ${GLFW_LIBRARIES} )
@@ -354,6 +369,23 @@ add_executable( glfwWhiteboard1
         glad/include/glad/glad.h
         glad/include/KHR/khrplatform.h
         src/GLFW/src/engine/tests/sandbox/whiteboard1.cpp
+        src/GLFW/src/engine/obj/util/shader/Shader.cpp
+        src/GLFW/src/engine/obj/util/shader/Shader.h
+        src/GLFW/src/engine/obj/util/diag/Diagnostic.cpp
+        src/GLFW/src/engine/obj/util/diag/Diagnostic.h
+        src/GLFW/src/engine/obj/util/obj/GameObject.cpp
+        src/GLFW/src/engine/obj/util/obj/GameObject.h
+        src/GLFW/src/engine/obj/util/obj/Transform.cpp
+        src/GLFW/src/engine/obj/util/obj/Transform.h
+        src/GLFW/src/engine/obj/util/geom/Vector.cpp
+        src/GLFW/src/engine/obj/util/geom/Vector.h
+        src/GLFW/src/engine/Engine.cpp
+        src/GLFW/src/engine/Engine.h
+        src/GLFW/src/engine/obj/window/Window.cpp
+        src/GLFW/src/engine/obj/window/Window.h
+        src/GLFW/src/engine/obj/util/struct/inputAxisFunc.c
+        src/GLFW/src/engine/obj/util/struct/inputAxisFunc.h
+        stb_image/stb-image.h
 )
 
 target_link_libraries( glfwWhiteboard1 glfw ${GLFW_LIBRARIES} )
@@ -363,6 +395,11 @@ add_executable( glfwWhiteboard2
         glad/include/glad/glad.h
         glad/include/KHR/khrplatform.h
         src/GLFW/src/engine/tests/sandbox/whiteboard2.cpp
+        src/GLFW/src/engine/obj/util/shader/Shader.cpp
+        src/GLFW/src/engine/obj/util/shader/Shader.h
+        src/GLFW/src/engine/obj/util/diag/Diagnostic.cpp
+        src/GLFW/src/engine/obj/util/diag/Diagnostic.h
+        stb_image/stb-image.h
 )
 
 target_link_libraries( glfwWhiteboard2 glfw ${GLFW_LIBRARIES} )
