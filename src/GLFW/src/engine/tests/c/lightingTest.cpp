@@ -141,6 +141,9 @@ engine::Shader *shader;
 engine::Shader *lightShader;
 engine::Camera *camera;
 
+glm::mat4 matInverse(const glm::mat4&);
+glm::mat3 matInverse(const glm::mat3&);
+
 void mouseCallback(GLFWwindow*, double, double);
 void framebufferSizeCallback(GLFWwindow* window, int width, int height);
 void processInputCallback (GLFWwindow* window, int key, int scanCode, int action, int mods);
@@ -384,6 +387,19 @@ void update() noexcept {
 
 unsigned int transformLoc;
 
+glm::mat4 matInverse(const glm::mat4& mat){
+    // A ^ -1 = 1 / det(A) * adj(A)
+//    glm::mat4 adj =
+return glm::mat4(1.0f);
+}
+
+glm::mat3 matInverse(const glm::mat3& mat){
+//    float det = glm::determinant(mat);
+//    if(det != 0.0f) det = 1.0f / det;
+//    return det * mat;
+    return glm::mat3(1.0f);
+}
+
 constexpr float lightScaleConst = 0.1f;
 
 glm::vec3 lightLoc = glm::vec3(0.0f, 1.0f, 0.0f);
@@ -392,7 +408,6 @@ glm::vec3 lightScale = glm::vec3(lightScaleConst, lightScaleConst, lightScaleCon
 inline void render() noexcept {
     int var = 0;
     shader->use();
-//    shader->setFloat("interpolation", interpolationVisibility);
 
     glm::mat4 view = camera->getViewMatrix();
 
@@ -404,6 +419,8 @@ inline void render() noexcept {
     shader->setVec3("objectColor", glm::vec3(1.0f, 0.5f, 0.31f));
     shader->setVec3("lightColor", glm::vec3(1.0f, 1.0f, 1.0f));
     shader->setVec3("lightPos", lightLoc);
+    shader->setVec3("viewPosition", camera->getTransform().getLocation());
+    shader->setInt("specularShineStrength", 64);
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture1);
@@ -413,24 +430,25 @@ inline void render() noexcept {
 
     glBindVertexArray(vertexArrayObject);
 
-    for(std::size_t i = 0; i < 2; i++) {
+    for(auto & cubePosition : cubePositions) {
         glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, cubePositions[i]);
-//        float angle = 20.0f * i;
-//        model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+        model = glm::translate(model, cubePosition);
+        shader->setMat4("TIModel", glm::transpose(glm::inverse(model)));
         shader->setMat4("model", model);
 
         glDrawArrays(GL_TRIANGLES, 0, 36);
     }
 
+    glm::mat4 lightModel = glm::scale(glm::translate(glm::mat4(1.0f), lightLoc), lightScale);
+
     lightShader->use();
     lightShader->setMat4("view", view);
     lightShader->setMat4("projection", projection);
-    lightShader->setMat4("model", glm::scale(glm::translate(glm::mat4(1.0f), lightLoc), lightScale));
+    lightShader->setMat4("model", lightModel);
 
     double offset = glfwGetTime() * 40;
 
-    lightLoc = glm::vec3(sin(glm::radians(offset)) * 2, sin(glm::radians(offset)), cos(glm::radians(offset)) * 2);
+    lightLoc = glm::vec3(sin(glm::radians(offset)) * 2, sin(glm::radians(offset)) * 0.5, cos(glm::radians(offset)) * 2);
 
     glBindVertexArray(lightVAO);
 
