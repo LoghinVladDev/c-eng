@@ -20,61 +20,98 @@ float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 float currentFrame = 0.0f;
 
+
 float vertices[] = {
-        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-        0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
-        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f, 0.0f,  0.0f, -1.0f,
+         0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 0.0f,  0.0f, -1.0f,
+        0.5f,  0.5f, -0.5f, 1.0f, 1.0f, 0.0f,  0.0f, -1.0f,
+        0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 0.0f,  0.0f, -1.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 0.0f,  0.0f, -1.0f,
+        -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, 0.0f,  0.0f, -1.0f,
 
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-        0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-        0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+        -0.5f, -0.5f,  0.5f, 0.0f, 0.0f, 0.0f,  0.0f, 1.0f,
+        0.5f, -0.5f,  0.5f, 1.0f, 0.0f, 0.0f,  0.0f, 1.0f,
+        0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 0.0f,  0.0f, 1.0f,
+        0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 0.0f,  0.0f, 1.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f, 1.0f, 0.0f,  0.0f, 1.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f, 0.0f,  0.0f, 1.0f,
 
-        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        -0.5f,  0.5f,  0.5f,1.0f, 0.0f, -1.0f,  0.0f,  0.0f,
+        -0.5f,  0.5f, -0.5f, 1.0f, 1.0f, -1.0f,  0.0f,  0.0f,
+        -0.5f, -0.5f, -0.5f, 0.0f, 1.0f, -1.0f,  0.0f,  0.0f,
+        -0.5f, -0.5f, -0.5f, 0.0f, 1.0f, -1.0f,  0.0f,  0.0f,
+        -0.5f, -0.5f,  0.5f, 0.0f, 0.0f, -1.0f,  0.0f,  0.0f,
+        -0.5f,  0.5f,  0.5f, 1.0f, 0.0f, -1.0f,  0.0f,  0.0f,
 
-        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 1.0f,  0.0f,  0.0f,
+        0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 1.0f,  0.0f,  0.0f,
+        0.5f, -0.5f, -0.5f, 0.0f, 1.0f, 1.0f,  0.0f,  0.0f,
+        0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 1.0f,  0.0f,  0.0f,
+        0.5f, -0.5f,  0.5f,  0.0f, 0.0f, 1.0f,  0.0f,  0.0f,
+        0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 1.0f,  0.0f,  0.0f,
 
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
-        0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-        0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, -1.0f,  0.0f,
+        0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 0.0f, -1.0f,  0.0f,
+        0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f, -1.0f,  0.0f,
+        0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f, -1.0f,  0.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f, 0.0f, -1.0f,  0.0f,
+        -0.5f, -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, -1.0f,  0.0f,
 
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
+        -0.5f,  0.5f, -0.5f, 0.0f, 1.0f,  0.0f,  1.0f,  0.0f,
+        0.5f,  0.5f, -0.5f, 1.0f, 1.0f,  0.0f,  1.0f,  0.0f,
+        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,  0.0f,  1.0f,  0.0f,
+        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,  0.0f,  1.0f,  0.0f,
+        -0.5f,  0.5f,  0.5f, 0.0f, 0.0f,  0.0f,  1.0f,  0.0f,
+        -0.5f,  0.5f, -0.5f , 0.0f, 1.0f, 0.0f,  1.0f,  0.0f
+};
+
+float lightVertices[] = {
+        -0.5f, -0.5f, -0.5f, // 0.0f, 0.0f,
+        0.5f, -0.5f, -0.5f, // 1.0f, 0.0f,
+        0.5f,  0.5f, -0.5f,  //1.0f, 1.0f,
+        0.5f,  0.5f, -0.5f,//  1.0f, 1.0f,
+        -0.5f,  0.5f, -0.5f,//  0.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f, // 0.0f, 0.0f,
+
+        -0.5f, -0.5f,  0.5f, // 0.0f, 0.0f,
+        0.5f, -0.5f,  0.5f,  //1.0f, 0.0f,
+        0.5f,  0.5f,  0.5f, // 1.0f, 1.0f,
+        0.5f,  0.5f,  0.5f, // 1.0f, 1.0f,
+        -0.5f,  0.5f,  0.5f,//  0.0f, 1.0f,
+        -0.5f, -0.5f,  0.5f,//  0.0f, 0.0f,
+
+        -0.5f,  0.5f,  0.5f,  //1.0f, 0.0f,
+        -0.5f,  0.5f, -0.5f, // 1.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f, // 0.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f, // 0.0f, 1.0f,
+        -0.5f, -0.5f,  0.5f, // 0.0f, 0.0f,
+        -0.5f,  0.5f,  0.5f, // 1.0f, 0.0f,
+
+        0.5f,  0.5f,  0.5f, // 1.0f, 0.0f,
+        0.5f,  0.5f, -0.5f, // 1.0f, 1.0f,
+        0.5f, -0.5f, -0.5f,  //0.0f, 1.0f,
+        0.5f, -0.5f, -0.5f, // 0.0f, 1.0f,
+        0.5f, -0.5f,  0.5f, // 0.0f, 0.0f,
+        0.5f,  0.5f,  0.5f, // 1.0f, 0.0f,
+
+        -0.5f, -0.5f, -0.5f, // 0.0f, 1.0f,
+        0.5f, -0.5f, -0.5f,  //1.0f, 1.0f,
+        0.5f, -0.5f,  0.5f, // 1.0f, 0.0f,
+        0.5f, -0.5f,  0.5f, // 1.0f, 0.0f,
+        -0.5f, -0.5f,  0.5f,//  0.0f, 0.0f,
+        -0.5f, -0.5f, -0.5f, // 0.0f, 1.0f,
+
+        -0.5f,  0.5f, -0.5f, // 0.0f, 1.0f,
+        0.5f,  0.5f, -0.5f,  //1.0f, 1.0f,
+        0.5f,  0.5f,  0.5f, // 1.0f, 0.0f,
+        0.5f,  0.5f,  0.5f, // 1.0f, 0.0f,
+        -0.5f,  0.5f,  0.5f, // 0.0f, 0.0f,
+        -0.5f,  0.5f, -0.5f //, 0.0f, 1.0f
 };
 
 glm::vec3 cubePositions[] = {
-        glm::vec3( 0.0f,  0.0f,  0.0f),
-        glm::vec3( 2.0f,  5.0f, -15.0f),
-        glm::vec3(-1.5f, -2.2f, -2.5f),
-        glm::vec3(-3.8f, -2.0f, -12.3f),
-        glm::vec3( 2.4f, -0.4f, -3.5f),
-        glm::vec3(-1.7f,  3.0f, -7.5f),
-        glm::vec3( 1.3f, -2.0f, -2.5f),
-        glm::vec3( 1.5f,  2.0f, -2.5f),
-        glm::vec3( 1.5f,  0.2f, -1.5f),
-        glm::vec3(-1.3f,  1.0f, -1.5f)
+        glm::vec3( -1.0f,  0.0f,  0.0f),
+        glm::vec3( 1.0f,  0.0f, 0.0f)
 };
 
 unsigned int indices[] = {
@@ -91,12 +128,17 @@ unsigned int vertexShader;
 unsigned int fragmentShader;
 unsigned int shaderProgram;
 
+unsigned int lightVAO;
+unsigned int lightVBO;
+unsigned int lightEBO;
+
 float interpolationVisibility = 0.2f;
 
 uint32 texture1;
 uint32 texture2;
 
 engine::Shader *shader;
+engine::Shader *lightShader;
 engine::Camera *camera;
 
 void mouseCallback(GLFWwindow*, double, double);
@@ -160,6 +202,13 @@ int main() {
             true
     );
 
+    lightShader = new engine::Shader(
+            "light.vert",
+            "light.frag",
+            true,
+            true
+    );
+
     linkElementBufferObject();
     linkVertexAttributes();
 
@@ -213,7 +262,7 @@ int main() {
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
 
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+//        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         update();
@@ -235,6 +284,7 @@ int main() {
     glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &nrAttrib);
 
     delete shader;
+    delete lightShader;
 
     std::cout << nrAttrib << '\n';
 
@@ -245,6 +295,7 @@ int main() {
 
 void linkElementBufferObject(){
     glGenBuffers(1, &elementBufferObject);
+    glGenBuffers(1, &lightEBO);
 }
 
 #pragma clang diagnostic push
@@ -270,11 +321,27 @@ void linkVertexAttributes() {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBufferObject);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*) 0 );
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*) 0 );
     glEnableVertexAttribArray(0);
 
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*) (3 * sizeof(float)));
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*) (3 * sizeof(float)));
     glEnableVertexAttribArray(1);
+
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*) (5 * sizeof(float)));
+    glEnableVertexAttribArray(2);
+
+    glGenVertexArrays(1, &lightVAO);
+    glBindVertexArray(lightVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, lightVBO);
+
+    glBufferData(GL_ARRAY_BUFFER, sizeof(lightVertices), lightVertices, GL_STATIC_DRAW);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, lightEBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*) 0);
+    glEnableVertexAttribArray(0);
+
 }
 
 #pragma clang diagnostic pop
@@ -287,48 +354,87 @@ bool left = false;
 bool right = false;
 
 float ratio = 800.0f / 600.0f;
-float fov=85.0f;
+float fov=60.0f;
 void update() noexcept {
+    constexpr float movementSpeed = 2.5f;
+    float velocity = movementSpeed * deltaTime;
+
+    float origY = camera->getTransform().getLocation().y;
+
+//    glm::vec3 front = camera->getFront();
+
+    if(up && down) {
+
+    } else if (up) {
+        camera->getTransform().getLocation() += camera->getWorldFront() * velocity;
+    } else if (down) {
+        camera->getTransform().getLocation() -= camera->getWorldFront() * velocity;
+    }
+
+    if(left && right) {
+
+    } else if(left) {
+        camera->getTransform().getLocation() -= camera->getRight() * velocity;
+    } else if(right) {
+        camera->getTransform().getLocation() += camera->getRight() * velocity;
+    }
+
+    camera->getTransform().getLocation().y = origY;
 }
 
 unsigned int transformLoc;
 
+constexpr float lightScaleConst = 0.1f;
+
+glm::vec3 lightLoc = glm::vec3(0.0f, 1.0f, 0.0f);
+glm::vec3 lightScale = glm::vec3(lightScaleConst, lightScaleConst, lightScaleConst);
 
 inline void render() noexcept {
-    std::cout << -1 << '\n';
     int var = 0;
-    std::cout << var << '\n';
     shader->use();
-    shader->setFloat("interpolation", interpolationVisibility);
+//    shader->setFloat("interpolation", interpolationVisibility);
 
     glm::mat4 view = camera->getViewMatrix();
 
-    std::cout << var << '\n';
     glm::mat4 projection;
     projection = glm::perspective(glm::radians(fov), ratio, 0.1f, 100.0f);
 
     shader->setMat4("view", view);
     shader->setMat4("projection", projection);
+    shader->setVec3("objectColor", glm::vec3(1.0f, 0.5f, 0.31f));
+    shader->setVec3("lightColor", glm::vec3(1.0f, 1.0f, 1.0f));
+    shader->setVec3("lightPos", lightLoc);
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture1);
 
-    std::cout << var << '\n';
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, texture2);
 
     glBindVertexArray(vertexArrayObject);
 
-    for(std::size_t i = 0; i < 10; i++) {
+    for(std::size_t i = 0; i < 2; i++) {
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model, cubePositions[i]);
-        float angle = 20.0f * i;
-        model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+//        float angle = 20.0f * i;
+//        model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
         shader->setMat4("model", model);
 
         glDrawArrays(GL_TRIANGLES, 0, 36);
     }
-    std::cout << var << '\n';
+
+    lightShader->use();
+    lightShader->setMat4("view", view);
+    lightShader->setMat4("projection", projection);
+    lightShader->setMat4("model", glm::scale(glm::translate(glm::mat4(1.0f), lightLoc), lightScale));
+
+    double offset = glfwGetTime() * 40;
+
+    lightLoc = glm::vec3(sin(glm::radians(offset)) * 2, sin(glm::radians(offset)), cos(glm::radians(offset)) * 2);
+
+    glBindVertexArray(lightVAO);
+
+    glDrawArrays(GL_TRIANGLES, 0, 36);
 }
 
 void deleteShaders() {
@@ -345,34 +451,7 @@ void deleteShaders() {
  */
 void prepareVBO() {
     glGenBuffers(1, &vertexBufferObject);
-}
-
-void checkShaderProgramCompileErrors(unsigned int shaderProgramID) {
-    int success;
-    char infoLog[512];
-
-    glGetProgramiv(shaderProgramID, GL_LINK_STATUS, &success);
-
-    if(success) {
-        std::cout << "Shader comp success\n";
-    } else {
-        glGetProgramInfoLog(shaderProgramID, 512, nullptr, infoLog);
-        std::cout << "Error compiling vertex shader : " << infoLog << '\n';
-    }
-}
-
-void checkShaderCompileErrors(unsigned int shaderID) {
-    int success;
-    char infoLog[512];
-
-    glGetShaderiv(shaderID, GL_COMPILE_STATUS, &success);
-
-    if(success) {
-        std::cout << "Shader comp success\n";
-    } else {
-        glGetShaderInfoLog(shaderID, 512, nullptr, infoLog);
-        std::cout << "Error compiling vertex shader : " << infoLog << '\n';
-    }
+    glGenBuffers(1, &lightVBO);
 }
 
 void framebufferSizeCallback(GLFWwindow* window, int width, int height) {

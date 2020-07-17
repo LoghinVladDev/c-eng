@@ -32,12 +32,29 @@ namespace engine {
         glm::vec3 _up;
         glm::vec3 _right;
         glm::vec3 _worldUp;
+        glm::vec3 _worldFront;
 
 //        float angle{0.0f};
 //        float deltaMove{0.0f};
 //        float deltaAngle{0.0f};
     public:
 //        Camera() = delete;
+
+        [[nodiscard]] glm::vec3 getFront() const noexcept {
+            return this->_front;
+        }
+
+        [[nodiscard]] glm::vec3 getWorldFront() const noexcept {
+            return this->_worldFront;
+        }
+
+        [[nodiscard]] glm::vec3 getRight() const noexcept {
+            return this->_right;
+        }
+
+        [[nodiscard]] glm::vec3 getUp() const noexcept {
+            return this->_up;
+        }
 
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "cppcoreguidelines-pro-type-member-init"
@@ -95,6 +112,14 @@ namespace engine {
                     cos(glm::radians(this->_yaw)) * cos(glm::radians(this->_pitch)),
                     sin(glm::radians(this->_pitch)),
                     sin(glm::radians(this->_yaw)) * cos(glm::radians(this->_pitch))
+                )
+            );
+
+            this->_worldFront = glm::normalize(
+                glm::vec3 (
+                    cos(glm::radians(this->_yaw)),
+                    0.0f,
+                    sin(glm::radians(this->_yaw))
                 )
             );
 

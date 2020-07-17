@@ -12,6 +12,9 @@ std::string engine::Shader::_pathToShadersFolder = std::string(__NO_PATH_GIVEN__
     std::ifstream vertexFile;
     std::ifstream fragmentFile;
 
+    this->_fragmentFilename = fragmentPath;
+    this->_vertexFilename = vertexPath;
+
     vertexFile.exceptions( std::ifstream::failbit | std::ifstream::badbit );
     fragmentFile.exceptions( std::ifstream::failbit | std::ifstream::badbit );
 
@@ -50,14 +53,14 @@ std::string engine::Shader::_pathToShadersFolder = std::string(__NO_PATH_GIVEN__
     glCompileShader(vertexID);
 
     if(enableDiagnostic)
-        Shader::diagnoseShaderCompilation(vertexID);
+        Shader::diagnoseShaderCompilation(vertexID, this->_vertexFilename);
 
     fragmentID = glCreateShader(GL_FRAGMENT_SHADER);
     glShaderSource(fragmentID, 1, &fragmentCodePtr, nullptr);
     glCompileShader(fragmentID);
 
     if(enableDiagnostic)
-        Shader::diagnoseShaderCompilation(fragmentID);
+        Shader::diagnoseShaderCompilation(fragmentID, this->_fragmentFilename);
 
     this->ID = glCreateProgram();
     glAttachShader(this->ID, vertexID);
@@ -77,6 +80,9 @@ std::string engine::Shader::_pathToShadersFolder = std::string(__NO_PATH_GIVEN__
     std::ifstream vertexFile;
     std::ifstream fragmentFile;
 
+    this->_fragmentFilename = fragmentPath;
+    this->_vertexFilename = vertexPath;
+
     vertexFile.exceptions( std::ifstream::failbit | std::ifstream::badbit );
     fragmentFile.exceptions( std::ifstream::failbit | std::ifstream::badbit );
 
@@ -115,14 +121,14 @@ std::string engine::Shader::_pathToShadersFolder = std::string(__NO_PATH_GIVEN__
     glCompileShader(vertexID);
 
     if(enableDiagnostic)
-        Shader::diagnoseShaderCompilation(vertexID);
+        Shader::diagnoseShaderCompilation(vertexID, this->_vertexFilename);
 
     fragmentID = glCreateShader(GL_FRAGMENT_SHADER);
     glShaderSource(fragmentID, 1, &fragmentCodePtr, nullptr);
     glCompileShader(fragmentID);
 
     if(enableDiagnostic)
-        Shader::diagnoseShaderCompilation(fragmentID);
+        Shader::diagnoseShaderCompilation(fragmentID, this->_fragmentFilename);
 
     this->ID = glCreateProgram();
     glAttachShader(this->ID, vertexID);
@@ -209,18 +215,18 @@ void engine::Shader::diagnoseProgramCompilation(int programID) noexcept {
         glGetProgramInfoLog( programID, 512, nullptr, infoLog );
         std::cout << "Shader linking failed" << infoLog << std::endl;
     } else {
-        std::cout << "Shader compilation success" << std::endl;
+        std::cout << "Shader linking success" << std::endl;
     }
 }
 
-void engine::Shader::diagnoseShaderCompilation(int shaderID) noexcept {
+void engine::Shader::diagnoseShaderCompilation(int shaderID, const std::string& shaderFilename) noexcept {
     int32 successStatus;
     char infoLog[512];
 
     glGetShaderiv( shaderID, GL_COMPILE_STATUS, &successStatus );
     if( !successStatus ) {
         glGetShaderInfoLog( shaderID, 512, nullptr, infoLog );
-        std::cout << "Shader compilation failed : " << infoLog << std::endl;
+        std::cout << shaderFilename << " : " << "Shader compilation failed : " << infoLog << std::endl;
     } else {
         std::cout << "Shader compilation success" << std::endl;
     }

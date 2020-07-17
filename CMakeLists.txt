@@ -273,8 +273,8 @@ add_executable( UITests
 target_link_libraries(UITests -lOpenGL32 -lfreeGLUT -lglu32)
 
 add_executable( GLFWInitWindow
-        src/GLFW/src/engine/tests/testInitWindow.cpp
-        src/GLFW/src/engine/obj/util/diag/Diagnostic.cpp src/GLFW/src/engine/obj/util/diag/Diagnostic.h src/GLFW/src/engine/enginePreproc.h src/GLFW/src/engine/types.h)
+        src/GLFW/src/engine/tests/c/testInitWindow.cpp
+        src/GLFW/src/engine/obj/util/diag/Diagnostic.cpp src/GLFW/src/engine/obj/util/diag/Diagnostic.h src/GLFW/src/engine/enginePreproc.h src/GLFW/src/engine/types.h src/GLFW/src/engine/tests/h/lighting.h)
 
 target_link_libraries( GLFWInitWindow glfw ${GLFW_LIBRARIES} )
 
@@ -282,7 +282,7 @@ add_executable( GLFWPortOfFreeGLUT
         glad/src/glad.c
         glad/include/glad/glad.h
         glad/include/KHR/khrplatform.h
-        src/GLFW/src/engine/tests/mainPort.cpp
+        src/GLFW/src/engine/tests/c/mainPort.cpp
         src/GLFW/src/engine/obj/window/Window.cpp
         src/GLFW/src/engine/obj/window/Window.h
         src/GLFW/src/engine/obj/util/func/KeyFunctions.cpp
@@ -322,7 +322,7 @@ add_executable( GLFWPortOfFreeGLUT
 
 target_link_libraries( GLFWPortOfFreeGLUT glfw ${GLFW_LIBRARIES} )
 
-add_executable( drawTests src/GLFW/src/engine/tests/drawTests.cpp
+add_executable( drawTests src/GLFW/src/engine/tests/c/drawTests.cpp
         glad/src/glad.c
         glad/include/glad/glad.h
         glad/include/KHR/khrplatform.h
@@ -340,7 +340,7 @@ add_executable( drawTests src/GLFW/src/engine/tests/drawTests.cpp
 target_link_libraries( drawTests glfw ${GLFW_LIBRARIES} )
 
 add_executable( glfwSandbox
-        src/GLFW/src/engine/tests/glfwSandbox.cpp
+        src/GLFW/src/engine/tests/c/glfwSandbox.cpp
         src/GLFW/src/engine/obj/util/data/Matrix.h
         src/GLFW/src/engine/obj/util/data/Matrix.cpp
         src/GLFW/src/engine/obj/util/shader/Shader.cpp
@@ -403,6 +403,33 @@ add_executable( glfwWhiteboard2
 )
 
 target_link_libraries( glfwWhiteboard2 glfw ${GLFW_LIBRARIES} )
+
+
+add_executable( glfwLightning
+        src/GLFW/src/engine/tests/c/lightingTest.cpp
+        glad/src/glad.c
+        glad/include/glad/glad.h
+        glad/include/KHR/khrplatform.h
+        src/GLFW/src/engine/obj/util/shader/Shader.cpp
+        src/GLFW/src/engine/obj/util/shader/Shader.h
+        src/GLFW/src/engine/obj/util/diag/Diagnostic.cpp
+        src/GLFW/src/engine/obj/util/diag/Diagnostic.h
+        src/GLFW/src/engine/obj/util/obj/GameObject.cpp
+        src/GLFW/src/engine/obj/util/obj/GameObject.h
+        src/GLFW/src/engine/obj/util/obj/Transform.cpp
+        src/GLFW/src/engine/obj/util/obj/Transform.h
+        src/GLFW/src/engine/obj/util/geom/Vector.cpp
+        src/GLFW/src/engine/obj/util/geom/Vector.h
+        src/GLFW/src/engine/Engine.cpp
+        src/GLFW/src/engine/Engine.h
+        src/GLFW/src/engine/obj/window/Window.cpp
+        src/GLFW/src/engine/obj/window/Window.h
+        src/GLFW/src/engine/obj/util/struct/inputAxisFunc.c
+        src/GLFW/src/engine/obj/util/struct/inputAxisFunc.h
+        stb_image/stb-image.h
+)
+
+target_link_libraries( glfwLightning glfw ${GLFW_LIBRARIES} )
 
 #set_target_properties(
 #        drawTests

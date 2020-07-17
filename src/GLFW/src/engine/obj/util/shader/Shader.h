@@ -21,12 +21,14 @@ namespace engine {
     class [[maybe_unused]] Shader {
     private:
         static std::string _pathToShadersFolder;
+        std::string _fragmentFilename;
+        std::string _vertexFilename;
 
         bool failed { false };
 
         uint32 ID;
 
-        [[maybe_unused]] static void diagnoseShaderCompilation(int) noexcept;
+        [[maybe_unused]] static void diagnoseShaderCompilation(int, const std::string&) noexcept;
         [[maybe_unused]] static void diagnoseProgramCompilation(int) noexcept;
 
     public:

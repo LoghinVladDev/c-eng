@@ -2,8 +2,8 @@
 // Created by vladl on 09/07/2020.
 //
 
-#include "../enginePreproc.h"
-#include "../obj//util/diag//Diagnostic.h"
+#include "src/GLFW/src/engine/enginePreproc.h"
+#include "src/GLFW/src/engine/obj/util/diag/Diagnostic.h"
 
 using namespace Engine;
 
