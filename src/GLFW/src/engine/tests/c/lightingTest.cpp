@@ -1,6 +1,7 @@
 //
 // Created by vladl on 12/07/2020.
 //
+#define __DEF_MATERIALS
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -109,9 +110,56 @@ float lightVertices[] = {
         -0.5f,  0.5f, -0.5f //, 0.0f, 1.0f
 };
 
-glm::vec3 cubePositions[] = {
-        glm::vec3( -1.0f,  0.0f,  0.0f),
-        glm::vec3( 1.0f,  0.0f, 0.0f)
+struct cube {
+    glm::vec3 pos;
+    SMaterial material;
+};
+
+//glm::vec3 cubePositions[] = {
+//        glm::vec3( -1.0f,  0.0f,  1.0f),
+//        glm::vec3( 1.0f,  0.0f, 1.0f),
+//        glm::vec3( -1.0f,  0.0f,  -1.0f),
+//        glm::vec3( 1.0f,  0.0f, -1.0f),
+////        glm::vec3( -1.0f,  1.0f,  1.0f),
+////        glm::vec3( 1.0f,  1.0f, 1.0f),
+////        glm::vec3( -1.0f,  1.0f,  -1.0f),
+////        glm::vec3( 1.0f,  1.0f, -1.0f),
+//};
+
+cube cubes[] = {
+//        {glm::vec3(-1.0f, 0.0f, 1.0f), MATERIAL_EMERALD },
+//        {glm::vec3(1.0f,  0.0f, 1.0f),MATERIAL_GOLD },
+//        {glm::vec3(-1.0f,  0.0f,  -1.0f),MATERIAL_RUBBER_CYAN },
+//        {glm::vec3( 1.0f,  0.0f, -1.0f),MATERIAL_PLASTIC_CYAN },
+        {glm::vec3(0.0f, 0.0f, 0.0f), MATERIAL_EMERALD},
+        {glm::vec3(-1.5f, 0.0f, 0.0f), MATERIAL_JADE},
+        {glm::vec3(-1.5f, 0.0f, -1.5f), MATERIAL_OBSIDIAN},
+        {glm::vec3(0.0f, 0.0f, -1.5f), MATERIAL_PEARL},
+        {glm::vec3(1.5f, 0.0f, -1.5f), MATERIAL_RUBY},
+        {glm::vec3(1.5f, 0.0f, 0.0f), MATERIAL_TURQUOISE},
+        {glm::vec3(1.5f, 0.0f, 1.5f), MATERIAL_BRASS},
+        {glm::vec3(0.0f, 0.0f, 1.5f), MATERIAL_BRONZE},
+        {glm::vec3(-1.5f, 0.0f, 1.5f), MATERIAL_CHROME},
+
+        {glm::vec3(0.0f, -1.5f, 0.0f), MATERIAL_COPPER},
+        {glm::vec3(-1.5f, -1.5f, 0.0f), MATERIAL_GOLD},
+        {glm::vec3(-1.5f, -1.5f, -1.5f), MATERIAL_SILVER},
+        {glm::vec3(0.0f, -1.5f, -1.5f), MATERIAL_PLASTIC_BLACK},
+        {glm::vec3(1.5f, -1.5f, -1.5f), MATERIAL_PLASTIC_CYAN},
+        {glm::vec3(1.5f, -1.5f, 0.0f), MATERIAL_PLASTIC_GREEN},
+        {glm::vec3(1.5f, -1.5f, 1.5f), MATERIAL_PLASTIC_RED},
+        {glm::vec3(0.0f, -1.5f, 1.5f), MATERIAL_PLASTIC_WHITE},
+        {glm::vec3(-1.5f, -1.5f, 1.5f), MATERIAL_PLASTIC_YELLOW},
+
+        {glm::vec3(0.0f, 1.5f, 0.0f), MATERIAL_RUBBER_BLACK},
+        {glm::vec3(-1.5f, 1.5f, 0.0f), MATERIAL_RUBBER_CYAN},
+        {glm::vec3(-1.5f, 1.5f, -1.5f), MATERIAL_RUBBER_GREEN},
+        {glm::vec3(0.0f, 1.5f, -1.5f), MATERIAL_RUBBER_RED},
+        {glm::vec3(1.5f, 1.5f, -1.5f), MATERIAL_RUBBER_WHITE},
+        {glm::vec3(1.5f, 1.5f, 0.0f), MATERIAL_RUBBER_YELLOW},
+//        {glm::vec3(1.5f, 1.5f, 1.5f), MATERIAL_PLASTIC_RED},
+//        {glm::vec3(0.0f, 1.5f, 1.5f), MATERIAL_PLASTIC_WHITE},
+//        {glm::vec3(-1.5f, 1.5f, 1.5f), MATERIAL_PLASTIC_YELLOW},
 };
 
 unsigned int indices[] = {
@@ -259,11 +307,22 @@ int main() {
     shader->setInt("texture1", 0);
     shader->setInt("texture2", 1);
 
+    int frameCounter = 0;
+    int second = 1;
 
     while( !glfwWindowShouldClose(window) ) {
+        frameCounter++;
+
         currentFrame = glfwGetTime();
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
+
+        if(currentFrame > second) {
+            std::cout << frameCounter << '\n';
+            second++;
+
+            frameCounter = 0;
+        }
 
 //        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -368,10 +427,13 @@ void update() noexcept {
 
     if(up && down) {
 
+        //use worldFront, not front for no flying
     } else if (up) {
-        camera->getTransform().getLocation() += camera->getWorldFront() * velocity;
+//        camera->getTransform().getLocation() += camera->getWorldFront() * velocity;
+        camera->getTransform().getLocation() += camera->getFront() * velocity;
     } else if (down) {
-        camera->getTransform().getLocation() -= camera->getWorldFront() * velocity;
+//        camera->getTransform().getLocation() -= camera->getWorldFront() * velocity;
+        camera->getTransform().getLocation() -= camera->getFront() * velocity;
     }
 
     if(left && right) {
@@ -382,22 +444,8 @@ void update() noexcept {
         camera->getTransform().getLocation() += camera->getRight() * velocity;
     }
 
-    camera->getTransform().getLocation().y = origY;
-}
 
-unsigned int transformLoc;
-
-glm::mat4 matInverse(const glm::mat4& mat){
-    // A ^ -1 = 1 / det(A) * adj(A)
-//    glm::mat4 adj =
-return glm::mat4(1.0f);
-}
-
-glm::mat3 matInverse(const glm::mat3& mat){
-//    float det = glm::determinant(mat);
-//    if(det != 0.0f) det = 1.0f / det;
-//    return det * mat;
-    return glm::mat3(1.0f);
+//    camera->getTransform().getLocation().y = origY;
 }
 
 constexpr float lightScaleConst = 0.1f;
@@ -416,11 +464,26 @@ inline void render() noexcept {
 
     shader->setMat4("view", view);
     shader->setMat4("projection", projection);
-    shader->setVec3("objectColor", glm::vec3(1.0f, 0.5f, 0.31f));
     shader->setVec3("lightColor", glm::vec3(1.0f, 1.0f, 1.0f));
     shader->setVec3("lightPos", lightLoc);
     shader->setVec3("viewPosition", camera->getTransform().getLocation());
-    shader->setInt("specularShineStrength", 64);
+
+//    shader->setVec3("light.ambient", glm::vec3(0.2f, 0.2f, 0.2f));
+//    shader->setVec3("light.diffuse", glm::vec3(0.5f, 0.5f, 0.5f));
+//    shader->setVec3("light.specular", glm::vec3(1.0f, 1.0f, 1.0f));
+
+//    double time = glfwGetTime();
+//    glm::vec3 lightColor(sin(time * 2.0), sin(time * 0.7), sin(time * 1.3));
+//    glm::vec3 diffuseColor = lightColor * glm::vec3(0.5f);
+//    glm::vec3 ambientColor = lightColor * glm::vec3(0.2f);
+//
+//    shader->setVec3("light.ambient", ambientColor);
+//    shader->setVec3("light.diffuse", diffuseColor);
+//    shader->setVec3("light.specular", glm::vec3(1.0f, 1.0f, 1.0f));
+//
+    shader->setVec3("light.ambient", glm::vec3(1.0f));
+    shader->setVec3("light.diffuse", glm::vec3(1.0f));
+    shader->setVec3("light.specular", glm::vec3(1.0f));
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture1);
@@ -430,9 +493,14 @@ inline void render() noexcept {
 
     glBindVertexArray(vertexArrayObject);
 
-    for(auto & cubePosition : cubePositions) {
+    for(auto & cube : cubes) {
+        shader->setVec3("material.ambient", cube.material.ambient);
+        shader->setVec3("material.diffuse", cube.material.diffuse);
+        shader->setVec3("material.specular", cube.material.specular);
+        shader->setFloat("material.shine", cube.material.shine);
+
         glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, cubePosition);
+        model = glm::translate(model, cube.pos);
         shader->setMat4("TIModel", glm::transpose(glm::inverse(model)));
         shader->setMat4("model", model);
 
@@ -446,9 +514,9 @@ inline void render() noexcept {
     lightShader->setMat4("projection", projection);
     lightShader->setMat4("model", lightModel);
 
-    double offset = glfwGetTime() * 40;
+    double offset = glfwGetTime() * 100;
 
-    lightLoc = glm::vec3(sin(glm::radians(offset)) * 2, sin(glm::radians(offset)) * 0.5, cos(glm::radians(offset)) * 2);
+    lightLoc = glm::vec3(sin(glm::radians(offset)) * 4.0, sin(glm::radians(offset)) * 2.5f , cos(glm::radians(offset)) * 4.0);
 
     glBindVertexArray(lightVAO);
 

@@ -11,6 +11,8 @@
 //#include <GL/freeglut_std.h>
 //#endif
 
+#include <glm/glm.hpp>
+
 #ifndef _glfw3_h_
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -36,6 +38,7 @@
 [[maybe_unused]] typedef short int16;
 [[maybe_unused]] typedef int int32;
 [[maybe_unused]] typedef long long int64;
+
 
 #define KEY_ESCAPE 27
 
@@ -111,5 +114,7 @@ constexpr uint8 MODIFIER_ACTIVE_ALT_SHIFT           = (uint8) GLFW_MOD_ALT      
 constexpr uint8 MODIFIER_ACTIVE_CTRL_ALT_SHIFT      = ( (uint8) GLFW_MOD_CONTROL ) | ( (uint8) GLFW_MOD_ALT ) | ( (uint8) GLFW_MOD_SHIFT );
 
 #pragma clang diagnostic pop
+
+#include "typesExtension/mats.h"
 
 #endif //ENG1_TYPES_H
