@@ -131,37 +131,37 @@ cube cubes[] = {
 //        {glm::vec3(1.0f,  0.0f, 1.0f),MATERIAL_GOLD },
 //        {glm::vec3(-1.0f,  0.0f,  -1.0f),MATERIAL_RUBBER_CYAN },
 //        {glm::vec3( 1.0f,  0.0f, -1.0f),MATERIAL_PLASTIC_CYAN },
-        {glm::vec3(0.0f, 0.0f, 0.0f), MATERIAL_EMERALD},
-        {glm::vec3(-1.5f, 0.0f, 0.0f), MATERIAL_JADE},
-        {glm::vec3(-1.5f, 0.0f, -1.5f), MATERIAL_OBSIDIAN},
-        {glm::vec3(0.0f, 0.0f, -1.5f), MATERIAL_PEARL},
-        {glm::vec3(1.5f, 0.0f, -1.5f), MATERIAL_RUBY},
-        {glm::vec3(1.5f, 0.0f, 0.0f), MATERIAL_TURQUOISE},
-        {glm::vec3(1.5f, 0.0f, 1.5f), MATERIAL_BRASS},
-        {glm::vec3(0.0f, 0.0f, 1.5f), MATERIAL_BRONZE},
-        {glm::vec3(-1.5f, 0.0f, 1.5f), MATERIAL_CHROME},
-
-        {glm::vec3(0.0f, -1.5f, 0.0f), MATERIAL_COPPER},
-        {glm::vec3(-1.5f, -1.5f, 0.0f), MATERIAL_GOLD},
-        {glm::vec3(-1.5f, -1.5f, -1.5f), MATERIAL_SILVER},
-        {glm::vec3(0.0f, -1.5f, -1.5f), MATERIAL_PLASTIC_BLACK},
-        {glm::vec3(1.5f, -1.5f, -1.5f), MATERIAL_PLASTIC_CYAN},
-        {glm::vec3(1.5f, -1.5f, 0.0f), MATERIAL_PLASTIC_GREEN},
-        {glm::vec3(1.5f, -1.5f, 1.5f), MATERIAL_PLASTIC_RED},
-        {glm::vec3(0.0f, -1.5f, 1.5f), MATERIAL_PLASTIC_WHITE},
-        {glm::vec3(-1.5f, -1.5f, 1.5f), MATERIAL_PLASTIC_YELLOW},
-
-        {glm::vec3(0.0f, 1.5f, 0.0f), MATERIAL_RUBBER_BLACK},
-        {glm::vec3(-1.5f, 1.5f, 0.0f), MATERIAL_RUBBER_CYAN},
-        {glm::vec3(-1.5f, 1.5f, -1.5f), MATERIAL_RUBBER_GREEN},
-        {glm::vec3(0.0f, 1.5f, -1.5f), MATERIAL_RUBBER_RED},
-        {glm::vec3(1.5f, 1.5f, -1.5f), MATERIAL_RUBBER_WHITE},
-        {glm::vec3(1.5f, 1.5f, 0.0f), MATERIAL_RUBBER_YELLOW},
+        {glm::vec3(0.0f, 0.0f, 0.0f), MATERIAL_EMERALD}
+//        {glm::vec3(-1.5f, 0.0f, 0.0f), MATERIAL_JADE},
+//        {glm::vec3(-1.5f, 0.0f, -1.5f), MATERIAL_OBSIDIAN},
+//        {glm::vec3(0.0f, 0.0f, -1.5f), MATERIAL_PEARL},
+//        {glm::vec3(1.5f, 0.0f, -1.5f), MATERIAL_RUBY},
+//        {glm::vec3(1.5f, 0.0f, 0.0f), MATERIAL_TURQUOISE},
+//        {glm::vec3(1.5f, 0.0f, 1.5f), MATERIAL_BRASS},
+//        {glm::vec3(0.0f, 0.0f, 1.5f), MATERIAL_BRONZE},
+//        {glm::vec3(-1.5f, 0.0f, 1.5f), MATERIAL_CHROME},
+//
+//        {glm::vec3(0.0f, -1.5f, 0.0f), MATERIAL_COPPER},
+//        {glm::vec3(-1.5f, -1.5f, 0.0f), MATERIAL_GOLD},
+//        {glm::vec3(-1.5f, -1.5f, -1.5f), MATERIAL_SILVER},
+//        {glm::vec3(0.0f, -1.5f, -1.5f), MATERIAL_PLASTIC_BLACK},
+//        {glm::vec3(1.5f, -1.5f, -1.5f), MATERIAL_PLASTIC_CYAN},
+//        {glm::vec3(1.5f, -1.5f, 0.0f), MATERIAL_PLASTIC_GREEN},
+//        {glm::vec3(1.5f, -1.5f, 1.5f), MATERIAL_PLASTIC_RED},
+//        {glm::vec3(0.0f, -1.5f, 1.5f), MATERIAL_PLASTIC_WHITE},
+//        {glm::vec3(-1.5f, -1.5f, 1.5f), MATERIAL_PLASTIC_YELLOW},
+//
+//        {glm::vec3(0.0f, 1.5f, 0.0f), MATERIAL_RUBBER_BLACK},
+//        {glm::vec3(-1.5f, 1.5f, 0.0f), MATERIAL_RUBBER_CYAN},
+//        {glm::vec3(-1.5f, 1.5f, -1.5f), MATERIAL_RUBBER_GREEN},
+//        {glm::vec3(0.0f, 1.5f, -1.5f), MATERIAL_RUBBER_RED},
+//        {glm::vec3(1.5f, 1.5f, -1.5f), MATERIAL_RUBBER_WHITE},
+//        {glm::vec3(1.5f, 1.5f, 0.0f), MATERIAL_RUBBER_YELLOW},
 //        {glm::vec3(1.5f, 1.5f, 1.5f), MATERIAL_PLASTIC_RED},
 //        {glm::vec3(0.0f, 1.5f, 1.5f), MATERIAL_PLASTIC_WHITE},
 //        {glm::vec3(-1.5f, 1.5f, 1.5f), MATERIAL_PLASTIC_YELLOW},
 };
-
+//
 unsigned int indices[] = {
         0, 1, 2,
         0, 2, 3
@@ -274,38 +274,38 @@ int main() {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR); //bi-linear filter for magnifying
 
     stbi_set_flip_vertically_on_load(true);
-    data = stbi_load( (std::string(__TEXTURES_PATH__) + "container.jpg").c_str(), &imageWidth, &imageHeight, &numberOfChannels, 0 );
+    data = stbi_load( (std::string(__TEXTURES_PATH__) + "container2.png").c_str(), &imageWidth, &imageHeight, &numberOfChannels, 0 );
 //
     if(data) {
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, imageWidth, imageHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, imageWidth, imageHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
         glGenerateMipmap(GL_TEXTURE_2D);
     } else {
         std::cout << "Image load failed" << std::endl;
     }
     stbi_image_free(data);
 
-//    glGenTextures(1, &texture2);
+    glGenTextures(1, &texture2);
 
-//    glBindTexture(GL_TEXTURE_2D, texture2);
-//
-//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-//
-//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glBindTexture(GL_TEXTURE_2D, texture2);
 
-//    data = stbi_load( (std::string(__TEXTURES_PATH__) + "awesomeface.png" ).c_str(), &imageWidth, &imageHeight, &numberOfChannels, 0);
-//    if(data) {
-//        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, imageWidth, imageHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-//        glGenerateMipmap(GL_TEXTURE_2D);
-//    } else {
-//        std::cout << "Image load failed" << std::endl;
-//    }
-//    stbi_image_free(data);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    data = stbi_load( (std::string(__TEXTURES_PATH__) + "container2_specular.png" ).c_str(), &imageWidth, &imageHeight, &numberOfChannels, 0);
+    if(data) {
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, imageWidth, imageHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+        glGenerateMipmap(GL_TEXTURE_2D);
+    } else {
+        std::cout << "Image load failed" << std::endl;
+    }
+    stbi_image_free(data);
 
     shader->use();
-    shader->setInt("texture1", 0);
-    shader->setInt("texture2", 1);
+//    shader->setInt("texture1", 0);
+//    shader->setInt("texture2", 1);
 
     int frameCounter = 0;
     int second = 1;
@@ -429,11 +429,11 @@ void update() noexcept {
 
         //use worldFront, not front for no flying
     } else if (up) {
-//        camera->getTransform().getLocation() += camera->getWorldFront() * velocity;
-        camera->getTransform().getLocation() += camera->getFront() * velocity;
+        camera->getTransform().getLocation() += camera->getWorldFront() * velocity;
+//        camera->getTransform().getLocation() += camera->getFront() * velocity;
     } else if (down) {
-//        camera->getTransform().getLocation() -= camera->getWorldFront() * velocity;
-        camera->getTransform().getLocation() -= camera->getFront() * velocity;
+        camera->getTransform().getLocation() -= camera->getWorldFront() * velocity;
+//        camera->getTransform().getLocation() -= camera->getFront() * velocity;
     }
 
     if(left && right) {
@@ -445,7 +445,7 @@ void update() noexcept {
     }
 
 
-//    camera->getTransform().getLocation().y = origY;
+    camera->getTransform().getLocation().y = origY;
 }
 
 constexpr float lightScaleConst = 0.1f;
@@ -481,15 +481,17 @@ inline void render() noexcept {
 //    shader->setVec3("light.diffuse", diffuseColor);
 //    shader->setVec3("light.specular", glm::vec3(1.0f, 1.0f, 1.0f));
 //
-    shader->setVec3("light.ambient", glm::vec3(1.0f));
-    shader->setVec3("light.diffuse", glm::vec3(1.0f));
+    shader->setVec3("light.ambient", glm::vec3(0.2f));
+    shader->setVec3("light.diffuse", glm::vec3(0.5f));
     shader->setVec3("light.specular", glm::vec3(1.0f));
 
+    shader->setInt("material.diffuse", 0);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture1);
 
-//    glActiveTexture(GL_TEXTURE1);
-//    glBindTexture(GL_TEXTURE_2D, texture2);
+    shader->setInt("material.specular", 1);
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, texture2);
 
     glBindVertexArray(vertexArrayObject);
 
@@ -514,9 +516,9 @@ inline void render() noexcept {
     lightShader->setMat4("projection", projection);
     lightShader->setMat4("model", lightModel);
 
-    double offset = glfwGetTime() * 100;
+    double offset = glfwGetTime() * 40;
 
-    lightLoc = glm::vec3(sin(glm::radians(offset)) * 4.0, sin(glm::radians(offset)) * 2.5f , cos(glm::radians(offset)) * 4.0);
+    lightLoc = glm::vec3(sin(glm::radians(offset)) * 1.5, sin(glm::radians(offset)) * 0.66  , cos(glm::radians(offset)) * 1.5);
 
     glBindVertexArray(lightVAO);
 
