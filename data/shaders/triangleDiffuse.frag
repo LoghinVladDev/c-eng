@@ -1,22 +1,20 @@
 #version 330 core
 
 struct Material {
+//    vec3 ambient;
+//    vec3 diffuse;
     sampler2D diffuse;
     sampler2D specular;
+//    vec3 specular;
     float shine;
 };
 
 struct Light {
     vec3 position;
-//    vec3 direction;
 
     vec3 ambient;
     vec3 diffuse;
     vec3 specular;
-
-    float constant;
-    float linear;
-    float quadratic;
 };
 
 out vec4 FragColor;
@@ -24,8 +22,10 @@ in vec2 texCoord;
 in vec3 normal;
 in vec3 fragPos;
 
+//uniform sampler2D texture1;
+//uniform sampler2D texture2;
 uniform vec3 lightColor;
-//uniform vec3 lightPos;
+uniform vec3 lightPos;
 
 uniform Light light;
 
@@ -36,26 +36,18 @@ uniform Material material;
 float specularStrength = 0.5f;
 
 void main() {
-//    vec3 lightDir = normalize(-light.direction);
-
-    float distance = length(light.position - fragPos);
-    float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
-
     ///ambient
     vec3 ambient = light.ambient * vec3(texture(material.diffuse, texCoord));
-    ambient *= attenuation;
 
     ///diffuse
     vec3 norm = normalize(normal);
-    vec3 lightDir = normalize(light.position - fragPos);
+    vec3 lightDir = normalize(lightPos - fragPos);
     vec3 diffuse = light.diffuse * (max(dot(norm, lightDir), 0.0) * vec3(texture(material.diffuse, texCoord)));
-    diffuse *= attenuation;
 
     ///specular
     vec3 viewDir = normalize(viewPosition - fragPos);
     vec3 reflectDir = reflect(-lightDir, norm);
     vec3 specular = light.specular * (pow(max(dot(viewDir, reflectDir), 0.0), material.shine) * vec3(texture(material.specular, texCoord)));
-    specular *= attenuation;
 
     vec3 result = (ambient + diffuse + specular);
 

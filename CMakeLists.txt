@@ -20,6 +20,8 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 add_subdirectory(src/glfw_src)
 add_subdirectory(glad)
 add_subdirectory(glm)
+#add_subdirectory(messengerOffline)
+#add_subdirectory(messengerOffline/src)
 #add_subdirectory(glm/glm)
 
 #include_directories(glm/glm)
@@ -28,6 +30,7 @@ include_directories(src/glfw_src/include)
 include_directories(src/GLFW/src/engine)
 include_directories(glad/include)
 include_directories(stb_image)
+include_directories(messengerOffline/include)
 
 find_package(OpenGL REQUIRED)
 find_package(Qt5 COMPONENTS Widgets REQUIRED)
@@ -467,3 +470,31 @@ target_link_libraries( glfwDiffuseMaps glfw ${GLFW_LIBRARIES} )
 #        ARCHIVE_OUTPUT_DIRECTORY "/build/lib/"
 #        LIBRARY_OUTPUT_DIRECTORY "/build/lib/"
 #)
+
+
+add_executable( glfwLightcasting
+        src/GLFW/src/engine/tests/c/lightCasting.cpp
+        glad/src/glad.c
+        glad/include/glad/glad.h
+        glad/include/KHR/khrplatform.h
+        src/GLFW/src/engine/obj/util/shader/Shader.cpp
+        src/GLFW/src/engine/obj/util/shader/Shader.h
+        src/GLFW/src/engine/obj/util/diag/Diagnostic.cpp
+        src/GLFW/src/engine/obj/util/diag/Diagnostic.h
+        src/GLFW/src/engine/obj/util/obj/GameObject.cpp
+        src/GLFW/src/engine/obj/util/obj/GameObject.h
+        src/GLFW/src/engine/obj/util/obj/Transform.cpp
+        src/GLFW/src/engine/obj/util/obj/Transform.h
+        src/GLFW/src/engine/obj/util/geom/Vector.cpp
+        src/GLFW/src/engine/obj/util/geom/Vector.h
+        src/GLFW/src/engine/Engine.cpp
+        src/GLFW/src/engine/Engine.h
+        src/GLFW/src/engine/obj/window/Window.cpp
+        src/GLFW/src/engine/obj/window/Window.h
+        src/GLFW/src/engine/obj/util/struct/inputAxisFunc.c
+        src/GLFW/src/engine/obj/util/struct/inputAxisFunc.h
+        stb_image/stb-image.h
+        )
+
+target_link_libraries( glfwLightcasting glfw ${GLFW_LIBRARIES} )
+

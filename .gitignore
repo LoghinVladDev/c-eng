@@ -3,3 +3,4 @@
 ./src/glfw_src/*
 ./glad/*
 ./stb_image/*
+./messengerOffline/*

@@ -2,6 +2,7 @@
 // Created by vladl on 12/07/2020.
 //
 #define __DEF_MATERIALS
+#define __POINT_LIGHT_SAMPLES
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -115,53 +116,19 @@ struct cube {
     SMaterial material;
 };
 
-//glm::vec3 cubePositions[] = {
-//        glm::vec3( -1.0f,  0.0f,  1.0f),
-//        glm::vec3( 1.0f,  0.0f, 1.0f),
-//        glm::vec3( -1.0f,  0.0f,  -1.0f),
-//        glm::vec3( 1.0f,  0.0f, -1.0f),
-////        glm::vec3( -1.0f,  1.0f,  1.0f),
-////        glm::vec3( 1.0f,  1.0f, 1.0f),
-////        glm::vec3( -1.0f,  1.0f,  -1.0f),
-////        glm::vec3( 1.0f,  1.0f, -1.0f),
-//};
-
-cube cubes[] = {
-//        {glm::vec3(-1.0f, 0.0f, 1.0f), MATERIAL_EMERALD },
-//        {glm::vec3(1.0f,  0.0f, 1.0f),MATERIAL_GOLD },
-//        {glm::vec3(-1.0f,  0.0f,  -1.0f),MATERIAL_RUBBER_CYAN },
-//        {glm::vec3( 1.0f,  0.0f, -1.0f),MATERIAL_PLASTIC_CYAN },
-        {glm::vec3(0.0f, 0.0f, 0.0f), MATERIAL_EMERALD}
-//        {glm::vec3(-1.5f, 0.0f, 0.0f), MATERIAL_JADE},
-//        {glm::vec3(-1.5f, 0.0f, -1.5f), MATERIAL_OBSIDIAN},
-//        {glm::vec3(0.0f, 0.0f, -1.5f), MATERIAL_PEARL},
-//        {glm::vec3(1.5f, 0.0f, -1.5f), MATERIAL_RUBY},
-//        {glm::vec3(1.5f, 0.0f, 0.0f), MATERIAL_TURQUOISE},
-//        {glm::vec3(1.5f, 0.0f, 1.5f), MATERIAL_BRASS},
-//        {glm::vec3(0.0f, 0.0f, 1.5f), MATERIAL_BRONZE},
-//        {glm::vec3(-1.5f, 0.0f, 1.5f), MATERIAL_CHROME},
-//
-//        {glm::vec3(0.0f, -1.5f, 0.0f), MATERIAL_COPPER},
-//        {glm::vec3(-1.5f, -1.5f, 0.0f), MATERIAL_GOLD},
-//        {glm::vec3(-1.5f, -1.5f, -1.5f), MATERIAL_SILVER},
-//        {glm::vec3(0.0f, -1.5f, -1.5f), MATERIAL_PLASTIC_BLACK},
-//        {glm::vec3(1.5f, -1.5f, -1.5f), MATERIAL_PLASTIC_CYAN},
-//        {glm::vec3(1.5f, -1.5f, 0.0f), MATERIAL_PLASTIC_GREEN},
-//        {glm::vec3(1.5f, -1.5f, 1.5f), MATERIAL_PLASTIC_RED},
-//        {glm::vec3(0.0f, -1.5f, 1.5f), MATERIAL_PLASTIC_WHITE},
-//        {glm::vec3(-1.5f, -1.5f, 1.5f), MATERIAL_PLASTIC_YELLOW},
-//
-//        {glm::vec3(0.0f, 1.5f, 0.0f), MATERIAL_RUBBER_BLACK},
-//        {glm::vec3(-1.5f, 1.5f, 0.0f), MATERIAL_RUBBER_CYAN},
-//        {glm::vec3(-1.5f, 1.5f, -1.5f), MATERIAL_RUBBER_GREEN},
-//        {glm::vec3(0.0f, 1.5f, -1.5f), MATERIAL_RUBBER_RED},
-//        {glm::vec3(1.5f, 1.5f, -1.5f), MATERIAL_RUBBER_WHITE},
-//        {glm::vec3(1.5f, 1.5f, 0.0f), MATERIAL_RUBBER_YELLOW},
-//        {glm::vec3(1.5f, 1.5f, 1.5f), MATERIAL_PLASTIC_RED},
-//        {glm::vec3(0.0f, 1.5f, 1.5f), MATERIAL_PLASTIC_WHITE},
-//        {glm::vec3(-1.5f, 1.5f, 1.5f), MATERIAL_PLASTIC_YELLOW},
+glm::vec3 cubePositions[] = {
+        glm::vec3( 0.0f,  0.0f,  0.0f),
+        glm::vec3( 2.0f,  5.0f, -15.0f),
+        glm::vec3(-1.5f, -2.2f, -2.5f),
+        glm::vec3(-3.8f, -2.0f, -12.3f),
+        glm::vec3( 2.4f, -0.4f, -3.5f),
+        glm::vec3(-1.7f,  3.0f, -7.5f),
+        glm::vec3( 1.3f, -2.0f, -2.5f),
+        glm::vec3( 1.5f,  2.0f, -2.5f),
+        glm::vec3( 1.5f,  0.2f, -1.5f),
+        glm::vec3(-1.3f,  1.0f, -1.5f)
 };
-//
+
 unsigned int indices[] = {
         0, 1, 2,
         0, 2, 3
@@ -349,7 +316,7 @@ int main() {
     delete shader;
     delete lightShader;
 
-    std::cout << nrAttrib << '\n';
+//    std::cout << nrAttrib << '\n';
 
     glfwTerminate();
 
@@ -466,8 +433,9 @@ inline void render() noexcept {
     shader->setMat4("view", view);
     shader->setMat4("projection", projection);
     shader->setVec3("lightColor", glm::vec3(1.0f, 1.0f, 1.0f));
-    shader->setVec3("lightPos", lightLoc);
+//    shader->setVec3("lightPos", lightLoc);
     shader->setVec3("viewPosition", camera->getTransform().getLocation());
+    shader->setFloat("material.shine", 32);
 
 //    shader->setVec3("light.ambient", glm::vec3(0.2f, 0.2f, 0.2f));
 //    shader->setVec3("light.diffuse", glm::vec3(0.5f, 0.5f, 0.5f));
@@ -482,9 +450,16 @@ inline void render() noexcept {
 //    shader->setVec3("light.diffuse", diffuseColor);
 //    shader->setVec3("light.specular", glm::vec3(1.0f, 1.0f, 1.0f));
 //
+    SLight lightData = getLightStructByID(4);
+
     shader->setVec3("light.ambient", glm::vec3(0.2f));
     shader->setVec3("light.diffuse", glm::vec3(0.5f));
     shader->setVec3("light.specular", glm::vec3(1.0f));
+    shader->setVec3("light.position", lightLoc);
+//    shader->setVec3("light.direction", glm::vec3(-0.2f, -1.0f, -0.3f));
+    shader->setFloat("light.constant", lightData.constant);
+    shader->setFloat("light.linear", lightData.linear);
+    shader->setFloat("light.quadratic", lightData.quadratic);
 
     shader->setInt("material.diffuse", 0);
     glActiveTexture(GL_TEXTURE0);
@@ -496,14 +471,20 @@ inline void render() noexcept {
 
     glBindVertexArray(vertexArrayObject);
 
-    for(auto & cube : cubes) {
-        shader->setVec3("material.ambient", cube.material.ambient);
-        shader->setVec3("material.diffuse", cube.material.diffuse);
-        shader->setVec3("material.specular", cube.material.specular);
-        shader->setFloat("material.shine", cube.material.shine);
+    int i;
+
+    for(auto & cube : cubePositions) {
+//        shader->setVec3("material.ambient", cube.material.ambient);
+//        shader->setVec3("material.diffuse", cube.material.diffuse);
+//        shader->setVec3("material.specular", cube.material.specular);
+//        shader->setFloat("material.shine", cube.material.shine);
 
         glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, cube.pos);
+        model = glm::translate(model, cube);
+
+        float angle = 20.0f * (float) (i++);
+            model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+
         shader->setMat4("TIModel", glm::transpose(glm::inverse(model)));
         shader->setMat4("model", model);
 
@@ -520,9 +501,9 @@ inline void render() noexcept {
     double offset = glfwGetTime() * 40;
 
     lightLoc = glm::vec3(sin(glm::radians(offset)) * 1.5, sin(glm::radians(offset)) * 0.66  , cos(glm::radians(offset)) * 1.5);
-
+//
     glBindVertexArray(lightVAO);
-
+//
     glDrawArrays(GL_TRIANGLES, 0, 36);
 }
 
