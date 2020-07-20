@@ -26,11 +26,12 @@ namespace engine {
 
         bool failed { false };
 
-        uint32 ID;
+        uint32 ID {0U};
 
         [[maybe_unused]] static void diagnoseShaderCompilation(int, const std::string&) noexcept;
         [[maybe_unused]] static void diagnoseProgramCompilation(int) noexcept;
 
+        [[maybe_unused]] void includeSubShaders(const std::string&, std::stringstream&) noexcept;
     public:
         Shader() = delete;
         ~Shader();

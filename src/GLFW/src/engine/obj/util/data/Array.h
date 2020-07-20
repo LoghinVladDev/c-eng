@@ -10,7 +10,9 @@
 #include <bits/c++config.h>
 #include <string>
 #include <iostream>
+#ifndef ENG1_TYPES_H
 #include <src/GLFW/src/engine/types.h>
+#endif
 //#include <hash_map>
 
 
@@ -69,7 +71,7 @@ namespace engine {
 
         [[maybe_unused]] explicit operator std::string () const;
 
-        template <class U> friend std::ostream& operator << (std::ostream& f, const engine::Array<U>& array) {
+        friend std::ostream& operator << (std::ostream& f, const engine::Array<T>& array) {
             f << "arr = [ ";
             for( std::size_t iterator = 0; iterator < array._arrLen - 1; iterator++ )
                 f << * ( array._arrPtr[iterator] ) << ", ";

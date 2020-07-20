@@ -3,14 +3,26 @@
 //
 
 #include "Shader.h"
+#include <string_view>
 
 std::string engine::Shader::_pathToShadersFolder = std::string(__NO_PATH_GIVEN__);
+
+static std::string& trimString(std::string& str) {
+    while(str[0] == ' ' && str.length() > 0)
+        str.erase(str.begin());
+    while(str[str.length()] == '\0' && str[str.length() - 1] == ' ' && str.length() > 0)
+        str.erase(str.end() - 1);
+
+    return str;
+}
 
 [[maybe_unused]] engine::Shader::Shader(const char *vertexPath, const char *fragmentPath, bool relativePath, bool enableDiagnostic) noexcept {
     std::string vertexCode;
     std::string fragmentCode;
     std::ifstream vertexFile;
     std::ifstream fragmentFile;
+
+    std::string vertexCodeLine;
 
     this->_fragmentFilename = fragmentPath;
     this->_vertexFilename = vertexPath;
@@ -26,22 +38,48 @@ std::string engine::Shader::_pathToShadersFolder = std::string(__NO_PATH_GIVEN__
             vertexFile.open( Shader::_pathToShadersFolder + vertexPath );
             fragmentFile.open( Shader::_pathToShadersFolder + fragmentPath );
         }
-        std::stringstream vertexStream;
-        std::stringstream fragmentStream;
 
-        vertexStream << vertexFile.rdbuf();
-        fragmentStream << fragmentFile.rdbuf();
+//        static int lineCnt = 0;
+        while(std::getline(vertexFile, vertexCodeLine)) {
+//            std::printf("%d.\t%s\t=>\t", lineCnt++, vertexCodeLine.c_str());
+//            std::fflush(stdout);
 
-        vertexFile.close();
+            vertexCode += trimString(vertexCodeLine);
+
+//            std::cout << vertexCodeLine << '\n';
+//            vertexCode += vertexCodeLine;
+//            vertexCode = vertexCode.append(vertexCodeLine);
+//            std::cout << vertexCode << '\n';
+//            std::cout << vertexStream.str() << '\n';
+
+            if(vertexFile.eof())
+                break;
+        }
+
+//        std::printf("cyka\n");
+//        fflush(stdout);
+
+//        std::stringstream fragmentStream;
+
+//        vertexStream << vertexFile.rdbuf();
+//        fragmentStream << fragmentFile.rdbuf();
+
+//        vertexFile.close();
         fragmentFile.close();
 
-        vertexCode = vertexStream.str();
-        fragmentCode = fragmentStream.str();
+//        vertexCode = vertexStream.str();
+//        fragmentCode = fragmentStream.str();
+
+        std::cout << "CODE : \n" << vertexCode << '\n';
+
+        std::cout.flush();
     } catch (std::ifstream::failure& exception) {
         std::cout << "Shader read exception : " << exception.what() << std::endl;
         this->failed = true;
         return;
     }
+
+    return;
 
     int32 vertexID;
     int32 fragmentID;
@@ -237,7 +275,8 @@ void engine::Shader::diagnoseShaderCompilation(int shaderID, const std::string& 
 }
 
 engine::Shader::~Shader() {
-    glDeleteProgram(this->ID);
+    if(this->ID != 0U)
+        glDeleteProgram(this->ID);
 }
 
 void engine::Shader::setShadersFolder(const std::string & path) noexcept {

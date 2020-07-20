@@ -20,11 +20,13 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 add_subdirectory(src/glfw_src)
 add_subdirectory(glad)
 add_subdirectory(glm)
+add_subdirectory(assimp-5.0.1)
 #add_subdirectory(messengerOffline)
 #add_subdirectory(messengerOffline/src)
 #add_subdirectory(glm/glm)
 
 #include_directories(glm/glm)
+include_directories(assimp-5.0.1/include)
 include_directories(glm)
 include_directories(src/glfw_src/include)
 include_directories(src/GLFW/src/engine)
@@ -403,6 +405,10 @@ add_executable( glfwWhiteboard2
         src/GLFW/src/engine/obj/util/diag/Diagnostic.cpp
         src/GLFW/src/engine/obj/util/diag/Diagnostic.h
         stb_image/stb-image.h
+        src/GLFW/src/engine/obj/util/data/Array.cpp
+        src/GLFW/src/engine/obj/util/data/Array.h
+        src/GLFW/src/engine/obj/util/data/String.cpp
+        src/GLFW/src/engine/obj/util/data/String.h
 )
 
 target_link_libraries( glfwWhiteboard2 glfw ${GLFW_LIBRARIES} )
@@ -550,4 +556,31 @@ add_executable( glfwMultLights
         )
 
 target_link_libraries( glfwMultLights glfw ${GLFW_LIBRARIES} )
+
+add_executable( glfwModels
+        src/GLFW/src/engine/tests/c/glfwModels.cpp
+        glad/src/glad.c
+        glad/include/glad/glad.h
+        glad/include/KHR/khrplatform.h
+        src/GLFW/src/engine/obj/util/shader/Shader.cpp
+        src/GLFW/src/engine/obj/util/shader/Shader.h
+        src/GLFW/src/engine/obj/util/diag/Diagnostic.cpp
+        src/GLFW/src/engine/obj/util/diag/Diagnostic.h
+        src/GLFW/src/engine/obj/util/obj/GameObject.cpp
+        src/GLFW/src/engine/obj/util/obj/GameObject.h
+        src/GLFW/src/engine/obj/util/obj/Transform.cpp
+        src/GLFW/src/engine/obj/util/obj/Transform.h
+        src/GLFW/src/engine/obj/util/geom/Vector.cpp
+        src/GLFW/src/engine/obj/util/geom/Vector.h
+        src/GLFW/src/engine/Engine.cpp
+        src/GLFW/src/engine/Engine.h
+        src/GLFW/src/engine/obj/window/Window.cpp
+        src/GLFW/src/engine/obj/window/Window.h
+        src/GLFW/src/engine/obj/util/struct/inputAxisFunc.c
+        src/GLFW/src/engine/obj/util/struct/inputAxisFunc.h
+        stb_image/stb-image.h
+        src/GLFW/src/engine/obj/util/struct/meshStructs.h
+        src/GLFW/src/engine/obj/util/model/Mesh.cpp src/GLFW/src/engine/obj/util/model/Mesh.h src/GLFW/src/engine/obj/util/data/String.cpp src/GLFW/src/engine/obj/util/data/String.h)
+
+target_link_libraries( glfwModels glfw ${GLFW_LIBRARIES} )
 

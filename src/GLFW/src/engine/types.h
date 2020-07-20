@@ -118,5 +118,6 @@ constexpr uint8 MODIFIER_ACTIVE_CTRL_ALT_SHIFT      = ( (uint8) GLFW_MOD_CONTROL
 
 #include "typesExtension/mats.h"
 #include "typesExtension/lights.h"
+#include "obj/util/struct/meshStructs.h"
 
 #endif //ENG1_TYPES_H
