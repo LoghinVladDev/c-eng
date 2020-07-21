@@ -580,7 +580,23 @@ add_executable( glfwModels
         src/GLFW/src/engine/obj/util/struct/inputAxisFunc.h
         stb_image/stb-image.h
         src/GLFW/src/engine/obj/util/struct/meshStructs.h
-        src/GLFW/src/engine/obj/util/model/Mesh.cpp src/GLFW/src/engine/obj/util/model/Mesh.h src/GLFW/src/engine/obj/util/data/String.cpp src/GLFW/src/engine/obj/util/data/String.h)
+        src/GLFW/src/engine/obj/util/model/Mesh.cpp
+        src/GLFW/src/engine/obj/util/model/Mesh.h
+        src/GLFW/src/engine/obj/util/data/String.cpp
+        src/GLFW/src/engine/obj/util/data/String.h
+        src/GLFW/src/engine/obj/util/data/Array.cpp
+        src/GLFW/src/engine/obj/util/data/Array.h
+        src/GLFW/src/engine/obj/util/data/Set.cpp src/GLFW/src/engine/obj/util/data/Set.h src/GLFW/src/engine/obj/util/data/Map.cpp src/GLFW/src/engine/obj/util/data/Map.h)
 
 target_link_libraries( glfwModels glfw ${GLFW_LIBRARIES} )
 
+
+add_executable( Sandbox3
+        src/GLFW/src/engine/tests/sandbox/sandbox3.cpp
+        src/GLFW/src/engine/obj/util/data/Array.cpp
+        src/GLFW/src/engine/obj/util/data/Array.h
+        src/GLFW/src/engine/obj/util/data/String.cpp
+        src/GLFW/src/engine/obj/util/data/String.h
+        src/GLFW/src/engine/obj/util/data/Set.cpp
+        src/GLFW/src/engine/obj/util/data/Set.h
+)

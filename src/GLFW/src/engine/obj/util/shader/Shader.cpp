@@ -4,6 +4,7 @@
 
 #include "Shader.h"
 #include <string_view>
+#include <obj/util/data/String.h>
 
 std::string engine::Shader::_pathToShadersFolder = std::string(__NO_PATH_GIVEN__);
 
@@ -16,63 +17,64 @@ static std::string& trimString(std::string& str) {
     return str;
 }
 
+//static
+
+/**
+ * TODO : implement once engine::List is done
+ * @param path
+ * @param codeContainer
+ * @return
+ */
+[[maybe_unused]] static engine::String& includeFileInShaderRecInit(const char* path, engine::String& codeContainer) {
+    return codeContainer;
+}
+
 [[maybe_unused]] engine::Shader::Shader(const char *vertexPath, const char *fragmentPath, bool relativePath, bool enableDiagnostic) noexcept {
-    std::string vertexCode;
-    std::string fragmentCode;
     std::ifstream vertexFile;
     std::ifstream fragmentFile;
 
-    std::string vertexCodeLine;
+    engine::String vertexCode;
+    engine::String fragmentCode;
+
+    engine::String includesExpanded;
+
+    engine::String vertexCodeLine;
 
     this->_fragmentFilename = fragmentPath;
     this->_vertexFilename = vertexPath;
 
-    vertexFile.exceptions( std::ifstream::failbit | std::ifstream::badbit );
-    fragmentFile.exceptions( std::ifstream::failbit | std::ifstream::badbit );
+//    vertexFile.exceptions( std::ifstream::failbit | std::ifstream::badbit );
+//    fragmentFile.exceptions( std::ifstream::failbit | std::ifstream::badbit );
 
     try{
         if( !relativePath ) {
             vertexFile.open( vertexPath );
-            fragmentFile.open( fragmentPath );
+//            fragmentFile.open( fragmentPath );
         } else {
             vertexFile.open( Shader::_pathToShadersFolder + vertexPath );
-            fragmentFile.open( Shader::_pathToShadersFolder + fragmentPath );
+//            fragmentFile.open( Shader::_pathToShadersFolder + fragmentPath );
         }
 
-//        static int lineCnt = 0;
-        while(std::getline(vertexFile, vertexCodeLine)) {
-//            std::printf("%d.\t%s\t=>\t", lineCnt++, vertexCodeLine.c_str());
-//            std::fflush(stdout);
+        while(engine::String::getline(vertexFile, vertexCodeLine)) {
+            vertexCodeLine.trim();
 
-            vertexCode += trimString(vertexCodeLine);
-
-//            std::cout << vertexCodeLine << '\n';
-//            vertexCode += vertexCodeLine;
-//            vertexCode = vertexCode.append(vertexCodeLine);
-//            std::cout << vertexCode << '\n';
-//            std::cout << vertexStream.str() << '\n';
+            if(vertexCodeLine.contains("#include")) {
+                vertexCodeLine.replaceFirst("#include", "");
+//                std::cout << "Include : " << vertexCodeLine.trim(" \"\r\n\t") << '\n';
+                includeFileInShaderRecInit(vertexCodeLine.trim(" \"\r\n\t").c_str(), includesExpanded);
+            }
+            else
+                std::cout << vertexCodeLine << '\n';
 
             if(vertexFile.eof())
                 break;
         }
 
-//        std::printf("cyka\n");
-//        fflush(stdout);
+        vertexCodeLine.trim();
+        std::cout << vertexCodeLine << '\n';
 
-//        std::stringstream fragmentStream;
-
-//        vertexStream << vertexFile.rdbuf();
-//        fragmentStream << fragmentFile.rdbuf();
-
-//        vertexFile.close();
-        fragmentFile.close();
-
-//        vertexCode = vertexStream.str();
-//        fragmentCode = fragmentStream.str();
-
-        std::cout << "CODE : \n" << vertexCode << '\n';
-
-        std::cout.flush();
+        vertexFile.close();
+//        fragmentFile.close();
     } catch (std::ifstream::failure& exception) {
         std::cout << "Shader read exception : " << exception.what() << std::endl;
         this->failed = true;

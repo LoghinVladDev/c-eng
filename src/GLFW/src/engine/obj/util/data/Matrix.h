@@ -57,7 +57,7 @@ namespace engine {
             T& operator[] (std::size_t) noexcept;
             const T& operator[] (std::size_t) const noexcept;
 
-            friend std::ostream& operator << (std::ostream& f, const Row& x){
+            friend std::ostream& operator << (std::ostream& f, const Row& x) noexcept {
                 for(std::size_t i = 0; i < x._m; i++)
                     f << (* (x._row[i])) << ' ';
                 return f;

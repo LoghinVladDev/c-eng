@@ -1,0 +1,13 @@
+
+#ifndef INCLUDE_TEST_GLSL_H
+#define INCLUDE_TEST_GLSL_H
+
+int a;
+
+void funct(int, int);
+
+void funct(int b, int c) {
+    a = b + c;
+}
+
+#endif

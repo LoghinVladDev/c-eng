@@ -986,6 +986,38 @@ namespace engine {
             return this->ltrim(what);
         }
 
+        [[maybe_unused]] static String& capitalize(String& str) noexcept {
+            return str.capitalize();
+        }
+
+        [[maybe_unused]] static String& toLower(String& str) noexcept {
+            return str.toLower();
+        }
+
+        [[maybe_unused]] static String& toUpper(String& str) noexcept {
+            return str.toUpper();
+        }
+
+        [[maybe_unused]] static String& revertLetterCase(String& str) noexcept {
+            return str.revertLetterCase();
+        }
+
+        [[maybe_unused]] static bool isWord(String& str) noexcept {
+            return str.isWord();
+        }
+
+        [[maybe_unused]] static bool isSentence(String& str) noexcept {
+            return str.isSentence();
+        }
+
+        String& capitalize() noexcept;
+        String& toLower() noexcept;
+        String& toUpper() noexcept;
+        String& revertLetterCase() noexcept;
+
+        bool isWord() const noexcept;
+        bool isSentence() const noexcept;
+
         String& operator = (char) noexcept;
         String& operator = (const char *) noexcept;
         String& operator = (const String&) noexcept;

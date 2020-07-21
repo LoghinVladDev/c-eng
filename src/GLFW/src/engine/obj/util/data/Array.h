@@ -15,7 +15,6 @@
 #endif
 //#include <hash_map>
 
-
 namespace engine {
     class [[maybe_unused]] EngineArrayOutOfBounds : public std::exception{
         [[nodiscard]] const char* what() const noexcept override;
@@ -111,7 +110,7 @@ void engine::Array<T>::_relocateMemory(std::size_t blockSize) noexcept {
     }
 
     for( std::size_t iterator = this->_arrLen; iterator < this->_arrCap; iterator++ ){
-        delete newMemLoc[iterator];
+        delete this->_arrPtr[iterator]; // was delete newMemLoc[iterator] for some reason worked ?
     }
 
     delete[] this->_arrPtr;

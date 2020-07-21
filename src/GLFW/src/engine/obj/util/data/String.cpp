@@ -759,7 +759,7 @@ engine::String& engine::String::replaceFirst(const char* what, const char* with)
     this->clear();
 
     std::size_t segmentIndex = 0;
-    std::size_t lengthOfSegment = lengthCStr(with);
+    std::size_t lengthOfSegment = lengthCStr(what);
 
     for(std::size_t it = 0; it < copy._len; it++) {
         if( it != replaceSegmentsPositions[segmentIndex] || replacedFirst ) {
@@ -934,13 +934,19 @@ bool engine::String::getline(std::istream& f, String& str) noexcept(false) {
     str.clear();
     char c;
 
-    do{
-        c = f.get();
-        if(f.eof() || c == '\n')
-            break;
+    try {
+        do {
+            c = f.get();
+            if (f.eof() || c == '\n')
+                break;
 
-        str += c;
-    } while(!f.eof() && c != '\n');
+//        std::cout << c << '\n';
+
+            str += c;
+        } while (!f.eof() && c != '\n');
+    } catch ( std::exception& e ) {
+        std::cout << "File read exception : " << e.what() << "\nLast read string : " << str << "\nLast char : " << c <<  '\n';
+    }
 
     return !f.eof();
 }
@@ -1010,6 +1016,9 @@ engine::String& engine::String::ltrim(const engine::String& characters) noexcept
 
     while(characters.contains(this->_str[endPos])) endPos++;
 
+//    std::cout << endPos << '\n';
+//    std::cout.flush();
+
     return this->replace(0, endPos, "");
 }
 
@@ -1037,6 +1046,89 @@ engine::String& engine::String::rtrim(const engine::String& characters) noexcept
     return this->replace(startPos + 1, this->_len, "");
 }
 
+static inline bool isLetter(char character) noexcept {
+    return ( ( character >= 'A' && character <= 'Z' ) || ( character >= 'a' && character <= 'z' ) );
+}
+
+static inline bool isUppercaseLetter(char character) noexcept {
+    return ( character >= 'A' && character <= 'Z' );
+}
+
+static inline bool isLowercaseLetter(char character) noexcept {
+    return ( character >= 'a' && character <= 'z' );
+}
+
+static inline bool isDigit(char character) noexcept {
+    return ( character >= '0' && character <= '9' );
+}
+
+static inline char lower(char character) noexcept {
+    return character + 32;
+}
+
+static inline char upper(char character) noexcept {
+    return character - 32;
+}
+
+engine::String& engine::String::capitalize() noexcept {
+    if(this->_str == nullptr)
+        return *this;
+
+    if(isLowercaseLetter(this->_str[0]))
+        this->_str[0] = upper(this->_str[0]);
+
+    return *this;
+}
+
+engine::String& engine::String::toLower() noexcept {
+    for(std::size_t it = 0; it < this->_len; it++)
+        if(isUppercaseLetter(this->_str[it]))
+            this->_str[it] = lower(this->_str[it]);
+
+    return *this;
+}
+
+engine::String& engine::String::toUpper() noexcept {
+    for(std::size_t it = 0; it < this->_len; it++)
+        if(isLowercaseLetter(this->_str[it]))
+            this->_str[it] = upper(this->_str[it]);
+
+    return *this;
+}
+
+engine::String& engine::String::revertLetterCase() noexcept {
+    for(std::size_t it = 0; it < this->_len; it++)
+        if(isUppercaseLetter(this->_str[it]))
+            this->_str[it] = lower(this->_str[it]);
+        else if(isLowercaseLetter(this->_str[it]))
+            this->_str[it] = upper(this->_str[it]);
+
+    return *this;
+}
+
+static inline bool isPartOfWord(char character) noexcept {
+    return !(!isLowercaseLetter(character) && !isUppercaseLetter(character) && !isDigit(character));
+}
+
+bool engine::String::isWord() const noexcept {
+    for(std::size_t it = 0; it < this->_len; it++)
+        if( ! isPartOfWord(this->_str[it]) )
+            return false;
+
+    return true;
+}
+
+bool engine::String::isSentence() const noexcept {
+    engine::String specialChars(" \t\r\n\"\'`,.;:?!()&@");
+
+    for(std::size_t it = 0; it < this->_len; it++) {
+        if( ! isPartOfWord(this->_str[it]) && ! specialChars.contains(this->_str[it]) )
+            return false;
+    }
+
+    return true;
+}
+
 bool operator == (const engine::String& a, const engine::String& b) noexcept {
     return !(a != b);
 }
@@ -1058,6 +1150,9 @@ bool operator == (const char* a, const engine::String& b) noexcept {
 }
 
 bool operator != (const engine::String& a, const engine::String& b) noexcept {
+    if(&a == &b)
+        return false;
+
     if(a._len != b._len)
         return true;
 
