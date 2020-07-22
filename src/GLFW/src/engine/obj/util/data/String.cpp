@@ -93,11 +93,11 @@ engine::String::~String() noexcept {
 }
 
 engine::String::operator std::string() const noexcept {
-    return std::string(this->_str == nullptr ? "" : this->_str);
+    return std::string(this->_str == nullptr ? "null_string" : this->_str);
 }
 
 std::ostream& operator << (std::ostream& stream, const engine::String& string) noexcept (false) {
-    return (stream << (string._str == nullptr ? "" : string._str ));
+    return (stream << (string._str == nullptr ? "null_string" : string._str ));
 }
 
 engine::String& engine::String::append(const char* obj) noexcept {
@@ -1063,11 +1063,11 @@ static inline bool isDigit(char character) noexcept {
 }
 
 static inline char lower(char character) noexcept {
-    return character + 32;
+    return character + (char)32;
 }
 
 static inline char upper(char character) noexcept {
-    return character - 32;
+    return character - (char)32;
 }
 
 engine::String& engine::String::capitalize() noexcept {
@@ -1220,10 +1220,7 @@ bool operator < (const engine::String& a, const engine::String& b) noexcept {
             return false;
     }
 
-    if( a._len >= b._len )
-        return false;
-    else
-        return true;
+    return a._len < b._len;
 }
 
 bool operator < (const engine::String& a, const std::string& b) noexcept {
@@ -1235,10 +1232,7 @@ bool operator < (const engine::String& a, const std::string& b) noexcept {
             return false;
     }
 
-    if( a._len >= b.length() )
-        return false;
-    else
-        return true;
+    return a._len < b.length();
 }
 
 bool operator < (const std::string& a, const engine::String& b) noexcept {
@@ -1250,10 +1244,7 @@ bool operator < (const std::string& a, const engine::String& b) noexcept {
             return false;
     }
 
-    if( a.length() >= b._len )
-        return false;
-    else
-        return true;
+    return a.length() < b._len;
 }
 
 bool operator < (const engine::String& a, const char* b) noexcept {
@@ -1266,10 +1257,7 @@ bool operator < (const engine::String& a, const char* b) noexcept {
             return false;
     }
 
-    if( a._len >= len )
-        return false;
-    else
-        return true;
+    return a._len < len;
 }
 
 bool operator < (const char* a, const engine::String& b) noexcept {
@@ -1282,10 +1270,7 @@ bool operator < (const char* a, const engine::String& b) noexcept {
             return false;
     }
 
-    if( len >= b._len )
-        return false;
-    else
-        return true;
+    return len < b._len;
 }
 
 bool operator > (const engine::String& a, const engine::String& b) noexcept {
@@ -1297,10 +1282,7 @@ bool operator > (const engine::String& a, const engine::String& b) noexcept {
             return false;
     }
 
-    if( a._len <= b._len )
-        return false;
-    else
-        return true;
+    return a._len > b._len;
 }
 
 bool operator > (const engine::String& a, const std::string& b) noexcept {
@@ -1312,10 +1294,7 @@ bool operator > (const engine::String& a, const std::string& b) noexcept {
             return false;
     }
 
-    if( a._len <= b.length() )
-        return false;
-    else
-        return true;
+    return a._len > b.length();
 }
 
 bool operator > (const std::string& a, const engine::String& b) noexcept {
@@ -1327,10 +1306,7 @@ bool operator > (const std::string& a, const engine::String& b) noexcept {
             return false;
     }
 
-    if( a.length() <= b._len )
-        return false;
-    else
-        return true;
+    return a.length() > b._len;
 }
 
 bool operator > (const engine::String& a, const char* b) noexcept {
@@ -1343,10 +1319,7 @@ bool operator > (const engine::String& a, const char* b) noexcept {
             return false;
     }
 
-    if( a._len <= len )
-        return false;
-    else
-        return true;
+    return a._len > len;
 }
 
 bool operator > (const char* a, const engine::String& b) noexcept {
@@ -1359,10 +1332,7 @@ bool operator > (const char* a, const engine::String& b) noexcept {
             return false;
     }
 
-    if( len <= b._len )
-        return false;
-    else
-        return true;
+    return len > b._len;
 }
 
 bool operator <= (const engine::String& a, const engine::String& b) noexcept {

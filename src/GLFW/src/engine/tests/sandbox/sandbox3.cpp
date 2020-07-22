@@ -9,19 +9,38 @@
 
 using namespace engine;
 
+template <class T>
+void operandTests(Set<T> A, Set<T> B) {
+    std::cout << "A + B : " << A + B << '\n';
+    std::cout << "A - B : " << A - B << '\n';
+    std::cout << "B - A : " << B - A << '\n';
+
+    std::cout << "A * B : " << A * B << '\n';
+
+    std::cout << "A ^ B : " << Set<String>::intersection(A, B) << '\n';
+    std::cout << "A u B : " << Set<String>::unity(A, B) << '\n';
+    std::cout << "A !^ B : " << Set<String>::outerIntersection(A, B) << '\n';
+
+
+}
+
 int main() {
-    Set<String> defineKeys;
+    Set<String> A {
+        String("str1"),
+        String("str2"),
+        String("str6"),
+        String("str3")
+    };
 
-    String a("abc");
-    String b("abcd");
-    String c("ABVC");
-    String d("abc");
+    Set<String> B = {
+        String("str3"),
+        String("str5"),
+        String("str2"),
+        String("str4"),
+        String("str6")
+    };
 
-    defineKeys.insert(a);
-    defineKeys.insert(b);
-    defineKeys.insert(a);
-    defineKeys.insert(c);
-    defineKeys.insert(d);
+    std::cout << A << '\n' << B << '\n';
 
-    std::cout << defineKeys;
+    operandTests(A, B);
 }

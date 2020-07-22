@@ -3,8 +3,7 @@
 //
 
 #include "Shader.h"
-#include <string_view>
-#include <obj/util/data/String.h>
+#include <obj/util/data/Set.h>
 
 std::string engine::Shader::_pathToShadersFolder = std::string(__NO_PATH_GIVEN__);
 
@@ -17,15 +16,79 @@ static std::string& trimString(std::string& str) {
     return str;
 }
 
-//static
+[[maybe_unused]] static INC_SHD_STR_LINE_PROP includeFileInShaderAnalyseLine ( const engine::String& codeLine ) noexcept {
+    INC_SHD_STR_LINE_PROP properties;
+    _INIT_INC_SHD_STR_LINE_PROP(properties);
+
+    engine::Array < engine::String > lineBits = codeLine.split(' ');
+    if( ! _INC_SHD_STR_LINE_IS_TOKEN( lineBits[0] ) )
+        _INC_SHD_STR_LINE_PROP_REG(properties)
+
+    INC_SHD_ENUM_LINE_TYPE tokenType;
+
+    _INC_SHD_STR_LINE_TYPE_STR_TO_ENUM(lineBits[0], tokenType)
+
+    switch (tokenType) {
+        case INCLUDE_TOKEN_CODE_LINE        : _INC_SHD_STR_LINE_PROP_INC(properties, lineBits)
+        case END_IF_CODE_LINE               : _INC_SHD_STR_LINE_PROP_ENDIF(properties, lineBits)
+        case IF_N_DEF_CODE_LINE             : _INC_SHD_STR_LINE_PROP_IFNDEF(properties, lineBits)
+        case IF_DEF_CODE_LINE               : _INC_SHD_STR_LINE_PROP_IFDEF(properties, lineBits)
+        case UNDEF_TOKEN_CODE_LINE          : _INC_SHD_STR_LINE_PROP_UNDEF(properties, lineBits)
+        case DEF_TOKEN_CODE_LINE            : _INC_SHD_STR_LINE_PROP_DEF(properties, lineBits)
+    }
+
+//    std::cout << "Line bits : " << lineBits << '\n';
+
+    return properties;
+}
+
+
+[[maybe_unused]] static engine::String includeFileInShaderRec(const char* path, engine::SimpleSet < engine::NonConstexprPair < engine::String, engine::String > >& defineTokens ) noexcept {
+    engine::String code;
+    engine::String codeLine;
+    std::ifstream includedFile;
+
+    includedFile.open(path);
+
+    try {
+        while(engine::String::getline(includedFile, codeLine)) {
+
+            INC_SHD_STR_LINE_PROP lineProperties = includeFileInShaderAnalyseLine ( codeLine );
+            if(_INC_SHD_STR_PROP_IS_TOKEN(lineProperties))
+                _INC_SHD_STR_PRINT_STR(lineProperties);
+            _INC_SHD_STR_CLEAR_STR(lineProperties);
+        }
+        INC_SHD_STR_LINE_PROP lineProperties = includeFileInShaderAnalyseLine( codeLine );
+
+        _INC_SHD_STR_PRINT_STR(lineProperties);
+        _INC_SHD_STR_CLEAR_STR(lineProperties);
+    } catch (const std::exception& e) {
+        std::cout << "File parse exception : " << e.what() << '\n';
+    }
+
+    std::cout << "Included File : " << path << '\n';
+
+    return code;
+}
 
 /**
+ * TODO : implement shader include folders.
  * TODO : implement once engine::List is done
  * @param path
  * @param codeContainer
  * @return
  */
-[[maybe_unused]] static engine::String& includeFileInShaderRecInit(const char* path, engine::String& codeContainer) {
+[[maybe_unused]] static engine::String& includeFileRelativeInShaderRecInit(const char* includerPath, const char* relativePath, engine::String& codeContainer) noexcept {
+
+    engine::SimpleSet < engine::NonConstexprPair < engine::String, engine::String > > includeTokens;
+    engine::String currentDir(includerPath);
+    currentDir.replace(currentDir.findLast('/'), currentDir.length(), "/");
+
+    std::cout << "Include file start : " << relativePath << ", requested from : " << currentDir << '\n';
+    includeFileInShaderRec( (currentDir + relativePath).c_str(), includeTokens);
+
+    exit(0);
+
     return codeContainer;
 }
 
@@ -37,6 +100,7 @@ static std::string& trimString(std::string& str) {
     engine::String fragmentCode;
 
     engine::String includesExpanded;
+    engine::String includerPath;
 
     engine::String vertexCodeLine;
 
@@ -50,9 +114,11 @@ static std::string& trimString(std::string& str) {
         if( !relativePath ) {
             vertexFile.open( vertexPath );
 //            fragmentFile.open( fragmentPath );
+            includerPath = vertexPath;
         } else {
             vertexFile.open( Shader::_pathToShadersFolder + vertexPath );
 //            fragmentFile.open( Shader::_pathToShadersFolder + fragmentPath );
+            includerPath = (Shader::_pathToShadersFolder + vertexPath);
         }
 
         while(engine::String::getline(vertexFile, vertexCodeLine)) {
@@ -61,7 +127,7 @@ static std::string& trimString(std::string& str) {
             if(vertexCodeLine.contains("#include")) {
                 vertexCodeLine.replaceFirst("#include", "");
 //                std::cout << "Include : " << vertexCodeLine.trim(" \"\r\n\t") << '\n';
-                includeFileInShaderRecInit(vertexCodeLine.trim(" \"\r\n\t").c_str(), includesExpanded);
+                includeFileRelativeInShaderRecInit(includerPath.c_str(), vertexCodeLine.trim(" \"\r\n\t").c_str(), includesExpanded);
             }
             else
                 std::cout << vertexCodeLine << '\n';
@@ -290,3 +356,26 @@ void engine::Shader::setShadersFolder(const char * path) noexcept {
 }
 
 
+#undef _INC_SHD_STR_LINE_PROP_ENDIF
+#undef _INC_SHD_STR_LINE_PROP_IFNDEF
+#undef _INC_SHD_STR_LINE_PROP_IFDEF
+#undef _INC_SHD_STR_LINE_PROP_UNDEF
+#undef _INC_SHD_STR_LINE_PROP_INC
+#undef _INC_SHD_STR_LINE_PROP_REG
+#undef _INC_SHD_STR_LINE_PROP_DEF
+#undef _INIT_INC_SHD_STR_LINE_PROP
+#undef _INC_SHD_STR_LINE_IS_TOKEN
+#undef _INC_SHD_STR_LINE_TYPE_STR_TO_ENUM
+
+#undef _INC_SHD_STR_CLEAR_STR
+#undef _INC_SHD_STR_PRINT_STR
+
+
+#undef _TOKEN_INCLUDE
+#undef _TOKEN_DEFINE
+#undef _TOKEN_UNDEFINE
+#undef _TOKEN_IF_DEFINED
+#undef _TOKEN_IF_NOT_DEFINED
+#undef _TOKEN_END_IF
+
+#undef _INC_SHD_STR_PROP_IS_TOKEN

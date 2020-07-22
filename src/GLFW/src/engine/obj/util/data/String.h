@@ -1015,8 +1015,8 @@ namespace engine {
         String& toUpper() noexcept;
         String& revertLetterCase() noexcept;
 
-        bool isWord() const noexcept;
-        bool isSentence() const noexcept;
+        [[nodiscard]] bool isWord() const noexcept;
+        [[nodiscard]] bool isSentence() const noexcept;
 
         String& operator = (char) noexcept;
         String& operator = (const char *) noexcept;
@@ -1028,6 +1028,8 @@ namespace engine {
         String& operator+= (const String&) noexcept;
         String& operator+= (const std::string&) noexcept;
 
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "NotImplementedFunctions"
         friend bool             ( ::operator == ) (const engine::String&, const engine::String&)    noexcept;
         friend bool             ( ::operator == ) (const engine::String&, const std::string&)       noexcept;
         friend bool             ( ::operator == ) (const std::string&, const engine::String&)       noexcept;
@@ -1074,6 +1076,8 @@ namespace engine {
 
         friend std::istream& ( ::operator >> ) (std::istream&, String&) noexcept (false);
         friend std::ostream& ( ::operator << ) (std::ostream&, const String&) noexcept (false);
+#pragma clang diagnostic pop
+
     };
 
 }

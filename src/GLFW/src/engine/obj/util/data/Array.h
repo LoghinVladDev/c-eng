@@ -72,11 +72,12 @@ namespace engine {
 
         friend std::ostream& operator << (std::ostream& f, const engine::Array<T>& array) {
             f << "arr = [ ";
-            for( std::size_t iterator = 0; iterator < array._arrLen - 1; iterator++ )
-                f << * ( array._arrPtr[iterator] ) << ", ";
 
-            if(array._arrLen > 0)
-                f << * ( array._arrPtr[array._arrLen - 1] );
+            if(array._arrLen > 0) {
+                for (std::size_t iterator = 0; iterator < array._arrLen - 1; iterator++)
+                    f << *(array._arrPtr[iterator]) << ", ";
+                f << *(array._arrPtr[array._arrLen - 1]);
+            }
 
             f<< " ] ";
 
