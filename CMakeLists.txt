@@ -390,6 +390,14 @@ add_executable( glfwWhiteboard1
         src/GLFW/src/engine/obj/window/Window.h
         src/GLFW/src/engine/obj/util/struct/inputAxisFunc.c
         src/GLFW/src/engine/obj/util/struct/inputAxisFunc.h
+        src/GLFW/src/engine/obj/util/data/String.cpp
+        src/GLFW/src/engine/obj/util/data/String.h
+        src/GLFW/src/engine/obj/util/data/Array.cpp
+        src/GLFW/src/engine/obj/util/data/Array.h
+        src/GLFW/src/engine/obj/util/data/Pair.cpp
+        src/GLFW/src/engine/obj/util/data/Pair.h
+        src/GLFW/src/engine/obj/util/data/Map.cpp
+        src/GLFW/src/engine/obj/util/data/Map.h
         stb_image/stb-image.h
 )
 

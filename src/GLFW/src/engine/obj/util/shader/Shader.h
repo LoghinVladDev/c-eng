@@ -41,7 +41,8 @@ typedef struct {
 #define _INIT_INC_SHD_STR_LINE_PROP(_str)               \
     _str.lineType = INC_SHD_ENUM_LINE_TYPE::UNKNOWN;    \
     _str.tokenName = nullptr;                           \
-    _str.tokenReplaceValue = nullptr;
+    _str.tokenReplaceValue = nullptr;                   \
+    _str.includeFileRelativePath = nullptr;
 
 #define _TOKEN_INCLUDE          "#include"
 #define _TOKEN_DEFINE           "#define"

@@ -6,6 +6,7 @@
 #define ENG1_PAIR_H
 
 #include <iostream>
+#include <type_traits>
 
 namespace engine {
 
@@ -65,6 +66,12 @@ namespace engine {
             *this->_first = *obj._first;
             *this->_second = *obj._second;
             return *this;
+        }
+
+        [[nodiscard]] std::string toString() const noexcept {
+//            return ("{" + (std::string)(**this->_first) + ", " + (std::string)(**this->_second) + "}" );
+//            if constexpr ( std::is_same_v<K,  )
+            return std::string().append("{ ").append((std::string)**this->_first).append(", ").append((std::string)**this->_second).append("}");
         }
 
         friend std::ostream& operator << (std::ostream& f, const engine::NonConstexprPair<T, U>& obj ) noexcept {

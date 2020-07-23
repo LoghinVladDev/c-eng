@@ -4,6 +4,7 @@
 
 #include "Shader.h"
 #include <obj/util/data/Set.h>
+#include <obj/util/data/Map.h>
 
 std::string engine::Shader::_pathToShadersFolder = std::string(__NO_PATH_GIVEN__);
 
@@ -37,16 +38,55 @@ static std::string& trimString(std::string& str) {
         case DEF_TOKEN_CODE_LINE            : _INC_SHD_STR_LINE_PROP_DEF(properties, lineBits)
     }
 
-//    std::cout << "Line bits : " << lineBits << '\n';
-
     return properties;
 }
 
+/**
+ * 
+ * @return true if continue, else skip to corresponding endif;
+ */
+// [[maybe_unused]] static bool includeFileInShaderProcessToken(INC_SHD_STR_LINE_PROP lineProperties, engine::String& code, engine::SimpleSet < engine::NonConstexprPair < engine::String, engine::String > > & defineTokens) noexcept {
+[[maybe_unused]] static bool includeFileInShaderProcessToken ( INC_SHD_STR_LINE_PROP lineProperties, engine::String& code, engine::HashMap < engine::String, engine::String> & defineTokens ) noexcept {
+    switch ( lineProperties.lineType ) {
+    //    case INCLUDE_TOKEN_CODE_LINE         : 
+        case DEF_TOKEN_CODE_LINE : 
 
-[[maybe_unused]] static engine::String includeFileInShaderRec(const char* path, engine::SimpleSet < engine::NonConstexprPair < engine::String, engine::String > >& defineTokens ) noexcept {
+            std::cout << "Define ! \n";
+
+            code += ( engine::String(_TOKEN_DEFINE) + " " + (* lineProperties.tokenName ) + " " + (* lineProperties.tokenReplaceValue) );   
+            // defineTokens.insert( engine::NonConstexprPair <engine::String, engine::String> ( (*lineProperties.tokenName), (*lineProperties.tokenReplaceValue) ) );
+            defineTokens.put( *lineProperties.tokenName, *lineProperties.tokenReplaceValue );
+
+            std::cout << defineTokens << '\n';
+
+            return true;
+        
+        case IF_DEF_CODE_LINE : 
+            // std::cout << "If defined! \n";
+            // return true;
+            return defineTokens.contains(*lineProperties.tokenName);
+        case IF_N_DEF_CODE_LINE : 
+//            std::cout << "If not defined\n";
+            return ! defineTokens.contains(*lineProperties.tokenName);
+
+        case UNDEF_TOKEN_CODE_LINE :
+            defineTokens.remove(*lineProperties.tokenName);
+            return true;
+
+        case END_IF_CODE_LINE : 
+            std::cout << "END IF\n";
+            return true;
+    }    
+    return true;
+}
+
+// [[maybe_unused]] static engine::String includeFileInShaderRec(const char* path, engine::SimpleSet < engine::NonConstexprPair < engine::String, engine::String > >& defineTokens ) noexcept {
+[[maybe_unused]] static engine::String includeFileInShaderRec(const char* path, engine::HashMap < engine::String, engine::String >& defineTokens ) noexcept {
     engine::String code;
     engine::String codeLine;
     std::ifstream includedFile;
+
+    int ifDepth = 0;
 
     includedFile.open(path);
 
@@ -54,19 +94,58 @@ static std::string& trimString(std::string& str) {
         while(engine::String::getline(includedFile, codeLine)) {
 
             INC_SHD_STR_LINE_PROP lineProperties = includeFileInShaderAnalyseLine ( codeLine );
-            if(_INC_SHD_STR_PROP_IS_TOKEN(lineProperties))
-                _INC_SHD_STR_PRINT_STR(lineProperties);
+
+            if(_INC_SHD_STR_PROP_IS_TOKEN(lineProperties)) {
+                // _INC_SHD_STR_PRINT_STR(lineProperties);
+
+                if(lineProperties.lineType == INC_SHD_ENUM_LINE_TYPE::INCLUDE_TOKEN_CODE_LINE) {
+
+                    engine::String dirPath(path);
+                    code += includeFileInShaderRec(
+                        ( dirPath.replace(dirPath.findLast("/"), dirPath.length(), "/") + (*lineProperties.includeFileRelativePath) ).c_str(), 
+                        defineTokens 
+                    );
+
+                } else {
+
+                    if (ifDepth == 0 && !includeFileInShaderProcessToken(lineProperties, code, defineTokens)) {
+                        ifDepth++;
+                    }
+
+                    if (ifDepth > 0 && lineProperties.lineType == INC_SHD_ENUM_LINE_TYPE::END_IF_CODE_LINE)
+                        ifDepth--;
+
+                    std::cout << " if depth : " << ifDepth << '\n';
+
+                    if (ifDepth > 0) {
+                        _INC_SHD_STR_CLEAR_STR(lineProperties);
+                        continue;
+                    }
+                }
+            } else if(ifDepth == 0) {
+                code += codeLine + "\n";
+            }
+
             _INC_SHD_STR_CLEAR_STR(lineProperties);
         }
         INC_SHD_STR_LINE_PROP lineProperties = includeFileInShaderAnalyseLine( codeLine );
 
-        _INC_SHD_STR_PRINT_STR(lineProperties);
+        if(_INC_SHD_STR_PROP_IS_TOKEN(lineProperties)) {
+            // _INC_SHD_STR_PRINT_STR(lineProperties);
+
+            includeFileInShaderProcessToken(lineProperties, code, defineTokens);
+        } else {
+            code += codeLine;
+        }
+
         _INC_SHD_STR_CLEAR_STR(lineProperties);
     } catch (const std::exception& e) {
         std::cout << "File parse exception : " << e.what() << '\n';
     }
 
     std::cout << "Included File : " << path << '\n';
+
+    std::cout << "\n\nFinalCode : \n" << code << '\n';
 
     return code;
 }
@@ -80,7 +159,8 @@ static std::string& trimString(std::string& str) {
  */
 [[maybe_unused]] static engine::String& includeFileRelativeInShaderRecInit(const char* includerPath, const char* relativePath, engine::String& codeContainer) noexcept {
 
-    engine::SimpleSet < engine::NonConstexprPair < engine::String, engine::String > > includeTokens;
+    // engine::SimpleSet < engine::NonConstexprPair < engine::String, engine::String > > includeTokens;
+    engine::HashMap < engine::String, engine::String > includeTokens;
     engine::String currentDir(includerPath);
     currentDir.replace(currentDir.findLast('/'), currentDir.length(), "/");
 
