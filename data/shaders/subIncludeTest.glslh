@@ -1,6 +1,11 @@
 #ifndef ENG1_SUB_INCLUDE_TEST_GLSL_H
 #define ENG1_SUB_INCLUDE_TEST_GLSL_H
 
+int f() {
+    int x = 3;
+    return x;
+}
 
 
-#endif//ENG1_SUB_INCLUDE_TEST_GLSL_H
+
+#endif //ENG1_SUB_INCLUDE_TEST_GLSL_H
