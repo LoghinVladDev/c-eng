@@ -215,17 +215,16 @@ namespace engine {
         [[maybe_unused]] [[nodiscard]] int getID() const noexcept;
 
         class Header {
-
         public:
-            enum DataTypeModifier {
+            enum DataTypeModifier : uint8 {
                 NONE,
                 INPUT,
                 OUTPUT,
                 UNIFORM
             };
 
-            enum DataType {
-                SINT8 = 0x00,
+            enum DataType : uint8 {
+                SINT8 = _SHD_HEADER_DATA_TYPE_STD_TYPE_START,
                 SINT16,
                 SINT32,
                 SINT64,
@@ -263,7 +262,7 @@ namespace engine {
                 FLOAT = FLOAT32,
                 DOUBLE = FLOAT64,
                 
-                SINT8_ARRAY = 0x40,
+                SINT8_ARRAY = _SHD_HEADER_DATA_TYPE_STD_TYPE_ARR_START,
                 SINT16_ARRAY,
                 SINT32_ARRAY,
                 SINT64_ARRAY,
@@ -299,9 +298,9 @@ namespace engine {
                 UNSIGNED_LONG_LONG_INT_ARRAY = UINT64_ARRAY,
 
                 FLOAT_ARRAY = FLOAT32_ARRAY,
-                DOUBLE = FLOAT64_ARRAY,
+                DOUBLE_ARRAY = FLOAT64_ARRAY,
 
-                SAMPLER_2D = 0x80,
+                SAMPLER_2D = _SHD_HEADER_DATA_TYPE_STD_SHD_TYPE_START,
 
                 VEC_2,
                 VEC_3,
@@ -311,7 +310,7 @@ namespace engine {
                 MAT_4,
 
 
-                SAMPLER_2D_ARRAY = 0xC0,
+                SAMPLER_2D_ARRAY = _SHD_HEADER_DATA_TYPE_STD_SHD_TYPE_ARR_START,
 
                 VEC_2_ARRAY,
                 VEC_3_ARRAY,
@@ -320,14 +319,26 @@ namespace engine {
                 MAT_3_ARRAY,
                 MAT_4_ARRAY,
 
-                STRUCT = 0xFD,
-                STRUCT_ARRAY = 0xFE
+                STRUCT = _SHD_HEADER_DATA_TYPE_STD_STRUCT_TYPE_START,
+                STRUCT_ARRAY = _SHD_HEADER_DATA_TYPE_STD_STRUCT_TYPE_ARR_START
             };
+
+            static engine::String dataTypeToString(DataType) noexcept;
+            static engine::String dataTypeModifierToString(DataTypeModifier) noexcept;
+            
+            static engine::String dataTypeDeclaration(DataType) noexcept;
+            static engine::String dataTypeModifierDeclaration(DataTypeModifier) noexcept;
 
             class Struct {
             private:
-                engine::HashMap < engine::Shader::Header::DataType , engine::String> _variables;
+
+                engine::Array < engine::NonConstexprPair < uint8, engine::String > > _variables;
+
+                // engine::HashMap < uint8, engine::String > _variables;
+//                engine::HashMap < engine::Shader::Header::DataType , engine::String > _variables;
                 engine::HashMap < engine::String, uint64 > _arraySizes;
+                engine::HashMap < engine::String, engine::String> _structureTypeNames;
+
                 engine::String _name;
 
             public:
@@ -335,10 +346,17 @@ namespace engine {
                 explicit Struct(const char*) noexcept;
                 explicit Struct(const engine::String&) noexcept;
 
+                engine::Array < engine::NonConstexprPair < uint8, engine::String > > & getVariables() noexcept;
+
+                // engine::HashMap < uint8, engine::String > & getVariables() noexcept;
+//                engine::HashMap < engine::Shader::Header::DataType, engine::String >& getVariables() noexcept;
+                engine::HashMap < engine::String, uint64 > & getArraySizes() noexcept;
+                engine::HashMap < engine::String, engine::String > & getStructureVariableTypes() noexcept;
+
                 Struct& addVariable(const engine::String&, DataType) noexcept;
                 Struct& addVariable(const char*, DataType) noexcept;
-                Struct& addVariable(const Struct&) noexcept;
-                Struct& addStructVariable(const char*) noexcept;
+                Struct& addVariable(const Struct&, const char*) noexcept;
+                Struct& addStructVariable(const char*, const char*) noexcept;
 
                 Struct& addVariableUInt8  (const engine::String&) noexcept;
                 Struct& addVariableUInt16 (const engine::String&) noexcept;
@@ -364,8 +382,9 @@ namespace engine {
 
 
                 Struct& addArrayVariable(const engine::String&, DataType, std::size_t) noexcept;
-                Struct& addArrayVariable(const Struct&, std::size_t) noexcept;
-                Struct& addArrayStructVariable(const engine::String&,std::size_t) noexcept;
+                Struct& addArrayVariable(const Struct&, const char*, std::size_t) noexcept;
+                Struct& addArrayVariable(const Struct&, const engine::String&, std::size_t) noexcept;
+                Struct& addArrayStructVariable(const engine::String&, const engine::String&,std::size_t) noexcept;
 
                 Struct& addArrayVariableUInt16(const engine::String&, std::size_t) noexcept;
                 Struct& addArrayVariableUInt32(const engine::String&, std::size_t) noexcept;
@@ -413,11 +432,11 @@ namespace engine {
 
 
                 Struct& addArrayVariable(const char*, DataType, std::size_t) noexcept;
-                Struct& addArrayStructVariable(const char*, std::size_t) noexcept;
+                Struct& addArrayStructVariable(const char*, const char*, std::size_t) noexcept;
 
+                Struct& addArrayVariableUInt8 (const char*, std::size_t) noexcept;
                 Struct& addArrayVariableUInt16(const char*, std::size_t) noexcept;
                 Struct& addArrayVariableUInt32(const char*, std::size_t) noexcept;
-                Struct& addArrayVariableUInt8 (const char*, std::size_t) noexcept;
                 Struct& addArrayVariableUInt64(const char*, std::size_t) noexcept;
 
                 Struct& addArrayVariableInt8  (const char*, std::size_t) noexcept;
@@ -436,10 +455,10 @@ namespace engine {
                 Struct& addArrayVariableMat3     (const char*, std::size_t) noexcept;
                 Struct& addArrayVariableMat4     (const char*, std::size_t) noexcept;
 
+                Struct& settleVariables() noexcept;
 
                 engine::String toString() const noexcept;
-
-                engine::HashMap < engine::Shader::Header::DataType, engine::String >& getVariables() noexcept;
+                
             };
 
         private:

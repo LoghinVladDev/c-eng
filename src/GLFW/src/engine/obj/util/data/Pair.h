@@ -22,9 +22,14 @@ namespace engine {
             this->_second = new U();
         };
 
+        constexpr NonConstexprPair(const NonConstexprPair& obj) noexcept {
+            this->_first = new T(* obj._first);
+            this->_second = new U(* obj._second);
+        }
+
         [[maybe_unused]] explicit NonConstexprPair(const T& first, const U& second) noexcept {
             this->_first = new T(first);
-            this->_second = new T(second);
+            this->_second = new U(second);
         }
 
         ~NonConstexprPair() noexcept {
@@ -36,7 +41,15 @@ namespace engine {
             return * (this->_first);
         }
 
-        [[maybe_unused]] T getSecond() const noexcept {
+        [[maybe_unused]] T& getFirst() noexcept {
+            return * (this->_first);
+        }
+
+        [[maybe_unused]] U getSecond() const noexcept {
+            return * (this->_second);
+        }
+
+        [[maybe_unused]] U& getSecond() noexcept {
             return * (this->_second);
         }
 

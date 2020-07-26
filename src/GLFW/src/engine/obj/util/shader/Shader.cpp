@@ -463,6 +463,13 @@ void engine::Shader::setShadersFolder(const char * path) noexcept {
     Shader::_pathToShadersFolder = std::string(path);
 }
 
+
+
+/**
+ * Shader Header Struct Definition start
+ * 
+ * 
+ */
 engine::Shader::Header::Struct::Struct(const char * name) noexcept {
     this->_name = engine::String(name);
 }
@@ -475,7 +482,8 @@ engine::Shader::Header::Struct& engine::Shader::Header::Struct::addVariable(cons
     if( !_SHD_HEADER_DATA_IS_VAR_TYPE(dataType) )
         return *this;
 
-    this->_variables.put(dataType, varName);
+    this->_variables += engine::NonConstexprPair < uint8, engine::String > ( dataType, varName );
+    // this->_variables.put(dataType, varName);
     return *this;
 }
 
@@ -483,102 +491,126 @@ engine::Shader::Header::Struct& engine::Shader::Header::Struct::addVariable(cons
     if( !_SHD_HEADER_DATA_IS_VAR_TYPE(dataType) )
         return *this;
 
-    this->_variables.put(dataType, engine::String(varName));
+    this->_variables += engine::NonConstexprPair < uint8, engine::String > ( dataType, engine::String(varName) );
+    // this->_variables.put(dataType, engine::String(varName));
     return *this;
 }
 
-engine::Shader::Header::Struct& engine::Shader::Header::Struct::addVariable(const Struct & varType) noexcept {
-    this->_variables.put(engine::Shader::Header::DataType::STRUCT, varType._name);
+engine::Shader::Header::Struct& engine::Shader::Header::Struct::addVariable(const Struct & varType, const char* varName) noexcept {
+
+    this->_variables += engine::NonConstexprPair < uint8, engine::String > ( engine::Shader::Header::DataType::STRUCT, engine::String(varName) );
+    this->_structureTypeNames.put( engine::String(varName), varType._name );
+
+    // this->_variables.put(engine::Shader::Header::DataType::STRUCT, varType._name);
     return *this;
 }
 
-engine::Shader::Header::Struct& engine::Shader::Header::Struct::addStructVariable(const char* varName) noexcept {
-    this->_variables.put(engine::Shader::Header::DataType::STRUCT, engine::String(varName));
+engine::Shader::Header::Struct& engine::Shader::Header::Struct::addStructVariable(const char* structName, const char* varName) noexcept {
+    this->_variables += engine::NonConstexprPair < uint8, engine::String > ( engine::Shader::Header::DataType::STRUCT, engine::String(varName) );
+    // this->_variables.put(engine::Shader::Header::DataType::STRUCT, engine::String(varName));
+    this->_structureTypeNames.put(engine::String(varName), engine::String(structName));
     return *this;
 }
 
 engine::Shader::Header::Struct& engine::Shader::Header::Struct::addVariableUInt8 (const engine::String& varName) noexcept {
-    this->_variables.put(engine::Shader::Header::DataType::UINT8, varName);
+    this->_variables += engine::NonConstexprPair < uint8, engine::String > ( engine::Shader::Header::DataType::UINT8, engine::String(varName) );
+    // this->_variables.put(engine::Shader::Header::DataType::UINT8, varName);
     return *this;
 }
 
 engine::Shader::Header::Struct& engine::Shader::Header::Struct::addVariableUInt16( const engine::String& varName ) noexcept {
-    this->_variables.put(engine::Shader::Header::DataType::UINT16, varName); 
+    this->_variables += engine::NonConstexprPair < uint8, engine::String > ( engine::Shader::Header::DataType::UINT16, engine::String(varName) );
+    // this->_variables.put(engine::Shader::Header::DataType::UINT16, varName); 
     return *this; 
 }
 
 engine::Shader::Header::Struct& engine::Shader::Header::Struct::addVariableUInt32( const engine::String& varName ) noexcept {
-    this->_variables.put(engine::Shader::Header::DataType::UINT32, varName);
+    this->_variables += engine::NonConstexprPair < uint8, engine::String > ( engine::Shader::Header::DataType::UINT32, engine::String(varName) );
+    // this->_variables.put(engine::Shader::Header::DataType::UINT32, varName);
     return *this;
 }
 
 engine::Shader::Header::Struct& engine::Shader::Header::Struct::addVariableUInt64( const engine::String& varName ) noexcept {
-    this->_variables.put(engine::Shader::Header::DataType::UINT64, varName);
+    this->_variables += engine::NonConstexprPair < uint8, engine::String > ( engine::Shader::Header::DataType::UINT64, engine::String(varName) );
+    // this->_variables.put(engine::Shader::Header::DataType::UINT64, varName);
     return *this;
 }
 
 engine::Shader::Header::Struct& engine::Shader::Header::Struct::addVariableInt8( const engine::String& varName ) noexcept {
-    this->_variables.put(engine::Shader::Header::DataType::SINT8, varName);
+    this->_variables += engine::NonConstexprPair < uint8, engine::String > ( engine::Shader::Header::DataType::SINT8, engine::String(varName) );
+    // this->_variables.put(engine::Shader::Header::DataType::SINT8, varName);
     return *this;
 }
 
 engine::Shader::Header::Struct& engine::Shader::Header::Struct::addVariableInt16( const engine::String& varName ) noexcept {
-    this->_variables.put(engine::Shader::Header::DataType::SINT16, varName);
+    this->_variables += engine::NonConstexprPair < uint8, engine::String > ( engine::Shader::Header::DataType::SINT16, engine::String(varName) );
+    // this->_variables.put(engine::Shader::Header::DataType::SINT16, varName);
     return *this;
 }
 
 engine::Shader::Header::Struct& engine::Shader::Header::Struct::addVariableInt32( const engine::String& varName ) noexcept {
-    this->_variables.put(engine::Shader::Header::DataType::SINT32, varName);
+    this->_variables += engine::NonConstexprPair < uint8, engine::String > ( engine::Shader::Header::DataType::SINT32, engine::String(varName) );
+    // this->_variables.put(engine::Shader::Header::DataType::SINT32, varName);
     return *this;
 }
 
 engine::Shader::Header::Struct& engine::Shader::Header::Struct::addVariableInt64( const engine::String& varName ) noexcept {
-    this->_variables.put(engine::Shader::Header::DataType::SINT64, varName);
+    this->_variables += engine::NonConstexprPair < uint8, engine::String > ( engine::Shader::Header::DataType::SINT64, engine::String(varName) );
+    // this->_variables.put(engine::Shader::Header::DataType::SINT64, varName);
     return *this;
 }
 
 engine::Shader::Header::Struct& engine::Shader::Header::Struct::addVariableFloat( const engine::String& varName ) noexcept {
-    this->_variables.put(engine::Shader::Header::DataType::FLOAT32, varName);
+    this->_variables += engine::NonConstexprPair < uint8, engine::String > ( engine::Shader::Header::DataType::FLOAT32, engine::String(varName) );
+    // this->_variables.put(engine::Shader::Header::DataType::FLOAT32, varName);
     return *this;
 }
 
 engine::Shader::Header::Struct& engine::Shader::Header::Struct::addVariableDouble( const engine::String& varName ) noexcept {
-    this->_variables.put(engine::Shader::Header::DataType::FLOAT64, varName);
+    this->_variables += engine::NonConstexprPair < uint8, engine::String > ( engine::Shader::Header::DataType::FLOAT64, engine::String(varName) );
+    // this->_variables.put(engine::Shader::Header::DataType::FLOAT64, varName);
     return *this;
 }
 
 engine::Shader::Header::Struct& engine::Shader::Header::Struct::addVariableBool( const engine::String& varName ) noexcept {
-    this->_variables.put(engine::Shader::Header::DataType::BOOL, varName);
+    this->_variables += engine::NonConstexprPair < uint8, engine::String > ( engine::Shader::Header::DataType::BOOL, engine::String(varName) );
+    // this->_variables.put(engine::Shader::Header::DataType::BOOL, varName);
     return *this;
 }
 
 engine::Shader::Header::Struct& engine::Shader::Header::Struct::addVariableSampler2D( const engine::String& varName ) noexcept {
-    this->_variables.put(engine::Shader::Header::DataType::SAMPLER_2D, varName);
+    this->_variables += engine::NonConstexprPair < uint8, engine::String > ( engine::Shader::Header::DataType::SAMPLER_2D, engine::String(varName) );
+    // this->_variables.put(engine::Shader::Header::DataType::SAMPLER_2D, varName);
     return *this;
 }
 
 engine::Shader::Header::Struct& engine::Shader::Header::Struct::addVariableVec2( const engine::String& varName ) noexcept {
-    this->_variables.put(engine::Shader::Header::DataType::VEC_2, varName);
+    this->_variables += engine::NonConstexprPair < uint8, engine::String > ( engine::Shader::Header::DataType::VEC_2, engine::String(varName) );
+    // this->_variables.put(engine::Shader::Header::DataType::VEC_2, varName);
     return *this;
 }
 
 engine::Shader::Header::Struct& engine::Shader::Header::Struct::addVariableVec3( const engine::String& varName ) noexcept {
-    this->_variables.put(engine::Shader::Header::DataType::VEC_3, varName);
+    this->_variables += engine::NonConstexprPair < uint8, engine::String > ( engine::Shader::Header::DataType::VEC_3, engine::String(varName) );
+    // this->_variables.put(engine::Shader::Header::DataType::VEC_3, varName);
     return *this;
 }
 
 engine::Shader::Header::Struct& engine::Shader::Header::Struct::addVariableVec4( const engine::String& varName ) noexcept {
-    this->_variables.put(engine::Shader::Header::DataType::VEC_4, varName);
+    this->_variables += engine::NonConstexprPair < uint8, engine::String > ( engine::Shader::Header::DataType::VEC_4, engine::String(varName) );
+    // this->_variables.put(engine::Shader::Header::DataType::VEC_4, varName);
     return *this;
 }
 
 engine::Shader::Header::Struct& engine::Shader::Header::Struct::addVariableMat3( const engine::String& varName ) noexcept {
-    this->_variables.put(engine::Shader::Header::DataType::MAT_3, varName);
+    this->_variables += engine::NonConstexprPair < uint8, engine::String > ( engine::Shader::Header::DataType::MAT_3, engine::String(varName) );
+    // this->_variables.put(engine::Shader::Header::DataType::MAT_3, varName);
     return *this;
 }
 
 engine::Shader::Header::Struct& engine::Shader::Header::Struct::addVariableMat4( const engine::String& varName ) noexcept {
-    this->_variables.put(engine::Shader::Header::DataType::MAT_4, varName);
+    this->_variables += engine::NonConstexprPair < uint8, engine::String > ( engine::Shader::Header::DataType::MAT_4, engine::String(varName) );
+    // this->_variables.put(engine::Shader::Header::DataType::MAT_4, varName);
     return *this;
 }
 
@@ -586,207 +618,254 @@ engine::Shader::Header::Struct& engine::Shader::Header::Struct::addArrayVariable
     if( ! _SHD_HEADER_DATA_IS_VAR_ARR_TYPE(dataType) ) 
         return *this;
 
-    this->_variables.put(dataType, varName);
+    this->_variables += engine::NonConstexprPair < uint8, engine::String > ( dataType, varName );
+    // this->_variables.put(dataType, varName);
     this->_arraySizes.put(varName, arrSize);
     return *this;
 }
 
-engine::Shader::Header::Struct& engine::Shader::Header::Struct::addArrayVariable(const engine::Shader::Header::Struct& str, std::size_t arrSize) noexcept {
-    this->_variables.put(engine::Shader::Header::DataType::STRUCT_ARRAY, str._name);
-    this->_arraySizes.put(str._name, arrSize);
+engine::Shader::Header::Struct& engine::Shader::Header::Struct::addArrayVariable(const engine::Shader::Header::Struct& str, const char* varName, std::size_t arrSize) noexcept {
+    // this->_variables.put(engine::Shader::Header::DataType::STRUCT_ARRAY, engine::String(varName));
+    this->_variables += engine::NonConstexprPair < uint8, engine::String > (engine::Shader::Header::DataType::STRUCT_ARRAY, engine::String(varName));
+    this->_arraySizes.put(engine::String(varName), arrSize);
+    this->_structureTypeNames.put(engine::String(varName), str._name);
     return *this;
 }
 
-engine::Shader::Header::Struct& engine::Shader::Header::Struct::addArrayStructVariable(const engine::String& str, std::size_t arrSize) noexcept {
-    this->_variables.put(engine::Shader::Header::DataType::STRUCT_ARRAY, str);
+engine::Shader::Header::Struct& engine::Shader::Header::Struct::addArrayVariable(const engine::Shader::Header::Struct& str, const engine::String& varName, std::size_t arrSize) noexcept {
+    // this->_variables.put(engine::Shader::Header::DataType::STRUCT_ARRAY, varName);
+    this->_variables += engine::NonConstexprPair < uint8, engine::String > (engine::Shader::Header::DataType::STRUCT_ARRAY, varName);
+    this->_arraySizes.put(varName, arrSize);
+    this->_structureTypeNames.put(varName, str._name);
+    return *this;
+}
+
+engine::Shader::Header::Struct& engine::Shader::Header::Struct::addArrayStructVariable(const engine::String& structName, const engine::String& str, std::size_t arrSize) noexcept {
+    // this->_variables.put(engine::Shader::Header::DataType::STRUCT_ARRAY, str);
+    this->_variables += engine::NonConstexprPair < uint8, engine::String > (engine::Shader::Header::DataType::STRUCT_ARRAY, str);
     this->_arraySizes.put(str, arrSize);
+    this->_structureTypeNames.put(str, structName);
     return *this;
 }
 
 engine::Shader::Header::Struct& engine::Shader::Header::Struct::addArrayVariableUInt8(const engine::String& varName, std::size_t arrSize) noexcept {
-    this->_variables.put(engine::Shader::Header::DataType::UINT8_ARRAY, varName);
+    // this->_variables.put(engine::Shader::Header::DataType::UINT8_ARRAY, varName);
+    this->_variables += engine::NonConstexprPair < uint8, engine::String > (engine::Shader::Header::DataType::UINT8_ARRAY, varName);
     this->_arraySizes.put(varName, arrSize);
     return *this;
 }
 
 engine::Shader::Header::Struct& engine::Shader::Header::Struct::addArrayVariableUInt16(const engine::String& varName, std::size_t arrSize) noexcept {
-    this->_variables.put(engine::Shader::Header::DataType::UINT16_ARRAY, varName);
+    // this->_variables.put(engine::Shader::Header::DataType::UINT16_ARRAY, varName);
+    this->_variables += engine::NonConstexprPair < uint8, engine::String > (engine::Shader::Header::DataType::UINT16_ARRAY, varName);
     this->_arraySizes.put(varName, arrSize);
     return *this;
 }
 
 engine::Shader::Header::Struct& engine::Shader::Header::Struct::addArrayVariableUInt32(const engine::String& varName, std::size_t arrSize) noexcept {
-    this->_variables.put(engine::Shader::Header::DataType::UINT32_ARRAY, varName);
+    // this->_variables.put(engine::Shader::Header::DataType::UINT32_ARRAY, varName);
+    this->_variables += engine::NonConstexprPair < uint8, engine::String > (engine::Shader::Header::DataType::UINT32_ARRAY, varName);
     this->_arraySizes.put(varName, arrSize);
     return *this;
 }
 
 engine::Shader::Header::Struct& engine::Shader::Header::Struct::addArrayVariableUInt64(const engine::String& varName, std::size_t arrSize) noexcept {
-    this->_variables.put(engine::Shader::Header::DataType::UINT64_ARRAY, varName);
+    // this->_variables.put(engine::Shader::Header::DataType::UINT64_ARRAY, varName);
+    this->_variables += engine::NonConstexprPair < uint8, engine::String > (engine::Shader::Header::DataType::UINT64_ARRAY, varName);
     this->_arraySizes.put(varName, arrSize);
     return *this;
 }
 
 engine::Shader::Header::Struct& engine::Shader::Header::Struct::addArrayVariableInt8(const engine::String& varName, std::size_t arrSize) noexcept {
-    this->_variables.put(engine::Shader::Header::DataType::SINT8_ARRAY, varName);
+    // this->_variables.put(engine::Shader::Header::DataType::SINT8_ARRAY, varName);
+    this->_variables += engine::NonConstexprPair < uint8, engine::String > (engine::Shader::Header::DataType::SINT8_ARRAY, varName);
     this->_arraySizes.put(varName, arrSize);
     return *this;
 }
 
 engine::Shader::Header::Struct& engine::Shader::Header::Struct::addArrayVariableInt16(const engine::String& varName, std::size_t arrSize) noexcept {
-    this->_variables.put(engine::Shader::Header::DataType::SINT16_ARRAY, varName);
+    // this->_variables.put(engine::Shader::Header::DataType::SINT16_ARRAY, varName);
+    this->_variables += engine::NonConstexprPair < uint8, engine::String > (engine::Shader::Header::DataType::SINT16_ARRAY, varName);
     this->_arraySizes.put(varName, arrSize);
     return *this;
 }
 
 engine::Shader::Header::Struct& engine::Shader::Header::Struct::addArrayVariableInt32(const engine::String& varName, std::size_t arrSize) noexcept {
-    this->_variables.put(engine::Shader::Header::DataType::SINT32_ARRAY, varName);
+    // this->_variables.put(engine::Shader::Header::DataType::SINT32_ARRAY, varName);
+    this->_variables += engine::NonConstexprPair < uint8, engine::String > (engine::Shader::Header::DataType::SINT32_ARRAY, varName);
     this->_arraySizes.put(varName, arrSize);
     return *this;
 }
 
 engine::Shader::Header::Struct& engine::Shader::Header::Struct::addArrayVariableInt64(const engine::String& varName, std::size_t arrSize) noexcept {
-    this->_variables.put(engine::Shader::Header::DataType::SINT64_ARRAY, varName);
+    // this->_variables.put(engine::Shader::Header::DataType::SINT64_ARRAY, varName);
+    this->_variables += engine::NonConstexprPair < uint8, engine::String > (engine::Shader::Header::DataType::SINT64_ARRAY, varName);
     this->_arraySizes.put(varName, arrSize);
     return *this;
 }
 
 engine::Shader::Header::Struct& engine::Shader::Header::Struct::addArrayVariableFloat(const engine::String& varName, std::size_t arrSize) noexcept {
-    this->_variables.put(engine::Shader::Header::DataType::FLOAT32_ARRAY, varName);
+    // this->_variables.put(engine::Shader::Header::DataType::FLOAT32_ARRAY, varName);
+    this->_variables += engine::NonConstexprPair < uint8, engine::String > (engine::Shader::Header::DataType::FLOAT32_ARRAY, varName);
     this->_arraySizes.put(varName, arrSize);
     return *this;
 }
 
 engine::Shader::Header::Struct& engine::Shader::Header::Struct::addArrayVariableDouble(const engine::String& varName, std::size_t arrSize) noexcept {
-    this->_variables.put(engine::Shader::Header::DataType::FLOAT64_ARRAY, varName);
+    // this->_variables.put(engine::Shader::Header::DataType::FLOAT64_ARRAY, varName);
+    this->_variables += engine::NonConstexprPair < uint8, engine::String > (engine::Shader::Header::DataType::FLOAT64_ARRAY, varName);
     this->_arraySizes.put(varName, arrSize);
     return *this;
 }
 
 engine::Shader::Header::Struct& engine::Shader::Header::Struct::addArrayVariableBool(const engine::String& varName, std::size_t arrSize) noexcept {
-    this->_variables.put(engine::Shader::Header::DataType::BOOL_ARRAY, varName);
+    // this->_variables.put(engine::Shader::Header::DataType::BOOL_ARRAY, varName);
+    this->_variables += engine::NonConstexprPair < uint8, engine::String > (engine::Shader::Header::DataType::BOOL_ARRAY, varName);
     this->_arraySizes.put(varName, arrSize);
     return *this;
 }
 
 engine::Shader::Header::Struct& engine::Shader::Header::Struct::addArrayVariableSampler2D(const engine::String& varName, std::size_t arrSize) noexcept {
-    this->_variables.put(engine::Shader::Header::DataType::SAMPLER_2D_ARRAY, varName);
+    // this->_variables.put(engine::Shader::Header::DataType::SAMPLER_2D_ARRAY, varName);
+    this->_variables += engine::NonConstexprPair < uint8, engine::String > (engine::Shader::Header::DataType::SAMPLER_2D_ARRAY, varName);
     this->_arraySizes.put(varName, arrSize);
     return *this;
 }
 
 engine::Shader::Header::Struct& engine::Shader::Header::Struct::addArrayVariableVec2(const engine::String& varName, std::size_t arrSize) noexcept {
-    this->_variables.put(engine::Shader::Header::DataType::VEC_2_ARRAY, varName);
+    // this->_variables.put(engine::Shader::Header::DataType::VEC_2_ARRAY, varName);
+    this->_variables += engine::NonConstexprPair < uint8, engine::String > (engine::Shader::Header::DataType::VEC_2_ARRAY, varName);
     this->_arraySizes.put(varName, arrSize);
     return *this;
 }
 
 engine::Shader::Header::Struct& engine::Shader::Header::Struct::addArrayVariableVec3(const engine::String& varName, std::size_t arrSize) noexcept {
-    this->_variables.put(engine::Shader::Header::DataType::VEC_3_ARRAY, varName);
+    // this->_variables.put(engine::Shader::Header::DataType::VEC_3_ARRAY, varName);
+    this->_variables += engine::NonConstexprPair < uint8, engine::String > (engine::Shader::Header::DataType::VEC_3_ARRAY, varName);
     this->_arraySizes.put(varName, arrSize);
     return *this;
 }
 
 engine::Shader::Header::Struct& engine::Shader::Header::Struct::addArrayVariableVec4(const engine::String& varName, std::size_t arrSize) noexcept {
-    this->_variables.put(engine::Shader::Header::DataType::VEC_4_ARRAY, varName);
+    // this->_variables.put(engine::Shader::Header::DataType::VEC_4_ARRAY, varName);
+    this->_variables += engine::NonConstexprPair < uint8, engine::String > (engine::Shader::Header::DataType::VEC_4_ARRAY, varName);
     this->_arraySizes.put(varName, arrSize);
     return *this;
 }
 
 engine::Shader::Header::Struct& engine::Shader::Header::Struct::addArrayVariableMat3(const engine::String& varName, std::size_t arrSize) noexcept {
-    this->_variables.put(engine::Shader::Header::DataType::MAT_3_ARRAY, varName);
+    // this->_variables.put(engine::Shader::Header::DataType::MAT_3_ARRAY, varName);
+    this->_variables += engine::NonConstexprPair < uint8, engine::String > (engine::Shader::Header::DataType::MAT_3_ARRAY, varName);
     this->_arraySizes.put(varName, arrSize);
     return *this;
 }
 
 engine::Shader::Header::Struct& engine::Shader::Header::Struct::addArrayVariableMat4(const engine::String& varName, std::size_t arrSize) noexcept {
-    this->_variables.put(engine::Shader::Header::DataType::MAT_4_ARRAY, varName);
+    // this->_variables.put(engine::Shader::Header::DataType::MAT_4_ARRAY, varName);
+    this->_variables += engine::NonConstexprPair < uint8, engine::String > (engine::Shader::Header::DataType::MAT_4_ARRAY, varName);
     this->_arraySizes.put(varName, arrSize);
     return *this;
 }
 
 engine::Shader::Header::Struct& engine::Shader::Header::Struct::addVariableUInt8(const char* varName) noexcept {
-    this->_variables.put(engine::Shader::Header::DataType::UINT8, engine::String(varName));
+    // this->_variables.put(engine::Shader::Header::DataType::UINT8, engine::String(varName));
+    this->_variables += engine::NonConstexprPair < uint8, engine::String > (engine::Shader::Header::DataType::UINT8, engine::String(varName));
     return *this;
 }
 
 engine::Shader::Header::Struct& engine::Shader::Header::Struct::addVariableUInt16(const char* varName) noexcept {
-    this->_variables.put(engine::Shader::Header::DataType::UINT16, engine::String(varName));
+    // this->_variables.put(engine::Shader::Header::DataType::UINT16, engine::String(varName));
+    this->_variables += engine::NonConstexprPair < uint8, engine::String > (engine::Shader::Header::DataType::UINT16, engine::String(varName));
     return *this;
 }
 
 engine::Shader::Header::Struct& engine::Shader::Header::Struct::addVariableUInt32(const char* varName) noexcept {
-    this->_variables.put(engine::Shader::Header::DataType::UINT32, engine::String(varName));
+    // this->_variables.put(engine::Shader::Header::DataType::UINT32, engine::String(varName));
+    this->_variables += engine::NonConstexprPair < uint8, engine::String > (engine::Shader::Header::DataType::UINT32, engine::String(varName));
     return *this;
 }
 
 engine::Shader::Header::Struct& engine::Shader::Header::Struct::addVariableUInt64(const char* varName) noexcept {
-    this->_variables.put(engine::Shader::Header::DataType::UINT64, engine::String(varName));
+    // this->_variables.put(engine::Shader::Header::DataType::UINT64, engine::String(varName));
+    this->_variables += engine::NonConstexprPair < uint8, engine::String > (engine::Shader::Header::DataType::UINT64, engine::String(varName));
     return *this;
 }
 
 engine::Shader::Header::Struct& engine::Shader::Header::Struct::addVariableInt8(const char* varName) noexcept {
-    this->_variables.put(engine::Shader::Header::DataType::SINT8, engine::String(varName));
+    // this->_variables.put(engine::Shader::Header::DataType::SINT8, engine::String(varName));
+    this->_variables += engine::NonConstexprPair < uint8, engine::String > (engine::Shader::Header::DataType::SINT8, engine::String(varName));
     return *this;
 }
 
 engine::Shader::Header::Struct& engine::Shader::Header::Struct::addVariableInt16(const char* varName) noexcept {
-    this->_variables.put(engine::Shader::Header::DataType::SINT16, engine::String(varName));
+    // this->_variables.put(engine::Shader::Header::DataType::SINT16, engine::String(varName));
+    this->_variables += engine::NonConstexprPair < uint8, engine::String > (engine::Shader::Header::DataType::SINT16, engine::String(varName));
     return *this;
 }
 
 engine::Shader::Header::Struct& engine::Shader::Header::Struct::addVariableInt32(const char* varName) noexcept {
-    this->_variables.put(engine::Shader::Header::DataType::SINT32, engine::String(varName));
+    // this->_variables.put(engine::Shader::Header::DataType::SINT32, engine::String(varName));
+    this->_variables += engine::NonConstexprPair < uint8, engine::String > (engine::Shader::Header::DataType::SINT32, engine::String(varName));
     return *this;
 }
 
 engine::Shader::Header::Struct& engine::Shader::Header::Struct::addVariableInt64(const char* varName) noexcept {
-    this->_variables.put(engine::Shader::Header::DataType::SINT64, engine::String(varName));
+    // this->_variables.put(engine::Shader::Header::DataType::SINT64, engine::String(varName));
+    this->_variables += engine::NonConstexprPair < uint8, engine::String > (engine::Shader::Header::DataType::SINT64, engine::String(varName));
     return *this;
 }
 
 engine::Shader::Header::Struct& engine::Shader::Header::Struct::addVariableFloat(const char* varName) noexcept {
-    this->_variables.put(engine::Shader::Header::DataType::FLOAT32, engine::String(varName));
+    // this->_variables.put(engine::Shader::Header::DataType::FLOAT32, engine::String(varName));
+    this->_variables += engine::NonConstexprPair < uint8, engine::String > (engine::Shader::Header::DataType::FLOAT32, engine::String(varName));
     return *this;
 }
 
 engine::Shader::Header::Struct& engine::Shader::Header::Struct::addVariableDouble(const char* varName) noexcept {
-    this->_variables.put(engine::Shader::Header::DataType::FLOAT64, engine::String(varName));
+    // this->_variables.put(engine::Shader::Header::DataType::FLOAT64, engine::String(varName));
+    this->_variables += engine::NonConstexprPair < uint8, engine::String > (engine::Shader::Header::DataType::FLOAT64, engine::String(varName));
     return *this;
 }
 
 engine::Shader::Header::Struct& engine::Shader::Header::Struct::addVariableBool(const char* varName) noexcept {
-    this->_variables.put(engine::Shader::Header::DataType::BOOL, engine::String(varName));
+    // this->_variables.put(engine::Shader::Header::DataType::BOOL, engine::String(varName));
+    this->_variables += engine::NonConstexprPair < uint8, engine::String > (engine::Shader::Header::DataType::BOOL, engine::String(varName));
     return *this;
 }
 
 engine::Shader::Header::Struct& engine::Shader::Header::Struct::addVariableSampler2D(const char* varName) noexcept {
-    this->_variables.put(engine::Shader::Header::DataType::SAMPLER_2D, engine::String(varName));
+    // this->_variables.put(engine::Shader::Header::DataType::SAMPLER_2D, engine::String(varName));
+    this->_variables += engine::NonConstexprPair < uint8, engine::String > (engine::Shader::Header::DataType::SAMPLER_2D, engine::String(varName));
     return *this;
 }
 
 engine::Shader::Header::Struct& engine::Shader::Header::Struct::addVariableVec2(const char* varName) noexcept {
-    this->_variables.put(engine::Shader::Header::DataType::VEC_2, engine::String(varName));
+    // this->_variables.put(engine::Shader::Header::DataType::VEC_2, engine::String(varName));
+    this->_variables += engine::NonConstexprPair < uint8, engine::String > (engine::Shader::Header::DataType::VEC_2, engine::String(varName));
     return *this;
 }
 
 engine::Shader::Header::Struct& engine::Shader::Header::Struct::addVariableVec3(const char* varName) noexcept {
-    this->_variables.put(engine::Shader::Header::DataType::VEC_3, engine::String(varName));
+    // this->_variables.put(engine::Shader::Header::DataType::VEC_3, engine::String(varName));
+    this->_variables += engine::NonConstexprPair < uint8, engine::String > (engine::Shader::Header::DataType::VEC_3, engine::String(varName));
     return *this;
 }
 
 engine::Shader::Header::Struct& engine::Shader::Header::Struct::addVariableVec4(const char* varName) noexcept {
-    this->_variables.put(engine::Shader::Header::DataType::VEC_4, engine::String(varName));
+    // this->_variables.put(engine::Shader::Header::DataType::VEC_4, engine::String(varName));
+    this->_variables += engine::NonConstexprPair < uint8, engine::String > (engine::Shader::Header::DataType::VEC_4, engine::String(varName));
     return *this;
 }
 
 engine::Shader::Header::Struct& engine::Shader::Header::Struct::addVariableMat3(const char* varName) noexcept {
-    this->_variables.put(engine::Shader::Header::DataType::MAT_3, engine::String(varName));
+    // this->_variables.put(engine::Shader::Header::DataType::MAT_3, engine::String(varName));
+    this->_variables += engine::NonConstexprPair < uint8, engine::String > (engine::Shader::Header::DataType::MAT_3, engine::String(varName));
     return *this;
 }
 
 engine::Shader::Header::Struct& engine::Shader::Header::Struct::addVariableMat4(const char* varName) noexcept {
-    this->_variables.put(engine::Shader::Header::DataType::MAT_4, engine::String(varName));
+    // this->_variables.put(engine::Shader::Header::DataType::MAT_4, engine::String(varName));
+    this->_variables += engine::NonConstexprPair < uint8, engine::String > (engine::Shader::Header::DataType::MAT_4, engine::String(varName));
     return *this;
 }
 
@@ -794,14 +873,388 @@ engine::Shader::Header::Struct& engine::Shader::Header::Struct::addArrayVariable
     if( ! _SHD_HEADER_DATA_IS_VAR_ARR_TYPE(dataType) ) 
         return *this;
 
-    this->_variables.put( dataType, engine::String(varName) );
+    // this->_variables.put( dataType, engine::String(varName) );
+    this->_variables += engine::NonConstexprPair < uint8, engine::String > ( dataType, engine::String(varName) );
     this->_arraySizes.put( engine::String(varName), arrLen );
     return *this;
 }
 
-engine::Shader::Header::Struct& engine::Shader::Header::Struct::addArrayStructVariable(const char* varName, std::size_t) noexcept {
-    
+engine::Shader::Header::Struct& engine::Shader::Header::Struct::addArrayStructVariable(const char* structName,const char* varName, std::size_t arrLen) noexcept {
+    // this->_variables.put( engine::Shader::Header::DataType::STRUCT_ARRAY, engine::String( varName ) );
+    this->_variables += engine::NonConstexprPair < uint8, engine::String > ( engine::Shader::Header::DataType::STRUCT_ARRAY, engine::String( varName ) );
+    this->_arraySizes.put( engine::String( varName ), arrLen );
+    this->_structureTypeNames.put( engine::String( varName ), engine::String( structName ) );
+    return *this;
 }
+
+engine::Shader::Header::Struct& engine::Shader::Header::Struct::addArrayVariableUInt8 ( const char* varName, std::size_t arrLen ) noexcept {
+    // this->_variables.put( engine::Shader::Header::DataType::UINT8_ARRAY, engine::String( varName ) );
+    this->_variables += engine::NonConstexprPair < uint8, engine::String > ( engine::Shader::Header::DataType::UINT8_ARRAY, engine::String( varName ) );
+    this->_arraySizes.put( engine::String( varName ), arrLen );
+    return *this;
+}
+
+engine::Shader::Header::Struct& engine::Shader::Header::Struct::addArrayVariableUInt16 ( const char* varName, std::size_t arrLen ) noexcept {
+    // this->_variables.put( engine::Shader::Header::DataType::UINT16_ARRAY, engine::String( varName ) );
+    this->_variables += engine::NonConstexprPair < uint8, engine::String > ( engine::Shader::Header::DataType::UINT16_ARRAY, engine::String( varName ) );
+    this->_arraySizes.put( engine::String( varName ), arrLen );
+    return *this;
+}
+
+engine::Shader::Header::Struct& engine::Shader::Header::Struct::addArrayVariableUInt32 ( const char* varName, std::size_t arrLen ) noexcept {
+    // this->_variables.put( engine::Shader::Header::DataType::UINT32_ARRAY, engine::String( varName ) );
+    this->_variables += engine::NonConstexprPair < uint8, engine::String > ( engine::Shader::Header::DataType::UINT32_ARRAY, engine::String( varName ) );
+    this->_arraySizes.put( engine::String( varName ), arrLen );
+    return *this;
+}
+
+engine::Shader::Header::Struct& engine::Shader::Header::Struct::addArrayVariableUInt64 ( const char* varName, std::size_t arrLen ) noexcept {
+    // this->_variables.put( engine::Shader::Header::DataType::UINT64_ARRAY, engine::String( varName ) );
+    this->_variables += engine::NonConstexprPair < uint8, engine::String > ( engine::Shader::Header::DataType::UINT64_ARRAY, engine::String( varName ) );
+    this->_arraySizes.put( engine::String( varName ), arrLen );
+    return *this;
+}
+
+engine::Shader::Header::Struct& engine::Shader::Header::Struct::addArrayVariableInt8 ( const char* varName, std::size_t arrLen ) noexcept {
+    // this->_variables.put( engine::Shader::Header::DataType::SINT8_ARRAY, engine::String( varName ) );
+    this->_variables += engine::NonConstexprPair < uint8, engine::String > ( engine::Shader::Header::DataType::SINT8_ARRAY, engine::String( varName ) );
+    this->_arraySizes.put( engine::String( varName ), arrLen );
+    return *this;
+}
+
+engine::Shader::Header::Struct& engine::Shader::Header::Struct::addArrayVariableInt16 ( const char* varName, std::size_t arrLen ) noexcept {
+    // this->_variables.put( engine::Shader::Header::DataType::SINT16_ARRAY, engine::String( varName ) );
+    this->_variables += engine::NonConstexprPair < uint8, engine::String > ( engine::Shader::Header::DataType::SINT16_ARRAY, engine::String( varName ) );
+    this->_arraySizes.put( engine::String( varName ), arrLen );
+    return *this;
+}
+
+engine::Shader::Header::Struct& engine::Shader::Header::Struct::addArrayVariableInt32 ( const char* varName, std::size_t arrLen ) noexcept {
+    // this->_variables.put( engine::Shader::Header::DataType::SINT32_ARRAY, engine::String( varName ) );
+    this->_variables += engine::NonConstexprPair < uint8, engine::String > ( engine::Shader::Header::DataType::SINT32_ARRAY, engine::String( varName ) );
+    this->_arraySizes.put( engine::String( varName ), arrLen );
+    return *this;
+}
+
+engine::Shader::Header::Struct& engine::Shader::Header::Struct::addArrayVariableInt64 ( const char* varName, std::size_t arrLen ) noexcept {
+    // this->_variables.put( engine::Shader::Header::DataType::SINT64_ARRAY, engine::String( varName ) );
+    this->_variables += engine::NonConstexprPair < uint8, engine::String > ( engine::Shader::Header::DataType::SINT64_ARRAY, engine::String( varName ) );
+    this->_arraySizes.put( engine::String( varName ), arrLen );
+    return *this;
+}
+
+engine::Shader::Header::Struct& engine::Shader::Header::Struct::addArrayVariableFloat ( const char* varName, std::size_t arrLen ) noexcept {
+    // this->_variables.put( engine::Shader::Header::DataType::FLOAT32_ARRAY, engine::String( varName ) );
+    this->_variables += engine::NonConstexprPair < uint8, engine::String > ( engine::Shader::Header::DataType::FLOAT32_ARRAY, engine::String( varName ) );
+    this->_arraySizes.put( engine::String( varName ), arrLen );
+    return *this;
+}
+
+engine::Shader::Header::Struct& engine::Shader::Header::Struct::addArrayVariableDouble ( const char* varName, std::size_t arrLen ) noexcept {
+    // this->_variables.put( engine::Shader::Header::DataType::FLOAT64_ARRAY, engine::String( varName ) );
+    this->_variables += engine::NonConstexprPair < uint8, engine::String > ( engine::Shader::Header::DataType::FLOAT64_ARRAY, engine::String( varName ) );
+    this->_arraySizes.put( engine::String( varName ), arrLen );
+    return *this;
+}
+
+engine::Shader::Header::Struct& engine::Shader::Header::Struct::addArrayVariableBool ( const char* varName, std::size_t arrLen ) noexcept {
+    // this->_variables.put( engine::Shader::Header::DataType::BOOL_ARRAY, engine::String( varName ) );
+    this->_variables += engine::NonConstexprPair < uint8, engine::String > ( engine::Shader::Header::DataType::BOOL_ARRAY, engine::String( varName ) );
+    this->_arraySizes.put( engine::String( varName ), arrLen );
+    return *this;
+}
+
+engine::Shader::Header::Struct& engine::Shader::Header::Struct::addArrayVariableSampler2D ( const char* varName, std::size_t arrLen ) noexcept {
+    // this->_variables.put( engine::Shader::Header::DataType::SAMPLER_2D_ARRAY, engine::String( varName ) );
+    this->_variables += engine::NonConstexprPair < uint8, engine::String > ( engine::Shader::Header::DataType::SAMPLER_2D_ARRAY, engine::String( varName ) );
+    this->_arraySizes.put( engine::String( varName ), arrLen );
+    return *this;
+}
+
+engine::Shader::Header::Struct& engine::Shader::Header::Struct::addArrayVariableVec2 ( const char* varName, std::size_t arrLen ) noexcept {
+    // this->_variables.put( engine::Shader::Header::DataType::VEC_2_ARRAY, engine::String( varName ) );
+    this->_variables += engine::NonConstexprPair < uint8, engine::String > ( engine::Shader::Header::DataType::VEC_2_ARRAY, engine::String( varName ) );
+    this->_arraySizes.put( engine::String( varName ), arrLen );
+    return *this;
+}
+
+engine::Shader::Header::Struct& engine::Shader::Header::Struct::addArrayVariableVec3 ( const char* varName, std::size_t arrLen ) noexcept {
+    // this->_variables.put( engine::Shader::Header::DataType::VEC_3_ARRAY, engine::String( varName ) );
+    this->_variables += engine::NonConstexprPair < uint8, engine::String > ( engine::Shader::Header::DataType::VEC_3_ARRAY, engine::String( varName ) );
+    this->_arraySizes.put( engine::String( varName ), arrLen );
+    return *this;
+}
+
+engine::Shader::Header::Struct& engine::Shader::Header::Struct::addArrayVariableVec4 ( const char* varName, std::size_t arrLen ) noexcept {
+    // this->_variables.put( engine::Shader::Header::DataType::VEC_4_ARRAY, engine::String( varName ) );
+    this->_variables += engine::NonConstexprPair < uint8, engine::String > ( engine::Shader::Header::DataType::VEC_4_ARRAY, engine::String( varName ) );
+    this->_arraySizes.put( engine::String( varName ), arrLen );
+    return *this;
+}
+
+engine::Shader::Header::Struct& engine::Shader::Header::Struct::addArrayVariableMat3 ( const char* varName, std::size_t arrLen ) noexcept {
+    // this->_variables.put( engine::Shader::Header::DataType::MAT_3_ARRAY, engine::String( varName ) );
+    this->_variables += engine::NonConstexprPair < uint8, engine::String > ( engine::Shader::Header::DataType::MAT_3_ARRAY, engine::String( varName ) );
+    this->_arraySizes.put( engine::String( varName ), arrLen );
+    return *this;
+}
+
+engine::Shader::Header::Struct& engine::Shader::Header::Struct::addArrayVariableMat4 ( const char* varName, std::size_t arrLen ) noexcept {
+    // this->_variables.put( engine::Shader::Header::DataType::MAT_4_ARRAY, engine::String( varName ) );
+    this->_variables += engine::NonConstexprPair < uint8, engine::String > ( engine::Shader::Header::DataType::MAT_4_ARRAY, engine::String( varName ) );
+    this->_arraySizes.put( engine::String( varName ), arrLen );
+    return *this;
+}
+
+engine::Array < engine::NonConstexprPair < uint8, engine::String > > & engine::Shader::Header::Struct::getVariables() noexcept {
+    return this->_variables;
+}
+
+engine::HashMap < engine::String, uint64 > & engine::Shader::Header::Struct::getArraySizes() noexcept {
+    return this->_arraySizes;
+}
+
+engine::HashMap < engine::String, engine::String > & engine::Shader::Header::Struct::getStructureVariableTypes() noexcept {
+    return this->_structureTypeNames;
+}
+
+[[maybe_unused]] [[nodiscard]] static engine::Array < engine::NonConstexprPair < uint8, engine::String > > & sortVarsByTypeAndName ( engine::Array < engine::NonConstexprPair < uint8, engine::String > > & varsArray ) noexcept {
+    //TODO : add faster sorting method ? 
+
+    for( std::size_t i = 0, len = varsArray.getLength(); i + 1 < len; i++ ) { 
+        for( std::size_t j = i + 1; j < len; j++ ) {
+            engine::NonConstexprPair < uint8, engine::String > left     = varsArray[i];
+            engine::NonConstexprPair < uint8, engine::String > right    = varsArray[j];
+
+            if( left.getFirst() > right.getFirst() ) {
+                std::swap(left, right);
+            } else if( left.getFirst() == right.getFirst() ) {
+                if( left.getSecond() > right.getSecond() ) {
+                    std::swap(left, right);
+                } 
+            }
+        }
+    }
+
+    return varsArray;
+}
+
+engine::Shader::Header::Struct& engine::Shader::Header::Struct::settleVariables() noexcept {
+    this->_variables = sortVarsByTypeAndName( this->_variables );
+    return *this;
+}
+
+engine::String engine::Shader::Header::Struct::toString() const noexcept {
+    engine::String res = "struct " + this->_name + " {\n";
+
+    // engine::Array < engine::NonConstexprPair < uint8 *, engine::String * > * > variableArr = this->_variables.getEntries();
+
+    for(std::size_t it = 0; it < this->_variables.getLength(); it++ ) {
+        if( _SHD_HEADER_DATA_IS_VAR_TYPE((engine::Shader::Header::DataType) this->_variables[it].getFirst()) || _SHD_HEADER_DATA_IS_VAR_ARR_TYPE((engine::Shader::Header::DataType) this->_variables[it].getFirst()) ) {
+
+            res
+                    .append("\t")
+                    .append(engine::Shader::Header::dataTypeDeclaration((engine::Shader::Header::DataType) this->_variables[it].getFirst()))
+                    .append(" ")
+                    .append(this->_variables[it].getSecond());
+
+            if (_SHD_HEADER_DATA_IS_VAR_ARR_TYPE((engine::Shader::Header::DataType) this->_variables[it].getFirst())) {
+                res
+                        .append("[")
+                        .append(std::to_string(*(this->_arraySizes[this->_variables[it].getSecond()])))
+                        .append("]");
+            }
+
+            res.append(";\n");
+        } else {
+            if( this->_variables[it].getFirst() == engine::Shader::Header::DataType::STRUCT ) {
+                res
+                    .append("\t")
+                    .append(*this->_structureTypeNames[this->_variables[it].getSecond()])
+                    .append(" ")
+                    .append(this->_variables[it].getSecond())
+                    .append(";\n");
+            } else if ( this->_variables[it].getFirst() == engine::Shader::Header::DataType::STRUCT_ARRAY ) {
+                res
+                    .append("\t")
+                    .append(*this->_structureTypeNames[this->_variables[it].getSecond()])
+                    .append(" ")
+                    .append(this->_variables[it].getSecond())
+                    .append("[")
+                    .append(std::to_string(*(this->_arraySizes[this->_variables[it].getSecond()])))
+                    .append("];\n");
+            }
+        }
+    }
+
+    res.append("};\n");
+
+    return res;
+}
+
+engine::String engine::Shader::Header::dataTypeModifierToString(DataTypeModifier dataModifier) noexcept {
+    switch (dataModifier) {
+        case NONE       : return engine::String("No modifier");
+        case INPUT      : return engine::String("Input Variable");
+        case OUTPUT     : return engine::String("Output Variable");
+        case UNIFORM    : return engine::String("Uniform Variable, assign in code");
+    }
+}
+
+engine::String engine::Shader::Header::dataTypeModifierDeclaration(DataTypeModifier dataModifier) noexcept {
+    switch (dataModifier) {
+        case UNIFORM    : return engine::String("uniform");
+        case OUTPUT     : return engine::String("out");
+        case INPUT      : return engine::String("in");
+        case NONE       : return engine::String("");
+    }
+}
+
+engine::String engine::Shader::Header::dataTypeToString(DataType dataType) noexcept {
+    switch(dataType) { 
+        case UINT8              : return engine::String("Unsigned Int Size 8 (unsigned char)");
+        case UINT16             : return engine::String("Unsigned Int Size 16 (unsigned short)");
+        case UINT32             : return engine::String("Unsigned Int Size 32 (unsigned int)");
+        case UINT64             : return engine::String("Unsigned Int Size 64 (unsigned long long)");
+
+        case SINT8              : return engine::String("Int Size 8 (char)");
+        case SINT16             : return engine::String("Int Size 16 (short)");
+        case SINT32             : return engine::String("Int Size 32 (int)");
+        case SINT64             : return engine::String("Int Size 64 (long long)");
+
+        case FLOAT32            : return engine::String("Float Size 32(float)");
+        case FLOAT64            : return engine::String("Float Size 64(double)");
+
+        case BOOL               : return engine::String("Bool Size 8 (bool)");
+
+        case SAMPLER_2D         : return engine::String("Sampler 2D");
+        case VEC_2              : return engine::String("Vector Size 2");
+        case VEC_3              : return engine::String("Vector Size 3");
+        case VEC_4              : return engine::String("Vector Size 4");
+        case MAT_3              : return engine::String("Matrix Size 3");
+        case MAT_4              : return engine::String("Matrix Size 4");
+
+        case STRUCT             : return engine::String("Defined Structure");
+
+
+        case UINT8_ARRAY        : return engine::String("Unsigned Int Size 8 Array (unsigned char[])");
+        case UINT16_ARRAY       : return engine::String("Unsigned Int Size 16 Array (unsigned short[])");
+        case UINT32_ARRAY       : return engine::String("Unsigned Int Size 32 Array (unsigned int[])");
+        case UINT64_ARRAY       : return engine::String("Unsigned Int Size 64 Array (unsigned long long[])");
+
+        case SINT8_ARRAY        : return engine::String("Int Size 8 Array (char[])");
+        case SINT16_ARRAY       : return engine::String("Int Size 16 Array (short[])");
+        case SINT32_ARRAY       : return engine::String("Int Size 32 Array (int[])");
+        case SINT64_ARRAY       : return engine::String("Int Size 64 Array (long long[])");
+
+        case FLOAT32_ARRAY      : return engine::String("Float Size 32 Array (float[])");
+        case FLOAT64_ARRAY      : return engine::String("Float Size 64 Array (double[])");
+
+        case BOOL_ARRAY         : return engine::String("Bool Size 8 Array (bool[])");
+
+        case SAMPLER_2D_ARRAY   : return engine::String("Sampler 2D Array");
+        case VEC_2_ARRAY        : return engine::String("Vector Size 2 Array");
+        case VEC_3_ARRAY        : return engine::String("Vector Size 3 Array");
+        case VEC_4_ARRAY        : return engine::String("Vector Size 4 Array");
+        case MAT_3_ARRAY        : return engine::String("Matrix Size 3 Array");
+        case MAT_4_ARRAY        : return engine::String("Matrix Size 4 Array");
+
+        case STRUCT_ARRAY       : return engine::String("Defined Structure Array");
+    }
+}
+
+engine::String engine::Shader::Header::dataTypeDeclaration(DataType dataType) noexcept {
+    switch(dataType) {
+        case UINT8              : return engine::String("uint");
+        case UINT16             : return engine::String("uint");
+        case UINT32             : return engine::String("uint");
+        case UINT64             : return engine::String("uint");
+
+        case SINT8              : return engine::String("int");
+        case SINT16             : return engine::String("int");
+        case SINT32             : return engine::String("int");
+        case SINT64             : return engine::String("int");
+
+        case FLOAT32            : return engine::String("float");
+        case FLOAT64            : return engine::String("double");
+
+        case BOOL               : return engine::String("bool");
+
+        case SAMPLER_2D         : return engine::String("sampler2D");
+        case VEC_2              : return engine::String("vec2");
+        case VEC_3              : return engine::String("vec3");
+        case VEC_4              : return engine::String("vec4");
+        case MAT_3              : return engine::String("mat3");
+        case MAT_4              : return engine::String("mat4");
+
+        case STRUCT             : return engine::String("struct");
+
+
+        case UINT8_ARRAY        : return engine::String("uint");
+        case UINT16_ARRAY       : return engine::String("uint");
+        case UINT32_ARRAY       : return engine::String("uint");
+        case UINT64_ARRAY       : return engine::String("uint");
+
+        case SINT8_ARRAY        : return engine::String("int");
+        case SINT16_ARRAY       : return engine::String("int");
+        case SINT32_ARRAY       : return engine::String("int");
+        case SINT64_ARRAY       : return engine::String("int");
+
+        case FLOAT32_ARRAY      : return engine::String("float");
+        case FLOAT64_ARRAY      : return engine::String("double");
+
+        case BOOL_ARRAY         : return engine::String("bool");
+
+        case SAMPLER_2D_ARRAY   : return engine::String("sampler2D");
+        case VEC_2_ARRAY        : return engine::String("vec2");
+        case VEC_3_ARRAY        : return engine::String("vec3");
+        case VEC_4_ARRAY        : return engine::String("vec4");
+        case MAT_3_ARRAY        : return engine::String("mat3");
+        case MAT_4_ARRAY        : return engine::String("mat4");
+
+        case STRUCT_ARRAY       : return engine::String("struct");
+    }
+}
+
+
+/**
+ * 
+ * 
+ * Shader Header Definitions
+ */ 
+
+engine::Shader::Header::Header(const char* fileName, bool generateIncludeGuards) noexcept : 
+    _generateIncludeGuards(generateIncludeGuards), _name(engine::String(fileName)) {
+
+}
+
+engine::Shader::Header::Header(const engine::String& fileName, bool generateIncludeGuards) noexcept : 
+    _generateIncludeGuards(_generateIncludeGuards), _name(fileName) {
+
+}
+
+engine::String engine::Shader::Header::includeGuardTop() const noexcept {
+    engine::Array < engine::String > tokens;
+    engine::String token;
+
+    for(std::size_t it = 0; it < this->_name.length(); it++) {
+        if( this->_name[it] >= 'A' && this->_name[it] <= 'Z' ) {
+            tokens += token;
+            token.clear();
+        } else 
+            token += this->_name[it];
+    }
+
+    token.clear();
+
+    for(std::size_t it = 0, len = tokens.getLength(); it < len; it++) {
+        token.append(tokens[it]).append("_");
+    }
+
+    token.append("GLSL_H");
+
+    return "#ifndef " + token + "\n#define " + token;
+} 
 
 #undef _SHD_HEADER_DATA_IS_VAR_TYPE
 #undef _SHD_HEADER_DATA_IS_VAR_ARR_TYPE

@@ -46,6 +46,9 @@ namespace engine {
         [[maybe_unused]] [[nodiscard]] T& operator[] (std::size_t)   noexcept(false);
         [[maybe_unused]] [[nodiscard]] T& get(std::size_t)           noexcept(false);
 
+        [[maybe_unused]] [[nodiscard]] const T& operator[] (std::size_t) const noexcept(false);
+        [[maybe_unused]] [[nodiscard]] const T& get(std::size_t) const noexcept(false);
+
         [[maybe_unused]] void insert(const T&, std::size_t = NO_INDEX_GIVEN)                noexcept (false);
         [[maybe_unused]] void insert(const Array<T>&, std::size_t = NO_INDEX_GIVEN)         noexcept(false);
         [[maybe_unused]] void insert(const T*, std::size_t, std::size_t = NO_INDEX_GIVEN)   noexcept(false);
@@ -178,6 +181,22 @@ template <class T>
 
     if( index >= this->_arrLen )
         this->_arrLen = index + 1;
+
+    return * ( this->_arrPtr[index] );
+}
+
+template <class T>
+[[maybe_unused]] [[nodiscard]] const T& engine::Array<T>::operator[] (std::size_t index) const noexcept(false) {
+    if( index < 0 || index > this->_arrLen )
+        throw engine::EngineArrayOutOfBounds();
+
+    return * ( this->_arrPtr[index] );
+}
+
+template <class T>
+[[maybe_unused]] [[nodiscard]] const T& engine::Array<T>::get (std::size_t index) const noexcept(false) {
+    if( index < 0 || index > this->_arrLen )
+        throw engine::EngineArrayOutOfBounds();
 
     return * ( this->_arrPtr[index] );
 }

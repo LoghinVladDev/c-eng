@@ -5,10 +5,8 @@
 struct Material {
     sampler2D diffuse;
     sampler2D specular;
-
     float shine;
 };
-
 struct DirectionalLight {
     vec3 direction;
 

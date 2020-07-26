@@ -34,9 +34,17 @@ namespace engine {
     template <class T>
     struct _INTERNAL_KEY_HASH<engine::Array<T>> {
         uint32 operator()(const engine::Array<T>& key) const {
-
+            return key.getLength() % DEFAULT_TABLE_SIZE;
         }
     };
+
+    template <> 
+    struct _INTERNAL_KEY_HASH<uint8> {
+        uint32 operator()(uint8 key) const {
+            return key % DEFAULT_TABLE_SIZE;          
+        } 
+    };
+
 #pragma clang diagnostic pop
 
     template <class K, class V, class F = _INTERNAL_KEY_HASH<K>>
