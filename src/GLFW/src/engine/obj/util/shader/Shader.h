@@ -166,6 +166,25 @@ typedef struct {
 #define _SHD_HEADER_DATA_IS_VAR_TYPE(_vType) ( _SHD_HEADER_DATA_TYPE_STD_TYPE(_vType) || _SHD_HEADER_DATA_TYPE_STD_SHD_TYPE(_vType) )
 #define _SHD_HEADER_DATA_IS_VAR_ARR_TYPE(_vType) ( _SHD_HEADER_DATA_TYPE_STD_TYPE_ARR(_vType) || _SHD_HEADER_DATA_TYPE_STD_SHD_TYPE_ARR(_vType) )
 
+#define _GLSL_TOKEN_UNIFORM     "uniform"
+#define _GLSL_TOKEN_INPUT       "in"
+#define _GLSL_TOKEN_OUTPUT      "out"
+
+#define _GLSL_TYPE_UNSIGNED_INT "uint"
+#define _GLSL_TYPE_INT          "int"
+#define _GLSL_TYPE_FLOAT        "float"
+#define _GLSL_TYPE_DOUBLE       "double"
+#define _GLSL_TYPE_BOOL         "bool"
+#define _GLSL_TYPE_SAMPLER_2D   "sampler2D"
+#define _GLSL_TYPE_VEC_2        "vec2"
+#define _GLSL_TYPE_VEC_3        "vec3"
+#define _GLSL_TYPE_VEC_4        "vec4"
+#define _GLSL_TYPE_MAT_3        "mat3"
+#define _GLSL_TYPE_MAT_4        "mat4"
+#define _GLSL_TYPE_STRUCT       "struct"
+
+#define _GLSL_INCLUDE_FILE_EXTENSION ".glslh"
+
 namespace engine {
 
     class [[maybe_unused]] Shader {
@@ -206,6 +225,7 @@ namespace engine {
         [[maybe_unused]] Shader& setVec3d(const std::string &, const engine::VectorD&) noexcept;
         [[maybe_unused]] Shader& setVec4d(const std::string &, const engine::Vector4D&) noexcept;
         [[maybe_unused]] Shader& setVec3(const std::string &, const glm::vec3&) noexcept;
+
         [[maybe_unused]] Shader& setVec4(const std::string &, const glm::vec4&) noexcept;
         [[maybe_unused]] Shader& setMat3(const std::string &, const glm::mat3&) noexcept;
         [[maybe_unused]] Shader& setMat4(const std::string &, const glm::mat4&) noexcept;
@@ -224,7 +244,7 @@ namespace engine {
             };
 
             enum DataType : uint8 {
-                SINT8 = _SHD_HEADER_DATA_TYPE_STD_TYPE_START,
+                SINT8                                               = _SHD_HEADER_DATA_TYPE_STD_TYPE_START,
                 SINT16,
                 SINT32,
                 SINT64,
@@ -236,33 +256,33 @@ namespace engine {
                 FLOAT32,
                 FLOAT64,
 
-                CHAR = SINT8,
+                CHAR                            [[maybe_unused]]    = SINT8,
 
-                BYTE = UINT8,
+                BYTE                            [[maybe_unused]]    = UINT8,
 
-                SHORT = SINT16,
-                SHORT_INT = SINT16,
+                SHORT                           [[maybe_unused]]    = SINT16,
+                SHORT_INT                       [[maybe_unused]]    = SINT16,
 
-                UNSIGNED_SHORT = UINT16,
-                UNSIGNED_SHORT_INT = UINT16,
+                UNSIGNED_SHORT                  [[maybe_unused]]    = UINT16,
+                UNSIGNED_SHORT_INT              [[maybe_unused]]    = UINT16,
 
                 INT = SINT32,
 
-                UNSIGNED = UINT32,
-                UNSIGNED_INT = UINT32,
+                UNSIGNED                        [[maybe_unused]]    = UINT32,
+                UNSIGNED_INT                    [[maybe_unused]]    = UINT32,
 
                 LONG = SINT64,
-                LONG_LONG = SINT64,
-                LONG_LONG_INT = SINT64,
+                LONG_LONG                       [[maybe_unused]]    = SINT64,
+                LONG_LONG_INT                   [[maybe_unused]]    = SINT64,
 
-                UNSIGNED_LONG = UINT64,
-                UNSIGNED_LONG_LONG = UINT64,
-                UNSIGNED_LONG_LONG_INT = UINT64,
+                UNSIGNED_LONG                   [[maybe_unused]]    = UINT64,
+                UNSIGNED_LONG_LONG              [[maybe_unused]]    = UINT64,
+                UNSIGNED_LONG_LONG_INT          [[maybe_unused]]    = UINT64,
 
-                FLOAT = FLOAT32,
-                DOUBLE = FLOAT64,
+                FLOAT                           [[maybe_unused]]    = FLOAT32,
+                DOUBLE                          [[maybe_unused]]    = FLOAT64,
                 
-                SINT8_ARRAY = _SHD_HEADER_DATA_TYPE_STD_TYPE_ARR_START,
+                SINT8_ARRAY                                         = _SHD_HEADER_DATA_TYPE_STD_TYPE_ARR_START,
                 SINT16_ARRAY,
                 SINT32_ARRAY,
                 SINT64_ARRAY,
@@ -274,33 +294,33 @@ namespace engine {
                 FLOAT32_ARRAY,
                 FLOAT64_ARRAY,
 
-                CHAR_ARRAY = SINT8_ARRAY,
+                CHAR_ARRAY                      [[maybe_unused]]    = SINT8_ARRAY,
 
-                BYTE_ARRAY = UINT8_ARRAY,
+                BYTE_ARRAY                      [[maybe_unused]]    = UINT8_ARRAY,
 
-                SHORT_ARRAY = SINT16_ARRAY,
-                SHORT_INT_ARRAY = SINT16_ARRAY,
+                SHORT_ARRAY                     [[maybe_unused]]    = SINT16_ARRAY,
+                SHORT_INT_ARRAY                 [[maybe_unused]]    = SINT16_ARRAY,
 
-                UNSIGNED_SHORT_ARRAY = UINT16_ARRAY,
-                UNSIGNED_SHORT_INT_ARRAY = UINT16_ARRAY,
+                UNSIGNED_SHORT_ARRAY            [[maybe_unused]]    = UINT16_ARRAY,
+                UNSIGNED_SHORT_INT_ARRAY        [[maybe_unused]]    = UINT16_ARRAY,
 
-                INT_ARRAY = SINT32_ARRAY,
+                INT_ARRAY                       [[maybe_unused]]    = SINT32_ARRAY,
 
-                UNSIGNED_ARRAY = UINT32_ARRAY,
-                UNSIGNED_INT_ARRAY = UINT32_ARRAY,
+                UNSIGNED_ARRAY                  [[maybe_unused]]    = UINT32_ARRAY,
+                UNSIGNED_INT_ARRAY              [[maybe_unused]]    = UINT32_ARRAY,
 
-                LONG_ARRAY = SINT64_ARRAY,
-                LONG_LONG_ARRAY = SINT64_ARRAY,
-                LONG_LONG_INT_ARRAY = SINT64_ARRAY,
+                LONG_ARRAY                      [[maybe_unused]]    = SINT64_ARRAY,
+                LONG_LONG_ARRAY                 [[maybe_unused]]    = SINT64_ARRAY,
+                LONG_LONG_INT_ARRAY             [[maybe_unused]]    = SINT64_ARRAY,
 
-                UNSIGNED_LONG_ARRAY = UINT64_ARRAY,
-                UNSIGNED_LONG_LONG_ARRAY = UINT64_ARRAY,
-                UNSIGNED_LONG_LONG_INT_ARRAY = UINT64_ARRAY,
+                UNSIGNED_LONG_ARRAY             [[maybe_unused]]    = UINT64_ARRAY,
+                UNSIGNED_LONG_LONG_ARRAY        [[maybe_unused]]    = UINT64_ARRAY,
+                UNSIGNED_LONG_LONG_INT_ARRAY    [[maybe_unused]]    = UINT64_ARRAY,
 
-                FLOAT_ARRAY = FLOAT32_ARRAY,
-                DOUBLE_ARRAY = FLOAT64_ARRAY,
+                FLOAT_ARRAY                     [[maybe_unused]]    = FLOAT32_ARRAY,
+                DOUBLE_ARRAY                    [[maybe_unused]]    = FLOAT64_ARRAY,
 
-                SAMPLER_2D = _SHD_HEADER_DATA_TYPE_STD_SHD_TYPE_START,
+                SAMPLER_2D                                          = _SHD_HEADER_DATA_TYPE_STD_SHD_TYPE_START,
 
                 VEC_2,
                 VEC_3,
@@ -310,7 +330,7 @@ namespace engine {
                 MAT_4,
 
 
-                SAMPLER_2D_ARRAY = _SHD_HEADER_DATA_TYPE_STD_SHD_TYPE_ARR_START,
+                SAMPLER_2D_ARRAY                                    = _SHD_HEADER_DATA_TYPE_STD_SHD_TYPE_ARR_START,
 
                 VEC_2_ARRAY,
                 VEC_3_ARRAY,
@@ -319,15 +339,22 @@ namespace engine {
                 MAT_3_ARRAY,
                 MAT_4_ARRAY,
 
-                STRUCT = _SHD_HEADER_DATA_TYPE_STD_STRUCT_TYPE_START,
-                STRUCT_ARRAY = _SHD_HEADER_DATA_TYPE_STD_STRUCT_TYPE_ARR_START
+                STRUCT                                              = _SHD_HEADER_DATA_TYPE_STD_STRUCT_TYPE_START,
+                STRUCT_ARRAY                                        = _SHD_HEADER_DATA_TYPE_STD_STRUCT_TYPE_ARR_START
             };
 
-            static engine::String dataTypeToString(DataType) noexcept;
-            static engine::String dataTypeModifierToString(DataTypeModifier) noexcept;
-            
-            static engine::String dataTypeDeclaration(DataType) noexcept;
-            static engine::String dataTypeModifierDeclaration(DataTypeModifier) noexcept;
+            [[maybe_unused]] static engine::String dataTypeToString(DataType) noexcept;
+            [[maybe_unused]] static engine::String dataTypeModifierToString(DataTypeModifier) noexcept;
+
+            [[maybe_unused]] static engine::String dataTypeDeclaration(DataType) noexcept;
+            [[maybe_unused]] static engine::String dataTypeModifierDeclaration(DataTypeModifier) noexcept;
+
+            [[maybe_unused]] static engine::String toString(const glm::vec2&) noexcept;
+            [[maybe_unused]] static engine::String toString(const glm::vec3&) noexcept;
+            [[maybe_unused]] static engine::String toString(const glm::vec4&) noexcept;
+
+            [[maybe_unused]] static engine::String toString(const glm::mat3&) noexcept;
+            [[maybe_unused]] static engine::String toString(const glm::mat4&) noexcept;
 
             class Struct {
             private:
@@ -343,213 +370,394 @@ namespace engine {
 
             public:
                 Struct() = delete;
+                Struct(const Struct&) noexcept;
                 explicit Struct(const char*) noexcept;
                 explicit Struct(const engine::String&) noexcept;
 
-                engine::Array < engine::NonConstexprPair < uint8, engine::String > > & getVariables() noexcept;
+                [[maybe_unused]] [[nodiscard]] engine::Array < engine::NonConstexprPair < uint8, engine::String > > & getVariables() noexcept;
 
                 // engine::HashMap < uint8, engine::String > & getVariables() noexcept;
 //                engine::HashMap < engine::Shader::Header::DataType, engine::String >& getVariables() noexcept;
-                engine::HashMap < engine::String, uint64 > & getArraySizes() noexcept;
-                engine::HashMap < engine::String, engine::String > & getStructureVariableTypes() noexcept;
+                [[maybe_unused]] [[nodiscard]] engine::HashMap < engine::String, uint64 > & getArraySizes() noexcept;
+                [[maybe_unused]] [[nodiscard]] engine::HashMap < engine::String, engine::String > & getStructureVariableTypes() noexcept;
 
-                Struct& addVariable(const engine::String&, DataType) noexcept;
-                Struct& addVariable(const char*, DataType) noexcept;
-                Struct& addVariable(const Struct&, const char*) noexcept;
-                Struct& addStructVariable(const char*, const char*) noexcept;
+                [[nodiscard]] engine::String getName() const noexcept;
 
-                Struct& addVariableUInt8  (const engine::String&) noexcept;
-                Struct& addVariableUInt16 (const engine::String&) noexcept;
-                Struct& addVariableUInt32 (const engine::String&) noexcept;
-                Struct& addVariableUInt64 (const engine::String&) noexcept;
+                Struct& operator = (const Struct&) noexcept;
 
-                Struct& addVariableInt8   (const engine::String&) noexcept;
-                Struct& addVariableInt16  (const engine::String&) noexcept;
-                Struct& addVariableInt32  (const engine::String&) noexcept;
-                Struct& addVariableInt64  (const engine::String&) noexcept;
+                [[maybe_unused]] Struct& addVariable(const engine::String&, DataType) noexcept;
+                [[maybe_unused]] Struct& addVariable(const char*, DataType) noexcept;
 
-                Struct& addVariableFloat  (const engine::String&) noexcept;
-                Struct& addVariableDouble (const engine::String&) noexcept;
-                Struct& addVariableBool   (const engine::String&) noexcept;
+                [[maybe_unused]] Struct& addVariable(const Struct&, const char*) noexcept;
+                [[maybe_unused]] Struct& addStructVariable(const char*, const char*) noexcept;
 
-                Struct& addVariableSampler2D (const engine::String&) noexcept;
+                [[maybe_unused]] Struct& addVariableUInt8  (const engine::String&) noexcept;
+                [[maybe_unused]] Struct& addVariableUInt16 (const engine::String&) noexcept;
+                [[maybe_unused]] Struct& addVariableUInt32 (const engine::String&) noexcept;
+                [[maybe_unused]] Struct& addVariableUInt64 (const engine::String&) noexcept;
 
-                Struct& addVariableVec2      (const engine::String&) noexcept;
-                Struct& addVariableVec3      (const engine::String&) noexcept;
-                Struct& addVariableVec4      (const engine::String&) noexcept;
-                Struct& addVariableMat3      (const engine::String&) noexcept;
-                Struct& addVariableMat4      (const engine::String&) noexcept;
+                [[maybe_unused]] Struct& addVariableInt8   (const engine::String&) noexcept;
+                [[maybe_unused]] Struct& addVariableInt16  (const engine::String&) noexcept;
+                [[maybe_unused]] Struct& addVariableInt32  (const engine::String&) noexcept;
+                [[maybe_unused]] Struct& addVariableInt64  (const engine::String&) noexcept;
 
+                [[maybe_unused]] Struct& addVariableFloat  (const engine::String&) noexcept;
+                [[maybe_unused]] Struct& addVariableDouble (const engine::String&) noexcept;
+                [[maybe_unused]] Struct& addVariableBool   (const engine::String&) noexcept;
 
-                Struct& addArrayVariable(const engine::String&, DataType, std::size_t) noexcept;
-                Struct& addArrayVariable(const Struct&, const char*, std::size_t) noexcept;
-                Struct& addArrayVariable(const Struct&, const engine::String&, std::size_t) noexcept;
-                Struct& addArrayStructVariable(const engine::String&, const engine::String&,std::size_t) noexcept;
+                [[maybe_unused]] Struct& addVariableSampler2D (const engine::String&) noexcept;
 
-                Struct& addArrayVariableUInt16(const engine::String&, std::size_t) noexcept;
-                Struct& addArrayVariableUInt32(const engine::String&, std::size_t) noexcept;
-                Struct& addArrayVariableUInt8 (const engine::String&, std::size_t) noexcept;
-                Struct& addArrayVariableUInt64(const engine::String&, std::size_t) noexcept;
-
-                Struct& addArrayVariableInt8  (const engine::String&, std::size_t) noexcept;
-                Struct& addArrayVariableInt16 (const engine::String&, std::size_t) noexcept;
-                Struct& addArrayVariableInt32 (const engine::String&, std::size_t) noexcept;
-                Struct& addArrayVariableInt64 (const engine::String&, std::size_t) noexcept;
-
-                Struct& addArrayVariableFloat (const engine::String&, std::size_t) noexcept;
-                Struct& addArrayVariableDouble(const engine::String&, std::size_t) noexcept;
-                Struct& addArrayVariableBool  (const engine::String&, std::size_t) noexcept;
-
-                Struct& addArrayVariableSampler2D(const engine::String&, std::size_t) noexcept;
-                Struct& addArrayVariableVec2     (const engine::String&, std::size_t) noexcept;
-                Struct& addArrayVariableVec3     (const engine::String&, std::size_t) noexcept;
-                Struct& addArrayVariableVec4     (const engine::String&, std::size_t) noexcept;
-                Struct& addArrayVariableMat3     (const engine::String&, std::size_t) noexcept;
-                Struct& addArrayVariableMat4     (const engine::String&, std::size_t) noexcept;
+                [[maybe_unused]] Struct& addVariableVec2      (const engine::String&) noexcept;
+                [[maybe_unused]] Struct& addVariableVec3      (const engine::String&) noexcept;
+                [[maybe_unused]] Struct& addVariableVec4      (const engine::String&) noexcept;
+                [[maybe_unused]] Struct& addVariableMat3      (const engine::String&) noexcept;
+                [[maybe_unused]] Struct& addVariableMat4      (const engine::String&) noexcept;
 
 
-                Struct& addVariableUInt8  (const char*) noexcept;
-                Struct& addVariableUInt16 (const char*) noexcept;
-                Struct& addVariableUInt32 (const char*) noexcept;
-                Struct& addVariableUInt64 (const char*) noexcept;
+                [[maybe_unused]] Struct& addArrayVariable(const engine::String&, DataType, std::size_t) noexcept;
+                [[maybe_unused]] Struct& addArrayVariable(const Struct&, const char*, std::size_t) noexcept;
+                [[maybe_unused]] Struct& addArrayVariable(const Struct&, const engine::String&, std::size_t) noexcept;
+                [[maybe_unused]] Struct& addArrayStructVariable(const engine::String&, const engine::String&,std::size_t) noexcept;
 
-                Struct& addVariableInt8   (const char*) noexcept;
-                Struct& addVariableInt16  (const char*) noexcept;
-                Struct& addVariableInt32  (const char*) noexcept;
-                Struct& addVariableInt64  (const char*) noexcept;
+                [[maybe_unused]] Struct& addArrayVariableUInt16(const engine::String&, std::size_t) noexcept;
+                [[maybe_unused]] Struct& addArrayVariableUInt32(const engine::String&, std::size_t) noexcept;
+                [[maybe_unused]] Struct& addArrayVariableUInt8 (const engine::String&, std::size_t) noexcept;
+                [[maybe_unused]] Struct& addArrayVariableUInt64(const engine::String&, std::size_t) noexcept;
 
-                Struct& addVariableFloat  (const char*) noexcept;
-                Struct& addVariableDouble (const char*) noexcept;
-                Struct& addVariableBool   (const char*) noexcept;
+                [[maybe_unused]] Struct& addArrayVariableInt8  (const engine::String&, std::size_t) noexcept;
+                [[maybe_unused]] Struct& addArrayVariableInt16 (const engine::String&, std::size_t) noexcept;
+                [[maybe_unused]] Struct& addArrayVariableInt32 (const engine::String&, std::size_t) noexcept;
+                [[maybe_unused]] Struct& addArrayVariableInt64 (const engine::String&, std::size_t) noexcept;
 
-                Struct& addVariableSampler2D (const char*) noexcept;
+                [[maybe_unused]] Struct& addArrayVariableFloat (const engine::String&, std::size_t) noexcept;
+                [[maybe_unused]] Struct& addArrayVariableDouble(const engine::String&, std::size_t) noexcept;
+                [[maybe_unused]] Struct& addArrayVariableBool  (const engine::String&, std::size_t) noexcept;
 
-                Struct& addVariableVec2      (const char*) noexcept;
-                Struct& addVariableVec3      (const char*) noexcept;
-                Struct& addVariableVec4      (const char*) noexcept;
-                Struct& addVariableMat3      (const char*) noexcept;
-                Struct& addVariableMat4      (const char*) noexcept;
+                [[maybe_unused]] Struct& addArrayVariableSampler2D(const engine::String&, std::size_t) noexcept;
+                [[maybe_unused]] Struct& addArrayVariableVec2     (const engine::String&, std::size_t) noexcept;
+                [[maybe_unused]] Struct& addArrayVariableVec3     (const engine::String&, std::size_t) noexcept;
+                [[maybe_unused]] Struct& addArrayVariableVec4     (const engine::String&, std::size_t) noexcept;
+                [[maybe_unused]] Struct& addArrayVariableMat3     (const engine::String&, std::size_t) noexcept;
+                [[maybe_unused]] Struct& addArrayVariableMat4     (const engine::String&, std::size_t) noexcept;
 
 
-                Struct& addArrayVariable(const char*, DataType, std::size_t) noexcept;
-                Struct& addArrayStructVariable(const char*, const char*, std::size_t) noexcept;
+                [[maybe_unused]] Struct& addVariableUInt8  (const char*) noexcept;
+                [[maybe_unused]] Struct& addVariableUInt16 (const char*) noexcept;
+                [[maybe_unused]] Struct& addVariableUInt32 (const char*) noexcept;
+                [[maybe_unused]] Struct& addVariableUInt64 (const char*) noexcept;
 
-                Struct& addArrayVariableUInt8 (const char*, std::size_t) noexcept;
-                Struct& addArrayVariableUInt16(const char*, std::size_t) noexcept;
-                Struct& addArrayVariableUInt32(const char*, std::size_t) noexcept;
-                Struct& addArrayVariableUInt64(const char*, std::size_t) noexcept;
+                [[maybe_unused]] Struct& addVariableInt8   (const char*) noexcept;
+                [[maybe_unused]] Struct& addVariableInt16  (const char*) noexcept;
+                [[maybe_unused]] Struct& addVariableInt32  (const char*) noexcept;
+                [[maybe_unused]] Struct& addVariableInt64  (const char*) noexcept;
 
-                Struct& addArrayVariableInt8  (const char*, std::size_t) noexcept;
-                Struct& addArrayVariableInt16 (const char*, std::size_t) noexcept;
-                Struct& addArrayVariableInt32 (const char*, std::size_t) noexcept;
-                Struct& addArrayVariableInt64 (const char*, std::size_t) noexcept;
+                [[maybe_unused]] Struct& addVariableFloat  (const char*) noexcept;
+                [[maybe_unused]] Struct& addVariableDouble (const char*) noexcept;
+                [[maybe_unused]] Struct& addVariableBool   (const char*) noexcept;
 
-                Struct& addArrayVariableFloat (const char*, std::size_t) noexcept;
-                Struct& addArrayVariableDouble(const char*, std::size_t) noexcept;
-                Struct& addArrayVariableBool  (const char*, std::size_t) noexcept;
+                [[maybe_unused]] Struct& addVariableSampler2D (const char*) noexcept;
 
-                Struct& addArrayVariableSampler2D(const char*, std::size_t) noexcept;
-                Struct& addArrayVariableVec2     (const char*, std::size_t) noexcept;
-                Struct& addArrayVariableVec3     (const char*, std::size_t) noexcept;
-                Struct& addArrayVariableVec4     (const char*, std::size_t) noexcept;
-                Struct& addArrayVariableMat3     (const char*, std::size_t) noexcept;
-                Struct& addArrayVariableMat4     (const char*, std::size_t) noexcept;
+                [[maybe_unused]] Struct& addVariableVec2      (const char*) noexcept;
+                [[maybe_unused]] Struct& addVariableVec3      (const char*) noexcept;
+                [[maybe_unused]] Struct& addVariableVec4      (const char*) noexcept;
+                [[maybe_unused]] Struct& addVariableMat3      (const char*) noexcept;
+                [[maybe_unused]] Struct& addVariableMat4      (const char*) noexcept;
 
-                Struct& settleVariables() noexcept;
 
-                engine::String toString() const noexcept;
+                [[maybe_unused]] Struct& addArrayVariable(const char*, DataType, std::size_t) noexcept;
+                [[maybe_unused]] Struct& addArrayStructVariable(const char*, const char*, std::size_t) noexcept;
+
+                [[maybe_unused]] Struct& addArrayVariableUInt8 (const char*, std::size_t) noexcept;
+                [[maybe_unused]] Struct& addArrayVariableUInt16(const char*, std::size_t) noexcept;
+                [[maybe_unused]] Struct& addArrayVariableUInt32(const char*, std::size_t) noexcept;
+                [[maybe_unused]] Struct& addArrayVariableUInt64(const char*, std::size_t) noexcept;
+
+                [[maybe_unused]] Struct& addArrayVariableInt8  (const char*, std::size_t) noexcept;
+                [[maybe_unused]] Struct& addArrayVariableInt16 (const char*, std::size_t) noexcept;
+                [[maybe_unused]] Struct& addArrayVariableInt32 (const char*, std::size_t) noexcept;
+                [[maybe_unused]] Struct& addArrayVariableInt64 (const char*, std::size_t) noexcept;
+
+                [[maybe_unused]] Struct& addArrayVariableFloat (const char*, std::size_t) noexcept;
+                [[maybe_unused]] Struct& addArrayVariableDouble(const char*, std::size_t) noexcept;
+                [[maybe_unused]] Struct& addArrayVariableBool  (const char*, std::size_t) noexcept;
+
+                [[maybe_unused]] Struct& addArrayVariableSampler2D(const char*, std::size_t) noexcept;
+                [[maybe_unused]] Struct& addArrayVariableVec2     (const char*, std::size_t) noexcept;
+                [[maybe_unused]] Struct& addArrayVariableVec3     (const char*, std::size_t) noexcept;
+                [[maybe_unused]] Struct& addArrayVariableVec4     (const char*, std::size_t) noexcept;
+                [[maybe_unused]] Struct& addArrayVariableMat3     (const char*, std::size_t) noexcept;
+                [[maybe_unused]] Struct& addArrayVariableMat4     (const char*, std::size_t) noexcept;
+
+                [[maybe_unused]] Struct& settleVariables() noexcept;
+
+                [[nodiscard]] engine::String toString() const noexcept;
                 
             };
 
         private:
-            engine::String _code;
+            engine::String _declarations;
+            engine::String _definitions;
+
             engine::String _name;
             engine::String _path {engine::String(__SHADERS_PATH__)};
             bool _generateIncludeGuards {true};
 
             engine::HashMap <engine::String, engine::Shader::Header::Struct> _definedStructures;
 
-            engine::String includeGuardTop() const noexcept;
-            engine::String includeGuardBottom() const noexcept;
+            [[maybe_unused]] [[nodiscard]] engine::String includeGuardTop() const noexcept;
+            [[maybe_unused]] [[nodiscard]] engine::String includeGuardBottom() const noexcept;
+
+            [[maybe_unused]] [[nodiscard]] engine::String generateCode() const noexcept;
 
         public:
             Header() = delete;
-            Header(const char*, bool = true) noexcept;
-            Header(const engine::String&, bool = true) noexcept;
+            explicit Header(const char*, bool = true) noexcept;
+            explicit Header(const engine::String&, bool = true) noexcept;
 
-            Header& setRelativePath(const char*) noexcept;
-            Header& setAbsolutePath(const char*) noexcept;
+            [[maybe_unused]] Header& setRelativePath(const char*) noexcept;
+            [[maybe_unused]] Header& setAbsolutePath(const char*) noexcept;
 
-            Header& clear() noexcept;
+            [[maybe_unused]] Header& clear() noexcept;
 
-            Header& addDefine(const engine::String&, const engine::String& = engine::String("")) noexcept;
+            [[maybe_unused]] Header& addDefine(const engine::String&, const engine::String& = engine::String("")) noexcept;
 
-            Header& addIfDefine(const engine::String&) noexcept;
-            Header& addIfNotDefine(const engine::String&) noexcept;
-            Header& addEndIf() noexcept;
+            [[maybe_unused]] Header& addIfDefined(const engine::String&) noexcept;
+            [[maybe_unused]] Header& addIfNotDefined(const engine::String&) noexcept;
+            [[maybe_unused]] Header& addEndIf() noexcept;
 
-            Header& addStruct(const Shader::Header::Struct&) noexcept;
+            [[maybe_unused]] Header& addStruct(const Shader::Header::Struct&) noexcept;
 
-            Header& addCode(const char*) noexcept;
-            Header& addCode(const engine::String&) noexcept;
-            Header& addCode(const std::string&) noexcept;
+            [[maybe_unused]] Header& addCode(const char*) noexcept;
+            [[maybe_unused]] Header& addCode(const engine::String&) noexcept;
+            [[maybe_unused]] Header& addCode(const std::string&) noexcept;
 
-            Header& addVariable(const engine::String&, DataType, DataTypeModifier = DataTypeModifier::NONE) noexcept;
-            Header& addVariable(const engine::String&, const Struct&, DataTypeModifier = DataTypeModifier::NONE) noexcept;
-            Header& addStructVariable(const engine::String&, const char*, DataTypeModifier = DataTypeModifier::NONE) noexcept;
+            [[maybe_unused]] Header& addVariable(const engine::String&, DataType, DataTypeModifier = DataTypeModifier::NONE) noexcept;
+            [[maybe_unused]] Header& addVariable(const engine::String&, const Struct&, DataTypeModifier = DataTypeModifier::NONE) noexcept;
+            [[maybe_unused]] Header& addStructVariable(const engine::String&, const engine::String&, DataTypeModifier = DataTypeModifier::NONE) noexcept;
 
-            Header& addVariableUInt8  (const engine::String&, DataTypeModifier = DataTypeModifier::NONE, uint8  = 0U ) noexcept;
-            Header& addVariableUInt16 (const engine::String&, DataTypeModifier = DataTypeModifier::NONE, uint16 = 0U ) noexcept;
-            Header& addVariableUInt32 (const engine::String&, DataTypeModifier = DataTypeModifier::NONE, uint32 = 0UL) noexcept;
-            Header& addVariableUInt64 (const engine::String&, DataTypeModifier = DataTypeModifier::NONE, uint64 = 0UL) noexcept;
+            [[maybe_unused]] Header& addVariableUInt8  (const engine::String&, DataTypeModifier = DataTypeModifier::NONE, uint8  = 0U ) noexcept;
+            [[maybe_unused]] Header& addVariableUInt16 (const engine::String&, DataTypeModifier = DataTypeModifier::NONE, uint16 = 0U ) noexcept;
+            [[maybe_unused]] Header& addVariableUInt32 (const engine::String&, DataTypeModifier = DataTypeModifier::NONE, uint32 = 0UL) noexcept;
+            [[maybe_unused]] Header& addVariableUInt64 (const engine::String&, DataTypeModifier = DataTypeModifier::NONE, uint64 = 0UL) noexcept;
 
-            Header& addVariableInt8   (const engine::String&, DataTypeModifier = DataTypeModifier::NONE, int8   = 0U ) noexcept;
-            Header& addVariableInt16  (const engine::String&, DataTypeModifier = DataTypeModifier::NONE, int16  = 0U ) noexcept;
-            Header& addVariableInt32  (const engine::String&, DataTypeModifier = DataTypeModifier::NONE, int32  = 0UL) noexcept;
-            Header& addVariableInt64  (const engine::String&, DataTypeModifier = DataTypeModifier::NONE, int64  = 0UL) noexcept;
+            [[maybe_unused]] Header& addVariableInt8   (const engine::String&, DataTypeModifier = DataTypeModifier::NONE, int8   = 0U ) noexcept;
+            [[maybe_unused]] Header& addVariableInt16  (const engine::String&, DataTypeModifier = DataTypeModifier::NONE, int16  = 0U ) noexcept;
+            [[maybe_unused]] Header& addVariableInt32  (const engine::String&, DataTypeModifier = DataTypeModifier::NONE, int32  = 0UL) noexcept;
+            [[maybe_unused]] Header& addVariableInt64  (const engine::String&, DataTypeModifier = DataTypeModifier::NONE, int64  = 0UL) noexcept;
 
-            Header& addVariableFloat  (const engine::String&, DataTypeModifier = DataTypeModifier::NONE, float = 0.0f) noexcept;
-            Header& addVariableDouble (const engine::String&, DataTypeModifier = DataTypeModifier::NONE, double = 0.0) noexcept;
-            Header& addVariableBool   (const engine::String&, DataTypeModifier = DataTypeModifier::NONE, bool = false) noexcept;
+            [[maybe_unused]] Header& addVariableFloat  (const engine::String&, DataTypeModifier = DataTypeModifier::NONE, float = 0.0f) noexcept;
+            [[maybe_unused]] Header& addVariableDouble (const engine::String&, DataTypeModifier = DataTypeModifier::NONE, double = 0.0) noexcept;
+            [[maybe_unused]] Header& addVariableBool   (const engine::String&, DataTypeModifier = DataTypeModifier::NONE, bool = false) noexcept;
 
-            Header& addVariableSampler2D (const engine::String&, DataTypeModifier = DataTypeModifier::NONE) noexcept;
+            [[maybe_unused]] Header& addVariableSampler2D (const engine::String&, DataTypeModifier = DataTypeModifier::NONE) noexcept;
 
-            Header& addVariableVec2      (const engine::String&, DataTypeModifier = DataTypeModifier::NONE, const glm::vec2& = glm::vec2(0.0f)) noexcept;
-            Header& addVariableVec3      (const engine::String&, DataTypeModifier = DataTypeModifier::NONE, const glm::vec3& = glm::vec3(0.0f)) noexcept;
-            Header& addVariableVec4      (const engine::String&, DataTypeModifier = DataTypeModifier::NONE, const glm::vec4& = glm::vec4(0.0f)) noexcept;
-            Header& addVariableMat3      (const engine::String&, DataTypeModifier = DataTypeModifier::NONE, const glm::mat3& = glm::mat3(0.0f)) noexcept;
-            Header& addVariableMat4      (const engine::String&, DataTypeModifier = DataTypeModifier::NONE, const glm::mat4& = glm::mat4(0.0f)) noexcept;
+            [[maybe_unused]] Header& addVariableVec2      (const engine::String&, DataTypeModifier = DataTypeModifier::NONE, const glm::vec2& = glm::vec2(0.0f)) noexcept;
+            [[maybe_unused]] Header& addVariableVec3      (const engine::String&, DataTypeModifier = DataTypeModifier::NONE, const glm::vec3& = glm::vec3(0.0f)) noexcept;
+            [[maybe_unused]] Header& addVariableVec4      (const engine::String&, DataTypeModifier = DataTypeModifier::NONE, const glm::vec4& = glm::vec4(0.0f)) noexcept;
+            [[maybe_unused]] Header& addVariableMat3      (const engine::String&, DataTypeModifier = DataTypeModifier::NONE, const glm::mat3& = glm::mat3(0.0f)) noexcept;
+            [[maybe_unused]] Header& addVariableMat4      (const engine::String&, DataTypeModifier = DataTypeModifier::NONE, const glm::mat4& = glm::mat4(0.0f)) noexcept;
 
 
-            Header& addArrayVariable(const engine::String&, DataType, std::size_t, DataTypeModifier = DataTypeModifier::NONE) noexcept;
-            Header& addArrayVariable(const engine::String&, const Struct&, std::size_t, DataTypeModifier = DataTypeModifier::NONE) noexcept;
-            Header& addArrayStructVariable(const engine::String&, const char*, std::size_t, DataTypeModifier = DataTypeModifier::NONE) noexcept;
+            [[maybe_unused]] Header& addArrayVariable(const engine::String&, DataType, std::size_t, DataTypeModifier = DataTypeModifier::NONE) noexcept;
+            [[maybe_unused]] Header& addArrayVariable(const engine::String&, const Struct&, std::size_t, DataTypeModifier = DataTypeModifier::NONE) noexcept;
+            [[maybe_unused]] Header& addArrayStructVariable(const engine::String&, const engine::String& , std::size_t, DataTypeModifier = DataTypeModifier::NONE) noexcept;
 
-            Header& addArrayVariableUInt16(const engine::String&, std::size_t, DataTypeModifier = DataTypeModifier::NONE) noexcept;
-            Header& addArrayVariableUInt32(const engine::String&, std::size_t, DataTypeModifier = DataTypeModifier::NONE) noexcept;
-            Header& addArrayVariableUInt8 (const engine::String&, std::size_t, DataTypeModifier = DataTypeModifier::NONE) noexcept;
-            Header& addArrayVariableUInt64(const engine::String&, std::size_t, DataTypeModifier = DataTypeModifier::NONE) noexcept;
+            [[maybe_unused]] Header& addArrayVariableUInt16(const engine::String&, std::size_t, DataTypeModifier = DataTypeModifier::NONE) noexcept;
+            [[maybe_unused]] Header& addArrayVariableUInt32(const engine::String&, std::size_t, DataTypeModifier = DataTypeModifier::NONE) noexcept;
+            [[maybe_unused]] Header& addArrayVariableUInt8 (const engine::String&, std::size_t, DataTypeModifier = DataTypeModifier::NONE) noexcept;
+            [[maybe_unused]] Header& addArrayVariableUInt64(const engine::String&, std::size_t, DataTypeModifier = DataTypeModifier::NONE) noexcept;
 
-            Header& addArrayVariableInt8  (const engine::String&, std::size_t, DataTypeModifier = DataTypeModifier::NONE) noexcept;
-            Header& addArrayVariableInt16 (const engine::String&, std::size_t, DataTypeModifier = DataTypeModifier::NONE) noexcept;
-            Header& addArrayVariableInt32 (const engine::String&, std::size_t, DataTypeModifier = DataTypeModifier::NONE) noexcept;
-            Header& addArrayVariableInt64 (const engine::String&, std::size_t, DataTypeModifier = DataTypeModifier::NONE) noexcept;
+            [[maybe_unused]] Header& addArrayVariableInt8  (const engine::String&, std::size_t, DataTypeModifier = DataTypeModifier::NONE) noexcept;
+            [[maybe_unused]] Header& addArrayVariableInt16 (const engine::String&, std::size_t, DataTypeModifier = DataTypeModifier::NONE) noexcept;
+            [[maybe_unused]] Header& addArrayVariableInt32 (const engine::String&, std::size_t, DataTypeModifier = DataTypeModifier::NONE) noexcept;
+            [[maybe_unused]] Header& addArrayVariableInt64 (const engine::String&, std::size_t, DataTypeModifier = DataTypeModifier::NONE) noexcept;
 
-            Header& addArrayVariableFloat (const engine::String&, std::size_t, DataTypeModifier = DataTypeModifier::NONE) noexcept;
-            Header& addArrayVariableDouble(const engine::String&, std::size_t, DataTypeModifier = DataTypeModifier::NONE) noexcept;
-            Header& addArrayVariableBool  (const engine::String&, std::size_t, DataTypeModifier = DataTypeModifier::NONE) noexcept;
+            [[maybe_unused]] Header& addArrayVariableFloat (const engine::String&, std::size_t, DataTypeModifier = DataTypeModifier::NONE) noexcept;
+            [[maybe_unused]] Header& addArrayVariableDouble(const engine::String&, std::size_t, DataTypeModifier = DataTypeModifier::NONE) noexcept;
+            [[maybe_unused]] Header& addArrayVariableBool  (const engine::String&, std::size_t, DataTypeModifier = DataTypeModifier::NONE) noexcept;
 
-            Header& addArrayVariableSampler2D(const engine::String&, std::size_t, DataTypeModifier = DataTypeModifier::NONE) noexcept;
-            Header& addArrayVariableVec2     (const engine::String&, std::size_t, DataTypeModifier = DataTypeModifier::NONE) noexcept;
-            Header& addArrayVariableVec3     (const engine::String&, std::size_t, DataTypeModifier = DataTypeModifier::NONE) noexcept;
-            Header& addArrayVariableVec4     (const engine::String&, std::size_t, DataTypeModifier = DataTypeModifier::NONE) noexcept;
-            Header& addArrayVariableMat3     (const engine::String&, std::size_t, DataTypeModifier = DataTypeModifier::NONE) noexcept;
-            Header& addArrayVariableMat4     (const engine::String&, std::size_t, DataTypeModifier = DataTypeModifier::NONE) noexcept;
+            [[maybe_unused]] Header& addArrayVariableSampler2D(const engine::String&, std::size_t, DataTypeModifier = DataTypeModifier::NONE) noexcept;
+            [[maybe_unused]] Header& addArrayVariableVec2     (const engine::String&, std::size_t, DataTypeModifier = DataTypeModifier::NONE) noexcept;
+            [[maybe_unused]] Header& addArrayVariableVec3     (const engine::String&, std::size_t, DataTypeModifier = DataTypeModifier::NONE) noexcept;
+            [[maybe_unused]] Header& addArrayVariableVec4     (const engine::String&, std::size_t, DataTypeModifier = DataTypeModifier::NONE) noexcept;
+            [[maybe_unused]] Header& addArrayVariableMat3     (const engine::String&, std::size_t, DataTypeModifier = DataTypeModifier::NONE) noexcept;
+            [[maybe_unused]] Header& addArrayVariableMat4     (const engine::String&, std::size_t, DataTypeModifier = DataTypeModifier::NONE) noexcept;
 
-//            engine::Array< engine::Shader::Header::Struct> & getDefinedStructures() noexcept;
-            engine::HashMap < engine::String, engine::Shader::Header::Struct > & getDefinedStructures() noexcept;
 
-            void generate() noexcept;
+            [[maybe_unused]] Header& addVariable(const char* varName, DataType dataType, DataTypeModifier modifier = DataTypeModifier::NONE) noexcept {
+                return this->addVariable(engine::String(varName), dataType, modifier);
+            }
+
+            [[maybe_unused]] Header& addVariable(const char* varName, const Struct& structure, DataTypeModifier modifier = DataTypeModifier::NONE) noexcept {
+                return this->addVariable(engine::String(varName), structure, modifier);
+            }
+
+            [[maybe_unused]] Header& addStructVariable(const char* varName, const char* structName, DataTypeModifier modifier = DataTypeModifier::NONE) noexcept {
+                return this->addStructVariable(engine::String(varName), engine::String(structName), modifier);
+            }
+
+            [[maybe_unused]] Header& addVariableUInt8  (const char * varName, DataTypeModifier modifier = DataTypeModifier::NONE, uint8  defaultValue = 0U ) noexcept {
+                return this->addVariableUInt8 ( engine::String(varName), modifier, defaultValue );
+            }
+
+            [[maybe_unused]] Header& addVariableUInt16 (const char * varName, DataTypeModifier modifier = DataTypeModifier::NONE, uint16 defaultValue = 0U ) noexcept{
+                return this->addVariableUInt16 ( engine::String(varName), modifier, defaultValue );
+            }
+
+            [[maybe_unused]] Header& addVariableUInt32 (const char * varName, DataTypeModifier modifier = DataTypeModifier::NONE, uint32 defaultValue = 0UL) noexcept{
+                return this->addVariableUInt32 ( engine::String(varName), modifier, defaultValue );
+            }
+
+            [[maybe_unused]] Header& addVariableUInt64 (const char * varName, DataTypeModifier modifier = DataTypeModifier::NONE, uint64 defaultValue = 0UL) noexcept{
+                return this->addVariableUInt64 ( engine::String(varName), modifier, defaultValue );
+            }
+
+
+            [[maybe_unused]] Header& addVariableInt8   (const char * varName, DataTypeModifier modifier = DataTypeModifier::NONE, int8   defaultValue = 0U ) noexcept{
+                return this->addVariableInt8 ( engine::String(varName), modifier, defaultValue );
+            }
+
+            [[maybe_unused]] Header& addVariableInt16  (const char * varName, DataTypeModifier modifier = DataTypeModifier::NONE, int16  defaultValue = 0U ) noexcept{
+                return this->addVariableInt16 ( engine::String(varName), modifier, defaultValue );
+            }
+
+            [[maybe_unused]] Header& addVariableInt32  (const char * varName, DataTypeModifier modifier = DataTypeModifier::NONE, int32  defaultValue = 0UL) noexcept{
+                return this->addVariableInt32 ( engine::String(varName), modifier, defaultValue );
+            }
+
+            [[maybe_unused]] Header& addVariableInt64  (const char * varName, DataTypeModifier modifier = DataTypeModifier::NONE, int64  defaultValue= 0UL) noexcept{
+                return this->addVariableInt64 ( engine::String(varName), modifier, defaultValue );
+            }
+
+
+            [[maybe_unused]] Header& addVariableFloat  (const char * varName, DataTypeModifier modifier = DataTypeModifier::NONE, float  defaultValue= 0.0f) noexcept{
+                return this->addVariableFloat ( engine::String(varName), modifier, defaultValue );
+            }
+
+            [[maybe_unused]] Header& addVariableDouble (const char * varName, DataTypeModifier modifier = DataTypeModifier::NONE, double defaultValue= 0.0) noexcept{
+                return this->addVariableDouble ( engine::String(varName), modifier, defaultValue );
+            }
+
+            [[maybe_unused]] Header& addVariableBool   (const char * varName, DataTypeModifier modifier = DataTypeModifier::NONE, bool   defaultValue= false) noexcept{
+                return this->addVariableBool ( engine::String(varName), modifier, defaultValue );
+            }
+
+
+            [[maybe_unused]] Header& addVariableSampler2D (const char * varName, DataTypeModifier modifier = DataTypeModifier::NONE) noexcept {
+                return this->addVariableSampler2D( engine::String(varName), modifier );
+            }
+
+            [[maybe_unused]] Header& addVariableVec2      (const char * varName, DataTypeModifier modifier = DataTypeModifier::NONE, const glm::vec2& defaultValue= glm::vec2(0.0f)) noexcept{
+                return this->addVariableVec2 ( engine::String(varName), modifier, defaultValue );
+            }
+
+            [[maybe_unused]] Header& addVariableVec3      (const char * varName, DataTypeModifier modifier = DataTypeModifier::NONE, const glm::vec3& defaultValue= glm::vec3(0.0f)) noexcept{
+                return this->addVariableVec3 ( engine::String(varName), modifier, defaultValue );
+            }
+
+            [[maybe_unused]] Header& addVariableVec4      (const char * varName, DataTypeModifier modifier = DataTypeModifier::NONE, const glm::vec4& defaultValue= glm::vec4(0.0f)) noexcept{
+                return this->addVariableVec4 ( engine::String(varName), modifier, defaultValue );
+            }
+
+            [[maybe_unused]] Header& addVariableMat3      (const char * varName, DataTypeModifier modifier = DataTypeModifier::NONE, const glm::mat3& defaultValue= glm::mat3(0.0f)) noexcept{
+                return this->addVariableMat3 ( engine::String(varName), modifier, defaultValue );
+            }
+
+            [[maybe_unused]] Header& addVariableMat4      (const char * varName, DataTypeModifier modifier = DataTypeModifier::NONE, const glm::mat4& defaultValue= glm::mat4(0.0f)) noexcept{
+                return this->addVariableMat4 ( engine::String(varName), modifier, defaultValue );
+            }
+
+
+
+            [[maybe_unused]] Header& addArrayVariable(const char * varName, DataType dataType, std::size_t length, DataTypeModifier modifier = DataTypeModifier::NONE) noexcept {
+                return this->addArrayVariable( engine::String(varName), dataType, length, modifier );
+            }
+
+            [[maybe_unused]] Header& addArrayVariable(const char * varName, const Struct& structure, std::size_t length, DataTypeModifier modifier = DataTypeModifier::NONE) noexcept {
+                return this->addArrayVariable( engine::String(varName), structure, length, modifier );
+            }
+
+            [[maybe_unused]] Header& addArrayStructVariable(const char * varName, const char* structureName, std::size_t length, DataTypeModifier modifier = DataTypeModifier::NONE) noexcept {
+                return this->addArrayStructVariable( engine::String(varName), engine::String(structureName), length, modifier );
+            }
+
+
+            [[maybe_unused]] Header& addArrayVariableUInt8 (const char * varName, std::size_t length, DataTypeModifier modifier = DataTypeModifier::NONE) noexcept{
+                return this->addArrayVariableUInt8( engine::String(varName), length, modifier );
+            }
+
+            [[maybe_unused]] Header& addArrayVariableUInt16(const char * varName, std::size_t length, DataTypeModifier modifier = DataTypeModifier::NONE) noexcept{
+                return this->addArrayVariableUInt16( engine::String(varName), length, modifier );
+            }
+
+            [[maybe_unused]] Header& addArrayVariableUInt32(const char * varName, std::size_t length, DataTypeModifier modifier = DataTypeModifier::NONE) noexcept{
+                return this->addArrayVariableUInt32( engine::String(varName), length, modifier );
+            }
+
+            [[maybe_unused]] Header& addArrayVariableUInt64(const char * varName, std::size_t length, DataTypeModifier modifier = DataTypeModifier::NONE) noexcept{
+                return this->addArrayVariableUInt64( engine::String(varName), length, modifier );
+            }
+
+
+            [[maybe_unused]] Header& addArrayVariableInt8  (const char * varName, std::size_t length, DataTypeModifier modifier = DataTypeModifier::NONE) noexcept{
+                return this->addArrayVariableInt8( engine::String(varName), length, modifier );
+            }
+
+            [[maybe_unused]] Header& addArrayVariableInt16 (const char * varName, std::size_t length, DataTypeModifier modifier = DataTypeModifier::NONE) noexcept{
+                return this->addArrayVariableInt16( engine::String(varName), length, modifier );
+            }
+
+            [[maybe_unused]] Header& addArrayVariableInt32 (const char * varName, std::size_t length, DataTypeModifier modifier = DataTypeModifier::NONE) noexcept{
+                return this->addArrayVariableInt32( engine::String(varName), length, modifier );
+            }
+
+            [[maybe_unused]] Header& addArrayVariableInt64 (const char * varName, std::size_t length, DataTypeModifier modifier = DataTypeModifier::NONE) noexcept{
+                return this->addArrayVariableInt64( engine::String(varName), length, modifier );
+            }
+
+
+            [[maybe_unused]] Header& addArrayVariableFloat (const char * varName, std::size_t length, DataTypeModifier modifier = DataTypeModifier::NONE) noexcept{
+                return this->addArrayVariableFloat( engine::String(varName), length, modifier );
+            }
+
+            [[maybe_unused]] Header& addArrayVariableDouble(const char * varName, std::size_t length, DataTypeModifier modifier = DataTypeModifier::NONE) noexcept{
+                return this->addArrayVariableDouble( engine::String(varName), length, modifier );
+            }
+
+            [[maybe_unused]] Header& addArrayVariableBool  (const char * varName, std::size_t length, DataTypeModifier modifier = DataTypeModifier::NONE) noexcept{
+                return this->addArrayVariableBool( engine::String(varName), length, modifier );
+            }
+
+
+            [[maybe_unused]] Header& addArrayVariableSampler2D(const char * varName, std::size_t length, DataTypeModifier modifier = DataTypeModifier::NONE) noexcept{
+                return this->addArrayVariableSampler2D( engine::String(varName), length, modifier );
+            }
+
+            [[maybe_unused]] Header& addArrayVariableVec2     (const char * varName, std::size_t length, DataTypeModifier modifier = DataTypeModifier::NONE) noexcept{
+                return this->addArrayVariableVec2( engine::String(varName), length, modifier );
+            }
+
+            [[maybe_unused]] Header& addArrayVariableVec3     (const char * varName, std::size_t length, DataTypeModifier modifier = DataTypeModifier::NONE) noexcept{
+                return this->addArrayVariableVec3( engine::String(varName), length, modifier );
+            }
+
+            [[maybe_unused]] Header& addArrayVariableVec4     (const char * varName, std::size_t length, DataTypeModifier modifier = DataTypeModifier::NONE) noexcept{
+                return this->addArrayVariableVec4( engine::String(varName), length, modifier );
+            }
+
+            [[maybe_unused]] Header& addArrayVariableMat3     (const char * varName, std::size_t length, DataTypeModifier modifier = DataTypeModifier::NONE) noexcept{
+                return this->addArrayVariableMat3( engine::String(varName), length, modifier );
+            }
+
+            [[maybe_unused]] Header& addArrayVariableMat4     (const char * varName, std::size_t length, DataTypeModifier modifier = DataTypeModifier::NONE) noexcept{
+                return this->addArrayVariableMat4( engine::String(varName), length, modifier );
+            }
+
+
+            //            engine::Array< engine::Shader::Header::Struct> & getDefinedStructures() noexcept;
+            [[maybe_unused]] [[nodiscard]] engine::HashMap < engine::String, engine::Shader::Header::Struct > & getDefinedStructures() noexcept;
+
+            [[maybe_unused]] void generate() const noexcept;
         };
     };
 }

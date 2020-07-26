@@ -60,9 +60,24 @@ namespace engine {
             HashNode* _next;
 
         public:
-            HashNode() = delete;
-            HashNode(const K& key, const V& value) : _key(key), _value(value), _next(nullptr) {
+            HashNode() noexcept = delete;
+            HashNode(const K& key, const V& value) noexcept : _key(key), _value(value), _next(nullptr) {
 
+            }
+
+            HashNode(const HashNode& obj) noexcept : _key(obj._key), _value(obj._value), _next(nullptr) {
+
+            }
+
+            HashNode& operator= (const HashNode& obj) noexcept {
+                if(this == &obj)
+                    return *this;
+
+                this->_key = obj._key;
+                this->_value = obj._value;
+                this->_next = obj._next;
+
+                return *this;
             }
 
             K& getKey() noexcept {
@@ -78,6 +93,9 @@ namespace engine {
             }
         };
 
+    private:
+        HashNode ** _table;
+        F _hashFunction;
     public:
         HashMap() noexcept {
             this->_table = new HashNode * [DEFAULT_TABLE_SIZE];
@@ -94,6 +112,66 @@ namespace engine {
                 this->_table[i] = nullptr;
             }
             delete [] this->_table;
+        }
+
+        HashMap(const HashMap& obj) noexcept {
+            this->_table = new HashNode * [DEFAULT_TABLE_SIZE];
+
+            for(std::size_t i = 0; i < DEFAULT_TABLE_SIZE; i++) {
+                this->_table[i] = nullptr; // memory leak if here isn't here
+
+                HashNode* entry = obj._table[i];
+                while(entry != nullptr) {
+                    this->put(entry->getKey(), entry->getValue());
+                    entry = entry->_next;
+                }
+            }
+
+            this->_hashFunction = obj._hashFunction;
+        }
+
+        HashMap& operator= (const HashMap& obj) noexcept {
+            if(this == &obj)
+                return *this;
+
+            this->clear();
+
+            this->_table = new HashNode * [DEFAULT_TABLE_SIZE];
+
+            for(std::size_t i = 0; i < DEFAULT_TABLE_SIZE; i++) {
+                this->_table[i] = nullptr; /// memory leak if not here
+                HashNode * entry = obj._table[i];
+                HashNode * previousInCurrent = nullptr;
+                while(entry != nullptr) {
+//                    this->put(entry->getKey(), entry->getValue());
+                    if(this->_table[i] == nullptr) {
+                        this->_table[i] = new HashNode(entry->getKey(), entry->getValue());
+                        previousInCurrent = this->_table[i];
+                    } else {
+                        previousInCurrent->_next = new HashNode(entry->getKey(), entry->getValue());
+                        previousInCurrent = previousInCurrent->_next;
+                    }
+
+                    entry = entry->_next;
+                }
+            }
+
+            this->_hashFunction = obj._hashFunction;
+
+            return *this;
+        }
+
+        void clear() noexcept {
+            for(std::size_t i = 0; i < DEFAULT_TABLE_SIZE; i++) {
+                HashNode* entry = this->_table[i];
+                while(entry != nullptr) {
+                    HashNode* previous = entry;
+                    entry = entry->_next;
+                    delete previous;
+                }
+                this->_table[i] = nullptr;
+            }
+            delete[] this->_table;
         }
 
         bool get(const K& key, V& value) noexcept {
@@ -287,9 +365,6 @@ namespace engine {
             return (f << " ] ");
         }
 
-    private:
-        HashNode ** _table;
-        F _hashFunction;
     };
 
 }

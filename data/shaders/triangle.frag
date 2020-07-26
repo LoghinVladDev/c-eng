@@ -49,6 +49,8 @@ struct SpotLight {
     bool toggle;
 };
 
+//mat3 m = mat3(vec3(0.0f), vec3(0.0f), vec3(0.0f));
+
 uniform Material material;
 
 uniform DirectionalLight directionalLight;

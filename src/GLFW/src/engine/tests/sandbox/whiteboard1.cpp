@@ -45,12 +45,20 @@ int main() {
 
      structTest.addArrayVariableFloat("var2312", 10);
 
-//     std::cout << structTest.getVariables() << '\n';
+    Shader::Header headerTest("headerNumberOne");
 
+    headerTest.addStruct(structTest);
 
-    for( std::size_t it = 0; it < structTest.getVariables().getLength(); it++ ) {
-        std::cout << engine::Shader::Header::dataTypeToString((engine::Shader::Header::DataType)(structTest.getVariables()[it].getFirst())) << " : " << (structTest.getVariables()[it].getSecond()) << '\n';
-    }
+    auto pairs = headerTest.getDefinedStructures().getEntries();
 
-    std::cout << "\n\n\n" << structTest.settleVariables().toString() << '\n';
+    headerTest.addVariable(engine::String("var1"), structTest, engine::Shader::Header::DataTypeModifier::UNIFORM);
+    headerTest.addVariable(engine::String("var2"), engine::Shader::Header::DataType::MAT_3);
+    headerTest.addVariableMat3(engine::String("var4"));
+    headerTest.addVariableSampler2D(engine::String("var3"));
+
+    headerTest.addVariableVec4("test123", engine::Shader::Header::DataTypeModifier::INPUT);
+
+    headerTest.addArrayVariableUInt64("etse", 1023, engine::Shader::Header::DataTypeModifier::OUTPUT );
+
+    headerTest.generate();
 }
