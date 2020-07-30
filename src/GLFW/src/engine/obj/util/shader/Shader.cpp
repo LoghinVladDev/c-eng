@@ -97,7 +97,6 @@ std::string engine::Shader::_pathToShadersFolder = std::string(__NO_PATH_GIVEN__
 // [[maybe_unused]] static engine::String includeFileInShaderRec(const char* path, engine::SimpleSet < engine::NonConstexprPair < engine::String, engine::String > >& defineTokens ) noexcept {
 [[maybe_unused]] static engine::String includeFileInShaderRec(const char* path, engine::HashMap < engine::String, engine::String >& defineTokens ) noexcept {
     std::cout << "Include : " << path << '\n';
-
     engine::String code;
     engine::String codeLine;
     std::ifstream includedFile;
@@ -1039,7 +1038,7 @@ engine::Shader::Header::Struct& engine::Shader::Header::Struct::addStructVariabl
     return varsArray;
 }
 
-engine::Shader::Header::Struct& engine::Shader::Header::Struct::settleVariables() noexcept {
+[[maybe_unused]] engine::Shader::Header::Struct& engine::Shader::Header::Struct::settleVariables() noexcept {
     this->_variables = sortVarsByTypeAndName( this->_variables );
     return *this;
 }
@@ -1116,6 +1115,7 @@ engine::String engine::Shader::Header::Struct::getName() const noexcept {
         case INPUT      : return engine::String("Input Variable");
         case OUTPUT     : return engine::String("Output Variable");
         case UNIFORM    : return engine::String("Uniform Variable, assign in code");
+        default         : return engine::String("unknown");
     }
 }
 
@@ -1124,7 +1124,8 @@ engine::String engine::Shader::Header::Struct::getName() const noexcept {
         case UNIFORM    : return engine::String(_GLSL_TOKEN_UNIFORM);
         case OUTPUT     : return engine::String(_GLSL_TOKEN_OUTPUT);
         case INPUT      : return engine::String(_GLSL_TOKEN_INPUT);
-        case NONE       : return engine::String("");
+        case NONE       :
+        default         : return engine::String("");
     }
 }
 
@@ -1178,6 +1179,8 @@ engine::String engine::Shader::Header::Struct::getName() const noexcept {
         case MAT_4_ARRAY        : return engine::String("Matrix Size 4 Array");
 
         case STRUCT_ARRAY       : return engine::String("Defined Structure Array");
+
+        default                 : return engine::String("No known data type");
     }
 }
 
@@ -1231,6 +1234,8 @@ engine::String engine::Shader::Header::Struct::getName() const noexcept {
 
         case STRUCT             :
         case STRUCT_ARRAY       : return engine::String(_GLSL_TYPE_STRUCT);
+
+        default                 : return engine::String("");
     }
 }
 
@@ -1707,10 +1712,17 @@ engine::Shader::Header::Header(const engine::String& fileName, bool generateIncl
 
 [[maybe_unused]] void engine::Shader::Header::generate() const noexcept {
     engine::String code = this->generateCode();
+
+//    std::cout << code << '\n';
+
     std::fstream generatedFile;
     engine::String fileFullPath = this->_path + this->_name + _GLSL_INCLUDE_FILE_EXTENSION;
 
+//    std::cout << fileFullPath << '\n';
+
     generatedFile.open( fileFullPath.c_str(), std::fstream::out | std::fstream::trunc );
+
+//    generatedFile.close();
 
     generatedFile << code << '\n';
 

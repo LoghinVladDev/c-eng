@@ -3,6 +3,7 @@
 //
 
 #include "Mesh.h"
+#include <cstddef>
 
 engine::Mesh::Mesh() noexcept = default;
 
@@ -16,6 +17,7 @@ engine::Mesh::Mesh(const std::vector<SVertex> & vertices, const std::vector<uint
     _loaded(true) {
     if(textures.size() > engine::Mesh::_TEXTURE_LIMIT)
         throw engine::MeshTextureLimitReached();
+
     this->_texturesPtr = new std::vector<STexture>(textures);
 
     this->setupMesh();

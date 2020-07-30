@@ -31,21 +31,22 @@ int main() {
 //    std::cout << tokens << '\n';
 
 
+    Shader::Header::Struct structTest("StructTest");
+    structTest.addVariable("var123", Shader::Header::DataType::UINT16);
+    structTest.addVariable("var231", Shader::Header::DataType::SINT8);
+    structTest.addVariable("var", Shader::Header::DataType::SAMPLER_2D);
+    structTest.addVariable("var3415", Shader::Header::DataType::MAT_4);
 
-     Shader::Header::Struct structTest("StructTest");
-     structTest.addVariable("var123", Shader::Header::DataType::UINT16);
-     structTest.addVariable("var231", Shader::Header::DataType::SINT8);
-     structTest.addVariable("var", Shader::Header::DataType::SAMPLER_2D);
-     structTest.addVariable("var3415", Shader::Header::DataType::MAT_4);
+    structTest.addStructVariable("Light", "v123");
+    structTest.addArrayStructVariable("Light", "v3242", 105);
+    structTest.addArrayStructVariable("Dark", "skkr", 13244);
+    structTest.addArrayStructVariable("Dark123", "skkr4", 13242);
 
-     structTest.addStructVariable("Light", "v123");
-     structTest.addArrayStructVariable("Light", "v3242", 105);
-     structTest.addArrayStructVariable("Dark", "skkr", 13244);
-     structTest.addArrayStructVariable("Dark123", "skkr4", 13242);
+    structTest.addArrayVariableFloat("var2312", 10);
 
-     structTest.addArrayVariableFloat("var2312", 10);
+//    std::cout << structTest.toString() << '\n';
 
-    Shader::Header headerTest("headerNumberOne");
+    Shader::Header headerTest("headerGeneratAcum");
 
     headerTest.addStruct(structTest);
 

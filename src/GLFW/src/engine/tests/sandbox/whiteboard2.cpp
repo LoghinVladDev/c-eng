@@ -248,10 +248,10 @@ void operatorTests() {
 int main(){ 
 //    basicTests();
 //    accessTests();
-//    utilityTests();
+    utilityTests();
 //    utility2Tests();
 //    fileTests();
 //    utility3Tests();
-    operatorTests();
+//    operatorTests();
 }
 

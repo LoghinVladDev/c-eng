@@ -65,11 +65,16 @@
 
 #ifndef __PROJ_PATHS__
 
-constexpr const char* __PROJECT_PATH__ = "./../";
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "bugprone-reserved-identifier"
+
+[[maybe_unused]] constexpr const char* __PROJECT_PATH__ = "./../";
 constexpr const char* __SHADERS_PATH__ = "./../data/shaders/";
 constexpr const char* __TEXTURES_PATH__ = "./../data/textures/";
 
 constexpr const char* __NO_PATH_GIVEN__ = "./";
+
+#pragma clang diagnostic pop
 
 #define __PROJ_PATHS__
 #endif
