@@ -21,6 +21,7 @@ add_subdirectory(dependencies/glfw_src)
 add_subdirectory(dependencies/glad)
 add_subdirectory(dependencies/glm)
 add_subdirectory(dependencies/assimp-5.0.1)
+#add_subdirectory(dependencies/sqlite-autoconf-3320300)
 #add_subdirectory(dependencies/stb_image)
 #add_subdirectory(messengerOffline)
 #add_subdirectory(messengerOffline/src)
@@ -28,7 +29,8 @@ add_subdirectory(dependencies/assimp-5.0.1)
 
 #include_directories(glm/glm)
 #include_directories(cmake-build-debug/assimp-5.0.1/include)
-include_directories(dependencies/assimp-5.0.1/include)
+include_directories(dependencies/sqlite-autoconf-3320300)
+#include_directories(dependencies/assimp-5.0.1/include)
 include_directories(dependencies/glm)
 include_directories(dependencies/glfw_src/include)
 include_directories(dependencies/glad/include)
@@ -38,9 +40,17 @@ include_directories(src/GLFW/src/engine)
 
 find_package(OpenGL REQUIRED)
 find_package(ASSIMP REQUIRED)
+#find_package(SQLite3 REQUIRED)
+
+if(SQLite3_FOUND)
+    include_directories(${SQLite3_INCLUDE_DIRS})
+endif()
+
 if(ASSIMP_FOUND)
     include_directories(${ASSIMP_INCLUDE_DIR})
 endif()
+
+
 find_package(Qt5 COMPONENTS Widgets REQUIRED)
 
 if(ANDROID)
@@ -606,7 +616,7 @@ add_executable( glfwModels
         src/GLFW/src/engine/obj/util/data/String.h
         src/GLFW/src/engine/obj/util/data/Array.cpp
         src/GLFW/src/engine/obj/util/data/Array.h
-        src/GLFW/src/engine/obj/util/data/Set.cpp src/GLFW/src/engine/obj/util/data/Set.h src/GLFW/src/engine/obj/util/data/Map.cpp src/GLFW/src/engine/obj/util/data/Map.h)
+        src/GLFW/src/engine/obj/util/data/Set.cpp src/GLFW/src/engine/obj/util/data/Set.h src/GLFW/src/engine/obj/util/data/Map.cpp src/GLFW/src/engine/obj/util/data/Map.h src/GLFW/src/engine/obj/util/model/Model.cpp src/GLFW/src/engine/obj/util/model/Model.h src/GLFW/src/engine/obj/util/func/TextureManager.cpp src/GLFW/src/engine/obj/util/func/TextureManager.h)
 
 target_link_libraries( glfwModels glfw ${GLFW_LIBRARIES} )
 

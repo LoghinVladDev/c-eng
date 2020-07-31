@@ -66,6 +66,13 @@ namespace engine {
         [[maybe_unused]] Mesh& setIndices(const std::vector<uint32> &) noexcept;
 
         [[maybe_unused]] Mesh& setTextures(const std::vector<STexture> &) noexcept (false);
+
+        [[maybe_unused]] [[nodiscard]] const std::vector <SVertex>  * getVertices  () const { return this->_verticesPtr; }
+        [[maybe_unused]] [[nodiscard]] const std::vector <uint32>   * getIndices   () const { return this->_indicesPtr; }
+        [[maybe_unused]] [[nodiscard]] const std::vector <STexture> * getTextures  () const { return this->_texturesPtr; }
+        [[maybe_unused]] [[nodiscard]] int getVertexArrayObject     () const { return this->_VAO; }
+        [[maybe_unused]] [[nodiscard]] int getVertexBufferObject    () const { return this->_VBO; }
+        [[maybe_unused]] [[nodiscard]] int getElementBufferObject   () const { return this->_EBO; }
     };
 }
 

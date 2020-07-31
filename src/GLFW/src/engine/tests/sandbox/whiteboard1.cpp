@@ -6,9 +6,12 @@
 #include <obj/util/data/Map.h>
  #include <obj/util/shader/Shader.h>
 
+#include <sqlite3.h>
+
 using namespace engine;
 
-int main() {
+void headerTest() {
+
 //    HashMap<String, String> tokens;
 //
 //    tokens.put(String("a"), String("bbb"));
@@ -62,4 +65,7 @@ int main() {
     headerTest.addArrayVariableUInt64("etse", 1023, engine::Shader::Header::DataTypeModifier::OUTPUT );
 
     headerTest.generate();
+}
+
+int main() {
 }

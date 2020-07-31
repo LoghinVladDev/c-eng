@@ -72,8 +72,6 @@ engine::Mesh::~Mesh() noexcept {
     return *this;
 }
 
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "modernize-use-nullptr"
 void engine::Mesh::setupMesh() noexcept {
     glGenVertexArrays(1, &this->_VAO);
     glGenBuffers(1, &this->_VBO);
@@ -94,11 +92,16 @@ void engine::Mesh::setupMesh() noexcept {
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(SVertex), (void*)offsetof(SVertex, normal));
 
     glEnableVertexAttribArray(2);
-    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(SVertex), (void*)offsetof(SVertex, textureCoordinates));
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(SVertex), (void*)offsetof(SVertex, coordinates));
+
+    glEnableVertexAttribArray(3);
+    glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(SVertex), (void*)offsetof(SVertex, tangent));
+
+    glEnableVertexAttribArray(4);
+    glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(SVertex), (void*)offsetof(SVertex, bitangent));
 
     glBindVertexArray(0);
 }
-#pragma clang diagnostic pop
 
 void engine::Mesh::load() noexcept (false) {
     this->_loaded = this->_verticesLoaded && this->_indicesLoaded && this->_texturesLoaded;
@@ -117,8 +120,10 @@ void engine::Mesh::draw(Shader & shader) noexcept (false) {
     if(!this->_loaded)
         throw engine::MeshDataNotLoaded();
 
-    uint8 diffuseCnt = 0U;
-    uint8 specularCnt = 0U;
+    uint8 diffuseTexturesCount = 0U;
+    uint8 specularTexturesCount = 0U;
+    uint8 normalTexturesCount = 0U;
+    uint8 ambientTexturesCount = 0U;
 
     std::string number;
     std::string type;
@@ -130,19 +135,25 @@ void engine::Mesh::draw(Shader & shader) noexcept (false) {
         attributeTag = "material.";
 
         type = (*this->_texturesPtr)[i].type;
-        if(type == "textureDiffuse")
-            number = std::to_string(diffuseCnt++);
-        else if(type == "textureSpecular")
-            number = std::to_string(specularCnt++);
+        if(type == _TEXTURE_TYPE_DIFFUSE)
+            number = std::to_string(diffuseTexturesCount++);
+        else if(type == _TEXTURE_TYPE_SPECULAR)
+            number = std::to_string(specularTexturesCount++);
+        else if(type == _TEXTURE_TYPE_NORMAL)
+            number = std::to_string(normalTexturesCount++);
+        else if(type == _TEXTURE_TYPE_AMBIENT)
+            number = std::to_string(ambientTexturesCount++);
 
         attributeTag += type + number;
 
-        shader.setFloat(attributeTag, i);
+        shader.setInt(attributeTag, i);
         glBindTexture(GL_TEXTURE_2D, (*this->_texturesPtr)[i].id);
     }
     glActiveTexture(GL_TEXTURE0);
 
     glBindVertexArray(this->_VAO);
-    glDrawElements(GL_TRIANGLES, this->_indicesPtr->size(), GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, this->_indicesPtr->size(), GL_UNSIGNED_INT, nullptr);
     glBindVertexArray(0);
+
+    glActiveTexture(GL_TEXTURE0);
 }
