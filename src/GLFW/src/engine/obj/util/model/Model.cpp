@@ -39,7 +39,7 @@ engine::Model& engine::Model::setGammaCorrection(bool toggle) noexcept {
     this->_gammaCorrection = toggle;
 }
 
-void engine::Model::Draw(Shader &shader) noexcept (false) {
+void engine::Model::draw(Shader &shader) noexcept (false) {
     if(!this->_loaded)
         throw EngineModelNotLoaded();
 

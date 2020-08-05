@@ -1,180 +1,112 @@
-#include <iostream>
-
-// O(n^2) > O(n) <= push back <-> push front => O(1)
-// pop_front -> O(1)
-// pop_back -> O(n)
-// find(x) -> O(n)
-
-// list : pop_front, pop_back, push_front, push_back, front, back, isEmpty
-
-//// Coada / Stive
-//// Stiva -> pop_front, push_front, front, isEmpty. O(1)
-//// Coada -> pop_front, <<  push_back  >> O(n) , front, isEmpty
-//// add1 : Coada cu dublu inlantuit -> push_back-ul este O(1)
-//
-//struct SimpleListNode {
-//    int val;
-//    SimpleListNode* next;
-//};      /// sizeof(SimpleListNode) = 4 + sizeof(*) = 4 + 8 = 12 B + 4 B (struct) =  16B
-//
-//struct DoubleListNode {
-//    int val;
-//    DoubleListNode* next;
-//    DoubleListNode* prev;
-//}; /// sizeof(DoubleListNode) = 4 + 2 * sizeof(*) = 4 + 16 = 20 B + 4 B (struct) =  24B
 
 
-// O(n), O(n^2) , O(n + m), O(log2 n) <- termeni de complexitate. Marginire superioara
-// n -> n/2 -> n/4 -> n/8 -> .... -> 1  = de cate ori se imparte n la 2 = log 2 n = x, unde 2 ^ x = n
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
+#include <types.h>
+#include <src/GLFW/src/engine/obj/util/obj/stdObj/Camera.h>
+#include <dependencies/stb_image/stb-image.h>
+#include <src/GLFW/src/engine/obj/util/shader/Shader.h>
+#include <src/GLFW/src/engine/obj/util/model/Model.h>
 
-// preferam mai multa memorie -> mai rapid / nu ne prea pasa de viteza
+void framebufferSizeCallback(GLFWwindow*, int, int);
+void mouseCallback(GLFWwindow*, double, double);
+void scrollCallback(GLFWwindow*, double, double);
+void processInputCallback(GLFWwindow*, int, int, int, int);
+void processInput(GLFWwindow*);
+void engineLoop(GLFWwindow*);
 
-struct Node {
-    int val;
-    Node * next;
-    Node * prev;
+constexpr uint16 SCREEN_WIDTH = 800;
+constexpr uint16 SCREEN_HEIGHT = 600;
+constexpr float  SCREEN_RATIO = (float) SCREEN_WIDTH / (float) SCREEN_HEIGHT;
 
-};
+float lastX = SCREEN_WIDTH / 2.0f;
+float lastY = SCREEN_HEIGHT/ 2.0f;
+bool firstMouse = true;
 
-Node * front    = NULL;
-Node * back     = NULL;
+float deltaTime = 0.0f;
+float lastFrame = 0.0f;
 
-// TODO : represent with structure instead of two ptrs
-//struct DoubleList {
-//    Node * front;
-//    Node * back;
-//};
+constexpr float FOV = 60.0f;
 
+using namespace engine;
+using namespace glm;
 
-// push, pop, front/back -> push_back, pop_back, front, print
+Camera* camera;
+Shader* shader;
+Model* modelObj;
 
-void push_back(int value, Node * & front, Node * & back) {
+void engineLoop(GLFWwindow* window) {
+    float currentFrame = 0.0f;
+    mat4 projection;
+    mat4 view;
+    mat4 model;
 
-    if( back == NULL ) {
-        back = new Node;
-        front = back;
+    while(!glfwWindowShouldClose(window)) {
+        currentFrame = (float)glfwGetTime();
+        deltaTime = currentFrame - lastFrame;
+        lastFrame = currentFrame;
 
-        back->next = back->prev = NULL;
-        back->val = value;
+        processInput(window);
 
-        return;
-    }
+        ENG_CLEAR_FRAME();
 
-    Node * p = new Node;
-    p->val = value;
+        shader->use();
 
-    p->next = NULL;
-    p->prev = back;
+        projection = perspective(radians(FOV), SCREEN_RATIO, 0.1f, 100.0f);
+        view = camera->getViewMatrix();
 
-    back->next = p; /// asta poate da segfault, back poate fi null
-    back = p;
-}
+        shader->setMat4("projection", projection);
+        shader->setMat4("view", view);
 
-void push_front (int value, Node* & front, Node*  & back) {
-    if (front == NULL) {
-        front = new Node;
-        front->val = value;
-        front->prev = NULL;
-        front->next = NULL;
-        back = front;
-        return;
-    }
-    Node* p = new Node;
-    p->val = value;
-    p->next = front;
-    p->prev = NULL;
-    front->prev = p; /// aveam 1 nod inainte, se m
-    front = p;
-}
+        model = mat4(1.0f);
+        model = scale(
+            translate(
+                model, vec3(0.0f, 0.0f, 0.0f)
+            ),
+            vec3(1.0f, 1.0f, 1.0f)
+        );
 
-void pop_front (Node* & front, Node* & back) {
-    Node* p;
-    if (front == NULL) {
-        return;
-    }
-    if (front == back) {
-        delete front;
-        front = back = NULL;
-        return;
-    }
-    p = front;
-    front = front->next;
-    delete p;
-    front->prev = NULL;
-}
+        shader->setMat4("model", model);
 
-void pop_back(Node* & front, Node* & back) {
-    if(back == NULL) {
-        return;
-    }
+        modelObj->draw(*shader);
 
-    if( back->prev == NULL ) { // front == back
-        delete back;    /// back = 0x102
-
-//        delete front; /// front = 0x102 (nu mai e in prog nostru) => segfault
-
-        front = back = NULL; // obl. amandoua !!!
-        return;
-    }
-
-    back = back->prev; // 1 . back = nullptr, 2. back->prev = nullptr => back = back->prev <=> back = nullptr
-    delete back->next; // 2. cont . back = nullptr, back->next <=> nullptr->next => segfault // back->prev = null => avem un singur el.
-    back->next = NULL;
-}
-
-int Front(Node* front, Node*  back) {
-    if ( front == NULL ) {
-        return -1;
-    }
-
-    return front->val;
-}
-
-int Back (Node* front, Node* back) {
-    if (back == NULL)
-        return -1;
-    else
-        return back->val;
-}
-
-void print_from_front(Node*  front, Node*  back) {
-
-    while(front != NULL) {
-        std::cout << front->val << ' ';
-        front = front->next;
-    }
-    std::cout << '\n';
-}
-
-void print_from_back (Node* front, Node* back) {
-    while (back != NULL) {
-        std::cout << back->val << ' ';
-        back = back->prev;
+        ENG_FINISH_FRAME(window);
     }
 }
 
-void delete_list (Node* & front, Node* & back) {
-    while(front != NULL) {
-        Node* p = front;
-        front = front->next;
-        delete p;
-    }
+int main(){
+    glfwInit();
 
-    back = NULL;
-}
+    ENG_SET_VERSION_LIMITATION(_GL_MIN_VER, _GL_MAX_VER);
+    GLFWwindow* window;
 
-int main() {
+    ENG_WINDOW_CREATE_WINDOW(window, SCREEN_WIDTH, SCREEN_HEIGHT);
+    ENG_WINDOW_SET_CALLBACKS(window, framebufferSizeCallback, mouseCallback, scrollCallback);
+    ENG_GLAD_INIT();
 
-//    push_back(5, front, back);
-//    push_back(10, front, back);
+    stbi_set_flip_vertically_on_load(true);
 
-    push_front(5, front, back);
-    //pop_front (front, back);
-    push_front(90, front, back);
-    print_from_front(front, back);
-    std::cout<<'\n';
-    print_from_back(front, back);
-    delete_list(front, back);
+    glEnable(GL_DEPTH_TEST);
+
+    shader = new Shader(
+            "triangle.vert",
+            "triangle.frag",
+            true,
+            true
+    );
+
+    modelObj = new Model(std::string().append(__ASSETS_PATH__).append("backpackTestModel/backpack.obj"));
+
+    camera = new Camera(glm::vec3(0.0f, 0.0f, 3.0f));
+
+    engineLoop(window);
+
+    glfwDestroyWindow(window);
+    glfwTerminate();
+
+    delete (camera);
+    delete (shader);
+    delete (modelObj);
 
     return 0;
 }

@@ -46,7 +46,7 @@ namespace engine {
         Model& setPath(std::string const&) noexcept;
         Model& setGammaCorrection(bool) noexcept;
 
-        void Draw(Shader &) noexcept(false);
+        void draw(Shader &) noexcept(false);
 
         void load() noexcept;
     private:

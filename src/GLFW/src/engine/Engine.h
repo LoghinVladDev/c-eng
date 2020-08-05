@@ -21,10 +21,10 @@ class GameObject;
 #include <obj/util/struct/inputAxisFunc.h>
 #include <exception>
 
-class Camera;
-class Window;
 namespace engine {
 
+    class Camera;
+    class Window;
     class EngineGLFWInitFailure : public std::exception {
         [[nodiscard]] const char * what() const noexcept override {
             return "Initialization of Graphics Library Framework failed!";

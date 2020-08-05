@@ -6,7 +6,7 @@
 #include "TextureManager.h"
 //#include
 
-uint32 engine::TextureManager::loadTextureFromFile(const char *path, const std::string &directory, bool gamma) noexcept {
+uint32 engine::TextureManager::loadTextureFromFile(const char *path, const std::string &directory, [[maybe_unused]] bool gamma) noexcept {
     std::string fileName = std::string(path);
     fileName = directory + '/' + fileName;
 

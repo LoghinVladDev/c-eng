@@ -50,252 +50,39 @@ if(ASSIMP_FOUND)
     include_directories(${ASSIMP_INCLUDE_DIR})
 endif()
 
+# VULKAN extension
 
-find_package(Qt5 COMPONENTS Widgets REQUIRED)
+find_package(Vulkan)
 
-if(ANDROID)
-    add_library( editorHelloWorld SHARED
-            src/editor/main.cpp
-            src/editor/mainwindow.cpp
-            src/editor/mainwindow.h
-            src/editor/mainwindow.ui
-    )
-else()
-    add_executable( editorHelloWorld
-            src/editor/main.cpp
-            src/editor/mainwindow.cpp
-            src/editor/mainwindow.h
-            src/editor/mainwindow.ui
-    )
+if(Vulkan_FOUND)
+    include_directories(src/GLFW/src/engine/vulkan)
+
+    include_directories( ${Vulkan_INCLUDE_DIRS} )
+
+    add_executable( vkTriangle
+            src/GLFW/src/engine/vulkan/vkTests/c/vulkanTriangle.cpp
+            src/GLFW/src/engine/vulkan/vkTests/obj/VulkanTriangleApplication.cpp
+            src/GLFW/src/engine/vulkan/vkTests/obj/VulkanTriangleApplication.h
+            src/GLFW/src/engine/vulkan/vkTests/obj/VulkanInitTests.cpp
+            src/GLFW/src/engine/vulkan/vkTests/obj/VulkanInitTests.h
+            src/GLFW/src/engine/vulkan/engineVulkanPreproc.h
+            src/GLFW/src/engine/vulkan/vkDefs/types/vulkanExplicitTypes.h
+            src/GLFW/src/engine/vulkan/vkDefs/vkDefinitions.h src/GLFW/src/engine/vulkan/vkObj/validationLayer/ValidationLayer.cpp src/GLFW/src/engine/vulkan/vkObj/validationLayer/ValidationLayer.h)
+
+    target_link_libraries( vkTriangle Vulkan::Vulkan )
+
+    target_link_libraries( vkTriangle glfw ${GLFW_LIBRARIES} )
 endif()
 
-target_link_libraries( editorHelloWorld PRIVATE Qt5::Widgets )
-
-#add_executable(
-#        editorHelloWorld src/editor/tests/helloWorld.cpp
-#        src/editor/obj/window/mainWindow.cpp
-#        src/editor/obj/window/mainWindow.h
-#)
-
-#target_link_libraries(editorHelloWorld Qt5::Widgets)
-
-add_executable(
-        sandbox src/exec/sandbox.cpp
-        src/GLFW/src/engine/obj/util/data/Array.cpp
-        src/GLFW/src/engine/obj/util/data/Array.h
-)
-
-add_executable( drawReshapeTest
-        src/exec/tests/drawReshapeTest.cpp
-        src/obj/engine/window/Window.cpp
-        src/obj/engine/window/Window.h
-        src/obj/engine/util/Size.cpp
-        src/obj/engine/util/Size.h
-        src/obj/engine/util/geom/Point.cpp
-        src/obj/engine/util/geom/Point.h
-        src/obj/engine/util/defs/types.h
-        src/obj/engine/Engine.cpp
-        src/obj/engine/Engine.h
-        src/obj/engine/preCompiledHeaders.h
-)
-
-target_link_libraries(drawReshapeTest -lOpenGL32 -lfreeGLUT -lglu32)
-
-add_executable( animateTest
-        src/exec/tests/animateTest.cpp
-        src/obj/engine/window/Window.cpp
-        src/obj/engine/window/Window.h
-        src/obj/engine/util/Size.cpp
-        src/obj/engine/util/Size.h
-        src/obj/engine/util/geom/Point.cpp
-        src/obj/engine/util/geom/Point.h
-        src/obj/engine/util/defs/types.h
-        src/obj/engine/Engine.cpp
-        src/obj/engine/Engine.h
-        src/obj/engine/util/event/KeyListener.cpp
-        src/obj/engine/util/event/KeyListener.h
-        src/obj/engine/util/obj/standardObj/Camera.cpp
-        src/obj/engine/util/obj/standardObj/Camera.h
-        src/obj/engine/util/obj/standardObj/Sphere.cpp
-        src/obj/engine/util/obj/standardObj/Sphere.h
-        src/obj/engine/util/dataStructures/Array.cpp
-        src/obj/engine/util/dataStructures/Array.h
-        src/obj/engine/preCompiledHeaders.h
-        src/GLFW/src/engine/enginePreproc.h src/GLFW/src/engine/obj/util/func/KeyFunctions.cpp src/GLFW/src/engine/obj/util/func/KeyFunctions.h)
-
-target_link_libraries(animateTest -lOpenGL32 -lfreeGLUT -lglu32)
-
-add_executable( inputTest
-        src/exec/tests/inputTest.cpp
-        src/obj/engine/window/Window.cpp
-        src/obj/engine/window/Window.h
-        src/obj/engine/util/Size.cpp
-        src/obj/engine/util/Size.h
-        src/obj/engine/util/geom/Point.cpp
-        src/obj/engine/util/geom/Point.h
-        src/obj/engine/util/defs/types.h
-        src/obj/engine/Engine.cpp
-        src/obj/engine/Engine.h
-        src/obj/engine/util/event/KeyListener.cpp
-        src/obj/engine/util/event/KeyListener.h
-        src/obj/engine/preCompiledHeaders.h
-        src/obj/engine/util/dataStructures/Color.cpp
-        src/obj/engine/util/dataStructures/Color.h
-)
-
-target_link_libraries(inputTest -lOpenGL32 -lfreeGLUT -lglu32)
-
-add_executable( cameraMovement
-        src/exec/tests/cameraMovement.cpp
-        src/obj/engine/window/Window.cpp
-        src/obj/engine/window/Window.h
-        src/obj/engine/util/geom/Vector.cpp
-        src/obj/engine/util/geom/Vector.h
-        src/obj/engine/util/Size.cpp
-        src/obj/engine/util/Size.h
-        src/obj/engine/util/geom/Point.cpp
-        src/obj/engine/util/geom/Point.h
-        src/obj/engine/util/defs/types.h
-        src/obj/engine/Engine.cpp
-        src/obj/engine/Engine.h
-        src/obj/engine/util/event/KeyListener.cpp
-        src/obj/engine/util/event/KeyListener.h
-        src/obj/engine/util/obj/Transform.cpp
-        src/obj/engine/util/obj/Transform.h
-        src/obj/engine/util/obj/GameObject.cpp
-        src/obj/engine/util/obj/GameObject.h
-        src/obj/engine/preCompiledHeaders.h
-        src/obj/engine/util/obj/standardObj/Camera.cpp
-        src/obj/engine/util/obj/standardObj/Camera.h
-)
-
-target_link_libraries(cameraMovement -lOpenGL32 -lfreeGLUT -lglu32)
-
-
-add_executable( libTests
-        src/obj/engine/util/Size.cpp
-        src/obj/engine/util/Size.h
-        src/obj/engine/util/geom/Point.cpp
-        src/obj/engine/util/geom/Point.h
-        src/obj/engine/window/Window.cpp
-        src/obj/engine/window/Window.h
-        src/obj/engine/util/defs/types.h
-        src/obj/engine/Engine.cpp
-        src/obj/engine/Engine.h
-        src/obj/engine/util/event/KeyListener.cpp
-        src/obj/engine/util/event/KeyListener.h
-        src/obj/engine/util/geom/Vector.cpp
-        src/obj/engine/util/geom/Vector.h
-        src/obj/engine/util/obj/Transform.cpp
-        src/obj/engine/util/obj/Transform.h
-        src/obj/engine/util/obj/GameObject.cpp
-        src/obj/engine/util/obj/GameObject.h
-        src/obj/engine/util/dataStructures/Array.h
-        src/obj/engine/util/dataStructures/Array.cpp
-        src/exec/tests/libTest.cpp
-        src/obj/engine/preCompiledHeaders.h
-        src/exec/tests/objectTests.cpp
-        src/exec/tests/UITests.cpp)
-
-target_link_libraries(libTests -lOpenGL32 -lfreeGLUT -lglu32)
-
-add_executable( cameraMovement2
-        src/exec/tests/cameraMovementTypeTwo.cpp
-        src/obj/engine/window/Window.cpp
-        src/obj/engine/window/Window.h
-        src/obj/engine/util/geom/Vector.cpp
-        src/obj/engine/util/geom/Vector.h
-        src/obj/engine/util/Size.cpp
-        src/obj/engine/util/Size.h
-        src/obj/engine/util/geom/Point.cpp
-        src/obj/engine/util/geom/Point.h
-        src/obj/engine/util/defs/types.h
-        src/obj/engine/Engine.cpp
-        src/obj/engine/Engine.h
-        src/obj/engine/util/event/KeyListener.cpp
-        src/obj/engine/util/event/KeyListener.h
-        src/obj/engine/util/obj/Transform.cpp
-        src/obj/engine/util/obj/Transform.h
-        src/obj/engine/util/obj/GameObject.cpp
-        src/obj/engine/util/obj/GameObject.h
-        src/obj/engine/preCompiledHeaders.h
-        src/obj/engine/util/obj/standardObj/Camera.cpp
-        src/obj/engine/util/obj/standardObj/Camera.h
-)
-
-target_link_libraries(cameraMovement2 -lOpenGL32 -lfreeGLUT -lglu32)
-
-add_executable( objectTests
-        src/exec/tests/objectTests.cpp
-        src/obj/engine/window/Window.cpp
-        src/obj/engine/window/Window.h
-        src/obj/engine/util/geom/Vector.cpp
-        src/obj/engine/util/geom/Vector.h
-        src/obj/engine/util/Size.cpp
-        src/obj/engine/util/Size.h
-        src/obj/engine/util/geom/Point.cpp
-        src/obj/engine/util/geom/Point.h
-        src/obj/engine/util/defs/types.h
-        src/obj/engine/Engine.cpp
-        src/obj/engine/Engine.h
-        src/obj/engine/util/event/KeyListener.cpp
-        src/obj/engine/util/event/KeyListener.h
-        src/obj/engine/util/obj/Transform.cpp
-        src/obj/engine/util/obj/Transform.h
-        src/obj/engine/util/obj/GameObject.cpp
-        src/obj/engine/util/obj/GameObject.h
-        src/obj/engine/preCompiledHeaders.h
-        src/obj/engine/util/obj/standardObj/Camera.cpp
-        src/obj/engine/util/obj/standardObj/Camera.h
-        src/obj/engine/util/dataStructures/Color.cpp
-        src/obj/engine/util/dataStructures/Color.h
-        src/obj/engine/util/obj/standardObj/Sphere.cpp
-        src/obj/engine/util/obj/standardObj/Sphere.h
-        src/obj/engine/util/event/MouseListener.cpp
-        src/obj/engine/util/event/MouseListener.h
-        src/obj/engine/util/event/InputListener.cpp
-        src/obj/engine/util/event/InputListener.h
-)
-
-target_link_libraries(objectTests -lOpenGL32 -lfreeGLUT -lglu32)
-
-add_executable( UITests
-        src/exec/tests/UITests.cpp
-        src/obj/engine/window/Window.cpp
-        src/obj/engine/window/Window.h
-        src/obj/engine/util/geom/Vector.cpp
-        src/obj/engine/util/geom/Vector.h
-        src/obj/engine/util/Size.cpp
-        src/obj/engine/util/Size.h
-        src/obj/engine/util/geom/Point.cpp
-        src/obj/engine/util/geom/Point.h
-        src/obj/engine/util/defs/types.h
-        src/obj/engine/Engine.cpp
-        src/obj/engine/Engine.h
-        src/obj/engine/util/event/KeyListener.cpp
-        src/obj/engine/util/event/KeyListener.h
-        src/obj/engine/util/obj/Transform.cpp
-        src/obj/engine/util/obj/Transform.h
-        src/obj/engine/util/obj/GameObject.cpp
-        src/obj/engine/util/obj/GameObject.h
-        src/obj/engine/preCompiledHeaders.h
-        src/obj/engine/util/obj/standardObj/Camera.cpp
-        src/obj/engine/util/obj/standardObj/Camera.h
-        src/obj/engine/util/dataStructures/Color.cpp
-        src/obj/engine/util/dataStructures/Color.h
-        src/obj/engine/util/obj/standardObj/Sphere.cpp
-        src/obj/engine/util/obj/standardObj/Sphere.h
-        src/obj/engine/util/event/MouseListener.cpp
-        src/obj/engine/util/event/MouseListener.h
-        src/obj/engine/util/event/InputListener.cpp
-        src/obj/engine/util/event/InputListener.h
-)
-
-target_link_libraries(UITests -lOpenGL32 -lfreeGLUT -lglu32)
 
 add_executable( GLFWInitWindow
         src/GLFW/src/engine/tests/c/testInitWindow.cpp
-        src/GLFW/src/engine/obj/util/diag/Diagnostic.cpp src/GLFW/src/engine/obj/util/diag/Diagnostic.h src/GLFW/src/engine/enginePreproc.h src/GLFW/src/engine/types.h src/GLFW/src/engine/tests/h/lighting.h)
+        src/GLFW/src/engine/obj/util/diag/Diagnostic.cpp
+        src/GLFW/src/engine/obj/util/diag/Diagnostic.h
+        src/GLFW/src/engine/enginePreproc.h
+        src/GLFW/src/engine/types.h
+        src/GLFW/src/engine/tests/h/lighting.h
+)
 
 target_link_libraries( GLFWInitWindow glfw ${GLFW_LIBRARIES} )
 
@@ -645,3 +432,218 @@ add_executable( whiteboard4
 
 target_link_libraries( whiteboard4 glfw assimp ${GLFW_LIBRARIES} ${ASSIMP_LIBRARIES} )
 #target_link_libraries( whiteboard4 assimp ${ASSIMP_LIBRARIES} )
+
+
+add_executable(
+        sandbox src/exec/sandbox.cpp
+        src/GLFW/src/engine/obj/util/data/Array.cpp
+        src/GLFW/src/engine/obj/util/data/Array.h
+)
+
+add_executable( drawReshapeTest
+        src/exec/tests/drawReshapeTest.cpp
+        src/obj/engine/window/Window.cpp
+        src/obj/engine/window/Window.h
+        src/obj/engine/util/Size.cpp
+        src/obj/engine/util/Size.h
+        src/obj/engine/util/geom/Point.cpp
+        src/obj/engine/util/geom/Point.h
+        src/obj/engine/util/defs/types.h
+        src/obj/engine/Engine.cpp
+        src/obj/engine/Engine.h
+        src/obj/engine/preCompiledHeaders.h
+        )
+
+target_link_libraries(drawReshapeTest -lOpenGL32 -lfreeGLUT -lglu32)
+
+add_executable( animateTest
+        src/exec/tests/animateTest.cpp
+        src/obj/engine/window/Window.cpp
+        src/obj/engine/window/Window.h
+        src/obj/engine/util/Size.cpp
+        src/obj/engine/util/Size.h
+        src/obj/engine/util/geom/Point.cpp
+        src/obj/engine/util/geom/Point.h
+        src/obj/engine/util/defs/types.h
+        src/obj/engine/Engine.cpp
+        src/obj/engine/Engine.h
+        src/obj/engine/util/event/KeyListener.cpp
+        src/obj/engine/util/event/KeyListener.h
+        src/obj/engine/util/obj/standardObj/Camera.cpp
+        src/obj/engine/util/obj/standardObj/Camera.h
+        src/obj/engine/util/obj/standardObj/Sphere.cpp
+        src/obj/engine/util/obj/standardObj/Sphere.h
+        src/obj/engine/util/dataStructures/Array.cpp
+        src/obj/engine/util/dataStructures/Array.h
+        src/obj/engine/preCompiledHeaders.h
+        src/GLFW/src/engine/enginePreproc.h src/GLFW/src/engine/obj/util/func/KeyFunctions.cpp src/GLFW/src/engine/obj/util/func/KeyFunctions.h src/GLFW/src/engine/vulkan/vkTests/obj/VulkanTriangleApplication.cpp src/GLFW/src/engine/vulkan/vkTests/obj/VulkanTriangleApplication.h)
+
+target_link_libraries(animateTest -lOpenGL32 -lfreeGLUT -lglu32)
+
+add_executable( inputTest
+        src/exec/tests/inputTest.cpp
+        src/obj/engine/window/Window.cpp
+        src/obj/engine/window/Window.h
+        src/obj/engine/util/Size.cpp
+        src/obj/engine/util/Size.h
+        src/obj/engine/util/geom/Point.cpp
+        src/obj/engine/util/geom/Point.h
+        src/obj/engine/util/defs/types.h
+        src/obj/engine/Engine.cpp
+        src/obj/engine/Engine.h
+        src/obj/engine/util/event/KeyListener.cpp
+        src/obj/engine/util/event/KeyListener.h
+        src/obj/engine/preCompiledHeaders.h
+        src/obj/engine/util/dataStructures/Color.cpp
+        src/obj/engine/util/dataStructures/Color.h
+        )
+
+target_link_libraries(inputTest -lOpenGL32 -lfreeGLUT -lglu32)
+
+add_executable( cameraMovement
+        src/exec/tests/cameraMovement.cpp
+        src/obj/engine/window/Window.cpp
+        src/obj/engine/window/Window.h
+        src/obj/engine/util/geom/Vector.cpp
+        src/obj/engine/util/geom/Vector.h
+        src/obj/engine/util/Size.cpp
+        src/obj/engine/util/Size.h
+        src/obj/engine/util/geom/Point.cpp
+        src/obj/engine/util/geom/Point.h
+        src/obj/engine/util/defs/types.h
+        src/obj/engine/Engine.cpp
+        src/obj/engine/Engine.h
+        src/obj/engine/util/event/KeyListener.cpp
+        src/obj/engine/util/event/KeyListener.h
+        src/obj/engine/util/obj/Transform.cpp
+        src/obj/engine/util/obj/Transform.h
+        src/obj/engine/util/obj/GameObject.cpp
+        src/obj/engine/util/obj/GameObject.h
+        src/obj/engine/preCompiledHeaders.h
+        src/obj/engine/util/obj/standardObj/Camera.cpp
+        src/obj/engine/util/obj/standardObj/Camera.h
+        )
+
+target_link_libraries(cameraMovement -lOpenGL32 -lfreeGLUT -lglu32)
+
+
+add_executable( libTests
+        src/obj/engine/util/Size.cpp
+        src/obj/engine/util/Size.h
+        src/obj/engine/util/geom/Point.cpp
+        src/obj/engine/util/geom/Point.h
+        src/obj/engine/window/Window.cpp
+        src/obj/engine/window/Window.h
+        src/obj/engine/util/defs/types.h
+        src/obj/engine/Engine.cpp
+        src/obj/engine/Engine.h
+        src/obj/engine/util/event/KeyListener.cpp
+        src/obj/engine/util/event/KeyListener.h
+        src/obj/engine/util/geom/Vector.cpp
+        src/obj/engine/util/geom/Vector.h
+        src/obj/engine/util/obj/Transform.cpp
+        src/obj/engine/util/obj/Transform.h
+        src/obj/engine/util/obj/GameObject.cpp
+        src/obj/engine/util/obj/GameObject.h
+        src/obj/engine/util/dataStructures/Array.h
+        src/obj/engine/util/dataStructures/Array.cpp
+        src/exec/tests/libTest.cpp
+        src/obj/engine/preCompiledHeaders.h
+        src/exec/tests/objectTests.cpp
+        src/exec/tests/UITests.cpp)
+
+target_link_libraries(libTests -lOpenGL32 -lfreeGLUT -lglu32)
+
+add_executable( cameraMovement2
+        src/exec/tests/cameraMovementTypeTwo.cpp
+        src/obj/engine/window/Window.cpp
+        src/obj/engine/window/Window.h
+        src/obj/engine/util/geom/Vector.cpp
+        src/obj/engine/util/geom/Vector.h
+        src/obj/engine/util/Size.cpp
+        src/obj/engine/util/Size.h
+        src/obj/engine/util/geom/Point.cpp
+        src/obj/engine/util/geom/Point.h
+        src/obj/engine/util/defs/types.h
+        src/obj/engine/Engine.cpp
+        src/obj/engine/Engine.h
+        src/obj/engine/util/event/KeyListener.cpp
+        src/obj/engine/util/event/KeyListener.h
+        src/obj/engine/util/obj/Transform.cpp
+        src/obj/engine/util/obj/Transform.h
+        src/obj/engine/util/obj/GameObject.cpp
+        src/obj/engine/util/obj/GameObject.h
+        src/obj/engine/preCompiledHeaders.h
+        src/obj/engine/util/obj/standardObj/Camera.cpp
+        src/obj/engine/util/obj/standardObj/Camera.h
+        )
+
+target_link_libraries(cameraMovement2 -lOpenGL32 -lfreeGLUT -lglu32)
+
+add_executable( objectTests
+        src/exec/tests/objectTests.cpp
+        src/obj/engine/window/Window.cpp
+        src/obj/engine/window/Window.h
+        src/obj/engine/util/geom/Vector.cpp
+        src/obj/engine/util/geom/Vector.h
+        src/obj/engine/util/Size.cpp
+        src/obj/engine/util/Size.h
+        src/obj/engine/util/geom/Point.cpp
+        src/obj/engine/util/geom/Point.h
+        src/obj/engine/util/defs/types.h
+        src/obj/engine/Engine.cpp
+        src/obj/engine/Engine.h
+        src/obj/engine/util/event/KeyListener.cpp
+        src/obj/engine/util/event/KeyListener.h
+        src/obj/engine/util/obj/Transform.cpp
+        src/obj/engine/util/obj/Transform.h
+        src/obj/engine/util/obj/GameObject.cpp
+        src/obj/engine/util/obj/GameObject.h
+        src/obj/engine/preCompiledHeaders.h
+        src/obj/engine/util/obj/standardObj/Camera.cpp
+        src/obj/engine/util/obj/standardObj/Camera.h
+        src/obj/engine/util/dataStructures/Color.cpp
+        src/obj/engine/util/dataStructures/Color.h
+        src/obj/engine/util/obj/standardObj/Sphere.cpp
+        src/obj/engine/util/obj/standardObj/Sphere.h
+        src/obj/engine/util/event/MouseListener.cpp
+        src/obj/engine/util/event/MouseListener.h
+        src/obj/engine/util/event/InputListener.cpp
+        src/obj/engine/util/event/InputListener.h
+        )
+
+target_link_libraries(objectTests -lOpenGL32 -lfreeGLUT -lglu32)
+
+add_executable( UITests
+        src/exec/tests/UITests.cpp
+        src/obj/engine/window/Window.cpp
+        src/obj/engine/window/Window.h
+        src/obj/engine/util/geom/Vector.cpp
+        src/obj/engine/util/geom/Vector.h
+        src/obj/engine/util/Size.cpp
+        src/obj/engine/util/Size.h
+        src/obj/engine/util/geom/Point.cpp
+        src/obj/engine/util/geom/Point.h
+        src/obj/engine/util/defs/types.h
+        src/obj/engine/Engine.cpp
+        src/obj/engine/Engine.h
+        src/obj/engine/util/event/KeyListener.cpp
+        src/obj/engine/util/event/KeyListener.h
+        src/obj/engine/util/obj/Transform.cpp
+        src/obj/engine/util/obj/Transform.h
+        src/obj/engine/util/obj/GameObject.cpp
+        src/obj/engine/util/obj/GameObject.h
+        src/obj/engine/preCompiledHeaders.h
+        src/obj/engine/util/obj/standardObj/Camera.cpp
+        src/obj/engine/util/obj/standardObj/Camera.h
+        src/obj/engine/util/dataStructures/Color.cpp
+        src/obj/engine/util/dataStructures/Color.h
+        src/obj/engine/util/obj/standardObj/Sphere.cpp
+        src/obj/engine/util/obj/standardObj/Sphere.h
+        src/obj/engine/util/event/MouseListener.cpp
+        src/obj/engine/util/event/MouseListener.h
+        src/obj/engine/util/event/InputListener.cpp
+        src/obj/engine/util/event/InputListener.h
+        )
+
+target_link_libraries(UITests -lOpenGL32 -lfreeGLUT -lglu32)

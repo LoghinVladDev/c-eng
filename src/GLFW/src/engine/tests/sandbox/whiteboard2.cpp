@@ -2,7 +2,7 @@
 // Created by loghin on 7/15/20.
 //
 
-
+#include <obj/util/data/Map.h>
 #include <obj/util/data/String.h>
 
 #include <cstdio>
@@ -248,10 +248,12 @@ void operatorTests() {
 int main(){ 
 //    basicTests();
 //    accessTests();
-    utilityTests();
+//    utilityTests();
 //    utility2Tests();
 //    fileTests();
 //    utility3Tests();
 //    operatorTests();
+    return 0;
+
 }
 

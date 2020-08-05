@@ -18,7 +18,7 @@ namespace engine {
     public:
         TextureManager() = delete;
 
-        static uint32 loadTextureFromFile(const char *, const std::string &, bool = false) noexcept;
+        static uint32 loadTextureFromFile(const char *, const std::string &, [[maybe_unused]] bool = false) noexcept;
     };
 
 }
