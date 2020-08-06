@@ -5,7 +5,6 @@
 #ifndef ENG1_VINSTANCE_H
 #define ENG1_VINSTANCE_H
 #include <vulkan/engineVulkanPreproc.h>
-#include <vulkan/vkDefs/vkDefinitions.h>
 #include <vulkan/vkDefs/types/vulkanExplicitTypes.h>
 #include <vulkan/vkObj/instance/validationLayer/VValidationLayer.h>
 

@@ -4,6 +4,7 @@
 
 #include "VInstance.h"
 #include <vkObj/instance/extension/VExtension.h>
+#include <vkDefs/VInstanceDefinitions.h>
 
 const char* engine::VInstance::DEFAULT_VULKAN_INSTANCE_TITLE = __VULKAN_INSTANCE_DEFAULT_TITLE;
 

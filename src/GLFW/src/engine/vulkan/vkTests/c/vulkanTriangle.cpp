@@ -4,7 +4,6 @@
 
 #include <iostream>
 #include <vkTests/obj/VulkanTriangleApplication.h>
-#include <cstring>
 using namespace engine;
 
 int main() {

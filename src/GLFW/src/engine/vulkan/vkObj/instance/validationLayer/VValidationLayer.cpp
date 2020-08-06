@@ -4,21 +4,21 @@
 
 #include "VValidationLayer.h"
 #include <cstring>
-#include <vkDefs/vkDefinitions.h>
+#include <vkDefs/VInstanceDefinitions.h>
 
 bool engine::VValidationLayer::_layersQueried = false;
 
 std::vector < VulkanLayerProperties > engine::VValidationLayer::_availableValidationLayers = std::vector < VulkanLayerProperties > ();
 
-void engine::VValidationLayer::debugPrintAvailableValidationLayers() noexcept {
+void engine::VValidationLayer::debugPrintAvailableValidationLayers(std::ostream& buffer) noexcept {
     VValidationLayer::queryAvailableValidationLayers();
-    std::cout << "Available Validation Layers : \n";
+    buffer << "Available Validation Layers : \n";
 
     for( const auto & validationLayer : VValidationLayer::_availableValidationLayers ) {
-        std::cout << "\tName : " << validationLayer.layerName << '\n';
-        std::cout << "\t\tDescription : " << validationLayer.description << '\n';
-        std::cout << "\t\tImplementation Version : " << validationLayer.implementationVersion << '\n';
-        std::cout << "\t\tSpecification Version : " << validationLayer.specVersion << '\n';
+        buffer << "\tName : " << validationLayer.layerName << '\n';
+        buffer << "\t\tDescription : " << validationLayer.description << '\n';
+        buffer << "\t\tImplementation Version : " << validationLayer.implementationVersion << '\n';
+        buffer << "\t\tSpecification Version : " << validationLayer.specVersion << '\n';
     }
 }
 
@@ -66,8 +66,6 @@ engine::VValidationLayerCollection& engine::VValidationLayerCollection::addValid
 void engine::VValidationLayer::queryAvailableValidationLayers() noexcept {
     if( VValidationLayer::_layersQueried )
         return;
-    else
-        VValidationLayer::_layersQueried = true;
 
     uint32 layerCount;
 
@@ -75,6 +73,8 @@ void engine::VValidationLayer::queryAvailableValidationLayers() noexcept {
 
     VValidationLayer::_availableValidationLayers = std::vector < VulkanLayerProperties > (layerCount );
     vkEnumerateInstanceLayerProperties(& layerCount, VValidationLayer::_availableValidationLayers.data() );
+
+    VValidationLayer::_layersQueried = true;
 }
 
 engine::VValidationLayerCollection::VValidationLayerCollection(const std::initializer_list < engine::VValidationLayer > & list) noexcept {

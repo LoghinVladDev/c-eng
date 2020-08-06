@@ -6,6 +6,7 @@
 #include <src/GLFW/src/engine/vulkan/vkObj/instance/validationLayer/VValidationLayer.h>
 #include <src/GLFW/src/engine/vulkan/vkDefs/vkDefinitions.h>
 #include "VMessenger.h"
+#include <src/GLFW/src/engine/vulkan/vkDefs/VInstanceDefinitions.h>
 
 static VULKAN_API_ATTRIBUTE VulkanBool32 VULKAN_API_CALL staticMessengerDebugCallback (
         VulkanDebugMessageSeverityFlagBits          messageSeverity,

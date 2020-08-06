@@ -89,7 +89,7 @@ namespace engine {
         VValidationLayer& setLayerType (VulkanValidationLayer layer ) noexcept;
 
         [[nodiscard]] static bool checkValidationLayerSupport( const VValidationLayerCollection & ) noexcept;
-        static void debugPrintAvailableValidationLayers() noexcept;
+        static void debugPrintAvailableValidationLayers(std::ostream&) noexcept;
     };
 
     class VValidationLayerCollection {

@@ -5,6 +5,7 @@
 #include "VulkanTriangleApplication.h"
 #include <src/GLFW/src/engine/vulkan/vkObj/instance/extension/VExtension.h>
 #include <src/GLFW/src/engine/vulkan/vkUtils/VStdUtils.h>
+#include <vkObj/instance/device/VPhysicalDevice.h>
 
 const char* engine::VulkanTriangleApplication::DEFAULT_TITLE = "Vulkan Application";
 
@@ -62,7 +63,7 @@ inline void engine::VulkanTriangleApplication::initVulkan() noexcept (false) {
     }
 
     if( enableValidationLayers ) {
-        VValidationLayer::debugPrintAvailableValidationLayers();
+        VValidationLayer::debugPrintAvailableValidationLayers(std::cout);
 
         std::cout << "\nRequested Validation Layers : \n";
 
@@ -87,6 +88,7 @@ inline void engine::VulkanTriangleApplication::initVulkan() noexcept (false) {
 
 
     this->setupDebugMessenger();
+    this->pickPhysicalDevice();
 }
 #pragma clang diagnostic pop
 
@@ -108,7 +110,7 @@ void engine::VulkanTriangleApplication::cleanup() noexcept (false) {
 }
 
 void engine::VulkanTriangleApplication::pickPhysicalDevice() noexcept(false) {
-
+    VPhysicalDevice::debugPrintAvailablePhysicalDevices( this->_vulkanInstance, std::cout );
 }
 
 #pragma clang diagnostic pop
