@@ -2,8 +2,8 @@
 // Created by vladl on 05/08/2020.
 //
 
-#ifndef ENG1_VALIDATIONLAYER_H
-#define ENG1_VALIDATIONLAYER_H
+#ifndef ENG1_VVALIDATIONLAYER_H
+#define ENG1_VVALIDATIONLAYER_H
 
 #include <engineVulkanPreproc.h>
 #include <vkDefs/types/vulkanExplicitTypes.h>
@@ -18,9 +18,9 @@
 
 namespace engine {
 
-    class ValidationLayerCollection;
+    class VValidationLayerCollection;
 
-    class ValidationLayer {
+    class VValidationLayer {
     public:
         //// TODO : define more eventually
         typedef enum {
@@ -71,30 +71,31 @@ namespace engine {
         //// public vars
 
         //// public functions
-        ValidationLayer()   noexcept {
-            ValidationLayer::queryAvailableValidationLayers();
+        VValidationLayer()   noexcept {
+            VValidationLayer::queryAvailableValidationLayers();
         }
 
-        ~ValidationLayer()  noexcept = default;
+        explicit VValidationLayer(VulkanValidationLayer layerType) noexcept {
+            VValidationLayer::queryAvailableValidationLayers();
+            this->setLayerType(layerType);
+        }
+
+        ~VValidationLayer()  noexcept = default;
 
         [[nodiscard]] VulkanValidationLayerLiteral getLiteral() const noexcept {
             return this->_literal;
         }
 
-        ValidationLayer& setLayerType ( VulkanValidationLayer layer ) noexcept;
+        VValidationLayer& setLayerType (VulkanValidationLayer layer ) noexcept;
 
-        [[nodiscard]] static VulkanLayerDebugFunctionCallbackPointer getValidationLayerDebugCallbackFunctionPointer() noexcept {
-            return ValidationLayer::_debugFunctionPtr;
-        }
-
-        [[nodiscard]] static bool checkValidationLayerSupport( const ValidationLayerCollection & ) noexcept;
+        [[nodiscard]] static bool checkValidationLayerSupport( const VValidationLayerCollection & ) noexcept;
         static void debugPrintAvailableValidationLayers() noexcept;
     };
 
-    class ValidationLayerCollection {
+    class VValidationLayerCollection {
     private:
         //// private vars
-        std::vector < ValidationLayer > _validationLayers;
+        std::vector < VValidationLayer > _validationLayers;
 
         //// private functions
 
@@ -102,16 +103,17 @@ namespace engine {
         //// public vars
 
         //// public functions
-        ValidationLayerCollection() noexcept = default;
-        ValidationLayerCollection( const std::initializer_list < ValidationLayer > & ) noexcept;
+        VValidationLayerCollection() noexcept = default;
+        VValidationLayerCollection( const std::initializer_list < VValidationLayer > & ) noexcept;
+        VValidationLayerCollection( const std::initializer_list < VValidationLayer::VulkanValidationLayer > & ) noexcept;
 
-        ValidationLayerCollection& addValidationLayer( const ValidationLayer & ) noexcept;
+        VValidationLayerCollection& addValidationLayer( const VValidationLayer & ) noexcept;
 
-        [[nodiscard]] const std::vector < ValidationLayer > & getValidationLayers() const noexcept {
+        [[nodiscard]] const std::vector < VValidationLayer > & getValidationLayers() const noexcept {
             return this->_validationLayers;
         }
 
-        [[nodiscard]] std::vector < ValidationLayer::VulkanValidationLayerLiteral > getValidationLayerLiterals() const noexcept;
+        [[nodiscard]] std::vector < VValidationLayer::VulkanValidationLayerLiteral > getValidationLayerLiterals() const noexcept;
 
         void clear() noexcept {
             this->_validationLayers.clear();
@@ -121,4 +123,4 @@ namespace engine {
 
 
 
-#endif //ENG1_VALIDATIONLAYER_H
+#endif //ENG1_VVALIDATIONLAYER_H

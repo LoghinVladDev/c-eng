@@ -7,6 +7,8 @@
 
 #include <engineVulkanPreproc.h>
 
+typedef VkPhysicalDevice                            VulkanPhysicalDevice;
+
 typedef VkBool32                                    VulkanBool32;
 
 typedef VkInstance                                  VulkanInstance;

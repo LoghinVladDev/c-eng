@@ -35,5 +35,8 @@
 #define __VULKAN_INSTANCE_PROC_ADDRESS_CREATE_DEBUG_UTIL_MESSENGER_EXT    "vkCreateDebugUtilsMessengerEXT"
 #define __VULKAN_INSTANCE_PROC_ADDRESS_DESTROY_DEBUG_UTIL_MESSENGER_EXT   "vkDestroyDebugUtilsMessengerEXT"
 
+#define __VULKAN_INSTANCE_DEFAULT_TITLE                                   "Vulkan Application"
+
+#define __VULKAN_INSTANCE_APP_INFO_ENGINE_NO_ENGINE                       "No Engine"
 
 #endif //ENG1_VKDEFINITIONS_H

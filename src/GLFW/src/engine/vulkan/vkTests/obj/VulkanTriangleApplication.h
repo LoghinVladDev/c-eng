@@ -19,7 +19,9 @@
 #include <engineVulkanPreproc.h>
 #include <vkDefs/types/vulkanExplicitTypes.h>
 #include <vector>
-#include <src/GLFW/src/engine/vulkan/vkObj/validationLayer/ValidationLayer.h>
+#include <src/GLFW/src/engine/vulkan/vkObj/instance/validationLayer/VValidationLayer.h>
+#include <src/GLFW/src/engine/vulkan/vkObj/instance/VInstance.h>
+#include <src/GLFW/src/engine/vulkan/vkObj/instance/messenger/VMessenger.h>
 
 namespace engine {
 
@@ -39,16 +41,14 @@ namespace engine {
     class VulkanTriangleApplication {
     private:
         //// private_vars
-        uint32                                                          _width          {VulkanTriangleApplication::DEFAULT_WIDTH};
-        uint32                                                          _height         {VulkanTriangleApplication::DEFAULT_HEIGHT};
+        uint32                      _width          {VulkanTriangleApplication::DEFAULT_WIDTH};
+        uint32                      _height         {VulkanTriangleApplication::DEFAULT_HEIGHT};
 
-        GLFWwindow *                                                    _window         {nullptr};
-        VulkanInstance                                                  _instance       {nullptr};
-        VulkanDebugMessenger                                            _debugMessenger {nullptr};
+        GLFWwindow *                _window         {nullptr};
 
-        std::vector < VulkanExtensionProperties > *                     _extensionsPtr  {nullptr};
-
-        ValidationLayerCollection                                       _validationLayerCollection;
+        VMessenger                  _vulkanMessenger;
+        VValidationLayerCollection  _vulkanValidationLayerCollection;
+        VInstance                   _vulkanInstance;
 
         //// private_functions
         void initWindow() noexcept(false);
@@ -57,12 +57,7 @@ namespace engine {
         void cleanup() noexcept(false);
 
         void setupDebugMessenger() noexcept (false);
-
-        VulkanResult createVulkanInstance() noexcept;
-
-        void printExtensions() const noexcept;
-        void checkExtensions() noexcept;
-        [[nodiscard]] const std::vector < VulkanExtensionProperties > * getVulkanExtensions() const noexcept;
+        void pickPhysicalDevice() noexcept (false);
     public:
         //// public_vars
         constexpr static uint32 DEFAULT_WIDTH       = 800U;
@@ -71,38 +66,33 @@ namespace engine {
 
         static const int8*      DEFAULT_TITLE;
 
-        constexpr static VulkanFlags DEFAULT_DEBUG_MESSAGE_SEVERITY =
-                (VulkanFlags) VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT |
-                (VulkanFlags) VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT |
-                (VulkanFlags) VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;
-
-        constexpr static VulkanFlags DEFAULT_DEBUG_MESSAGE_TYPE =
-                (VulkanFlags) VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT |
-                (VulkanFlags) VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT |
-                (VulkanFlags) VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
-
         //// public_functions
         VulkanTriangleApplication() noexcept = default;
         explicit VulkanTriangleApplication(uint32, uint32) noexcept;
 
-        [[nodiscard]] ValidationLayerCollection & getValidationLayerCollection() noexcept {
-            return this->_validationLayerCollection;
+        [[nodiscard]] VValidationLayerCollection & getValidationLayerCollection() noexcept {
+            return this->_vulkanValidationLayerCollection;
         }
 
-        VulkanTriangleApplication & addValidationLayer ( const engine::ValidationLayer & layer ) noexcept {
-            this->_validationLayerCollection.addValidationLayer(layer );
+        VulkanTriangleApplication & addValidationLayer ( const engine::VValidationLayer & layer ) noexcept {
+            this->_vulkanValidationLayerCollection.addValidationLayer(layer );
             return *this;
         }
 
-        VulkanTriangleApplication & addValidationLayers( const engine::ValidationLayerCollection & layerCollection ) noexcept {
+        VulkanTriangleApplication & addValidationLayer ( engine::VValidationLayer::VulkanValidationLayer layerType ) noexcept {
+            this->_vulkanValidationLayerCollection.addValidationLayer( engine::VValidationLayer().setLayerType(layerType) );
+            return *this;
+        }
+
+        VulkanTriangleApplication & addValidationLayers( const engine::VValidationLayerCollection & layerCollection ) noexcept {
             for( const auto & layer : layerCollection.getValidationLayers() ) {
-                this->_validationLayerCollection.addValidationLayer(layer );
+                this->_vulkanValidationLayerCollection.addValidationLayer(layer );
             }
             return *this;
         }
 
         VulkanTriangleApplication & clearValidationLayers() noexcept {
-            this->_validationLayerCollection.clear();
+            this->_vulkanValidationLayerCollection.clear();
             return *this;
         }
 

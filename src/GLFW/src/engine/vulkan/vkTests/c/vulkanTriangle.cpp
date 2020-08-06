@@ -11,10 +11,7 @@ int main() {
     VulkanTriangleApplication app(1024, 768);
 
     try{
-        ValidationLayer khronosValidationLayer;
-        khronosValidationLayer.setLayerType( ValidationLayer::KHRONOS_VALIDATION );
-
-        app.addValidationLayer( khronosValidationLayer );
+        app.addValidationLayer( VValidationLayer::KHRONOS_VALIDATION );
         app.run();
     } catch (std::exception const & e) {
         std::cerr << e.what() << '\n';
