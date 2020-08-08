@@ -14,6 +14,7 @@ typedef VkPhysicalDeviceFeatures                    VulkanPhysicalDeviceFeatures
 typedef VkPhysicalDeviceSparseProperties            VulkanPhysicalDeviceSparseProperties;
 typedef VkPhysicalDeviceLimits                      VulkanPhysicalDeviceLimits;
 typedef VkPhysicalDeviceFeatures                    VulkanPhysicalDeviceFeatures;
+typedef VkQueueFamilyProperties                     VulkanQueueFamilyProperties;
 
 typedef VkBool32                                    VulkanBool32;
 

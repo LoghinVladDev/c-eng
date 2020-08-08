@@ -7,6 +7,7 @@
 #include <src/GLFW/src/engine/vulkan/vkUtils/VStdUtils.h>
 #include <vkObj/instance/device/VPhysicalDevice.h>
 #include <map>
+#include <vkObj/instance/device/queue/VQueueFamily.h>
 
 const char* engine::VulkanTriangleApplication::DEFAULT_TITLE = "Vulkan Application";
 
@@ -94,6 +95,11 @@ inline void engine::VulkanTriangleApplication::initVulkan() noexcept (false) {
     std::cout << "Most Suitable GPU : \n";
 
     this->_vulkanPhysicalDevice.debugPrintPhysicalDeviceProperties( std::cout, true, "\t");
+
+    engine::VQueueFamilyCollection queueFamilyCollection( this->_vulkanPhysicalDevice ) ;
+
+    std::cout << "Available Queue Families : \n";
+    queueFamilyCollection.debugPrintQueueFamilies( std::cout, "\t" );
 }
 #pragma clang diagnostic pop
 

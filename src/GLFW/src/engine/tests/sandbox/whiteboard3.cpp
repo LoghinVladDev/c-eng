@@ -1,112 +1,53 @@
+#include <iostream>
+#include <fstream>
 
+//std::ofstream fout ("summax.out");
 
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
-#include <types.h>
-#include <src/GLFW/src/engine/obj/util/obj/stdObj/Camera.h>
-#include <dependencies/stb_image/stb-image.h>
-#include <src/GLFW/src/engine/obj/util/shader/Shader.h>
-#include <src/GLFW/src/engine/obj/util/model/Model.h>
+int n, m;
+int mat[10][10];
 
-void framebufferSizeCallback(GLFWwindow*, int, int);
-void mouseCallback(GLFWwindow*, double, double);
-void scrollCallback(GLFWwindow*, double, double);
-void processInputCallback(GLFWwindow*, int, int, int, int);
-void processInput(GLFWwindow*);
-void engineLoop(GLFWwindow*);
+int dl[] = { -2, -1,  1,  2,  2,  1, -1, -2 };
+int dc[] = {  1,  2,  2,  1, -1, -2, -2, -1 };
 
-constexpr uint16 SCREEN_WIDTH = 800;
-constexpr uint16 SCREEN_HEIGHT = 600;
-constexpr float  SCREEN_RATIO = (float) SCREEN_WIDTH / (float) SCREEN_HEIGHT;
+int salturi = 0;
 
-float lastX = SCREEN_WIDTH / 2.0f;
-float lastY = SCREEN_HEIGHT/ 2.0f;
-bool firstMouse = true;
-
-float deltaTime = 0.0f;
-float lastFrame = 0.0f;
-
-constexpr float FOV = 60.0f;
-
-using namespace engine;
-using namespace glm;
-
-Camera* camera;
-Shader* shader;
-Model* modelObj;
-
-void engineLoop(GLFWwindow* window) {
-    float currentFrame = 0.0f;
-    mat4 projection;
-    mat4 view;
-    mat4 model;
-
-    while(!glfwWindowShouldClose(window)) {
-        currentFrame = (float)glfwGetTime();
-        deltaTime = currentFrame - lastFrame;
-        lastFrame = currentFrame;
-
-        processInput(window);
-
-        ENG_CLEAR_FRAME();
-
-        shader->use();
-
-        projection = perspective(radians(FOV), SCREEN_RATIO, 0.1f, 100.0f);
-        view = camera->getViewMatrix();
-
-        shader->setMat4("projection", projection);
-        shader->setMat4("view", view);
-
-        model = mat4(1.0f);
-        model = scale(
-            translate(
-                model, vec3(0.0f, 0.0f, 0.0f)
-            ),
-            vec3(1.0f, 1.0f, 1.0f)
-        );
-
-        shader->setMat4("model", model);
-
-        modelObj->draw(*shader);
-
-        ENG_FINISH_FRAME(window);
+void afis() {
+    for (int i = 1; i <= n; ++i) {
+        for (int j = 1; j <= m; ++j) {
+            std::cout << mat[i][j] << ' ';
+        }
+        std::cout << '\n';
     }
+    exit(0);
 }
 
-int main(){
-    glfwInit();
+void bkt( int i, int j ) {
+    salturi++;
+    mat[i][j] = salturi;
 
-    ENG_SET_VERSION_LIMITATION(_GL_MIN_VER, _GL_MAX_VER);
-    GLFWwindow* window;
+    if( salturi == n * m ) {
+        afis ();
+    } else {
+        for ( int k = 0; k < 8; k++ ) {
+            int ln = i + dl[k];
+            int cn = j + dc[k];
 
-    ENG_WINDOW_CREATE_WINDOW(window, SCREEN_WIDTH, SCREEN_HEIGHT);
-    ENG_WINDOW_SET_CALLBACKS(window, framebufferSizeCallback, mouseCallback, scrollCallback);
-    ENG_GLAD_INIT();
+            if ( ln >= 1 && ln <= n && cn >=1 && cn <= m )
+                if ( mat[ln][cn] == 0 )
+                    bkt( ln, cn );
+        }
+    }
 
-    stbi_set_flip_vertically_on_load(true);
+    mat[i][j] = 0;
+    salturi--;
+}
 
-    glEnable(GL_DEPTH_TEST);
+int main() {
+    int pi, pj;
 
-    shader = new Shader(
-            "triangle.vert",
-            "triangle.frag",
-            true,
-            true
-    );
+    std::cin >> n >> m >> pi >> pj;
 
-    modelObj = new Model(std::string().append(__ASSETS_PATH__).append("backpackTestModel/backpack.obj"));
-
-    camera = new Camera(glm::vec3(0.0f, 0.0f, 3.0f));
-
-    engineLoop(window);
-
-    glfwDestroyWindow(window);
-    glfwTerminate();
-
-    delete (camera);
-    delete (shader);
-    delete (modelObj);
+    bkt( pi, pj );
 
     return 0;
 }

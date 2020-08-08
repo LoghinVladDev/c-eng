@@ -45,6 +45,14 @@ namespace engine {
             vkGetPhysicalDeviceFeatures     ( this->_physicalDeviceHandle, & this->_physicalDeviceFeatures );
         }
 
+        [[nodiscard]] const VulkanPhysicalDeviceProperties & getPhysicalDeviceProperties () const noexcept {
+            return this->_physicalDeviceProperties;
+        }
+
+        [[nodiscard]] const VulkanPhysicalDeviceFeatures & getPhysicalDeviceFeatures () const noexcept {
+            return this->_physicalDeviceFeatures;
+        }
+
         [[nodiscard]] uint32 getPhysicalDeviceRenderRating() const noexcept;
 
         [[nodiscard]] const VulkanPhysicalDevice & data() const noexcept {
@@ -72,10 +80,10 @@ namespace engine {
 #endif
 
 #ifndef NDEBUG
-        static void debugPrintPhysicalDeviceBasicPropertiesStructure ( VulkanPhysicalDeviceProperties, std::ostream&, const char* = "" ) noexcept;
-        static void debugPrintPhysicalDeviceSparsePropertiesStructure ( VulkanPhysicalDeviceSparseProperties, std::ostream&, const char* = "" ) noexcept;
-        static void debugPrintPhysicalDeviceLimitsStructure ( VulkanPhysicalDeviceLimits, std::ostream&, const char * = "" ) noexcept;
-        static void debugPrintPhysicalDeviceFeaturesStructure ( VulkanPhysicalDeviceFeatures, std::ostream&, const char* = "" ) noexcept;
+        static void debugPrintPhysicalDeviceBasicPropertiesStructure    ( const VulkanPhysicalDeviceProperties &,       std::ostream&, const char* = "" ) noexcept;
+        static void debugPrintPhysicalDeviceSparsePropertiesStructure   ( const VulkanPhysicalDeviceSparseProperties &, std::ostream&, const char* = "" ) noexcept;
+        static void debugPrintPhysicalDeviceLimitsStructure             ( const VulkanPhysicalDeviceLimits &,           std::ostream&, const char * = "" ) noexcept;
+        static void debugPrintPhysicalDeviceFeaturesStructure           ( const VulkanPhysicalDeviceFeatures &,         std::ostream&, const char* = "" ) noexcept;
 #endif
 
     };

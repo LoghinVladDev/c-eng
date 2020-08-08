@@ -103,7 +103,7 @@ void engine::VPhysicalDevice::debugPrintAvailablePhysicalDevices(const VInstance
 
 #ifndef NDEBUG
 
-void engine::VPhysicalDevice::debugPrintPhysicalDeviceBasicPropertiesStructure(VulkanPhysicalDeviceProperties properties, std::ostream & buffer, const char * prefix) noexcept {
+void engine::VPhysicalDevice::debugPrintPhysicalDeviceBasicPropertiesStructure( const VulkanPhysicalDeviceProperties & properties, std::ostream & buffer, const char * prefix) noexcept {
     buffer << prefix << "Name :                                                    " << properties.deviceName << '\n';
     buffer << prefix << "Device ID :                                               " << properties.deviceID << '\n';
     buffer << prefix << "Device Type :                                             " << properties.deviceType << '\n';
@@ -122,7 +122,7 @@ void engine::VPhysicalDevice::debugPrintPhysicalDeviceBasicPropertiesStructure(V
 
 #ifndef NDEBUG
 
-void engine::VPhysicalDevice::debugPrintPhysicalDeviceSparsePropertiesStructure( VulkanPhysicalDeviceSparseProperties sparseProperties, std::ostream & buffer,const char * prefix) noexcept {
+void engine::VPhysicalDevice::debugPrintPhysicalDeviceSparsePropertiesStructure( const VulkanPhysicalDeviceSparseProperties & sparseProperties, std::ostream & buffer,const char * prefix) noexcept {
     /* VkBool32 */  buffer << prefix << "Residency Aligned MIP Size :                              " <<  engine::VStandardUtils::constexprBoolAlpha( sparseProperties.residencyAlignedMipSize )                     << '\n';
     /* VkBool32 */  buffer << prefix << "Residency Non Resident Strict :                           " <<  engine::VStandardUtils::constexprBoolAlpha( sparseProperties.residencyNonResidentStrict )                  << '\n';
     /* VkBool32 */  buffer << prefix << "Residency Standard 2D Block Shape :                       " <<  engine::VStandardUtils::constexprBoolAlpha( sparseProperties.residencyStandard2DBlockShape )               << '\n';
@@ -134,7 +134,7 @@ void engine::VPhysicalDevice::debugPrintPhysicalDeviceSparsePropertiesStructure(
 
 #ifndef NDEBUG
 
-void engine::VPhysicalDevice::debugPrintPhysicalDeviceLimitsStructure(VulkanPhysicalDeviceLimits limits, std::ostream & buffer,const char * prefix) noexcept {
+void engine::VPhysicalDevice::debugPrintPhysicalDeviceLimitsStructure( const VulkanPhysicalDeviceLimits & limits, std::ostream & buffer,const char * prefix) noexcept {
 
     /* uint32_t              */ buffer << prefix << "Max Image Dimension 1D :                                  " << limits.maxImageDimension1D                               << '\n';
     /* uint32_t              */ buffer << prefix << "Max Image Dimension 2D :                                  " << limits.maxImageDimension2D                               << '\n';
@@ -256,7 +256,7 @@ void engine::VPhysicalDevice::debugPrintPhysicalDeviceLimitsStructure(VulkanPhys
 
 #ifndef NDEBUG
 
-void engine::VPhysicalDevice::debugPrintPhysicalDeviceFeaturesStructure(VulkanPhysicalDeviceFeatures features, std::ostream & buffer, const char * prefix) noexcept {
+void engine::VPhysicalDevice::debugPrintPhysicalDeviceFeaturesStructure( const VulkanPhysicalDeviceFeatures & features, std::ostream & buffer, const char * prefix) noexcept {
     /* VkBool32 */  buffer << prefix << "Robust Buffer Access :                                    " << engine::VStandardUtils::constexprBoolAlpha( features.robustBufferAccess )                         << '\n';
     /* VkBool32 */  buffer << prefix << "Full Draw Index Unsigned Integer 32 :                     " << engine::VStandardUtils::constexprBoolAlpha( features.fullDrawIndexUint32 )                        << '\n';
     /* VkBool32 */  buffer << prefix << "Image Cube Array :                                        " << engine::VStandardUtils::constexprBoolAlpha( features.imageCubeArray )                             << '\n';
