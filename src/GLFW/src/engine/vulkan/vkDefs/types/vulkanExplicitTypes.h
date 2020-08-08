@@ -8,7 +8,11 @@
 #include <engineVulkanPreproc.h>
 
 typedef VkPhysicalDevice                            VulkanPhysicalDevice;
+typedef VkPhysicalDeviceType                        VulkanPhysicalDeviceType;
 typedef VkPhysicalDeviceProperties                  VulkanPhysicalDeviceProperties;
+typedef VkPhysicalDeviceFeatures                    VulkanPhysicalDeviceFeatures;
+typedef VkPhysicalDeviceSparseProperties            VulkanPhysicalDeviceSparseProperties;
+typedef VkPhysicalDeviceLimits                      VulkanPhysicalDeviceLimits;
 typedef VkPhysicalDeviceFeatures                    VulkanPhysicalDeviceFeatures;
 
 typedef VkBool32                                    VulkanBool32;

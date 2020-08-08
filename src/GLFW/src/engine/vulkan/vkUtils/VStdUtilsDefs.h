@@ -5,6 +5,9 @@
 #ifndef ENG1_VSTDUTILSDEFS_H
 #define ENG1_VSTDUTILSDEFS_H
 
+/**
+ * to_string ( VulkanResult ) defs
+ */
 #define __VK_SUCCESS_STR                                        "Vulkan : Success"
 #define __VK_NOT_READY                                          "Vulkan : Not Ready"
 #define __VK_TIMEOUT                                            "Vulkan : Timeout"
@@ -38,7 +41,19 @@
 #define __VK_ERROR_INVALID_DRM_FORMAT_MODIFIER_PLANE_LAYOUT_EXT "Vulkan : Error : Extension : Invalid DRM Format Modifier Plane Layout"
 #define __VK_ERROR_NOT_PERMITTED_EXT                            "Vulkan : Error : Extension : Not Permitted"
 #define __VK_ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT          "Vulkan : Error : Extension : Fullscreen Exclusive Mode Lost"
-#define __VK_RESULT_RANGE_SIZE                                  "Vulkan : Result : Range Size"
-#define __VK_RESULT_MAX_ENUM                                    "Vulkan : Result : Max Enum"
+#define __VK_RESULT_RANGE_SIZE                                  "Vulkan : Result Range Size"
+#define __VK_RESULT_MAX_ENUM                                    "Vulkan : Result Max Enum Value"
+
+/**
+ * to_string ( VulkanPhysicalDeviceType ) defs
+ */
+#define __VK_PHYSICAL_DEVICE_OTHER                              "Vulkan Physical Device : Other"
+#define __VK_PHYSICAL_DEVICE_INTEGRATED_GPU                     "Vulkan Physical Device : Integrated GPU"
+#define __VK_PHYSICAL_DEVICE_DISCRETE_GPU                       "Vulkan Physical Device : Discrete GPU"
+#define __VK_PHYSICAL_DEVICE_VIRTUAL_GPU                        "Vulkan Physical Device : Virtual GPU"
+#define __VK_PHYSICAL_DEVICE_CPU                                "Vulkan Physical Device : CPU"
+#define __VK_PHYSICAL_DEVICE_TYPE_RANGE_SIZE                    "Vulkan Physical Device Range Size"
+#define __VK_PHYSICAL_DEVICE_TYPE_MAX_ENUM                      "Vulkan Physical Device Max Enum Value"
+#define __VK_PHYSICAL_DEVICE_UNKNOWN                            "Vulkan Physical Device Unknown"
 
 #endif //ENG1_VSTDUTILSDEFS_H

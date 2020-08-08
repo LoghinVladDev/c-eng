@@ -22,6 +22,7 @@
 #include <src/GLFW/src/engine/vulkan/vkObj/instance/validationLayer/VValidationLayer.h>
 #include <src/GLFW/src/engine/vulkan/vkObj/instance/VInstance.h>
 #include <src/GLFW/src/engine/vulkan/vkObj/instance/messenger/VMessenger.h>
+#include <vkObj/instance/device/VPhysicalDevice.h>
 
 namespace engine {
 
@@ -49,6 +50,7 @@ namespace engine {
         VMessenger                  _vulkanMessenger;
         VValidationLayerCollection  _vulkanValidationLayerCollection;
         VInstance                   _vulkanInstance;
+        VPhysicalDevice             _vulkanPhysicalDevice;
 
         //// private_functions
         void initWindow() noexcept(false);
@@ -57,7 +59,7 @@ namespace engine {
         void cleanup() noexcept(false);
 
         void setupDebugMessenger() noexcept (false);
-        void pickPhysicalDevice() noexcept (false);
+        void autoPickPhysicalDevice() noexcept (false);
     public:
         //// public_vars
         constexpr static uint32 DEFAULT_WIDTH       = 800U;

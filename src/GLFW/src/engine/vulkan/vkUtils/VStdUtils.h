@@ -23,6 +23,11 @@ namespace engine {
         VStandardUtils() = delete;
 
         static std::string to_string ( VulkanResult ) noexcept;
+        static std::string to_string ( VulkanPhysicalDeviceType ) noexcept;
+
+        constexpr static const char * constexprBoolAlpha ( bool value ) noexcept {
+            return value ? "true" : "false";
+        }
     };
 
 }

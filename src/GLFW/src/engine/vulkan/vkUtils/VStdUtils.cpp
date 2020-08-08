@@ -48,3 +48,18 @@ std::string engine::VStandardUtils::to_string(VulkanResult result) noexcept {
             
     }
 }
+
+std::string engine::VStandardUtils::to_string(VulkanPhysicalDeviceType deviceType) noexcept {
+    switch ( deviceType ) {
+
+        case VK_PHYSICAL_DEVICE_TYPE_OTHER:                         return std::string(__VK_PHYSICAL_DEVICE_OTHER);
+        case VK_PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU:                return std::string(__VK_PHYSICAL_DEVICE_INTEGRATED_GPU);
+        case VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU:                  return std::string(__VK_PHYSICAL_DEVICE_DISCRETE_GPU);
+        case VK_PHYSICAL_DEVICE_TYPE_VIRTUAL_GPU:                   return std::string(__VK_PHYSICAL_DEVICE_VIRTUAL_GPU);
+        case VK_PHYSICAL_DEVICE_TYPE_CPU:                           return std::string(__VK_PHYSICAL_DEVICE_CPU);
+        case VK_PHYSICAL_DEVICE_TYPE_RANGE_SIZE:                    return std::string(__VK_PHYSICAL_DEVICE_TYPE_RANGE_SIZE);
+        case VK_PHYSICAL_DEVICE_TYPE_MAX_ENUM:                      return std::string(__VK_PHYSICAL_DEVICE_TYPE_MAX_ENUM);
+
+        default :                                                   return std::string(__VK_PHYSICAL_DEVICE_UNKNOWN);
+    }
+}

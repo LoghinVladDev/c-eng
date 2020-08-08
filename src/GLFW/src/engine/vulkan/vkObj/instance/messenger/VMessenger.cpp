@@ -9,10 +9,10 @@
 #include <src/GLFW/src/engine/vulkan/vkDefs/VInstanceDefinitions.h>
 
 static VULKAN_API_ATTRIBUTE VulkanBool32 VULKAN_API_CALL staticMessengerDebugCallback (
-        VulkanDebugMessageSeverityFlagBits          messageSeverity,
-        [[maybe_unused]] VulkanDebugMessageTypeFlags                 messageType,
-        const VulkanDebugMessengerCallbackData     *callbackDataPtr,
-        [[maybe_unused]] void                                       *userDataPtr
+        VulkanDebugMessageSeverityFlagBits              messageSeverity,
+        [[maybe_unused]] VulkanDebugMessageTypeFlags    messageType,
+        const VulkanDebugMessengerCallbackData        * callbackDataPtr,
+        [[maybe_unused]] void                         * userDataPtr
 ) noexcept {
 
     if( messageSeverity >= VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT ) {

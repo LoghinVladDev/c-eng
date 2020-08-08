@@ -81,7 +81,7 @@ if(Vulkan_FOUND)
             src/GLFW/src/engine/vulkan/vkUtils/VStdUtilsDefs.h
             src/GLFW/src/engine/vulkan/vkObj/instance/device/VPhysicalDevice.cpp
             src/GLFW/src/engine/vulkan/vkObj/instance/device/VPhysicalDevice.h
-        )
+            src/GLFW/src/engine/vulkan/vkObj/instance/device/VPhysicalDeviceDefs.h)
 
 
     target_link_libraries( vkTriangle Vulkan::Vulkan )

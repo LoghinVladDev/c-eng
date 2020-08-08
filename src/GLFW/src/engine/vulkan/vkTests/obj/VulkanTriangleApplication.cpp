@@ -6,6 +6,7 @@
 #include <src/GLFW/src/engine/vulkan/vkObj/instance/extension/VExtension.h>
 #include <src/GLFW/src/engine/vulkan/vkUtils/VStdUtils.h>
 #include <vkObj/instance/device/VPhysicalDevice.h>
+#include <map>
 
 const char* engine::VulkanTriangleApplication::DEFAULT_TITLE = "Vulkan Application";
 
@@ -88,7 +89,11 @@ inline void engine::VulkanTriangleApplication::initVulkan() noexcept (false) {
 
 
     this->setupDebugMessenger();
-    this->pickPhysicalDevice();
+    this->autoPickPhysicalDevice();
+
+    std::cout << "Most Suitable GPU : \n";
+
+    this->_vulkanPhysicalDevice.debugPrintPhysicalDeviceProperties( std::cout, true, "\t");
 }
 #pragma clang diagnostic pop
 
@@ -109,8 +114,24 @@ void engine::VulkanTriangleApplication::cleanup() noexcept (false) {
     glfwTerminate();
 }
 
-void engine::VulkanTriangleApplication::pickPhysicalDevice() noexcept(false) {
-    VPhysicalDevice::debugPrintAvailablePhysicalDevices( this->_vulkanInstance, std::cout );
+void engine::VulkanTriangleApplication::autoPickPhysicalDevice() noexcept(false) {
+//    VPhysicalDevice::debugPrintAvailablePhysicalDevices( this->_vulkanInstance, std::cout );
+    auto devices = VPhysicalDevice::getAvailablePhysicalDevices( this->_vulkanInstance );
+    const VPhysicalDevice * bestDevice = nullptr;
+    uint32 maxDeviceRating = 0U;
+
+    for ( const auto & device : devices ) {
+        uint32 rating = device.getPhysicalDeviceRenderRating();
+        if( rating > maxDeviceRating ) {
+            maxDeviceRating = rating;
+            bestDevice = & device;
+        }
+    }
+
+    if( bestDevice == nullptr )
+        throw std::runtime_error ( "failed to find a suitable GPU" );
+
+    this->_vulkanPhysicalDevice = ( * bestDevice );
 }
 
 #pragma clang diagnostic pop
