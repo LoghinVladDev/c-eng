@@ -39,7 +39,7 @@ include_directories(dependencies/stb_image)
 include_directories(src/GLFW/src/engine)
 
 find_package(OpenGL REQUIRED)
-find_package(ASSIMP REQUIRED)
+find_package(ASSIMP)
 #find_package(SQLite3 REQUIRED)
 
 if(SQLite3_FOUND)

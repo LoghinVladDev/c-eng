@@ -22,27 +22,36 @@ namespace engine {
 
         //// private functions
         [[nodiscard]] constexpr static bool queueFamilyPropertiesTransferBit( const VulkanQueueFamilyProperties& properties ) noexcept {
-            return (bool) ( properties.queueFlags & VK_QUEUE_TRANSFER_BIT);
+            return (bool) ( properties.queueFlags & VQueueFamily::TRANSFER_FLAG);
         }
 
         [[nodiscard]] constexpr static bool queueFamilyPropertiesGraphicsBit( const VulkanQueueFamilyProperties& properties ) noexcept {
-            return (bool) ( properties.queueFlags & VK_QUEUE_GRAPHICS_BIT);
+            return (bool) ( properties.queueFlags & VQueueFamily::GRAPHICS_FLAG);
         }
 
         [[nodiscard]] constexpr static bool queueFamilyPropertiesComputeBit( const VulkanQueueFamilyProperties& properties ) noexcept {
-            return (bool) ( properties.queueFlags & VK_QUEUE_COMPUTE_BIT);
+            return (bool) ( properties.queueFlags & VQueueFamily::COMPUTE_FLAG);
         }
 
         [[nodiscard]] constexpr static bool queueFamilyPropertiesProtectedBit( const VulkanQueueFamilyProperties& properties ) noexcept {
-            return (bool) ( properties.queueFlags & VK_QUEUE_PROTECTED_BIT);
+            return (bool) ( properties.queueFlags & VQueueFamily::PROTECTED_FLAG);
         }
 
         [[nodiscard]] constexpr static bool queueFamilyPropertiesSparseBindingBit( const VulkanQueueFamilyProperties& properties ) noexcept {
-            return (bool) ( properties.queueFlags & VK_QUEUE_SPARSE_BINDING_BIT);
+            return (bool) ( properties.queueFlags & VQueueFamily::SPARSE_BINDING_FLAG);
         }
-//        void queryAvailableQueueFamilies ( const VPhysicalDevice& ) noexcept;
+
+        [[nodiscard]] constexpr static bool queueFamilyPropertiesCompatibleFlagBits( const VulkanQueueFamilyProperties& properties, VulkanQueueFlags flags ) noexcept {
+            return (bool) ( ( properties.queueFlags & flags ) == flags );
+        }
+        //        void queryAvailableQueueFamilies ( const VPhysicalDevice& ) noexcept;
     public:
         //// public variables
+        constexpr static VulkanQueueFlags GRAPHICS_FLAG       = VK_QUEUE_GRAPHICS_BIT;
+        constexpr static VulkanQueueFlags COMPUTE_FLAG        = VK_QUEUE_COMPUTE_BIT;
+        constexpr static VulkanQueueFlags TRANSFER_FLAG       = VK_QUEUE_TRANSFER_BIT;
+        constexpr static VulkanQueueFlags PROTECTED_FLAG      = VK_QUEUE_PROTECTED_BIT;
+        constexpr static VulkanQueueFlags SPARSE_BINDING_FLAG = VK_QUEUE_SPARSE_BINDING_BIT;
 
         //// public functions
         VQueueFamily() noexcept = default;
@@ -79,6 +88,10 @@ namespace engine {
             return VQueueFamily::queueFamilyPropertiesSparseBindingBit(this->_queueFamilyProperties);
         }
 
+        [[nodiscard]] constexpr bool queueFamilyIsCapableOf ( VulkanQueueFlags flags ) const noexcept {
+            return VQueueFamily::queueFamilyPropertiesCompatibleFlagBits( this->_queueFamilyProperties, flags );
+        }
+
 #ifndef NDEBUG
         void debugPrintQueueFamily ( std::ostream&, const char * = "" ) const noexcept;
         static void debugPrintQueueFamilyPropertiesStructureQueueFlags ( const VulkanQueueFamilyProperties & ,std::ostream&, const char * = "" ) noexcept;
@@ -91,6 +104,7 @@ namespace engine {
         //// private variables
         VPhysicalDevice                 _physicalDevice;
         std::vector < VQueueFamily >    _queueFamilies;
+//        std::vector < VQueueFamily * >  _graphicsCapableQueueFamilies; ptr implementation is the most logical
 
         //// private functions
         void queryAvailableQueueFamilies ( ) noexcept;
@@ -107,6 +121,28 @@ namespace engine {
         [[nodiscard]] const std::vector < VQueueFamily > & getQueueFamilies () const noexcept {
             return this->_queueFamilies;
         }
+
+        [[nodiscard]] std::vector < VQueueFamily > getGraphicsCapableQueueFamilies () const noexcept {
+            return this->getFlagsCapableQueueFamilies( VQueueFamily::GRAPHICS_FLAG );
+        }
+
+        [[nodiscard]] std::vector < VQueueFamily > getComputeCapableQueueFamilies () const noexcept {
+            return this->getFlagsCapableQueueFamilies( VQueueFamily::COMPUTE_FLAG );
+        }
+
+        [[nodiscard]] std::vector < VQueueFamily > getTransferCapableQueueFamilies () const noexcept {
+            return this->getFlagsCapableQueueFamilies( VQueueFamily::TRANSFER_FLAG );
+        }
+
+        [[nodiscard]] std::vector < VQueueFamily > getProtectedCapableQueueFamilies () const noexcept {
+            return this->getFlagsCapableQueueFamilies( VQueueFamily::PROTECTED_FLAG );
+        }
+
+        [[nodiscard]] std::vector < VQueueFamily > getSparseBindingCapableQueueFamilies () const noexcept {
+            return this->getFlagsCapableQueueFamilies( VQueueFamily::SPARSE_BINDING_FLAG );
+        }
+
+        [[nodiscard]] std::vector < VQueueFamily > getFlagsCapableQueueFamilies ( VulkanQueueFlags ) const noexcept;
 
 #ifndef NDEBUG
         void debugPrintQueueFamilies ( std::ostream&, const char* = "" ) const noexcept;

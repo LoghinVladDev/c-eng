@@ -76,3 +76,13 @@ void engine::VQueueFamily::debugPrintQueueFamilyPropertiesStructureQueueFlags(co
     buffer << prefix << "Queue Family Sparse Binding Capable :  " << VStandardUtils::constexprBoolAlpha ( VQueueFamily::queueFamilyPropertiesSparseBindingBit(properties) ) << '\n' ;
 }
 #endif
+
+[[nodiscard]] std::vector < engine::VQueueFamily > engine::VQueueFamilyCollection::getFlagsCapableQueueFamilies(VulkanQueueFlags flags) const noexcept {
+    auto capableQueueFamilies = std::vector < engine::VQueueFamily > ();
+
+    for( const auto & queueFamily : this->_queueFamilies )
+        if( queueFamily.queueFamilyIsCapableOf( flags ) )
+            capableQueueFamilies.push_back( queueFamily );
+
+    return capableQueueFamilies;
+}

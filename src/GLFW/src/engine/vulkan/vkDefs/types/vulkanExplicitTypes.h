@@ -7,6 +7,9 @@
 
 #include <engineVulkanPreproc.h>
 
+typedef VkFlags                                     VulkanFlags;
+typedef VkQueueFlags                                VulkanQueueFlags;
+
 typedef VkPhysicalDevice                            VulkanPhysicalDevice;
 typedef VkPhysicalDeviceType                        VulkanPhysicalDeviceType;
 typedef VkPhysicalDeviceProperties                  VulkanPhysicalDeviceProperties;

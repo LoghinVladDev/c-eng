@@ -100,6 +100,11 @@ inline void engine::VulkanTriangleApplication::initVulkan() noexcept (false) {
 
     std::cout << "Available Queue Families : \n";
     queueFamilyCollection.debugPrintQueueFamilies( std::cout, "\t" );
+
+    std::cout << "Graphics Capable Queue Families on Device : \n";
+
+    for ( const auto & queueFamily : queueFamilyCollection.getGraphicsCapableQueueFamilies() )
+        queueFamily.debugPrintQueueFamily( std::cout << "\t" );
 }
 #pragma clang diagnostic pop
 
