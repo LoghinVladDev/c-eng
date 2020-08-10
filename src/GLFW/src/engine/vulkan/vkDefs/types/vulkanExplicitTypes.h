@@ -18,6 +18,8 @@ typedef VkPhysicalDeviceSparseProperties            VulkanPhysicalDeviceSparsePr
 typedef VkPhysicalDeviceLimits                      VulkanPhysicalDeviceLimits;
 typedef VkPhysicalDeviceFeatures                    VulkanPhysicalDeviceFeatures;
 typedef VkQueueFamilyProperties                     VulkanQueueFamilyProperties;
+typedef VkDevice                                    VulkanDevice;
+typedef VkQueue                                     VulkanQueue;
 
 typedef VkDeviceQueueCreateInfo                     VulkanDeviceQueueCreateInfo;
 typedef VkDeviceCreateInfo                          VulkanDeviceCreateInfo;

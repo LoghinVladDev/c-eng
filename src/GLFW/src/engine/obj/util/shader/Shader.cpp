@@ -220,11 +220,11 @@ std::string engine::Shader::_pathToShadersFolder = std::string(__NO_PATH_GIVEN__
     try{
         if( !relativePath ) {
             vertexFile.open( vertexPath );
-//            fragmentFile.open( fragmentPath );
+            fragmentFile.open( fragmentPath );
             includerPath = vertexPath;
         } else {
             vertexFile.open( Shader::_pathToShadersFolder + vertexPath );
-//            fragmentFile.open( Shader::_pathToShadersFolder + fragmentPath );
+            fragmentFile.open( Shader::_pathToShadersFolder + fragmentPath );
             includerPath = (Shader::_pathToShadersFolder + vertexPath);
         }
 
@@ -236,25 +236,34 @@ std::string engine::Shader::_pathToShadersFolder = std::string(__NO_PATH_GIVEN__
 //                std::cout << "Include : " << vertexCodeLine.trim(" \"\r\n\t") << '\n';
                 includeFileRelativeInShaderRecInit(includerPath.c_str(), vertexCodeLine.trim(" \"\r\n\t").c_str(), includesExpanded);
             }
-            else
+            else {
                 std::cout << vertexCodeLine << '\n';
-
+                vertexCode += vertexCodeLine.append('\n');
+            }
             if(vertexFile.eof())
                 break;
         }
 
         vertexCodeLine.trim();
         std::cout << vertexCodeLine << '\n';
+        vertexCode += vertexCodeLine.append('\0');
+
+        engine::String fragmentCodeLine;
+
+        while( engine::String::getline( fragmentFile, fragmentCodeLine ) ) {
+            fragmentCode += fragmentCodeLine.append('\n');
+        }
+        fragmentCode += fragmentCodeLine.append('\0');
 
         vertexFile.close();
-//        fragmentFile.close();
+        fragmentFile.close();
     } catch (std::ifstream::failure& exception) {
         std::cout << "Shader read exception : " << exception.what() << std::endl;
         this->failed = true;
         return;
     }
 
-    return;
+//    return;
 
     int32 vertexID;
     int32 fragmentID;

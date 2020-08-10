@@ -81,7 +81,14 @@ if(Vulkan_FOUND)
             src/GLFW/src/engine/vulkan/vkUtils/VStdUtilsDefs.h
             src/GLFW/src/engine/vulkan/vkObj/instance/device/VPhysicalDevice.cpp
             src/GLFW/src/engine/vulkan/vkObj/instance/device/VPhysicalDevice.h
-            src/GLFW/src/engine/vulkan/vkObj/instance/device/VPhysicalDeviceDefs.h src/GLFW/src/engine/vulkan/vkObj/instance/device/queue/VQueueFamily.cpp src/GLFW/src/engine/vulkan/vkObj/instance/device/queue/VQueueFamily.h src/GLFW/src/engine/vulkan/vkObj/instance/device/VLogicalDevice.cpp src/GLFW/src/engine/vulkan/vkObj/instance/device/VLogicalDevice.h)
+            src/GLFW/src/engine/vulkan/vkObj/instance/device/VPhysicalDeviceDefs.h
+            src/GLFW/src/engine/vulkan/vkObj/instance/device/queue/VQueueFamily.cpp
+            src/GLFW/src/engine/vulkan/vkObj/instance/device/queue/VQueueFamily.h
+            src/GLFW/src/engine/vulkan/vkObj/instance/device/VLogicalDevice.cpp
+            src/GLFW/src/engine/vulkan/vkObj/instance/device/VLogicalDevice.h
+            src/GLFW/src/engine/vulkan/vkObj/instance/device/queue/VQueue.cpp
+            src/GLFW/src/engine/vulkan/vkObj/instance/device/queue/VQueue.h
+    )
 
 
     target_link_libraries( vkTriangle Vulkan::Vulkan )
@@ -378,6 +385,10 @@ add_executable( glfwMultLights
         src/GLFW/src/engine/obj/util/obj/Transform.h
         src/GLFW/src/engine/obj/util/geom/Vector.cpp
         src/GLFW/src/engine/obj/util/geom/Vector.h
+        src/GLFW/src/engine/obj/util/data/String.cpp
+        src/GLFW/src/engine/obj/util/data/String.h
+        src/GLFW/src/engine/obj/util/data/Array.cpp
+        src/GLFW/src/engine/obj/util/data/Array.h
         src/GLFW/src/engine/Engine.cpp
         src/GLFW/src/engine/Engine.h
         src/GLFW/src/engine/obj/window/Window.cpp

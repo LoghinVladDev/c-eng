@@ -7,6 +7,8 @@
 
 #include <vkObj/instance/device/queue/VQueueFamily.h>
 #include <cstring>
+#include <vkObj/instance/validationLayer/VValidationLayer.h>
+#include <vkObj/instance/device/queue/VQueue.h>
 
 namespace engine {
 
@@ -34,19 +36,24 @@ namespace engine {
     class VLogicalDevice {
     private:
         //// private variables
-        uint32 _queueCount        {0U};
-        float* _queuePriorities   {nullptr};
+
+        VulkanDevice                        _vulkanDevice               {};
+        uint32                              _queueCount                 {0U};
+        uint32                              _queueFamilyIndex           {0U};
+        float*                              _queuePriorities            {nullptr};
+        const VValidationLayerCollection *  _validationLayerCollection  {nullptr};
 
         //// private functions
         VLogicalDevice() noexcept = default;
-        void setup( const VPhysicalDevice & ) noexcept;
+        VulkanResult setup( const VPhysicalDevice & ) noexcept;
     public:
         class [[maybe_unused]] VLogicalDeviceFactory {
         private:
             //// private variables
-            static bool             _exceptionsToggle;
-            uint32                  _queueCount       {VLogicalDeviceFactory::DEFAULT_QUEUE_COUNT_FROM_POOL};
-            float*                  _queuePriorities  {nullptr};
+            static bool                         _exceptionsToggle;
+            uint32                              _queueCount       {VLogicalDeviceFactory::DEFAULT_QUEUE_COUNT_FROM_POOL};
+            float*                              _queuePriorities  {nullptr};
+            const VValidationLayerCollection *  _validationLayerCollection { nullptr };
 
             constexpr static float  DEFAULT_MIN_QUEUE_PRIORITY = 0.0f;
             constexpr static float  DEFAULT_MAX_QUEUE_PRIORITY = 1.0f;
@@ -86,6 +93,11 @@ namespace engine {
                 VLogicalDevice::VLogicalDeviceFactory::_exceptionsToggle = false;
             }
 
+            VLogicalDeviceFactory& withValidationLayers ( const VValidationLayerCollection& collection ) noexcept {
+                this->_validationLayerCollection = ( & collection );
+                return *this;
+            }
+
             VLogicalDeviceFactory& withQueueCount ( uint32 targetQueueCount ) noexcept {
                 this->updatePrioritiesArray( targetQueueCount );
                 this->_queueCount = targetQueueCount;
@@ -114,7 +126,7 @@ namespace engine {
                 return *this;
             }
 
-            VLogicalDevice build ( const VQueueFamily & queueFamily, const VPhysicalDevice & physicalDevice ) noexcept {
+            VLogicalDevice build ( const VQueueFamily & queueFamily, const VPhysicalDevice & physicalDevice ) noexcept (false) {
                 if ( this->_queuePriorities == nullptr )
                     this->updatePrioritiesArray( this->_queueCount );
 
@@ -122,11 +134,14 @@ namespace engine {
 
                 builtObject._queueCount = queueFamily.reserveQueues( this->_queueCount );
                 builtObject._queuePriorities = new float[builtObject._queueCount];
+                builtObject._queueFamilyIndex = queueFamily.getQueueFamilyIndex();
+                builtObject._validationLayerCollection = this->_validationLayerCollection;
                 for(uint32 it = 0; it < builtObject._queueCount; it++) {
                     builtObject._queuePriorities[it] = this->_queuePriorities[it];
                 }
 
-                builtObject.setup();
+                if( builtObject.setup( physicalDevice ) != VK_SUCCESS )
+                    throw std::runtime_error("failed to create logical device!");
 
                 return builtObject;
             }
@@ -140,7 +155,20 @@ namespace engine {
 
         //// public functions
 
+        [[nodiscard]] uint32 getQueueFamilyIndex () const noexcept {
+            return this->_queueFamilyIndex;
+        }
+
+        [[nodiscard]] const VulkanDevice & data() const noexcept {
+            return this->_vulkanDevice;
+        }
+
+        void cleanup () noexcept {
+            vkDestroyDevice( this->_vulkanDevice, nullptr );
+        }
+
         ~VLogicalDevice() noexcept {
+//            vkDestroyDevice ( this->_vulkanDevice, nullptr ); implement later for destruction
             delete [] this->_queuePriorities;
         }
     };

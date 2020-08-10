@@ -3,6 +3,7 @@
 //
 
 #include "VLogicalDevice.h"
+#include <vkUtils/VStdUtilsDefs.h>
 
 bool engine::VLogicalDevice::VLogicalDeviceFactory::_exceptionsToggle = false;
 
@@ -17,17 +18,33 @@ static inline void populateQueueCreateInfoStructure (VulkanDeviceQueueCreateInfo
     createInfo->pQueuePriorities            = qPrioritiesPtr;
 }
 
-static inline void populateDeviceCreateInfoStructure (VulkanDeviceCreateInfo * createInfo, const VulkanPhy, const VulkanDeviceQueueCreateInfo * queueCreateInfoPtr, uint32 queueCreateInfoCount = 1U) noexcept {
+static inline void populateDeviceCreateInfoStructure (VulkanDeviceCreateInfo * createInfo, const VulkanPhysicalDeviceFeatures & physicalDeviceFeatures, const VulkanDeviceQueueCreateInfo & queueCreateInfoPtr, uint32 queueCreateInfoCount = 1U) noexcept {
     if ( createInfo == nullptr )
         return;
 
     *createInfo = {};
-    createInfo->pQueueCreateInfos           = queueCreateInfoPtr;
+    createInfo->pQueueCreateInfos           = & queueCreateInfoPtr;
     createInfo->queueCreateInfoCount        = queueCreateInfoCount;
-//    createInfo->pEnabledFeatures
+    createInfo->pEnabledFeatures            = & physicalDeviceFeatures;
+    createInfo->enabledExtensionCount       = 0U;
 }
 
-void engine::VLogicalDevice::setup( const engine::VPhysicalDevice& physicalDevice ) noexcept {
+VulkanResult engine::VLogicalDevice::setup( const engine::VPhysicalDevice& physicalDevice ) noexcept {
     VulkanDeviceQueueCreateInfo queueCreateInfo     {};
     VulkanDeviceCreateInfo      deviceCreateInfo    {};
+    std::vector < VValidationLayer::VulkanValidationLayerLiteral > layerLiterals;
+
+    populateQueueCreateInfoStructure( & queueCreateInfo, this->_queueFamilyIndex, this->_queueCount, this->_queuePriorities );
+    populateDeviceCreateInfoStructure( & deviceCreateInfo, physicalDevice.getPhysicalDeviceFeatures(), queueCreateInfo );
+
+
+    if( this->_validationLayerCollection != nullptr ) {
+        layerLiterals = this->_validationLayerCollection->getValidationLayerLiterals();
+        deviceCreateInfo.enabledLayerCount      = static_cast <uint32> (layerLiterals.size());
+        deviceCreateInfo.ppEnabledLayerNames    = layerLiterals.data();
+    } else {
+        deviceCreateInfo.enabledLayerCount = 0U;
+    }
+
+    return vkCreateDevice ( physicalDevice.data(), & deviceCreateInfo, nullptr, & this->_vulkanDevice );
 }
