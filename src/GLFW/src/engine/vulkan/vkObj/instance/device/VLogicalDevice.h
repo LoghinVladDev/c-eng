@@ -163,6 +163,11 @@ namespace engine {
             return this->_vulkanDevice;
         }
 
+        //// TODO : implement queue clearing on command / destruction
+//        void cleanQueue ( uint32 queueIndex ) noexcept {
+//            this->_validationLayerCollection.
+//        }
+
         void cleanup () noexcept {
             vkDestroyDevice( this->_vulkanDevice, nullptr );
         }

@@ -14,7 +14,9 @@ namespace engine {
     class VQueue {
     private:
         //// private variables
-        VulkanQueue _queueHandler {};
+        VulkanQueue         _queueHandler           {};
+        VLogicalDevice *    _parentLogicalDevice    {nullptr};
+
         //// private functions
 
     public:
@@ -25,6 +27,11 @@ namespace engine {
             vkGetDeviceQueue( logicalDevice.data(), logicalDevice.getQueueFamilyIndex(), index, & this->_queueHandler );
         }
         //// public functions
+
+        //// TODO : destroy individual queues upon destruction
+//        ~VQueue() noexcept {
+//
+//        }
 
     };
 
