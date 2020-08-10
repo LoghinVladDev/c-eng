@@ -11,6 +11,13 @@
 #include <vector>
 namespace engine {
 
+    class EngineNullVPhysicalDevice : public std::exception{
+    public:
+        [[nodiscard]] const char * what() const noexcept override {
+            return "Physical Device Attached has a VK_NULL_HANDLE physical handle";
+        }
+    };
+
     class VPhysicalDevice {
     private:
         //// private variables

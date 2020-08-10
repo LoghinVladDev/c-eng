@@ -8,17 +8,21 @@
 #include <vkDefs/vkDefinitions.h>
 #include <vkDefs/types/vulkanExplicitTypes.h>
 #include <vkObj/instance/device/VPhysicalDevice.h>
+#include <map>
 
 namespace engine {
+
+    class VQueueFamilyCollection;
 
     class VQueueFamily {
     private:
         //// private variables
-        uint32                                      _graphicsFamily         {0};
+        uint32                                      _familyIndex            {0};
 //        VkQueueFamilyProperties _queueFamilyProperties  { };
 //        std::vector < VulkanQueueFamilyProperties > _vulkanQueueFamilyProperties;
         VulkanQueueFamilyProperties                 _queueFamilyProperties  { };
-        const VPhysicalDevice                     * _physicalDevice         { nullptr };
+//        const VPhysicalDevice                     * _physicalDevice         { nullptr };
+        VQueueFamilyCollection                    * _parentCollection       { nullptr };
 
         //// private functions
         [[nodiscard]] constexpr static bool queueFamilyPropertiesTransferBit( const VulkanQueueFamilyProperties& properties ) noexcept {
@@ -55,36 +59,45 @@ namespace engine {
 
         //// public functions
         VQueueFamily() noexcept = default;
-        explicit VQueueFamily (const VPhysicalDevice & physicalDevice, const VulkanQueueFamilyProperties & properties) noexcept {
-            this->_physicalDevice = ( & physicalDevice );
+        explicit VQueueFamily (VQueueFamilyCollection * parent, const VulkanQueueFamilyProperties & properties, uint32 family) noexcept {
+//            this->_physicalDevice = ( & physicalDevice );
+            this->_parentCollection = parent;
             this->_queueFamilyProperties = properties;
+            this->_familyIndex = family;
         }
 
-        [[nodiscard]] const VPhysicalDevice & getPhysicalDevice ( ) const noexcept {
-            return * this->_physicalDevice;
+        [[nodiscard]] uint32 reserveQueues(uint32 ) const noexcept;
+        void                 freeQueues(   uint32 ) const noexcept;
+
+        [[nodiscard]] uint32 getQueueFamilyIndex ( ) const noexcept {
+            return this->_familyIndex;
+        }
+
+        [[nodiscard]] uint32 getQueueCount ( ) const noexcept {
+            return this->_queueFamilyProperties.queueCount;
         }
 
         [[nodiscard]] const VulkanQueueFamilyProperties & getQueueFamilyProperties ( ) const noexcept {
             return this->_queueFamilyProperties;
         }
 
-        [[nodiscard]] constexpr bool queueFamilyTransferCapable() const noexcept {
+        [[maybe_unused]] [[nodiscard]] constexpr bool queueFamilyTransferCapable() const noexcept {
             return VQueueFamily::queueFamilyPropertiesTransferBit(this->_queueFamilyProperties);
         }
 
-        [[nodiscard]] constexpr bool queueFamilyGraphicsCapable() const noexcept {
+        [[maybe_unused]] [[nodiscard]] constexpr bool queueFamilyGraphicsCapable() const noexcept {
             return VQueueFamily::queueFamilyPropertiesGraphicsBit(this->_queueFamilyProperties);
         }
 
-        [[nodiscard]] constexpr bool queueFamilyComputeCapable() const noexcept {
+        [[maybe_unused]] [[nodiscard]] constexpr bool queueFamilyComputeCapable() const noexcept {
             return VQueueFamily::queueFamilyPropertiesComputeBit(this->_queueFamilyProperties);
         }
 
-        [[nodiscard]] constexpr bool queueFamilyProtectedCapable() const noexcept {
+        [[maybe_unused]] [[nodiscard]] constexpr bool queueFamilyProtectedCapable() const noexcept {
             return VQueueFamily::queueFamilyPropertiesProtectedBit(this->_queueFamilyProperties);
         }
 
-        [[nodiscard]] constexpr bool queueFamilySparseBindingCapable() const noexcept {
+        [[maybe_unused]] [[nodiscard]] constexpr bool queueFamilySparseBindingCapable() const noexcept {
             return VQueueFamily::queueFamilyPropertiesSparseBindingBit(this->_queueFamilyProperties);
         }
 
@@ -94,6 +107,7 @@ namespace engine {
 
 #ifndef NDEBUG
         void debugPrintQueueFamily ( std::ostream&, const char * = "" ) const noexcept;
+        void debugPrintQueueFamilyReservation( std::ostream&, const char* = "" ) const noexcept;
         static void debugPrintQueueFamilyPropertiesStructureQueueFlags ( const VulkanQueueFamilyProperties & ,std::ostream&, const char * = "" ) noexcept;
         static void debugPrintQueueFamilyPropertiesStructure ( const VulkanQueueFamilyProperties &, std::ostream&, const char * = "" ) noexcept;
 #endif
@@ -102,20 +116,35 @@ namespace engine {
     class VQueueFamilyCollection {
     private:
         //// private variables
-        VPhysicalDevice                 _physicalDevice;
+        const VPhysicalDevice         * _physicalDevice { nullptr };
         std::vector < VQueueFamily >    _queueFamilies;
+        std::map < uint32, uint32 >     _reservedQueuesForFamilies;
 //        std::vector < VQueueFamily * >  _graphicsCapableQueueFamilies; ptr implementation is the most logical
 
         //// private functions
-        void queryAvailableQueueFamilies ( ) noexcept;
+        void unReserveAllQueueFamilies ( ) noexcept (false);
+        void queryAvailableQueueFamilies ( ) noexcept (false);
     public:
         //// public variables
 
         //// public functions
         VQueueFamilyCollection () noexcept = delete;
-        explicit VQueueFamilyCollection ( const VPhysicalDevice & physicalDevice ) noexcept {
-            this->_physicalDevice = physicalDevice;
+        explicit VQueueFamilyCollection ( const VPhysicalDevice & physicalDevice ) noexcept (false) {
+            this->_physicalDevice = (& physicalDevice);
             this->queryAvailableQueueFamilies();
+            this->unReserveAllQueueFamilies();
+        }
+
+//        [[nodiscard]] uint32 reserveQueues( uint32, uint32) noexcept;
+        [[nodiscard]] uint32 reserveQueues( const VQueueFamily&, uint32 ) noexcept;
+        void                 freeQueues(    const VQueueFamily&, uint32 ) noexcept;
+
+        [[nodiscard]] const std::map < uint32, uint32 > & getReservedQueueFamiliesMap () const noexcept {
+            return this->_reservedQueuesForFamilies;
+        }
+
+        [[nodiscard]] const VPhysicalDevice & getPhysicalDevice ( ) const noexcept {
+            return * this->_physicalDevice;
         }
 
         [[nodiscard]] const std::vector < VQueueFamily > & getQueueFamilies () const noexcept {
@@ -146,6 +175,7 @@ namespace engine {
 
 #ifndef NDEBUG
         void debugPrintQueueFamilies ( std::ostream&, const char* = "" ) const noexcept;
+        void debugPrintQueueFamiliesReservations ( std::ostream&, const char * = "" ) const noexcept;
 #endif
     };
 

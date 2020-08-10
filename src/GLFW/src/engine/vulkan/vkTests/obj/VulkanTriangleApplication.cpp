@@ -5,7 +5,7 @@
 #include "VulkanTriangleApplication.h"
 #include <src/GLFW/src/engine/vulkan/vkObj/instance/extension/VExtension.h>
 #include <src/GLFW/src/engine/vulkan/vkUtils/VStdUtils.h>
-#include <vkObj/instance/device/VPhysicalDevice.h>
+//#include <vkObj/instance/device/VPhysicalDevice.h>
 #include <map>
 #include <vkObj/instance/device/queue/VQueueFamily.h>
 
@@ -15,6 +15,43 @@ engine::VulkanTriangleApplication::VulkanTriangleApplication(uint32 width, uint3
     _width(width),
     _height(height){
 
+}
+
+static void queueFamilyTests ( const engine::VQueueFamilyCollection & collection ) noexcept {
+    std::cout << "Available Queue Families : \n";
+    collection.debugPrintQueueFamilies( std::cout, "\t" );
+
+    std::cout << "Graphics Capable Queue Families on Device : \n";
+
+    for ( const auto & queueFamily : collection.getGraphicsCapableQueueFamilies() )
+        queueFamily.debugPrintQueueFamily( std::cout << "\t" );
+
+    collection.debugPrintQueueFamiliesReservations( std::cout );
+
+    for ( const auto & queueFamily : collection.getQueueFamilies() ) {
+        uint32 reservationTarget = 4U;
+        uint32 reservations = queueFamily.reserveQueues(reservationTarget);
+
+        std::cout << "Managed to reserve " << reservations << " out of " << reservationTarget << " requested\n";
+    }
+
+    collection.debugPrintQueueFamiliesReservations( std::cout );
+
+    const auto & selectedQueueFamily = collection.getQueueFamilies()[0];
+
+    uint32 queuesToFree = 2U;
+
+    std::cout << "Attempting to free " << queuesToFree << " queues from family with index " << selectedQueueFamily.getQueueFamilyIndex() << '\n';
+    selectedQueueFamily.freeQueues(queuesToFree);
+
+    for ( const auto & queueFamily : collection.getQueueFamilies()){
+        uint32 reservationTarget = 8U;
+        uint32 reservations = queueFamily.reserveQueues(reservationTarget);
+
+        std::cout << "Managed to reserve " << reservations << " out of " << reservationTarget << " requested\n";
+    }
+
+    collection.debugPrintQueueFamiliesReservations( std::cout );
 }
 
 #pragma clang diagnostic push
@@ -98,13 +135,8 @@ inline void engine::VulkanTriangleApplication::initVulkan() noexcept (false) {
 
     engine::VQueueFamilyCollection queueFamilyCollection( this->_vulkanPhysicalDevice ) ;
 
-    std::cout << "Available Queue Families : \n";
-    queueFamilyCollection.debugPrintQueueFamilies( std::cout, "\t" );
+    queueFamilyTests( queueFamilyCollection );
 
-    std::cout << "Graphics Capable Queue Families on Device : \n";
-
-    for ( const auto & queueFamily : queueFamilyCollection.getGraphicsCapableQueueFamilies() )
-        queueFamily.debugPrintQueueFamily( std::cout << "\t" );
 }
 #pragma clang diagnostic pop
 
