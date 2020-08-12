@@ -9,8 +9,26 @@
 #include <vkDefs/types/vulkanExplicitTypes.h>
 #include <vkObj/instance/device/VPhysicalDevice.h>
 #include <map>
+#include <set>
 
 namespace engine {
+
+    class EngineVQueueFamilyNoQueuesAvailable : public std::exception {
+    private:
+        std::string _message;
+    public:
+        EngineVQueueFamilyNoQueuesAvailable() noexcept {
+            this->_message = "Could not reserve the requested queue count";
+        }
+
+        explicit EngineVQueueFamilyNoQueuesAvailable( uint32 reqQueueCount, uint32 availableQueueCount ) noexcept {
+            this->_message = "Could not reserve the requested queue count. Requested : " + std::to_string(reqQueueCount) + ", Available : " + std::to_string(availableQueueCount);
+        }
+
+        [[nodiscard]] const char * what() const noexcept override {
+            return this->_message.c_str();
+        }
+    };
 
     class VQueueFamilyCollection;
 
@@ -18,10 +36,7 @@ namespace engine {
     private:
         //// private variables
         uint32                                      _familyIndex            {0};
-//        VkQueueFamilyProperties _queueFamilyProperties  { };
-//        std::vector < VulkanQueueFamilyProperties > _vulkanQueueFamilyProperties;
         VulkanQueueFamilyProperties                 _queueFamilyProperties  { };
-//        const VPhysicalDevice                     * _physicalDevice         { nullptr };
         VQueueFamilyCollection                    * _parentCollection       { nullptr };
 
         //// private functions
@@ -48,7 +63,7 @@ namespace engine {
         [[nodiscard]] constexpr static bool queueFamilyPropertiesCompatibleFlagBits( const VulkanQueueFamilyProperties& properties, VulkanQueueFlags flags ) noexcept {
             return (bool) ( ( properties.queueFlags & flags ) == flags );
         }
-        //        void queryAvailableQueueFamilies ( const VPhysicalDevice& ) noexcept;
+
     public:
         //// public variables
         constexpr static VulkanQueueFlags GRAPHICS_FLAG       = VK_QUEUE_GRAPHICS_BIT;
@@ -66,8 +81,11 @@ namespace engine {
             this->_familyIndex = family;
         }
 
-        [[nodiscard]] uint32 reserveQueues(uint32 ) const noexcept;
-        void                 freeQueues(   uint32 ) const noexcept;
+        [[nodiscard]] uint32 reserveQueues          ( uint32 ) const noexcept;
+        void                 freeQueues             ( uint32 ) const noexcept;
+
+        [[nodiscard]] uint32 getAvailableQueueIndex ( )        const noexcept;
+        void                 freeQueueIndex         ( uint32 ) const noexcept;
 
         [[nodiscard]] const VPhysicalDevice & getPhysicalDevice () const noexcept;
 
@@ -121,8 +139,7 @@ namespace engine {
         const VPhysicalDevice         * _physicalDevice { nullptr };
         std::vector < VQueueFamily >    _queueFamilies;
         std::map < uint32, uint32 >     _reservedQueuesForFamilies;
-//        std::vector < VQueueFamily * >  _graphicsCapableQueueFamilies; ptr implementation is the most logical
-
+        std::map < uint32, std::set < uint32 > > _reservedQueueIndicesForFamilies;
         //// private functions
         void unReserveAllQueueFamilies ( ) noexcept (false);
         void queryAvailableQueueFamilies ( ) noexcept (false);
@@ -137,9 +154,10 @@ namespace engine {
             this->unReserveAllQueueFamilies();
         }
 
-//        [[nodiscard]] uint32 reserveQueues( uint32, uint32) noexcept;
         [[nodiscard]] uint32 reserveQueues( const VQueueFamily&, uint32 ) noexcept;
         void                 freeQueues(    const VQueueFamily&, uint32 ) noexcept;
+        uint32               getAvailableQueueIndex ( const VQueueFamily& ) noexcept;
+        void                 freeQueueIndex ( const VQueueFamily& ,uint32 ) noexcept;
 
         [[nodiscard]] const std::map < uint32, uint32 > & getReservedQueueFamiliesMap () const noexcept {
             return this->_reservedQueuesForFamilies;

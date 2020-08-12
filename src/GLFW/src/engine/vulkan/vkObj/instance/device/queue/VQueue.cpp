@@ -4,7 +4,8 @@
 
 #include "VQueue.h"
 
-engine::VQueue::VQueue(const engine::VLogicalDevice & logicalDevice, uint32 index) noexcept
-    : _parentLogicalDevice( & logicalDevice ){
-    vkGetDeviceQueue( logicalDevice.data(), logicalDevice.getQueueFamily()->getQueueFamilyIndex(), index, & this->_queueHandler );
+engine::VQueue::VQueue(const engine::VQueueFamily& family, float priority) noexcept :
+    _parentFamily( & family ),
+    _priority( priority ) {
+//    vkGetDeviceQueue( logicalDevice.data(), logicalDevice.getQueueFamily()->getQueueFamilyIndex(), index, & this->_queueHandler );
 }

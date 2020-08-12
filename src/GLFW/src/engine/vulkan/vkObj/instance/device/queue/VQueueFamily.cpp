@@ -21,8 +21,10 @@ void engine::VQueueFamilyCollection::queryAvailableQueueFamilies( ) noexcept (fa
 }
 
 void engine::VQueueFamilyCollection::unReserveAllQueueFamilies() noexcept(false) {
-    for ( const auto & queueFamily : this->_queueFamilies )
-        this->_reservedQueuesForFamilies.emplace( queueFamily.getQueueFamilyIndex(), 0 );
+    for ( const auto & queueFamily : this->_queueFamilies ) {
+        this->_reservedQueuesForFamilies.emplace(queueFamily.getQueueFamilyIndex(), 0);
+        this->_reservedQueueIndicesForFamilies.emplace(queueFamily.getQueueFamilyIndex(), std::set< uint32 > ());
+    }
 }
 
 #ifndef NDEBUG
@@ -98,6 +100,14 @@ void engine::VQueueFamily::freeQueues(uint32 targetQueueCount) const noexcept {
     return this->_parentCollection->freeQueues( *this, targetQueueCount);
 }
 
+[[nodiscard]] uint32 engine::VQueueFamily::getAvailableQueueIndex() const noexcept {
+    return this->_parentCollection->getAvailableQueueIndex( *this );
+}
+
+void engine::VQueueFamily::freeQueueIndex(uint32 index) const noexcept {
+    return this->_parentCollection->freeQueueIndex( *this, index);
+}
+
 [[nodiscard]] uint32 engine::VQueueFamilyCollection::reserveQueues( const VQueueFamily & queueFamily, uint32 targetQueueCount ) noexcept {
     auto searchResult = this->_reservedQueuesForFamilies.find( queueFamily.getQueueFamilyIndex() );
     uint32 reservedQueues;
@@ -123,6 +133,29 @@ void engine::VQueueFamilyCollection::freeQueues(const VQueueFamily & queueFamily
     } else {
         searchResult->second = ( targetQueueCount > searchResult->second ) ? ( 0U ) : ( searchResult->second - targetQueueCount );
     }
+}
+
+[[nodiscard]] uint32 engine::VQueueFamilyCollection::getAvailableQueueIndex(const VQueueFamily & queueFamily) noexcept {
+    uint32 firstAvailableIndex = 0U;
+
+    auto searchResult = this->_reservedQueueIndicesForFamilies.find( queueFamily.getQueueFamilyIndex() );
+
+    if( searchResult == this->_reservedQueueIndicesForFamilies.end() )
+        this->_reservedQueueIndicesForFamilies.emplace( queueFamily.getQueueFamilyIndex(), std::set < uint32 > {firstAvailableIndex} );
+    else {
+        while ( searchResult->second.find( firstAvailableIndex ) != searchResult->second.end() )
+            firstAvailableIndex++;
+        searchResult->second.insert( firstAvailableIndex );
+    }
+
+    return firstAvailableIndex;
+}
+
+void engine::VQueueFamilyCollection::freeQueueIndex(const VQueueFamily & queueFamily, uint32 index) noexcept {
+    auto searchResult = this->_reservedQueueIndicesForFamilies.find( queueFamily.getQueueFamilyIndex() );
+
+    if ( searchResult != this->_reservedQueueIndicesForFamilies.end() )
+        this->_reservedQueueIndicesForFamilies.extract( searchResult );
 }
 
 #ifndef NDEBUG

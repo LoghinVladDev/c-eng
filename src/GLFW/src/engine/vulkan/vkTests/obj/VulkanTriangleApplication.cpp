@@ -99,7 +99,7 @@ void engine::VulkanTriangleApplication::createSurface() noexcept(false) {
     if( this->_vulkanSurface.setup(this->_window, this->_vulkanInstance) != VK_SUCCESS )
         throw std::runtime_error("failed to create vulkan surface");
 
-    testSurfaceCheckPhysicalDeviceSupport( this->_vulkanSurface, this-> );
+//    testSurfaceCheckPhysicalDeviceSupport( this->_vulkanSurface, this-> );
 }
 
 #pragma clang diagnostic push
@@ -150,12 +150,12 @@ inline void engine::VulkanTriangleApplication::initVulkan() noexcept (false) {
 
     engine::VLogicalDevice::VLogicalDeviceFactory deviceFactory;
 
-    deviceFactory
-        .withQueueCount(1U)
-        .setPriorityForQueue(1.0f, 0U);
+//    deviceFactory
+//        .withQueueCount(1U)
+//        .setPriorityForQueue(1.0f, 0U);
 
-    if ( enableValidationLayers )
-        deviceFactory.withValidationLayers( this->_vulkanValidationLayerCollection );
+//    if ( enableValidationLayers )
+//        deviceFactory.withValidationLayers( this->_vulkanValidationLayerCollection );
 
 //    auto logicalDevice = deviceFactory.build(queueFamilyCollection.getGraphicsCapableQueueFamilies()[0]);
 
@@ -163,11 +163,11 @@ inline void engine::VulkanTriangleApplication::initVulkan() noexcept (false) {
 //    for( const auto & queue : logicalDevice.getQueues() )
 //        std::cout << queue.getQueueHandler() << '\n';
 
-    this->_vulkanLogicalDevice = deviceFactory.build(this->_vulkanQueueFamilyCollection->getGraphicsCapableQueueFamilies()[0]);
+//    this->_vulkanLogicalDevice = deviceFactory.build(this->_vulkanQueueFamilyCollection->getGraphicsCapableQueueFamilies()[0]);
 
-    std::cout << this->_vulkanLogicalDevice->data() << '\n';
-    for( const auto & queue : this->_vulkanLogicalDevice->getQueues() )
-        std::cout << queue.getQueueHandler() << '\n';
+//    std::cout << this->_vulkanLogicalDevice->data() << '\n';
+//    for( const auto & queue : this->_vulkanLogicalDevice->getQueues() )
+//        std::cout << queue.getQueueHandler() << '\n';
 }
 #pragma clang diagnostic pop
 
