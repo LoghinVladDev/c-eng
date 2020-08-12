@@ -25,7 +25,7 @@ static void queueFamilyTests ( const engine::VQueueFamilyCollection & collection
     std::cout << "Graphics Capable Queue Families on Device : \n";
 
     for ( const auto & queueFamily : collection.getGraphicsCapableQueueFamilies() ) {
-        queueFamily.debugPrintQueueFamily(std::cout, "\t");
+        queueFamily->debugPrintQueueFamily(std::cout, "\t");
     }
 
     collection.debugPrintQueueFamiliesReservations( std::cout );
@@ -51,6 +51,11 @@ static void queueFamilyTests ( const engine::VQueueFamilyCollection & collection
         uint32 reservations = queueFamily.reserveQueues(reservationTarget);
 
         std::cout << "Managed to reserve " << reservations << " out of " << reservationTarget << " requested\n";
+    }
+
+    std::cout << "Freeing back all queues :\n";
+    for ( const auto & queueFamily : collection.getQueueFamilies() ) {
+        queueFamily.freeQueues( queueFamily.getQueueCount() );
     }
 
     collection.debugPrintQueueFamiliesReservations( std::cout );
@@ -98,8 +103,6 @@ inline void engine::VulkanTriangleApplication::initWindow() noexcept (false) {
 void engine::VulkanTriangleApplication::createSurface() noexcept(false) {
     if( this->_vulkanSurface.setup(this->_window, this->_vulkanInstance) != VK_SUCCESS )
         throw std::runtime_error("failed to create vulkan surface");
-
-//    testSurfaceCheckPhysicalDeviceSupport( this->_vulkanSurface, this-> );
 }
 
 #pragma clang diagnostic push
@@ -143,31 +146,39 @@ inline void engine::VulkanTriangleApplication::initVulkan() noexcept (false) {
 
     this->_vulkanPhysicalDevice.debugPrintPhysicalDeviceProperties( std::cout, true, "\t");
 
-//    engine::VQueueFamilyCollection queueFamilyCollection( this->_vulkanPhysicalDevice ) ;
     this->_vulkanQueueFamilyCollection = new VQueueFamilyCollection ( this->_vulkanPhysicalDevice );
 
     queueFamilyTests( * this->_vulkanQueueFamilyCollection );
 
+    engine::VLogicalDevice::VLogicalDeviceFactory::enableExceptions();
     engine::VLogicalDevice::VLogicalDeviceFactory deviceFactory;
 
-//    deviceFactory
-//        .withQueueCount(1U)
-//        .setPriorityForQueue(1.0f, 0U);
+    if( enableValidationLayers )
+        deviceFactory.withValidationLayers( this->_vulkanValidationLayerCollection );
 
-//    if ( enableValidationLayers )
-//        deviceFactory.withValidationLayers( this->_vulkanValidationLayerCollection );
+//    this->_graphicsCapableQueueFamily = this->_vulkanQueueFamilyCollection->getGraphicsCapableQueueFamilies();
 
-//    auto logicalDevice = deviceFactory.build(queueFamilyCollection.getGraphicsCapableQueueFamilies()[0]);
+//    this->_vulkanQueueFamilyCollection->getGraphicsCapableQueueFamilies()[0]->getAvailableQueueIndex();
+//    this->_vulkanQueueFamilyCollection->getGraphicsCapableQueueFamilies()[0]->getAvailableQueueIndex();
+//    this->_vulkanQueueFamilyCollection->getGraphicsCapableQueueFamilies()[0]->getAvailableQueueIndex();
 
-//    std::cout << logicalDevice.data() << '\n';
-//    for( const auto & queue : logicalDevice.getQueues() )
-//        std::cout << queue.getQueueHandler() << '\n';
+//    deviceFactory.addQueue( this->_graphicsCapableQueueFamily[0], 1.0f );
+    deviceFactory.addQueue( * this->_vulkanQueueFamilyCollection->getGraphicsCapableQueueFamilies()[0], 1.0f );
+    deviceFactory.addQueue( * this->_vulkanQueueFamilyCollection->getTransferCapableQueueFamilies()[0], 1.0f );
+    deviceFactory.addQueue( * this->_vulkanQueueFamilyCollection->getGraphicsCapableQueueFamilies()[0], 0.9f );
+    deviceFactory.addQueue( this->_vulkanQueueFamilyCollection->getQueueFamilies() [1] , 0.5f );
+    this->_vulkanLogicalDevice = deviceFactory.build( this->_vulkanPhysicalDevice );
+    std::cout << "Logical Device Handle : " << this->_vulkanLogicalDevice.data() << '\n';
 
-//    this->_vulkanLogicalDevice = deviceFactory.build(this->_vulkanQueueFamilyCollection->getGraphicsCapableQueueFamilies()[0]);
 
-//    std::cout << this->_vulkanLogicalDevice->data() << '\n';
-//    for( const auto & queue : this->_vulkanLogicalDevice->getQueues() )
-//        std::cout << queue.getQueueHandler() << '\n';
+    std::cout << "Queues : \n";
+    for(const auto & queue : this->_vulkanLogicalDevice.getQueues()) {
+        std::cout << "\tQueue :\n";
+        std::cout << "\t\tHandler : " << queue.data() << "\n";
+        std::cout << "\t\tFamily index : " << queue.getQueueFamily().getQueueFamilyIndex() << '\n';
+        std::cout << "\t\tIndex in Family : " << queue.getIndex() << '\n';
+        std::cout << "\t\tPriority : " << queue.getPriority() << '\n';
+    }
 }
 #pragma clang diagnostic pop
 
@@ -178,8 +189,10 @@ void engine::VulkanTriangleApplication::mainLoop() noexcept (false) {
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "Simplify"
 void engine::VulkanTriangleApplication::cleanup() noexcept (false) {
+
+    this->_vulkanLogicalDevice.cleanup();
+
     delete this->_vulkanQueueFamilyCollection;
-    delete this->_vulkanLogicalDevice;
 
     if( enableValidationLayers )
         this->_vulkanMessenger.clean();
@@ -193,7 +206,6 @@ void engine::VulkanTriangleApplication::cleanup() noexcept (false) {
 }
 
 void engine::VulkanTriangleApplication::autoPickPhysicalDevice() noexcept(false) {
-//    VPhysicalDevice::debugPrintAvailablePhysicalDevices( this->_vulkanInstance, std::cout );
     auto devices = VPhysicalDevice::getAvailablePhysicalDevices( this->_vulkanInstance );
     const VPhysicalDevice * bestDevice = nullptr;
     uint32 maxDeviceRating = 0U;

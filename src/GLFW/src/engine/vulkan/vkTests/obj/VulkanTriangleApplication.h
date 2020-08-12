@@ -56,7 +56,9 @@ namespace engine {
         VPhysicalDevice             _vulkanPhysicalDevice;
 
         VQueueFamilyCollection    * _vulkanQueueFamilyCollection        {nullptr};
-        VLogicalDevice            * _vulkanLogicalDevice                {nullptr};
+        VLogicalDevice              _vulkanLogicalDevice;
+
+        std::vector <VQueueFamily>  _graphicsCapableQueueFamily;
 
         //// private_functions
         void initWindow() noexcept(false);

@@ -82,12 +82,12 @@ void engine::VQueueFamily::debugPrintQueueFamilyPropertiesStructureQueueFlags(co
 }
 #endif
 
-[[nodiscard]] std::vector < engine::VQueueFamily > engine::VQueueFamilyCollection::getFlagsCapableQueueFamilies(VulkanQueueFlags flags) const noexcept {
-    auto capableQueueFamilies = std::vector < engine::VQueueFamily > ();
+[[nodiscard]] std::vector < const engine::VQueueFamily* > engine::VQueueFamilyCollection::getFlagsCapableQueueFamilies(VulkanQueueFlags flags) const noexcept {
+    auto capableQueueFamilies = std::vector < const engine::VQueueFamily * > ();
 
     for( const auto & queueFamily : this->_queueFamilies )
         if( queueFamily.queueFamilyIsCapableOf( flags ) )
-            capableQueueFamilies.push_back( queueFamily );
+            capableQueueFamilies.push_back( & queueFamily );
 
     return capableQueueFamilies;
 }
@@ -155,7 +155,7 @@ void engine::VQueueFamilyCollection::freeQueueIndex(const VQueueFamily & queueFa
     auto searchResult = this->_reservedQueueIndicesForFamilies.find( queueFamily.getQueueFamilyIndex() );
 
     if ( searchResult != this->_reservedQueueIndicesForFamilies.end() )
-        this->_reservedQueueIndicesForFamilies.extract( searchResult );
+        searchResult->second.extract( index );
 }
 
 #ifndef NDEBUG

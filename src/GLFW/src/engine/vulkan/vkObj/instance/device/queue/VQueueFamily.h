@@ -75,11 +75,18 @@ namespace engine {
         //// public functions
         VQueueFamily() noexcept = default;
         explicit VQueueFamily (VQueueFamilyCollection * parent, const VulkanQueueFamilyProperties & properties, uint32 family) noexcept {
-//            this->_physicalDevice = ( & physicalDevice );
             this->_parentCollection = parent;
             this->_queueFamilyProperties = properties;
             this->_familyIndex = family;
         }
+
+        VQueueFamily(const VQueueFamily& obj) noexcept {
+            this->_parentCollection = obj._parentCollection;
+            this->_queueFamilyProperties = obj._queueFamilyProperties;
+            this->_familyIndex = obj._familyIndex;
+        }
+
+        ~VQueueFamily() noexcept = default;
 
         [[nodiscard]] uint32 reserveQueues          ( uint32 ) const noexcept;
         void                 freeQueues             ( uint32 ) const noexcept;
@@ -171,27 +178,28 @@ namespace engine {
             return this->_queueFamilies;
         }
 
-        [[nodiscard]] std::vector < VQueueFamily > getGraphicsCapableQueueFamilies () const noexcept {
+        /// fix:0002 . Have to return *, otherwise duplicates that will destroy logical devices and queues will appear
+        [[nodiscard]] std::vector < const VQueueFamily* > getGraphicsCapableQueueFamilies () const noexcept {
             return this->getFlagsCapableQueueFamilies( VQueueFamily::GRAPHICS_FLAG );
         }
 
-        [[nodiscard]] std::vector < VQueueFamily > getComputeCapableQueueFamilies () const noexcept {
+        [[nodiscard]] std::vector < const VQueueFamily* > getComputeCapableQueueFamilies () const noexcept {
             return this->getFlagsCapableQueueFamilies( VQueueFamily::COMPUTE_FLAG );
         }
 
-        [[nodiscard]] std::vector < VQueueFamily > getTransferCapableQueueFamilies () const noexcept {
+        [[nodiscard]] std::vector < const VQueueFamily* > getTransferCapableQueueFamilies () const noexcept {
             return this->getFlagsCapableQueueFamilies( VQueueFamily::TRANSFER_FLAG );
         }
 
-        [[nodiscard]] std::vector < VQueueFamily > getProtectedCapableQueueFamilies () const noexcept {
+        [[nodiscard]] std::vector < const VQueueFamily* > getProtectedCapableQueueFamilies () const noexcept {
             return this->getFlagsCapableQueueFamilies( VQueueFamily::PROTECTED_FLAG );
         }
 
-        [[nodiscard]] std::vector < VQueueFamily > getSparseBindingCapableQueueFamilies () const noexcept {
+        [[nodiscard]] std::vector < const VQueueFamily* > getSparseBindingCapableQueueFamilies () const noexcept {
             return this->getFlagsCapableQueueFamilies( VQueueFamily::SPARSE_BINDING_FLAG );
         }
 
-        [[nodiscard]] std::vector < VQueueFamily > getFlagsCapableQueueFamilies ( VulkanQueueFlags ) const noexcept;
+        [[nodiscard]] std::vector < const VQueueFamily* > getFlagsCapableQueueFamilies ( VulkanQueueFlags ) const noexcept;
 
 #ifndef NDEBUG
         void debugPrintQueueFamilies ( std::ostream&, const char* = "" ) const noexcept;

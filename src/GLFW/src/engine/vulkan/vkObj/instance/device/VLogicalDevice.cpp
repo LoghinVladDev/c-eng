@@ -9,14 +9,15 @@
 #include <map>
 
 bool engine::VLogicalDevice::VLogicalDeviceFactory::_exceptionsToggle = false;
+float engine::VLogicalDevice::_internal_explicitWrapper_DEFAULT_QUEUE_PRIORITY = engine::VQueue::DEFAULT_QUEUE_PRIORITY;
 
 static inline void fArrSet( float * ptr, float val, uint64 len ) noexcept {
     for( uint64 it = 0; it < len; it++ )
         ptr[it] = val;
 }
 
-static inline bool queueFamilyComparator ( const engine::VQueueFamily& a, const engine::VQueueFamily& b ) noexcept {
-    return a.getQueueFamilyIndex() < b.getQueueFamilyIndex();
+static inline bool queueFamilyComparator ( const engine::VQueue& a, const engine::VQueue& b ) noexcept {
+    return a.getQueueFamily().getQueueFamilyIndex() < b.getQueueFamily().getQueueFamilyIndex();
 }
 
 static inline void populateQueueCreateInfoStructure (VulkanDeviceQueueCreateInfo * createInfo, uint32 qFamilyIndex, uint32 qCount, const float * qPrioritiesPtr) noexcept {
@@ -103,6 +104,8 @@ engine::VLogicalDevice::VLogicalDeviceFactory & engine::VLogicalDevice::VLogical
         this->_queues.emplace_back( queueFamily, priority );
     else if ( engine::VLogicalDevice::VLogicalDeviceFactory::_exceptionsToggle )
         throw engine::EngineVQueueFamilyNoQueuesAvailable( 1U, reservedQueuesCount );
+
+    return *this;
 }
 
 engine::VLogicalDevice::VLogicalDeviceFactory & engine::VLogicalDevice::VLogicalDeviceFactory::addQueues(const VQueueFamily & queueFamily, uint32 queueCount, const float * priorities) noexcept(false) {
@@ -120,6 +123,8 @@ engine::VLogicalDevice::VLogicalDeviceFactory & engine::VLogicalDevice::VLogical
     for( uint32 i = 0; i < queueCount; i++ ) {
         this->_queues.emplace_back( queueFamily, priorities[i] );
     }
+
+    return *this;
 }
 
 engine::VLogicalDevice engine::VLogicalDevice::VLogicalDeviceFactory::build ( const engine::VPhysicalDevice& physicalDevice ) noexcept (false) {
@@ -134,5 +139,14 @@ engine::VLogicalDevice engine::VLogicalDevice::VLogicalDeviceFactory::build ( co
     if( builtObject.setup( physicalDevice ) != VK_SUCCESS )
         throw std::runtime_error ( "logical device creation failure" );
 
+    builtObject.setupQueues();
+
     return builtObject;
+}
+
+void engine::VLogicalDevice::cleanup() noexcept {
+    for( auto & queue : this->_queues )
+        queue.cleanup();
+
+    vkDestroyDevice( this->_vulkanDevice, nullptr );
 }

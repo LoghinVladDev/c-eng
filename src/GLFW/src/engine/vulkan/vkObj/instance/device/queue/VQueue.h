@@ -19,12 +19,14 @@ namespace engine {
         //// private variables
         constexpr static float  DEFAULT_MIN_QUEUE_PRIORITY  = 0.0f;
         constexpr static float  DEFAULT_MAX_QUEUE_PRIORITY  = 1.0f;
-
+        /// TODO : fix:0002. Make Returns from queueFamily by type to return std::vector < VQueueFamily*> instead of std::vector < VQueueFamily >.
         VulkanQueue             _queueHandler               {};
-        const VQueueFamily    * _parentFamily               {nullptr};
+        const VQueueFamily    * _parentFamily               {nullptr}; // fix:0002 temporary fix for problematic pointer
+//        VQueueFamilyCollection* _parentFamilyCollection     {nullptr};
         const VLogicalDevice  * _parentLogicalDevice        {nullptr};
-        const float             _priority                   {engine::VQueue::DEFAULT_QUEUE_PRIORITY};
+        float                   _priority                   {engine::VQueue::DEFAULT_QUEUE_PRIORITY};
         uint32                  _queueIndex                 {0U};
+//        uint32                  _queueFamilyIndex           {0U}; // fix:0002 temporary fix for problematic pointer issue
         //// private functions
 
     public:
@@ -33,18 +35,10 @@ namespace engine {
 
         //// public functions
 
-//        VQueue() noexcept = delete;
-//        explicit VQueue(const engine::VLogicalDevice &, const engine::VQueueFamily &, uint32, float = engine::VQueue::DEFAULT_QUEUE_PRIORITY) noexcept;
-
         VQueue () noexcept = default;
         explicit VQueue ( const engine::VQueueFamily&, float = engine::VQueue::DEFAULT_QUEUE_PRIORITY ) noexcept;
 
-        void setup ( const VLogicalDevice& logicalDevice, uint32 index ) noexcept {
-            this->_parentLogicalDevice = ( & logicalDevice );
-            this->_queueIndex = index;
-            vkGetDeviceQueue( logicalDevice.data(), this->_parentFamily->getQueueFamilyIndex(), index, & this->_queueHandler );
-        }
-
+        void setup ( const VLogicalDevice&, uint32 ) noexcept;
         [[nodiscard]] float getPriority () const noexcept {
             return this->_priority;
         }
@@ -61,9 +55,15 @@ namespace engine {
             return this->_queueHandler;
         }
 
-        ~VQueue () noexcept {
+        [[nodiscard]] uint32 getIndex () const noexcept {
+            return this->_queueIndex;
+        }
+
+        void cleanup () noexcept {
             this->_parentFamily->freeQueueIndex (this->_queueIndex);
         }
+
+        ~VQueue () noexcept = default;
     };
 
 }
