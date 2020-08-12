@@ -5,6 +5,9 @@
 #ifndef ENG1_VINSTANCEDEFINITIONS_H
 #define ENG1_VINSTANCEDEFINITIONS_H
 
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "bugprone-reserved-identifier"
+
 #define VULKAN_LAYERS_NONE 0
 
 #define __VULKAN_LAYER_NVIDIA_OPTIMUS             "VK_LAYER_NV_optimus"
@@ -34,5 +37,7 @@
 #define __VULKAN_INSTANCE_DEFAULT_TITLE                                   "Vulkan Application"
 
 #define __VULKAN_INSTANCE_APP_INFO_ENGINE_NO_ENGINE                       "No Engine"
+
+#pragma clang diagnostic pop
 
 #endif //ENG1_VINSTANCEDEFINITIONS_H

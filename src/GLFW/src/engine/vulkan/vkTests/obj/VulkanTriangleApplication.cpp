@@ -8,6 +8,7 @@
 //#include <vkObj/instance/device/VPhysicalDevice.h>
 #include <map>
 #include <vkObj/instance/device/queue/VQueueFamily.h>
+#include <vkObj/instance/device/VLogicalDevice.h>
 
 const char* engine::VulkanTriangleApplication::DEFAULT_TITLE = "Vulkan Application";
 
@@ -23,8 +24,9 @@ static void queueFamilyTests ( const engine::VQueueFamilyCollection & collection
 
     std::cout << "Graphics Capable Queue Families on Device : \n";
 
-    for ( const auto & queueFamily : collection.getGraphicsCapableQueueFamilies() )
-        queueFamily.debugPrintQueueFamily( std::cout << "\t" );
+    for ( const auto & queueFamily : collection.getGraphicsCapableQueueFamilies() ) {
+        queueFamily.debugPrintQueueFamily(std::cout, "\t");
+    }
 
     collection.debugPrintQueueFamiliesReservations( std::cout );
 
@@ -93,6 +95,13 @@ inline void engine::VulkanTriangleApplication::initWindow() noexcept (false) {
     );
 }
 
+void engine::VulkanTriangleApplication::createSurface() noexcept(false) {
+    if( this->_vulkanSurface.setup(this->_window, this->_vulkanInstance) != VK_SUCCESS )
+        throw std::runtime_error("failed to create vulkan surface");
+
+    testSurfaceCheckPhysicalDeviceSupport( this->_vulkanSurface, this-> );
+}
+
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "Simplify"
 #pragma ide diagnostic ignored "UnreachableCode"
@@ -127,16 +136,38 @@ inline void engine::VulkanTriangleApplication::initVulkan() noexcept (false) {
 
 
     this->setupDebugMessenger();
+    this->createSurface();
     this->autoPickPhysicalDevice();
 
     std::cout << "Most Suitable GPU : \n";
 
     this->_vulkanPhysicalDevice.debugPrintPhysicalDeviceProperties( std::cout, true, "\t");
 
-    engine::VQueueFamilyCollection queueFamilyCollection( this->_vulkanPhysicalDevice ) ;
+//    engine::VQueueFamilyCollection queueFamilyCollection( this->_vulkanPhysicalDevice ) ;
+    this->_vulkanQueueFamilyCollection = new VQueueFamilyCollection ( this->_vulkanPhysicalDevice );
 
-    queueFamilyTests( queueFamilyCollection );
+    queueFamilyTests( * this->_vulkanQueueFamilyCollection );
 
+    engine::VLogicalDevice::VLogicalDeviceFactory deviceFactory;
+
+    deviceFactory
+        .withQueueCount(1U)
+        .setPriorityForQueue(1.0f, 0U);
+
+    if ( enableValidationLayers )
+        deviceFactory.withValidationLayers( this->_vulkanValidationLayerCollection );
+
+//    auto logicalDevice = deviceFactory.build(queueFamilyCollection.getGraphicsCapableQueueFamilies()[0]);
+
+//    std::cout << logicalDevice.data() << '\n';
+//    for( const auto & queue : logicalDevice.getQueues() )
+//        std::cout << queue.getQueueHandler() << '\n';
+
+    this->_vulkanLogicalDevice = deviceFactory.build(this->_vulkanQueueFamilyCollection->getGraphicsCapableQueueFamilies()[0]);
+
+    std::cout << this->_vulkanLogicalDevice->data() << '\n';
+    for( const auto & queue : this->_vulkanLogicalDevice->getQueues() )
+        std::cout << queue.getQueueHandler() << '\n';
 }
 #pragma clang diagnostic pop
 
@@ -147,9 +178,13 @@ void engine::VulkanTriangleApplication::mainLoop() noexcept (false) {
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "Simplify"
 void engine::VulkanTriangleApplication::cleanup() noexcept (false) {
+    delete this->_vulkanQueueFamilyCollection;
+    delete this->_vulkanLogicalDevice;
+
     if( enableValidationLayers )
         this->_vulkanMessenger.clean();
 
+    this->_vulkanSurface.clean();
     this->_vulkanInstance.clean();
 
     glfwDestroyWindow(this->_window);

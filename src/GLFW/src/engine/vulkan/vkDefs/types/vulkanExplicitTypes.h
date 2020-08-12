@@ -7,6 +7,8 @@
 
 #include <engineVulkanPreproc.h>
 
+typedef VkSurfaceKHR                                VulkanSurfaceKhronos;
+
 typedef VkFlags                                     VulkanFlags;
 typedef VkQueueFlags                                VulkanQueueFlags;
 
@@ -36,6 +38,7 @@ typedef VkExtensionProperties                       VulkanExtensionProperties;
 
 typedef VkLayerProperties                           VulkanLayerProperties;
 
+
 typedef const int8 *                                GLFWExtensionLiteral;
 typedef const int8 **                               GLFWExtensionLiteralArray;
 
@@ -54,5 +57,15 @@ typedef VkDebugUtilsMessengerCallbackDataEXT        VulkanDebugMessengerCallback
 typedef VkDebugUtilsMessengerCallbackDataFlagsEXT   VulkanDebugMessengerCallbackDataFlags;
 
 typedef VkFlags                                     VulkanFlags;
+
+#if defined(ENGINE_OS_WINDOWS_32_64)
+
+typedef VkWin32SurfaceCreateInfoKHR                 VulkanSurfaceCreateInfoKhronos;
+
+extern VulkanResult (* vkCreateSurfaceKhronos) (VulkanInstance, const VulkanSurfaceCreateInfoKhronos *, const VkAllocationCallbacks *, VulkanSurfaceKhronos *);
+
+#elif defined(ENGINE_OS_LINUX)
+#elif defined(ENGINE_OS_MAC_OS_X)
+#endif
 
 #endif //ENG1_VULKANEXPLICITTYPES_H

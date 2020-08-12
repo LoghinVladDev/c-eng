@@ -146,3 +146,7 @@ void engine::VQueueFamilyCollection::debugPrintQueueFamiliesReservations(std::os
 }
 
 #endif
+
+const engine::VPhysicalDevice & engine::VQueueFamily::getPhysicalDevice() const noexcept {
+    return this->_parentCollection->getPhysicalDevice();
+}

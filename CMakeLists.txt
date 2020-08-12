@@ -88,7 +88,7 @@ if(Vulkan_FOUND)
             src/GLFW/src/engine/vulkan/vkObj/instance/device/VLogicalDevice.h
             src/GLFW/src/engine/vulkan/vkObj/instance/device/queue/VQueue.cpp
             src/GLFW/src/engine/vulkan/vkObj/instance/device/queue/VQueue.h
-    )
+            src/GLFW/src/engine/vulkan/vkObj/window/surface/VSurface.cpp src/GLFW/src/engine/vulkan/vkObj/window/surface/VSurface.h src/GLFW/src/engine/vulkan/vkDefs/types/vkPlatformDefs.cpp)
 
 
     target_link_libraries( vkTriangle Vulkan::Vulkan )
@@ -502,7 +502,7 @@ add_executable( animateTest
         src/obj/engine/util/dataStructures/Array.cpp
         src/obj/engine/util/dataStructures/Array.h
         src/obj/engine/preCompiledHeaders.h
-        src/GLFW/src/engine/enginePreproc.h src/GLFW/src/engine/obj/util/func/KeyFunctions.cpp src/GLFW/src/engine/obj/util/func/KeyFunctions.h src/GLFW/src/engine/vulkan/vkTests/obj/VulkanTriangleApplication.cpp src/GLFW/src/engine/vulkan/vkTests/obj/VulkanTriangleApplication.h src/GLFW/src/engine/vulkan/vkObj/instance/device/VPhysicalDevice.cpp src/GLFW/src/engine/vulkan/vkObj/instance/device/VPhysicalDevice.h src/GLFW/src/engine/vulkan/vkDefs/VInstanceDefinitions.h)
+        src/GLFW/src/engine/enginePreproc.h src/GLFW/src/engine/obj/util/func/KeyFunctions.cpp src/GLFW/src/engine/obj/util/func/KeyFunctions.h src/GLFW/src/engine/vulkan/vkTests/obj/VulkanTriangleApplication.cpp src/GLFW/src/engine/vulkan/vkTests/obj/VulkanTriangleApplication.h src/GLFW/src/engine/vulkan/vkObj/instance/device/VPhysicalDevice.cpp src/GLFW/src/engine/vulkan/vkObj/instance/device/VPhysicalDevice.h src/GLFW/src/engine/vulkan/vkDefs/VInstanceDefinitions.h src/GLFW/src/engine/vulkan/vkDefs/vkPlatformDefs.h)
 
 target_link_libraries(animateTest -lOpenGL32 -lfreeGLUT -lglu32)
 

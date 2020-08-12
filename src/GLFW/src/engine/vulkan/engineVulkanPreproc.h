@@ -5,8 +5,11 @@
 #ifndef ENG1_ENGINEVULKANPREPROC_H
 #define ENG1_ENGINEVULKANPREPROC_H
 
+#include <vkDefs/vkPlatformDefs.h>
+
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
+#include <GLFW/glfw3native.h>
 
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE

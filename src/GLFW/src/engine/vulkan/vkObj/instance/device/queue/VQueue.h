@@ -11,27 +11,31 @@
 
 namespace engine {
 
+    class VLogicalDevice;
+
     class VQueue {
     private:
         //// private variables
-        VulkanQueue         _queueHandler           {};
-        VLogicalDevice *    _parentLogicalDevice    {nullptr};
+        VulkanQueue             _queueHandler           {};
+        const VLogicalDevice *  _parentLogicalDevice    {nullptr};
 
         //// private functions
 
     public:
         //// public variables
 
-        VQueue() noexcept = delete;
-        explicit VQueue(const VLogicalDevice& logicalDevice, uint32 index) noexcept {
-            vkGetDeviceQueue( logicalDevice.data(), logicalDevice.getQueueFamilyIndex(), index, & this->_queueHandler );
-        }
         //// public functions
 
-        //// TODO : destroy individual queues upon destruction
-//        ~VQueue() noexcept {
-//
-//        }
+        VQueue() noexcept = delete;
+        explicit VQueue(const engine::VLogicalDevice & logicalDevice, uint32 index) noexcept;
+
+        [[nodiscard]] const VLogicalDevice & getLogicalDevice () const noexcept {
+            return *this->_parentLogicalDevice;
+        }
+
+        [[nodiscard]] const VulkanQueue & getQueueHandler () const noexcept {
+            return this->_queueHandler;
+        }
 
     };
 

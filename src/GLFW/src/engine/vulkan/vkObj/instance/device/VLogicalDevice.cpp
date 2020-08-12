@@ -23,6 +23,7 @@ static inline void populateDeviceCreateInfoStructure (VulkanDeviceCreateInfo * c
         return;
 
     *createInfo = {};
+    createInfo->sType                       = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
     createInfo->pQueueCreateInfos           = & queueCreateInfoPtr;
     createInfo->queueCreateInfoCount        = queueCreateInfoCount;
     createInfo->pEnabledFeatures            = & physicalDeviceFeatures;
@@ -34,7 +35,7 @@ VulkanResult engine::VLogicalDevice::setup( const engine::VPhysicalDevice& physi
     VulkanDeviceCreateInfo      deviceCreateInfo    {};
     std::vector < VValidationLayer::VulkanValidationLayerLiteral > layerLiterals;
 
-    populateQueueCreateInfoStructure( & queueCreateInfo, this->_queueFamilyIndex, this->_queueCount, this->_queuePriorities );
+    populateQueueCreateInfoStructure( & queueCreateInfo, this->_queueFamily->getQueueFamilyIndex(), this->_queueCount, this->_queuePriorities );
     populateDeviceCreateInfoStructure( & deviceCreateInfo, physicalDevice.getPhysicalDeviceFeatures(), queueCreateInfo );
 
 
@@ -47,4 +48,10 @@ VulkanResult engine::VLogicalDevice::setup( const engine::VPhysicalDevice& physi
     }
 
     return vkCreateDevice ( physicalDevice.data(), & deviceCreateInfo, nullptr, & this->_vulkanDevice );
+}
+
+void engine::VLogicalDevice::setupQueues() noexcept {
+    for( uint32 it = 0; it < this->_queueCount; it ++ ) {
+        this->_queues.emplace_back( *this, it );
+    }
 }

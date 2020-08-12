@@ -69,6 +69,8 @@ namespace engine {
         [[nodiscard]] uint32 reserveQueues(uint32 ) const noexcept;
         void                 freeQueues(   uint32 ) const noexcept;
 
+        [[nodiscard]] const VPhysicalDevice & getPhysicalDevice () const noexcept;
+
         [[nodiscard]] uint32 getQueueFamilyIndex ( ) const noexcept {
             return this->_familyIndex;
         }
