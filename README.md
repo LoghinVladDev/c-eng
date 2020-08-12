@@ -1,7 +1,7 @@
 ### Introduction
 
 Game Engine Project. Started as a port from a small Java 2D game engine, turned into a 
-3D engine in C++ OpenGL
+3D engine in C++ OpenGL/Vulkan
 
 ### Compilation
 
