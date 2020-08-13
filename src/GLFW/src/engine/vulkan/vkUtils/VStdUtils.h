@@ -7,6 +7,7 @@
 #include <engineVulkanPreproc.h>
 #include <vkDefs/types/vulkanExplicitTypes.h>
 #include <string>
+#include <vector>
 
 namespace engine {
 
@@ -28,6 +29,8 @@ namespace engine {
         constexpr static const char * constexprBoolAlpha ( bool value ) noexcept {
             return value ? "true" : "false";
         }
+
+        static std::vector < GLFWExtensionLiteral > getGLFWRequiredExtensions (bool = false) noexcept;
     };
 
 }

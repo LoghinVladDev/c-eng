@@ -21,7 +21,7 @@ namespace engine {
 
     public:
         //// public variables
-        static const char* DEFAULT_VULKAN_INSTANCE_TITLE;
+        [[maybe_unused]] static const char* DEFAULT_VULKAN_INSTANCE_TITLE;
 
         //// public functions
         VInstance() noexcept = default;

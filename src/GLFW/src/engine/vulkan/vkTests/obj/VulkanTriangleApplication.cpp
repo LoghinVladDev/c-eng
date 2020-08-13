@@ -59,6 +59,7 @@ static void queueFamilyTests ( const engine::VQueueFamilyCollection & collection
     }
 
     collection.debugPrintQueueFamiliesReservations( std::cout );
+
 }
 
 #pragma clang diagnostic push
@@ -105,13 +106,36 @@ void engine::VulkanTriangleApplication::createSurface() noexcept(false) {
         throw std::runtime_error("failed to create vulkan surface");
 }
 
+static inline std::vector < const engine::VQueueFamily* > internalGatherGraphicsAndPresentQueueFamilies( const engine::VQueueFamilyCollection& collection ) noexcept {
+
+//    for( const auto & queueFamily : collection.getQueueFamilies() )
+//        std::cout << "FIndex : " << queueFamily.getQueueFamilyIndex() << ", present : " << queueFamily.isPresentCapable() << '\n';
+
+    auto queueFamilies = collection.getFlagsCapableQueueFamilies( engine::VQueueFamily::GRAPHICS_FLAG | engine::VQueueFamily::PRESENT_FLAG );
+
+//    std::cout << "Found " << queueFamilies.size() << " graphics and present capable queue families";
+
+    if( queueFamilies.empty() ) {
+
+        queueFamilies.push_back( collection.getGraphicsCapableQueueFamilies()[0] );
+        queueFamilies.push_back( collection.getPresentCapableQueueFamilies()[0] );
+    }
+
+    return queueFamilies;
+}
+
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "Simplify"
 #pragma ide diagnostic ignored "UnreachableCode"
 inline void engine::VulkanTriangleApplication::initVulkan() noexcept (false) {
-    if( VulkanTriangleApplication::VULKAN_EXT_CHECK ) {
-        VExtension::printExtensions(std::cout);
-    }
+//    if( VulkanTriangleApplication::VULKAN_EXT_CHECK ) {
+//        VExtension::printExtensions(std::cout);
+//    }
+
+    VExtensionCollection availableExtensions = VExtensionCollection::getAllAvailableExtensions();
+
+    if( VulkanTriangleApplication::VULKAN_EXT_CHECK )
+        availableExtensions.debugPrint(std::cout );
 
     if( enableValidationLayers ) {
         VValidationLayer::debugPrintAvailableValidationLayers(std::cout);
@@ -146,7 +170,7 @@ inline void engine::VulkanTriangleApplication::initVulkan() noexcept (false) {
 
     this->_vulkanPhysicalDevice.debugPrintPhysicalDeviceProperties( std::cout, true, "\t");
 
-    this->_vulkanQueueFamilyCollection = new VQueueFamilyCollection ( this->_vulkanPhysicalDevice );
+    this->_vulkanQueueFamilyCollection = new VQueueFamilyCollection ( this->_vulkanPhysicalDevice, &this->_vulkanSurface );
 
     queueFamilyTests( * this->_vulkanQueueFamilyCollection );
 
@@ -156,21 +180,19 @@ inline void engine::VulkanTriangleApplication::initVulkan() noexcept (false) {
     if( enableValidationLayers )
         deviceFactory.withValidationLayers( this->_vulkanValidationLayerCollection );
 
-//    this->_graphicsCapableQueueFamily = this->_vulkanQueueFamilyCollection->getGraphicsCapableQueueFamilies();
+    auto queues = internalGatherGraphicsAndPresentQueueFamilies ( * this->_vulkanQueueFamilyCollection );
 
-//    this->_vulkanQueueFamilyCollection->getGraphicsCapableQueueFamilies()[0]->getAvailableQueueIndex();
-//    this->_vulkanQueueFamilyCollection->getGraphicsCapableQueueFamilies()[0]->getAvailableQueueIndex();
-//    this->_vulkanQueueFamilyCollection->getGraphicsCapableQueueFamilies()[0]->getAvailableQueueIndex();
-
-//    deviceFactory.addQueue( this->_graphicsCapableQueueFamily[0], 1.0f );
-    deviceFactory.addQueue( * this->_vulkanQueueFamilyCollection->getGraphicsCapableQueueFamilies()[0], 1.0f );
-    deviceFactory.addQueue( * this->_vulkanQueueFamilyCollection->getTransferCapableQueueFamilies()[0], 1.0f );
-    deviceFactory.addQueue( * this->_vulkanQueueFamilyCollection->getGraphicsCapableQueueFamilies()[0], 0.9f );
-    deviceFactory.addQueue( this->_vulkanQueueFamilyCollection->getQueueFamilies() [1] , 0.5f );
+    if( queues.size() == 1 ) // graphics & present queues in same family
+        deviceFactory.addQueue( * queues[0], 1.0f );
+    else {
+        deviceFactory.addQueue( * queues[0], 1.0f );
+        deviceFactory.addQueue( * queues[1], 1.0f );
+    }
+//
     this->_vulkanLogicalDevice = deviceFactory.build( this->_vulkanPhysicalDevice );
     std::cout << "Logical Device Handle : " << this->_vulkanLogicalDevice.data() << '\n';
-
-
+//
+//
     std::cout << "Queues : \n";
     for(const auto & queue : this->_vulkanLogicalDevice.getQueues()) {
         std::cout << "\tQueue :\n";
@@ -179,6 +201,7 @@ inline void engine::VulkanTriangleApplication::initVulkan() noexcept (false) {
         std::cout << "\t\tIndex in Family : " << queue.getIndex() << '\n';
         std::cout << "\t\tPriority : " << queue.getPriority() << '\n';
     }
+
 }
 #pragma clang diagnostic pop
 
