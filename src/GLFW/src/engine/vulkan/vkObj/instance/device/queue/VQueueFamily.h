@@ -10,6 +10,7 @@
 #include <vkObj/instance/device/VPhysicalDevice.h>
 #include <map>
 #include <set>
+#include <src/GLFW/src/engine/vulkan/vkObj/window/surface/VSurface.h>
 
 namespace engine {
 
@@ -38,6 +39,7 @@ namespace engine {
         uint32                                      _familyIndex            {0};
         VulkanQueueFamilyProperties                 _queueFamilyProperties  { };
         VQueueFamilyCollection                    * _parentCollection       { nullptr };
+        VulkanBool32                                _presentSupport         { false };
 
         //// private functions
         [[nodiscard]] constexpr static bool queueFamilyPropertiesTransferBit( const VulkanQueueFamilyProperties& properties ) noexcept {
@@ -69,8 +71,16 @@ namespace engine {
         constexpr static VulkanQueueFlags GRAPHICS_FLAG       = VK_QUEUE_GRAPHICS_BIT;
         constexpr static VulkanQueueFlags COMPUTE_FLAG        = VK_QUEUE_COMPUTE_BIT;
         constexpr static VulkanQueueFlags TRANSFER_FLAG       = VK_QUEUE_TRANSFER_BIT;
-        constexpr static VulkanQueueFlags PROTECTED_FLAG      = VK_QUEUE_PROTECTED_BIT;
         constexpr static VulkanQueueFlags SPARSE_BINDING_FLAG = VK_QUEUE_SPARSE_BINDING_BIT;
+        constexpr static VulkanQueueFlags PROTECTED_FLAG      = VK_QUEUE_PROTECTED_BIT;
+        constexpr static VulkanQueueFlags PRESENT_FLAG        = VkQueueFlagBits::VK_QUEUE_PROTECTED_BIT * 2;
+
+        constexpr static VulkanQueueFlags STANDARD_QUEUE_PROPERTIES_MASK =
+                VQueueFamily::GRAPHICS_FLAG         |
+                VQueueFamily::COMPUTE_FLAG          |
+                VQueueFamily::TRANSFER_FLAG         |
+                VQueueFamily::PROTECTED_FLAG        |
+                VQueueFamily::SPARSE_BINDING_FLAG;
 
         //// public functions
         VQueueFamily() noexcept = default;
@@ -84,6 +94,7 @@ namespace engine {
             this->_parentCollection = obj._parentCollection;
             this->_queueFamilyProperties = obj._queueFamilyProperties;
             this->_familyIndex = obj._familyIndex;
+            this->_presentSupport = obj._presentSupport;
         }
 
         ~VQueueFamily() noexcept = default;
@@ -108,29 +119,35 @@ namespace engine {
             return this->_queueFamilyProperties;
         }
 
-        [[maybe_unused]] [[nodiscard]] constexpr bool queueFamilyTransferCapable() const noexcept {
+        [[maybe_unused]] [[nodiscard]] constexpr bool isTransferCapable() const noexcept {
             return VQueueFamily::queueFamilyPropertiesTransferBit(this->_queueFamilyProperties);
         }
 
-        [[maybe_unused]] [[nodiscard]] constexpr bool queueFamilyGraphicsCapable() const noexcept {
+        [[maybe_unused]] [[nodiscard]] constexpr bool isGraphicsCapable() const noexcept {
             return VQueueFamily::queueFamilyPropertiesGraphicsBit(this->_queueFamilyProperties);
         }
 
-        [[maybe_unused]] [[nodiscard]] constexpr bool queueFamilyComputeCapable() const noexcept {
+        [[maybe_unused]] [[nodiscard]] constexpr bool isComputeCapable() const noexcept {
             return VQueueFamily::queueFamilyPropertiesComputeBit(this->_queueFamilyProperties);
         }
 
-        [[maybe_unused]] [[nodiscard]] constexpr bool queueFamilyProtectedCapable() const noexcept {
+        [[maybe_unused]] [[nodiscard]] constexpr bool isProtectedCapable() const noexcept {
             return VQueueFamily::queueFamilyPropertiesProtectedBit(this->_queueFamilyProperties);
         }
 
-        [[maybe_unused]] [[nodiscard]] constexpr bool queueFamilySparseBindingCapable() const noexcept {
+        [[maybe_unused]] [[nodiscard]] constexpr bool isSparseBindingCapable() const noexcept {
             return VQueueFamily::queueFamilyPropertiesSparseBindingBit(this->_queueFamilyProperties);
         }
 
-        [[nodiscard]] constexpr bool queueFamilyIsCapableOf ( VulkanQueueFlags flags ) const noexcept {
+        [[maybe_unused]] [[nodiscard]] constexpr bool isPresentCapable () const noexcept {
+            return ( (bool) this->_presentSupport );
+        }
+
+        [[nodiscard]] constexpr bool isCapableOfPropertiesFlags ( VulkanQueueFlags flags ) const noexcept {
             return VQueueFamily::queueFamilyPropertiesCompatibleFlagBits( this->_queueFamilyProperties, flags );
         }
+
+        void syncWithSurface ( const VSurface& ) noexcept;
 
 #ifndef NDEBUG
         void debugPrintQueueFamily ( std::ostream&, const char * = "" ) const noexcept;
@@ -155,10 +172,12 @@ namespace engine {
 
         //// public functions
         VQueueFamilyCollection () noexcept = delete;
-        explicit VQueueFamilyCollection ( const VPhysicalDevice & physicalDevice ) noexcept (false) {
+        explicit VQueueFamilyCollection ( const VPhysicalDevice & physicalDevice , const VSurface * surfaceToSync = nullptr ) noexcept (false) {
             this->_physicalDevice = (& physicalDevice);
             this->queryAvailableQueueFamilies();
             this->unReserveAllQueueFamilies();
+            if ( surfaceToSync != nullptr )
+                this->syncWithSurface( * surfaceToSync );
         }
 
         [[nodiscard]] uint32 reserveQueues( const VQueueFamily&, uint32 ) noexcept;
@@ -199,7 +218,16 @@ namespace engine {
             return this->getFlagsCapableQueueFamilies( VQueueFamily::SPARSE_BINDING_FLAG );
         }
 
+        [[nodiscard]] std::vector < const VQueueFamily* > getPresentCapableQueueFamilies () const noexcept {
+            return this->getFlagsCapableQueueFamilies( VQueueFamily::PRESENT_FLAG );
+        }
+
         [[nodiscard]] std::vector < const VQueueFamily* > getFlagsCapableQueueFamilies ( VulkanQueueFlags ) const noexcept;
+
+        void syncWithSurface ( const VSurface& surface ) noexcept {
+            for ( auto & queueFamily : this->_queueFamilies )
+                queueFamily.syncWithSurface( surface );
+        }
 
 #ifndef NDEBUG
         void debugPrintQueueFamilies ( std::ostream&, const char* = "" ) const noexcept;

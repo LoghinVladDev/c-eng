@@ -30,7 +30,12 @@ namespace engine {
 
         VulkanResult setup ( GLFWwindow*, const VInstance& ) noexcept;
 
+        [[nodiscard]] const VulkanSurfaceKhronos & data() const noexcept {
+            return this->_surface;
+        }
+
         void clean () noexcept;
+
     };
 
 }

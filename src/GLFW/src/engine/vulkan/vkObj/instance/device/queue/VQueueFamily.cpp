@@ -85,9 +85,19 @@ void engine::VQueueFamily::debugPrintQueueFamilyPropertiesStructureQueueFlags(co
 [[nodiscard]] std::vector < const engine::VQueueFamily* > engine::VQueueFamilyCollection::getFlagsCapableQueueFamilies(VulkanQueueFlags flags) const noexcept {
     auto capableQueueFamilies = std::vector < const engine::VQueueFamily * > ();
 
+    bool checkForPresentQueues = (bool) ( flags & engine::VQueueFamily::PRESENT_FLAG );
+    flags &= engine::VQueueFamily::STANDARD_QUEUE_PROPERTIES_MASK;
+
     for( const auto & queueFamily : this->_queueFamilies )
-        if( queueFamily.queueFamilyIsCapableOf( flags ) )
-            capableQueueFamilies.push_back( & queueFamily );
+        if( queueFamily.isCapableOfPropertiesFlags( flags ) ) {
+            if (!checkForPresentQueues)
+                capableQueueFamilies.push_back(&queueFamily);
+            else {
+                std::cout << queueFamily.getQueueFamilyIndex() << ", present cap : " << queueFamily.isPresentCapable() << '\n';
+                if ( queueFamily.isPresentCapable() )
+                    capableQueueFamilies.push_back(&queueFamily);
+            }
+        }
 
     return capableQueueFamilies;
 }
@@ -182,4 +192,8 @@ void engine::VQueueFamilyCollection::debugPrintQueueFamiliesReservations(std::os
 
 const engine::VPhysicalDevice & engine::VQueueFamily::getPhysicalDevice() const noexcept {
     return this->_parentCollection->getPhysicalDevice();
+}
+
+void engine::VQueueFamily::syncWithSurface(const engine::VSurface & surface) noexcept {
+    vkGetPhysicalDeviceSurfaceSupportKHR( this->_parentCollection->getPhysicalDevice().data(), this->getQueueFamilyIndex(), surface.data(), & this->_presentSupport );
 }
