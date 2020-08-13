@@ -128,9 +128,14 @@ static inline std::vector < const engine::VQueueFamily* > internalGatherGraphics
 #pragma ide diagnostic ignored "Simplify"
 #pragma ide diagnostic ignored "UnreachableCode"
 inline void engine::VulkanTriangleApplication::initVulkan() noexcept (false) {
-    if( VulkanTriangleApplication::VULKAN_EXT_CHECK ) {
-        VExtension::printExtensions(std::cout);
-    }
+//    if( VulkanTriangleApplication::VULKAN_EXT_CHECK ) {
+//        VExtension::printExtensions(std::cout);
+//    }
+
+    VExtensionCollection availableExtensions = VExtensionCollection::getAllAvailableExtensions();
+
+    if( VulkanTriangleApplication::VULKAN_EXT_CHECK )
+        availableExtensions.debugPrint(std::cout );
 
     if( enableValidationLayers ) {
         VValidationLayer::debugPrintAvailableValidationLayers(std::cout);

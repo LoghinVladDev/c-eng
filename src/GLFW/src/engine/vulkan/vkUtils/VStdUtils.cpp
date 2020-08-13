@@ -63,3 +63,16 @@ std::string engine::VStandardUtils::to_string(VulkanPhysicalDeviceType deviceTyp
         default :                                                   return std::string(__VK_PHYSICAL_DEVICE_UNKNOWN);
     }
 }
+
+std::vector< GLFWExtensionLiteral > engine::VStandardUtils::getGLFWRequiredExtensions(bool enableValidationLayers) noexcept {
+    uint32                      glfwExtensionsCount = 0U;
+    GLFWExtensionLiteralArray   glfwExtensions;
+
+    glfwExtensions = glfwGetRequiredInstanceExtensions( & glfwExtensionsCount );
+    std::vector < GLFWExtensionLiteral > extensions ( glfwExtensions, glfwExtensions + glfwExtensionsCount );
+
+    if( enableValidationLayers )
+        extensions.push_back( VK_EXT_DEBUG_UTILS_EXTENSION_NAME );
+
+    return extensions;
+}

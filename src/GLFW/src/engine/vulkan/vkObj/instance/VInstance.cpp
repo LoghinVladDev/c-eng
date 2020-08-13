@@ -3,10 +3,10 @@
 //
 
 #include "VInstance.h"
-#include <vkObj/instance/extension/VExtension.h>
 #include <vkDefs/VInstanceDefinitions.h>
+#include <vkUtils/VStdUtils.h>
 
-const char* engine::VInstance::DEFAULT_VULKAN_INSTANCE_TITLE = __VULKAN_INSTANCE_DEFAULT_TITLE;
+[[maybe_unused]] const char* engine::VInstance::DEFAULT_VULKAN_INSTANCE_TITLE = __VULKAN_INSTANCE_DEFAULT_TITLE;
 
 extern void populateDebugMessengerCreateInfo ( VulkanDebugMessengerCreateInfo * ) noexcept;
 
@@ -17,7 +17,7 @@ static void populateApplicationInfoStructure( VulkanApplicationInfo * applicatio
     *applicationInfo = {};
 
     applicationInfo->sType              = VK_STRUCTURE_TYPE_APPLICATION_INFO;
-//    applicationInfo->pApplicationName   = engine::VInstance::DEFAULT_VULKAN_INSTANCE_TITLE;
+    applicationInfo->pApplicationName   = engine::VInstance::DEFAULT_VULKAN_INSTANCE_TITLE;
     applicationInfo->applicationVersion = VK_MAKE_VERSION(1U, 0U, 0U);  // NOLINT(hicpp-signed-bitwise)
     applicationInfo->pEngineName        = __VULKAN_INSTANCE_APP_INFO_ENGINE_NO_ENGINE;
     applicationInfo->engineVersion      = VK_MAKE_VERSION(1U, 0U, 0U);  // NOLINT(hicpp-signed-bitwise)
@@ -28,7 +28,7 @@ static void populateApplicationInfoStructure( VulkanApplicationInfo * applicatio
 VulkanResult engine::VInstance::setup() noexcept {
     VulkanApplicationInfo       applicationInfo {};
     VulkanInstanceCreateInfo    createInfo      {};
-    auto                        extensions      = VExtension::getGLFWRequiredExtensions(false);
+    auto                        extensions      = VStandardUtils::getGLFWRequiredExtensions(false);
 
     populateApplicationInfoStructure( & applicationInfo );
 
@@ -49,7 +49,7 @@ VulkanResult engine::VInstance::setup(const VValidationLayerCollection & layerCo
     VulkanInstanceCreateInfo        createInfo      {};
     VulkanDebugMessengerCreateInfo  debugCreateInfo {};
 
-    auto                        extensions                          = VExtension::getGLFWRequiredExtensions(true);
+    auto                        extensions                          = VStandardUtils::getGLFWRequiredExtensions(true);
     static auto                 _persistent_validationLayerLiterals = layerCollection.getValidationLayerLiterals();
 
     populateApplicationInfoStructure( & applicationInfo );

@@ -93,7 +93,7 @@ void engine::VQueueFamily::debugPrintQueueFamilyPropertiesStructureQueueFlags(co
             if (!checkForPresentQueues)
                 capableQueueFamilies.push_back(&queueFamily);
             else {
-                std::cout << queueFamily.getQueueFamilyIndex() << ", present cap : " << queueFamily.isPresentCapable() << '\n';
+//                std::cout << queueFamily.getQueueFamilyIndex() << ", present cap : " << queueFamily.isPresentCapable() << '\n';
                 if ( queueFamily.isPresentCapable() )
                     capableQueueFamilies.push_back(&queueFamily);
             }
