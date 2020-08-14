@@ -2,6 +2,7 @@
 // Created by vladl on 06/08/2020.
 //
 
+
 #ifndef ENG1_VEXTENSION_H
 #define ENG1_VEXTENSION_H
 #include <engineVulkanPreproc.h>
@@ -10,8 +11,18 @@
 #include <algorithm>
 #include <vector>
 #include <cstring>
+#include <src/GLFW/src/engine/vulkan/vkObj/instance/device/VPhysicalDevice.h>
 
 namespace engine {
+
+    class EngineVExtensionUnknownType : public std::exception {
+    public:
+        [[nodiscard]] const char * what() const noexcept override {
+            return "Unknown Extension Type given";
+        } 
+    };
+
+    class VPhysicalDevice;
 
     class VExtension {
     private:
@@ -21,6 +32,10 @@ namespace engine {
         //// private functions
 
     public:
+        typedef enum : uint8 {
+            KHRONOS_SWAPCHAIN
+        } VExtensionType;
+
         //// public variables
         VExtension ( ) noexcept = default;
 
@@ -28,9 +43,11 @@ namespace engine {
             this->_extensionProperties = properties;
         }
 
-        explicit VExtension ( const char* literal ) noexcept {
-            std::strncpy( this->_extensionProperties.extensionName, literal, 0x100 );
-        }
+        // explicit VExtension ( const char* literal ) noexcept {
+        //     std::strncpy( this->_extensionProperties.extensionName, literal, 0x100 );
+        // }
+
+        explicit VExtension ( VExtensionType ) noexcept (false);
 
         //// public functions
 
@@ -71,6 +88,9 @@ namespace engine {
             return this->_extensions;
         }
 
+        [[nodiscard]] std::vector < VulkanExtensionProperties > getExtensionsProperties () const noexcept;
+        [[nodiscard]] std::vector < const char * > getExtensionNames() const noexcept;
+
         [[nodiscard]] bool contains ( const VExtension& obj ) const noexcept {
 
 //            return std::ranges::any_of (); windows is always behind
@@ -96,31 +116,13 @@ namespace engine {
             }
         }
 
-        static VExtensionCollection getAllAvailableExtensions () noexcept;
+        [[nodiscard]] static VExtensionCollection getAllAvailableExtensions () noexcept;
+        [[nodiscard]] static VExtensionCollection getPhysicalDeviceAvailableExtensions ( const VPhysicalDevice & ) noexcept;
 
 #ifndef NDEBUG
         void debugPrint ( std::ostream&, const char * = "" ) const noexcept;
 #endif
     };
-
-//
-//    class VExtension {
-//    private:
-//        //// private variables
-//        static bool                                        _extensionsQueried;
-//        static std::vector < VulkanExtensionProperties >   _extensions;
-//
-//        //// private functions
-//
-//    public:
-//        //// public variables
-//
-//        //// public functions
-//        static void queryExtensions() noexcept;
-//        static void printExtensions(std::ostream&) noexcept;
-//        static const std::vector < VulkanExtensionProperties > & getAvailableExtensions() noexcept;
-//        static std::vector < GLFWExtensionLiteral > getGLFWRequiredExtensions(bool = false) noexcept;
-//    };
 
 }
 

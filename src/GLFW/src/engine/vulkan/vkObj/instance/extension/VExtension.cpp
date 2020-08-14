@@ -3,22 +3,15 @@
 //
 
 #include "VExtension.h"
-//
-//bool engine::VExtension::_extensionsQueried = false;
-//std::vector < VulkanExtensionProperties > engine::VExtension::_extensions = std::vector < VulkanExtensionProperties > ();
-//
-//void engine::VExtension::queryExtensions() noexcept {
-//    if( VExtension::_extensionsQueried )
-//        return;
-//
-//    uint32 extensionCount = 0;
-//    vkEnumerateInstanceExtensionProperties( nullptr, & extensionCount, nullptr );
-//
-//    VExtension::_extensions = std::vector < VulkanExtensionProperties > ( extensionCount );
-//
-//    vkEnumerateInstanceExtensionProperties( nullptr, & extensionCount, VExtension::_extensions.data() );
-//}
-//
+#include "VExtensionDefs.h"
+
+engine::VExtension::VExtension( engine::VExtension::VExtensionType type ) noexcept (false) {
+    switch ( type ) {
+        case KHRONOS_SWAPCHAIN : std::strcpy ( this->_extensionProperties.extensionName, __V_EXTENSION_TYPE_KHR_SWAPCHAIN ); break;
+
+        default : throw engine::EngineVExtensionUnknownType();
+    }
+}
 
 engine::VExtensionCollection engine::VExtensionCollection::getAllAvailableExtensions() noexcept {
     VExtensionCollection collection;
@@ -35,6 +28,43 @@ engine::VExtensionCollection engine::VExtensionCollection::getAllAvailableExtens
 
     return collection;
 }
+
+engine::VExtensionCollection engine::VExtensionCollection::getPhysicalDeviceAvailableExtensions( const VPhysicalDevice & device ) noexcept {
+    VExtensionCollection collection;
+
+    uint32 extensionCount = 0U;
+    vkEnumerateDeviceExtensionProperties( device.data(), nullptr, &extensionCount, nullptr );
+
+    std::vector < VulkanExtensionProperties > extensionsProperties ( extensionCount );
+    vkEnumerateDeviceExtensionProperties( device.data(), nullptr, &extensionCount, extensionsProperties.data() );
+
+    for ( const auto& extensionProperties : extensionsProperties ) {
+        collection._extensions.emplace_back( extensionProperties );
+    }
+
+    return collection;
+}
+
+[[nodiscard]] std::vector < VulkanExtensionProperties > engine::VExtensionCollection::getExtensionsProperties () const noexcept {
+    std::vector < VulkanExtensionProperties > extensionsProperties ( this->_extensions.size() );
+
+    for ( const auto & extension : this->_extensions )
+        extensionsProperties.emplace_back ( extension.data() );
+
+    return extensionsProperties;
+}
+
+
+[[nodiscard]] std::vector < const char * > engine::VExtensionCollection::getExtensionNames () const noexcept {
+    std::vector < const char * > extensionNames ( this->_extensions.size() );
+
+    for ( const auto & extension : this->_extensions )
+        extensionNames.emplace_back ( extension.data().extensionName );
+
+    return extensionNames;
+}
+
+
 
 #ifndef NDEBUG
 
@@ -59,7 +89,7 @@ void engine::VExtensionCollection::debugPrint(std::ostream & buffer, const char*
 }
 
 bool engine::VExtensionCollection::contains(const engine::VExtensionCollection & otherCollection) const noexcept {
-    for ( const auto& otherCollectionExtension : otherCollection._extensions ) {
+    for ( const auto& otherCollectionExtension : otherCollection._extensions ) { // NOLINT(readability-use-anyofallof)
         if ( this->contains( otherCollectionExtension ) )
             return true;
     }
@@ -67,33 +97,3 @@ bool engine::VExtensionCollection::contains(const engine::VExtensionCollection &
 }
 
 #endif
-
-//void engine::VExtension::printExtensions(std::ostream& outputBuffer) noexcept {
-//    if ( ! VExtension::_extensionsQueried )
-//        VExtension::queryExtensions();
-//
-//    outputBuffer << "\nExtensions : \n";
-//    for(const auto & extension : VExtension::_extensions) {
-//        outputBuffer << "\t" << extension.extensionName << '\n';
-//    }
-//}
-//
-//const std::vector < VulkanExtensionProperties > & engine::VExtension::getAvailableExtensions() noexcept {
-//    if( ! VExtension::_extensionsQueried )
-//        VExtension::queryExtensions();
-//
-//    return VExtension::_extensions;
-//}
-//
-//std::vector < GLFWExtensionLiteral > engine::VExtension::getGLFWRequiredExtensions(bool enableValidationLayers) noexcept {
-//    uint32                      glfwExtensionsCount = 0U;
-//    GLFWExtensionLiteralArray   glfwExtensions;
-//
-//    glfwExtensions = glfwGetRequiredInstanceExtensions( & glfwExtensionsCount );
-//    std::vector < GLFWExtensionLiteral > extensions ( glfwExtensions, glfwExtensions + glfwExtensionsCount );
-//
-//    if( enableValidationLayers )
-//        extensions.push_back( VK_EXT_DEBUG_UTILS_EXTENSION_NAME );
-//
-//    return extensions;
-//}

@@ -202,6 +202,8 @@ inline void engine::VulkanTriangleApplication::initVulkan() noexcept (false) {
         std::cout << "\t\tPriority : " << queue.getPriority() << '\n';
     }
 
+    std::cout << "Device Capable of Swapchain Ext : " << this->_vulkanPhysicalDevice.supportsExtension ( VExtension( VExtension::KHRONOS_SWAPCHAIN ) );
+
 }
 #pragma clang diagnostic pop
 

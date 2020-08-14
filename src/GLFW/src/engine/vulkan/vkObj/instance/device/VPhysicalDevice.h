@@ -8,6 +8,7 @@
 #include <engineVulkanPreproc.h>
 #include <vkDefs/types/vulkanExplicitTypes.h>
 #include <vkObj/instance/VInstance.h>
+#include <vkObj/instance/extension/VExtension.h>
 #include <vector>
 namespace engine {
 
@@ -17,6 +18,9 @@ namespace engine {
             return "Physical Device Attached has a VK_NULL_HANDLE physical handle";
         }
     };
+
+    class VExtension;
+    class VExtensionCollection;
 
     class VPhysicalDevice {
     private:
@@ -30,11 +34,8 @@ namespace engine {
         VulkanPhysicalDeviceFeatures                _physicalDeviceFeatures {};
 
         //// private functions
-//        VPhysicalDevice() noexcept = default;
 
         static void queryAvailablePhysicalDevices( const VInstance& ) noexcept (false);
-//        static bool isDeviceVulkanCompatible( const VInstance&, const VPhysicalDevice & ) noexcept (false);
-
     public:
         //// public variables
 
@@ -76,12 +77,16 @@ namespace engine {
             return VPhysicalDevice::_availablePhysicalDeviceHandles;
         }
 
+        [[nodiscard]] bool supportsExtension  ( const VExtension & extension ) const noexcept;
+        [[nodiscard]] bool supportsExtensions ( const VExtensionCollection & collection ) const noexcept;
+
 #ifndef NDEBUG
         void debugPrintPhysicalDeviceProperties ( std::ostream&,  bool = false, const char* = "" ) const noexcept;
         void debugPrintPhysicalDeviceSparseProperties ( std::ostream&, const char* = "") const noexcept;
         void debugPrintPhysicalDeviceLimits ( std::ostream&, const char* = "" ) const noexcept;
         void debugPrintPhysicalDeviceFeatures ( std::ostream&, const char* = "" ) const noexcept;
 #endif
+
 #ifndef NDEBUG
         static void debugPrintAvailablePhysicalDevices( const VInstance&, std::ostream& ) noexcept;
 #endif

@@ -10,6 +10,9 @@ bool engine::VPhysicalDevice::_physicalDevicesQueried = false;
 std::vector < VulkanPhysicalDevice > engine::VPhysicalDevice::_availablePhysicalDeviceHandles = std::vector < VulkanPhysicalDevice > ();
 std::vector < engine::VPhysicalDevice > engine::VPhysicalDevice::_availablePhysicalDevices = std::vector < engine::VPhysicalDevice > ();
 
+
+
+
 [[nodiscard]] uint32 engine::VPhysicalDevice::getPhysicalDeviceRenderRating() const noexcept {
     uint32 deviceScore = 0U;
 
@@ -49,6 +52,16 @@ void engine::VPhysicalDevice::queryAvailablePhysicalDevices(const engine::VInsta
 
     VPhysicalDevice::_physicalDevicesQueried = true;
 }
+
+
+[[nodiscard]] bool engine::VPhysicalDevice::supportsExtension  ( const engine::VExtension & extension ) const noexcept {
+    return VExtensionCollection::getPhysicalDeviceAvailableExtensions ( *this ).contains ( extension );
+}
+
+[[nodiscard]] bool engine::VPhysicalDevice::supportsExtensions ( const engine::VExtensionCollection & collection ) const noexcept {
+    return VExtensionCollection::getPhysicalDeviceAvailableExtensions ( *this ).contains ( collection );
+}
+
 
 #ifndef NDEBUG
 

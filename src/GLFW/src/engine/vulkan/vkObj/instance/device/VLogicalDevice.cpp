@@ -43,7 +43,7 @@ static inline void populateDeviceCreateInfoStructure (VulkanDeviceCreateInfo * c
     createInfo->enabledExtensionCount       = 0U;
 }
 
-VulkanResult engine::VLogicalDevice::setup( const engine::VPhysicalDevice& physicalDevice ) noexcept (false) {
+VulkanResult engine::VLogicalDevice::setup( const engine::VPhysicalDevice& physicalDevice, const engine::VExtensionCollection & extensions ) noexcept (false) {
     std::set < uint32 > queueFamiliesIndices;
     std::map < uint32, std::vector < float > > familyIndexToQueuePriorities;
 
@@ -88,6 +88,13 @@ VulkanResult engine::VLogicalDevice::setup( const engine::VPhysicalDevice& physi
         deviceCreateInfo.enabledLayerCount = 0U;
     }
 
+    auto requiredExtensionsProperties = extensions.getExtensionNames ();
+
+    if( requiredExtensionsProperties.size() > 0 ) {
+        deviceCreateInfo.enabledExtensionCount =  static_cast <uint32> ( requiredExtensionsProperties.size() );
+        deviceCreateInfo.ppEnabledExtensionNames = requiredExtensionsProperties.data();
+    }
+
     return vkCreateDevice ( physicalDevice.data(), & deviceCreateInfo, nullptr, & this->_vulkanDevice );
 }
 
@@ -127,6 +134,16 @@ engine::VLogicalDevice::VLogicalDeviceFactory & engine::VLogicalDevice::VLogical
     return *this;
 }
 
+engine::VLogicalDevice::VLogicalDeviceFactory & engine::VLogicalDevice::VLogicalDeviceFactory::addExtension ( const engine::VExtension& extension ) noexcept {
+    this->_extensions.addExtension ( extension );
+    return *this;
+}
+
+engine::VLogicalDevice::VLogicalDeviceFactory & engine::VLogicalDevice::VLogicalDeviceFactory::addExtensions ( const engine::VExtensionCollection& collection ) noexcept {
+    this->_extensions.addExtensions ( collection );
+    return *this; 
+}
+
 engine::VLogicalDevice engine::VLogicalDevice::VLogicalDeviceFactory::build ( const engine::VPhysicalDevice& physicalDevice ) noexcept (false) {
 
     VLogicalDevice builtObject;
@@ -136,7 +153,20 @@ engine::VLogicalDevice engine::VLogicalDevice::VLogicalDeviceFactory::build ( co
     builtObject._queues                     = this->_queues;
     builtObject._validationLayerCollection  = this->_validationLayerCollection;
 
-    if( builtObject.setup( physicalDevice ) != VK_SUCCESS )
+    if ( engine::VLogicalDevice::VLogicalDeviceFactory::_exceptionsToggle ) {
+        for ( auto & extension : this->_extensions.getExtensions() ) 
+            if ( ! physicalDevice.supportsExtension( extension ) )
+                throw engine::EngineVLogicalDeviceUnsupportedExtension( extension );
+    } else {
+        VExtensionCollection filteredExtensions;
+        for ( auto & extension : this->_extensions.getExtensions() )
+            if( physicalDevice.supportsExtension ( extension ) )
+                filteredExtensions.addExtension( extension );
+
+        this->_extensions = filteredExtensions;
+    }
+
+    if( builtObject.setup( physicalDevice, this->_extensions ) != VK_SUCCESS )
         throw std::runtime_error ( "logical device creation failure" );
 
     builtObject.setupQueues();

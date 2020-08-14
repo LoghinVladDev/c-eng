@@ -88,7 +88,7 @@ if(Vulkan_FOUND)
             src/GLFW/src/engine/vulkan/vkObj/instance/device/VLogicalDevice.h
             src/GLFW/src/engine/vulkan/vkObj/instance/device/queue/VQueue.cpp
             src/GLFW/src/engine/vulkan/vkObj/instance/device/queue/VQueue.h
-            src/GLFW/src/engine/vulkan/vkObj/window/surface/VSurface.cpp src/GLFW/src/engine/vulkan/vkObj/window/surface/VSurface.h src/GLFW/src/engine/vulkan/vkDefs/types/vkPlatformDefs.cpp)
+            src/GLFW/src/engine/vulkan/vkObj/window/surface/VSurface.cpp src/GLFW/src/engine/vulkan/vkObj/window/surface/VSurface.h src/GLFW/src/engine/vulkan/vkDefs/types/vkPlatformDefs.cpp src/GLFW/src/engine/vulkan/vkDefs/types/vulkanShortHandTypes.h)
 
 
     target_link_libraries( vkTriangle Vulkan::Vulkan )
