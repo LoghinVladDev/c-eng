@@ -10,11 +10,19 @@
 #include <vkObj/instance/validationLayer/VValidationLayer.h>
 #include <vkObj/instance/device/queue/VQueue.h>
 #include <vkObj/instance/extension/VExtension.h>
-#include <vkObj/window/surface/VSurface.h>
+//#include <vkObj/window/surface/VSurface.h>
+#include <vkObj/instance/device/VSwapChain.h>
 
 namespace engine {
 
     class VQueue;
+
+    class EngineVLogicalDeviceFactoryInvalidSwapChain : public std::exception {
+    public:
+        [[nodiscard]] const char * what() const noexcept override {
+            return "Given Swap Chain is not configured with a proper surface";
+        }
+    };
 
     class EngineVLogicalDeviceQueuePhysicalDeviceMismatch : public std::exception {
     public:
@@ -66,6 +74,8 @@ namespace engine {
         VExtensionCollection                _enabledExtensions;
         
         const VSurface                   *  _surfacePtr                 {nullptr};
+        const VPhysicalDevice            *  _physicalDevice             {nullptr};
+        VSwapChain                       *  _swapChain                  {nullptr};
 
         //// private functions
         VulkanResult setup( const VPhysicalDevice &) noexcept (false);
@@ -80,6 +90,7 @@ namespace engine {
             std::vector < VQueue >              _queues;
             VExtensionCollection                _extensions;
             const VSurface                   *  _surface                    {nullptr};
+//            const VSwapChain                    _swapChain;
 
         public:
             //// public variables
@@ -106,7 +117,8 @@ namespace engine {
             VLogicalDeviceFactory& addQueues                ( const VQueueFamily&, uint32, const float* ) noexcept (false);
             VLogicalDeviceFactory& addExtension             ( const VExtension& ) noexcept;
             VLogicalDeviceFactory& addExtensions            ( const VExtensionCollection& ) noexcept;
-            VLogicalDeviceFactory& addSwapChainToSurface    ( const VSurface* ) noexcept;
+//            VLogicalDeviceFactory& addSwapChainToSurface    ( const VSurface* ) noexcept;
+            VLogicalDeviceFactory& createSwapChainToSurface ( const VSurface* ) noexcept (false);
 
             VLogicalDevice build ( const VPhysicalDevice& ) noexcept (false);
 
@@ -118,6 +130,26 @@ namespace engine {
 
         //// public functions
 
+        [[nodiscard]] const VPhysicalDevice * getBasePhysicalDevice () const noexcept {
+            return this->_physicalDevice;
+        }
+
+        /**
+         *
+         * @return nullptr if device does not have a swap chain configured
+         */
+        [[nodiscard]] const VSurface * getSwapChainSurface() const noexcept {
+            return this->_surfacePtr;
+        }
+
+        /**
+         *
+         * @return nullptr if device does not have a swap chain configured
+         */
+        [[nodiscard]] const VSwapChain * getSwapChain() const noexcept {
+            return this->_swapChain;
+        }
+
         [[nodiscard]] const std::vector < VQueue > & getQueues() const noexcept {
             return this->_queues;
         }
@@ -126,13 +158,15 @@ namespace engine {
             return this->_vulkanDevice;
         }
 
-        [[nodiscard]] const bool isSwapChainAdequate () const noexcept {
+        [[nodiscard]] bool isSwapChainAdequate () const noexcept {
             return this->_swapChainAdequate;
         }
 
         void cleanup () noexcept;
 
-        ~VLogicalDevice() noexcept = default;
+        ~VLogicalDevice() noexcept {
+            delete this->_swapChain;
+        }
     };
 
 }

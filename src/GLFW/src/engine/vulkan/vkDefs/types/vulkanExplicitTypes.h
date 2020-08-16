@@ -62,6 +62,7 @@ typedef VkSurfaceCapabilitiesKHR                    VulkanSurfaceCapabilitiesKhr
 typedef VkSurfaceFormatKHR                          VulkanSurfaceFormatKhronos;
 typedef VkPresentModeKHR                            VulkanPresentModeKhronos;
 typedef VkExtent2D                                  VulkanExtent2D;
+typedef VkSwapchainKHR                              VulkanSwapChainKhronos;
 
 #if defined(ENGINE_OS_WINDOWS_32_64)
 
