@@ -84,6 +84,14 @@ namespace engine {
 
 //        void query () noexcept;
 
+        [[nodiscard]] bool empty() const noexcept {
+            return this->_extensions.empty();
+        }
+
+        [[nodiscard]] uint32 size() const noexcept {
+            return this->_extensions.size();
+        }
+
         [[nodiscard]] const std::vector < VExtension > & getExtensions () const noexcept {
             return this->_extensions;
         }
@@ -100,20 +108,28 @@ namespace engine {
             return false;
         }
 
+        [[nodiscard]] bool contains ( VExtension::VExtensionType ) const noexcept;
+
         [[nodiscard]] bool contains ( const VExtensionCollection & ) const noexcept;
 
-        void addExtension ( const VExtension& extension ) noexcept {
+        void add ( const VExtension& extension ) noexcept {
             if( this->contains(extension) )
                 return;
             this->_extensions.push_back( extension );
         }
 
-        void addExtensions ( const VExtensionCollection& extensionCollection ) noexcept {
+        void add ( const VExtensionCollection& extensionCollection ) noexcept {
             for( const auto & extension : extensionCollection._extensions ) {
                 if ( this->contains( extension ) )
                     continue;
                 this->_extensions.push_back( extension );
             }
+        }
+
+        void emplace ( VExtension::VExtensionType type ) noexcept {
+            if ( this->contains( type ) )
+                return;
+            this->_extensions.emplace_back( type );
         }
 
         [[nodiscard]] static VExtensionCollection getAllAvailableExtensions () noexcept;

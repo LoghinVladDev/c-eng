@@ -39,15 +39,7 @@
 #include <string>
 #include <cmath>
 
-[[maybe_unused]] typedef unsigned char uint8;
-[[maybe_unused]] typedef unsigned short uint16;
-[[maybe_unused]] typedef unsigned int uint32;
-[[maybe_unused]] typedef unsigned long int uint64;
-
-[[maybe_unused]] typedef char int8;
-[[maybe_unused]] typedef short int16;
-[[maybe_unused]] typedef int int32;
-[[maybe_unused]] typedef long long int64;
+#include "dataTypes.h"
 
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "hicpp-signed-bitwise"

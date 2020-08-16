@@ -9,6 +9,7 @@
 #include <vkDefs/types/vulkanExplicitTypes.h>
 #include <vkObj/instance/VInstance.h>
 #include <vkObj/instance/extension/VExtension.h>
+#include <vkObj/window/surface/VSurface.h>
 #include <vector>
 namespace engine {
 
@@ -37,6 +38,12 @@ namespace engine {
 
         static void queryAvailablePhysicalDevices( const VInstance& ) noexcept (false);
     public:
+        typedef struct {
+            VulkanSurfaceCapabilitiesKhronos            capabilities;
+            std::vector < VulkanSurfaceFormatKhronos >  formats;
+            std::vector < VulkanPresentModeKhronos >    presentModes;
+        } SwapChainSupportDetails;
+
         //// public variables
 
         //// public functions
@@ -66,6 +73,8 @@ namespace engine {
         [[nodiscard]] const VulkanPhysicalDevice & data() const noexcept {
             return this->_physicalDeviceHandle;
         }
+
+        [[nodiscard]] SwapChainSupportDetails querySwapChainOnSurfaceSupport ( const VSurface* ) const noexcept;
 
         [[nodiscard]] static const std::vector < VPhysicalDevice > & getAvailablePhysicalDevices ( const VInstance & instance ) noexcept {
             VPhysicalDevice::queryAvailablePhysicalDevices( instance );

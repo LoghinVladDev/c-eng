@@ -5,12 +5,23 @@
 #include "VExtension.h"
 #include "VExtensionDefs.h"
 
-engine::VExtension::VExtension( engine::VExtension::VExtensionType type ) noexcept (false) {
+[[nodiscard]] static inline VExtensionLiteral getLiteralByType ( engine::VExtension::VExtensionType type ) noexcept (false) {
     switch ( type ) {
-        case KHRONOS_SWAPCHAIN : std::strcpy ( this->_extensionProperties.extensionName, __V_EXTENSION_TYPE_KHR_SWAPCHAIN ); break;
-
+        case engine::VExtension::VExtensionType::KHRONOS_SWAPCHAIN : return ( __V_EXTENSION_TYPE_KHR_SWAPCHAIN );
+        
         default : throw engine::EngineVExtensionUnknownType();
     }
+}  
+
+engine::VExtension::VExtension( engine::VExtension::VExtensionType type ) noexcept (false) {
+    std::strcpy( this->_extensionProperties.extensionName, getLiteralByType ( type ) );
+}
+
+[[nodiscard]] bool engine::VExtensionCollection::contains ( engine::VExtension::VExtensionType type ) const noexcept {
+    for ( const auto & extension : this->_extensions ) // NOLINT(readability-use-anyofallof)
+        if ( std::strcmp ( extension.getName(), getLiteralByType( type ) ) == 0 )
+            return true;
+    return false;
 }
 
 engine::VExtensionCollection engine::VExtensionCollection::getAllAvailableExtensions() noexcept {
@@ -56,10 +67,11 @@ engine::VExtensionCollection engine::VExtensionCollection::getPhysicalDeviceAvai
 
 
 [[nodiscard]] std::vector < const char * > engine::VExtensionCollection::getExtensionNames () const noexcept {
-    std::vector < const char * > extensionNames ( this->_extensions.size() );
+    std::vector < const char * > extensionNames ;
 
-    for ( const auto & extension : this->_extensions )
-        extensionNames.emplace_back ( extension.data().extensionName );
+    for ( const auto & extension : this->_extensions ) {
+        extensionNames.push_back(extension.data().extensionName);
+    }
 
     return extensionNames;
 }

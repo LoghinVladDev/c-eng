@@ -7,9 +7,98 @@
 #include <algorithm>
 #include <set>
 #include <map>
+#include "VSwapChainDefs.h"
+
+#ifndef UINT32_MAX
+#include <cstdint>
+#endif
+
+#include <obj/util/settings/SettingOptionGraphics.h>
 
 bool engine::VLogicalDevice::VLogicalDeviceFactory::_exceptionsToggle = false;
 float engine::VLogicalDevice::_internal_explicitWrapper_DEFAULT_QUEUE_PRIORITY = engine::VQueue::DEFAULT_QUEUE_PRIORITY;
+
+static inline VulkanSurfaceFormatKhronos chooseSwapSurfaceFormat ( const std::vector < VulkanSurfaceFormatKhronos > & availableFormats ) noexcept {
+    for ( const auto & availableFormat : availableFormats ) {
+        if (
+            availableFormat.format      == __VK_FORMAT_8BIT_BGRA_SRGB &&
+            availableFormat.colorSpace  == __VK_COLORSPACE_NONLINEAR_SRGB
+        )
+            return availableFormat;
+    }
+
+    return availableFormats[0];
+}
+
+static inline VulkanPresentModeKhronos chooseSwapPresentMode ( const std::vector < VulkanPresentModeKhronos > & availablePresentModes ) noexcept {
+
+    for ( const auto & availablePresentMode : availablePresentModes )
+        if ( availablePresentMode == __VK_PRESENT_MODE_VSYNC_TRIPLE_BUFFER )
+            return availablePresentMode;
+
+    return __VK_PRESENT_MODE_VSYNC_DOUBLE_BUFFER;
+}
+
+static inline const engine::ResolutionSetting * getSharedResolutionSetting () noexcept {
+
+    const auto * pSetting = engine::SettingsSharedContainer::getInstance().get( engine::SettingOption::RESOLUTION );
+
+    if ( pSetting != nullptr ) {
+        const auto * pResolutionSetting = reinterpret_cast < engine::ResolutionSetting const * >( pSetting );
+
+        if( pResolutionSetting != nullptr )
+            return pResolutionSetting;
+    }
+
+    return nullptr;
+}
+
+static inline VulkanExtent2D chooseSwapExtent ( const VulkanSurfaceCapabilitiesKhronos & capabilites ) noexcept ( false ) {
+    if ( capabilites.currentExtent.width != UINT32_MAX )
+        return capabilites.currentExtent;
+
+    const auto * sharedResolutionSetting = getSharedResolutionSetting();
+
+    if( sharedResolutionSetting == nullptr )
+        throw std::runtime_error( "No Resolution Set in SettingsSharedContainer" );
+
+    VulkanExtent2D actualExtent = {
+        sharedResolutionSetting->getWidth(),
+        sharedResolutionSetting->getHeight()
+    };
+
+    actualExtent.width = std::max (
+        capabilites.minImageExtent.width,
+        std::min (
+            capabilites.maxImageExtent.width,
+            actualExtent.width
+        )
+    );
+
+    actualExtent.height = std::max (
+        capabilites.minImageExtent.height,
+        std::min (
+            capabilites.maxImageExtent.height,
+            actualExtent.height
+        )
+    );
+
+    return actualExtent;
+}
+
+static inline bool checkForSwapChainCapability ( const engine::VExtensionCollection& extensionCollection, const engine::VPhysicalDevice& device, const engine::VSurface *surface ) noexcept {
+    if ( surface == nullptr )
+        return false;
+
+    if ( extensionCollection.empty() )
+        return false;
+
+    auto swapChainSupportDetails = device.querySwapChainOnSurfaceSupport ( surface );
+
+    std::cout << extensionCollection.contains( engine::VExtension::KHRONOS_SWAPCHAIN ) << '\n';
+
+    return ( extensionCollection.contains ( engine::VExtension::KHRONOS_SWAPCHAIN ) ) && ( ! swapChainSupportDetails.formats.empty() ) && ( ! swapChainSupportDetails.presentModes.empty() );
+}
 
 static inline void fArrSet( float * ptr, float val, uint64 len ) noexcept {
     for( uint64 it = 0; it < len; it++ )
@@ -43,7 +132,14 @@ static inline void populateDeviceCreateInfoStructure (VulkanDeviceCreateInfo * c
     createInfo->enabledExtensionCount       = 0U;
 }
 
-VulkanResult engine::VLogicalDevice::setup( const engine::VPhysicalDevice& physicalDevice, const engine::VExtensionCollection & extensions ) noexcept (false) {
+engine::VLogicalDevice::VLogicalDeviceFactory & engine::VLogicalDevice::VLogicalDeviceFactory::addSwapChainToSurface ( const VSurface* surface ) noexcept {
+    this->_extensions.add ( VExtension( VExtension::KHRONOS_SWAPCHAIN ) );
+    this->_surface = surface;
+
+    return * this;
+}
+
+VulkanResult engine::VLogicalDevice::setup( const engine::VPhysicalDevice& physicalDevice ) noexcept (false) {
     std::set < uint32 > queueFamiliesIndices;
     std::map < uint32, std::vector < float > > familyIndexToQueuePriorities;
 
@@ -88,12 +184,19 @@ VulkanResult engine::VLogicalDevice::setup( const engine::VPhysicalDevice& physi
         deviceCreateInfo.enabledLayerCount = 0U;
     }
 
-    auto requiredExtensionsProperties = extensions.getExtensionNames ();
+    auto requiredExtensionsProperties = this->_enabledExtensions.getExtensionNames ();
 
-    if( requiredExtensionsProperties.size() > 0 ) {
+    if( ! requiredExtensionsProperties.empty() ) {
         deviceCreateInfo.enabledExtensionCount =  static_cast <uint32> ( requiredExtensionsProperties.size() );
         deviceCreateInfo.ppEnabledExtensionNames = requiredExtensionsProperties.data();
     }
+
+    this->_swapChainAdequate = checkForSwapChainCapability( this->_enabledExtensions, physicalDevice, this->_surfacePtr );
+
+    if ( this->_surfacePtr != nullptr && ! this->_swapChainAdequate )
+        throw engine::EngineVLogicalDeviceSwapChainIncompatible();
+
+    const auto * res = getSharedResolutionSetting();
 
     return vkCreateDevice ( physicalDevice.data(), & deviceCreateInfo, nullptr, & this->_vulkanDevice );
 }
@@ -135,12 +238,12 @@ engine::VLogicalDevice::VLogicalDeviceFactory & engine::VLogicalDevice::VLogical
 }
 
 engine::VLogicalDevice::VLogicalDeviceFactory & engine::VLogicalDevice::VLogicalDeviceFactory::addExtension ( const engine::VExtension& extension ) noexcept {
-    this->_extensions.addExtension ( extension );
+    this->_extensions.add ( extension );
     return *this;
 }
 
 engine::VLogicalDevice::VLogicalDeviceFactory & engine::VLogicalDevice::VLogicalDeviceFactory::addExtensions ( const engine::VExtensionCollection& collection ) noexcept {
-    this->_extensions.addExtensions ( collection );
+    this->_extensions.add ( collection );
     return *this; 
 }
 
@@ -152,6 +255,7 @@ engine::VLogicalDevice engine::VLogicalDevice::VLogicalDeviceFactory::build ( co
 
     builtObject._queues                     = this->_queues;
     builtObject._validationLayerCollection  = this->_validationLayerCollection;
+    builtObject._surfacePtr                 = this->_surface;
 
     if ( engine::VLogicalDevice::VLogicalDeviceFactory::_exceptionsToggle ) {
         for ( auto & extension : this->_extensions.getExtensions() ) 
@@ -161,12 +265,14 @@ engine::VLogicalDevice engine::VLogicalDevice::VLogicalDeviceFactory::build ( co
         VExtensionCollection filteredExtensions;
         for ( auto & extension : this->_extensions.getExtensions() )
             if( physicalDevice.supportsExtension ( extension ) )
-                filteredExtensions.addExtension( extension );
+                filteredExtensions.add( extension );
 
         this->_extensions = filteredExtensions;
     }
 
-    if( builtObject.setup( physicalDevice, this->_extensions ) != VK_SUCCESS )
+    builtObject._enabledExtensions = this->_extensions;
+
+    if( builtObject.setup( physicalDevice ) != VK_SUCCESS )
         throw std::runtime_error ( "logical device creation failure" );
 
     builtObject.setupQueues();

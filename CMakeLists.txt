@@ -88,7 +88,12 @@ if(Vulkan_FOUND)
             src/GLFW/src/engine/vulkan/vkObj/instance/device/VLogicalDevice.h
             src/GLFW/src/engine/vulkan/vkObj/instance/device/queue/VQueue.cpp
             src/GLFW/src/engine/vulkan/vkObj/instance/device/queue/VQueue.h
-            src/GLFW/src/engine/vulkan/vkObj/window/surface/VSurface.cpp src/GLFW/src/engine/vulkan/vkObj/window/surface/VSurface.h src/GLFW/src/engine/vulkan/vkDefs/types/vkPlatformDefs.cpp src/GLFW/src/engine/vulkan/vkDefs/types/vulkanShortHandTypes.h)
+            src/GLFW/src/engine/vulkan/vkObj/window/surface/VSurface.cpp
+            src/GLFW/src/engine/vulkan/vkObj/window/surface/VSurface.h
+            src/GLFW/src/engine/vulkan/vkDefs/types/vkPlatformDefs.cpp
+            src/GLFW/src/engine/vulkan/vkDefs/types/vulkanShortHandTypes.h
+            src/GLFW/src/engine/vulkan/vkObj/instance/device/VSwapChainDefs.h
+            src/GLFW/src/engine/obj/util/settings/SettingsSharedContainer.cpp src/GLFW/src/engine/obj/util/settings/SettingsSharedContainer.h src/GLFW/src/engine/obj/util/settings/SettingOption.cpp src/GLFW/src/engine/obj/util/settings/SettingOption.h src/GLFW/src/engine/obj/util/settings/SettingOptionGraphics.cpp src/GLFW/src/engine/obj/util/settings/SettingOptionGraphics.h)
 
 
     target_link_libraries( vkTriangle Vulkan::Vulkan )
@@ -301,7 +306,7 @@ add_executable( glfwDiffuseMaps
         src/GLFW/src/engine/obj/util/struct/inputAxisFunc.c
         src/GLFW/src/engine/obj/util/struct/inputAxisFunc.h
         dependencies/stb_image/stb-image.h
-)
+        src/GLFW/src/engine/dataTypes.h)
 
 target_link_libraries( glfwDiffuseMaps glfw ${GLFW_LIBRARIES} )
 
@@ -450,13 +455,13 @@ add_executable( whiteboard3
 
 add_executable( whiteboard4
         src/GLFW/src/engine/tests/sandbox/whiteboard4.cpp
-        dependencies/glad/src/glad.c
-        dependencies/glad/include/glad/glad.h
-        dependencies/glad/include/KHR/khrplatform.h
-        dependencies/stb_image/stb-image.h
+#        dependencies/glad/src/glad.c
+#        dependencies/glad/include/glad/glad.h
+#        dependencies/glad/include/KHR/khrplatform.h
+#        dependencies/stb_image/stb-image.h
         )
 
-target_link_libraries( whiteboard4 glfw assimp ${GLFW_LIBRARIES} ${ASSIMP_LIBRARIES} )
+target_link_libraries( whiteboard4) #glfw assimp ${GLFW_LIBRARIES} ${ASSIMP_LIBRARIES} )
 #target_link_libraries( whiteboard4 assimp ${ASSIMP_LIBRARIES} )
 
 

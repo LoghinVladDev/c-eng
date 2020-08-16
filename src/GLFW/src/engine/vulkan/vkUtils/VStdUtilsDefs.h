@@ -1,3 +1,5 @@
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "bugprone-reserved-identifier"
 //
 // Created by vladl on 07/08/2020.
 //
@@ -57,3 +59,5 @@
 #define __VK_PHYSICAL_DEVICE_UNKNOWN                            "Vulkan Physical Device Unknown"
 
 #endif //ENG1_VSTDUTILSDEFS_H
+
+#pragma clang diagnostic pop

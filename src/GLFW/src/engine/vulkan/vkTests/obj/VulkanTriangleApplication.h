@@ -61,6 +61,7 @@ namespace engine {
         std::vector <VQueueFamily>  _graphicsCapableQueueFamily;
 
         //// private_functions
+        void initSettings() const noexcept;
         void initWindow() noexcept(false);
         void initVulkan() noexcept(false);
         void mainLoop() noexcept(false);

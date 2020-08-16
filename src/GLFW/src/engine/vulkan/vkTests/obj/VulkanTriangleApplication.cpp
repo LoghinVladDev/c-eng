@@ -3,12 +3,10 @@
 //
 
 #include "VulkanTriangleApplication.h"
-#include <src/GLFW/src/engine/vulkan/vkObj/instance/extension/VExtension.h>
 #include <src/GLFW/src/engine/vulkan/vkUtils/VStdUtils.h>
-//#include <vkObj/instance/device/VPhysicalDevice.h>
 #include <map>
-#include <vkObj/instance/device/queue/VQueueFamily.h>
-#include <vkObj/instance/device/VLogicalDevice.h>
+#include <obj/util/settings/SettingsSharedContainer.h>
+#include <obj/util/settings/SettingOptionGraphics.h>
 
 const char* engine::VulkanTriangleApplication::DEFAULT_TITLE = "Vulkan Application";
 
@@ -77,7 +75,16 @@ void engine::VulkanTriangleApplication::setupDebugMessenger() noexcept (false) {
 }
 #pragma clang diagnostic pop
 
+void engine::VulkanTriangleApplication::initSettings() const noexcept {
+    auto resolution = new engine::ResolutionSetting( this->_width, this->_height );
+
+    SettingsSharedContainer::getInstance().put( resolution );
+
+    delete resolution;
+}
+
 void engine::VulkanTriangleApplication::run() noexcept (false) {
+    this->initSettings();
     this->initWindow();
     this->initVulkan();
     this->mainLoop();
@@ -188,6 +195,8 @@ inline void engine::VulkanTriangleApplication::initVulkan() noexcept (false) {
         deviceFactory.addQueue( * queues[0], 1.0f );
         deviceFactory.addQueue( * queues[1], 1.0f );
     }
+
+    deviceFactory.addSwapChainToSurface( & this->_vulkanSurface );
 //
     this->_vulkanLogicalDevice = deviceFactory.build( this->_vulkanPhysicalDevice );
     std::cout << "Logical Device Handle : " << this->_vulkanLogicalDevice.data() << '\n';
@@ -202,8 +211,19 @@ inline void engine::VulkanTriangleApplication::initVulkan() noexcept (false) {
         std::cout << "\t\tPriority : " << queue.getPriority() << '\n';
     }
 
-    std::cout << "Device Capable of Swapchain Ext : " << this->_vulkanPhysicalDevice.supportsExtension ( VExtension( VExtension::KHRONOS_SWAPCHAIN ) );
+    std::cout << "Device Capable of Swapchain Ext : " << this->_vulkanPhysicalDevice.supportsExtension ( VExtension( VExtension::KHRONOS_SWAPCHAIN ) ) << '\n';
 
+    std::cout << "Logical Device Capable of Swap Chain : " << this->_vulkanLogicalDevice.isSwapChainAdequate() << '\n';
+
+    auto setting = engine::SettingsSharedContainer::getInstance().get(engine::SettingOption::RESOLUTION);
+
+    if(setting != nullptr ) {
+        auto resolution = dynamic_cast < const engine::ResolutionSetting* > ( setting );
+
+        if ( resolution != nullptr ) {
+            std::cout << "Saved res : " << resolution->getWidth() << ',' << resolution->getHeight() << '\n';
+        }
+    }
 }
 #pragma clang diagnostic pop
 

@@ -10,8 +10,31 @@ bool engine::VPhysicalDevice::_physicalDevicesQueried = false;
 std::vector < VulkanPhysicalDevice > engine::VPhysicalDevice::_availablePhysicalDeviceHandles = std::vector < VulkanPhysicalDevice > ();
 std::vector < engine::VPhysicalDevice > engine::VPhysicalDevice::_availablePhysicalDevices = std::vector < engine::VPhysicalDevice > ();
 
+[[nodiscard]] engine::VPhysicalDevice::SwapChainSupportDetails engine::VPhysicalDevice::querySwapChainOnSurfaceSupport( const engine::VSurface * surface ) const noexcept {
+    SwapChainSupportDetails details;
 
+    if( surface == nullptr )
+        return details;
 
+    uint32 formatCount      = 0U;
+    uint32 presentModeCount = 0U;
+
+    vkGetPhysicalDeviceSurfaceCapabilitiesKHR( this->_physicalDeviceHandle, surface->data(), & details.capabilities );
+    vkGetPhysicalDeviceSurfaceFormatsKHR( this->_physicalDeviceHandle, surface->data(), & formatCount, nullptr );
+    vkGetPhysicalDeviceSurfacePresentModesKHR( this->_physicalDeviceHandle, surface->data(), & presentModeCount, nullptr );
+
+    if( formatCount != 0U ) {
+        details.formats.resize ( formatCount );
+        vkGetPhysicalDeviceSurfaceFormatsKHR( this->_physicalDeviceHandle, surface->data(), & formatCount, details.formats.data() );
+    }
+
+    if( presentModeCount != 0U ) {
+        details.presentModes.resize ( presentModeCount );
+        vkGetPhysicalDeviceSurfacePresentModesKHR( this->_physicalDeviceHandle, surface->data(), & presentModeCount, details.presentModes.data() );
+    }
+
+    return details;
+}
 
 [[nodiscard]] uint32 engine::VPhysicalDevice::getPhysicalDeviceRenderRating() const noexcept {
     uint32 deviceScore = 0U;
