@@ -44,7 +44,7 @@ static inline const engine::ResolutionSetting * getSharedResolutionSetting () no
     const auto * pSetting = engine::SettingsSharedContainer::getInstance().get( engine::SettingOption::RESOLUTION );
 
     if ( pSetting != nullptr ) {
-        const auto * pResolutionSetting = reinterpret_cast < engine::ResolutionSetting const * >( pSetting );
+        const auto * pResolutionSetting = dynamic_cast < engine::ResolutionSetting const * >( pSetting );
 
         if( pResolutionSetting != nullptr )
             return pResolutionSetting;
