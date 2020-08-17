@@ -18,4 +18,6 @@
 
 #include <types.h>
 
+#include <vkDefs/types/vulkanExplicitTypes.h>
+
 #endif //ENG1_ENGINEVULKANPREPROC_H

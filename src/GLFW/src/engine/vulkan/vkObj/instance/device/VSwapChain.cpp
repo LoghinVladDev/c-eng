@@ -76,7 +76,11 @@ static inline VulkanExtent2D chooseSwapExtent ( const VulkanSurfaceCapabilitiesK
     return actualExtent;
 }
 
-static inline void swapChainLinkQueueFamilies ( VulkanSwapChainCreateInfoKhronos * createInfo, const engine::VLogicalDevice * device ) noexcept {
+static inline void swapChainLinkQueueFamilies (
+    VulkanSwapChainCreateInfoKhronos * createInfo,
+    const engine::VLogicalDevice * device
+) noexcept {
+
     if ( createInfo == nullptr )
         return;
 
@@ -116,7 +120,14 @@ static inline void swapChainLinkQueueFamilies ( VulkanSwapChainCreateInfoKhronos
     }
 }
 
-static inline void populateSwapChainCreateInfoStructure ( VulkanSwapChainCreateInfoKhronos * createInfo, const engine::VLogicalDevice* device, uint32 imageCount, const engine::VPhysicalDevice::SwapChainSupportDetails & swapChainSupportDetails) noexcept {
+static inline void populateSwapChainCreateInfoStructure (
+    VulkanSwapChainCreateInfoKhronos * createInfo,
+    const engine::VLogicalDevice* device,
+    uint32 imageCount,
+    const engine::VPhysicalDevice::SwapChainSupportDetails & swapChainSupportDetails,
+    engine::VSwapChain::VSwapChainImageInfo * savedSwapChainInformation = nullptr
+) noexcept {
+
     if( createInfo == nullptr )
         return;
 
@@ -143,10 +154,15 @@ static inline void populateSwapChainCreateInfoStructure ( VulkanSwapChainCreateI
     createInfo->presentMode         = presentMode;
     createInfo->clipped             = VK_TRUE;
     createInfo->oldSwapchain        = VK_NULL_HANDLE; /// should come back to this. once window resizes, you should recreate swap chain.
+
+    if( savedSwapChainInformation != nullptr ) {
+        savedSwapChainInformation->format = surfaceFormat.format;
+        savedSwapChainInformation->extent = extent;
+    }
 }
 
 engine::VSwapChain::VSwapChain(const VLogicalDevice *device) noexcept(false) :
-    _device( device ){
+    _device( device ) {
     if( ! device->isSwapChainAdequate() )
         throw engine::EngineVLogicalDeviceSwapChainIncompatible();
 }
@@ -162,9 +178,16 @@ VulkanResult engine::VSwapChain::setup() noexcept {
         imageCount = swapChainSupportDetails.capabilities.maxImageCount;
 
     VulkanSwapChainCreateInfoKhronos createInfo {};
-    populateSwapChainCreateInfoStructure( & createInfo, this->_device, imageCount, swapChainSupportDetails );
+    populateSwapChainCreateInfoStructure( & createInfo, this->_device, imageCount, swapChainSupportDetails, & this->_imagesInfo );
 
-    return vkCreateSwapchainKHR( this->_device->data(), & createInfo, nullptr, & this->_handle );
+    VulkanResult createSwapChainResult = vkCreateSwapchainKHR( this->_device->data(), & createInfo, nullptr, & this->_handle );
+
+    vkGetSwapchainImagesKHR( this->_device->data(), this->_handle, & imageCount, nullptr );
+
+    this->_images.resize( imageCount );
+    vkGetSwapchainImagesKHR( this->_device->data(), this->_handle, & imageCount, this->_images.data() );
+
+    return createSwapChainResult;
 }
 
 VulkanResult engine::VSwapChain::setup( const engine::VLogicalDevice * device) noexcept (false) {
@@ -185,6 +208,15 @@ void engine::VSwapChain::cleanup() noexcept {
 }
 
 engine::VSwapChain::VSwapChain(const engine::VSwapChain & obj, const engine::VLogicalDevice * device) noexcept {
-    this->_handle = obj._handle;
-    this->_device = device;
+    this->_handle       = obj._handle;
+    this->_images       = obj._images;
+    this->_device       = device;
+    this->_imagesInfo   = obj._imagesInfo;
+}
+
+engine::VImageViewCollection engine::VSwapChain::getImageViewCollection() const noexcept {
+    engine::VImageViewCollection collection;
+    collection.setup( this );
+
+    return collection;
 }

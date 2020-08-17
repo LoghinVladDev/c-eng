@@ -147,16 +147,40 @@ VulkanResult engine::VLogicalDevice::setup( const engine::VPhysicalDevice& physi
         if (!this->_swapChainAdequate)
             throw engine::EngineVLogicalDeviceSwapChainIncompatible();
         else {
-            this->_swapChain = new VSwapChain( this );
+            this->_swapChain            = new VSwapChain( this );
+            this->_imageViewCollection  = new VImageViewCollection;
         }
     }
 
     VulkanResult createDeviceResult = vkCreateDevice ( physicalDevice.data(), & deviceCreateInfo, nullptr, & this->_vulkanDevice );
-    VulkanResult createSwapChainResult = this->_swapChain->setup();
+    if( createDeviceResult != VK_SUCCESS ) {
+        delete this->_swapChain;
+        delete this->_imageViewCollection;
+        this->_swapChain = nullptr;
+        this->_imageViewCollection = nullptr;
 
-    if( createDeviceResult == VK_SUCCESS && createSwapChainResult != VK_SUCCESS )
+        return createDeviceResult;
+    }
+
+    VulkanResult createSwapChainResult = this->_swapChain->setup();
+    if( createSwapChainResult != VK_SUCCESS ) {
+        delete this->_swapChain;
+        delete this->_imageViewCollection;
+        this->_swapChain = nullptr;
+        this->_imageViewCollection = nullptr;
+
         return createSwapChainResult;
-    return createDeviceResult;
+    }
+
+    VulkanResult createImageViewCollectionResult = this->_imageViewCollection->setup( this->_swapChain );
+    if( createImageViewCollectionResult != VK_SUCCESS ) {
+        delete this->_imageViewCollection;
+        this->_imageViewCollection = nullptr;
+
+        return createImageViewCollectionResult;
+    }
+
+    return VulkanResult::VK_SUCCESS;
 }
 
 void engine::VLogicalDevice::setupQueues() noexcept {
@@ -243,13 +267,16 @@ void engine::VLogicalDevice::cleanup() noexcept {
     for( auto & queue : this->_queues )
         queue.cleanup();
 
-    if( this->_swapChain != nullptr )
+    if( this->_swapChain != nullptr ) {
+        this->_imageViewCollection->cleanup();
         this->_swapChain->cleanup();
+    }
 
     vkDestroyDevice( this->_vulkanDevice, nullptr );
 }
 
 engine::VLogicalDevice::~VLogicalDevice() noexcept {
+    delete this->_imageViewCollection;
     delete this->_swapChain;
 }
 
@@ -263,12 +290,15 @@ engine::VLogicalDevice::VLogicalDevice(const engine::VLogicalDevice & obj) noexc
     this->_physicalDevice               = obj._physicalDevice;
 
     if( obj._swapChain != nullptr ) {
-        this->_swapChain = new VSwapChain(*obj._swapChain, this);
+        this->_swapChain            = new VSwapChain(*obj._swapChain, this);
+        this->_imageViewCollection  = new VImageViewCollection ( obj._imageViewCollection, this->_swapChain );
 //        this->_swapChain->setLogicalDevice( this ); cannot because upon copy ctr call, obj is initialized
-//                                                           set of logical device works before init
+//                                                           set of logical device works before init. Same for img collection
     }
-    else
-        this->_swapChain                    = nullptr;
+    else {
+        this->_swapChain            = nullptr;
+        this->_imageViewCollection  = nullptr;
+    }
 }
 
 engine::VLogicalDevice &engine::VLogicalDevice::operator=(const engine::VLogicalDevice & obj) noexcept {
@@ -288,11 +318,14 @@ engine::VLogicalDevice &engine::VLogicalDevice::operator=(const engine::VLogical
     this->_physicalDevice               = obj._physicalDevice;
 
     if( obj._swapChain != nullptr ) {
-        this->_swapChain = new VSwapChain(*obj._swapChain, this);
+        this->_swapChain            = new VSwapChain(*obj._swapChain, this);
+        this->_imageViewCollection  = new VImageViewCollection ( obj._imageViewCollection, this->_swapChain );
 //        this->_swapChain->setLogicalDevice( this );
     }
-    else
-        this->_swapChain                    = nullptr;
+    else {
+        this->_swapChain            = nullptr;
+        this->_imageViewCollection  = nullptr;
+    }
 
     return *this;
 }

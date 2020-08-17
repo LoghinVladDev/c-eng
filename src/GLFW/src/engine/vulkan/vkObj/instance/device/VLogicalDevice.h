@@ -17,6 +17,7 @@ namespace engine {
 
     class VQueue;
     class VSwapChain;
+    class VImageViewCollection;
 
     class EngineVLogicalDeviceFactoryInvalidSwapChain : public std::exception {
     public:
@@ -77,6 +78,7 @@ namespace engine {
         const VSurface                   *  _surfacePtr                 {nullptr};
         const VPhysicalDevice            *  _physicalDevice             {nullptr};
         VSwapChain                       *  _swapChain                  {nullptr};
+        VImageViewCollection             *  _imageViewCollection        {nullptr};
 
         //// private functions
         VulkanResult setup( const VPhysicalDevice &) noexcept (false);
@@ -154,6 +156,14 @@ namespace engine {
          */
         [[nodiscard]] const VSwapChain * getSwapChain() const noexcept {
             return this->_swapChain;
+        }
+
+        /**
+         *
+         * @return nullptr if device does not have a swap chain configured
+         */
+        [[nodiscard]] const VImageViewCollection * getImageViewCollection () const noexcept {
+            return this->_imageViewCollection;
         }
 
         [[nodiscard]] const std::vector < VQueue > & getQueues() const noexcept {

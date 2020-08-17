@@ -64,6 +64,12 @@ typedef VkPresentModeKHR                            VulkanPresentModeKhronos;
 typedef VkExtent2D                                  VulkanExtent2D;
 typedef VkSwapchainKHR                              VulkanSwapChainKhronos;
 typedef VkSwapchainCreateInfoKHR                    VulkanSwapChainCreateInfoKhronos;
+typedef VkImage                                     VulkanImage;
+typedef VkFormat                                    VulkanFormat;
+
+typedef VkImageViewCreateInfo                       VulkanImageViewCreateInfo;
+
+typedef VkImageView                                 VulkanImageView;
 
 #if defined(ENGINE_OS_WINDOWS_32_64)
 

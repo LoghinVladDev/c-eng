@@ -34,18 +34,7 @@
 #define _GL_MAX_VER 3
 #endif
 
-#ifndef __PROJ_PATHS__
-
-[[maybe_unused]] constexpr const char* __PROJECT_PATH__ = "./../";                  // NOLINT(bugprone-reserved-identifier)
-constexpr const char* __SHADERS_PATH__                  = "./../data/shaders/";     // NOLINT(bugprone-reserved-identifier)
-constexpr const char* __TEXTURES_PATH__                 = "./../data/textures/";    // NOLINT(bugprone-reserved-identifier)
-
-constexpr const char* __NO_PATH_GIVEN__                 = "./";                     // NOLINT(bugprone-reserved-identifier)
-constexpr const char* __ASSETS_PATH__                   = "./../data/assets/";      // NOLINT(bugprone-reserved-identifier)
-
-
-#define __PROJ_PATHS__
-#endif
+#include "engineDataPaths.h"
 
 #ifndef ENG_SET_VERSION_LIMITATION
 #define ENG_SET_VERSION_LIMITATION(_minVer,_maxVer) \

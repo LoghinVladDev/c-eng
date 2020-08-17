@@ -93,7 +93,7 @@ if(Vulkan_FOUND)
             src/GLFW/src/engine/vulkan/vkDefs/types/vkPlatformDefs.cpp
             src/GLFW/src/engine/vulkan/vkDefs/types/vulkanShortHandTypes.h
             src/GLFW/src/engine/vulkan/vkObj/instance/device/VSwapChainDefs.h
-            src/GLFW/src/engine/obj/util/settings/SettingsSharedContainer.cpp src/GLFW/src/engine/obj/util/settings/SettingsSharedContainer.h src/GLFW/src/engine/obj/util/settings/SettingOption.cpp src/GLFW/src/engine/obj/util/settings/SettingOption.h src/GLFW/src/engine/obj/util/settings/SettingOptionGraphics.cpp src/GLFW/src/engine/obj/util/settings/SettingOptionGraphics.h src/GLFW/src/engine/vulkan/vkObj/instance/device/VSwapChain.cpp src/GLFW/src/engine/vulkan/vkObj/instance/device/VSwapChain.h)
+            src/GLFW/src/engine/obj/util/settings/SettingsSharedContainer.cpp src/GLFW/src/engine/obj/util/settings/SettingsSharedContainer.h src/GLFW/src/engine/obj/util/settings/SettingOption.cpp src/GLFW/src/engine/obj/util/settings/SettingOption.h src/GLFW/src/engine/obj/util/settings/SettingOptionGraphics.cpp src/GLFW/src/engine/obj/util/settings/SettingOptionGraphics.h src/GLFW/src/engine/vulkan/vkObj/instance/device/VSwapChain.cpp src/GLFW/src/engine/vulkan/vkObj/instance/device/VSwapChain.h src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/VImageView.cpp src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/VImageView.h)
 
 
     target_link_libraries( vkTriangle Vulkan::Vulkan )
