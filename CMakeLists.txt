@@ -93,12 +93,78 @@ if(Vulkan_FOUND)
             src/GLFW/src/engine/vulkan/vkDefs/types/vkPlatformDefs.cpp
             src/GLFW/src/engine/vulkan/vkDefs/types/vulkanShortHandTypes.h
             src/GLFW/src/engine/vulkan/vkObj/instance/device/VSwapChainDefs.h
-            src/GLFW/src/engine/obj/util/settings/SettingsSharedContainer.cpp src/GLFW/src/engine/obj/util/settings/SettingsSharedContainer.h src/GLFW/src/engine/obj/util/settings/SettingOption.cpp src/GLFW/src/engine/obj/util/settings/SettingOption.h src/GLFW/src/engine/obj/util/settings/SettingOptionGraphics.cpp src/GLFW/src/engine/obj/util/settings/SettingOptionGraphics.h src/GLFW/src/engine/vulkan/vkObj/instance/device/VSwapChain.cpp src/GLFW/src/engine/vulkan/vkObj/instance/device/VSwapChain.h src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/VImageView.cpp src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/VImageView.h)
+            src/GLFW/src/engine/obj/util/settings/SettingsSharedContainer.cpp
+            src/GLFW/src/engine/obj/util/settings/SettingsSharedContainer.h
+            src/GLFW/src/engine/obj/util/settings/SettingOption.cpp
+            src/GLFW/src/engine/obj/util/settings/SettingOption.h
+            src/GLFW/src/engine/obj/util/settings/SettingOptionGraphics.cpp
+            src/GLFW/src/engine/obj/util/settings/SettingOptionGraphics.h
+            src/GLFW/src/engine/vulkan/vkObj/instance/device/VSwapChain.cpp
+            src/GLFW/src/engine/vulkan/vkObj/instance/device/VSwapChain.h
+            src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/VImageView.cpp
+            src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/VImageView.h
+            src/GLFW/src/engine/vulkan/vkObj/shader/VShaderCompiler.cpp
+            src/GLFW/src/engine/vulkan/vkObj/shader/VShaderCompiler.h
+        )
 
 
     target_link_libraries( vkTriangle Vulkan::Vulkan )
 
     target_link_libraries( vkTriangle glfw ${GLFW_LIBRARIES} )
+
+
+    add_executable( vkPrecompiler
+            src/GLFW/src/engine/vulkan/vkTests/c/vulkanPrecompilerTest.cpp
+            src/GLFW/src/engine/vulkan/vkTests/obj/VulkanTriangleApplication.cpp
+            src/GLFW/src/engine/vulkan/vkTests/obj/VulkanTriangleApplication.h
+            src/GLFW/src/engine/vulkan/vkTests/obj/VulkanInitTests.cpp
+            src/GLFW/src/engine/vulkan/vkTests/obj/VulkanInitTests.h
+            src/GLFW/src/engine/vulkan/engineVulkanPreproc.h
+            src/GLFW/src/engine/vulkan/vkDefs/types/vulkanExplicitTypes.h
+            src/GLFW/src/engine/vulkan/vkDefs/vkDefinitions.h
+            src/GLFW/src/engine/vulkan/vkObj/instance/validationLayer/VValidationLayer.cpp
+            src/GLFW/src/engine/vulkan/vkObj/instance/validationLayer/VValidationLayer.h
+            src/GLFW/src/engine/vulkan/vkObj/instance/VInstance.cpp
+            src/GLFW/src/engine/vulkan/vkObj/instance/VInstance.h
+            src/GLFW/src/engine/vulkan/vkObj/instance/messenger/VMessenger.cpp
+            src/GLFW/src/engine/vulkan/vkObj/instance/messenger/VMessenger.h
+            src/GLFW/src/engine/vulkan/vkObj/instance/extension/VExtension.cpp
+            src/GLFW/src/engine/vulkan/vkObj/instance/extension/VExtension.h
+            src/GLFW/src/engine/vulkan/vkUtils/VStdUtils.cpp
+            src/GLFW/src/engine/vulkan/vkUtils/VStdUtils.h
+            src/GLFW/src/engine/vulkan/vkUtils/VStdUtilsDefs.h
+            src/GLFW/src/engine/vulkan/vkObj/instance/device/VPhysicalDevice.cpp
+            src/GLFW/src/engine/vulkan/vkObj/instance/device/VPhysicalDevice.h
+            src/GLFW/src/engine/vulkan/vkObj/instance/device/VPhysicalDeviceDefs.h
+            src/GLFW/src/engine/vulkan/vkObj/instance/device/queue/VQueueFamily.cpp
+            src/GLFW/src/engine/vulkan/vkObj/instance/device/queue/VQueueFamily.h
+            src/GLFW/src/engine/vulkan/vkObj/instance/device/VLogicalDevice.cpp
+            src/GLFW/src/engine/vulkan/vkObj/instance/device/VLogicalDevice.h
+            src/GLFW/src/engine/vulkan/vkObj/instance/device/queue/VQueue.cpp
+            src/GLFW/src/engine/vulkan/vkObj/instance/device/queue/VQueue.h
+            src/GLFW/src/engine/vulkan/vkObj/window/surface/VSurface.cpp
+            src/GLFW/src/engine/vulkan/vkObj/window/surface/VSurface.h
+            src/GLFW/src/engine/vulkan/vkDefs/types/vkPlatformDefs.cpp
+            src/GLFW/src/engine/vulkan/vkDefs/types/vulkanShortHandTypes.h
+            src/GLFW/src/engine/vulkan/vkObj/instance/device/VSwapChainDefs.h
+            src/GLFW/src/engine/obj/util/settings/SettingsSharedContainer.cpp
+            src/GLFW/src/engine/obj/util/settings/SettingsSharedContainer.h
+            src/GLFW/src/engine/obj/util/settings/SettingOption.cpp
+            src/GLFW/src/engine/obj/util/settings/SettingOption.h
+            src/GLFW/src/engine/obj/util/settings/SettingOptionGraphics.cpp
+            src/GLFW/src/engine/obj/util/settings/SettingOptionGraphics.h
+            src/GLFW/src/engine/vulkan/vkObj/instance/device/VSwapChain.cpp
+            src/GLFW/src/engine/vulkan/vkObj/instance/device/VSwapChain.h
+            src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/VImageView.cpp
+            src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/VImageView.h
+            src/GLFW/src/engine/vulkan/vkObj/shader/VShaderCompiler.cpp
+            src/GLFW/src/engine/vulkan/vkObj/shader/VShaderCompiler.h
+            )
+
+
+    target_link_libraries( vkPrecompiler Vulkan::Vulkan )
+
+    target_link_libraries( vkPrecompiler glfw ${GLFW_LIBRARIES} )
 endif()
 
 
