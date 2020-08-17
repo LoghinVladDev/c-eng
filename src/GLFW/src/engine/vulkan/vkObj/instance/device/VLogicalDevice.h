@@ -16,6 +16,7 @@
 namespace engine {
 
     class VQueue;
+    class VSwapChain;
 
     class EngineVLogicalDeviceFactoryInvalidSwapChain : public std::exception {
     public:
@@ -130,6 +131,11 @@ namespace engine {
 
         //// public functions
 
+        VLogicalDevice ( ) noexcept = default;
+        VLogicalDevice ( const VLogicalDevice& ) noexcept;
+
+        VLogicalDevice & operator = ( const VLogicalDevice& ) noexcept;
+
         [[nodiscard]] const VPhysicalDevice * getBasePhysicalDevice () const noexcept {
             return this->_physicalDevice;
         }
@@ -154,6 +160,8 @@ namespace engine {
             return this->_queues;
         }
 
+        [[nodiscard]] std::set < const VQueueFamily * > getQueueFamilies () const noexcept;
+
         [[nodiscard]] const VulkanDevice & data() const noexcept {
             return this->_vulkanDevice;
         }
@@ -164,9 +172,7 @@ namespace engine {
 
         void cleanup () noexcept;
 
-        ~VLogicalDevice() noexcept {
-            delete this->_swapChain;
-        }
+        ~VLogicalDevice() noexcept;
     };
 
 }

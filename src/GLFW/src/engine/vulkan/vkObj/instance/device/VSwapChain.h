@@ -13,10 +13,12 @@
 
 namespace engine {
 
+    class VLogicalDevice;
+
     class VSwapChain {
     private:
         //// private variables
-        const VulkanSwapChainKhronos    _handle     {nullptr};
+        VulkanSwapChainKhronos          _handle     {VK_NULL_HANDLE};
         const VLogicalDevice *          _device     {nullptr};
 
         //// private functions
@@ -28,6 +30,11 @@ namespace engine {
         VSwapChain() noexcept = default;
         explicit VSwapChain( const VLogicalDevice* ) noexcept (false);
 
+        /**
+         * enhanced copy ctr to enforce set LD for VSC
+         */
+        explicit VSwapChain( const VSwapChain&, const VLogicalDevice* ) noexcept;
+
         VulkanResult setup(  ) noexcept;
         VulkanResult setup( const VLogicalDevice* ) noexcept (false);
 
@@ -38,14 +45,11 @@ namespace engine {
             this->_device = device;
         }
 
-        void cleanup () noexcept {
+        void cleanup () noexcept;
 
+        [[nodiscard]] const VLogicalDevice * getDevice () const noexcept {
+            return this->_device;
         }
-
-        [[nodiscard]] const VSurface* getSurface() const noexcept {
-            return this->_surface;
-        }
-
     };
 
 }

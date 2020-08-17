@@ -196,7 +196,7 @@ inline void engine::VulkanTriangleApplication::initVulkan() noexcept (false) {
         deviceFactory.addQueue( * queues[1], 1.0f );
     }
 
-    deviceFactory.addSwapChainToSurface( & this->_vulkanSurface );
+    deviceFactory.createSwapChainToSurface( & this->_vulkanSurface );
 //
     this->_vulkanLogicalDevice = deviceFactory.build( this->_vulkanPhysicalDevice );
     std::cout << "Logical Device Handle : " << this->_vulkanLogicalDevice.data() << '\n';
@@ -206,7 +206,7 @@ inline void engine::VulkanTriangleApplication::initVulkan() noexcept (false) {
     for(const auto & queue : this->_vulkanLogicalDevice.getQueues()) {
         std::cout << "\tQueue :\n";
         std::cout << "\t\tHandler : " << queue.data() << "\n";
-        std::cout << "\t\tFamily index : " << queue.getQueueFamily().getQueueFamilyIndex() << '\n';
+        std::cout << "\t\tFamily index : " << queue.getQueueFamily()->getQueueFamilyIndex() << '\n';
         std::cout << "\t\tIndex in Family : " << queue.getIndex() << '\n';
         std::cout << "\t\tPriority : " << queue.getPriority() << '\n';
     }

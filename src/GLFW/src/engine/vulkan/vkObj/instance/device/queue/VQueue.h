@@ -43,12 +43,12 @@ namespace engine {
             return this->_priority;
         }
 
-        [[nodiscard]] const VLogicalDevice & getLogicalDevice () const noexcept {
-            return *this->_parentLogicalDevice;
+        [[nodiscard]] const VLogicalDevice * getLogicalDevice () const noexcept {
+            return this->_parentLogicalDevice;
         }
 
-        [[nodiscard]] const VQueueFamily & getQueueFamily () const noexcept {
-            return *this->_parentFamily;
+        [[nodiscard]] const VQueueFamily * getQueueFamily () const noexcept {
+            return this->_parentFamily;
         }
 
         [[nodiscard]] const VulkanQueue & data () const noexcept {

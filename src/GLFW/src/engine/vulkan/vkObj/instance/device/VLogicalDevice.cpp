@@ -35,7 +35,7 @@ static inline void fArrSet( float * ptr, float val, uint64 len ) noexcept {
 }
 
 static inline bool queueFamilyComparator ( const engine::VQueue& a, const engine::VQueue& b ) noexcept {
-    return a.getQueueFamily().getQueueFamilyIndex() < b.getQueueFamily().getQueueFamilyIndex();
+    return a.getQueueFamily()->getQueueFamilyIndex() < b.getQueueFamily()->getQueueFamilyIndex();
 }
 
 static inline void populateQueueCreateInfoStructure (VulkanDeviceQueueCreateInfo * createInfo, uint32 qFamilyIndex, uint32 qCount, const float * qPrioritiesPtr) noexcept {
@@ -78,6 +78,15 @@ engine::VLogicalDevice::VLogicalDeviceFactory & engine::VLogicalDevice::VLogical
 //    return * this;
 //}
 
+[[nodiscard]] std::set < const engine::VQueueFamily* > engine::VLogicalDevice::getQueueFamilies() const noexcept {
+    std::set < const engine::VQueueFamily * > queueFamilies;
+
+    for ( const auto& queue : this->_queues )
+        queueFamilies.insert( queue.getQueueFamily() );
+
+    return queueFamilies;
+}
+
 VulkanResult engine::VLogicalDevice::setup( const engine::VPhysicalDevice& physicalDevice ) noexcept (false) {
     std::set < uint32 > queueFamiliesIndices;
     std::map < uint32, std::vector < float > > familyIndexToQueuePriorities;
@@ -86,10 +95,10 @@ VulkanResult engine::VLogicalDevice::setup( const engine::VPhysicalDevice& physi
 
     uint32 queueCreateInfoIndex = 0U;
     for( const auto & queue : this->_queues ) {
-        if (queue.getQueueFamily().getPhysicalDevice().data() != physicalDevice.data())
+        if (queue.getQueueFamily()->getPhysicalDevice().data() != physicalDevice.data())
             throw engine::EngineVLogicalDeviceQueuePhysicalDeviceMismatch();
 
-        uint32 familyIndex = queue.getQueueFamily().getQueueFamilyIndex();
+        uint32 familyIndex = queue.getQueueFamily()->getQueueFamilyIndex();
 
         queueFamiliesIndices.insert( familyIndex );
 
@@ -104,10 +113,10 @@ VulkanResult engine::VLogicalDevice::setup( const engine::VPhysicalDevice& physi
 
     for ( const auto& familyIndex : queueFamiliesIndices ) {
         populateQueueCreateInfoStructure(
-                (&queueCreateInfos[queueCreateInfoIndex++]),
-                familyIndex,
-                familyIndexToQueuePriorities.find(familyIndex)->second.size(),
-                familyIndexToQueuePriorities.find(familyIndex)->second.data()
+            (&queueCreateInfos[queueCreateInfoIndex++]),
+            familyIndex,
+            familyIndexToQueuePriorities.find(familyIndex)->second.size(),
+            familyIndexToQueuePriorities.find(familyIndex)->second.data()
         );
     }
 
@@ -152,7 +161,7 @@ VulkanResult engine::VLogicalDevice::setup( const engine::VPhysicalDevice& physi
 
 void engine::VLogicalDevice::setupQueues() noexcept {
     for( auto& queue : this->_queues ) {
-        queue.setup( *this, queue.getQueueFamily().getAvailableQueueIndex() );
+        queue.setup( *this, queue.getQueueFamily()->getAvailableQueueIndex() );
     }
 }
 
@@ -234,7 +243,56 @@ void engine::VLogicalDevice::cleanup() noexcept {
     for( auto & queue : this->_queues )
         queue.cleanup();
 
-    this->_swapChain->cleanup();
+    if( this->_swapChain != nullptr )
+        this->_swapChain->cleanup();
 
     vkDestroyDevice( this->_vulkanDevice, nullptr );
+}
+
+engine::VLogicalDevice::~VLogicalDevice() noexcept {
+    delete this->_swapChain;
+}
+
+engine::VLogicalDevice::VLogicalDevice(const engine::VLogicalDevice & obj) noexcept {
+    this->_vulkanDevice                 = obj._vulkanDevice;
+    this->_queues                       = obj._queues;
+    this->_swapChainAdequate            = obj._swapChainAdequate;
+    this->_validationLayerCollection    = obj._validationLayerCollection;
+    this->_enabledExtensions            = obj._enabledExtensions;
+    this->_surfacePtr                   = obj._surfacePtr;
+    this->_physicalDevice               = obj._physicalDevice;
+
+    if( obj._swapChain != nullptr ) {
+        this->_swapChain = new VSwapChain(*obj._swapChain, this);
+//        this->_swapChain->setLogicalDevice( this ); cannot because upon copy ctr call, obj is initialized
+//                                                           set of logical device works before init
+    }
+    else
+        this->_swapChain                    = nullptr;
+}
+
+engine::VLogicalDevice &engine::VLogicalDevice::operator=(const engine::VLogicalDevice & obj) noexcept {
+    if( this == & obj )
+        return *this;
+
+    if ( this->_vulkanDevice != VulkanDevice() )
+        this->cleanup();
+    delete this->_swapChain;
+
+    this->_vulkanDevice                 = obj._vulkanDevice;
+    this->_queues                       = obj._queues;
+    this->_swapChainAdequate            = obj._swapChainAdequate;
+    this->_validationLayerCollection    = obj._validationLayerCollection;
+    this->_enabledExtensions            = obj._enabledExtensions;
+    this->_surfacePtr                   = obj._surfacePtr;
+    this->_physicalDevice               = obj._physicalDevice;
+
+    if( obj._swapChain != nullptr ) {
+        this->_swapChain = new VSwapChain(*obj._swapChain, this);
+//        this->_swapChain->setLogicalDevice( this );
+    }
+    else
+        this->_swapChain                    = nullptr;
+
+    return *this;
 }
