@@ -1,0 +1,20 @@
+{
+    "compilerConfig" : {
+        "version"           : 450,
+        "bytecode"          : "SPIR-V",
+        "compilerInputDir"  : "../data/shaders/GLSL/450",
+        "compilerOutputDir" : "../data/shaders/GLSL/450/out",
+        "sources" : [ {
+                "path"          : "./vertexShader.vert",
+                "outputName"    : "vertexShaderByteCode",
+                "tag"           : "vertexShader",
+                "type"          : "vert"
+            }, {
+                "path"          : "./fragmentShader.frag",
+                "outputName"    : "fragmentShaderByteCode",
+                "tag"           : "fragmentShader",
+                "type"          : "frag"
+            }
+        ]
+    }
+}

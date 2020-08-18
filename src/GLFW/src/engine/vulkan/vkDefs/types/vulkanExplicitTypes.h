@@ -71,6 +71,12 @@ typedef VkImageViewCreateInfo                       VulkanImageViewCreateInfo;
 
 typedef VkImageView                                 VulkanImageView;
 
+typedef VkShaderModule                              VulkanShaderModule;
+typedef VkShaderModuleCreateInfo                    VulkanShaderModuleCreateInfo;
+
+typedef VkPipelineShaderStageCreateInfo             VulkanPipelineShaderStageCreateInfo;
+typedef VkShaderStageFlagBits                       VulkanShaderStageFlagBits;
+
 #if defined(ENGINE_OS_WINDOWS_32_64)
 
 typedef VkWin32SurfaceCreateInfoKHR                 VulkanSurfaceCreateInfoKhronos;

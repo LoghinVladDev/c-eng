@@ -3,7 +3,7 @@
 //
 
 #include <engineVulkanPreproc.h>
-#include <vkObj/shader/VShaderCompiler.h>
+#include <vkObj/instance/pipeline/shader/VShaderCompiler.h>
 #include <iostream>
 
 using namespace engine;
@@ -15,7 +15,17 @@ int main() {
     std::cout << compiler.getInputDirectoryPath() << '\n';
     std::cout << compiler.getOutputDirectoryPath() << '\n';
 
-    VShaderCompilerTarget target1 ("fragmentShader.frag");
+    compiler.setConfigurationFileJSON( std::string(__VULKAN_SHADERS_PATH__).append("/config/vkTriangleShaderComp.json") );
+
+//    VShaderCompilerTarget target1 ("fragmentShader.frag");
+//    VShaderCompilerTarget target2 ("vertexShader.vert");
+
+//    compiler.addTarget( target1 );
+//    compiler.addTarget( target2 );
+
+//    compiler.build();
+
+    compiler.build();
 
     return 0;
 }

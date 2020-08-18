@@ -21,6 +21,7 @@ add_subdirectory(dependencies/glfw_src)
 add_subdirectory(dependencies/glad)
 add_subdirectory(dependencies/glm)
 add_subdirectory(dependencies/assimp-5.0.1)
+add_subdirectory(dependencies/JSONCpp)
 #add_subdirectory(dependencies/sqlite-autoconf-3320300)
 #add_subdirectory(dependencies/stb_image)
 #add_subdirectory(messengerOffline)
@@ -35,6 +36,7 @@ include_directories(dependencies/glm)
 include_directories(dependencies/glfw_src/include)
 include_directories(dependencies/glad/include)
 include_directories(dependencies/stb_image)
+include_directories(dependencies/JSONCpp/include)
 
 include_directories(src/GLFW/src/engine)
 
@@ -50,6 +52,8 @@ if(ASSIMP_FOUND)
     include_directories(${ASSIMP_INCLUDE_DIR})
 endif()
 
+
+
 # VULKAN extension
 
 find_package(Vulkan)
@@ -60,6 +64,7 @@ if(Vulkan_FOUND)
     include_directories( ${Vulkan_INCLUDE_DIRS} )
 
     add_executable( vkTriangle
+            ${JSONCpp_SOURCE}
             src/GLFW/src/engine/vulkan/vkTests/c/vulkanTriangle.cpp
             src/GLFW/src/engine/vulkan/vkTests/obj/VulkanTriangleApplication.cpp
             src/GLFW/src/engine/vulkan/vkTests/obj/VulkanTriangleApplication.h
@@ -103,8 +108,11 @@ if(Vulkan_FOUND)
             src/GLFW/src/engine/vulkan/vkObj/instance/device/VSwapChain.h
             src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/VImageView.cpp
             src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/VImageView.h
-            src/GLFW/src/engine/vulkan/vkObj/shader/VShaderCompiler.cpp
-            src/GLFW/src/engine/vulkan/vkObj/shader/VShaderCompiler.h
+            src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/shader/VShaderCompiler.cpp
+            src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/shader/VShaderCompiler.h
+            src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/shader/VShaderModule.cpp
+            src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/shader/VShaderModule.h
+            src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/shader/VShaderModuleDefs.h
         )
 
 
@@ -114,6 +122,7 @@ if(Vulkan_FOUND)
 
 
     add_executable( vkPrecompiler
+            ${JSONCpp_SOURCE}
             src/GLFW/src/engine/vulkan/vkTests/c/vulkanPrecompilerTest.cpp
             src/GLFW/src/engine/vulkan/vkTests/obj/VulkanTriangleApplication.cpp
             src/GLFW/src/engine/vulkan/vkTests/obj/VulkanTriangleApplication.h
@@ -157,8 +166,8 @@ if(Vulkan_FOUND)
             src/GLFW/src/engine/vulkan/vkObj/instance/device/VSwapChain.h
             src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/VImageView.cpp
             src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/VImageView.h
-            src/GLFW/src/engine/vulkan/vkObj/shader/VShaderCompiler.cpp
-            src/GLFW/src/engine/vulkan/vkObj/shader/VShaderCompiler.h
+            src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/shader/VShaderCompiler.cpp
+            src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/shader/VShaderCompiler.h
             )
 
 

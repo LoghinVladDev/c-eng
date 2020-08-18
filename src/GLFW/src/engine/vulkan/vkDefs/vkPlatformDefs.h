@@ -11,6 +11,8 @@
 #define VK_USE_PLATFORM_WIN32_KHR /// required for surface object
 #define ENGINE_OS_WINDOWS_32_64
 
+#define WINDOWS_VULKAN_GLSL_COMPILER "glslc"
+
 #if defined(_WIN64)
 #define ENGINE_OS_WINDOWS_64
 #endif

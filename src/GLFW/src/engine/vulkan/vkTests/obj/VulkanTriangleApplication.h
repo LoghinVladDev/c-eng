@@ -25,6 +25,7 @@
 #include <vkObj/instance/device/VPhysicalDevice.h>
 #include <src/GLFW/src/engine/vulkan/vkObj/instance/device/VLogicalDevice.h>
 #include <src/GLFW/src/engine/vulkan/vkObj/window/surface/VSurface.h>
+#include <vkObj/shader/VShaderCompiler.h>
 
 namespace engine {
 

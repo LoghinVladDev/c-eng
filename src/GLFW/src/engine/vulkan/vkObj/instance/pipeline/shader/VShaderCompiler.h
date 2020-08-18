@@ -9,16 +9,23 @@
 #include <engineDataPaths.h>
 #include <vkDefs/vkPlatformDefs.h>
 #include <vector>
+#include <JSON.h>
+#include <vkObj/instance/pipeline/shader/VShaderModule.h>
 
 namespace engine {
 
     class VShaderCompiler;
 
     class VShaderCompilerTarget {
+        friend class VShaderCompiler;
     private:
-        std::string             _path;
-        std::string             _targetName;
-        std::string             _outputPath;
+        std::string                         _path;
+        std::string                         _targetName;
+        std::string                         _outputPath;
+        std::string                         _tag;
+
+        engine::VShaderModule::ShaderType   _shaderType { engine::VShaderModule::UNDEFINED };
+
         const VShaderCompiler * _pCompiler {nullptr};
 
         void setDefaultTargetName () noexcept {
@@ -48,7 +55,20 @@ namespace engine {
             return *this;
         }
 
-        VShaderCompilerTarget & setCompiler ( VShaderCompiler & compiler, bool = false) noexcept;
+        VShaderCompilerTarget & setTag ( std::string tag ) noexcept (false) {
+            this->_tag = std::move ( tag );
+            return *this;
+        }
+
+        [[nodiscard]] engine::VShaderModule::ShaderType getType () const noexcept {
+            return this->_shaderType;
+        }
+
+        [[nodiscard]] const std::string & getTag() const noexcept {
+            return this->_tag;
+        }
+
+//        VShaderCompilerTarget & setCompiler ( VShaderCompiler & compiler, bool = false) noexcept;
 
         [[nodiscard]] const std::string& getCompiledPath () const noexcept {
             return this->_outputPath;
@@ -77,10 +97,13 @@ namespace engine {
         VShaderCompiler () noexcept (false);
         explicit VShaderCompiler ( const std::string &, const std::string& = "" ) noexcept ( false );
 
-        VShaderCompiler & addTarget     ( VShaderCompilerTarget &, bool = false );
+        VShaderCompiler & addTarget     ( VShaderCompilerTarget & );
         VShaderCompiler & addTarget     ( std::string& );
         VShaderCompiler & addTargets    ( std::vector < VShaderCompilerTarget > & );
         VShaderCompiler & addTargets    ( std::vector < std::string > & );
+
+        VShaderCompiler & setConfigurationFile ( const JSON& );
+        VShaderCompiler & setConfigurationFileJSON ( const std::string& );
 
         [[nodiscard]] const std::string & getOutputDirectoryPath () const noexcept {
             return this->_outputDirectoryPath;
@@ -88,6 +111,10 @@ namespace engine {
 
         [[nodiscard]] const std::string & getInputDirectoryPath () const noexcept {
             return this->_inputDirectoryPath;
+        }
+
+        [[nodiscard]] const std::vector < VShaderCompilerTarget > & getTargets () const noexcept {
+            return this->_targets;
         }
 
         void build () noexcept;
