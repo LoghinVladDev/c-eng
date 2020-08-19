@@ -43,6 +43,7 @@ VulkanResult engine::VImageView::setup(const engine::VSwapChain * swapChain, uin
 
 VulkanResult engine::VImageViewCollection::setup(const engine::VSwapChain * swapChain) noexcept {
     this->_imageViews.resize( swapChain->getImages().size() );
+    this->_pSwapChain = swapChain;
 
     uint32 index = 0;
 
@@ -65,6 +66,7 @@ void engine::VImageViewCollection::cleanup() noexcept {
 
 engine::VImageViewCollection::VImageViewCollection(const engine::VImageViewCollection * pObj,const engine::VSwapChain * pSwapChain) noexcept {
     this->_imageViews.clear();
+    this->_pSwapChain = pSwapChain;
 
     for ( const auto & imageView : pObj->_imageViews )
         this->_imageViews.emplace_back ( & imageView, pSwapChain );
@@ -75,7 +77,7 @@ void engine::VImageView::cleanup() noexcept {
 }
 
 engine::VImageView::VImageView(const engine::VImageView * pObj, const engine::VSwapChain * pSwapChain) noexcept {
-    this->_handle = pObj->_handle;
-    this->_index  = pObj->_index;
-    this->_pSwapChain = pSwapChain;
+    this->_handle       = pObj->_handle;
+    this->_index        = pObj->_index;
+    this->_pSwapChain   = pSwapChain;
 }

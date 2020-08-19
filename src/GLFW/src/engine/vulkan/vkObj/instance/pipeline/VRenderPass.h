@@ -33,8 +33,12 @@ namespace engine {
         //// public functions
         VRenderPass () noexcept = default;
 
-        [[nodiscard]] const VulkanRenderPass data () const noexcept {
+        [[nodiscard]] const VulkanRenderPass & data () const noexcept {
             return this->_handle;
+        }
+
+        [[nodiscard]] const VLogicalDevice * getLogicalDevicePtr () const noexcept {
+            return this->_pLogicalDevice;
         }
 
         VulkanResult setup ( const engine::VLogicalDevice & ) noexcept (false) ;

@@ -88,6 +88,7 @@ void engine::VulkanTriangleApplication::run() noexcept (false) {
     this->initWindow();
     this->initVulkan();
     this->createGraphicsPipeline();
+    this->createFrameBuffers();
     this->mainLoop();
     this->cleanup();
 }
@@ -236,6 +237,12 @@ void engine::VulkanTriangleApplication::mainLoop() noexcept (false) {
 #pragma ide diagnostic ignored "Simplify"
 void engine::VulkanTriangleApplication::cleanup() noexcept (false) {
 
+    this->_frameBufferCollection.cleanup();
+
+    this->_graphicsPipeline.cleanup();
+
+//    this->_renderPass.cleanup(); happens in graphics pipeline cleanup
+
     this->_vertexShader.cleanup();
     this->_fragmentShader.cleanup();
 
@@ -297,6 +304,19 @@ void engine::VulkanTriangleApplication::createGraphicsPipeline() noexcept(false)
         this->_fragmentShader.getShaderStageInfo()
     };
 
+    // happens in pipeline setup
+//    if ( this->_renderPass.setup( this->_vulkanLogicalDevice ) != VulkanResult::VK_SUCCESS )
+//        throw std::runtime_error ("Render Pass initialization failed");
+
+    if ( this->_graphicsPipeline.setup( shaderStages, 2, this->_vulkanLogicalDevice ) != VulkanResult::VK_SUCCESS )
+        throw std::runtime_error ("Graphics Pipeline initialization failed");
+
+    this->_renderPass = this->_graphicsPipeline.getRenderPassPtr();
+
+    this->_frameBufferCollection.setup ( this->_renderPass );
+}
+
+void engine::VulkanTriangleApplication::createFrameBuffers() noexcept(false) {
 
 }
 

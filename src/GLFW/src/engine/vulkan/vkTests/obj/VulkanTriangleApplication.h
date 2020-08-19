@@ -27,6 +27,8 @@
 #include <src/GLFW/src/engine/vulkan/vkObj/window/surface/VSurface.h>
 #include <vkObj/instance/pipeline/shader/VShaderCompiler.h>
 #include <vkObj/instance/pipeline/VPipeline.h>
+#include <src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/VFrameBuffer.h>
+
 
 namespace engine {
 
@@ -46,10 +48,10 @@ namespace engine {
     class VulkanTriangleApplication {
     private:
         //// private_vars
-        uint32                      _width          {VulkanTriangleApplication::DEFAULT_WIDTH};
-        uint32                      _height         {VulkanTriangleApplication::DEFAULT_HEIGHT};
+        uint32                      _width                              {VulkanTriangleApplication::DEFAULT_WIDTH};
+        uint32                      _height                             {VulkanTriangleApplication::DEFAULT_HEIGHT};
 
-        GLFWwindow *                _window         {nullptr};
+        GLFWwindow *                _window                             {nullptr};
 
         VMessenger                  _vulkanMessenger;
         VValidationLayerCollection  _vulkanValidationLayerCollection;
@@ -65,6 +67,11 @@ namespace engine {
         VShaderModule               _vertexShader;
         VShaderModule               _fragmentShader;
 
+        const VRenderPass         * _renderPass                         {nullptr};
+        VPipeline                   _graphicsPipeline;
+
+        VFrameBufferCollection      _frameBufferCollection;
+
         //// private_functions
         void initSettings() const noexcept;
         void initWindow() noexcept(false);
@@ -72,6 +79,7 @@ namespace engine {
         void mainLoop() noexcept(false);
         void cleanup() noexcept(false);
 
+        void createFrameBuffers () noexcept (false);
         void createGraphicsPipeline() noexcept (false);
         void createSurface() noexcept (false);
         void setupDebugMessenger() noexcept (false);

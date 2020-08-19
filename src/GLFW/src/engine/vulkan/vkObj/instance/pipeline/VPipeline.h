@@ -34,8 +34,12 @@ namespace engine {
         //// public functions
         VPipeline() noexcept = default;
 
-        [[nodiscard]] VulkanGraphicsPipeline data () const noexcept {
+        [[nodiscard]] const VulkanGraphicsPipeline & data () const noexcept {
             return this->_handle;
+        }
+
+        [[nodiscard]] const VRenderPass * getRenderPassPtr () const noexcept {
+            return & this->_renderPass;
         }
 
         VulkanResult setup ( const VulkanPipelineShaderStageCreateInfo*, uint32, const engine::VLogicalDevice& ) noexcept (false);

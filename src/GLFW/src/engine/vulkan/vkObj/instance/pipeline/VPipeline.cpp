@@ -289,6 +289,15 @@ VulkanResult engine::VPipeline::setup(const VulkanPipelineShaderStageCreateInfo 
 
     auto extent = this->_pLogicalDevice->getSwapChain()->getImagesInfo().extent;
 
+    VulkanPipelineLayoutCreateInfo              layoutCreateInfo                { };
+
+    populateLayoutCreateInfo ( & layoutCreateInfo );
+
+    VulkanResult createLayoutResult = vkCreatePipelineLayout( this->_pLogicalDevice->data(), & layoutCreateInfo, nullptr, & this->_layoutHandle );
+
+    if( createLayoutResult != VK_SUCCESS )
+        return createLayoutResult;
+
     VulkanPipelineVertexInputStateCreateInfo    vertexInputStateCreateInfo      { };
     VulkanPipelineInputAssemblyStateCreateInfo  inputAssemblyStateCreateInfo    { };
     VulkanViewport                              viewport                        { };
@@ -299,7 +308,6 @@ VulkanResult engine::VPipeline::setup(const VulkanPipelineShaderStageCreateInfo 
     VulkanPipelineColorBlendAttachmentState     colorBlendAttachmentState       { };
     VulkanPipelineColorBlendStateCreateInfo     colorBlendStateCreateInfo       { };
     // dynamic state here ..., nullptr for now
-    VulkanPipelineLayoutCreateInfo              layoutCreateInfo                { };
 
     VulkanGraphicsPipelineCreateInfo            createInfo                      { };
 
@@ -313,7 +321,6 @@ VulkanResult engine::VPipeline::setup(const VulkanPipelineShaderStageCreateInfo 
     populateColorBlendAttachmentStateEnabled    ( & colorBlendAttachmentState );
     populateColorBlendStateCreateInfo           ( & colorBlendStateCreateInfo, & colorBlendAttachmentState );
     // dynamic state populate call here
-    populateLayoutCreateInfo ( & layoutCreateInfo );
 
     populateGraphicsPipelineCreateInfo(
             & createInfo,
@@ -331,11 +338,6 @@ VulkanResult engine::VPipeline::setup(const VulkanPipelineShaderStageCreateInfo 
             & this->_renderPass,
             0U
     );
-
-    VulkanResult createLayoutResult = vkCreatePipelineLayout( this->_pLogicalDevice->data(), & layoutCreateInfo, nullptr, & this->_layoutHandle );
-
-    if( createLayoutResult != VK_SUCCESS )
-        return createLayoutResult;
 
     VulkanResult createPipelineResult = vkCreateGraphicsPipelines(
             this->_pLogicalDevice->data(),

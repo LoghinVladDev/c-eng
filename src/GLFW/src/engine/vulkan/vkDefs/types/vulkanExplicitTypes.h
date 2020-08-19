@@ -101,6 +101,9 @@ typedef VkRenderPassCreateInfo                      VulkanRenderPassCreateInfo;
 typedef VkGraphicsPipelineCreateInfo                VulkanGraphicsPipelineCreateInfo;
 typedef VkPipeline                                  VulkanGraphicsPipeline;
 
+typedef VkFramebufferCreateInfo                     VulkanFrameBufferCreateInfo;
+typedef VkFramebuffer                               VulkanFrameBuffer;
+
 #if defined(ENGINE_OS_WINDOWS_32_64)
 
 typedef VkWin32SurfaceCreateInfoKHR                 VulkanSurfaceCreateInfoKhronos;
