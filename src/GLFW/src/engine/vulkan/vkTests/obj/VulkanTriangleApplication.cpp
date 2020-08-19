@@ -297,6 +297,7 @@ void engine::VulkanTriangleApplication::createGraphicsPipeline() noexcept(false)
         this->_fragmentShader.getShaderStageInfo()
     };
 
+
 }
 
 #pragma clang diagnostic pop

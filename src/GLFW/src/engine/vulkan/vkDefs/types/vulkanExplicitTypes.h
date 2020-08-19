@@ -90,7 +90,16 @@ typedef VkDynamicState                              VulkanDynamicState;
 typedef VkPipelineDynamicStateCreateInfo            VulkanPipelineDynamicStateCreateInfo;
 typedef VkPipelineLayout                            VulkanPipelineLayout;
 typedef VkPipelineLayoutCreateInfo                  VulkanPipelineLayoutCreateInfo;
+typedef VkPipelineDepthStencilStateCreateInfo       VulkanPipelineDepthStencilStateCreateInfo;
 
+typedef VkAttachmentDescription                     VulkanAttachmentDescription;
+typedef VkAttachmentReference                       VulkanAttachmentReference;
+typedef VkSubpassDescription                        VulkanSubpassDescription;
+typedef VkRenderPass                                VulkanRenderPass;
+typedef VkRenderPassCreateInfo                      VulkanRenderPassCreateInfo;
+
+typedef VkGraphicsPipelineCreateInfo                VulkanGraphicsPipelineCreateInfo;
+typedef VkPipeline                                  VulkanGraphicsPipeline;
 
 #if defined(ENGINE_OS_WINDOWS_32_64)
 

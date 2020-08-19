@@ -68,11 +68,11 @@ inline static void populateScissorStructure (
 }
 
 inline static void populateViewportStateCreateInfo (
-    VulkanPipelineViewportStateCreateInfo * createInfo,
-    VulkanViewport * pViewports,
-    uint32 viewportCount,
-    VulkanRectangle2D * pScissors,
-    uint32 scissorCount
+    VulkanPipelineViewportStateCreateInfo   * createInfo,
+    VulkanViewport                          * pViewports,
+    uint32                                    viewportCount,
+    VulkanRectangle2D                       * pScissors,
+    uint32                                    scissorCount
 ) noexcept {
     if ( createInfo == nullptr )
         return;
@@ -210,20 +210,141 @@ inline static void populateLayoutCreateInfo (
     createInfo->pPushConstantRanges     = nullptr;
 }
 
-VulkanResult engine::VPipeline::setup(const std::vector<VulkanPipelineShaderStageCreateInfo> & shaderStages, const engine::VLogicalDevice & device) noexcept(false) {
-    this->_pLogicalDevice = & device;
-    VulkanPipelineLayoutCreateInfo layoutCreateInfo { };
+inline static void populateGraphicsPipelineCreateInfo (
+    VulkanGraphicsPipelineCreateInfo                    * createInfo,
+    const VulkanPipelineShaderStageCreateInfo           * pShaderStages,
+    uint32                                                shaderStageCount,
+    const VulkanPipelineVertexInputStateCreateInfo      * pVertexInputState,
+    const VulkanPipelineInputAssemblyStateCreateInfo    * pInputAssemblyState,
+    const VulkanPipelineViewportStateCreateInfo         * pViewportState,
+    const VulkanPipelineRasterizationStateCreateInfo    * pRasterizerState,
+    const VulkanPipelineMultisampleStateCreateInfo      * pMultisampleState,
+    const VulkanPipelineDepthStencilStateCreateInfo     * pDepthStencilState,
+    const VulkanPipelineColorBlendStateCreateInfo       * pColorBlendState,
+    const VulkanPipelineDynamicStateCreateInfo          * pDynamicState,
+    VulkanPipelineLayout                                  layout,
+    const engine::VRenderPass                           * pRenderPass,
+    uint32                                                subpass,
+    const engine::VPipeline                             * pBasePipeline         = nullptr,
+    int32                                                 basePipelineIndex     = -1
+) noexcept {
+    if (
+        createInfo          == nullptr ||
+        pShaderStages       == nullptr ||
+        pVertexInputState   == nullptr ||
+        pInputAssemblyState == nullptr ||
+        pViewportState      == nullptr ||
+        pRasterizerState    == nullptr ||
+        pMultisampleState   == nullptr ||
+        pColorBlendState    == nullptr ||
+        pRenderPass         == nullptr
+    )
+        return;
 
-    populateLayoutCreateInfo ( & layoutCreateInfo );
+    * createInfo = { };
 
-    VulkanResult createLayoutResult = vkCreatePipelineLayout( this->_pLogicalDevice->data(), & layoutCreateInfo, nullptr, & this->_layoutHandle );
+    createInfo->sType                   = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
+    createInfo->stageCount              = shaderStageCount;
+    createInfo->pStages                 = pShaderStages;
 
-    return createLayoutResult;
+    createInfo->pVertexInputState       = pVertexInputState;
+    createInfo->pInputAssemblyState     = pInputAssemblyState;
+    createInfo->pViewportState          = pViewportState;
+    createInfo->pRasterizationState     = pRasterizerState;
+    createInfo->pMultisampleState       = pMultisampleState;
+    createInfo->pDepthStencilState      = pDepthStencilState;
+    createInfo->pColorBlendState        = pColorBlendState;
+    createInfo->pDynamicState           = pDynamicState;
+
+    createInfo->layout                  = layout;
+
+    createInfo->renderPass              = pRenderPass->data();
+    createInfo->subpass                 = subpass;
+
+    createInfo->basePipelineIndex       = basePipelineIndex;
+
+    if ( pBasePipeline == nullptr )
+        createInfo->basePipelineHandle  = VK_NULL_HANDLE;
+    else
+        createInfo->basePipelineHandle  = pBasePipeline->data();
+}
+
+void engine::VPipeline::createRenderPass() noexcept (false) {
+    if ( this->_renderPass.setup( * this->_pLogicalDevice ) != VulkanResult::VK_SUCCESS )
+        throw std::runtime_error ("render pass creation failure");
 }
 
 void engine::VPipeline::cleanup() noexcept {
+    if ( this->_handle != nullptr )
+        vkDestroyPipeline ( this->_pLogicalDevice->data(), this->_handle, nullptr );
+    this->_renderPass.cleanup();
     if ( this->_layoutHandle == nullptr )
         return;
-
     vkDestroyPipelineLayout( this->_pLogicalDevice->data(), this->_layoutHandle, nullptr );
+}
+
+VulkanResult engine::VPipeline::setup(const VulkanPipelineShaderStageCreateInfo * pShaderStages, uint32 shaderStageCount, const engine::VLogicalDevice & device ) noexcept(false) {
+    this->_pLogicalDevice = & device;
+    this->createRenderPass();
+
+    auto extent = this->_pLogicalDevice->getSwapChain()->getImagesInfo().extent;
+
+    VulkanPipelineVertexInputStateCreateInfo    vertexInputStateCreateInfo      { };
+    VulkanPipelineInputAssemblyStateCreateInfo  inputAssemblyStateCreateInfo    { };
+    VulkanViewport                              viewport                        { };
+    VulkanRectangle2D                           scissor                         { };
+    VulkanPipelineViewportStateCreateInfo       viewportStateCreateInfo         { };
+    VulkanPipelineRasterizationStateCreateInfo  rasterizationStateCreateInfo    { };
+    VulkanPipelineMultisampleStateCreateInfo    multisampleStateCreateInfo      { };
+    VulkanPipelineColorBlendAttachmentState     colorBlendAttachmentState       { };
+    VulkanPipelineColorBlendStateCreateInfo     colorBlendStateCreateInfo       { };
+    // dynamic state here ..., nullptr for now
+    VulkanPipelineLayoutCreateInfo              layoutCreateInfo                { };
+
+    VulkanGraphicsPipelineCreateInfo            createInfo                      { };
+
+    populateVertexInputStateCreateInfo          ( & vertexInputStateCreateInfo );
+    populateInputAssemblyStateCreateInfo        ( & inputAssemblyStateCreateInfo );
+    populateViewportStructure                   ( & viewport,0.0f, 0.0f, (float) extent.width, (float) extent.height );
+    populateScissorStructure                    ( & scissor,0,0, extent );
+    populateViewportStateCreateInfo             ( & viewportStateCreateInfo, & viewport, 1U, & scissor, 1U );
+    populateRasterizationStateCreateInfo        ( & rasterizationStateCreateInfo );
+    populateMultisampleStateCreateInfo          ( & multisampleStateCreateInfo );
+    populateColorBlendAttachmentStateEnabled    ( & colorBlendAttachmentState );
+    populateColorBlendStateCreateInfo           ( & colorBlendStateCreateInfo, & colorBlendAttachmentState );
+    // dynamic state populate call here
+    populateLayoutCreateInfo ( & layoutCreateInfo );
+
+    populateGraphicsPipelineCreateInfo(
+            & createInfo,
+            pShaderStages,
+            shaderStageCount,
+            & vertexInputStateCreateInfo,
+            & inputAssemblyStateCreateInfo,
+            & viewportStateCreateInfo,
+            & rasterizationStateCreateInfo,
+            & multisampleStateCreateInfo,
+            nullptr,
+            & colorBlendStateCreateInfo,
+            nullptr,
+            this->_layoutHandle,
+            & this->_renderPass,
+            0U
+    );
+
+    VulkanResult createLayoutResult = vkCreatePipelineLayout( this->_pLogicalDevice->data(), & layoutCreateInfo, nullptr, & this->_layoutHandle );
+
+    if( createLayoutResult != VK_SUCCESS )
+        return createLayoutResult;
+
+    VulkanResult createPipelineResult = vkCreateGraphicsPipelines(
+            this->_pLogicalDevice->data(),
+            VK_NULL_HANDLE,
+            1U,
+            & createInfo,
+            nullptr,
+            & this->_handle
+    );
+
+    return createPipelineResult;
 }
