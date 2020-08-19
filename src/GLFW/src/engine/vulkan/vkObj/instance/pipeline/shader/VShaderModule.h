@@ -9,7 +9,6 @@
 #include <string>
 #include <vector>
 #include <vkObj/instance/device/VLogicalDevice.h>
-#include <vkObj/instance/pipeline/shader/VShaderCompiler.h>
 
 namespace engine {
 
@@ -21,6 +20,7 @@ namespace engine {
             return "Tried to acquire pipeline create info without valid shader module";
         }
     };
+
 
     class VShaderModule {
     public:
@@ -46,6 +46,7 @@ namespace engine {
         //// public variables
 
         //// public functions
+        VShaderModule () noexcept = default;
         explicit VShaderModule ( const std::string& ) noexcept;
         explicit VShaderModule ( const engine::VShaderCompilerTarget& ) noexcept;
 
@@ -59,7 +60,7 @@ namespace engine {
             return *this;
         }
 
-        VulkanPipelineShaderStageCreateInfo getShaderStageInfo () const noexcept (false);
+        [[nodiscard]] VulkanPipelineShaderStageCreateInfo getShaderStageInfo () const noexcept (false);
 
         [[nodiscard]] static std::string shaderTypeToString ( ShaderType ) noexcept;
         [[nodiscard]] static ShaderType stringToShaderType ( const std::string & ) noexcept;

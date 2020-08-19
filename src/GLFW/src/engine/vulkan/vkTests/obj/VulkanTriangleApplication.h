@@ -25,7 +25,8 @@
 #include <vkObj/instance/device/VPhysicalDevice.h>
 #include <src/GLFW/src/engine/vulkan/vkObj/instance/device/VLogicalDevice.h>
 #include <src/GLFW/src/engine/vulkan/vkObj/window/surface/VSurface.h>
-#include <vkObj/shader/VShaderCompiler.h>
+#include <vkObj/instance/pipeline/shader/VShaderCompiler.h>
+#include <vkObj/instance/pipeline/VPipeline.h>
 
 namespace engine {
 
@@ -61,6 +62,9 @@ namespace engine {
 
         std::vector <VQueueFamily>  _graphicsCapableQueueFamily;
 
+        VShaderModule               _vertexShader;
+        VShaderModule               _fragmentShader;
+
         //// private_functions
         void initSettings() const noexcept;
         void initWindow() noexcept(false);
@@ -68,6 +72,7 @@ namespace engine {
         void mainLoop() noexcept(false);
         void cleanup() noexcept(false);
 
+        void createGraphicsPipeline() noexcept (false);
         void createSurface() noexcept (false);
         void setupDebugMessenger() noexcept (false);
         void autoPickPhysicalDevice() noexcept (false);

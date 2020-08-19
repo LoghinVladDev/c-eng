@@ -87,6 +87,7 @@ void engine::VulkanTriangleApplication::run() noexcept (false) {
     this->initSettings();
     this->initWindow();
     this->initVulkan();
+    this->createGraphicsPipeline();
     this->mainLoop();
     this->cleanup();
 }
@@ -235,6 +236,9 @@ void engine::VulkanTriangleApplication::mainLoop() noexcept (false) {
 #pragma ide diagnostic ignored "Simplify"
 void engine::VulkanTriangleApplication::cleanup() noexcept (false) {
 
+    this->_vertexShader.cleanup();
+    this->_fragmentShader.cleanup();
+
     this->_vulkanLogicalDevice.cleanup();
 
     delete this->_vulkanQueueFamilyCollection;
@@ -267,6 +271,32 @@ void engine::VulkanTriangleApplication::autoPickPhysicalDevice() noexcept(false)
         throw std::runtime_error ( "failed to find a suitable GPU" );
 
     this->_vulkanPhysicalDevice = ( * bestDevice );
+}
+
+void engine::VulkanTriangleApplication::createGraphicsPipeline() noexcept(false) {
+    VShaderCompiler compiler;
+
+    compiler.setConfigurationFileJSON( std::string(__VULKAN_SHADERS_PATH__).append("/config/vkTriangleShaderComp.json") );
+    compiler.build();
+
+    for ( const auto & target : compiler.getTargets() ) {
+        if ( target.getType() == VShaderModule::VERTEX ) {
+            this->_vertexShader.setType( VShaderModule::VERTEX );
+            if ( this->_vertexShader.setup ( target.getCompiledPath(), this->_vulkanLogicalDevice ) != VulkanResult::VK_SUCCESS )
+                throw std::runtime_error ("Shader module initialization failed");
+        } else if ( target.getType() == VShaderModule::FRAGMENT ) {
+            this->_fragmentShader.setType( VShaderModule::FRAGMENT );
+            if ( this->_fragmentShader.setup ( target.getCompiledPath(), this->_vulkanLogicalDevice ) != VulkanResult::VK_SUCCESS )
+                throw std::runtime_error ("Shader module initialization failed");
+        }
+
+    }
+
+    VulkanPipelineShaderStageCreateInfo shaderStages [] = {
+        this->_vertexShader.getShaderStageInfo(),
+        this->_fragmentShader.getShaderStageInfo()
+    };
+
 }
 
 #pragma clang diagnostic pop

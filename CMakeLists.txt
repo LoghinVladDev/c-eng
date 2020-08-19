@@ -113,7 +113,9 @@ if(Vulkan_FOUND)
             src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/shader/VShaderModule.cpp
             src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/shader/VShaderModule.h
             src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/shader/VShaderModuleDefs.h
-        )
+            src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/VPipeline.cpp
+            src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/VPipeline.h
+    )
 
 
     target_link_libraries( vkTriangle Vulkan::Vulkan )

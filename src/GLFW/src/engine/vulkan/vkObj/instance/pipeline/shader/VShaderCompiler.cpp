@@ -113,6 +113,7 @@ engine::VShaderCompiler &engine::VShaderCompiler::setConfigurationFile(const JSO
         target.setPath( targetJSON.getString("path") );
         target.setTargetName( targetJSON.getString("outputName") );
         target._pCompiler = this;
+        target._shaderType = engine::VShaderModule::stringToShaderType( targetJSON.getString( "type" ) );
 
         this->_targets.push_back( target );
     }

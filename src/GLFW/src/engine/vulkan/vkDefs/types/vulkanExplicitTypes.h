@@ -77,6 +77,21 @@ typedef VkShaderModuleCreateInfo                    VulkanShaderModuleCreateInfo
 typedef VkPipelineShaderStageCreateInfo             VulkanPipelineShaderStageCreateInfo;
 typedef VkShaderStageFlagBits                       VulkanShaderStageFlagBits;
 
+typedef VkPipelineVertexInputStateCreateInfo        VulkanPipelineVertexInputStateCreateInfo;
+typedef VkPipelineInputAssemblyStateCreateInfo      VulkanPipelineInputAssemblyStateCreateInfo;
+typedef VkViewport                                  VulkanViewport;
+typedef VkRect2D                                    VulkanRectangle2D;
+typedef VkPipelineViewportStateCreateInfo           VulkanPipelineViewportStateCreateInfo;
+typedef VkPipelineRasterizationStateCreateInfo      VulkanPipelineRasterizationStateCreateInfo;
+typedef VkPipelineMultisampleStateCreateInfo        VulkanPipelineMultisampleStateCreateInfo;
+typedef VkPipelineColorBlendAttachmentState         VulkanPipelineColorBlendAttachmentState;
+typedef VkPipelineColorBlendStateCreateInfo         VulkanPipelineColorBlendStateCreateInfo;
+typedef VkDynamicState                              VulkanDynamicState;
+typedef VkPipelineDynamicStateCreateInfo            VulkanPipelineDynamicStateCreateInfo;
+typedef VkPipelineLayout                            VulkanPipelineLayout;
+typedef VkPipelineLayoutCreateInfo                  VulkanPipelineLayoutCreateInfo;
+
+
 #if defined(ENGINE_OS_WINDOWS_32_64)
 
 typedef VkWin32SurfaceCreateInfoKHR                 VulkanSurfaceCreateInfoKhronos;

@@ -5,6 +5,7 @@
 #include "VShaderModule.h"
 #include "VShaderModuleDefs.h"
 #include <fstream>
+#include <vkObj/instance/pipeline/shader/VShaderCompiler.h>
 
 static std::vector < int8 > readFile ( const std::string& fileName ) noexcept (false) {
     std::ifstream file ( fileName, std::ios::ate | std::ios::binary );
@@ -79,9 +80,14 @@ VulkanResult engine::VShaderModule::setup(const std::string & path, const engine
         this->_byteCode.clear();
         std::cout << "Caught exception upon reading shader bytecode : " << exception.what() << '\n';
     }
+
+    return VulkanResult::VK_ERROR_INITIALIZATION_FAILED;
 }
 
 void engine::VShaderModule::cleanup() noexcept {
+    if ( this->_handle == nullptr )
+        return;
+
     vkDestroyShaderModule( this->_pLogicalDevice->data(), this->_handle, nullptr );
 
 }
