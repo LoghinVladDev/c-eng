@@ -89,6 +89,7 @@ void engine::VulkanTriangleApplication::run() noexcept (false) {
     this->initVulkan();
     this->createGraphicsPipeline();
     this->createFrameBuffers();
+    this->createCommandPoolsAndBuffers();
     this->mainLoop();
     this->cleanup();
 }
@@ -237,6 +238,8 @@ void engine::VulkanTriangleApplication::mainLoop() noexcept (false) {
 #pragma ide diagnostic ignored "Simplify"
 void engine::VulkanTriangleApplication::cleanup() noexcept (false) {
 
+    this->_commandPool.cleanup();
+
     this->_frameBufferCollection.cleanup();
 
     this->_graphicsPipeline.cleanup();
@@ -259,6 +262,16 @@ void engine::VulkanTriangleApplication::cleanup() noexcept (false) {
     glfwDestroyWindow(this->_window);
 
     glfwTerminate();
+}
+
+void engine::VulkanTriangleApplication::createCommandPoolsAndBuffers() noexcept(false) {
+    this->_commandPool.setup( this->_vulkanLogicalDevice );
+
+    if ( this->_commandBufferCollection.allocate( this->_commandPool, this->_frameBufferCollection ) != VulkanResult::VK_SUCCESS )
+        throw std::runtime_error ( "Command Buffers Allocation Error" );
+
+    if ( this->_commandBufferCollection.startRecord( this->_graphicsPipeline ) != VulkanResult::VK_SUCCESS )
+        throw std::runtime_error ( "Command Buffers Record Error" );
 }
 
 void engine::VulkanTriangleApplication::autoPickPhysicalDevice() noexcept(false) {
@@ -313,11 +326,10 @@ void engine::VulkanTriangleApplication::createGraphicsPipeline() noexcept(false)
 
     this->_renderPass = this->_graphicsPipeline.getRenderPassPtr();
 
-    this->_frameBufferCollection.setup ( this->_renderPass );
 }
 
 void engine::VulkanTriangleApplication::createFrameBuffers() noexcept(false) {
-
+    this->_frameBufferCollection.setup ( this->_renderPass );
 }
 
 #pragma clang diagnostic pop

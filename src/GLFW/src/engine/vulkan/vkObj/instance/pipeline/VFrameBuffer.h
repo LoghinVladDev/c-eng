@@ -48,6 +48,14 @@ namespace engine {
         }
         VulkanResult setup (  ) noexcept;
         void cleanup () noexcept;
+
+        [[nodiscard]] const VRenderPass * getRenderPassPtr () const noexcept {
+            return this->_pRenderPass;
+        }
+
+        [[nodiscard]] const VulkanFrameBuffer & data () const noexcept {
+            return this->_handle;
+        }
     };
 
     class VFrameBufferCollection {
@@ -67,6 +75,10 @@ namespace engine {
 
         [[nodiscard]] const std::vector < VFrameBuffer > & getFrameBuffers () const noexcept {
             return this->_frameBuffers;
+        }
+
+        [[nodiscard]] uint32 size () const noexcept {
+            return this->_frameBuffers.size();
         }
 
         void cleanup () noexcept;

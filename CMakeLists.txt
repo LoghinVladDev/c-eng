@@ -118,7 +118,12 @@ if(Vulkan_FOUND)
             src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/VRenderPass.cpp
             src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/VRenderPass.h
             src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/VFrameBuffer.cpp
-            src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/VFrameBuffer.h)
+            src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/VFrameBuffer.h
+            src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/command/VCommandBuffer.cpp
+            src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/command/VCommandBuffer.h
+            src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/command/VCommandPool.cpp
+            src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/command/VCommandPool.h
+        )
 
 
     target_link_libraries( vkTriangle Vulkan::Vulkan )
@@ -587,7 +592,7 @@ add_executable( animateTest
         src/obj/engine/util/dataStructures/Array.cpp
         src/obj/engine/util/dataStructures/Array.h
         src/obj/engine/preCompiledHeaders.h
-        src/GLFW/src/engine/enginePreproc.h src/GLFW/src/engine/obj/util/func/KeyFunctions.cpp src/GLFW/src/engine/obj/util/func/KeyFunctions.h src/GLFW/src/engine/vulkan/vkTests/obj/VulkanTriangleApplication.cpp src/GLFW/src/engine/vulkan/vkTests/obj/VulkanTriangleApplication.h src/GLFW/src/engine/vulkan/vkObj/instance/device/VPhysicalDevice.cpp src/GLFW/src/engine/vulkan/vkObj/instance/device/VPhysicalDevice.h src/GLFW/src/engine/vulkan/vkDefs/VInstanceDefinitions.h src/GLFW/src/engine/vulkan/vkDefs/vkPlatformDefs.h)
+        src/GLFW/src/engine/enginePreproc.h src/GLFW/src/engine/obj/util/func/KeyFunctions.cpp src/GLFW/src/engine/obj/util/func/KeyFunctions.h src/GLFW/src/engine/vulkan/vkTests/obj/VulkanTriangleApplication.cpp src/GLFW/src/engine/vulkan/vkTests/obj/VulkanTriangleApplication.h src/GLFW/src/engine/vulkan/vkObj/instance/device/VPhysicalDevice.cpp src/GLFW/src/engine/vulkan/vkObj/instance/device/VPhysicalDevice.h src/GLFW/src/engine/vulkan/vkDefs/VInstanceDefinitions.h src/GLFW/src/engine/vulkan/vkDefs/vkPlatformDefs.h src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/command/VCommandPool.cpp src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/command/VCommandPool.h)
 
 target_link_libraries(animateTest -lOpenGL32 -lfreeGLUT -lglu32)
 

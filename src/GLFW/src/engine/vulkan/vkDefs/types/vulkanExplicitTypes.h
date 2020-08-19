@@ -104,6 +104,16 @@ typedef VkPipeline                                  VulkanGraphicsPipeline;
 typedef VkFramebufferCreateInfo                     VulkanFrameBufferCreateInfo;
 typedef VkFramebuffer                               VulkanFrameBuffer;
 
+typedef VkCommandPool                               VulkanCommandPool;
+typedef VkCommandPoolCreateInfo                     VulkanCommandPoolCreateInfo;
+typedef VkCommandBuffer                             VulkanCommandBuffer;
+typedef VkCommandBufferAllocateInfo                 VulkanCommandBufferAllocateInfo;
+typedef VkCommandBufferBeginInfo                    VulkanCommandBufferBeginInfo;
+typedef VkRenderPassBeginInfo                       VulkanRenderPassBeginInfo;
+typedef VkClearValue                                VulkanClearValue;
+typedef VkCommandBufferLevel                        VulkanCommandBufferLevel;
+
+
 #if defined(ENGINE_OS_WINDOWS_32_64)
 
 typedef VkWin32SurfaceCreateInfoKHR                 VulkanSurfaceCreateInfoKhronos;

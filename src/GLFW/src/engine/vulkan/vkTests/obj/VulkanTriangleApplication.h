@@ -28,6 +28,7 @@
 #include <vkObj/instance/pipeline/shader/VShaderCompiler.h>
 #include <vkObj/instance/pipeline/VPipeline.h>
 #include <src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/VFrameBuffer.h>
+#include <vkObj/instance/pipeline/command/VCommandBuffer.h>
 
 
 namespace engine {
@@ -72,12 +73,17 @@ namespace engine {
 
         VFrameBufferCollection      _frameBufferCollection;
 
+        VCommandPool                _commandPool;
+        VCommandBufferCollection    _commandBufferCollection;
+
         //// private_functions
         void initSettings() const noexcept;
         void initWindow() noexcept(false);
         void initVulkan() noexcept(false);
         void mainLoop() noexcept(false);
         void cleanup() noexcept(false);
+
+        void createCommandPoolsAndBuffers () noexcept (false);
 
         void createFrameBuffers () noexcept (false);
         void createGraphicsPipeline() noexcept (false);
