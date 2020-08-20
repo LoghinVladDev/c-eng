@@ -90,6 +90,7 @@ void engine::VulkanTriangleApplication::run() noexcept (false) {
     this->createGraphicsPipeline();
     this->createFrameBuffers();
     this->createCommandPoolsAndBuffers();
+    this->createSynchronizationElements();
     this->mainLoop();
     this->cleanup();
 }
@@ -231,12 +232,37 @@ inline void engine::VulkanTriangleApplication::initVulkan() noexcept (false) {
 #pragma clang diagnostic pop
 
 void engine::VulkanTriangleApplication::mainLoop() noexcept (false) {
+    while ( !glfwWindowShouldClose( this->_window ) ) {
+        glfwPollEvents();
+        this->drawFrame();
+    }
+}
 
+void engine::VulkanTriangleApplication::drawFrame() noexcept {
+    uint32 imageIndex;
+    vkAcquireNextImageKHR(
+        this->_vulkanLogicalDevice.data(),
+        this->_vulkanLogicalDevice.getSwapChain()->data(),
+        UINT64_MAX,
+        this->_imageAvailableSemaphore.data(),
+        VK_NULL_HANDLE,
+        & imageIndex
+    );
+}
+
+void engine::VulkanTriangleApplication::createSynchronizationElements() noexcept(false) {
+    if ( this->_renderFinishedSemaphore.setup( this->_vulkanLogicalDevice ) != VulkanResult::VK_SUCCESS )
+        throw std::runtime_error ( "Semaphore : render finish initialization failed" );
+    if ( this->_imageAvailableSemaphore.setup( this->_vulkanLogicalDevice ) != VulkanResult::VK_SUCCESS )
+        throw std::runtime_error ( "Semaphore : image available initialization failed" );
 }
 
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "Simplify"
 void engine::VulkanTriangleApplication::cleanup() noexcept (false) {
+
+    this->_renderFinishedSemaphore.cleanup();
+    this->_imageAvailableSemaphore.cleanup();
 
     this->_commandPool.cleanup();
 

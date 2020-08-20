@@ -29,6 +29,7 @@
 #include <vkObj/instance/pipeline/VPipeline.h>
 #include <src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/VFrameBuffer.h>
 #include <vkObj/instance/pipeline/command/VCommandBuffer.h>
+#include <vkObj/instance/pipeline/synchronization/VSemaphore.h>
 
 
 namespace engine {
@@ -76,6 +77,9 @@ namespace engine {
         VCommandPool                _commandPool;
         VCommandBufferCollection    _commandBufferCollection;
 
+        VSemaphore                  _renderFinishedSemaphore;
+        VSemaphore                  _imageAvailableSemaphore;
+
         //// private_functions
         void initSettings() const noexcept;
         void initWindow() noexcept(false);
@@ -83,7 +87,10 @@ namespace engine {
         void mainLoop() noexcept(false);
         void cleanup() noexcept(false);
 
+        void drawFrame () noexcept;
+
         void createCommandPoolsAndBuffers () noexcept (false);
+        void createSynchronizationElements () noexcept (false);
 
         void createFrameBuffers () noexcept (false);
         void createGraphicsPipeline() noexcept (false);

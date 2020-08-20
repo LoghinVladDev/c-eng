@@ -51,6 +51,10 @@ namespace engine {
          */
         explicit VSwapChain( const VSwapChain&, const VLogicalDevice* ) noexcept;
 
+        [[nodiscard]] const VulkanSwapChainKhronos & data () const noexcept {
+            return this->_handle;
+        }
+
         [[nodiscard]] const VSwapChainImageInfo & getImagesInfo () const noexcept {
             return this->_imagesInfo;
         }
