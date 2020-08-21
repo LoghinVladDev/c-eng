@@ -10,11 +10,13 @@
 #include <vkObj/window/surface/VSurface.h>
 #include <vkObj/instance/device/VLogicalDevice.h>
 #include <vkObj/instance/pipeline/VImageView.h>
+#include <vkObj/instance/pipeline/synchronization/VSemaphore.h>
 
 #include <vector>
 
 namespace engine {
 
+    class VSemaphore;
     class VLogicalDevice;
     class VImageViewCollection;
 
@@ -67,6 +69,7 @@ namespace engine {
 
         VulkanResult setup(  ) noexcept;
         VulkanResult setup( const VLogicalDevice* ) noexcept (false);
+        VulkanResult present ( const VSemaphore *, uint32, uint32 ) const noexcept;
 
         void setLogicalDevice ( const VLogicalDevice* device ) noexcept {
             if( this->_handle != nullptr )

@@ -270,7 +270,17 @@ inline static void populateGraphicsPipelineCreateInfo (
 }
 
 void engine::VPipeline::createRenderPass() noexcept (false) {
-    if ( this->_renderPass.setup( * this->_pLogicalDevice ) != VulkanResult::VK_SUCCESS )
+    VulkanSubpassDependency waitForImageSubpassDependency;
+    waitForImageSubpassDependency.srcSubpass    = VK_SUBPASS_EXTERNAL;
+    waitForImageSubpassDependency.dstSubpass    = 0U;
+    waitForImageSubpassDependency.dependencyFlags = 0U;
+    waitForImageSubpassDependency.srcStageMask  = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+    waitForImageSubpassDependency.srcAccessMask = 0U;
+
+    waitForImageSubpassDependency.dstStageMask  = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+    waitForImageSubpassDependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+
+    if ( this->_renderPass.setup( * this->_pLogicalDevice, & waitForImageSubpassDependency, 1U ) != VulkanResult::VK_SUCCESS )
         throw std::runtime_error ("render pass creation failure");
 }
 

@@ -120,6 +120,9 @@ typedef VkFenceCreateInfo                           VulkanFenceCreateInfo;
 typedef VkPipelineStageFlags                        VulkanPipelineStageFlags;
 typedef VkSubmitInfo                                VulkanSubmitInfo;
 
+typedef VkSubpassDependency                         VulkanSubpassDependency;
+typedef VkPresentInfoKHR                            VulkanPresentInfoKhronos;
+
 
 #if defined(ENGINE_OS_WINDOWS_32_64)
 

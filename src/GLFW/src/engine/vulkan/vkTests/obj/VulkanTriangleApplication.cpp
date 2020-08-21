@@ -237,7 +237,7 @@ void engine::VulkanTriangleApplication::createSynchronizationElements() noexcept
 
 #pragma clang diagnostic pop
 
-void engine::VulkanTriangleApplication::mainLoop() noexcept (false) {
+void engine::VulkanTriangleApplication::drawImage () noexcept (false) {
     uint32 imageIndex;
     vkAcquireNextImageKHR( this->_vulkanLogicalDevice.data(), this->_vulkanLogicalDevice.getSwapChain()->data(), UINT64_MAX, this->_imageAvailableSemaphore.data(), VK_NULL_HANDLE, & imageIndex );
 
@@ -249,10 +249,29 @@ void engine::VulkanTriangleApplication::mainLoop() noexcept (false) {
             1U,
             & this->_renderFinishedSemaphore,
             1U
-        ) != VulkanResult::VK_SUCCESS
-    )
+    ) != VulkanResult::VK_SUCCESS
+            )
         throw std::runtime_error ( "Command Buffer Submit Failure" );
 
+    if( this->_vulkanLogicalDevice.getSwapChain()->present( & this->_renderFinishedSemaphore, 1U, imageIndex ) != VulkanResult::VK_SUCCESS )
+        throw std::runtime_error ( "Swap Chain Present Failure" );
+
+    const VQueue * pPresentQueue = nullptr;
+
+    for ( const auto & queue : this->_vulkanLogicalDevice.getQueues() )
+        if ( queue.getQueueFamily()->isPresentCapable() ) {
+            pPresentQueue = & queue;
+            break;
+        }
+
+    vkQueueWaitIdle( pPresentQueue->data() );
+}
+
+void engine::VulkanTriangleApplication::mainLoop() noexcept (false) {
+    while ( !glfwWindowShouldClose( this->_window ) ) {
+        glfwPollEvents();
+        this->drawImage();
+    }
 }
 
 #pragma clang diagnostic push

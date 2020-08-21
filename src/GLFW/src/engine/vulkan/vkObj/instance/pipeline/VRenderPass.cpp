@@ -57,7 +57,9 @@ static inline void populateRenderPassCreateInfo (
     const VulkanAttachmentDescription   * pAttachments,
     uint32                                attachmentCount,
     const VulkanSubpassDescription      * pSubpasses,
-    uint32                                subpassCount
+    uint32                                subpassCount,
+    const VulkanSubpassDependency       * pSubpassDependencies,
+    uint32                                subpassDependencyCount
 ) noexcept {
     if ( createInfo == nullptr )
         return;
@@ -69,9 +71,15 @@ static inline void populateRenderPassCreateInfo (
     createInfo->subpassCount        = subpassCount;
     createInfo->pAttachments        = pAttachments;
     createInfo->pSubpasses          = pSubpasses;
+    createInfo->dependencyCount     = subpassDependencyCount;
+    createInfo->pDependencies       = pSubpassDependencies;
 }
 
-VulkanResult engine::VRenderPass::setup(const engine::VLogicalDevice & device) noexcept(false) {
+VulkanResult engine::VRenderPass::setup(
+    const engine::VLogicalDevice & device,
+    const VulkanSubpassDependency * pSubpassDependencies,
+    uint32 subpassDependencyCount
+) noexcept(false) {
     VulkanAttachmentDescription colorAttachmentDescription  { };
     VulkanAttachmentReference   colorAttachmentReference    { };
     VulkanSubpassDescription    subpassDescription          { };
@@ -85,7 +93,15 @@ VulkanResult engine::VRenderPass::setup(const engine::VLogicalDevice & device) n
     populateAttachmentDescription   ( & colorAttachmentDescription, this->_pLogicalDevice->getSwapChain() );
     populateAttachmentReference     ( & colorAttachmentReference, 0U );
     populateSubpassDescription      ( & subpassDescription, & colorAttachmentReference, 1U );
-    populateRenderPassCreateInfo    ( & createInfo, & colorAttachmentDescription, 1U, & subpassDescription, 1U );
+    populateRenderPassCreateInfo    (
+        & createInfo,
+        & colorAttachmentDescription,
+        1U,
+        & subpassDescription,
+        1U,
+        pSubpassDependencies,
+        subpassDependencyCount
+    );
 
     return vkCreateRenderPass( this->_pLogicalDevice->data(), & createInfo, nullptr, & this->_handle );
 }

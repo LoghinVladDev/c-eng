@@ -41,7 +41,11 @@ namespace engine {
             return this->_pLogicalDevice;
         }
 
-        VulkanResult setup ( const engine::VLogicalDevice & ) noexcept (false) ;
+        VulkanResult setup (
+            const engine::VLogicalDevice & ,
+            const VulkanSubpassDependency * = nullptr,
+            uint32 = 0U
+        ) noexcept (false) ;
 
         void cleanup () noexcept;
     };

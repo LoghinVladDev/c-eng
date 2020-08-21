@@ -11,6 +11,8 @@
 
 namespace engine {
 
+    class VLogicalDevice;
+
     class VSemaphore {
     private:
         //// private variables

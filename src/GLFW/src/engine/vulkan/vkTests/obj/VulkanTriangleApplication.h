@@ -86,6 +86,7 @@ namespace engine {
         void initVulkan() noexcept(false);
         void mainLoop() noexcept(false);
         void cleanup() noexcept(false);
+        void drawImage() noexcept (false);
 
         void createCommandPoolsAndBuffers () noexcept (false);
 
