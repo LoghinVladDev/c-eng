@@ -90,6 +90,7 @@ void engine::VulkanTriangleApplication::run() noexcept (false) {
     this->createGraphicsPipeline();
     this->createFrameBuffers();
     this->createCommandPoolsAndBuffers();
+    this->createSynchronizationElements();
     this->mainLoop();
     this->cleanup();
 }
@@ -228,15 +229,38 @@ inline void engine::VulkanTriangleApplication::initVulkan() noexcept (false) {
         }
     }
 }
+
+void engine::VulkanTriangleApplication::createSynchronizationElements() noexcept(false) {
+    this->_imageAvailableSemaphore.setup( this->_vulkanLogicalDevice );
+    this->_renderFinishedSemaphore.setup( this->_vulkanLogicalDevice );
+}
+
 #pragma clang diagnostic pop
 
 void engine::VulkanTriangleApplication::mainLoop() noexcept (false) {
+    uint32 imageIndex;
+    vkAcquireNextImageKHR( this->_vulkanLogicalDevice.data(), this->_vulkanLogicalDevice.getSwapChain()->data(), UINT64_MAX, this->_imageAvailableSemaphore.data(), VK_NULL_HANDLE, & imageIndex );
+
+    static VkPipelineStageFlags waitStages[] = { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
+
+    if ( this->_commandBufferCollection.getCommandBuffers()[ imageIndex ].submit(
+            waitStages,
+            & this->_imageAvailableSemaphore,
+            1U,
+            & this->_renderFinishedSemaphore,
+            1U
+        ) != VulkanResult::VK_SUCCESS
+    )
+        throw std::runtime_error ( "Command Buffer Submit Failure" );
 
 }
 
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "Simplify"
 void engine::VulkanTriangleApplication::cleanup() noexcept (false) {
+
+    this->_imageAvailableSemaphore.cleanup();
+    this->_renderFinishedSemaphore.cleanup();
 
     this->_commandPool.cleanup();
 

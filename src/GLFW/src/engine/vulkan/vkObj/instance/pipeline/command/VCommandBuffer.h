@@ -10,6 +10,7 @@
 #include "VCommandPool.h"
 #include <vkObj/instance/pipeline/VFrameBuffer.h>
 #include <src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/VPipeline.h>
+#include <src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/synchronization/VSemaphore.h>
 
 namespace engine {
 
@@ -35,6 +36,8 @@ namespace engine {
 
         }
 
+        VulkanResult submit ( VulkanPipelineStageFlags *, VSemaphore *, uint32, VSemaphore *, uint32 ) const noexcept;
+
         VulkanResult startRecord ( const VPipeline& ) noexcept;
     };
 
@@ -53,6 +56,10 @@ namespace engine {
 
         VulkanResult allocate ( const engine::VCommandPool &, const engine::VFrameBufferCollection & );
         VulkanResult startRecord ( const VPipeline& ) noexcept;
+
+        [[nodiscard]] const std::vector < VCommandBuffer > & getCommandBuffers () const noexcept {
+            return this->_commandBuffers;
+        }
     };
 
 }

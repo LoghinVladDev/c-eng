@@ -55,6 +55,38 @@ inline static void populateRenderPassBeginInfo (
     renderPassBeginInfo->pClearValues           = pClearValues;
 }
 
+inline static void populateSubmitInfo (
+    VulkanSubmitInfo                  * submitInfo,
+    const VulkanPipelineStageFlags    * pWaitStages,
+    const VulkanSemaphore             * pWaitSemaphores,
+    uint32                              waitSemaphoreCount,
+    const VulkanSemaphore             * pSignalSemaphores,
+    uint32                              signalSemaphoreCount,
+    const VulkanCommandBuffer         * pCommandBuffers,
+    uint32                              commandBufferCount
+) noexcept {
+    if (
+        submitInfo          == nullptr ||
+        pWaitStages         == nullptr ||
+        pWaitSemaphores     == nullptr ||
+        pSignalSemaphores   == nullptr ||
+        pCommandBuffers     == nullptr
+    )
+        return;
+
+    * submitInfo = { };
+
+    submitInfo->sType                   = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+    submitInfo->waitSemaphoreCount      = waitSemaphoreCount;
+    submitInfo->pWaitDstStageMask       = pWaitStages;
+    submitInfo->pWaitSemaphores         = pWaitSemaphores;
+
+    submitInfo->commandBufferCount      = commandBufferCount;
+    submitInfo->pCommandBuffers         = pCommandBuffers;
+
+    submitInfo->signalSemaphoreCount    = signalSemaphoreCount;
+    submitInfo->pSignalSemaphores       = pSignalSemaphores;
+}
 
 VulkanResult engine::VCommandBufferCollection::allocate(const engine::VCommandPool & commandPool, const engine::VFrameBufferCollection & frameBufferCollection) {
     VulkanCommandBufferAllocateInfo allocateInfo { };
@@ -105,4 +137,47 @@ VulkanResult engine::VCommandBufferCollection::startRecord( const engine::VPipel
             return startRecordResult;
     }
     return VulkanResult::VK_SUCCESS;
+}
+
+VulkanResult engine::VCommandBuffer::submit(
+    VulkanPipelineStageFlags * pWaitStages,
+    VSemaphore * pWaitSemaphores,
+    uint32 waitSemaphoreCount,
+    VSemaphore * pSignalSemaphores,
+    uint32 signalSemaphoreCount
+) const noexcept {
+    VulkanSubmitInfo    submitInfo { };
+    VulkanSemaphore     waitHandles[waitSemaphoreCount];
+    VulkanSemaphore     signalHandles[signalSemaphoreCount];
+
+    for ( uint32 i = 0; i < waitSemaphoreCount; i++ )
+        waitHandles[i] = pWaitSemaphores[i].data();
+
+    for ( uint32 i = 0; i < signalSemaphoreCount; i++ )
+        signalHandles[i] = pSignalSemaphores[i].data();
+
+    populateSubmitInfo (
+        & submitInfo,
+        pWaitStages,
+        waitHandles,
+        waitSemaphoreCount,
+        signalHandles,
+        signalSemaphoreCount,
+        & this->_handle,
+        1U
+    );
+
+    const VQueue * pGraphicsQueue = nullptr;
+
+    for( const auto & queue : this->_pFrameBuffer->getRenderPassPtr()->getLogicalDevicePtr()->getQueues() ) {
+        if ( queue.getQueueFamily()->isGraphicsCapable() ) {
+            pGraphicsQueue = & queue;
+            break;
+        }
+    }
+
+    if ( pGraphicsQueue == nullptr )
+        return VulkanResult::VK_ERROR_INITIALIZATION_FAILED;
+
+    return vkQueueSubmit( pGraphicsQueue->data(), 1U, & submitInfo, VK_NULL_HANDLE );
 }

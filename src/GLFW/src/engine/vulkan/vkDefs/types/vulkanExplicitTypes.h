@@ -113,6 +113,13 @@ typedef VkRenderPassBeginInfo                       VulkanRenderPassBeginInfo;
 typedef VkClearValue                                VulkanClearValue;
 typedef VkCommandBufferLevel                        VulkanCommandBufferLevel;
 
+typedef VkSemaphore                                 VulkanSemaphore;
+typedef VkSemaphoreCreateInfo                       VulkanSemaphoreCreateInfo;
+typedef VkFence                                     VulkanFence;
+typedef VkFenceCreateInfo                           VulkanFenceCreateInfo;
+typedef VkPipelineStageFlags                        VulkanPipelineStageFlags;
+typedef VkSubmitInfo                                VulkanSubmitInfo;
+
 
 #if defined(ENGINE_OS_WINDOWS_32_64)
 

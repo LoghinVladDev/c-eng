@@ -49,6 +49,10 @@ namespace engine {
         VulkanResult setup (  ) noexcept;
         void cleanup () noexcept;
 
+        [[nodiscard]] const VImageView * getImageViewPtr () const noexcept {
+            return this->_pImageView;
+        }
+
         [[nodiscard]] const VRenderPass * getRenderPassPtr () const noexcept {
             return this->_pRenderPass;
         }
