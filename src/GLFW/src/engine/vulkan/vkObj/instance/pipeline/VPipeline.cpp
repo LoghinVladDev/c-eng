@@ -125,19 +125,21 @@ inline static void populateMultisampleStateCreateInfo (
     createInfo->alphaToOneEnable        = VK_FALSE;
 }
 
+constexpr static VulkanFlags COLOR_WRITE_MASK =
+    ( uint32 ) VK_COLOR_COMPONENT_R_BIT |
+    ( uint32 ) VK_COLOR_COMPONENT_G_BIT |
+    ( uint32 ) VK_COLOR_COMPONENT_B_BIT |
+    ( uint32 ) VK_COLOR_COMPONENT_A_BIT;
+
 inline static void populateColorBlendAttachmentStateDisabled (
-    VulkanPipelineColorBlendAttachmentState * colorBlendAttachment
+        VulkanPipelineColorBlendAttachmentState * colorBlendAttachment
 ) noexcept {
     if ( colorBlendAttachment == nullptr )
         return;
 
     * colorBlendAttachment = { };
 
-    colorBlendAttachment->colorWriteMask =
-            VK_COLOR_COMPONENT_R_BIT |
-            VK_COLOR_COMPONENT_G_BIT |
-            VK_COLOR_COMPONENT_B_BIT |
-            VK_COLOR_COMPONENT_A_BIT;
+    colorBlendAttachment->colorWriteMask = COLOR_WRITE_MASK;
 
     colorBlendAttachment->blendEnable = VK_FALSE;
 }
@@ -180,7 +182,7 @@ inline static void populateColorBlendStateCreateInfo (
     createInfo->blendConstants[3]   = 0.0f;
 }
 
-inline static void populateDynamicStateCreateInfo (
+[[maybe_unused]] inline static void populateDynamicStateCreateInfo (
     VulkanPipelineDynamicStateCreateInfo * createInfo,
     const VulkanDynamicState             * pDynamicStates,
     uint32                                 dynamicStateCount

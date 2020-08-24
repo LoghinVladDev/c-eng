@@ -241,6 +241,11 @@ void engine::VulkanTriangleApplication::drawImage () noexcept (false) {
     uint32 imageIndex;
     vkAcquireNextImageKHR( this->_vulkanLogicalDevice.data(), this->_vulkanLogicalDevice.getSwapChain()->data(), UINT64_MAX, this->_imageAvailableSemaphore.data(), VK_NULL_HANDLE, & imageIndex );
 
+    static uint64 frame = 0U;
+
+//    std::cout << frame << '\n';
+//    frame++;
+
     static VkPipelineStageFlags waitStages[] = { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
 
     if ( this->_commandBufferCollection.getCommandBuffers()[ imageIndex ].submit(
@@ -249,8 +254,8 @@ void engine::VulkanTriangleApplication::drawImage () noexcept (false) {
             1U,
             & this->_renderFinishedSemaphore,
             1U
-    ) != VulkanResult::VK_SUCCESS
-            )
+        ) != VulkanResult::VK_SUCCESS
+    )
         throw std::runtime_error ( "Command Buffer Submit Failure" );
 
     if( this->_vulkanLogicalDevice.getSwapChain()->present( & this->_renderFinishedSemaphore, 1U, imageIndex ) != VulkanResult::VK_SUCCESS )
@@ -263,6 +268,9 @@ void engine::VulkanTriangleApplication::drawImage () noexcept (false) {
             pPresentQueue = & queue;
             break;
         }
+
+    if ( pPresentQueue == nullptr )
+        throw std::runtime_error ( "Present Queue Unavailable" );
 
     vkQueueWaitIdle( pPresentQueue->data() );
 }
