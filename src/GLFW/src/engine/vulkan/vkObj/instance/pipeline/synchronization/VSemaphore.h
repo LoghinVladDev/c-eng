@@ -1,5 +1,5 @@
 //
-// Created by vladl on 20/08/2020.
+// Created by Vlad on 21/08/2020.
 //
 
 #ifndef ENG1_VSEMAPHORE_H
@@ -11,11 +11,13 @@
 
 namespace engine {
 
+    class VLogicalDevice;
+
     class VSemaphore {
     private:
         //// private variables
-        const VLogicalDevice *  _pLogicalDevice {nullptr};
-        VulkanSemaphore         _handle         {nullptr};
+        VulkanSemaphore           _handle         {nullptr};
+        const VLogicalDevice    * _pLogicalDevice {nullptr};
 
         //// private functions
 
@@ -23,11 +25,10 @@ namespace engine {
         //// public variables
 
         //// public functions
+        VSemaphore () noexcept = default;
 
-        VSemaphore() noexcept = default;
-
-        void cleanup ( ) noexcept;
-        VulkanResult setup ( const engine::VLogicalDevice & ) noexcept;
+        VulkanResult setup ( const VLogicalDevice & ) noexcept;
+        void cleanup () noexcept;
 
         [[nodiscard]] const VulkanSemaphore & data () const noexcept {
             return this->_handle;

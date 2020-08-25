@@ -125,19 +125,21 @@ inline static void populateMultisampleStateCreateInfo (
     createInfo->alphaToOneEnable        = VK_FALSE;
 }
 
+constexpr static VulkanFlags COLOR_WRITE_MASK =
+    ( uint32 ) VK_COLOR_COMPONENT_R_BIT |
+    ( uint32 ) VK_COLOR_COMPONENT_G_BIT |
+    ( uint32 ) VK_COLOR_COMPONENT_B_BIT |
+    ( uint32 ) VK_COLOR_COMPONENT_A_BIT;
+
 inline static void populateColorBlendAttachmentStateDisabled (
-    VulkanPipelineColorBlendAttachmentState * colorBlendAttachment
+        VulkanPipelineColorBlendAttachmentState * colorBlendAttachment
 ) noexcept {
     if ( colorBlendAttachment == nullptr )
         return;
 
     * colorBlendAttachment = { };
 
-    colorBlendAttachment->colorWriteMask =
-            VK_COLOR_COMPONENT_R_BIT |
-            VK_COLOR_COMPONENT_G_BIT |
-            VK_COLOR_COMPONENT_B_BIT |
-            VK_COLOR_COMPONENT_A_BIT;
+    colorBlendAttachment->colorWriteMask = COLOR_WRITE_MASK;
 
     colorBlendAttachment->blendEnable = VK_FALSE;
 }
@@ -180,7 +182,7 @@ inline static void populateColorBlendStateCreateInfo (
     createInfo->blendConstants[3]   = 0.0f;
 }
 
-inline static void populateDynamicStateCreateInfo (
+[[maybe_unused]] inline static void populateDynamicStateCreateInfo (
     VulkanPipelineDynamicStateCreateInfo * createInfo,
     const VulkanDynamicState             * pDynamicStates,
     uint32                                 dynamicStateCount
@@ -270,7 +272,17 @@ inline static void populateGraphicsPipelineCreateInfo (
 }
 
 void engine::VPipeline::createRenderPass() noexcept (false) {
-    if ( this->_renderPass.setup( * this->_pLogicalDevice ) != VulkanResult::VK_SUCCESS )
+    VulkanSubpassDependency waitForImageSubpassDependency;
+    waitForImageSubpassDependency.srcSubpass    = VK_SUBPASS_EXTERNAL;
+    waitForImageSubpassDependency.dstSubpass    = 0U;
+    waitForImageSubpassDependency.dependencyFlags = 0U;
+    waitForImageSubpassDependency.srcStageMask  = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+    waitForImageSubpassDependency.srcAccessMask = 0U;
+
+    waitForImageSubpassDependency.dstStageMask  = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+    waitForImageSubpassDependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+
+    if ( this->_renderPass.setup( * this->_pLogicalDevice, & waitForImageSubpassDependency, 1U ) != VulkanResult::VK_SUCCESS )
         throw std::runtime_error ("render pass creation failure");
 }
 

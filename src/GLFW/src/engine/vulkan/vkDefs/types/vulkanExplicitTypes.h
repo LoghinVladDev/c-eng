@@ -115,12 +115,14 @@ typedef VkCommandBufferLevel                        VulkanCommandBufferLevel;
 
 typedef VkSemaphore                                 VulkanSemaphore;
 typedef VkSemaphoreCreateInfo                       VulkanSemaphoreCreateInfo;
-typedef VkSubmitInfo                                VulkanSubmitInfo;
-typedef VkPipelineStageFlags                        VulkanPipelineStageFlags;
-typedef VkSubpassDependency                         VulkanSubpassDependency;
-typedef VkPresentInfoKHR                            VulkanPresentInfoKhronos;
 typedef VkFence                                     VulkanFence;
 typedef VkFenceCreateInfo                           VulkanFenceCreateInfo;
+typedef VkPipelineStageFlags                        VulkanPipelineStageFlags;
+typedef VkSubmitInfo                                VulkanSubmitInfo;
+
+typedef VkSubpassDependency                         VulkanSubpassDependency;
+typedef VkPresentInfoKHR                            VulkanPresentInfoKhronos;
+
 
 #if defined(ENGINE_OS_WINDOWS_32_64)
 

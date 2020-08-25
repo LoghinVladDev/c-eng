@@ -37,7 +37,7 @@ inline static void populateCommandBufferBeginInfo (
 inline static void populateRenderPassBeginInfo (
     VulkanRenderPassBeginInfo   * renderPassBeginInfo,
     const engine::VFrameBuffer  * frameBuffer,
-    const VulkanClearValue      * pClearValues,
+    VulkanClearValue            * pClearValues,
     uint32                        clearValueCount
 ) noexcept {
     if ( renderPassBeginInfo == nullptr || frameBuffer == nullptr )
@@ -56,17 +56,18 @@ inline static void populateRenderPassBeginInfo (
 }
 
 inline static void populateSubmitInfo (
-    VulkanSubmitInfo                * submitInfo,
-    const VulkanPipelineStageFlags  * pWaitStages,
-    const VulkanSemaphore           * pWaitSemaphores,
-    uint32                            waitSemaphoreCount,
-    const VulkanSemaphore           * pSignalSemaphores,
-    uint32                            signalSemaphoreCount,
-    const VulkanCommandBuffer       * pCommandBuffers,
-    uint32                            commandBufferCount
+    VulkanSubmitInfo                  * submitInfo,
+    const VulkanPipelineStageFlags    * pWaitStages,
+    const VulkanSemaphore             * pWaitSemaphores,
+    uint32                              waitSemaphoreCount,
+    const VulkanSemaphore             * pSignalSemaphores,
+    uint32                              signalSemaphoreCount,
+    const VulkanCommandBuffer         * pCommandBuffers,
+    uint32                              commandBufferCount
 ) noexcept {
     if (
         submitInfo          == nullptr ||
+        pWaitStages         == nullptr ||
         pWaitSemaphores     == nullptr ||
         pSignalSemaphores   == nullptr ||
         pCommandBuffers     == nullptr
@@ -77,14 +78,15 @@ inline static void populateSubmitInfo (
 
     submitInfo->sType                   = VK_STRUCTURE_TYPE_SUBMIT_INFO;
     submitInfo->waitSemaphoreCount      = waitSemaphoreCount;
-    submitInfo->pWaitSemaphores         = pWaitSemaphores;
     submitInfo->pWaitDstStageMask       = pWaitStages;
-    submitInfo->signalSemaphoreCount    = signalSemaphoreCount;
-    submitInfo->pSignalSemaphores       = pSignalSemaphores;
+    submitInfo->pWaitSemaphores         = pWaitSemaphores;
+
     submitInfo->commandBufferCount      = commandBufferCount;
     submitInfo->pCommandBuffers         = pCommandBuffers;
-}
 
+    submitInfo->signalSemaphoreCount    = signalSemaphoreCount;
+    submitInfo->pSignalSemaphores       = pSignalSemaphores;
+}
 
 VulkanResult engine::VCommandBufferCollection::allocate(const engine::VCommandPool & commandPool, const engine::VFrameBufferCollection & frameBufferCollection) {
     VulkanCommandBufferAllocateInfo allocateInfo { };
@@ -137,28 +139,37 @@ VulkanResult engine::VCommandBufferCollection::startRecord( const engine::VPipel
     return VulkanResult::VK_SUCCESS;
 }
 
-VulkanResult engine::VCommandBuffer::submit(const VulkanPipelineStageFlags * pStageFlagMasks, const engine::VSemaphore * pWaitSemaphores, uint32 waitSemaphoreCount, const engine::VSemaphore * pSignalSemaphores, uint32 signalSemaphoreCount) noexcept {
-    VulkanSubmitInfo            submitInfo              { };
-    VulkanSemaphore             waitSemaphoreHandles    [ waitSemaphoreCount ];
-    VulkanSemaphore             signalSemaphoreHandles  [ signalSemaphoreCount ];
+VulkanResult engine::VCommandBuffer::submit(
+    VulkanPipelineStageFlags * pWaitStages,
+    VSemaphore * pWaitSemaphores,
+    uint32 waitSemaphoreCount,
+    VSemaphore * pSignalSemaphores,
+    uint32 signalSemaphoreCount
+) const noexcept {
+    VulkanSubmitInfo    submitInfo { };
+    VulkanSemaphore     waitHandles[waitSemaphoreCount];
+    VulkanSemaphore     signalHandles[signalSemaphoreCount];
 
     for ( uint32 i = 0; i < waitSemaphoreCount; i++ )
-        waitSemaphoreHandles[i] = pWaitSemaphores[i].data();
-    for ( uint32 i = 0; i < signalSemaphoreCount; i++ )
-        signalSemaphoreHandles[i] = pSignalSemaphores[i].data();
+        waitHandles[i] = pWaitSemaphores[i].data();
 
-    populateSubmitInfo(
+    for ( uint32 i = 0; i < signalSemaphoreCount; i++ )
+        signalHandles[i] = pSignalSemaphores[i].data();
+
+    populateSubmitInfo (
         & submitInfo,
-        pStageFlagMasks,
-        waitSemaphoreHandles,
+        pWaitStages,
+        waitHandles,
         waitSemaphoreCount,
-        signalSemaphoreHandles,
+        signalHandles,
         signalSemaphoreCount,
-        & (this->_handle),
+        & this->_handle,
         1U
     );
+
     const VQueue * pGraphicsQueue = nullptr;
-    for ( const auto & queue : this->_pFrameBuffer->getRenderPassPtr()->getLogicalDevicePtr()->getQueues() ) {
+
+    for( const auto & queue : this->_pFrameBuffer->getRenderPassPtr()->getLogicalDevicePtr()->getQueues() ) {
         if ( queue.getQueueFamily()->isGraphicsCapable() ) {
             pGraphicsQueue = & queue;
             break;

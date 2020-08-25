@@ -77,8 +77,8 @@ namespace engine {
         VCommandPool                _commandPool;
         VCommandBufferCollection    _commandBufferCollection;
 
-        VSemaphore                  _renderFinishedSemaphore;
         VSemaphore                  _imageAvailableSemaphore;
+        VSemaphore                  _renderFinishedSemaphore;
 
         //// private_functions
         void initSettings() const noexcept;
@@ -86,10 +86,10 @@ namespace engine {
         void initVulkan() noexcept(false);
         void mainLoop() noexcept(false);
         void cleanup() noexcept(false);
-
-        void drawFrame () noexcept;
+        void drawImage() noexcept (false);
 
         void createCommandPoolsAndBuffers () noexcept (false);
+
         void createSynchronizationElements () noexcept (false);
 
         void createFrameBuffers () noexcept (false);

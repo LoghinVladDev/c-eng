@@ -1,5 +1,5 @@
 //
-// Created by vladl on 20/08/2020.
+// Created by Vlad on 21/08/2020.
 //
 
 #include "VSemaphore.h"
@@ -11,11 +11,12 @@ inline static void populateSemaphoreCreateInfo (
         return;
 
     * createInfo = { };
-    createInfo->sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
+
+    createInfo->sType =VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
 }
 
-VulkanResult engine::VSemaphore::setup(const engine::VLogicalDevice & device) noexcept {
-    this->_pLogicalDevice = & device;
+VulkanResult engine::VSemaphore::setup(const VLogicalDevice & logicalDevice) noexcept {
+    this->_pLogicalDevice = & logicalDevice;
 
     VulkanSemaphoreCreateInfo createInfo { };
 

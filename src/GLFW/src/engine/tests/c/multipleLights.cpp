@@ -238,15 +238,15 @@ int main() {
     engine::Shader::setShadersFolder(__SHADERS_PATH__);
 
     shader = new engine::Shader(
-            "triangle.vert",
-            "triangle.frag",
+            "/triangle.vert",
+            "/triangle.frag",
             true,
             true
     );
 
     lightShader = new engine::Shader(
-            "light.vert",
-            "light.frag",
+            "/light.vert",
+            "/light.frag",
             true,
             true
     );

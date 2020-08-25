@@ -161,6 +161,35 @@ static inline void populateSwapChainCreateInfoStructure (
     }
 }
 
+inline static void populatePresentInfo (
+    VulkanPresentInfoKhronos        * presentInfo,
+    const VulkanSemaphore           * pWaitSemaphores,
+    uint32                            waitSemaphoreCount,
+    const VkSwapchainKHR            * pSwapChains,
+    const uint32                    * pImageIndices,
+    uint32                            swapChainCount,
+    VulkanResult                    * pResults = nullptr
+) noexcept {
+    if (
+        presentInfo     == nullptr ||
+        pSwapChains     == nullptr ||
+        pImageIndices   == nullptr ||
+        pWaitSemaphores == nullptr
+    )
+        return;
+
+    * presentInfo = { };
+
+    presentInfo->sType              = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
+    presentInfo->pWaitSemaphores    = pWaitSemaphores;
+    presentInfo->waitSemaphoreCount = waitSemaphoreCount;
+    presentInfo->swapchainCount     = swapChainCount;
+    presentInfo->pSwapchains        = pSwapChains;
+    presentInfo->pImageIndices      = pImageIndices;
+    presentInfo->pResults           = pResults;
+
+}
+
 engine::VSwapChain::VSwapChain(const VLogicalDevice *device) noexcept(false) :
     _device( device ) {
     if( ! device->isSwapChainAdequate() )
@@ -219,4 +248,34 @@ engine::VImageViewCollection engine::VSwapChain::getImageViewCollection() const 
     collection.setup( this );
 
     return collection;
+}
+
+VulkanResult engine::VSwapChain::present( const VSemaphore * pWaitSemaphores, uint32 waitSemaphoreCount, uint32 imageIndex) const noexcept {
+    VulkanPresentInfoKhronos presentInfo { };
+
+    VulkanSemaphore waitSemaphoreHandles [ waitSemaphoreCount ];
+
+    for( uint32 i = 0; i < waitSemaphoreCount; i++ )
+        waitSemaphoreHandles[i] = pWaitSemaphores[i].data();
+
+    populatePresentInfo(
+        & presentInfo,
+        waitSemaphoreHandles,
+        waitSemaphoreCount,
+        & this->_handle,
+        & imageIndex,
+        1U
+    );
+
+    const VQueue * pPresentQueue = nullptr;
+    for ( const auto & queue : this->_device->getQueues() )
+        if ( queue.getQueueFamily()->isPresentCapable() ) {
+            pPresentQueue = & queue;
+            break;
+        }
+
+    if ( pPresentQueue == nullptr )
+        return VulkanResult::VK_ERROR_INITIALIZATION_FAILED;
+
+    return vkQueuePresentKHR( pPresentQueue->data(), & presentInfo );
 }
