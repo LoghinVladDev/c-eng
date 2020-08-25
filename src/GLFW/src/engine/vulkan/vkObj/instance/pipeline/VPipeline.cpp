@@ -10,26 +10,26 @@ inline static void populateVertexInputStateCreateInfo (
     if ( createInfo == nullptr )
         return;
 
-    * createInfo = { };
-
-    createInfo->sType                           = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
-    createInfo->vertexBindingDescriptionCount   = 0U;
-    createInfo->pVertexBindingDescriptions      = nullptr;
-    createInfo->vertexAttributeDescriptionCount = 0U;
-    createInfo->pVertexAttributeDescriptions    = nullptr;
+    * createInfo = VulkanPipelineVertexInputStateCreateInfo {
+        .sType                              = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO,
+        .vertexBindingDescriptionCount      = 0,
+        .pVertexBindingDescriptions         = nullptr,
+        .vertexAttributeDescriptionCount    = 0,
+        .pVertexAttributeDescriptions       = nullptr
+    };
 }
 
 inline static void populateInputAssemblyStateCreateInfo (
-    VkPipelineInputAssemblyStateCreateInfo * createInfo
+    VulkanPipelineInputAssemblyStateCreateInfo * createInfo
 ) noexcept {
     if ( createInfo == nullptr )
         return;
 
-    * createInfo = { };
-
-    createInfo->sType                           = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
-    createInfo->topology                        = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
-    createInfo->primitiveRestartEnable          = VK_FALSE;
+    * createInfo = VulkanPipelineInputAssemblyStateCreateInfo {
+        .sType                  = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO,
+        .topology               = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST,
+        .primitiveRestartEnable = VK_FALSE
+    };
 }
 
 inline static void populateViewportStructure (
@@ -42,14 +42,14 @@ inline static void populateViewportStructure (
     if ( viewport == nullptr )
         return;
 
-    * viewport = { };
-
-    viewport->x         = x;
-    viewport->y         = y;
-    viewport->width     = width;
-    viewport->height    = height;
-    viewport->minDepth  = 0.0f;
-    viewport->maxDepth  = 1.0f;
+    * viewport = VulkanViewport {
+        .x          = x,
+        .y          = y,
+        .width      = width,
+        .height     = height,
+        .minDepth   = 0.0f,
+        .maxDepth   = 1.0f
+    };
 }
 
 inline static void populateScissorStructure (
@@ -61,10 +61,10 @@ inline static void populateScissorStructure (
     if( scissor == nullptr )
         return;
 
-    * scissor = {};
-
-    scissor->offset = { xOffset, yOffset };
-    scissor->extent = extent;
+    * scissor = VulkanRectangle2D {
+        .offset = { xOffset, yOffset },
+        .extent = extent
+    };
 }
 
 inline static void populateViewportStateCreateInfo (
@@ -77,13 +77,13 @@ inline static void populateViewportStateCreateInfo (
     if ( createInfo == nullptr )
         return;
 
-    * createInfo = { };
-
-    createInfo->sType           = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
-    createInfo->viewportCount   = viewportCount;
-    createInfo->scissorCount    = scissorCount;
-    createInfo->pViewports      = pViewports;
-    createInfo->pScissors       = pScissors;
+    * createInfo = VulkanPipelineViewportStateCreateInfo {
+        .sType          = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO,
+        .viewportCount  = viewportCount,
+        .pViewports     = pViewports,
+        .scissorCount   = scissorCount,
+        .pScissors      = pScissors
+    };
 }
 
 inline static void populateRasterizationStateCreateInfo (
@@ -92,20 +92,19 @@ inline static void populateRasterizationStateCreateInfo (
     if ( createInfo == nullptr )
         return;
 
-    * createInfo = { };
-
-    createInfo->sType                   = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
-    createInfo->depthClampEnable        = VK_FALSE;
-    createInfo->rasterizerDiscardEnable = VK_FALSE;
-    createInfo->polygonMode             = VK_POLYGON_MODE_FILL;
-    createInfo->lineWidth               = 1.0f;
-    createInfo->cullMode                = VK_CULL_MODE_BACK_BIT;
-    createInfo->frontFace               = VK_FRONT_FACE_CLOCKWISE;
-
-    createInfo->depthBiasEnable         = VK_FALSE;
-    createInfo->depthBiasConstantFactor = 0.0f;
-    createInfo->depthBiasClamp          = 0.0f;
-    createInfo->depthBiasSlopeFactor    = 0.0f;
+    * createInfo = VulkanPipelineRasterizationStateCreateInfo {
+        .sType                      = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO,
+        .depthClampEnable           = VK_FALSE,
+        .rasterizerDiscardEnable    = VK_FALSE,
+        .polygonMode                = VK_POLYGON_MODE_FILL,
+        .cullMode                   = VK_CULL_MODE_BACK_BIT,
+        .frontFace                  = VK_FRONT_FACE_CLOCKWISE,
+        .depthBiasEnable            = VK_FALSE,
+        .depthBiasConstantFactor    = 0.0f,
+        .depthBiasClamp             = 0.0f,
+        .depthBiasSlopeFactor       = 0.0f,
+        .lineWidth                  = 1.0f
+    };
 }
 
 inline static void populateMultisampleStateCreateInfo (
@@ -114,15 +113,15 @@ inline static void populateMultisampleStateCreateInfo (
     if ( createInfo == nullptr )
         return;
 
-    * createInfo = { };
-
-    createInfo->sType                   = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
-    createInfo->sampleShadingEnable     = VK_FALSE;
-    createInfo->rasterizationSamples    = VK_SAMPLE_COUNT_1_BIT;
-    createInfo->minSampleShading        = 1.0f;
-    createInfo->pSampleMask             = nullptr;
-    createInfo->alphaToCoverageEnable   = VK_FALSE;
-    createInfo->alphaToOneEnable        = VK_FALSE;
+    * createInfo = VulkanPipelineMultisampleStateCreateInfo {
+        .sType                  = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO,
+        .rasterizationSamples   = VK_SAMPLE_COUNT_1_BIT,
+        .sampleShadingEnable    = VK_FALSE,
+        .minSampleShading       = 1.0f,
+        .pSampleMask            = nullptr,
+        .alphaToCoverageEnable  = VK_FALSE,
+        .alphaToOneEnable       = VK_FALSE
+    };
 }
 
 constexpr static VulkanFlags COLOR_WRITE_MASK =
@@ -137,11 +136,10 @@ inline static void populateColorBlendAttachmentStateDisabled (
     if ( colorBlendAttachment == nullptr )
         return;
 
-    * colorBlendAttachment = { };
-
-    colorBlendAttachment->colorWriteMask = COLOR_WRITE_MASK;
-
-    colorBlendAttachment->blendEnable = VK_FALSE;
+    * colorBlendAttachment = VulkanPipelineColorBlendAttachmentState {
+        .blendEnable    = VK_FALSE,
+        .colorWriteMask = COLOR_WRITE_MASK
+    };
 }
 
 inline static void populateColorBlendAttachmentStateEnabled (
@@ -150,36 +148,33 @@ inline static void populateColorBlendAttachmentStateEnabled (
     if ( colorBlendAttachment == nullptr )
         return;
 
-    * colorBlendAttachment = { };
-
-    colorBlendAttachment->blendEnable           = VK_TRUE;
-    colorBlendAttachment->srcColorBlendFactor   = VK_BLEND_FACTOR_SRC_ALPHA;
-    colorBlendAttachment->dstColorBlendFactor   = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
-    colorBlendAttachment->colorBlendOp          = VK_BLEND_OP_ADD;
-    colorBlendAttachment->srcAlphaBlendFactor   = VK_BLEND_FACTOR_ONE;
-    colorBlendAttachment->dstAlphaBlendFactor   = VK_BLEND_FACTOR_ZERO;
-    colorBlendAttachment->alphaBlendOp          = VK_BLEND_OP_ADD;
+    * colorBlendAttachment = VulkanPipelineColorBlendAttachmentState {
+        .blendEnable            = VK_TRUE,
+        .srcColorBlendFactor    = VK_BLEND_FACTOR_SRC_ALPHA,
+        .dstColorBlendFactor    = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA,
+        .colorBlendOp           = VK_BLEND_OP_ADD,
+        .srcAlphaBlendFactor    = VK_BLEND_FACTOR_ONE,
+        .dstAlphaBlendFactor    = VK_BLEND_FACTOR_ZERO,
+        .alphaBlendOp           = VK_BLEND_OP_ADD
+    };
 }
 
 inline static void populateColorBlendStateCreateInfo (
     VulkanPipelineColorBlendStateCreateInfo * createInfo,
-    VulkanPipelineColorBlendAttachmentState * attachment
+    VulkanPipelineColorBlendAttachmentState * pAttachments,
+    uint32                                    attachmentCount
 ) noexcept {
-    if ( createInfo == nullptr || attachment == nullptr )
+    if ( createInfo == nullptr || pAttachments == nullptr )
         return;
 
-    * createInfo = { };
-
-    createInfo->sType               = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
-    createInfo->logicOpEnable       = ( ( attachment->blendEnable == VK_TRUE ) ? ( VK_FALSE ) : ( VK_TRUE ) );
-
-    createInfo->logicOp             = VK_LOGIC_OP_COPY;
-    createInfo->attachmentCount     = 1U;
-    createInfo->pAttachments        = attachment;
-    createInfo->blendConstants[0]   = 0.0f;
-    createInfo->blendConstants[1]   = 0.0f;
-    createInfo->blendConstants[2]   = 0.0f;
-    createInfo->blendConstants[3]   = 0.0f;
+    * createInfo = VulkanPipelineColorBlendStateCreateInfo {
+        .sType              = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO,
+        .logicOpEnable      = static_cast<VkBool32>(( ( pAttachments->blendEnable == VK_TRUE ) ? ( VK_FALSE ) : ( VK_TRUE ) )),
+        .logicOp            = VK_LOGIC_OP_COPY,
+        .attachmentCount    = attachmentCount,
+        .pAttachments       = pAttachments,
+        .blendConstants     = { 0.0f, 0.0f, 0.0f, 0.0f }
+    };
 }
 
 [[maybe_unused]] inline static void populateDynamicStateCreateInfo (
@@ -243,32 +238,24 @@ inline static void populateGraphicsPipelineCreateInfo (
     )
         return;
 
-    * createInfo = { };
-
-    createInfo->sType                   = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
-    createInfo->stageCount              = shaderStageCount;
-    createInfo->pStages                 = pShaderStages;
-
-    createInfo->pVertexInputState       = pVertexInputState;
-    createInfo->pInputAssemblyState     = pInputAssemblyState;
-    createInfo->pViewportState          = pViewportState;
-    createInfo->pRasterizationState     = pRasterizerState;
-    createInfo->pMultisampleState       = pMultisampleState;
-    createInfo->pDepthStencilState      = pDepthStencilState;
-    createInfo->pColorBlendState        = pColorBlendState;
-    createInfo->pDynamicState           = pDynamicState;
-
-    createInfo->layout                  = layout;
-
-    createInfo->renderPass              = pRenderPass->data();
-    createInfo->subpass                 = subpass;
-
-    createInfo->basePipelineIndex       = basePipelineIndex;
-
-    if ( pBasePipeline == nullptr )
-        createInfo->basePipelineHandle  = VK_NULL_HANDLE;
-    else
-        createInfo->basePipelineHandle  = pBasePipeline->data();
+    * createInfo = VulkanGraphicsPipelineCreateInfo {
+        .sType                  = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO,
+        .stageCount             = shaderStageCount,
+        .pStages                = pShaderStages,
+        .pVertexInputState      = pVertexInputState,
+        .pInputAssemblyState    = pInputAssemblyState,
+        .pViewportState         = pViewportState,
+        .pRasterizationState    = pRasterizerState,
+        .pMultisampleState      = pMultisampleState,
+        .pDepthStencilState     = pDepthStencilState,
+        .pColorBlendState       = pColorBlendState,
+        .pDynamicState          = pDynamicState,
+        .layout                 = layout,
+        .renderPass             = pRenderPass->data(),
+        .subpass                = subpass,
+        .basePipelineHandle     = ( pBasePipeline == nullptr ? nullptr : pBasePipeline->data() ) ,
+        .basePipelineIndex      = basePipelineIndex
+    };
 }
 
 void engine::VPipeline::createRenderPass() noexcept (false) {
@@ -297,7 +284,6 @@ void engine::VPipeline::cleanup() noexcept {
 
 VulkanResult engine::VPipeline::setup(const VulkanPipelineShaderStageCreateInfo * pShaderStages, uint32 shaderStageCount, const engine::VLogicalDevice & device ) noexcept(false) {
     this->_pLogicalDevice = & device;
-    this->createRenderPass();
 
     auto extent = this->_pLogicalDevice->getSwapChain()->getImagesInfo().extent;
 
@@ -309,6 +295,8 @@ VulkanResult engine::VPipeline::setup(const VulkanPipelineShaderStageCreateInfo 
 
     if( createLayoutResult != VK_SUCCESS )
         return createLayoutResult;
+
+    this->createRenderPass();
 
     VulkanPipelineVertexInputStateCreateInfo    vertexInputStateCreateInfo      { };
     VulkanPipelineInputAssemblyStateCreateInfo  inputAssemblyStateCreateInfo    { };
@@ -330,8 +318,8 @@ VulkanResult engine::VPipeline::setup(const VulkanPipelineShaderStageCreateInfo 
     populateViewportStateCreateInfo             ( & viewportStateCreateInfo, & viewport, 1U, & scissor, 1U );
     populateRasterizationStateCreateInfo        ( & rasterizationStateCreateInfo );
     populateMultisampleStateCreateInfo          ( & multisampleStateCreateInfo );
-    populateColorBlendAttachmentStateEnabled    ( & colorBlendAttachmentState );
-    populateColorBlendStateCreateInfo           ( & colorBlendStateCreateInfo, & colorBlendAttachmentState );
+    populateColorBlendAttachmentStateDisabled   ( & colorBlendAttachmentState ); /// enabled doesn't work for now
+    populateColorBlendStateCreateInfo           ( & colorBlendStateCreateInfo, & colorBlendAttachmentState, 1U );
     // dynamic state populate call here
 
     populateGraphicsPipelineCreateInfo(
@@ -351,7 +339,7 @@ VulkanResult engine::VPipeline::setup(const VulkanPipelineShaderStageCreateInfo 
             0U
     );
 
-    VulkanResult createPipelineResult = vkCreateGraphicsPipelines(
+    return vkCreateGraphicsPipelines(
             this->_pLogicalDevice->data(),
             VK_NULL_HANDLE,
             1U,
@@ -359,6 +347,4 @@ VulkanResult engine::VPipeline::setup(const VulkanPipelineShaderStageCreateInfo 
             nullptr,
             & this->_handle
     );
-
-    return createPipelineResult;
 }

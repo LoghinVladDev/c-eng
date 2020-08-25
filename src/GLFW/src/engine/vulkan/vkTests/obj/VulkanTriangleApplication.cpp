@@ -231,22 +231,20 @@ inline void engine::VulkanTriangleApplication::initVulkan() noexcept (false) {
 }
 
 void engine::VulkanTriangleApplication::createSynchronizationElements() noexcept(false) {
-    this->_imageAvailableSemaphore.setup( this->_vulkanLogicalDevice );
-    this->_renderFinishedSemaphore.setup( this->_vulkanLogicalDevice );
+    if ( this->_imageAvailableSemaphore.setup( this->_vulkanLogicalDevice ) != VulkanResult::VK_SUCCESS )
+        throw std::runtime_error ( "Semaphore Creation Failure : Image Availability" );
+    if ( this->_renderFinishedSemaphore.setup( this->_vulkanLogicalDevice ) != VulkanResult::VK_SUCCESS )
+        throw std::runtime_error ( "Semaphore Creation Failure : Render Finish" );
 }
 
 #pragma clang diagnostic pop
 
 void engine::VulkanTriangleApplication::drawImage () noexcept (false) {
     uint32 imageIndex;
-    vkAcquireNextImageKHR( this->_vulkanLogicalDevice.data(), this->_vulkanLogicalDevice.getSwapChain()->data(), UINT64_MAX, this->_imageAvailableSemaphore.data(), VK_NULL_HANDLE, & imageIndex );
+    if ( vkAcquireNextImageKHR( this->_vulkanLogicalDevice.data(), this->_vulkanLogicalDevice.getSwapChain()->data(), UINT64_MAX, this->_imageAvailableSemaphore.data(), VK_NULL_HANDLE, & imageIndex ) != VulkanResult::VK_SUCCESS )
+        throw std::runtime_error ( "Image Acquisition Failure" );
 
-    static uint64 frame = 0U;
-
-//    std::cout << frame << '\n';
-//    frame++;
-
-    static VkPipelineStageFlags waitStages[] = { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
+    VkPipelineStageFlags waitStages[] = { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
 
     if ( this->_commandBufferCollection.getCommandBuffers()[ imageIndex ].submit(
             waitStages,
@@ -276,7 +274,7 @@ void engine::VulkanTriangleApplication::drawImage () noexcept (false) {
 }
 
 void engine::VulkanTriangleApplication::mainLoop() noexcept (false) {
-    while ( !glfwWindowShouldClose( this->_window ) ) {
+    while ( ! glfwWindowShouldClose( this->_window ) ) {
         glfwPollEvents();
         this->drawImage();
     }
@@ -316,7 +314,8 @@ void engine::VulkanTriangleApplication::cleanup() noexcept (false) {
 }
 
 void engine::VulkanTriangleApplication::createCommandPoolsAndBuffers() noexcept(false) {
-    this->_commandPool.setup( this->_vulkanLogicalDevice );
+    if ( this->_commandPool.setup( this->_vulkanLogicalDevice ) != VulkanResult::VK_SUCCESS )
+        throw std::runtime_error ( "Command Pool Creation Error" );
 
     if ( this->_commandBufferCollection.allocate( this->_commandPool, this->_frameBufferCollection ) != VulkanResult::VK_SUCCESS )
         throw std::runtime_error ( "Command Buffers Allocation Error" );
@@ -368,10 +367,6 @@ void engine::VulkanTriangleApplication::createGraphicsPipeline() noexcept(false)
         this->_fragmentShader.getShaderStageInfo()
     };
 
-    // happens in pipeline setup
-//    if ( this->_renderPass.setup( this->_vulkanLogicalDevice ) != VulkanResult::VK_SUCCESS )
-//        throw std::runtime_error ("Render Pass initialization failed");
-
     if ( this->_graphicsPipeline.setup( shaderStages, 2, this->_vulkanLogicalDevice ) != VulkanResult::VK_SUCCESS )
         throw std::runtime_error ("Graphics Pipeline initialization failed");
 
@@ -380,7 +375,8 @@ void engine::VulkanTriangleApplication::createGraphicsPipeline() noexcept(false)
 }
 
 void engine::VulkanTriangleApplication::createFrameBuffers() noexcept(false) {
-    this->_frameBufferCollection.setup ( this->_renderPass );
+    if ( this->_frameBufferCollection.setup ( this->_renderPass ) != VulkanResult::VK_SUCCESS )
+        throw std::runtime_error ( "Frame Buffers Creation Failure" );
 }
 
 #pragma clang diagnostic pop

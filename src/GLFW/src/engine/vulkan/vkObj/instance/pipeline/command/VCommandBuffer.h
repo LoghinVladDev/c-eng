@@ -39,6 +39,10 @@ namespace engine {
         VulkanResult submit ( VulkanPipelineStageFlags *, VSemaphore *, uint32, VSemaphore *, uint32 ) const noexcept;
 
         VulkanResult startRecord ( const VPipeline& ) noexcept;
+
+        [[nodiscard]] const VulkanCommandBuffer & data () const noexcept {
+            return this->_handle;
+        }
     };
 
     class VCommandBufferCollection {
