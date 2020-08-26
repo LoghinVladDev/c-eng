@@ -62,6 +62,8 @@ VulkanResult engine::VImageViewCollection::setup(const engine::VSwapChain * swap
 void engine::VImageViewCollection::cleanup() noexcept {
     for ( auto imageView : this->_imageViews )
         imageView.cleanup();
+    this->_imageViews.clear();
+    this->_pSwapChain = nullptr;
 }
 
 engine::VImageViewCollection::VImageViewCollection(const engine::VImageViewCollection * pObj,const engine::VSwapChain * pSwapChain) noexcept {

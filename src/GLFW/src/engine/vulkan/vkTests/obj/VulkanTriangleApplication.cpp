@@ -8,7 +8,10 @@
 #include <obj/util/settings/SettingsSharedContainer.h>
 #include <obj/util/settings/SettingOptionGraphics.h>
 
+constexpr uint32 MAX_FRAMES_IN_FLIGHT = 2U;
 const char* engine::VulkanTriangleApplication::DEFAULT_TITLE = "Vulkan Application";
+
+uint32 currentFrame = 0U;
 
 engine::VulkanTriangleApplication::VulkanTriangleApplication(uint32 width, uint32 height) noexcept :
     _width(width),
@@ -76,20 +79,33 @@ void engine::VulkanTriangleApplication::setupDebugMessenger() noexcept (false) {
 #pragma clang diagnostic pop
 
 void engine::VulkanTriangleApplication::initSettings() const noexcept {
-    auto resolution = new engine::ResolutionSetting( this->_width, this->_height );
+    auto resolution = engine::ResolutionSetting( this->_width, this->_height );
 
-    SettingsSharedContainer::getInstance().put( resolution );
+    engine::SettingsSharedContainer::getInstance().put( & resolution );
+}
 
-    delete resolution;
+void engine::VulkanTriangleApplication::updateResolutionSettings() noexcept {
+    int width = 0, height = 0;
+    glfwGetFramebufferSize( this->_window, & width, & height );
+    while ( width == 0 || height == 0 ) {
+        glfwGetFramebufferSize( this->_window, & width, & height );
+        glfwWaitEvents();
+    }
+
+    auto resolution = engine::ResolutionSetting( width, height );
+
+    engine::SettingsSharedContainer::getInstance().put( & resolution );
 }
 
 void engine::VulkanTriangleApplication::run() noexcept (false) {
     this->initSettings();
     this->initWindow();
     this->initVulkan();
+    this->createShaderModules();
     this->createGraphicsPipeline();
     this->createFrameBuffers();
-    this->createCommandPoolsAndBuffers();
+    this->createCommandPool();
+    this->createCommandBuffers();
     this->createSynchronizationElements();
     this->mainLoop();
     this->cleanup();
@@ -101,7 +117,7 @@ inline void engine::VulkanTriangleApplication::initWindow() noexcept (false) {
     }
 
     glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-    glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+//    glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
     this->_window = glfwCreateWindow(
         this->_width,
@@ -110,6 +126,9 @@ inline void engine::VulkanTriangleApplication::initWindow() noexcept (false) {
         nullptr,
         nullptr
     );
+
+    glfwSetWindowUserPointer( this->_window, this );
+    glfwSetFramebufferSizeCallback( this->_window, engine::VulkanTriangleApplication::frameBufferResizeCallback );
 }
 
 void engine::VulkanTriangleApplication::createSurface() noexcept(false) {
@@ -118,13 +137,7 @@ void engine::VulkanTriangleApplication::createSurface() noexcept(false) {
 }
 
 static inline std::vector < const engine::VQueueFamily* > internalGatherGraphicsAndPresentQueueFamilies( const engine::VQueueFamilyCollection& collection ) noexcept {
-
-//    for( const auto & queueFamily : collection.getQueueFamilies() )
-//        std::cout << "FIndex : " << queueFamily.getQueueFamilyIndex() << ", present : " << queueFamily.isPresentCapable() << '\n';
-
     auto queueFamilies = collection.getFlagsCapableQueueFamilies( engine::VQueueFamily::GRAPHICS_FLAG | engine::VQueueFamily::PRESENT_FLAG );
-
-//    std::cout << "Found " << queueFamilies.size() << " graphics and present capable queue families";
 
     if( queueFamilies.empty() ) {
 
@@ -139,10 +152,6 @@ static inline std::vector < const engine::VQueueFamily* > internalGatherGraphics
 #pragma ide diagnostic ignored "Simplify"
 #pragma ide diagnostic ignored "UnreachableCode"
 inline void engine::VulkanTriangleApplication::initVulkan() noexcept (false) {
-//    if( VulkanTriangleApplication::VULKAN_EXT_CHECK ) {
-//        VExtension::printExtensions(std::cout);
-//    }
-
     VExtensionCollection availableExtensions = VExtensionCollection::getAllAvailableExtensions();
 
     if( VulkanTriangleApplication::VULKAN_EXT_CHECK )
@@ -231,46 +240,117 @@ inline void engine::VulkanTriangleApplication::initVulkan() noexcept (false) {
 }
 
 void engine::VulkanTriangleApplication::createSynchronizationElements() noexcept(false) {
-    if ( this->_imageAvailableSemaphore.setup( this->_vulkanLogicalDevice ) != VulkanResult::VK_SUCCESS )
+    if ( this->_imageAvailableSemaphores.setup( this->_vulkanLogicalDevice, MAX_FRAMES_IN_FLIGHT ) != VulkanResult::VK_SUCCESS )
         throw std::runtime_error ( "Semaphore Creation Failure : Image Availability" );
-    if ( this->_renderFinishedSemaphore.setup( this->_vulkanLogicalDevice ) != VulkanResult::VK_SUCCESS )
+    if ( this->_renderFinishedSemaphores.setup( this->_vulkanLogicalDevice, MAX_FRAMES_IN_FLIGHT ) != VulkanResult::VK_SUCCESS )
         throw std::runtime_error ( "Semaphore Creation Failure : Render Finish" );
+
+    if ( this->_inFlightFences.setup( this->_vulkanLogicalDevice, MAX_FRAMES_IN_FLIGHT, engine::VFence::START_SIGNALED ) != VulkanResult::VK_SUCCESS )
+        throw std::runtime_error ( "Fence Creation Failure" );
+    this->_imagesInFlight.resize( this->_vulkanLogicalDevice.getSwapChain()->getImages().size() );
 }
 
 #pragma clang diagnostic pop
 
+
+/**
+ * Will recreate in flight
+ */
+void engine::VulkanTriangleApplication::recreateSwapChain() noexcept(false) {
+    vkDeviceWaitIdle( this->_vulkanLogicalDevice.data() );
+
+    this->cleanupSwapChain();
+
+    this->updateResolutionSettings();
+
+    if ( this->_vulkanLogicalDevice.recreateSwapChain() != VulkanResult::VK_SUCCESS )
+        throw std::runtime_error ( "Swap Chain Recreation Error" );
+
+    this->createGraphicsPipeline();
+    this->createFrameBuffers();
+    this->createCommandBuffers();
+//    this->createSynchronizationElements();
+}
+
+void engine::VulkanTriangleApplication::cleanupSwapChain() noexcept(false) {
+    this->_frameBufferCollection.cleanup();
+    this->_commandBufferCollection.free();
+    this->_graphicsPipeline.cleanup();
+    this->_vulkanLogicalDevice.cleanupSwapChain();
+}
+
+void engine::VulkanTriangleApplication::frameBufferResizeCallback(GLFWwindow * pWindow, int32 width, int32 height) {
+    auto * baseObj = reinterpret_cast< engine::VulkanTriangleApplication * > ( glfwGetWindowUserPointer( pWindow ) );
+    baseObj->_framebufferResized = true;
+}
+
 void engine::VulkanTriangleApplication::drawImage () noexcept (false) {
+    vkWaitForFences(
+        this->_vulkanLogicalDevice.data(),
+        1U,
+        & this->_inFlightFences[ currentFrame ].data(),
+        VK_TRUE,
+        UINT64_MAX
+    );
+
     uint32 imageIndex;
-    if ( vkAcquireNextImageKHR( this->_vulkanLogicalDevice.data(), this->_vulkanLogicalDevice.getSwapChain()->data(), UINT64_MAX, this->_imageAvailableSemaphore.data(), VK_NULL_HANDLE, & imageIndex ) != VulkanResult::VK_SUCCESS )
+    VulkanResult acquireImageResult = vkAcquireNextImageKHR(
+        this->_vulkanLogicalDevice.data(),
+        this->_vulkanLogicalDevice.getSwapChain()->data(),
+        UINT64_MAX,
+        this->_imageAvailableSemaphores[ currentFrame ].data(),
+        VK_NULL_HANDLE,
+        & imageIndex
+    );
+
+    if ( acquireImageResult == VulkanResult::VK_ERROR_OUT_OF_DATE_KHR ) {
+        this->recreateSwapChain();
+        return;
+    } else if ( acquireImageResult != VulkanResult::VK_SUCCESS )
         throw std::runtime_error ( "Image Acquisition Failure" );
+
+    if ( ! this->_imagesInFlight [ imageIndex ].empty() ) {
+        vkWaitForFences(
+            this->_vulkanLogicalDevice.data(),
+            1U,
+            & this->_imagesInFlight[ imageIndex ].data(),
+            VK_TRUE,
+            UINT64_MAX
+        );
+    }
+
+    this->_imagesInFlight[ imageIndex ] = this->_inFlightFences [ currentFrame ];
 
     VkPipelineStageFlags waitStages[] = { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
 
     if ( this->_commandBufferCollection.getCommandBuffers()[ imageIndex ].submit(
             waitStages,
-            & this->_imageAvailableSemaphore,
+            & this->_imageAvailableSemaphores[ currentFrame ],
             1U,
-            & this->_renderFinishedSemaphore,
-            1U
+            & this->_renderFinishedSemaphores[ currentFrame ],
+            1U,
+            & this->_inFlightFences[ currentFrame ]
         ) != VulkanResult::VK_SUCCESS
     )
         throw std::runtime_error ( "Command Buffer Submit Failure" );
 
-    if( this->_vulkanLogicalDevice.getSwapChain()->present( & this->_renderFinishedSemaphore, 1U, imageIndex ) != VulkanResult::VK_SUCCESS )
+    VulkanResult presentResult = this->_vulkanLogicalDevice.getSwapChain()->present(
+            & this->_renderFinishedSemaphores[ currentFrame ],
+            1U, imageIndex
+    );
+
+    if (
+        presentResult == VulkanResult::VK_ERROR_OUT_OF_DATE_KHR ||
+        presentResult == VulkanResult::VK_SUBOPTIMAL_KHR ||
+        this->_framebufferResized
+    ) {
+        this->_framebufferResized = false;
+        this->recreateSwapChain();
+    }
+    else if ( presentResult != VulkanResult::VK_SUCCESS )
         throw std::runtime_error ( "Swap Chain Present Failure" );
 
-    const VQueue * pPresentQueue = nullptr;
-
-    for ( const auto & queue : this->_vulkanLogicalDevice.getQueues() )
-        if ( queue.getQueueFamily()->isPresentCapable() ) {
-            pPresentQueue = & queue;
-            break;
-        }
-
-    if ( pPresentQueue == nullptr )
-        throw std::runtime_error ( "Present Queue Unavailable" );
-
-    vkQueueWaitIdle( pPresentQueue->data() );
+    currentFrame = ( currentFrame + 1 ) % MAX_FRAMES_IN_FLIGHT;
 }
 
 void engine::VulkanTriangleApplication::mainLoop() noexcept (false) {
@@ -278,14 +358,19 @@ void engine::VulkanTriangleApplication::mainLoop() noexcept (false) {
         glfwPollEvents();
         this->drawImage();
     }
+    vkDeviceWaitIdle( this->_vulkanLogicalDevice.data() );
 }
 
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "Simplify"
 void engine::VulkanTriangleApplication::cleanup() noexcept (false) {
 
-    this->_imageAvailableSemaphore.cleanup();
-    this->_renderFinishedSemaphore.cleanup();
+//    this->_imageAvailableSemaphore.cleanup();
+//    this->_renderFinishedSemaphore.cleanup();
+
+    this->_imageAvailableSemaphores.cleanup();
+    this->_renderFinishedSemaphores.cleanup();
+    this->_inFlightFences.cleanup();
 
     this->_commandPool.cleanup();
 
@@ -313,16 +398,30 @@ void engine::VulkanTriangleApplication::cleanup() noexcept (false) {
     glfwTerminate();
 }
 
-void engine::VulkanTriangleApplication::createCommandPoolsAndBuffers() noexcept(false) {
+void engine::VulkanTriangleApplication::createCommandPool() noexcept(false) {
     if ( this->_commandPool.setup( this->_vulkanLogicalDevice ) != VulkanResult::VK_SUCCESS )
         throw std::runtime_error ( "Command Pool Creation Error" );
+}
 
+void engine::VulkanTriangleApplication::createCommandBuffers() noexcept(false) {
     if ( this->_commandBufferCollection.allocate( this->_commandPool, this->_frameBufferCollection ) != VulkanResult::VK_SUCCESS )
         throw std::runtime_error ( "Command Buffers Allocation Error" );
 
     if ( this->_commandBufferCollection.startRecord( this->_graphicsPipeline ) != VulkanResult::VK_SUCCESS )
         throw std::runtime_error ( "Command Buffers Record Error" );
 }
+
+//
+//void engine::VulkanTriangleApplication::createCommandPoolsAndBuffers() noexcept(false) {
+//    if ( this->_commandPool.setup( this->_vulkanLogicalDevice ) != VulkanResult::VK_SUCCESS )
+//        throw std::runtime_error ( "Command Pool Creation Error" );
+//
+//    if ( this->_commandBufferCollection.allocate( this->_commandPool, this->_frameBufferCollection ) != VulkanResult::VK_SUCCESS )
+//        throw std::runtime_error ( "Command Buffers Allocation Error" );
+//
+//    if ( this->_commandBufferCollection.startRecord( this->_graphicsPipeline ) != VulkanResult::VK_SUCCESS )
+//        throw std::runtime_error ( "Command Buffers Record Error" );
+//}
 
 void engine::VulkanTriangleApplication::autoPickPhysicalDevice() noexcept(false) {
     auto devices = VPhysicalDevice::getAvailablePhysicalDevices( this->_vulkanInstance );
@@ -343,7 +442,7 @@ void engine::VulkanTriangleApplication::autoPickPhysicalDevice() noexcept(false)
     this->_vulkanPhysicalDevice = ( * bestDevice );
 }
 
-void engine::VulkanTriangleApplication::createGraphicsPipeline() noexcept(false) {
+void engine::VulkanTriangleApplication::createShaderModules() noexcept(false) {
     VShaderCompiler compiler;
 
     compiler.setConfigurationFileJSON( std::string(__VULKAN_SHADERS_PATH__).append("/config/vkTriangleShaderComp.json") );
@@ -361,7 +460,9 @@ void engine::VulkanTriangleApplication::createGraphicsPipeline() noexcept(false)
         }
 
     }
+}
 
+void engine::VulkanTriangleApplication::createGraphicsPipeline() noexcept(false) {
     VulkanPipelineShaderStageCreateInfo shaderStages [] = {
         this->_vertexShader.getShaderStageInfo(),
         this->_fragmentShader.getShaderStageInfo()

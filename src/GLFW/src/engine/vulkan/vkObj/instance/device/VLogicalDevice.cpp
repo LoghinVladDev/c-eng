@@ -329,3 +329,54 @@ engine::VLogicalDevice &engine::VLogicalDevice::operator=(const engine::VLogical
 
     return *this;
 }
+
+const engine::VQueue * engine::VLogicalDevice::getFirstPresentQueuePtr() const noexcept {
+    const VQueue * pQueue = nullptr;
+
+    for( const auto & queue : this->_queues )
+        if ( queue.getQueueFamily()->isPresentCapable() ) {
+            pQueue = & queue;
+            break;
+        }
+
+    return pQueue;
+}
+
+const engine::VQueue * engine::VLogicalDevice::getFirstGraphicsQueuePtr() const noexcept {
+    const VQueue * pQueue = nullptr;
+
+    for( const auto & queue : this->_queues )
+        if ( queue.getQueueFamily()->isGraphicsCapable() ) {
+            pQueue = & queue;
+            break;
+        }
+
+    return pQueue;
+}
+
+void engine::VLogicalDevice::cleanupSwapChain() noexcept {
+    this->_imageViewCollection->cleanup();
+    this->_swapChain->cleanup();
+}
+
+VulkanResult engine::VLogicalDevice::recreateSwapChain() noexcept {
+    VulkanResult createSwapChainResult = this->_swapChain->setup( this );
+    if ( createSwapChainResult != VulkanResult::VK_SUCCESS ) {
+        delete this->_swapChain;
+        delete this->_imageViewCollection;
+        this->_swapChain = nullptr;
+        this->_imageViewCollection = nullptr;
+
+        return createSwapChainResult;
+    }
+
+    VulkanResult createImageViewCollectionResult = this->_imageViewCollection->setup( this->_swapChain );
+    if ( createImageViewCollectionResult != VulkanResult::VK_SUCCESS ) {
+        delete this->_imageViewCollection;
+        this->_imageViewCollection = nullptr;
+
+        return createImageViewCollectionResult;
+    }
+
+    return VulkanResult::VK_SUCCESS;
+}

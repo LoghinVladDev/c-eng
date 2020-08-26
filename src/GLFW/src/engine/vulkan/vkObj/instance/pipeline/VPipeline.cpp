@@ -280,6 +280,10 @@ void engine::VPipeline::cleanup() noexcept {
     if ( this->_layoutHandle == nullptr )
         return;
     vkDestroyPipelineLayout( this->_pLogicalDevice->data(), this->_layoutHandle, nullptr );
+
+    this->_layoutHandle = VK_NULL_HANDLE;
+    this->_handle = VK_NULL_HANDLE;
+    this->_pLogicalDevice = nullptr;
 }
 
 VulkanResult engine::VPipeline::setup(const VulkanPipelineShaderStageCreateInfo * pShaderStages, uint32 shaderStageCount, const engine::VLogicalDevice & device ) noexcept(false) {

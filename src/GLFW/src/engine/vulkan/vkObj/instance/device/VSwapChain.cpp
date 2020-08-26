@@ -213,6 +213,7 @@ VulkanResult engine::VSwapChain::setup() noexcept {
 
     vkGetSwapchainImagesKHR( this->_device->data(), this->_handle, & imageCount, nullptr );
 
+    this->_images.clear();
     this->_images.resize( imageCount );
     vkGetSwapchainImagesKHR( this->_device->data(), this->_handle, & imageCount, this->_images.data() );
 
@@ -223,17 +224,20 @@ VulkanResult engine::VSwapChain::setup( const engine::VLogicalDevice * device) n
     if( this->_handle != nullptr )
         return VulkanResult::VK_ERROR_TOO_MANY_OBJECTS;
 
+    this->_device = device;
+
     if( ! this->_device->isSwapChainAdequate() ) {
         throw engine::EngineVLogicalDeviceSwapChainIncompatible();
     }
-
-    this->_device = device;
 
     return this->setup();
 }
 
 void engine::VSwapChain::cleanup() noexcept {
     vkDestroySwapchainKHR( this->_device->data(), this->_handle, nullptr );
+    this->_handle = VK_NULL_HANDLE;
+    this->_device = nullptr;
+    this->_images.clear();
 }
 
 engine::VSwapChain::VSwapChain(const engine::VSwapChain & obj, const engine::VLogicalDevice * device) noexcept {

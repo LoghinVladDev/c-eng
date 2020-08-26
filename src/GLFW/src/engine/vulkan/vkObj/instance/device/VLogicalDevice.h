@@ -138,6 +138,9 @@ namespace engine {
 
         VLogicalDevice & operator = ( const VLogicalDevice& ) noexcept;
 
+        [[nodiscard]] const VQueue * getFirstPresentQueuePtr () const noexcept;
+        [[nodiscard]] const VQueue * getFirstGraphicsQueuePtr () const noexcept;
+
         [[nodiscard]] const VPhysicalDevice * getBasePhysicalDevice () const noexcept {
             return this->_physicalDevice;
         }
@@ -179,6 +182,9 @@ namespace engine {
         [[nodiscard]] bool isSwapChainAdequate () const noexcept {
             return this->_swapChainAdequate;
         }
+
+        void cleanupSwapChain () noexcept;
+        VulkanResult recreateSwapChain () noexcept;
 
         void cleanup () noexcept;
 

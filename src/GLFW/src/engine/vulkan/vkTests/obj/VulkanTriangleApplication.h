@@ -30,6 +30,7 @@
 #include <src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/VFrameBuffer.h>
 #include <vkObj/instance/pipeline/command/VCommandBuffer.h>
 #include <vkObj/instance/pipeline/synchronization/VSemaphore.h>
+#include <vkObj/instance/pipeline/synchronization/VFence.h>
 
 
 namespace engine {
@@ -77,8 +78,16 @@ namespace engine {
         VCommandPool                _commandPool;
         VCommandBufferCollection    _commandBufferCollection;
 
-        VSemaphore                  _imageAvailableSemaphore;
-        VSemaphore                  _renderFinishedSemaphore;
+//        VSemaphore                  _imageAvailableSemaphore;
+//        VSemaphore                  _renderFinishedSemaphore;
+
+        VSemaphoreCollection        _imageAvailableSemaphores;
+        VSemaphoreCollection        _renderFinishedSemaphores;
+
+        VFenceCollection            _inFlightFences;
+        VFenceCollection            _imagesInFlight;
+
+        bool _framebufferResized {false};
 
         //// private_functions
         void initSettings() const noexcept;
@@ -88,7 +97,10 @@ namespace engine {
         void cleanup() noexcept(false);
         void drawImage() noexcept (false);
 
-        void createCommandPoolsAndBuffers () noexcept (false);
+        void createShaderModules () noexcept (false);
+
+        void createCommandPool() noexcept (false);
+        void createCommandBuffers() noexcept (false);
 
         void createSynchronizationElements () noexcept (false);
 
@@ -97,6 +109,13 @@ namespace engine {
         void createSurface() noexcept (false);
         void setupDebugMessenger() noexcept (false);
         void autoPickPhysicalDevice() noexcept (false);
+
+        void recreateSwapChain () noexcept (false);
+        void cleanupSwapChain () noexcept (false);
+
+        void updateResolutionSettings() noexcept;
+
+        static void frameBufferResizeCallback ( GLFWwindow*, int32, int32 );
     public:
         //// public_vars
         constexpr static uint32 DEFAULT_WIDTH       = 800U;

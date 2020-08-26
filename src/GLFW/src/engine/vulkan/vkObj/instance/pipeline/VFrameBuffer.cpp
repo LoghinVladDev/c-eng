@@ -42,6 +42,8 @@ VulkanResult engine::VFrameBufferCollection::setup(const engine::VRenderPass * p
 void engine::VFrameBufferCollection::cleanup() noexcept {
     for ( auto & frameBuffer : this->_frameBuffers )
         frameBuffer.cleanup();
+
+    this->_frameBuffers.clear();
 }
 
 VulkanResult engine::VFrameBuffer::setup() noexcept {
@@ -57,5 +59,8 @@ VulkanResult engine::VFrameBuffer::setup() noexcept {
 
 void engine::VFrameBuffer::cleanup() noexcept {
     vkDestroyFramebuffer( this->_pRenderPass->getLogicalDevicePtr()->data(), this->_handle, nullptr );
+    this->_handle       = VK_NULL_HANDLE;
+    this->_pImageView   = nullptr;
+    this->_pRenderPass  = nullptr;
 }
 

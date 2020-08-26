@@ -59,6 +59,7 @@ namespace engine {
 
         [[nodiscard]] const VSwapChainImageInfo & getImagesInfo () const noexcept {
             return this->_imagesInfo;
+
         }
 
         [[nodiscard]] const std::vector < VulkanImage > & getImages () const noexcept {

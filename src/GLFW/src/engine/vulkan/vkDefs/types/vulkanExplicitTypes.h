@@ -117,6 +117,8 @@ typedef VkSemaphore                                 VulkanSemaphore;
 typedef VkSemaphoreCreateInfo                       VulkanSemaphoreCreateInfo;
 typedef VkFence                                     VulkanFence;
 typedef VkFenceCreateInfo                           VulkanFenceCreateInfo;
+typedef VkFenceCreateFlags                          VulkanFenceCreateFlags;
+typedef VkFenceCreateFlagBits                       VulkanFenceCreateFlagBits;
 typedef VkPipelineStageFlags                        VulkanPipelineStageFlags;
 typedef VkSubmitInfo                                VulkanSubmitInfo;
 

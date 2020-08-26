@@ -89,6 +89,7 @@ inline static void populateSubmitInfo (
 }
 
 VulkanResult engine::VCommandBufferCollection::allocate(const engine::VCommandPool & commandPool, const engine::VFrameBufferCollection & frameBufferCollection) {
+    this->_pCommandPool = & commandPool;
     VulkanCommandBufferAllocateInfo allocateInfo { };
     std::vector < VulkanCommandBuffer > handles (frameBufferCollection.size());
 
@@ -100,6 +101,7 @@ VulkanResult engine::VCommandBufferCollection::allocate(const engine::VCommandPo
         return allocateResult;
 
     uint32 frameBufferIndex = 0U;
+
     for ( const auto & handle : handles ) {
         this->_commandBuffers.emplace_back( handle, & frameBufferCollection.getFrameBuffers()[frameBufferIndex++] );
     }
@@ -139,12 +141,29 @@ VulkanResult engine::VCommandBufferCollection::startRecord( const engine::VPipel
     return VulkanResult::VK_SUCCESS;
 }
 
+void engine::VCommandBufferCollection::free() noexcept {
+    std::vector < VulkanCommandBuffer > commandBufferHandles;
+    for( const auto & commandBuffer : this->_commandBuffers )
+        commandBufferHandles.emplace_back( commandBuffer.data() );
+
+    vkFreeCommandBuffers (
+        this->_pCommandPool->getLogicalDevicePtr()->data(),
+        this->_pCommandPool->data(),
+        static_cast < uint32 > ( commandBufferHandles.size() ),
+        commandBufferHandles.data()
+    );
+
+    this->_commandBuffers.clear();
+    this->_pCommandPool = nullptr;
+}
+
 VulkanResult engine::VCommandBuffer::submit(
-    VulkanPipelineStageFlags * pWaitStages,
-    VSemaphore * pWaitSemaphores,
+    const VulkanPipelineStageFlags * pWaitStages,
+    const VSemaphore * pWaitSemaphores,
     uint32 waitSemaphoreCount,
-    VSemaphore * pSignalSemaphores,
-    uint32 signalSemaphoreCount
+    const VSemaphore * pSignalSemaphores,
+    uint32 signalSemaphoreCount,
+    const VFence * pFence
 ) const noexcept {
     VulkanSubmitInfo    submitInfo { };
     VulkanSemaphore     waitHandles[waitSemaphoreCount];
@@ -167,17 +186,20 @@ VulkanResult engine::VCommandBuffer::submit(
         1U
     );
 
-    const VQueue * pGraphicsQueue = nullptr;
-
-    for( const auto & queue : this->_pFrameBuffer->getRenderPassPtr()->getLogicalDevicePtr()->getQueues() ) {
-        if ( queue.getQueueFamily()->isGraphicsCapable() ) {
-            pGraphicsQueue = & queue;
-            break;
-        }
-    }
+    const auto * pGraphicsQueue = this->_pFrameBuffer->getRenderPassPtr()->getLogicalDevicePtr()->getFirstGraphicsQueuePtr();
 
     if ( pGraphicsQueue == nullptr )
         return VulkanResult::VK_ERROR_INITIALIZATION_FAILED;
 
-    return vkQueueSubmit( pGraphicsQueue->data(), 1U, & submitInfo, VK_NULL_HANDLE );
+    if ( pFence == nullptr )
+        return vkQueueSubmit( pGraphicsQueue->data(), 1U, & submitInfo, VK_NULL_HANDLE );
+    else {
+        vkResetFences(
+            this->_pFrameBuffer->getRenderPassPtr()->getLogicalDevicePtr()->data(),
+            1U,
+            & pFence->data()
+        );
+
+        return vkQueueSubmit(pGraphicsQueue->data(), 1U, &submitInfo, pFence->data());
+    }
 }

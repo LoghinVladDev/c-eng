@@ -110,4 +110,5 @@ void engine::VRenderPass::cleanup () noexcept {
     if( this->_handle == nullptr )
         return;
     vkDestroyRenderPass( this->_pLogicalDevice->data(), this->_handle, nullptr );
+    this->_handle = VK_NULL_HANDLE;
 }

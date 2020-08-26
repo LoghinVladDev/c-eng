@@ -11,6 +11,7 @@
 #include <vkObj/instance/pipeline/VFrameBuffer.h>
 #include <src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/VPipeline.h>
 #include <src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/synchronization/VSemaphore.h>
+#include <src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/synchronization/VFence.h>
 
 namespace engine {
 
@@ -36,7 +37,14 @@ namespace engine {
 
         }
 
-        VulkanResult submit ( VulkanPipelineStageFlags *, VSemaphore *, uint32, VSemaphore *, uint32 ) const noexcept;
+        VulkanResult submit (
+            const VulkanPipelineStageFlags *,
+            const VSemaphore *,
+            uint32,
+            const VSemaphore *,
+            uint32,
+            const VFence * = nullptr
+        ) const noexcept;
 
         VulkanResult startRecord ( const VPipeline& ) noexcept;
 
@@ -49,6 +57,7 @@ namespace engine {
     private:
         //// private variables
         std::vector < VCommandBuffer > _commandBuffers;
+        const VCommandPool           * _pCommandPool    {nullptr};
 
         //// private functions
 
@@ -64,6 +73,8 @@ namespace engine {
         [[nodiscard]] const std::vector < VCommandBuffer > & getCommandBuffers () const noexcept {
             return this->_commandBuffers;
         }
+
+        void free () noexcept;
     };
 
 }
