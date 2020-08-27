@@ -5,17 +5,21 @@
 #include "VPipeline.h"
 
 inline static void populateVertexInputStateCreateInfo (
-    VulkanPipelineVertexInputStateCreateInfo * createInfo
+    VulkanPipelineVertexInputStateCreateInfo       * createInfo,
+    const VulkanVertexInputBindingDescription      * pVertexBindingDescriptions       = nullptr,
+    uint32                                           vertexBindingDescriptionCount    = 0U,
+    const VulkanVertexInputAttributeDescription    * pVertexAttributeDescriptions     = nullptr,
+    uint32                                           vertexAttributeDescriptionCount  = 0U
 ) noexcept {
     if ( createInfo == nullptr )
         return;
 
     * createInfo = VulkanPipelineVertexInputStateCreateInfo {
         .sType                              = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO,
-        .vertexBindingDescriptionCount      = 0,
-        .pVertexBindingDescriptions         = nullptr,
-        .vertexAttributeDescriptionCount    = 0,
-        .pVertexAttributeDescriptions       = nullptr
+        .vertexBindingDescriptionCount      = vertexBindingDescriptionCount,
+        .pVertexBindingDescriptions         = pVertexBindingDescriptions,
+        .vertexAttributeDescriptionCount    = vertexAttributeDescriptionCount,
+        .pVertexAttributeDescriptions       = pVertexAttributeDescriptions
     };
 }
 
@@ -286,7 +290,15 @@ void engine::VPipeline::cleanup() noexcept {
     this->_pLogicalDevice = nullptr;
 }
 
-VulkanResult engine::VPipeline::setup(const VulkanPipelineShaderStageCreateInfo * pShaderStages, uint32 shaderStageCount, const engine::VLogicalDevice & device ) noexcept(false) {
+VulkanResult engine::VPipeline::setup(
+    const engine::VLogicalDevice &                device,
+    const VulkanPipelineShaderStageCreateInfo   * pShaderStages,
+    uint32                                        shaderStageCount,
+    const VulkanVertexInputBindingDescription   * pBindingDescriptions,
+    uint32                                        bindingDescriptionCount,
+    const VulkanVertexInputAttributeDescription * pAttributeDescriptions,
+    uint32                                        attributeDescriptionCount
+) noexcept(false) {
     this->_pLogicalDevice = & device;
 
     auto extent = this->_pLogicalDevice->getSwapChain()->getImagesInfo().extent;
@@ -315,7 +327,7 @@ VulkanResult engine::VPipeline::setup(const VulkanPipelineShaderStageCreateInfo 
 
     VulkanGraphicsPipelineCreateInfo            createInfo                      { };
 
-    populateVertexInputStateCreateInfo          ( & vertexInputStateCreateInfo );
+    populateVertexInputStateCreateInfo          ( & vertexInputStateCreateInfo, pBindingDescriptions, bindingDescriptionCount, pAttributeDescriptions, attributeDescriptionCount );
     populateInputAssemblyStateCreateInfo        ( & inputAssemblyStateCreateInfo );
     populateViewportStructure                   ( & viewport,0.0f, 0.0f, (float) extent.width, (float) extent.height );
     populateScissorStructure                    ( & scissor,0,0, extent );

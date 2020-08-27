@@ -74,6 +74,12 @@ namespace engine {
             return this->_physicalDeviceHandle;
         }
 
+        [[nodiscard]] VulkanPhysicalDeviceMemoryProperties getMemoryProperties () const noexcept {
+            VulkanPhysicalDeviceMemoryProperties properties;
+            vkGetPhysicalDeviceMemoryProperties ( this->_physicalDeviceHandle, & properties );
+            return properties;
+        }
+
         [[nodiscard]] SwapChainSupportDetails querySwapChainOnSurfaceSupport ( const VSurface* ) const noexcept;
 
         [[nodiscard]] static const std::vector < VPhysicalDevice > & getAvailablePhysicalDevices ( const VInstance & instance ) noexcept {

@@ -18,19 +18,20 @@
 
 #include <engineVulkanPreproc.h>
 #include <vkDefs/types/vulkanExplicitTypes.h>
-#include <vector>
-#include <src/GLFW/src/engine/vulkan/vkObj/instance/validationLayer/VValidationLayer.h>
-#include <src/GLFW/src/engine/vulkan/vkObj/instance/VInstance.h>
-#include <src/GLFW/src/engine/vulkan/vkObj/instance/messenger/VMessenger.h>
+#include <vkObj/instance/validationLayer/VValidationLayer.h>
+#include <vkObj/instance/VInstance.h>
+#include <vkObj/instance/messenger/VMessenger.h>
 #include <vkObj/instance/device/VPhysicalDevice.h>
-#include <src/GLFW/src/engine/vulkan/vkObj/instance/device/VLogicalDevice.h>
-#include <src/GLFW/src/engine/vulkan/vkObj/window/surface/VSurface.h>
+#include <vkObj/instance/device/VLogicalDevice.h>
+#include <vkObj/window/surface/VSurface.h>
 #include <vkObj/instance/pipeline/shader/VShaderCompiler.h>
 #include <vkObj/instance/pipeline/VPipeline.h>
-#include <src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/VFrameBuffer.h>
+#include <vkObj/instance/pipeline/VFrameBuffer.h>
 #include <vkObj/instance/pipeline/command/VCommandBuffer.h>
 #include <vkObj/instance/pipeline/synchronization/VSemaphore.h>
 #include <vkObj/instance/pipeline/synchronization/VFence.h>
+#include <vkObj/instance/pipeline/shader/input/VVertex.h>
+#include <vector>
 
 
 namespace engine {
@@ -87,6 +88,8 @@ namespace engine {
         VFenceCollection            _inFlightFences;
         VFenceCollection            _imagesInFlight;
 
+        VVertexBuffer               _vertexBuffer;
+
         bool _framebufferResized {false};
 
         //// private_functions
@@ -111,11 +114,12 @@ namespace engine {
         void autoPickPhysicalDevice() noexcept (false);
 
         void recreateSwapChain () noexcept (false);
+        void createVertexBuffers () noexcept (false);
         void cleanupSwapChain () noexcept (false);
 
         void updateResolutionSettings() noexcept;
 
-        static void frameBufferResizeCallback ( GLFWwindow*, int32, int32 );
+        static void frameBufferResizeCallback ( GLFWwindow*, [[maybe_unused]] int32, int32 );
     public:
         //// public_vars
         constexpr static uint32 DEFAULT_WIDTH       = 800U;

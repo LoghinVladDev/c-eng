@@ -105,6 +105,7 @@ void engine::VulkanTriangleApplication::run() noexcept (false) {
     this->createGraphicsPipeline();
     this->createFrameBuffers();
     this->createCommandPool();
+    this->createVertexBuffers();
     this->createCommandBuffers();
     this->createSynchronizationElements();
     this->mainLoop();
@@ -279,7 +280,7 @@ void engine::VulkanTriangleApplication::cleanupSwapChain() noexcept(false) {
     this->_vulkanLogicalDevice.cleanupSwapChain();
 }
 
-void engine::VulkanTriangleApplication::frameBufferResizeCallback(GLFWwindow * pWindow, int32 width, int32 height) {
+void engine::VulkanTriangleApplication::frameBufferResizeCallback(GLFWwindow * pWindow, [[maybe_unused]] int32 width, [[maybe_unused]] int32 height) {
     auto * baseObj = reinterpret_cast< engine::VulkanTriangleApplication * > ( glfwGetWindowUserPointer( pWindow ) );
     baseObj->_framebufferResized = true;
 }
@@ -361,6 +362,21 @@ void engine::VulkanTriangleApplication::mainLoop() noexcept (false) {
     vkDeviceWaitIdle( this->_vulkanLogicalDevice.data() );
 }
 
+void engine::VulkanTriangleApplication::createVertexBuffers() noexcept(false) {
+    std::vector < VVertex > vertices = {
+        { { 0.0f, -0.5f }, { 1.0f, 0.5f, 0.5f } },
+        { { 0.5f, 0.5f }, { 0.0f, 1.0f, 0.0f } },
+        { { -0.5f, 0.5f }, { 0.0f, 0.0f, 1.0f } }
+    };
+
+//    VVertex vertex = { { 0.0f, -0.5f }, {1.0f, 0.0f, 0.0f} };
+
+    if ( this->_vertexBuffer.setup( this->_vulkanLogicalDevice, vertices ) != VulkanResult::VK_SUCCESS )
+        throw std::runtime_error ( "Vertex Buffer Initialization failure" );
+    if ( this->_vertexBuffer.allocateMemory() != VulkanResult::VK_SUCCESS )
+        throw std::runtime_error ( "Vertex Buffer Allocate failure" );
+}
+
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "Simplify"
 void engine::VulkanTriangleApplication::cleanup() noexcept (false) {
@@ -382,6 +398,9 @@ void engine::VulkanTriangleApplication::cleanup() noexcept (false) {
 
     this->_vertexShader.cleanup();
     this->_fragmentShader.cleanup();
+
+    this->_vertexBuffer.free();
+    this->_vertexBuffer.cleanup();
 
     this->_vulkanLogicalDevice.cleanup();
 
@@ -407,7 +426,14 @@ void engine::VulkanTriangleApplication::createCommandBuffers() noexcept(false) {
     if ( this->_commandBufferCollection.allocate( this->_commandPool, this->_frameBufferCollection ) != VulkanResult::VK_SUCCESS )
         throw std::runtime_error ( "Command Buffers Allocation Error" );
 
-    if ( this->_commandBufferCollection.startRecord( this->_graphicsPipeline ) != VulkanResult::VK_SUCCESS )
+    VulkanDeviceSize offsets [] = { 0 };
+
+    if ( this->_commandBufferCollection.startRecord(
+            this->_graphicsPipeline,
+            & this->_vertexBuffer,
+            offsets,
+            1U
+        ) != VulkanResult::VK_SUCCESS )
         throw std::runtime_error ( "Command Buffers Record Error" );
 }
 
@@ -468,7 +494,19 @@ void engine::VulkanTriangleApplication::createGraphicsPipeline() noexcept(false)
         this->_fragmentShader.getShaderStageInfo()
     };
 
-    if ( this->_graphicsPipeline.setup( shaderStages, 2, this->_vulkanLogicalDevice ) != VulkanResult::VK_SUCCESS )
+    auto bindingDescription = VVertex::getBindingDescription();
+    auto attributeDescriptions = VVertex::getAttributeDescriptions();
+
+    if ( this->_graphicsPipeline.setup (
+            this->_vulkanLogicalDevice,
+            shaderStages,
+            2,
+            & bindingDescription,
+            1U,
+            attributeDescriptions.data(),
+            static_cast < uint32 > ( attributeDescriptions.size() )
+        ) != VulkanResult::VK_SUCCESS
+    )
         throw std::runtime_error ("Graphics Pipeline initialization failed");
 
     this->_renderPass = this->_graphicsPipeline.getRenderPassPtr();

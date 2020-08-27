@@ -109,7 +109,12 @@ VulkanResult engine::VCommandBufferCollection::allocate(const engine::VCommandPo
     return allocateResult;
 }
 
-VulkanResult engine::VCommandBuffer::startRecord( const engine::VPipeline & pipeline ) noexcept {
+VulkanResult engine::VCommandBuffer::startRecord(
+    const engine::VPipeline & pipeline,
+    const VVertexBuffer * pVertexBuffers,
+    const VulkanDeviceSize * pOffsets,
+    uint32 vertexBufferCount
+) noexcept {
     VulkanCommandBufferBeginInfo beginInfo { };
 
     populateCommandBufferBeginInfo( & beginInfo );
@@ -126,15 +131,29 @@ VulkanResult engine::VCommandBuffer::startRecord( const engine::VPipeline & pipe
 
     vkCmdBeginRenderPass( this->_handle, & renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE );
     vkCmdBindPipeline   ( this->_handle, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline.data() );
+
+    if ( pVertexBuffers != nullptr ) {
+        VulkanBuffer vertexBufferHandles [ vertexBufferCount ];
+        for ( uint32 vertexBufferIndex = 0U; vertexBufferIndex < vertexBufferCount; vertexBufferIndex ++ )
+            vertexBufferHandles [ vertexBufferIndex ] = pVertexBuffers [ vertexBufferIndex ].data();
+
+        vkCmdBindVertexBuffers( this->_handle, 0, vertexBufferCount, vertexBufferHandles, pOffsets );
+    }
+
     vkCmdDraw           ( this->_handle, 3, 1, 0, 0 );
     vkCmdEndRenderPass  ( this->_handle );
 
     return vkEndCommandBuffer( this->_handle );
 }
 
-VulkanResult engine::VCommandBufferCollection::startRecord( const engine::VPipeline & pipeline ) noexcept {
+VulkanResult engine::VCommandBufferCollection::startRecord(
+    const engine::VPipeline & pipeline,
+    const engine::VVertexBuffer * pVertexBuffers,
+    const VulkanDeviceSize * pOffsets,
+    uint32 vertexBufferCount
+) noexcept {
     for ( auto & commandBuffer : this->_commandBuffers ) {
-        VulkanResult startRecordResult = commandBuffer.startRecord(pipeline);
+        VulkanResult startRecordResult = commandBuffer.startRecord(pipeline, pVertexBuffers, pOffsets, vertexBufferCount);
         if( startRecordResult != VulkanResult::VK_SUCCESS )
             return startRecordResult;
     }

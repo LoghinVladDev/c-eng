@@ -12,6 +12,7 @@
 #include <src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/VPipeline.h>
 #include <src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/synchronization/VSemaphore.h>
 #include <src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/synchronization/VFence.h>
+#include <vkObj/instance/pipeline/shader/input/VVertex.h>
 
 namespace engine {
 
@@ -46,7 +47,12 @@ namespace engine {
             const VFence * = nullptr
         ) const noexcept;
 
-        VulkanResult startRecord ( const VPipeline& ) noexcept;
+        VulkanResult startRecord (
+            const VPipeline&,
+            const VVertexBuffer * = nullptr,
+            const VulkanDeviceSize * = nullptr,
+            uint32 = 0U
+        ) noexcept;
 
         [[nodiscard]] const VulkanCommandBuffer & data () const noexcept {
             return this->_handle;
@@ -68,7 +74,12 @@ namespace engine {
         VCommandBufferCollection() noexcept = default;
 
         VulkanResult allocate ( const engine::VCommandPool &, const engine::VFrameBufferCollection & );
-        VulkanResult startRecord ( const VPipeline& ) noexcept;
+        VulkanResult startRecord (
+            const VPipeline&,
+            const VVertexBuffer * = nullptr,
+            const VulkanDeviceSize * = nullptr,
+            uint32 = 0U
+        ) noexcept;
 
         [[nodiscard]] const std::vector < VCommandBuffer > & getCommandBuffers () const noexcept {
             return this->_commandBuffers;

@@ -125,6 +125,22 @@ typedef VkSubmitInfo                                VulkanSubmitInfo;
 typedef VkSubpassDependency                         VulkanSubpassDependency;
 typedef VkPresentInfoKHR                            VulkanPresentInfoKhronos;
 
+typedef VkVertexInputBindingDescription             VulkanVertexInputBindingDescription;
+typedef VkVertexInputAttributeDescription           VulkanVertexInputAttributeDescription;
+typedef VkVertexInputRate                           VulkanVertexInputRate;
+typedef VkBufferCreateInfo                          VulkanBufferCreateInfo;
+typedef VkBuffer                                    VulkanBuffer;
+typedef VkSharingMode                               VulkanSharingMode;
+typedef VkBufferUsageFlags                          VulkanBufferUsageFlags;
+typedef VkBufferUsageFlagBits                       VulkanBufferUsageFlagBits;
+
+typedef VkMemoryRequirements                        VulkanMemoryRequirements;
+typedef VkPhysicalDeviceMemoryProperties            VulkanPhysicalDeviceMemoryProperties;
+typedef VkMemoryAllocateInfo                        VulkanMemoryAllocateInfo;
+typedef VkDeviceMemory                              VulkanDeviceMemory;
+typedef VkMemoryPropertyFlags                       VulkanMemoryPropertyFlags;
+typedef VkMemoryPropertyFlagBits                    VulkanMemoryPropertyFlagBits;
+typedef VkDeviceSize                                VulkanDeviceSize;
 
 #if defined(ENGINE_OS_WINDOWS_32_64)
 

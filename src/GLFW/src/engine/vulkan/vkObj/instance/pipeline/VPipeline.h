@@ -42,9 +42,30 @@ namespace engine {
             return & this->_renderPass;
         }
 
-        VulkanResult setup ( const VulkanPipelineShaderStageCreateInfo*, uint32, const engine::VLogicalDevice& ) noexcept (false);
-        VulkanResult setup ( const std::vector < VulkanPipelineShaderStageCreateInfo > & shaderStages, const engine::VLogicalDevice& device ) noexcept (false) {
-            return this->setup ( shaderStages.data(), static_cast < uint32 > ( shaderStages.size() ), device );
+        VulkanResult setup (
+            const engine::VLogicalDevice&,
+            const VulkanPipelineShaderStageCreateInfo *,
+            uint32,
+            const VulkanVertexInputBindingDescription *     = nullptr,
+            uint32                                          = 0U,
+            const VulkanVertexInputAttributeDescription *   = nullptr,
+            uint32                                          = 0U
+        ) noexcept (false);
+        VulkanResult setup (
+            const engine::VLogicalDevice& device,
+            const std::vector < VulkanPipelineShaderStageCreateInfo > & shaderStages,
+            const std::vector < VulkanVertexInputBindingDescription > & bindingDescriptions,
+            const std::vector < VulkanVertexInputAttributeDescription > & attributeDescriptions
+        ) noexcept (false) {
+            return this->setup (
+                device,
+                shaderStages.data(),
+                static_cast < uint32 > ( shaderStages.size() ),
+                bindingDescriptions.data(),
+                static_cast < uint32 > ( bindingDescriptions.size() ),
+                attributeDescriptions.data(),
+                static_cast < uint32 > ( attributeDescriptions.size() )
+            );
         }
 
         void cleanup () noexcept;
