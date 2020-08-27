@@ -132,6 +132,7 @@ std::array < VulkanVertexInputAttributeDescription, engine::VVertex::PACK_PROPER
 VulkanResult engine::VVertexBuffer::setup(const VLogicalDevice & device, const std::vector < engine::VVertex > & vertices ) noexcept {
     this->_pLogicalDevice = & device;
     this->_pVertices = & vertices;
+    this->_vertexCount = vertices.size();
 
     VulkanBufferCreateInfo createInfo { };
     populateVertexBufferCreateInfo(

@@ -132,15 +132,20 @@ VulkanResult engine::VCommandBuffer::startRecord(
     vkCmdBeginRenderPass( this->_handle, & renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE );
     vkCmdBindPipeline   ( this->_handle, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline.data() );
 
+    uint32 vertexCount = 0U;
+
     if ( pVertexBuffers != nullptr ) {
         VulkanBuffer vertexBufferHandles [ vertexBufferCount ];
-        for ( uint32 vertexBufferIndex = 0U; vertexBufferIndex < vertexBufferCount; vertexBufferIndex ++ )
-            vertexBufferHandles [ vertexBufferIndex ] = pVertexBuffers [ vertexBufferIndex ].data();
+        for ( uint32 vertexBufferIndex = 0U; vertexBufferIndex < vertexBufferCount; vertexBufferIndex ++ ) {
+            vertexBufferHandles[vertexBufferIndex] = pVertexBuffers[vertexBufferIndex].data();
+            vertexCount += pVertexBuffers[ vertexBufferIndex ].getVertexCount();
+        }
 
         vkCmdBindVertexBuffers( this->_handle, 0, vertexBufferCount, vertexBufferHandles, pOffsets );
     }
 
-    vkCmdDraw           ( this->_handle, 3, 1, 0, 0 );
+    vkCmdDraw           ( this->_handle, vertexCount , 1, 0, 0 );
+//    vkCmdDraw           ( this->_handle, 3 , 1, 3, 0 );
     vkCmdEndRenderPass  ( this->_handle );
 
     return vkEndCommandBuffer( this->_handle );

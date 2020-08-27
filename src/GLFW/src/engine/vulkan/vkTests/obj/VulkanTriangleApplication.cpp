@@ -364,9 +364,12 @@ void engine::VulkanTriangleApplication::mainLoop() noexcept (false) {
 
 void engine::VulkanTriangleApplication::createVertexBuffers() noexcept(false) {
     std::vector < VVertex > vertices = {
-        { { 0.0f, -0.5f }, { 1.0f, 0.5f, 0.5f } },
+        { { -0.5f, -0.5f }, { 1.0f, 0.5f, 0.5f } },
         { { 0.5f, 0.5f }, { 0.0f, 1.0f, 0.0f } },
-        { { -0.5f, 0.5f }, { 0.0f, 0.0f, 1.0f } }
+        { { -0.5f, 0.5f }, { 0.0f, 0.0f, 1.0f } },
+        { { -0.5f, -0.5f }, { 1.0f, 0.5f, 0.5f } },
+        { { 0.5f, 0.5f }, { 0.0f, 1.0f, 0.0f } },
+        { { 0.5f, -0.5f }, { 0.0f, 0.0f, 0.7f } }
     };
 
 //    VVertex vertex = { { 0.0f, -0.5f }, {1.0f, 0.0f, 0.0f} };

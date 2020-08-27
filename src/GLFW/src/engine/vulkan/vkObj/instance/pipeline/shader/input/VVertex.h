@@ -103,6 +103,7 @@ namespace engine {
         VulkanBuffer                            _handle         {VK_NULL_HANDLE};
         VkDeviceMemory                          _memoryHandle   {VK_NULL_HANDLE};
         VulkanDeviceSize                        _memorySize     {0ULL};
+        uint32                                  _vertexCount    {0U};
         const VLogicalDevice                  * _pLogicalDevice {nullptr};
         const std::vector < engine::VVertex > * _pVertices      {nullptr};
 
@@ -120,6 +121,10 @@ namespace engine {
 
         VulkanResult setup ( const VLogicalDevice &, const std::vector < VVertex > & ) noexcept;
         VulkanResult allocateMemory (  ) noexcept;
+
+        [[nodiscard]] uint32 getVertexCount () const noexcept {
+            return this->_vertexCount;
+        }
 
         void free () noexcept;
         void cleanup () noexcept;
