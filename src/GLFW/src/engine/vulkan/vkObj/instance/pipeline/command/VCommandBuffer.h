@@ -13,6 +13,7 @@
 #include <src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/synchronization/VSemaphore.h>
 #include <src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/synchronization/VFence.h>
 #include <vkObj/instance/pipeline/shader/input/VVertex.h>
+#include <vkObj/instance/pipeline/shader/input/VVertexBuffer.h>
 
 namespace engine {
 

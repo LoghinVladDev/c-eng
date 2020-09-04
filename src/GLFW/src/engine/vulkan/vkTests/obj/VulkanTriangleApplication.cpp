@@ -280,6 +280,8 @@ void engine::VulkanTriangleApplication::cleanupSwapChain() noexcept(false) {
     this->_vulkanLogicalDevice.cleanupSwapChain();
 }
 
+
+
 void engine::VulkanTriangleApplication::frameBufferResizeCallback(GLFWwindow * pWindow, [[maybe_unused]] int32 width, [[maybe_unused]] int32 height) {
     auto * baseObj = reinterpret_cast< engine::VulkanTriangleApplication * > ( glfwGetWindowUserPointer( pWindow ) );
     baseObj->_framebufferResized = true;
@@ -356,23 +358,25 @@ void engine::VulkanTriangleApplication::drawImage () noexcept (false) {
 
 void engine::VulkanTriangleApplication::mainLoop() noexcept (false) {
     while ( ! glfwWindowShouldClose( this->_window ) ) {
+        double startFrameTime = glfwGetTime();
+        static double deltaTime = 0.0;
+
         glfwPollEvents();
         this->drawImage();
+
+        deltaTime = ( glfwGetTime() - startFrameTime );
+
+        std::cout << "FPS : " << ( 1.0 / deltaTime ) << '\n';
     }
     vkDeviceWaitIdle( this->_vulkanLogicalDevice.data() );
 }
 
 void engine::VulkanTriangleApplication::createVertexBuffers() noexcept(false) {
     std::vector < VVertex > vertices = {
-        { { -0.5f, -0.5f }, { 1.0f, 0.5f, 0.5f } },
+        { { 0.0f, -0.5f }, { 0.5f, 0.5f, 0.5f } },
         { { 0.5f, 0.5f }, { 0.0f, 1.0f, 0.0f } },
-        { { -0.5f, 0.5f }, { 0.0f, 0.0f, 1.0f } },
-        { { -0.5f, -0.5f }, { 1.0f, 0.5f, 0.5f } },
-        { { 0.5f, 0.5f }, { 0.0f, 1.0f, 0.0f } },
-        { { 0.5f, -0.5f }, { 0.0f, 0.0f, 0.7f } }
+        { { -0.5f, 0.5f }, { 0.0f, 0.0f, 1.0f } }
     };
-
-//    VVertex vertex = { { 0.0f, -0.5f }, {1.0f, 0.0f, 0.0f} };
 
     if ( this->_vertexBuffer.setup( this->_vulkanLogicalDevice, vertices ) != VulkanResult::VK_SUCCESS )
         throw std::runtime_error ( "Vertex Buffer Initialization failure" );
@@ -383,10 +387,6 @@ void engine::VulkanTriangleApplication::createVertexBuffers() noexcept(false) {
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "Simplify"
 void engine::VulkanTriangleApplication::cleanup() noexcept (false) {
-
-//    this->_imageAvailableSemaphore.cleanup();
-//    this->_renderFinishedSemaphore.cleanup();
-
     this->_imageAvailableSemaphores.cleanup();
     this->_renderFinishedSemaphores.cleanup();
     this->_inFlightFences.cleanup();
@@ -396,8 +396,6 @@ void engine::VulkanTriangleApplication::cleanup() noexcept (false) {
     this->_frameBufferCollection.cleanup();
 
     this->_graphicsPipeline.cleanup();
-
-//    this->_renderPass.cleanup(); happens in graphics pipeline cleanup
 
     this->_vertexShader.cleanup();
     this->_fragmentShader.cleanup();
@@ -439,18 +437,6 @@ void engine::VulkanTriangleApplication::createCommandBuffers() noexcept(false) {
         ) != VulkanResult::VK_SUCCESS )
         throw std::runtime_error ( "Command Buffers Record Error" );
 }
-
-//
-//void engine::VulkanTriangleApplication::createCommandPoolsAndBuffers() noexcept(false) {
-//    if ( this->_commandPool.setup( this->_vulkanLogicalDevice ) != VulkanResult::VK_SUCCESS )
-//        throw std::runtime_error ( "Command Pool Creation Error" );
-//
-//    if ( this->_commandBufferCollection.allocate( this->_commandPool, this->_frameBufferCollection ) != VulkanResult::VK_SUCCESS )
-//        throw std::runtime_error ( "Command Buffers Allocation Error" );
-//
-//    if ( this->_commandBufferCollection.startRecord( this->_graphicsPipeline ) != VulkanResult::VK_SUCCESS )
-//        throw std::runtime_error ( "Command Buffers Record Error" );
-//}
 
 void engine::VulkanTriangleApplication::autoPickPhysicalDevice() noexcept(false) {
     auto devices = VPhysicalDevice::getAvailablePhysicalDevices( this->_vulkanInstance );

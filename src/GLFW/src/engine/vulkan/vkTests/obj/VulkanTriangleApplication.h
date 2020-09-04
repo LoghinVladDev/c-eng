@@ -31,6 +31,7 @@
 #include <vkObj/instance/pipeline/synchronization/VSemaphore.h>
 #include <vkObj/instance/pipeline/synchronization/VFence.h>
 #include <vkObj/instance/pipeline/shader/input/VVertex.h>
+#include <vkObj/instance/pipeline/shader/input/VVertexBuffer.h>
 #include <vector>
 
 
@@ -78,9 +79,6 @@ namespace engine {
 
         VCommandPool                _commandPool;
         VCommandBufferCollection    _commandBufferCollection;
-
-//        VSemaphore                  _imageAvailableSemaphore;
-//        VSemaphore                  _renderFinishedSemaphore;
 
         VSemaphoreCollection        _imageAvailableSemaphores;
         VSemaphoreCollection        _renderFinishedSemaphores;

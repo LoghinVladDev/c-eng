@@ -8,3 +8,4 @@
 /src/GLFW/src/engine/vulkan/vkTests/obj/VulkanTriangleApplication2.h
 /src/GLFW/src/engine/vulkan/vkTests/obj/VulkanTriangleApplication2.cpp
 /src/GLFW/src/engine/vulkan/vkTests/c/vulkanTriangle2.cpp
+./externals/*

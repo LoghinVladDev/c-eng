@@ -22,6 +22,7 @@ add_subdirectory(dependencies/glad)
 add_subdirectory(dependencies/glm)
 add_subdirectory(dependencies/assimp-5.0.1)
 add_subdirectory(dependencies/JSONCpp)
+add_subdirectory(externals/onlineBookShop)
 #add_subdirectory(dependencies/sqlite-autoconf-3320300)
 #add_subdirectory(dependencies/stb_image)
 #add_subdirectory(messengerOffline)
@@ -127,7 +128,9 @@ if(Vulkan_FOUND)
             src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/synchronization/VSemaphore.h
             src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/synchronization/VFence.cpp
             src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/synchronization/VFence.h
-            src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/shader/input/VVertex.cpp src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/shader/input/VVertex.h)
+            src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/shader/input/VVertex.cpp
+            src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/shader/input/VVertex.h
+            src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/shader/input/VVertexBuffer.cpp src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/shader/input/VVertexBuffer.h)
 
 
     target_link_libraries( vkTriangle Vulkan::Vulkan )

@@ -97,39 +97,6 @@ namespace engine {
         static std::array < VulkanVertexInputAttributeDescription, engine::VVertex::PACK_PROPERTIES_COUNT >  getAttributeDescriptions () noexcept;
     };
 
-    class VVertexBuffer {
-    private:
-        //// private variables
-        VulkanBuffer                            _handle         {VK_NULL_HANDLE};
-        VkDeviceMemory                          _memoryHandle   {VK_NULL_HANDLE};
-        VulkanDeviceSize                        _memorySize     {0ULL};
-        uint32                                  _vertexCount    {0U};
-        const VLogicalDevice                  * _pLogicalDevice {nullptr};
-        const std::vector < engine::VVertex > * _pVertices      {nullptr};
-
-        //// private functions
-
-    public:
-        //// public variables
-
-        //// public functions
-        VVertexBuffer () noexcept = default;
-
-        [[nodiscard]] const VulkanBuffer & data () const noexcept {
-            return this->_handle;
-        }
-
-        VulkanResult setup ( const VLogicalDevice &, const std::vector < VVertex > & ) noexcept;
-        VulkanResult allocateMemory (  ) noexcept;
-
-        [[nodiscard]] uint32 getVertexCount () const noexcept {
-            return this->_vertexCount;
-        }
-
-        void free () noexcept;
-        void cleanup () noexcept;
-    };
-
 }
 
 #endif //ENG1_VVERTEX_H
