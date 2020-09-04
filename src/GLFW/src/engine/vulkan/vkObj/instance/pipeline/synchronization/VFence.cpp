@@ -13,6 +13,7 @@ static inline void populateFenceCreateInfo (
 
     * createInfo = VulkanFenceCreateInfo {
         .sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO,
+        .pNext = nullptr,
         .flags = flags
     };
 }

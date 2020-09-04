@@ -5,9 +5,12 @@
 #include "VStdUtils.h"
 #include "VStdUtilsDefs.h"
 
+constexpr static bool constexprVulkanVersionCheck ( int version, int required ) {
+    return version >= required;
+}
+
 std::string engine::VStandardUtils::to_string(VulkanResult result) noexcept {
     switch (result) {
-
         case VK_SUCCESS:                                            return std::string (__VK_SUCCESS_STR);
         case VK_NOT_READY:                                          return std::string (__VK_NOT_READY);
         case VK_TIMEOUT:                                            return std::string (__VK_TIMEOUT);
@@ -28,8 +31,14 @@ std::string engine::VStandardUtils::to_string(VulkanResult result) noexcept {
         case VK_ERROR_FRAGMENTED_POOL:                              return std::string (__VK_ERROR_FRAGMENTED_POOL);
         case VK_ERROR_OUT_OF_POOL_MEMORY:                           return std::string (__VK_ERROR_OUT_OF_POOL_MEMORY);
         case VK_ERROR_INVALID_EXTERNAL_HANDLE:                      return std::string (__VK_ERROR_INVALID_EXTERNAL_HANDLE);
+#if VK_HEADER_VERSION >= 131
         case VK_ERROR_FRAGMENTATION:                                return std::string (__VK_ERROR_FRAGMENTATION);
-        case VK_ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS:               return std::string (__VK_ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS);
+#else
+        case VK_ERROR_FRAGMENTATION_EXT:                            return std::string ( __VK_ERROR_FRAGMENTATION );
+#endif
+#if VK_HEADER_VERSION >= 131
+        case VK_ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS:           return std::string (__VK_ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS);
+#endif
         case VK_ERROR_SURFACE_LOST_KHR:                             return std::string (__VK_ERROR_SURFACE_LOST_KHR);
         case VK_ERROR_NATIVE_WINDOW_IN_USE_KHR:                     return std::string (__VK_ERROR_NATIVE_WINDOW_IN_USE_KHR);
         case VK_SUBOPTIMAL_KHR:                                     return std::string (__VK_SUBOPTIMAL_KHR);
@@ -42,8 +51,9 @@ std::string engine::VStandardUtils::to_string(VulkanResult result) noexcept {
         case VK_ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT:          return std::string (__VK_ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT);
 //        case VK_RESULT_RANGE_SIZE:                                  return std::string (__VK_RESULT_RANGE_SIZE); not on all platforms
         case VK_RESULT_MAX_ENUM:                                    return std::string (__VK_RESULT_MAX_ENUM);
-
+#if VK_HEADER_VERSION >= 131
         case VK_ERROR_UNKNOWN:
+#endif
         default:                                                    return std::string (__VK_ERROR_UNKNOWN);
             
     }

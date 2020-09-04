@@ -120,6 +120,7 @@ typedef VkFenceCreateInfo                           VulkanFenceCreateInfo;
 typedef VkFenceCreateFlags                          VulkanFenceCreateFlags;
 typedef VkFenceCreateFlagBits                       VulkanFenceCreateFlagBits;
 typedef VkPipelineStageFlags                        VulkanPipelineStageFlags;
+typedef VkPipelineStageFlagBits                     VulkanPipelineStageFlagBits;
 typedef VkSubmitInfo                                VulkanSubmitInfo;
 
 typedef VkSubpassDependency                         VulkanSubpassDependency;
@@ -142,6 +143,12 @@ typedef VkMemoryPropertyFlags                       VulkanMemoryPropertyFlags;
 typedef VkMemoryPropertyFlagBits                    VulkanMemoryPropertyFlagBits;
 typedef VkDeviceSize                                VulkanDeviceSize;
 
+typedef VkBlendOp                                   VulkanBlendOperation;
+typedef VkBlendFactor                               VulkanBlendFactor;
+typedef VkAccessFlagBits                            VulkanAccessFlagBits;
+
+constexpr VulkanFlags VULKAN_NULL_FLAGS = 0;
+
 #if defined(ENGINE_OS_WINDOWS_32_64)
 
 typedef VkWin32SurfaceCreateInfoKHR                 VulkanSurfaceCreateInfoKhronos;
@@ -149,6 +156,11 @@ typedef VkWin32SurfaceCreateInfoKHR                 VulkanSurfaceCreateInfoKhron
 extern VulkanResult (* vkCreateSurfaceKhronos) (VulkanInstance, const VulkanSurfaceCreateInfoKhronos *, const VkAllocationCallbacks *, VulkanSurfaceKhronos *);
 
 #elif defined(ENGINE_OS_LINUX)
+
+typedef VkXcbSurfaceCreateInfoKHR                   VulkanSurfaceCreateInfoKhronos;
+
+extern VulkanResult (* vkCreateSurfaceKhronos ) (VulkanInstance, const VulkanSurfaceCreateInfoKhronos *, const VkAllocationCallbacks *, VulkanSurfaceKhronos *);
+
 #elif defined(ENGINE_OS_MAC_OS_X)
 #endif
 

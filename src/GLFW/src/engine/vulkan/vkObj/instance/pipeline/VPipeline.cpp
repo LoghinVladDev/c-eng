@@ -16,6 +16,8 @@ inline static void populateVertexInputStateCreateInfo (
 
     * createInfo = VulkanPipelineVertexInputStateCreateInfo {
         .sType                              = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO,
+        .pNext                              = nullptr,
+        .flags                              = VULKAN_NULL_FLAGS,
         .vertexBindingDescriptionCount      = vertexBindingDescriptionCount,
         .pVertexBindingDescriptions         = pVertexBindingDescriptions,
         .vertexAttributeDescriptionCount    = vertexAttributeDescriptionCount,
@@ -31,6 +33,8 @@ inline static void populateInputAssemblyStateCreateInfo (
 
     * createInfo = VulkanPipelineInputAssemblyStateCreateInfo {
         .sType                  = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO,
+        .pNext                  = nullptr,
+        .flags                  = VULKAN_NULL_FLAGS,
         .topology               = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST,
         .primitiveRestartEnable = VK_FALSE
     };
@@ -83,6 +87,8 @@ inline static void populateViewportStateCreateInfo (
 
     * createInfo = VulkanPipelineViewportStateCreateInfo {
         .sType          = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO,
+        .pNext          = nullptr,
+        .flags          = VULKAN_NULL_FLAGS,
         .viewportCount  = viewportCount,
         .pViewports     = pViewports,
         .scissorCount   = scissorCount,
@@ -98,6 +104,8 @@ inline static void populateRasterizationStateCreateInfo (
 
     * createInfo = VulkanPipelineRasterizationStateCreateInfo {
         .sType                      = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO,
+        .pNext                      = nullptr,
+        .flags                      = VULKAN_NULL_FLAGS,
         .depthClampEnable           = VK_FALSE,
         .rasterizerDiscardEnable    = VK_FALSE,
         .polygonMode                = VK_POLYGON_MODE_FILL,
@@ -119,6 +127,8 @@ inline static void populateMultisampleStateCreateInfo (
 
     * createInfo = VulkanPipelineMultisampleStateCreateInfo {
         .sType                  = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO,
+        .pNext                  = nullptr,
+        .flags                  = VULKAN_NULL_FLAGS,
         .rasterizationSamples   = VK_SAMPLE_COUNT_1_BIT,
         .sampleShadingEnable    = VK_FALSE,
         .minSampleShading       = 1.0f,
@@ -141,8 +151,14 @@ inline static void populateColorBlendAttachmentStateDisabled (
         return;
 
     * colorBlendAttachment = VulkanPipelineColorBlendAttachmentState {
-        .blendEnable    = VK_FALSE,
-        .colorWriteMask = COLOR_WRITE_MASK
+        .blendEnable            = VK_FALSE,
+        .srcColorBlendFactor    = VulkanBlendFactor::VK_BLEND_FACTOR_ONE,
+        .dstColorBlendFactor    = VulkanBlendFactor::VK_BLEND_FACTOR_ZERO,
+        .colorBlendOp           = VulkanBlendOperation::VK_BLEND_OP_ADD,
+        .srcAlphaBlendFactor    = VulkanBlendFactor::VK_BLEND_FACTOR_ONE,
+        .dstAlphaBlendFactor    = VulkanBlendFactor::VK_BLEND_FACTOR_ZERO,
+        .alphaBlendOp           = VulkanBlendOperation::VK_BLEND_OP_ADD,
+        .colorWriteMask         = COLOR_WRITE_MASK
     };
 }
 
@@ -159,7 +175,8 @@ inline static void populateColorBlendAttachmentStateEnabled (
         .colorBlendOp           = VK_BLEND_OP_ADD,
         .srcAlphaBlendFactor    = VK_BLEND_FACTOR_ONE,
         .dstAlphaBlendFactor    = VK_BLEND_FACTOR_ZERO,
-        .alphaBlendOp           = VK_BLEND_OP_ADD
+        .alphaBlendOp           = VK_BLEND_OP_ADD,
+        .colorWriteMask         = COLOR_WRITE_MASK
     };
 }
 
@@ -173,6 +190,8 @@ inline static void populateColorBlendStateCreateInfo (
 
     * createInfo = VulkanPipelineColorBlendStateCreateInfo {
         .sType              = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO,
+        .pNext              = nullptr,
+        .flags              = VULKAN_NULL_FLAGS,
         .logicOpEnable      = static_cast<VkBool32>(( ( pAttachments->blendEnable == VK_TRUE ) ? ( VK_FALSE ) : ( VK_TRUE ) )),
         .logicOp            = VK_LOGIC_OP_COPY,
         .attachmentCount    = attachmentCount,
@@ -189,11 +208,17 @@ inline static void populateColorBlendStateCreateInfo (
     if ( createInfo == nullptr )
         return;
 
-    * createInfo = { };
+    * createInfo = VulkanPipelineDynamicStateCreateInfo {
+        .sType              = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO,
+        .pNext              = nullptr,
+        .flags              = VULKAN_NULL_FLAGS,
+        .dynamicStateCount  = dynamicStateCount,
+        .pDynamicStates     = pDynamicStates
+    };
 
-    createInfo->sType               = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
-    createInfo->dynamicStateCount   = dynamicStateCount;
-    createInfo->pDynamicStates      = pDynamicStates;
+//    createInfo->sType               = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
+//    createInfo->dynamicStateCount   = dynamicStateCount;
+//    createInfo->pDynamicStates      = pDynamicStates;
 }
 
 inline static void populateLayoutCreateInfo (
@@ -202,13 +227,15 @@ inline static void populateLayoutCreateInfo (
     if ( createInfo == nullptr )
         return;
 
-    * createInfo = { };
-
-    createInfo->sType                   = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-    createInfo->setLayoutCount          = 0U;
-    createInfo->pSetLayouts             = nullptr;
-    createInfo->pushConstantRangeCount  = 0U;
-    createInfo->pPushConstantRanges     = nullptr;
+    * createInfo = VulkanPipelineLayoutCreateInfo {
+        .sType                  = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO,
+        .pNext                  = nullptr,
+        .flags                  = VULKAN_NULL_FLAGS,
+        .setLayoutCount         = 0U,
+        .pSetLayouts            = nullptr,
+        .pushConstantRangeCount = 0U,
+        .pPushConstantRanges    = nullptr
+    };
 }
 
 inline static void populateGraphicsPipelineCreateInfo (
@@ -244,10 +271,13 @@ inline static void populateGraphicsPipelineCreateInfo (
 
     * createInfo = VulkanGraphicsPipelineCreateInfo {
         .sType                  = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO,
+        .pNext                  = nullptr,
+        .flags                  = VULKAN_NULL_FLAGS,
         .stageCount             = shaderStageCount,
         .pStages                = pShaderStages,
         .pVertexInputState      = pVertexInputState,
         .pInputAssemblyState    = pInputAssemblyState,
+        .pTessellationState     = nullptr,
         .pViewportState         = pViewportState,
         .pRasterizationState    = pRasterizerState,
         .pMultisampleState      = pMultisampleState,
@@ -258,20 +288,20 @@ inline static void populateGraphicsPipelineCreateInfo (
         .renderPass             = pRenderPass->data(),
         .subpass                = subpass,
         .basePipelineHandle     = ( pBasePipeline == nullptr ? nullptr : pBasePipeline->data() ) ,
-        .basePipelineIndex      = basePipelineIndex
+        .basePipelineIndex      = basePipelineIndex,
     };
 }
 
 void engine::VPipeline::createRenderPass() noexcept (false) {
-    VulkanSubpassDependency waitForImageSubpassDependency;
-    waitForImageSubpassDependency.srcSubpass    = VK_SUBPASS_EXTERNAL;
-    waitForImageSubpassDependency.dstSubpass    = 0U;
-    waitForImageSubpassDependency.dependencyFlags = 0U;
-    waitForImageSubpassDependency.srcStageMask  = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-    waitForImageSubpassDependency.srcAccessMask = 0U;
-
-    waitForImageSubpassDependency.dstStageMask  = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-    waitForImageSubpassDependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+    VulkanSubpassDependency waitForImageSubpassDependency {
+        .srcSubpass = VK_SUBPASS_EXTERNAL,
+        .dstSubpass = VULKAN_NULL_FLAGS,
+        .srcStageMask = VulkanPipelineStageFlagBits::VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
+        .dstStageMask = VulkanPipelineStageFlagBits::VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
+        .srcAccessMask = VULKAN_NULL_FLAGS,
+        .dstAccessMask = VulkanAccessFlagBits::VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT,
+        .dependencyFlags = VULKAN_NULL_FLAGS,
+    };
 
     if ( this->_renderPass.setup( * this->_pLogicalDevice, & waitForImageSubpassDependency, 1U ) != VulkanResult::VK_SUCCESS )
         throw std::runtime_error ("render pass creation failure");

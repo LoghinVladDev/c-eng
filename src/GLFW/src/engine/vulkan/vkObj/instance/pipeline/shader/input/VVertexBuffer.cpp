@@ -14,10 +14,14 @@ inline static void populateVertexBufferCreateInfo (
         return;
 
     * createInfo = VulkanBufferCreateInfo {
-            .sType          = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO,
-            .size           = size,
-            .usage          = usageFlags,
-            .sharingMode    = sharingMode
+            .sType                  = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO,
+            .pNext                  = nullptr,
+            .flags                  = VULKAN_NULL_FLAGS,
+            .size                   = size,
+            .usage                  = usageFlags,
+            .sharingMode            = sharingMode,
+            .queueFamilyIndexCount  = 0U,
+            .pQueueFamilyIndices    = nullptr
     };
 }
 
@@ -31,6 +35,7 @@ inline static void populateVertexBufferMemoryAllocateInfo (
 
     * allocateInfo = VulkanMemoryAllocateInfo {
             .sType              = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO,
+            .pNext              = nullptr,
             .allocationSize     = allocationSize,
             .memoryTypeIndex    = memoryTypeIndex
     };

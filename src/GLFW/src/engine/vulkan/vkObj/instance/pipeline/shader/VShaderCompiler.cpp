@@ -62,6 +62,42 @@ static inline void platformDependantCompilation ( const std::string & input, con
 
 #endif
 
+#if defined(ENGINE_OS_LINUX)
+
+#include <unistd.h>
+#include <wait.h>
+
+static inline void platformDependantCompilation ( const std::string & input, const std::string& output ) noexcept (false) {
+    std::cout << input << '\n';
+    std::cout << output << '\n';
+
+    pid_t processID = fork ();
+
+    if ( processID == 0 ) {
+        if ( -1 == execlp (
+            LINUX_VULKAN_GLSL_COMPILER,
+            LINUX_VULKAN_GLSL_COMPILER,
+            input.c_str(),
+            LINUX_VULKAN_GLSL_COMPILER_OUTPUT_ARGUMENT,
+            output.c_str(),
+            nullptr
+            )
+        ) {
+            std::cerr << "Compilation Failed\n";
+            exit (LINUX_VULKAN_GLSL_COMPILATION_FAILED_RETURN_VALUE);
+        }
+    } else if ( processID > 0 ) {
+        int childProcessReturnStatus = 0U;
+        if ( -1 == waitpid( processID, & childProcessReturnStatus, 0) )
+            throw std::runtime_error ( "Compile process failure" );
+        if ( childProcessReturnStatus == LINUX_VULKAN_GLSL_COMPILATION_FAILED_CHILD_RETURN_VALUE ) {
+            throw std::runtime_error ( "Compilation failed in child process" );
+        }
+    }
+}
+
+#endif
+
 engine::VShaderCompiler::VShaderCompiler() noexcept (false) {
     this->_inputDirectoryPath     = __VULKAN_SHADERS_PATH__;
     this->_outputDirectoryPath    = std::string( __VULKAN_SHADERS_PATH__ ).append("/out");

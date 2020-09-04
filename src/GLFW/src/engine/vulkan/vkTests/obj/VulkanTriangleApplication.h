@@ -16,6 +16,8 @@
 #define _VK_CHECK_EXT false
 #endif
 
+#define __SHOW_FPS_EVERY_S 0.100
+
 #include <engineVulkanPreproc.h>
 #include <vkDefs/types/vulkanExplicitTypes.h>
 #include <vkObj/instance/validationLayer/VValidationLayer.h>
@@ -88,6 +90,9 @@ namespace engine {
 
         VVertexBuffer               _vertexBuffer;
 
+        double                      _fpsTimer = 0.0;
+        double                      _fpsRefreshTimer = __SHOW_FPS_EVERY_S;
+
         bool _framebufferResized {false};
 
         //// private_functions
@@ -123,6 +128,7 @@ namespace engine {
         constexpr static uint32 DEFAULT_WIDTH       = 800U;
         constexpr static uint32 DEFAULT_HEIGHT      = 600U;
         constexpr static bool   VULKAN_EXT_CHECK    = _VK_CHECK_EXT;
+        constexpr static bool   SHOW_FPS_CONSOLE    = false;
 
         static const int8*      DEFAULT_TITLE;
 

@@ -366,7 +366,13 @@ void engine::VulkanTriangleApplication::mainLoop() noexcept (false) {
 
         deltaTime = ( glfwGetTime() - startFrameTime );
 
-        std::cout << "FPS : " << ( 1.0 / deltaTime ) << '\n';
+        this->_fpsTimer += deltaTime;
+
+        if ( this->_fpsTimer >= this->_fpsRefreshTimer ) {
+            if ( VulkanTriangleApplication::SHOW_FPS_CONSOLE )
+                std::cout << "FPS : " << (1.0 / deltaTime) << '\n';
+            this->_fpsTimer = 0.0;
+        }
     }
     vkDeviceWaitIdle( this->_vulkanLogicalDevice.data() );
 }

@@ -19,7 +19,17 @@
 
 #elif defined(__linux__)
 
-//// TODO : add linux platform def
+//// TODO : add linux platform defs
+
+#define GLFW_EXPOSE_NATIVE_XCB
+#define VK_USE_PLATFORM_XCB_KHR
+
+#define LINUX_VULKAN_GLSL_COMPILER "glslc"
+#define LINUX_VULKAN_GLSL_COMPILER_OUTPUT_ARGUMENT "-o"
+#define LINUX_VULKAN_GLSL_COMPILATION_FAILED_RETURN_VALUE 1U
+#define LINUX_VULKAN_GLSL_COMPILATION_FAILED_CHILD_RETURN_VALUE 256
+#define LINUX_VULKAN_GLSL_DEFAULT_ARGUMENT_COUNT 4
+
 #define ENGINE_OS_LINUX
 
 #elif defined(__APPLE__)

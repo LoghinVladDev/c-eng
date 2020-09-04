@@ -18,7 +18,7 @@ static inline void populateSurfaceCreateInfo ( VulkanSurfaceCreateInfoKhronos * 
 
 #elif   defined(ENGINE_OS_LINUX)
 
-    //createInfo->sType = ...
+    //createInfo->sType = ... let glfw do the work
 
 #elif   defined(ENGINE_OS_MAC_OS_X)
 
@@ -29,12 +29,16 @@ static inline void populateSurfaceCreateInfo ( VulkanSurfaceCreateInfoKhronos * 
 }
 
 VulkanResult engine::VSurface::setup(GLFWwindow * window, const VInstance& instance) noexcept {
+    this->_instance = & instance;
+
+#if defined(ENGINE_OS_WINDOWS_32_64)
     VulkanSurfaceCreateInfoKhronos createInfo {};
     populateSurfaceCreateInfo( & createInfo, window );
 
-    this->_instance = & instance;
-
     return vkCreateSurfaceKhronos( instance.data(), & createInfo, nullptr, & this->_surface );
+#elif defined(ENGINE_OS_LINUX)
+    return glfwCreateWindowSurface( instance.data(), window, nullptr, & this->_surface );
+#endif
 }
 
 void engine::VSurface::clean() noexcept {
