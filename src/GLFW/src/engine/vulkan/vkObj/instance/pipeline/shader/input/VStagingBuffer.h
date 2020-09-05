@@ -1,9 +1,9 @@
 //
-// Created by vladl on 8/30/2020.
+// Created by loghin on 9/5/20.
 //
 
-#ifndef ENG1_VVERTEXBUFFER_H
-#define ENG1_VVERTEXBUFFER_H
+#ifndef ENG1_VSTAGINGBUFFER_H
+#define ENG1_VSTAGINGBUFFER_H
 
 #include <engineVulkanPreproc.h>
 #include <vkDefs/types/vulkanExplicitTypes.h>
@@ -13,27 +13,19 @@
 
 namespace engine {
 
-
-    class VVertexBuffer : public VBuffer {
+    class VStagingBuffer : public VBuffer {
     private:
         //// private variables
-//        uint32                                          _vertexCount    {0U};
-        const std::vector < engine::VVertex > *         _pVertices      {nullptr};
+//        uint32                                        _vertexCount    {0U};
+        const std::vector < engine::VVertex >       * _pVertices      {nullptr};
+        std::vector < engine::VVertex::SVertexPack >  _packedVertices;
 
-        std::vector < engine::VVertex::SVertexPack >    _packedVertices;
 
-        //// private functions
+        //// private functions 
 
     public:
         //// public variables
-        //// public functions
-        VVertexBuffer () noexcept = default;
-
-        VulkanResult setup (
-            const VLogicalDevice &,
-            std::size_t,
-            VulkanSharingMode = VulkanSharingMode::VK_SHARING_MODE_EXCLUSIVE
-        ) noexcept;
+        VStagingBuffer () noexcept = default;
 
         VulkanResult setup (
             const VLogicalDevice &,
@@ -42,21 +34,19 @@ namespace engine {
         ) noexcept;
 
         VulkanResult allocateMemory () noexcept;
-
-        VulkanResult allocateMemory (
-            VulkanMemoryPropertyFlags
-        ) noexcept override;
-
+//        VulkanResult allocateMemory ( VulkanMemoryPropertyFlags ) noexcept;
 //        [[nodiscard]] uint32 getVertexCount () const noexcept {
 //            return this->_vertexCount;
 //        }
 
         void free () noexcept override;
         void cleanup () noexcept override;
-    };
 
+        //// public functions
+
+    };
 
 }
 
 
-#endif //ENG1_VVERTEXBUFFER_H
+#endif //ENG1_VSTAGINGBUFFER_H

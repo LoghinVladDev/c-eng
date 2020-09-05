@@ -140,6 +140,7 @@ namespace engine {
 
         [[nodiscard]] const VQueue * getFirstPresentQueuePtr () const noexcept;
         [[nodiscard]] const VQueue * getFirstGraphicsQueuePtr () const noexcept;
+        [[nodiscard]] const VQueue * getFirstTransferQueuePtr () const noexcept;
 
         [[nodiscard]] const VPhysicalDevice * getBasePhysicalDevice () const noexcept {
             return this->_physicalDevice;

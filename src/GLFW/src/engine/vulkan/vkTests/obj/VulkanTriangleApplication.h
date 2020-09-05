@@ -34,6 +34,7 @@
 #include <vkObj/instance/pipeline/synchronization/VFence.h>
 #include <vkObj/instance/pipeline/shader/input/VVertex.h>
 #include <vkObj/instance/pipeline/shader/input/VVertexBuffer.h>
+#include <vkObj/instance/pipeline/shader/input/VStagingBuffer.h>
 #include <vector>
 
 
@@ -80,6 +81,7 @@ namespace engine {
         VFrameBufferCollection      _frameBufferCollection;
 
         VCommandPool                _commandPool;
+        VCommandPool                _transferCommandPool;
         VCommandBufferCollection    _commandBufferCollection;
 
         VSemaphoreCollection        _imageAvailableSemaphores;
@@ -89,6 +91,7 @@ namespace engine {
         VFenceCollection            _imagesInFlight;
 
         VVertexBuffer               _vertexBuffer;
+        VStagingBuffer              _stagingBuffer;
 
         double                      _fpsTimer = 0.0;
         double                      _fpsRefreshTimer = __SHOW_FPS_EVERY_S;

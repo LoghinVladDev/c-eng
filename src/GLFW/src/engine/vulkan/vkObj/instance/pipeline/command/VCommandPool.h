@@ -17,6 +17,8 @@ namespace engine {
         const VLogicalDevice    * _pLogicalDevice   {nullptr};
         VulkanCommandPool         _handle           {nullptr};
 
+        bool                      _optimizedForTransfers {false};
+
         //// private functions
 
     public:
@@ -34,7 +36,11 @@ namespace engine {
             return this->_handle;
         }
 
-        VulkanResult setup ( const VLogicalDevice & ) noexcept;
+        [[nodiscard]] bool isOptimizedForTransfers () const noexcept {
+            return this->_optimizedForTransfers;
+        }
+
+        VulkanResult setup ( const VLogicalDevice &, const VQueueFamily * = nullptr ) noexcept;
         void cleanup () noexcept;
     };
 

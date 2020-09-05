@@ -3,7 +3,6 @@
 //
 
 #include "VLogicalDevice.h"
-#include <vkUtils/VStdUtilsDefs.h>
 #include <algorithm>
 #include <set>
 #include <map>
@@ -331,27 +330,29 @@ engine::VLogicalDevice &engine::VLogicalDevice::operator=(const engine::VLogical
 }
 
 const engine::VQueue * engine::VLogicalDevice::getFirstPresentQueuePtr() const noexcept {
-    const VQueue * pQueue = nullptr;
-
     for( const auto & queue : this->_queues )
-        if ( queue.getQueueFamily()->isPresentCapable() ) {
-            pQueue = & queue;
-            break;
-        }
-
-    return pQueue;
+        if ( queue.getQueueFamily()->isPresentCapable() )
+            return ( & queue );
+    return nullptr;
 }
 
 const engine::VQueue * engine::VLogicalDevice::getFirstGraphicsQueuePtr() const noexcept {
-    const VQueue * pQueue = nullptr;
-
     for( const auto & queue : this->_queues )
-        if ( queue.getQueueFamily()->isGraphicsCapable() ) {
-            pQueue = & queue;
-            break;
-        }
+        if ( queue.getQueueFamily()->isGraphicsCapable() )
+            return ( & queue );
+    return nullptr;
+}
 
-    return pQueue;
+const engine::VQueue * engine::VLogicalDevice::getFirstTransferQueuePtr() const noexcept {
+    const VQueue * pGraphicsQueue = nullptr;
+
+    for ( const auto & queue : this->_queues )
+        if ( queue.getQueueFamily()->isTransferCapable() )
+            return ( & queue );
+        else if ( queue.getQueueFamily()->isGraphicsCapable() )
+            pGraphicsQueue = ( & queue );
+
+    return pGraphicsQueue;
 }
 
 void engine::VLogicalDevice::cleanupSwapChain() noexcept {

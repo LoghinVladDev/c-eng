@@ -146,6 +146,8 @@ typedef VkDeviceSize                                VulkanDeviceSize;
 typedef VkBlendOp                                   VulkanBlendOperation;
 typedef VkBlendFactor                               VulkanBlendFactor;
 typedef VkAccessFlagBits                            VulkanAccessFlagBits;
+typedef VkCommandBufferUsageFlagBits                VulkanCommandBufferUsageFlagBits;
+typedef VkBufferCopy                                VulkanBufferCopy;
 
 constexpr VulkanFlags VULKAN_NULL_FLAGS = 0;
 

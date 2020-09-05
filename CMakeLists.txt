@@ -131,7 +131,7 @@ if(Vulkan_FOUND)
             src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/synchronization/VFence.h
             src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/shader/input/VVertex.cpp
             src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/shader/input/VVertex.h
-            src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/shader/input/VVertexBuffer.cpp src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/shader/input/VVertexBuffer.h)
+            src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/shader/input/VVertexBuffer.cpp src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/shader/input/VVertexBuffer.h src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/shader/input/VBuffer.cpp src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/shader/input/VBuffer.h src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/shader/input/VStagingBuffer.cpp src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/shader/input/VStagingBuffer.h)
 
 
     target_link_libraries( vkTriangle Vulkan::Vulkan )

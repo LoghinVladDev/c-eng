@@ -88,7 +88,58 @@ inline static void populateSubmitInfo (
     submitInfo->pSignalSemaphores       = pSignalSemaphores;
 }
 
-VulkanResult engine::VCommandBufferCollection::allocate(const engine::VCommandPool & commandPool, const engine::VFrameBufferCollection & frameBufferCollection) {
+inline static void populateBeginInfoBufferCopy (
+    VulkanCommandBufferBeginInfo * beginInfo
+) noexcept {
+    if ( beginInfo == nullptr )
+        return;
+
+    * beginInfo = VulkanCommandBufferBeginInfo {
+        .sType              = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,
+        .pNext              = nullptr,
+        .flags              = VulkanCommandBufferUsageFlagBits::VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT,
+        .pInheritanceInfo   = nullptr
+    };
+}
+
+inline static void populateBufferCopy (
+    VulkanBufferCopy  * copyRegion,
+    VulkanDeviceSize    sourceOffset,
+    VulkanDeviceSize    destinationOffset,
+    VulkanDeviceSize    size
+) noexcept {
+    if ( copyRegion == nullptr )
+        return;
+
+    * copyRegion = VulkanBufferCopy {
+        .srcOffset  = sourceOffset,
+        .dstOffset  = destinationOffset,
+        .size       = size
+    };
+}
+
+inline static void populateSubmitInfoBufferCopy (
+    VulkanSubmitInfo          * submitInfo,
+    const VulkanCommandBuffer * pCommandBuffers,
+    uint32                      commandBufferCount
+) noexcept {
+    if ( submitInfo == nullptr )
+        return;
+
+    * submitInfo = {
+        .sType                  = VK_STRUCTURE_TYPE_SUBMIT_INFO,
+        .pNext                  = nullptr,
+        .waitSemaphoreCount     = 0,
+        .pWaitSemaphores        = nullptr,
+        .pWaitDstStageMask      = nullptr,
+        .commandBufferCount     = commandBufferCount,
+        .pCommandBuffers        = pCommandBuffers,
+        .signalSemaphoreCount   = 0,
+        .pSignalSemaphores      = nullptr
+    };
+}
+
+VulkanResult engine::VCommandBufferCollection::allocate(const engine::VCommandPool & commandPool, const engine::VFrameBufferCollection & frameBufferCollection) noexcept {
     this->_pCommandPool = & commandPool;
     VulkanCommandBufferAllocateInfo allocateInfo { };
     std::vector < VulkanCommandBuffer > handles (frameBufferCollection.size());
@@ -109,9 +160,28 @@ VulkanResult engine::VCommandBufferCollection::allocate(const engine::VCommandPo
     return allocateResult;
 }
 
+VulkanResult engine::VCommandBufferCollection::allocate(const engine::VCommandPool & commandPool, uint32 commandBufferCount) noexcept {
+    this->_pCommandPool = & commandPool;
+    VulkanCommandBufferAllocateInfo allocateInfo { };
+    std::vector < VulkanCommandBuffer > handles ( commandBufferCount );
+
+    populateCommandBufferAllocateInfo( & allocateInfo, commandPool, handles.size(), VCommandBuffer::PRIMARY_LEVEL );
+
+    VulkanResult allocateResult = vkAllocateCommandBuffers( commandPool.getLogicalDevicePtr()->data(), & allocateInfo, handles.data() );
+
+    if ( allocateResult != VK_SUCCESS )
+        return allocateResult;
+
+    for ( const auto & handle : handles ) {
+        this->_commandBuffers.emplace_back( handle );
+    }
+
+    return allocateResult;
+}
+
 VulkanResult engine::VCommandBuffer::startRecord(
     const engine::VPipeline & pipeline,
-    const VVertexBuffer * pVertexBuffers,
+    const VBuffer * pVertexBuffers,
     const VulkanDeviceSize * pOffsets,
     uint32 vertexBufferCount
 ) noexcept {
@@ -138,7 +208,7 @@ VulkanResult engine::VCommandBuffer::startRecord(
         VulkanBuffer vertexBufferHandles [ vertexBufferCount ];
         for ( uint32 vertexBufferIndex = 0U; vertexBufferIndex < vertexBufferCount; vertexBufferIndex ++ ) {
             vertexBufferHandles[vertexBufferIndex] = pVertexBuffers[vertexBufferIndex].data();
-            vertexCount += pVertexBuffers[ vertexBufferIndex ].getVertexCount();
+            vertexCount += pVertexBuffers[ vertexBufferIndex ].getElementCount();
         }
 
         vkCmdBindVertexBuffers( this->_handle, 0, vertexBufferCount, vertexBufferHandles, pOffsets );
@@ -151,9 +221,34 @@ VulkanResult engine::VCommandBuffer::startRecord(
     return vkEndCommandBuffer( this->_handle );
 }
 
+VulkanResult engine::VCommandBuffer::startRecord(
+    const VBuffer & destination,
+    const VBuffer & source,
+    uint32          size
+) const noexcept {
+    VulkanCommandBufferBeginInfo beginInfo { };
+    populateBeginInfoBufferCopy( & beginInfo );
+
+    VulkanResult beginResult = vkBeginCommandBuffer( this->_handle, & beginInfo );
+    if ( beginResult != VulkanResult::VK_SUCCESS )
+        return beginResult;
+
+    VulkanBufferCopy copyRegion {};
+    populateBufferCopy(
+        & copyRegion,
+        0ULL,
+        0ULL,
+        static_cast < VulkanDeviceSize > ( size )
+    );
+
+    vkCmdCopyBuffer ( this->_handle, source.data(), destination.data(), 1U, & copyRegion );
+
+    return vkEndCommandBuffer( this->_handle );
+}
+
 VulkanResult engine::VCommandBufferCollection::startRecord(
     const engine::VPipeline & pipeline,
-    const engine::VVertexBuffer * pVertexBuffers,
+    const engine::VBuffer * pVertexBuffers,
     const VulkanDeviceSize * pOffsets,
     uint32 vertexBufferCount
 ) noexcept {
@@ -162,6 +257,42 @@ VulkanResult engine::VCommandBufferCollection::startRecord(
         if( startRecordResult != VulkanResult::VK_SUCCESS )
             return startRecordResult;
     }
+    return VulkanResult::VK_SUCCESS;
+}
+
+VulkanResult engine::VCommandBufferCollection::startRecord(
+    const VBuffer & destination,
+    const VBuffer & source,
+    uint32 size
+) const noexcept {
+    for ( const auto & commandBuffer : this->_commandBuffers ) {
+        VulkanResult startRecordResult = commandBuffer.startRecord( destination, source, size );
+        if ( startRecordResult != VulkanResult::VK_SUCCESS )
+            return startRecordResult;
+    }
+
+    return VulkanResult::VK_SUCCESS;
+}
+
+VulkanResult engine::VCommandBuffer::submit(const VQueue * pQueue) const noexcept {
+    VulkanSubmitInfo submitInfo {};
+
+    populateSubmitInfoBufferCopy(
+        & submitInfo,
+        & this->_handle,
+        1U
+    );
+
+    return vkQueueSubmit( pQueue->data(), 1U, & submitInfo, VK_NULL_HANDLE );
+}
+
+VulkanResult engine::VCommandBufferCollection::submit(const VQueue * pQueue) const noexcept {
+    for ( const auto & commandBuffer : this->_commandBuffers ) {
+        VulkanResult submitInfo = commandBuffer.submit( pQueue );
+        if ( submitInfo != VulkanResult::VK_SUCCESS )
+            return submitInfo;
+    }
+
     return VulkanResult::VK_SUCCESS;
 }
 

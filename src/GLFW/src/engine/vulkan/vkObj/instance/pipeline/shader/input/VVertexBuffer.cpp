@@ -4,58 +4,6 @@
 
 #include "VVertexBuffer.h"
 
-inline static void populateVertexBufferCreateInfo (
-        VulkanBufferCreateInfo    * createInfo,
-        VulkanDeviceSize            size,
-        VulkanBufferUsageFlags      usageFlags,
-        VulkanSharingMode           sharingMode
-) noexcept {
-    if ( createInfo == nullptr )
-        return;
-
-    * createInfo = VulkanBufferCreateInfo {
-            .sType                  = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO,
-            .pNext                  = nullptr,
-            .flags                  = VULKAN_NULL_FLAGS,
-            .size                   = size,
-            .usage                  = usageFlags,
-            .sharingMode            = sharingMode,
-            .queueFamilyIndexCount  = 0U,
-            .pQueueFamilyIndices    = nullptr
-    };
-}
-
-inline static void populateVertexBufferMemoryAllocateInfo (
-        VulkanMemoryAllocateInfo *  allocateInfo,
-        VulkanDeviceSize            allocationSize,
-        uint32                      memoryTypeIndex
-) noexcept {
-    if ( allocateInfo == nullptr )
-        return;
-
-    * allocateInfo = VulkanMemoryAllocateInfo {
-            .sType              = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO,
-            .pNext              = nullptr,
-            .allocationSize     = allocationSize,
-            .memoryTypeIndex    = memoryTypeIndex
-    };
-}
-
-inline static uint32 findMemoryType ( uint32 typeFilter, VulkanMemoryPropertyFlags properties, const engine::VLogicalDevice * pLogicalDevice ) noexcept (false) {
-    auto memoryProperties = pLogicalDevice->getBasePhysicalDevice()->getMemoryProperties();
-
-    for ( uint32 memoryTypeIndex = 0; memoryTypeIndex < memoryProperties.memoryTypeCount; memoryTypeIndex++ ) {
-        if (
-                ( typeFilter & ( 1U << memoryTypeIndex ) ) &&
-                ( ( memoryProperties.memoryTypes [ memoryTypeIndex ].propertyFlags & properties ) == properties )
-                ) {
-            return memoryTypeIndex;
-        }
-    }
-
-    throw std::runtime_error ( "failed to find suitable memory type" );
-}
-
 inline static std::vector < engine::VVertex::SVertexPack > getPackedVertices ( const engine::VVertex * vertices, uint32 size ) noexcept {
     std::vector < engine::VVertex::SVertexPack > packedVertices (size) ;
 
@@ -68,86 +16,76 @@ inline static std::vector < engine::VVertex::SVertexPack > getPackedVertices ( c
 VulkanResult engine::VVertexBuffer::setup(
     const VLogicalDevice                    & device,
     const std::vector < engine::VVertex >   & vertices,
-    VulkanBufferUsageFlags                    usageFlags,
     VulkanSharingMode                         sharingMode
 ) noexcept {
-    this->_pLogicalDevice = & device;
-    this->_pVertices = & vertices;
-    this->_vertexCount = vertices.size();
+    this->_pVertices        = & vertices;
+//    this->_vertexCount      = vertices.size();
+    this->setElementCount( vertices.size() );
 
-    VulkanBufferCreateInfo createInfo { };
-    populateVertexBufferCreateInfo(
-        & createInfo,
-        static_cast < VulkanDeviceSize > (sizeof ( engine::VVertex::SVertexPack ) * vertices.size()),
-        usageFlags,
-        sharingMode
+    this->_packedVertices = getPackedVertices(
+        vertices.data(),
+        static_cast < uint32 > ( vertices.size() )
     );
 
-    this->_memorySize = createInfo.size;
+    return VBuffer::setup(
+        device,
+        static_cast < std::size_t > ( this->_packedVertices.size() * sizeof ( VVertex::SVertexPack ) ),
+        VBuffer::VERTEX_BUFFER_CPU_LOCAL,
+        sharingMode
+    );
+}
 
-    return vkCreateBuffer( this->_pLogicalDevice->data(), & createInfo, nullptr, & this->_handle );
+VulkanResult engine::VVertexBuffer::setup(
+    const VLogicalDevice &  device,
+    std::size_t             size,
+    VulkanSharingMode       sharingMode
+) noexcept {
+    return VBuffer::setup(
+        device,
+        size,
+        VBuffer::VERTEX_BUFFER_GPU_LOCAL,
+        sharingMode
+    );
 }
 
 void engine::VVertexBuffer::cleanup() noexcept {
-    vkDestroyBuffer( this->_pLogicalDevice->data(), this->_handle, nullptr );
+    return VBuffer::cleanup();
+}
+
+VulkanResult engine::VVertexBuffer::allocateMemory() noexcept {
+    if ( this->getBufferUsageFlags() == VBuffer::VERTEX_BUFFER_GPU_LOCAL )
+        return VBuffer::allocateMemory( VBuffer::MEMORY_GPU_LOCAL );
+    else if ( this->getBufferUsageFlags() == VBuffer::VERTEX_BUFFER_CPU_LOCAL ) {
+        VulkanResult allocateResult = VBuffer::allocateMemory( VBuffer::MEMORY_CPU_BUFFER_FLAGS );
+        if ( allocateResult != VulkanResult::VK_SUCCESS )
+            return allocateResult;
+
+        return copyOntoBuffer(
+            static_cast < void * > ( this->_packedVertices.data() ),
+            static_cast < std::size_t > ( this->_packedVertices.size() * sizeof ( VVertex::SVertexPack ) )
+        );
+    }
+
+    return VulkanResult::VK_INCOMPLETE;
 }
 
 VulkanResult engine::VVertexBuffer::allocateMemory(
     VulkanMemoryPropertyFlags memoryPropertyFlags
 ) noexcept {
-    VulkanMemoryRequirements memoryRequirements;
-    vkGetBufferMemoryRequirements( this->_pLogicalDevice->data(), this->_handle, & memoryRequirements );
+    if ( memoryPropertyFlags == VBuffer::MEMORY_CPU_BUFFER_FLAGS ) {
+        VulkanResult allocateResult = VBuffer::allocateMemory( VBuffer::MEMORY_CPU_BUFFER_FLAGS );
+        if ( allocateResult != VulkanResult::VK_SUCCESS )
+            return allocateResult;
 
-    VulkanMemoryAllocateInfo allocateInfo { };
-
-    try {
-        populateVertexBufferMemoryAllocateInfo(
-            &allocateInfo,
-            memoryRequirements.size,
-            findMemoryType(
-                    memoryRequirements.memoryTypeBits,
-                    memoryPropertyFlags,
-                    this->_pLogicalDevice
-            )
+        return VBuffer::copyOntoBuffer(
+                static_cast < void * > ( this->_packedVertices.data() ),
+                static_cast < std::size_t > ( this->_packedVertices.size() * sizeof ( VVertex::SVertexPack ) )
         );
-    } catch ( std::runtime_error const & exception ) {
-        return VulkanResult::VK_ERROR_INITIALIZATION_FAILED;
     }
 
-    VulkanResult allocateInfoResult = vkAllocateMemory (
-            this->_pLogicalDevice->data(),
-            & allocateInfo,
-            nullptr,
-            & this->_memoryHandle
-    );
-
-    if ( allocateInfoResult != VulkanResult::VK_SUCCESS )
-        return allocateInfoResult;
-
-    VulkanResult bindResult = vkBindBufferMemory(
-            this->_pLogicalDevice->data(),
-            this->_handle,
-            this->_memoryHandle,
-            0ULL
-    );
-
-    if ( bindResult != VulkanResult::VK_SUCCESS )
-        return bindResult;
-
-    auto packedVertices = getPackedVertices( this->_pVertices->data(), static_cast <uint32> (this->_pVertices->size()) );
-
-    void * data;
-    VulkanResult mapMemoryResult = vkMapMemory(this->_pLogicalDevice->data(), this->_memoryHandle,0ULL, this->_memorySize,0, & data );
-    if ( mapMemoryResult != VulkanResult::VK_SUCCESS )
-        return mapMemoryResult;
-
-    memcpy ( data, packedVertices.data(), ( std::size_t ) this->_memorySize );
-
-    vkUnmapMemory( this->_pLogicalDevice->data(), this->_memoryHandle );
-
-    return VulkanResult::VK_SUCCESS;
+    return VBuffer::allocateMemory( memoryPropertyFlags );
 }
 
 void engine::VVertexBuffer::free() noexcept {
-    vkFreeMemory( this->_pLogicalDevice->data(), this->_memoryHandle, nullptr );
+    return VBuffer::free();
 }

@@ -138,7 +138,7 @@ void engine::VulkanTriangleApplication::createSurface() noexcept(false) {
 }
 
 static inline std::vector < const engine::VQueueFamily* > internalGatherGraphicsAndPresentQueueFamilies( const engine::VQueueFamilyCollection& collection ) noexcept {
-    auto queueFamilies = collection.getFlagsCapableQueueFamilies( engine::VQueueFamily::GRAPHICS_FLAG | engine::VQueueFamily::PRESENT_FLAG );
+    auto queueFamilies = collection.getFlagsCapableQueueFamilies( engine::VQueueFamily::GRAPHICS_FLAG | engine::VQueueFamily::PRESENT_FLAG | engine::VQueueFamily::TRANSFER_FLAG );
 
     if( queueFamilies.empty() ) {
 
@@ -202,12 +202,16 @@ inline void engine::VulkanTriangleApplication::initVulkan() noexcept (false) {
         deviceFactory.withValidationLayers( this->_vulkanValidationLayerCollection );
 
     auto queues = internalGatherGraphicsAndPresentQueueFamilies ( * this->_vulkanQueueFamilyCollection );
+    auto transferQueueFamily = this->_vulkanQueueFamilyCollection->getTransferCapableQueueFamilies()[0];
 
-    if( queues.size() == 1 ) // graphics & present queues in same family
-        deviceFactory.addQueue( * queues[0], 1.0f );
+    if( queues.size() == 1 ) { // graphics & present queues in same family
+        deviceFactory.addQueue(*queues[0], 1.0f);
+        deviceFactory.addQueue(* this->_vulkanQueueFamilyCollection->getTransferCapableQueueFamilies()[0], 1.0f);
+    }
     else {
         deviceFactory.addQueue( * queues[0], 1.0f );
         deviceFactory.addQueue( * queues[1], 1.0f );
+        deviceFactory.addQueue(* this->_vulkanQueueFamilyCollection->getTransferCapableQueueFamilies()[0], 1.0f);
     }
 
     deviceFactory.createSwapChainToSurface( & this->_vulkanSurface );
@@ -384,10 +388,18 @@ void engine::VulkanTriangleApplication::createVertexBuffers() noexcept(false) {
         { { -0.5f, 0.5f }, { 0.0f, 0.0f, 1.0f } }
     };
 
-    if ( this->_vertexBuffer.setup( this->_vulkanLogicalDevice, vertices ) != VulkanResult::VK_SUCCESS )
+    if ( this->_vertexBuffer.setup( this->_vulkanLogicalDevice, vertices.size() * sizeof (VVertex::SVertexPack) , VBuffer::TRANSFER_CONCURRENCY ) != VulkanResult::VK_SUCCESS )
         throw std::runtime_error ( "Vertex Buffer Initialization failure" );
     if ( this->_vertexBuffer.allocateMemory() != VulkanResult::VK_SUCCESS )
         throw std::runtime_error ( "Vertex Buffer Allocate failure" );
+
+    if ( this->_stagingBuffer.setup( this->_vulkanLogicalDevice, vertices, VBuffer::TRANSFER_CONCURRENCY ) != VulkanResult::VK_SUCCESS )
+        throw std::runtime_error ( "Staging Buffer Initialization failure" );
+    if ( this->_stagingBuffer.allocateMemory() != VulkanResult::VK_SUCCESS )
+        throw std::runtime_error ( "Staging Buffer Allocate Failure" );
+
+    if ( this->_stagingBuffer.copyFrom( this->_vertexBuffer, this->_transferCommandPool, this->_stagingBuffer.size() ) != VulkanResult::VK_SUCCESS )
+        throw std::runtime_error ( "Staging buffer onto Vertex Buffer Copy Error" );
 }
 
 #pragma clang diagnostic push
@@ -398,6 +410,7 @@ void engine::VulkanTriangleApplication::cleanup() noexcept (false) {
     this->_inFlightFences.cleanup();
 
     this->_commandPool.cleanup();
+    this->_transferCommandPool.cleanup();
 
     this->_frameBufferCollection.cleanup();
 
@@ -427,6 +440,8 @@ void engine::VulkanTriangleApplication::cleanup() noexcept (false) {
 void engine::VulkanTriangleApplication::createCommandPool() noexcept(false) {
     if ( this->_commandPool.setup( this->_vulkanLogicalDevice ) != VulkanResult::VK_SUCCESS )
         throw std::runtime_error ( "Command Pool Creation Error" );
+    if ( this->_transferCommandPool.setup( this->_vulkanLogicalDevice, this->_vulkanLogicalDevice.getFirstTransferQueuePtr()->getQueueFamily() ) != VulkanResult::VK_SUCCESS )
+        throw std::runtime_error ( "Transfer Command Pool Creation Error" );
 }
 
 void engine::VulkanTriangleApplication::createCommandBuffers() noexcept(false) {
@@ -437,11 +452,14 @@ void engine::VulkanTriangleApplication::createCommandBuffers() noexcept(false) {
 
     if ( this->_commandBufferCollection.startRecord(
             this->_graphicsPipeline,
-            & this->_vertexBuffer,
+            & this->_stagingBuffer,
             offsets,
             1U
         ) != VulkanResult::VK_SUCCESS )
         throw std::runtime_error ( "Command Buffers Record Error" );
+
+    this->_stagingBuffer.free();
+    this->_stagingBuffer.cleanup();
 }
 
 void engine::VulkanTriangleApplication::autoPickPhysicalDevice() noexcept(false) {

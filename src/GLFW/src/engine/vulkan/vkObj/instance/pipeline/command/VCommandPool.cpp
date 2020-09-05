@@ -18,19 +18,17 @@ inline static void populateCommandPoolCreateInfo (
     createInfo->flags               = 0U;
 }
 
-VulkanResult engine::VCommandPool::setup(const VLogicalDevice & device) noexcept {
+VulkanResult engine::VCommandPool::setup(const VLogicalDevice & device, const VQueueFamily * pQueueFamily) noexcept {
     this->_pLogicalDevice = & device;
-    const engine::VQueueFamily * pQueueFamily = nullptr;
 
-    for ( const auto * pDeviceQueueFamily : this->_pLogicalDevice->getQueueFamilies() ) {
-        if ( pDeviceQueueFamily->isGraphicsCapable() ) {
-            pQueueFamily = pDeviceQueueFamily;
-            break;
-        }
+    if ( pQueueFamily == nullptr ) {
+        pQueueFamily = this->_pLogicalDevice->getFirstGraphicsQueuePtr()->getQueueFamily();
+
+        if (pQueueFamily == nullptr)
+            return VulkanResult::VK_ERROR_INITIALIZATION_FAILED;
     }
 
-    if ( pQueueFamily == nullptr )
-        return VulkanResult::VK_ERROR_INITIALIZATION_FAILED;
+    this->_optimizedForTransfers = pQueueFamily->isTransferCapable();
 
     VulkanCommandPoolCreateInfo createInfo { };
 

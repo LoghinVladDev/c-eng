@@ -33,7 +33,7 @@ namespace engine {
 
         //// public functions
         VCommandBuffer() noexcept = delete;
-        explicit VCommandBuffer ( const VulkanCommandBuffer & handle, const VFrameBuffer * pFrameBuffer ) noexcept :
+        explicit VCommandBuffer ( const VulkanCommandBuffer & handle, const VFrameBuffer * pFrameBuffer = nullptr ) noexcept :
             _handle ( handle ),
             _pFrameBuffer ( pFrameBuffer ){
 
@@ -48,12 +48,22 @@ namespace engine {
             const VFence * = nullptr
         ) const noexcept;
 
+        VulkanResult submit (
+            const VQueue *
+        ) const noexcept ;
+
         VulkanResult startRecord (
             const VPipeline&,
-            const VVertexBuffer * = nullptr,
+            const VBuffer * = nullptr,
             const VulkanDeviceSize * = nullptr,
             uint32 = 0U
         ) noexcept;
+
+        VulkanResult startRecord (
+            const VBuffer &,
+            const VBuffer &,
+            uint32
+        ) const noexcept;
 
         [[nodiscard]] const VulkanCommandBuffer & data () const noexcept {
             return this->_handle;
@@ -74,13 +84,24 @@ namespace engine {
         //// public functions
         VCommandBufferCollection() noexcept = default;
 
-        VulkanResult allocate ( const engine::VCommandPool &, const engine::VFrameBufferCollection & );
+        VulkanResult allocate ( const engine::VCommandPool &, const engine::VFrameBufferCollection & ) noexcept;
+        VulkanResult allocate ( const engine::VCommandPool &, uint32 ) noexcept;
         VulkanResult startRecord (
             const VPipeline&,
-            const VVertexBuffer * = nullptr,
+            const VBuffer * = nullptr,
             const VulkanDeviceSize * = nullptr,
             uint32 = 0U
         ) noexcept;
+
+        VulkanResult startRecord (
+            const VBuffer &,
+            const VBuffer &,
+            uint32
+        ) const noexcept;
+
+        VulkanResult submit (
+            const VQueue *
+        ) const noexcept ;
 
         [[nodiscard]] const std::vector < VCommandBuffer > & getCommandBuffers () const noexcept {
             return this->_commandBuffers;
