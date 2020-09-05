@@ -69,7 +69,9 @@ namespace engine {
             const VLogicalDevice &,
             std::size_t,
             VulkanBufferUsageFlags,
-            VulkanSharingMode
+            VulkanSharingMode,
+            uint32,
+            const uint32 *
         ) noexcept;
 
         virtual VulkanResult allocateMemory (
