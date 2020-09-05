@@ -62,6 +62,7 @@ namespace engine {
                 VBuffer::VERTEX_BUFFER;
 
         constexpr static VulkanSharingMode TRANSFER_CONCURRENCY = VulkanSharingMode::VK_SHARING_MODE_CONCURRENT;
+        constexpr static VulkanSharingMode TRANSFER_EXCLUSIVITY = VulkanSharingMode::VK_SHARING_MODE_EXCLUSIVE;
 
         //// public functions
 
@@ -70,8 +71,8 @@ namespace engine {
             std::size_t,
             VulkanBufferUsageFlags,
             VulkanSharingMode,
-            uint32,
-            const uint32 *
+            const uint32 *,
+            uint32
         ) noexcept;
 
         virtual VulkanResult allocateMemory (

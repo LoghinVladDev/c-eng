@@ -120,7 +120,11 @@ namespace engine {
         void autoPickPhysicalDevice() noexcept (false);
 
         void recreateSwapChain () noexcept (false);
-        void createVertexBuffers () noexcept (false);
+
+        void createBuffers () noexcept (false);
+        void createExclusiveBuffers () noexcept (false);
+        void createConcurrentBuffers () noexcept (false);
+
         void cleanupSwapChain () noexcept (false);
 
         void updateResolutionSettings() noexcept;

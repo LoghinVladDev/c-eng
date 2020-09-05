@@ -1,53 +1,8 @@
 //
 // Created by loghin on 9/5/20.
 //
-
-#include <src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/command/VCommandBuffer.h>
 #include "VBuffer.h"
-//
-//inline static void populateBufferCreateInfoMemOnCPU (
-//    VulkanBufferCreateInfo    * createInfo,
-//    VulkanDeviceSize            size,
-//    VulkanBufferUsageFlags      usageFlags,
-//    VulkanSharingMode           sharingMode
-//) noexcept {
-//    if ( createInfo == nullptr )
-//        return;
-//
-//    * createInfo = VulkanBufferCreateInfo {
-//            .sType                  = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO,
-//            .pNext                  = nullptr,
-//            .flags                  = VULKAN_NULL_FLAGS,
-//            .size                   = size,
-//            .usage                  = usageFlags,
-//            .sharingMode            = sharingMode,
-//            .queueFamilyIndexCount  = 0U,
-//            .pQueueFamilyIndices    = nullptr
-//    };
-//}
-//
-//inline static void populateBufferCreateInfoMemOnGPU (
-//    VulkanBufferCreateInfo    * createInfo,
-//    VulkanDeviceSize            size,
-//    VulkanBufferUsageFlags      usageFlags,
-//    VulkanSharingMode           sharingMode,
-//    uint32                      queueFamilyIndexCount,
-//    const uint32              * pQueueFamilyIndices
-//) noexcept {
-//    if ( createInfo == nullptr || pQueueFamilyIndices == nullptr )
-//        return;
-//
-//    * createInfo = VulkanBufferCreateInfo {
-//        .sType                  = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO,
-//        .pNext                  = nullptr,
-//        .flags                  = VULKAN_NULL_FLAGS,
-//        .size                   = size,
-//        .usage                  = usageFlags,
-//        .sharingMode            = sharingMode,
-//        .queueFamilyIndexCount  = queueFamilyIndexCount,
-//        .pQueueFamilyIndices    = pQueueFamilyIndices
-//    };
-//}
+#include <src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/command/VCommandBuffer.h>
 
 inline static void populateBufferCreateInfo (
     VulkanBufferCreateInfo    * createInfo,
@@ -108,8 +63,8 @@ VulkanResult engine::VBuffer::setup(
     std::size_t dataSize,
     VulkanBufferUsageFlags usageFlags,
     VulkanSharingMode sharingMode,
-    uint32 queueFamilyIndexCount,
-    const uint32 * pQueueFamilyIndices
+    const uint32 * pQueueFamilyIndices,
+    uint32 queueFamilyIndexCount
 ) noexcept {
     if ( sharingMode == VulkanSharingMode::VK_SHARING_MODE_CONCURRENT && (
             queueFamilyIndexCount == 0 ||
@@ -262,6 +217,8 @@ VulkanResult engine::VBuffer::copyFrom(
         return queueWaitResult;
 
     copyCommandBuffers.free();
+
+    this->setElementCount( sourceBuffer.getElementCount() );
 
     return VulkanResult::VK_SUCCESS;
 }

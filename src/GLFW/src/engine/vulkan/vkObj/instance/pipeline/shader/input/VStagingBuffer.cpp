@@ -16,7 +16,9 @@ inline static std::vector < engine::VVertex::SVertexPack > getPackedVertices ( c
 VulkanResult engine::VStagingBuffer::setup(
     const VLogicalDevice        & device,
     const std::vector<VVertex>  & vertices,
-    VulkanSharingMode             sharingMode
+    VulkanSharingMode             sharingMode,
+    const uint32                * pQueueFamilyIndices,
+    uint32                        queueFamilyIndexCount
 ) noexcept {
     this->_pVertices    = & vertices;
 //    this->_vertexCount  = vertices.size();
@@ -30,8 +32,10 @@ VulkanResult engine::VStagingBuffer::setup(
     return VBuffer::setup(
         device,
         static_cast < std::size_t > ( this->_packedVertices.size() * sizeof ( VVertex::SVertexPack ) ),
-        VBuffer::VERTEX_BUFFER_CPU_LOCAL,
-        sharingMode
+        VBuffer::STAGING_BUFFER_CPU_LOCAL,
+        sharingMode,
+        pQueueFamilyIndices,
+        queueFamilyIndexCount
     );
 }
 

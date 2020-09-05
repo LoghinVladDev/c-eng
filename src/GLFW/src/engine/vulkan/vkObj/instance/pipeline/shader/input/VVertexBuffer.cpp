@@ -17,8 +17,8 @@ VulkanResult engine::VVertexBuffer::setup(
     const VLogicalDevice                    & device,
     const std::vector < engine::VVertex >   & vertices,
     VulkanSharingMode                         sharingMode,
-    uint32                                    queueFamilyIndexCount,
-    const uint32                            * pQueueFamilyIndices
+    const uint32                            * pQueueFamilyIndices,
+    uint32                                    queueFamilyIndexCount
 ) noexcept {
     this->_pVertices        = & vertices;
     this->setElementCount( vertices.size() );
@@ -33,8 +33,8 @@ VulkanResult engine::VVertexBuffer::setup(
         static_cast < std::size_t > ( this->_packedVertices.size() * sizeof ( VVertex::SVertexPack ) ),
         VBuffer::VERTEX_BUFFER_CPU_LOCAL,
         sharingMode,
-        queueFamilyIndexCount,
-        pQueueFamilyIndices
+        pQueueFamilyIndices,
+        queueFamilyIndexCount
     );
 }
 
@@ -42,16 +42,19 @@ VulkanResult engine::VVertexBuffer::setup(
     const VLogicalDevice &  device,
     std::size_t             size,
     VulkanSharingMode       sharingMode,
-    uint32                  queueFamilyIndexCount,
-    const uint32          * pQueueFamilyIndices
+    const uint32          * pQueueFamilyIndices,
+    uint32                  queueFamilyIndexCount
 ) noexcept {
+
+//    this->setElementCount( size / sizeof ( VVertex::SVertexPack ) ); //// TODO : add Vertex -> Staging data sync.
+
     return VBuffer::setup(
         device,
         size,
         VBuffer::VERTEX_BUFFER_GPU_LOCAL,
         sharingMode,
-        queueFamilyIndexCount,
-        pQueueFamilyIndices
+        pQueueFamilyIndices,
+        queueFamilyIndexCount
     );
 }
 

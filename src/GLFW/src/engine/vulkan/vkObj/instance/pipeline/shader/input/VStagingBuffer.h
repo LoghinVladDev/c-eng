@@ -30,7 +30,9 @@ namespace engine {
         VulkanResult setup (
             const VLogicalDevice &,
             const std::vector < VVertex > &,
-            VulkanSharingMode = VulkanSharingMode::VK_SHARING_MODE_EXCLUSIVE
+            VulkanSharingMode = VulkanSharingMode::VK_SHARING_MODE_EXCLUSIVE,
+            const uint32* = nullptr,
+            uint32 = 0U
         ) noexcept;
 
         VulkanResult allocateMemory () noexcept;

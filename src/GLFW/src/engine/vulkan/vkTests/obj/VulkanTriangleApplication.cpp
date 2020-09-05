@@ -105,7 +105,7 @@ void engine::VulkanTriangleApplication::run() noexcept (false) {
     this->createGraphicsPipeline();
     this->createFrameBuffers();
     this->createCommandPool();
-    this->createVertexBuffers();
+    this->createBuffers();
     this->createCommandBuffers();
     this->createSynchronizationElements();
     this->mainLoop();
@@ -381,25 +381,102 @@ void engine::VulkanTriangleApplication::mainLoop() noexcept (false) {
     vkDeviceWaitIdle( this->_vulkanLogicalDevice.data() );
 }
 
-void engine::VulkanTriangleApplication::createVertexBuffers() noexcept(false) {
-    std::vector < VVertex > vertices = {
+std::vector < engine::VVertex > vertices = {
         { { 0.0f, -0.5f }, { 0.5f, 0.5f, 0.5f } },
         { { 0.5f, 0.5f }, { 0.0f, 1.0f, 0.0f } },
         { { -0.5f, 0.5f }, { 0.0f, 0.0f, 1.0f } }
-    };
+};
 
-    if ( this->_vertexBuffer.setup( this->_vulkanLogicalDevice, vertices.size() * sizeof (VVertex::SVertexPack) , VBuffer::TRANSFER_CONCURRENCY ) != VulkanResult::VK_SUCCESS )
-        throw std::runtime_error ( "Vertex Buffer Initialization failure" );
+void engine::VulkanTriangleApplication::createBuffers() noexcept(false) {
+
+    if ( this->_vulkanQueueFamilyCollection->getQueueFamilies().size() == 1 ) {
+        this->createExclusiveBuffers();
+    } else if ( this->_vulkanQueueFamilyCollection->getQueueFamilies().size() > 1 ) {
+        this->createConcurrentBuffers();
+    }
+}
+
+void engine::VulkanTriangleApplication::createConcurrentBuffers() noexcept(false) {
+    uint32 queueFamilyIndices [ this->_vulkanQueueFamilyCollection->getQueueFamilies().size() ];
+    uint32 queueFamilyIndicesSize = 0;
+    for ( const auto & queueFamily : this->_vulkanQueueFamilyCollection->getQueueFamilies() ) {
+        queueFamilyIndices [ queueFamilyIndicesSize++ ] = queueFamily.getQueueFamilyIndex();
+    }
+
+    VulkanResult statusResult;
+    if (( statusResult = this->_vertexBuffer.setup(
+            this->_vulkanLogicalDevice,
+            vertices.size() * sizeof(VVertex::SVertexPack),
+            VBuffer::TRANSFER_CONCURRENCY,
+            queueFamilyIndices,
+            queueFamilyIndicesSize
+        )) != VulkanResult::VK_SUCCESS
+    ) {
+        std::cerr << VStandardUtils::to_string(statusResult) << '\n';
+        throw std::runtime_error("Vertex Buffer Initialization failure");
+    }
+
     if ( this->_vertexBuffer.allocateMemory() != VulkanResult::VK_SUCCESS )
-        throw std::runtime_error ( "Vertex Buffer Allocate failure" );
+        throw std::runtime_error ( "Vertex Buffer Allocation failure" );
 
-    if ( this->_stagingBuffer.setup( this->_vulkanLogicalDevice, vertices, VBuffer::TRANSFER_CONCURRENCY ) != VulkanResult::VK_SUCCESS )
-        throw std::runtime_error ( "Staging Buffer Initialization failure" );
-    if ( this->_stagingBuffer.allocateMemory() != VulkanResult::VK_SUCCESS )
-        throw std::runtime_error ( "Staging Buffer Allocate Failure" );
+    if (( statusResult = this->_stagingBuffer.setup(
+            this->_vulkanLogicalDevice,
+            vertices,
+            VBuffer::TRANSFER_CONCURRENCY,
+            queueFamilyIndices,
+            queueFamilyIndicesSize
+        )) != VulkanResult::VK_SUCCESS
+    ) {
+        std::cerr << VStandardUtils::to_string(statusResult) << '\n';
+        throw std::runtime_error("Staging Buffer Initialization failure");
+    }
 
-    if ( this->_stagingBuffer.copyFrom( this->_vertexBuffer, this->_transferCommandPool, this->_stagingBuffer.size() ) != VulkanResult::VK_SUCCESS )
-        throw std::runtime_error ( "Staging buffer onto Vertex Buffer Copy Error" );
+    if (this->_stagingBuffer.allocateMemory() != VulkanResult::VK_SUCCESS)
+        throw std::runtime_error("Staging Buffer Allocate Failure");
+
+//    if (this->_stagingBuffer.copyFrom(
+//        this->_vertexBuffer,
+//        this->_transferCommandPool,
+//        this->_stagingBuffer.size()
+//        ) != VulkanResult::VK_SUCCESS
+//    )
+//        throw std::runtime_error("Staging buffer onto Vertex Buffer Copy Error");
+
+    if ( this->_vertexBuffer.copyFrom(
+            this->_stagingBuffer,
+            this->_transferCommandPool,
+            this->_stagingBuffer.size()
+        ) != VulkanResult::VK_SUCCESS
+    )
+        throw std::runtime_error("Staging buffer onto Vertex Buffer Copy Error");
+}
+
+void engine::VulkanTriangleApplication::createExclusiveBuffers() noexcept(false) {
+    VulkanResult statusResult;
+    if ((statusResult = this->_vertexBuffer.setup(
+            this->_vulkanLogicalDevice,
+            vertices.size() * sizeof(VVertex::SVertexPack),
+            VBuffer::TRANSFER_EXCLUSIVITY,
+            nullptr,
+            0U
+    )) != VulkanResult::VK_SUCCESS
+            ) {
+        std::cerr << VStandardUtils::to_string(statusResult) << '\n';
+        throw std::runtime_error("Vertex Buffer Initialization failure");
+    }
+
+    if (this->_vertexBuffer.allocateMemory() != VulkanResult::VK_SUCCESS)
+        throw std::runtime_error("Vertex Buffer Allocate failure");
+
+    if (this->_stagingBuffer.setup(this->_vulkanLogicalDevice, vertices, VBuffer::TRANSFER_EXCLUSIVITY) !=
+        VulkanResult::VK_SUCCESS)
+        throw std::runtime_error("Staging Buffer Initialization failure");
+    if (this->_stagingBuffer.allocateMemory() != VulkanResult::VK_SUCCESS)
+        throw std::runtime_error("Staging Buffer Allocate Failure");
+
+    if (this->_stagingBuffer.copyFrom(this->_vertexBuffer, this->_transferCommandPool,
+                                      this->_stagingBuffer.size()) != VulkanResult::VK_SUCCESS)
+        throw std::runtime_error("Staging buffer onto Vertex Buffer Copy Error");
 }
 
 #pragma clang diagnostic push
@@ -452,7 +529,7 @@ void engine::VulkanTriangleApplication::createCommandBuffers() noexcept(false) {
 
     if ( this->_commandBufferCollection.startRecord(
             this->_graphicsPipeline,
-            & this->_stagingBuffer,
+            & this->_vertexBuffer,
             offsets,
             1U
         ) != VulkanResult::VK_SUCCESS )

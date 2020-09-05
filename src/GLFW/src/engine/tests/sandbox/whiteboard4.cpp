@@ -1,70 +1,85 @@
 #include <iostream>
-//#include <fstream>
-//using namespace std;
-//ifstream fin ("cerc.in");
-//ofstream fout ("cerc.out");
+#include <fstream>
 
-#define fin std::cin
-#define fout std::cout
+#define MAX_NUMBER_OF_PEOPLE 1005
 
-int n, solutie[100], vf[100], summax, vect[100], solfinal[100];
+std::ifstream fin ( "epidemie.in" );
+std::ofstream fout ( "epidemie.out" );
 
-int suma () {
-    int sum = 0;
-    for (int i = 1;i < n;i++)
-        sum += solutie[i]*solutie[i+1];
-    sum += solutie[n]*solutie[1];
-    return sum;
-}
+int adj[ MAX_NUMBER_OF_PEOPLE ][ MAX_NUMBER_OF_PEOPLE ];
+int n, m;
+int i, j;
 
-void afis () {
-    int sumaCurenta = suma();
-    if (sumaCurenta > summax) {
-        summax = sumaCurenta;
-        for (int i = 1;i <= n;i++)
-            solfinal[i] = solutie[i];
+int totalDays = 0;
+
+int todayInfectedCount;
+int todayNewInfectedCount;
+
+int todayInfected [ MAX_NUMBER_OF_PEOPLE ];
+int todayNewInfected [ MAX_NUMBER_OF_PEOPLE ];
+
+bool infectionHistory [ MAX_NUMBER_OF_PEOPLE ]; // true = inf, false not
+                                                // 1            0                ( sizeof (bool) = sizeof(char) )
+
+bool notAllPeopleAreInfected ();
+void infectToday ();
+void moveCasesAtEndOfDay ();
+void readData ();
+
+int main() {
+    readData ();
+
+    while ( notAllPeopleAreInfected () ) {
+        infectToday();
+
+        moveCasesAtEndOfDay();
+        totalDays ++;
     }
+
+    fout << totalDays << '\n';
 }
 
-//G n noduri -> k muchii. G n + 1 noduri adaugam n muchii
-//G n + 1 ...
+void moveCasesAtEndOfDay () {
+    todayInfectedCount = todayNewInfectedCount;
 
-// G (1) => 0 muchii
-// G (2) => 1 muchie
-// G (3) => 3 muchii ( 1 + 2 )
-// G (4) => 3 + 3 ( 3 + 2 + 1 )
+    for ( i = 0; i < todayNewInfectedCount; i++ )
+        todayInfected [ i ] = todayNewInfected [ i ];
+}
 
-// G(n) => max 1 + 2 + 3 + ... + n muchii = n(n-1) / 2
+/**
+ * todayInfected -> vecini in todayNewInfected
+ */
+void infectToday () {
+    todayNewInfectedCount = 0;
 
-void bkt (int pos) {
-    if (pos == n+1)
-        afis();
-    else {
-        for (int i = 1;i <= n;i++)
-            if (vf[i] == 0) {
-                vf[i] = 1;
-                solutie[pos] = vect[i];
-                bkt(pos + 1);
-                vf[i] = 0;
+    for ( int i = 0; i < todayInfectedCount; i++ ) {
+
+        infectionHistory [ todayInfected [ i ] ] = true;
+
+        for ( int person = 1; person <= n; person ++ ) {
+            if ( adj [ todayInfected [ i ] ] [ person ] && ! infectionHistory [ person ] ) {
+                todayNewInfected [ todayNewInfectedCount ++ ] = person;
             }
+        }
     }
 }
 
+bool notAllPeopleAreInfected () {
+    for ( int i = 1; i <= n; i++ )
+        if ( ! infectionHistory[ i ] )
+            return true;
+    return false;
+}
 
-int main()
-{
-    fin >> n;
-    for (int i = 1;i <= n;i++)
-        fin >> vect[i];
-    for (int i = 1;i < n;i++)
-        for (int j = i+1;j <= n;j++)
-            if (vect[i] > vect[j])
-                std::swap(vect[i],vect[j]);
+void readData () {
+    fin >> n >> m;
 
-    solutie[1] = vect[1];
-    vf[1] = 1;
-    bkt(2);
-    for (int i = 1;i <= n;i++)
-        fout<<solfinal[i]<<' ';
-    return 0;
+    while ( m-- ) {
+        fin >> i >> j;
+        adj[i][j] = adj[j][i] = 1;
+    }
+
+    fin >> todayInfectedCount;
+    for ( int i = 0; i < todayInfectedCount; i++ )
+        fin >> todayInfected[ i ];
 }
