@@ -24,6 +24,7 @@ namespace engine {
 
         VulkanBufferUsageFlags              _bufferUsageFlags   {VULKAN_NULL_FLAGS};
         VulkanSharingMode                   _sharingMode        {VulkanSharingMode::VK_SHARING_MODE_EXCLUSIVE};
+        VulkanMemoryPropertyFlags           _memoryPropertyFlags{VULKAN_NULL_FLAGS};
 
         //// private functions
 
@@ -42,7 +43,7 @@ namespace engine {
 
         constexpr static VulkanMemoryPropertyFlags MEMORY_CPU_BUFFER_FLAGS =
                 (VulkanBufferUsageFlags) VBuffer::MEMORY_HOST_COHERENT |
-                VBuffer::MEMORY_CPU_WRITEABLE;
+                (VulkanBufferUsageFlags) VBuffer::MEMORY_CPU_WRITEABLE;
 
         constexpr static VulkanMemoryPropertyFlags MEMORY_GPU_BUFFER_FLAGS =
                 VBuffer::MEMORY_GPU_LOCAL;
@@ -71,6 +72,14 @@ namespace engine {
 
         //// public functions
 
+        [[nodiscard]] constexpr static VulkanSharingMode getOptimalSharingMode ( bool forceExclusive, uint32 queueFamilyIndexCount, const VLogicalDevice & device ) noexcept {
+            return (
+                forceExclusive              ||
+                queueFamilyIndexCount <= 1  ||
+                device.getFirstTransferQueuePtr() == nullptr
+            ) ? VBuffer::TRANSFER_EXCLUSIVITY : VBuffer::TRANSFER_CONCURRENCY;
+        }
+
         [[nodiscard]] constexpr bool isSourceBuffer () const noexcept {
             return static_cast < bool > (this->_bufferUsageFlags & static_cast < VulkanBufferUsageFlags > ( VBuffer::TRANSFER_SOURCE_BUFFER ) );
         }
@@ -92,9 +101,10 @@ namespace engine {
             VulkanMemoryPropertyFlags
         ) noexcept;
 
-        virtual VulkanResult copyOntoBuffer (
-            const void *,
+        virtual VulkanResult load (
+            const void *pData,
             std::size_t
+            dataSize
         ) noexcept;
 
         virtual void free() noexcept;
