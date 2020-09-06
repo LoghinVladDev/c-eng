@@ -48,12 +48,18 @@ namespace engine {
                 VBuffer::MEMORY_GPU_LOCAL;
 
         constexpr static VulkanBufferUsageFlagBits VERTEX_BUFFER = VulkanBufferUsageFlagBits::VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
+        constexpr static VulkanBufferUsageFlagBits INDEX_BUFFER = VulkanBufferUsageFlagBits::VK_BUFFER_USAGE_INDEX_BUFFER_BIT;
         constexpr static VulkanBufferUsageFlagBits TRANSFER_SOURCE_BUFFER = VulkanBufferUsageFlagBits::VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
         constexpr static VulkanBufferUsageFlagBits TRANSFER_DESTINATION_BUFFER = VulkanBufferUsageFlagBits::VK_BUFFER_USAGE_TRANSFER_DST_BIT;
 
         constexpr static VulkanBufferUsageFlags VERTEX_BUFFER_GPU_LOCAL =
                 VBuffer::VERTEX_BUFFER |
                 VBuffer::TRANSFER_DESTINATION_BUFFER;
+
+        constexpr static VulkanBufferUsageFlags INDEX_BUFFER_GPU_LOCAL =
+                VBuffer::INDEX_BUFFER |
+                VBuffer::TRANSFER_DESTINATION_BUFFER;
+
 
         constexpr static VulkanBufferUsageFlags STAGING_BUFFER_CPU_LOCAL =
                 VBuffer::TRANSFER_SOURCE_BUFFER;

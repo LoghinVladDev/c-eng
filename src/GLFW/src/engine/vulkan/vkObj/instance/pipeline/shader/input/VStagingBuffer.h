@@ -18,8 +18,9 @@ namespace engine {
         //// private variables
 //        uint32                                        _vertexCount    {0U};
         const std::vector < engine::VVertex >       * _pVertices      {nullptr};
+        const std::vector < uint16 >                * _pIndices16     {nullptr};
+        const std::vector < uint32 >                * _pIndices32     {nullptr};
         std::vector < engine::VVertex::SVertexPack >  _packedVertices;
-
 
         //// private functions 
 
@@ -30,6 +31,22 @@ namespace engine {
         VulkanResult setup (
             const VLogicalDevice &,
             const std::vector < VVertex > &,
+            VulkanSharingMode = VulkanSharingMode::VK_SHARING_MODE_EXCLUSIVE,
+            const uint32* = nullptr,
+            uint32 = 0U
+        ) noexcept;
+
+        VulkanResult setup (
+            const VLogicalDevice &,
+            const std::vector < uint16 > &,
+            VulkanSharingMode = VulkanSharingMode::VK_SHARING_MODE_EXCLUSIVE,
+            const uint32* = nullptr,
+            uint32 = 0U
+        ) noexcept;
+
+        VulkanResult setup (
+            const VLogicalDevice &,
+            const std::vector < uint32 > &,
             VulkanSharingMode = VulkanSharingMode::VK_SHARING_MODE_EXCLUSIVE,
             const uint32* = nullptr,
             uint32 = 0U

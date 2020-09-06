@@ -17,7 +17,6 @@ namespace engine {
     class VVertexBuffer : public VBuffer {
     private:
         //// private variables
-//        uint32                                          _vertexCount    {0U};
         const std::vector < engine::VVertex > *         _pVertices      {nullptr};
 
         std::vector < engine::VVertex::SVertexPack >    _packedVertices;

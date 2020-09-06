@@ -45,9 +45,6 @@ VulkanResult engine::VVertexBuffer::setup(
     const uint32          * pQueueFamilyIndices,
     uint32                  queueFamilyIndexCount
 ) noexcept {
-
-//    this->setElementCount( size / sizeof ( VVertex::SVertexPack ) ); //// TODO : add Vertex -> Staging data sync.
-
     return VBuffer::setup(
         device,
         size,

@@ -35,6 +35,7 @@
 #include <vkObj/instance/pipeline/shader/input/VVertex.h>
 #include <vkObj/instance/pipeline/shader/input/VVertexBuffer.h>
 #include <vkObj/instance/pipeline/shader/input/VStagingBuffer.h>
+#include <vkObj/instance/pipeline/shader/input/VIndexBuffer.h>
 #include <vector>
 
 
@@ -91,7 +92,10 @@ namespace engine {
         VFenceCollection            _imagesInFlight;
 
         VVertexBuffer               _vertexBuffer;
-        VStagingBuffer              _stagingBuffer;
+        VStagingBuffer              _vertexStagingBuffer;
+
+        VIndexBuffer                _indexBuffer;
+        VStagingBuffer              _indexStagingBuffer;
 
         double                      _fpsTimer = 0.0;
         double                      _fpsRefreshTimer = __SHOW_FPS_EVERY_S;
@@ -124,6 +128,8 @@ namespace engine {
         void createBuffers () noexcept (false);
         void createExclusiveBuffers () noexcept (false);
         void createConcurrentBuffers () noexcept (false);
+
+        void freeStagingBuffers () noexcept (false);
 
         void cleanupSwapChain () noexcept (false);
 

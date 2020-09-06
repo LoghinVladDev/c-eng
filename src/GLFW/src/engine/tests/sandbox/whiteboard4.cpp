@@ -1,85 +1,101 @@
+
 #include <iostream>
-#include <fstream>
 
-#define MAX_NUMBER_OF_PEOPLE 1005
+struct Node {
+    int value;
+    Node * left;
+    Node * right;
+};
 
-std::ifstream fin ( "epidemie.in" );
-std::ofstream fout ( "epidemie.out" );
+Node * rootNode;
 
-int adj[ MAX_NUMBER_OF_PEOPLE ][ MAX_NUMBER_OF_PEOPLE ];
-int n, m;
-int i, j;
+bool exists ( int value, Node * root ) {
+    if ( root == nullptr )
+        return false;
 
-int totalDays = 0;
+    while ( root != nullptr ) {
+        if ( value == root->value )
+            return true;
 
-int todayInfectedCount;
-int todayNewInfectedCount;
-
-int todayInfected [ MAX_NUMBER_OF_PEOPLE ];
-int todayNewInfected [ MAX_NUMBER_OF_PEOPLE ];
-
-bool infectionHistory [ MAX_NUMBER_OF_PEOPLE ]; // true = inf, false not
-                                                // 1            0                ( sizeof (bool) = sizeof(char) )
-
-bool notAllPeopleAreInfected ();
-void infectToday ();
-void moveCasesAtEndOfDay ();
-void readData ();
-
-int main() {
-    readData ();
-
-    while ( notAllPeopleAreInfected () ) {
-        infectToday();
-
-        moveCasesAtEndOfDay();
-        totalDays ++;
+        if ( value > root->value )
+            root = root->right;
+        else if ( value < root->value )
+            root = root->left;
     }
 
-    fout << totalDays << '\n';
+    return false;
 }
 
-void moveCasesAtEndOfDay () {
-    todayInfectedCount = todayNewInfectedCount;
+void insert ( int value, Node * & root ) {
+    if ( root == nullptr ) {
+        root = new Node;
+        root->value = value;
+        root->left = nullptr;
+        root->right = nullptr;
+        return;
+    }
 
-    for ( i = 0; i < todayNewInfectedCount; i++ )
-        todayInfected [ i ] = todayNewInfected [ i ];
-}
-
-/**
- * todayInfected -> vecini in todayNewInfected
- */
-void infectToday () {
-    todayNewInfectedCount = 0;
-
-    for ( int i = 0; i < todayInfectedCount; i++ ) {
-
-        infectionHistory [ todayInfected [ i ] ] = true;
-
-        for ( int person = 1; person <= n; person ++ ) {
-            if ( adj [ todayInfected [ i ] ] [ person ] && ! infectionHistory [ person ] ) {
-                todayNewInfected [ todayNewInfectedCount ++ ] = person;
+    Node * copy = root;
+    while ( true ) {
+        if ( copy->value > value ) {
+            // stg
+            if ( copy->left == nullptr ) {
+                copy->left = new Node;
+                copy->left->value = value;
+                copy->left->left = nullptr;
+                copy->left->right = nullptr;
+                return;
+            } else {
+                copy = copy->left;
+                continue;
             }
+        } else if ( copy->value < value ) {
+            // drp
+            if ( copy->right == nullptr ) {
+                copy->right = new Node;
+                copy->right->value = value;
+                copy->right->left = nullptr;
+                copy->right->right = nullptr;
+                return;
+            } else {
+                copy = copy->right;
+                continue;
+            }
+        } else if ( copy->value == value ) {
+            return;
         }
     }
 }
 
-bool notAllPeopleAreInfected () {
-    for ( int i = 1; i <= n; i++ )
-        if ( ! infectionHistory[ i ] )
-            return true;
-    return false;
+void print ( Node * root ) {
+    if ( root != nullptr ) {
+        print ( root->left );
+        std::cout << root->value << ' ';
+        print ( root->right );
+    }
 }
 
-void readData () {
-    fin >> n >> m;
+int main () {
+    insert( 4, rootNode );
+    insert( 6, rootNode );
+    insert( 10, rootNode );
+    insert( 15, rootNode );
+    insert( 2, rootNode );
+    insert( 3, rootNode );
+    insert( 5, rootNode );
+    insert( 20, rootNode );
+    insert( 6, rootNode );
+    insert( 18, rootNode );
+    insert( 1, rootNode );
+    insert( 4, rootNode );
+    insert( 11, rootNode );
+    insert( 13, rootNode );
 
-    while ( m-- ) {
-        fin >> i >> j;
-        adj[i][j] = adj[j][i] = 1;
-    }
+    print ( rootNode );
 
-    fin >> todayInfectedCount;
-    for ( int i = 0; i < todayInfectedCount; i++ )
-        fin >> todayInfected[ i ];
+    std::cout << '\n';
+
+    std::cout << "7 exista in arb : " << exists ( 7, rootNode ) << '\n';
+    std::cout << "11 exista in arb : " << exists ( 11, rootNode ) << '\n';
+    std::cout << "3553 exista in arb : " << exists ( 3553, rootNode ) << '\n';
 }

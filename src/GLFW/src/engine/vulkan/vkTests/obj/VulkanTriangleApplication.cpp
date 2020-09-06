@@ -107,6 +107,7 @@ void engine::VulkanTriangleApplication::run() noexcept (false) {
     this->createCommandPool();
     this->createBuffers();
     this->createCommandBuffers();
+    this->freeStagingBuffers();
     this->createSynchronizationElements();
     this->mainLoop();
     this->cleanup();
@@ -202,7 +203,6 @@ inline void engine::VulkanTriangleApplication::initVulkan() noexcept (false) {
         deviceFactory.withValidationLayers( this->_vulkanValidationLayerCollection );
 
     auto queues = internalGatherGraphicsAndPresentQueueFamilies ( * this->_vulkanQueueFamilyCollection );
-    auto transferQueueFamily = this->_vulkanQueueFamilyCollection->getTransferCapableQueueFamilies()[0];
 
     if( queues.size() == 1 ) { // graphics & present queues in same family
         deviceFactory.addQueue(*queues[0], 1.0f);
@@ -242,6 +242,14 @@ inline void engine::VulkanTriangleApplication::initVulkan() noexcept (false) {
             std::cout << "Saved res : " << resolution->getWidth() << ',' << resolution->getHeight() << '\n';
         }
     }
+}
+
+void engine::VulkanTriangleApplication::freeStagingBuffers() noexcept(false) {
+    this->_vertexStagingBuffer.free();
+    this->_vertexStagingBuffer.cleanup();
+
+    this->_indexStagingBuffer.free();
+    this->_indexStagingBuffer.cleanup();
 }
 
 void engine::VulkanTriangleApplication::createSynchronizationElements() noexcept(false) {
@@ -381,14 +389,19 @@ void engine::VulkanTriangleApplication::mainLoop() noexcept (false) {
     vkDeviceWaitIdle( this->_vulkanLogicalDevice.data() );
 }
 
-std::vector < engine::VVertex > vertices = {
-        { { 0.0f, -0.5f }, { 0.5f, 0.5f, 0.5f } },
-        { { 0.5f, 0.5f }, { 0.0f, 1.0f, 0.0f } },
-        { { -0.5f, 0.5f }, { 0.0f, 0.0f, 1.0f } }
+const std::vector < engine::VVertex > vertices = {
+    {{-0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}},
+    {{0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}},
+    {{0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}},
+    {{-0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}}
+};
+
+const std::vector < uint16 > indices = {
+        0, 1, 2, 2, 3, 0
 };
 
 void engine::VulkanTriangleApplication::createBuffers() noexcept(false) {
-
+    //// TODO : integrate staging buffers into regular buffers and create flush command for copying
     if ( this->_vulkanQueueFamilyCollection->getQueueFamilies().size() == 1 ) {
         this->createExclusiveBuffers();
     } else if ( this->_vulkanQueueFamilyCollection->getQueueFamilies().size() > 1 ) {
@@ -419,7 +432,7 @@ void engine::VulkanTriangleApplication::createConcurrentBuffers() noexcept(false
     if ( this->_vertexBuffer.allocateMemory() != VulkanResult::VK_SUCCESS )
         throw std::runtime_error ( "Vertex Buffer Allocation failure" );
 
-    if (( statusResult = this->_stagingBuffer.setup(
+    if (( statusResult = this->_vertexStagingBuffer.setup(
             this->_vulkanLogicalDevice,
             vertices,
             VBuffer::TRANSFER_CONCURRENCY,
@@ -431,23 +444,53 @@ void engine::VulkanTriangleApplication::createConcurrentBuffers() noexcept(false
         throw std::runtime_error("Staging Buffer Initialization failure");
     }
 
-    if (this->_stagingBuffer.allocateMemory() != VulkanResult::VK_SUCCESS)
+    if (this->_vertexStagingBuffer.allocateMemory() != VulkanResult::VK_SUCCESS)
         throw std::runtime_error("Staging Buffer Allocate Failure");
 
-//    if (this->_stagingBuffer.copyFrom(
-//        this->_vertexBuffer,
-//        this->_transferCommandPool,
-//        this->_stagingBuffer.size()
-//        ) != VulkanResult::VK_SUCCESS
-//    )
-//        throw std::runtime_error("Staging buffer onto Vertex Buffer Copy Error");
-
     if ( this->_vertexBuffer.copyFrom(
-            this->_stagingBuffer,
+            this->_vertexStagingBuffer,
             this->_transferCommandPool,
-            this->_stagingBuffer.size()
+            this->_vertexStagingBuffer.size()
         ) != VulkanResult::VK_SUCCESS
     )
+        throw std::runtime_error("Staging buffer onto Vertex Buffer Copy Error");
+
+    if (( statusResult = this->_indexBuffer.setup(
+            this->_vulkanLogicalDevice,
+            indices.size() * sizeof ( uint16 ),
+            VBuffer::TRANSFER_CONCURRENCY,
+            queueFamilyIndices,
+            queueFamilyIndicesSize
+        )) != VulkanResult::VK_SUCCESS
+    ) {
+        std::cerr << VStandardUtils::to_string(statusResult) << '\n';
+        throw std::runtime_error("Index Buffer Initialization failure");
+    }
+
+    if ( this->_indexBuffer.allocateMemory() != VulkanResult::VK_SUCCESS )
+        throw std::runtime_error("Index Buffer Allocation failure");
+
+    if (( statusResult = this->_indexStagingBuffer.setup(
+            this->_vulkanLogicalDevice,
+            indices,
+            VBuffer::TRANSFER_CONCURRENCY,
+            queueFamilyIndices,
+            queueFamilyIndicesSize
+    )) != VulkanResult::VK_SUCCESS
+            ) {
+        std::cerr << VStandardUtils::to_string(statusResult) << '\n';
+        throw std::runtime_error("Staging Index Buffer Initialization failure");
+    }
+
+    if (this->_indexStagingBuffer.allocateMemory() != VulkanResult::VK_SUCCESS)
+        throw std::runtime_error("Staging Buffer Allocate Failure");
+
+    if ( this->_indexBuffer.copyFrom(
+            this->_indexStagingBuffer,
+            this->_transferCommandPool,
+            this->_indexStagingBuffer.size()
+    ) != VulkanResult::VK_SUCCESS
+            )
         throw std::runtime_error("Staging buffer onto Vertex Buffer Copy Error");
 }
 
@@ -459,8 +502,8 @@ void engine::VulkanTriangleApplication::createExclusiveBuffers() noexcept(false)
             VBuffer::TRANSFER_EXCLUSIVITY,
             nullptr,
             0U
-    )) != VulkanResult::VK_SUCCESS
-            ) {
+        )) != VulkanResult::VK_SUCCESS
+    ) {
         std::cerr << VStandardUtils::to_string(statusResult) << '\n';
         throw std::runtime_error("Vertex Buffer Initialization failure");
     }
@@ -468,14 +511,12 @@ void engine::VulkanTriangleApplication::createExclusiveBuffers() noexcept(false)
     if (this->_vertexBuffer.allocateMemory() != VulkanResult::VK_SUCCESS)
         throw std::runtime_error("Vertex Buffer Allocate failure");
 
-    if (this->_stagingBuffer.setup(this->_vulkanLogicalDevice, vertices, VBuffer::TRANSFER_EXCLUSIVITY) !=
-        VulkanResult::VK_SUCCESS)
+    if (this->_vertexStagingBuffer.setup(this->_vulkanLogicalDevice, vertices, VBuffer::TRANSFER_EXCLUSIVITY) != VulkanResult::VK_SUCCESS)
         throw std::runtime_error("Staging Buffer Initialization failure");
-    if (this->_stagingBuffer.allocateMemory() != VulkanResult::VK_SUCCESS)
+    if (this->_vertexStagingBuffer.allocateMemory() != VulkanResult::VK_SUCCESS)
         throw std::runtime_error("Staging Buffer Allocate Failure");
 
-    if (this->_stagingBuffer.copyFrom(this->_vertexBuffer, this->_transferCommandPool,
-                                      this->_stagingBuffer.size()) != VulkanResult::VK_SUCCESS)
+    if (this->_vertexStagingBuffer.copyFrom(this->_vertexBuffer, this->_transferCommandPool, this->_vertexStagingBuffer.size()) != VulkanResult::VK_SUCCESS)
         throw std::runtime_error("Staging buffer onto Vertex Buffer Copy Error");
 }
 
@@ -498,6 +539,8 @@ void engine::VulkanTriangleApplication::cleanup() noexcept (false) {
 
     this->_vertexBuffer.free();
     this->_vertexBuffer.cleanup();
+    this->_indexBuffer.free();
+    this->_indexBuffer.cleanup();
 
     this->_vulkanLogicalDevice.cleanup();
 
@@ -534,9 +577,6 @@ void engine::VulkanTriangleApplication::createCommandBuffers() noexcept(false) {
             1U
         ) != VulkanResult::VK_SUCCESS )
         throw std::runtime_error ( "Command Buffers Record Error" );
-
-    this->_stagingBuffer.free();
-    this->_stagingBuffer.cleanup();
 }
 
 void engine::VulkanTriangleApplication::autoPickPhysicalDevice() noexcept(false) {
