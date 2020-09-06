@@ -148,6 +148,7 @@ typedef VkBlendFactor                               VulkanBlendFactor;
 typedef VkAccessFlagBits                            VulkanAccessFlagBits;
 typedef VkCommandBufferUsageFlagBits                VulkanCommandBufferUsageFlagBits;
 typedef VkBufferCopy                                VulkanBufferCopy;
+typedef VkIndexType                                 VulkanIndexType;
 
 constexpr VulkanFlags VULKAN_NULL_FLAGS = 0;
 

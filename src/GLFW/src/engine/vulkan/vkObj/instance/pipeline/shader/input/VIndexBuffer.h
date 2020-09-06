@@ -16,22 +16,30 @@ namespace engine {
     class VIndexBuffer : public VBuffer {
     private:
         //// private variables
+        VulkanIndexType _indexType {VIndexBuffer::TYPE_16_BIT};
 
         //// private functions
 
     public:
         //// public variables
+        constexpr static VulkanIndexType TYPE_16_BIT = VulkanIndexType::VK_INDEX_TYPE_UINT16;
+        constexpr static VulkanIndexType TYPE_32_BIT = VulkanIndexType::VK_INDEX_TYPE_UINT32;
 
         //// public functions
         VIndexBuffer () noexcept = default;
 
         VulkanResult setup (
-                const VLogicalDevice &,
-                std::size_t,
-                VulkanSharingMode = VulkanSharingMode::VK_SHARING_MODE_EXCLUSIVE,
-                const uint32 * = nullptr,
-                uint32 = 0U
+            const VLogicalDevice &,
+            std::size_t,
+            VulkanSharingMode = VulkanSharingMode::VK_SHARING_MODE_EXCLUSIVE,
+            const uint32 * = nullptr,
+            uint32 = 0U,
+            VulkanIndexType = VIndexBuffer::TYPE_16_BIT
         ) noexcept;
+
+        [[nodiscard]] VulkanIndexType getIndexType () const noexcept {
+            return this->_indexType;
+        }
 
         VulkanResult allocateMemory () noexcept;
 

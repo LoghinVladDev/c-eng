@@ -10,7 +10,7 @@
 
 extern void populateDebugMessengerCreateInfo ( VulkanDebugMessengerCreateInfo * ) noexcept;
 
-static void populateApplicationInfoStructure( VulkanApplicationInfo * applicationInfo ) noexcept {
+inline static void populateApplicationInfoStructure( VulkanApplicationInfo * applicationInfo ) noexcept {
     if(applicationInfo == nullptr)
         return;
 

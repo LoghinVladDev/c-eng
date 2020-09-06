@@ -183,7 +183,8 @@ VulkanResult engine::VCommandBuffer::startRecord(
     const engine::VPipeline & pipeline,
     const VBuffer * pVertexBuffers,
     const VulkanDeviceSize * pOffsets,
-    uint32 vertexBufferCount
+    uint32 vertexBufferCount,
+    const VIndexBuffer * pIndexBuffer
 ) noexcept {
     VulkanCommandBufferBeginInfo beginInfo { };
 
@@ -212,9 +213,16 @@ VulkanResult engine::VCommandBuffer::startRecord(
         }
 
         vkCmdBindVertexBuffers( this->_handle, 0, vertexBufferCount, vertexBufferHandles, pOffsets );
+
+        if ( pIndexBuffer != nullptr ) {
+            vkCmdBindIndexBuffer( this->_handle, pIndexBuffer->data(), 0, pIndexBuffer->getIndexType() );
+        }
     }
 
-    vkCmdDraw           ( this->_handle, vertexCount , 1, 0, 0 );
+    if ( pIndexBuffer == nullptr )
+        vkCmdDraw           ( this->_handle, vertexCount , 1, 0, 0 );
+    else
+        vkCmdDrawIndexed    ( this->_handle, pIndexBuffer->getElementCount(), 1, 0, 0, 0 );
 //    vkCmdDraw           ( this->_handle, 3 , 1, 3, 0 );
     vkCmdEndRenderPass  ( this->_handle );
 
@@ -250,10 +258,11 @@ VulkanResult engine::VCommandBufferCollection::startRecord(
     const engine::VPipeline & pipeline,
     const engine::VBuffer * pVertexBuffers,
     const VulkanDeviceSize * pOffsets,
-    uint32 vertexBufferCount
+    uint32 vertexBufferCount,
+    const VIndexBuffer * pIndexBuffer
 ) noexcept {
     for ( auto & commandBuffer : this->_commandBuffers ) {
-        VulkanResult startRecordResult = commandBuffer.startRecord(pipeline, pVertexBuffers, pOffsets, vertexBufferCount);
+        VulkanResult startRecordResult = commandBuffer.startRecord(pipeline, pVertexBuffers, pOffsets, vertexBufferCount, pIndexBuffer);
         if( startRecordResult != VulkanResult::VK_SUCCESS )
             return startRecordResult;
     }

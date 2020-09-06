@@ -9,8 +9,10 @@ VulkanResult engine::VIndexBuffer::setup(
     std::size_t               size,
     VulkanSharingMode         sharingMode,
     const uint32            * pQueueFamilyIndices,
-    uint32                    queueFamilyIndexCount
+    uint32                    queueFamilyIndexCount,
+    VulkanIndexType           indexType
 ) noexcept {
+    this->_indexType = indexType;
     return VBuffer::setup(
         device,
         size,

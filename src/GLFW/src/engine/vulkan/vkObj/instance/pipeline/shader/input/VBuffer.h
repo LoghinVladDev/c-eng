@@ -41,7 +41,7 @@ namespace engine {
         constexpr static VulkanMemoryPropertyFlagBits MEMORY_GPU_LOCAL     = VulkanMemoryPropertyFlagBits::VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
 
         constexpr static VulkanMemoryPropertyFlags MEMORY_CPU_BUFFER_FLAGS =
-                VBuffer::MEMORY_HOST_COHERENT |
+                (VulkanBufferUsageFlags) VBuffer::MEMORY_HOST_COHERENT |
                 VBuffer::MEMORY_CPU_WRITEABLE;
 
         constexpr static VulkanMemoryPropertyFlags MEMORY_GPU_BUFFER_FLAGS =
@@ -53,12 +53,11 @@ namespace engine {
         constexpr static VulkanBufferUsageFlagBits TRANSFER_DESTINATION_BUFFER = VulkanBufferUsageFlagBits::VK_BUFFER_USAGE_TRANSFER_DST_BIT;
 
         constexpr static VulkanBufferUsageFlags VERTEX_BUFFER_GPU_LOCAL =
-                VBuffer::VERTEX_BUFFER |
-                VBuffer::TRANSFER_DESTINATION_BUFFER;
-
+                (VulkanBufferUsageFlags) VBuffer::VERTEX_BUFFER |
+                (VulkanBufferUsageFlags) VBuffer::TRANSFER_DESTINATION_BUFFER;
         constexpr static VulkanBufferUsageFlags INDEX_BUFFER_GPU_LOCAL =
-                VBuffer::INDEX_BUFFER |
-                VBuffer::TRANSFER_DESTINATION_BUFFER;
+                (VulkanBufferUsageFlags) VBuffer::INDEX_BUFFER |
+                (VulkanBufferUsageFlags) VBuffer::TRANSFER_DESTINATION_BUFFER;
 
 
         constexpr static VulkanBufferUsageFlags STAGING_BUFFER_CPU_LOCAL =
@@ -71,6 +70,14 @@ namespace engine {
         constexpr static VulkanSharingMode TRANSFER_EXCLUSIVITY = VulkanSharingMode::VK_SHARING_MODE_EXCLUSIVE;
 
         //// public functions
+
+        [[nodiscard]] constexpr bool isSourceBuffer () const noexcept {
+            return static_cast < bool > (this->_bufferUsageFlags & static_cast < VulkanBufferUsageFlags > ( VBuffer::TRANSFER_SOURCE_BUFFER ) );
+        }
+
+        [[nodiscard]] constexpr bool isDestinationBuffer () const noexcept {
+            return static_cast < bool > (this->_bufferUsageFlags & static_cast < VulkanBufferUsageFlags > ( VBuffer::TRANSFER_DESTINATION_BUFFER ) );
+        }
 
         virtual VulkanResult setup (
             const VLogicalDevice &,

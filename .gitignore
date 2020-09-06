@@ -4,6 +4,7 @@
 ./glad/*
 ./stb_image/*
 ./messengerOffline/*
+/src/GLFW/src/engine/vulkan/_template/
 /src/GLFW/src/engine/vulkan/_template/TemplateTriangle.cpp
 /src/GLFW/src/engine/vulkan/vkTests/obj/VulkanTriangleApplication2.h
 /src/GLFW/src/engine/vulkan/vkTests/obj/VulkanTriangleApplication2.cpp

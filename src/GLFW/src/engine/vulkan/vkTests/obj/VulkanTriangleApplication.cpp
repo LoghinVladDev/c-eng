@@ -407,6 +407,8 @@ void engine::VulkanTriangleApplication::createBuffers() noexcept(false) {
     } else if ( this->_vulkanQueueFamilyCollection->getQueueFamilies().size() > 1 ) {
         this->createConcurrentBuffers();
     }
+
+    vkDeviceWaitIdle( this->_vulkanLogicalDevice.data() );
 }
 
 void engine::VulkanTriangleApplication::createConcurrentBuffers() noexcept(false) {
@@ -574,7 +576,8 @@ void engine::VulkanTriangleApplication::createCommandBuffers() noexcept(false) {
             this->_graphicsPipeline,
             & this->_vertexBuffer,
             offsets,
-            1U
+            1U,
+            & this->_indexBuffer
         ) != VulkanResult::VK_SUCCESS )
         throw std::runtime_error ( "Command Buffers Record Error" );
 }

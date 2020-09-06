@@ -14,6 +14,7 @@
 #include <src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/synchronization/VFence.h>
 #include <vkObj/instance/pipeline/shader/input/VVertex.h>
 #include <vkObj/instance/pipeline/shader/input/VVertexBuffer.h>
+#include <vkObj/instance/pipeline/shader/input/VIndexBuffer.h>
 
 namespace engine {
 
@@ -56,7 +57,8 @@ namespace engine {
             const VPipeline&,
             const VBuffer * = nullptr,
             const VulkanDeviceSize * = nullptr,
-            uint32 = 0U
+            uint32 = 0U,
+            const VIndexBuffer * = nullptr
         ) noexcept;
 
         VulkanResult startRecord (
@@ -90,7 +92,8 @@ namespace engine {
             const VPipeline&,
             const VBuffer * = nullptr,
             const VulkanDeviceSize * = nullptr,
-            uint32 = 0U
+            uint32 = 0U,
+            const VIndexBuffer * = nullptr
         ) noexcept;
 
         VulkanResult startRecord (

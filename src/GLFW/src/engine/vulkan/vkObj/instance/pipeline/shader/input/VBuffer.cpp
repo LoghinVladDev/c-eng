@@ -150,7 +150,7 @@ VulkanResult engine::VBuffer::copyOntoBuffer(const void * pData, std::size_t dat
     if ( mapMemoryResult != VulkanResult::VK_SUCCESS )
         return mapMemoryResult;
 
-    memcpy ( pBufferData, pData, dataSize );
+    std::memcpy ( pBufferData, pData, dataSize );
 
     vkUnmapMemory(
             this->_pLogicalDevice->data(),
@@ -173,6 +173,10 @@ VulkanResult engine::VBuffer::copyFrom(
     const VCommandPool & commandPool,
     VulkanDeviceSize size
 ) noexcept {
+    if ( ! ( this->isDestinationBuffer() && sourceBuffer.isSourceBuffer() ) ) {
+        return VulkanResult::VK_ERROR_NOT_PERMITTED_EXT;
+    }
+
 #ifndef NDEBUG
     if ( commandPool.isOptimizedForTransfers() && this->_sharingMode != VulkanSharingMode::VK_SHARING_MODE_CONCURRENT )
         std::cerr << "Transfer Buffer Pool Available, Resources not Concurrent!\n";
