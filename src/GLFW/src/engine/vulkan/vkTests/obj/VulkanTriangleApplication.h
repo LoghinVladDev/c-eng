@@ -92,10 +92,10 @@ namespace engine {
         VFenceCollection            _imagesInFlight;
 
         VVertexBuffer               _vertexBuffer;
-        VStagingBuffer              _vertexStagingBuffer;
+//        VStagingBuffer              _vertexStagingBuffer;
 
         VIndexBuffer                _indexBuffer;
-        VStagingBuffer              _indexStagingBuffer;
+//        VStagingBuffer              _indexStagingBuffer;
 
         double                      _fpsTimer = 0.0;
         double                      _fpsRefreshTimer = __SHOW_FPS_EVERY_S;
@@ -108,6 +108,7 @@ namespace engine {
         void initVulkan() noexcept(false);
         void mainLoop() noexcept(false);
         void cleanup() noexcept(false);
+        void update() noexcept(false);
         void drawImage() noexcept (false);
 
         void createShaderModules () noexcept (false);

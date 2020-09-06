@@ -99,6 +99,8 @@ void engine::VBuffer::cleanup() noexcept {
 VulkanResult engine::VBuffer::allocateMemory(
     VulkanMemoryPropertyFlags memoryPropertyFlags
 ) noexcept {
+    this->_memoryPropertyFlags = memoryPropertyFlags;
+
     VulkanMemoryRequirements memoryRequirements;
     vkGetBufferMemoryRequirements( this->_pLogicalDevice->data(), this->_handle, & memoryRequirements );
 
@@ -136,7 +138,10 @@ VulkanResult engine::VBuffer::allocateMemory(
     );
 }
 
-VulkanResult engine::VBuffer::copyOntoBuffer(const void * pData, std::size_t dataSize) noexcept {
+VulkanResult engine::VBuffer::load(const void * pData, std::size_t dataSize) noexcept {
+    if ( ( this->_memoryPropertyFlags & (VulkanMemoryPropertyFlags) VBuffer::MEMORY_CPU_WRITEABLE ) == 0 )
+        return VulkanResult::VK_ERROR_MEMORY_MAP_FAILED;
+
     void * pBufferData;
 
     VulkanResult mapMemoryResult = vkMapMemory(

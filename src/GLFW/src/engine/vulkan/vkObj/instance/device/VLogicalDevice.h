@@ -175,6 +175,7 @@ namespace engine {
         }
 
         [[nodiscard]] std::set < const VQueueFamily * > getQueueFamilies () const noexcept;
+        [[nodiscard]] std::vector < uint32 > getQueueFamilyIndices () const noexcept;
 
         [[nodiscard]] const VulkanDevice & data() const noexcept {
             return this->_vulkanDevice;

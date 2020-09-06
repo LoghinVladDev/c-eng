@@ -70,12 +70,16 @@ engine::VLogicalDevice::VLogicalDeviceFactory & engine::VLogicalDevice::VLogical
     return *this;
 }
 
-//engine::VLogicalDevice::VLogicalDeviceFactory & engine::VLogicalDevice::VLogicalDeviceFactory::addSwapChainToSurface ( const VSurface* surface ) noexcept {
-//    this->_extensions.add ( VExtension( VExtension::KHRONOS_SWAPCHAIN ) );
-//    this->_surface = surface;
-//
-//    return * this;
-//}
+[[nodiscard]] std::vector < uint32 > engine::VLogicalDevice::getQueueFamilyIndices () const noexcept {
+    std::set < uint32 > uniqueQueueFamilyIndices;
+
+    for ( const auto& queue : this->_queues )
+        uniqueQueueFamilyIndices.insert( queue.getQueueFamily()->getQueueFamilyIndex() );
+
+    std::vector < uint32 > queueFamilyIndices ( uniqueQueueFamilyIndices.begin(), uniqueQueueFamilyIndices.end() );
+
+    return queueFamilyIndices;
+}
 
 [[nodiscard]] std::set < const engine::VQueueFamily* > engine::VLogicalDevice::getQueueFamilies() const noexcept {
     std::set < const engine::VQueueFamily * > queueFamilies;

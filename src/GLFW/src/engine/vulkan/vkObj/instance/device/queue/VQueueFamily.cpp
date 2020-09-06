@@ -188,6 +188,15 @@ void engine::VQueueFamilyCollection::debugPrintQueueFamiliesReservations(std::os
     }
 }
 
+std::vector< uint32 > engine::VQueueFamilyCollection::getQueueFamilyIndices() const noexcept {
+    std::vector < uint32 > queueFamilyIndices;
+
+    for ( const auto & queueFamily : this->_queueFamilies )
+        queueFamilyIndices.push_back( queueFamily.getQueueFamilyIndex() );
+
+    return queueFamilyIndices;
+}
+
 #endif
 
 const engine::VPhysicalDevice & engine::VQueueFamily::getPhysicalDevice() const noexcept {

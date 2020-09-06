@@ -197,6 +197,8 @@ namespace engine {
             return this->_queueFamilies;
         }
 
+        [[nodiscard]] std::vector < uint32 > getQueueFamilyIndices () const noexcept;
+
         /// fix:0002 . Have to return *, otherwise duplicates that will destroy logical devices and queues will appear
         [[nodiscard]] std::vector < const VQueueFamily* > getGraphicsCapableQueueFamilies () const noexcept {
             return this->getFlagsCapableQueueFamilies( VQueueFamily::GRAPHICS_FLAG );
