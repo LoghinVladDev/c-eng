@@ -97,11 +97,33 @@ void engine::VulkanTriangleApplication::updateResolutionSettings() noexcept {
     engine::SettingsSharedContainer::getInstance().put( & resolution );
 }
 
+void engine::VulkanTriangleApplication::createDescriptorSetLayout() noexcept(false) {
+    auto uniformBufferObjectBinding = VulkanDescriptorSetLayoutBinding {
+        .binding            = 0,
+        .descriptorType     = VulkanDescriptorType::VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
+        .descriptorCount    = 1U,
+        .stageFlags         = VulkanShaderStageFlagBits::VK_SHADER_STAGE_VERTEX_BIT,
+        .pImmutableSamplers = nullptr
+    };
+
+    VulkanDescriptorSetLayoutCreateInfo createInfo {
+        .sType              = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO,
+        .pNext              = nullptr,
+        .flags              = 0U,
+        .bindingCount       = 1U,
+        .pBindings          = & uniformBufferObjectBinding
+    };
+
+    if ( vkCreateDescriptorSetLayout( this->_vulkanLogicalDevice.data(), & createInfo, nullptr, & this->_descriptorSetLayoutUBO ) != VulkanResult::VK_SUCCESS )
+        throw std::runtime_error ("failed to create descriptor set layout");
+}
+
 void engine::VulkanTriangleApplication::run() noexcept (false) {
     this->initSettings();
     this->initWindow();
     this->initVulkan();
     this->createShaderModules();
+    this->createDescriptorSetLayout();
     this->createGraphicsPipeline();
     this->createFrameBuffers();
     this->createCommandPool();
@@ -277,6 +299,7 @@ void engine::VulkanTriangleApplication::recreateSwapChain() noexcept(false) {
 
     this->createGraphicsPipeline();
     this->createFrameBuffers();
+    this->createUniformBuffers();
     this->createCommandBuffers();
 //    this->createSynchronizationElements();
 }
@@ -330,6 +353,8 @@ void engine::VulkanTriangleApplication::drawImage () noexcept (false) {
         );
     }
 
+    this->updateUniformBuffer( imageIndex );
+
     this->_imagesInFlight[ imageIndex ] = this->_inFlightFences [ currentFrame ];
 
     VkPipelineStageFlags waitStages[] = { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
@@ -375,20 +400,48 @@ const std::vector < uint16 > indices = {
         0, 1, 2, 2, 3, 0
 };
 
+#include <chrono>
+#include <glm/gtc/matrix_transform.hpp>
+void engine::VulkanTriangleApplication::updateUniformBuffer(uint32 uniformBufferIndex) noexcept(false) {
+    auto & currentBuffer = this->_uniformBuffers[ uniformBufferIndex ];
+
+    static auto startTime = std::chrono::high_resolution_clock::now();
+    auto currentTime = std::chrono::high_resolution_clock::now();
+
+    float time = std::chrono::duration < float , std::chrono::seconds::period > ( currentTime - startTime ).count();
+    static float FOV = 60.0f;
+
+    engine::SUniformBufferObject UBO {
+        .model = glm::rotate( glm::mat4 ( 1.0f ), time * glm::radians ( 90.0f ), glm::vec3 (0.0f, 0.0f, 1.0f) ),
+        .view  = glm::lookAt( glm::vec3 ( 2.0f, 2.0f, 2.0f ) , glm::vec3( 0.0f, 0.0f, 0.0f ), glm::vec3 (0.0f, 0.0f, 1.0f) ),
+        .projection = glm::perspective (
+                glm::radians ( FOV ),
+                this->_vulkanLogicalDevice.getSwapChain()->getImagesInfo().extent.width /
+                (float) this->_vulkanLogicalDevice.getSwapChain()->getImagesInfo().extent.height,
+                0.1f,
+                10.0f
+        )
+    };
+
+    UBO.projection[1][1] *= -1; /// OPENGL - VULKAN diff
+
+    currentBuffer.load( & UBO, 1U );
+}
+
 void engine::VulkanTriangleApplication::update() noexcept(false) {
-    std::vector < engine::VVertex > newVertices (4);
-
-    for (int i = 0; i < 4; ++i) {
-        newVertices[i] = VVertex (
-            glm::vec2 (
-                vertices[i].getPosition().x + std::pow (-1, i) * std::sin ( glfwGetTime() ) / 4,
-                vertices[i].getPosition().y + -1 * std::pow (-1, i) * std::cos ( glfwGetTime() ) / 4
-            ),
-            vertices[i].getColor()
-        );
-    }
-
-    this->_vertexBuffer.load( newVertices );
+//    std::vector < engine::VVertex > newVertices (4);
+//
+//    for (int i = 0; i < 4; ++i) {
+//        newVertices[i] = VVertex (
+//            glm::vec2 (
+//                vertices[i].getPosition().x + std::pow (-1, i) * std::sin ( glfwGetTime() ) / 4,
+//                vertices[i].getPosition().y + -1 * std::pow (-1, i) * std::cos ( glfwGetTime() ) / 4
+//            ),
+//            vertices[i].getColor()
+//        );
+//    }
+//
+//    this->_vertexBuffer.load( newVertices );
 }
 
 void engine::VulkanTriangleApplication::mainLoop() noexcept (false) {
@@ -457,6 +510,17 @@ void engine::VulkanTriangleApplication::createConcurrentBuffers() noexcept(false
 
     if ( this->_indexBuffer.allocateMemory() != VulkanResult::VK_SUCCESS )
         throw std::runtime_error("Index Buffer Allocation failure");
+
+    this->createUniformBuffers();
+}
+
+void engine::VulkanTriangleApplication::createUniformBuffers() noexcept(false) {
+    this->_uniformBuffers.resize( this->_vulkanLogicalDevice.getSwapChain()->getImages().size() );
+    for ( auto & uniformBuffer : this->_uniformBuffers )
+        uniformBuffer.setup(
+            this->_vulkanLogicalDevice,
+            1U
+        );
 }
 
 void engine::VulkanTriangleApplication::createExclusiveBuffers() noexcept(false) {
@@ -486,6 +550,8 @@ void engine::VulkanTriangleApplication::createExclusiveBuffers() noexcept(false)
 
     if ( this->_indexBuffer.allocateMemory() != VulkanResult::VK_SUCCESS )
         throw std::runtime_error("Index Buffer Allocation failure");
+
+    this->createUniformBuffers();
 }
 
 #pragma clang diagnostic push
@@ -500,7 +566,14 @@ void engine::VulkanTriangleApplication::cleanup() noexcept (false) {
 
     this->_frameBufferCollection.cleanup();
 
+    for ( auto & buffer : this->_uniformBuffers ) {
+        buffer.free();
+        buffer.cleanup();
+    }
+
     this->_graphicsPipeline.cleanup();
+
+    vkDestroyDescriptorSetLayout( this->_vulkanLogicalDevice.data(), _descriptorSetLayoutUBO, nullptr );
 
     this->_vertexShader.cleanup();
     this->_fragmentShader.cleanup();
@@ -603,7 +676,9 @@ void engine::VulkanTriangleApplication::createGraphicsPipeline() noexcept(false)
             & bindingDescription,
             1U,
             attributeDescriptions.data(),
-            static_cast < uint32 > ( attributeDescriptions.size() )
+            static_cast < uint32 > ( attributeDescriptions.size() ),
+            & this->_descriptorSetLayoutUBO,
+            1U
         ) != VulkanResult::VK_SUCCESS
     )
         throw std::runtime_error ("Graphics Pipeline initialization failed");

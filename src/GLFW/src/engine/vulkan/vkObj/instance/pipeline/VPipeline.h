@@ -49,6 +49,8 @@ namespace engine {
             const VulkanVertexInputBindingDescription *     = nullptr,
             uint32                                          = 0U,
             const VulkanVertexInputAttributeDescription *   = nullptr,
+            uint32                                          = 0U,
+            const VulkanDescriptorSetLayout *               = nullptr,
             uint32                                          = 0U
         ) noexcept (false);
         VulkanResult setup (

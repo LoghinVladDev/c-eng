@@ -12,7 +12,7 @@ inline static void populateBufferCreateInfo (
     uint32                      queueFamilyIndexCount,
     const uint32              * pQueueFamilyIndices
 ) noexcept {
-    if ( createInfo == nullptr || pQueueFamilyIndices == nullptr )
+    if ( createInfo == nullptr )
         return;
 
     * createInfo = VulkanBufferCreateInfo {

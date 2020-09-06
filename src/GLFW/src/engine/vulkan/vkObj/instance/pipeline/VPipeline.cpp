@@ -222,7 +222,9 @@ inline static void populateColorBlendStateCreateInfo (
 }
 
 inline static void populateLayoutCreateInfo (
-    VulkanPipelineLayoutCreateInfo * createInfo
+    VulkanPipelineLayoutCreateInfo  * createInfo,
+    const VulkanDescriptorSetLayout * pSetLayouts,
+    uint32                            setLayoutCount
 ) noexcept {
     if ( createInfo == nullptr )
         return;
@@ -231,8 +233,8 @@ inline static void populateLayoutCreateInfo (
         .sType                  = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO,
         .pNext                  = nullptr,
         .flags                  = VULKAN_NULL_FLAGS,
-        .setLayoutCount         = 0U,
-        .pSetLayouts            = nullptr,
+        .setLayoutCount         = setLayoutCount,
+        .pSetLayouts            = pSetLayouts,
         .pushConstantRangeCount = 0U,
         .pPushConstantRanges    = nullptr
     };
@@ -327,7 +329,9 @@ VulkanResult engine::VPipeline::setup(
     const VulkanVertexInputBindingDescription   * pBindingDescriptions,
     uint32                                        bindingDescriptionCount,
     const VulkanVertexInputAttributeDescription * pAttributeDescriptions,
-    uint32                                        attributeDescriptionCount
+    uint32                                        attributeDescriptionCount,
+    const VulkanDescriptorSetLayout             * pDescriptorSetLayouts,
+    uint32                                        descriptorSetLayoutCount
 ) noexcept(false) {
     this->_pLogicalDevice = & device;
 
@@ -335,7 +339,7 @@ VulkanResult engine::VPipeline::setup(
 
     VulkanPipelineLayoutCreateInfo              layoutCreateInfo                { };
 
-    populateLayoutCreateInfo ( & layoutCreateInfo );
+    populateLayoutCreateInfo ( & layoutCreateInfo, pDescriptorSetLayouts, descriptorSetLayoutCount );
 
     VulkanResult createLayoutResult = vkCreatePipelineLayout( this->_pLogicalDevice->data(), & layoutCreateInfo, nullptr, & this->_layoutHandle );
 

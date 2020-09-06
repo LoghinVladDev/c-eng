@@ -150,6 +150,11 @@ typedef VkCommandBufferUsageFlagBits                VulkanCommandBufferUsageFlag
 typedef VkBufferCopy                                VulkanBufferCopy;
 typedef VkIndexType                                 VulkanIndexType;
 
+typedef VkDescriptorSetLayoutBinding                VulkanDescriptorSetLayoutBinding;
+typedef VkDescriptorSetLayout                       VulkanDescriptorSetLayout;
+typedef VkDescriptorSetLayoutCreateInfo             VulkanDescriptorSetLayoutCreateInfo;
+typedef VkDescriptorType                            VulkanDescriptorType;
+
 constexpr VulkanFlags VULKAN_NULL_FLAGS = 0;
 
 #if defined(ENGINE_OS_WINDOWS_32_64)

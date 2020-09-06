@@ -50,6 +50,7 @@ namespace engine {
 
         constexpr static VulkanBufferUsageFlagBits VERTEX_BUFFER = VulkanBufferUsageFlagBits::VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
         constexpr static VulkanBufferUsageFlagBits INDEX_BUFFER = VulkanBufferUsageFlagBits::VK_BUFFER_USAGE_INDEX_BUFFER_BIT;
+        constexpr static VulkanBufferUsageFlagBits UNIFORM_BUFFER = VulkanBufferUsageFlagBits::VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT;
         constexpr static VulkanBufferUsageFlagBits TRANSFER_SOURCE_BUFFER = VulkanBufferUsageFlagBits::VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
         constexpr static VulkanBufferUsageFlagBits TRANSFER_DESTINATION_BUFFER = VulkanBufferUsageFlagBits::VK_BUFFER_USAGE_TRANSFER_DST_BIT;
 
@@ -66,6 +67,9 @@ namespace engine {
 
         constexpr static VulkanBufferUsageFlags VERTEX_BUFFER_CPU_LOCAL =
                 VBuffer::VERTEX_BUFFER;
+
+        constexpr static VulkanBufferUsageFlags UNIFORM_BUFFER_CPU_LOCAL =
+                VBuffer::UNIFORM_BUFFER;
 
         constexpr static VulkanSharingMode TRANSFER_CONCURRENCY = VulkanSharingMode::VK_SHARING_MODE_CONCURRENT;
         constexpr static VulkanSharingMode TRANSFER_EXCLUSIVITY = VulkanSharingMode::VK_SHARING_MODE_EXCLUSIVE;
@@ -104,7 +108,6 @@ namespace engine {
         virtual VulkanResult load (
             const void *pData,
             std::size_t
-            dataSize
         ) noexcept;
 
         virtual void free() noexcept;

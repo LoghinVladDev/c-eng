@@ -36,6 +36,7 @@
 #include <vkObj/instance/pipeline/shader/input/VVertexBuffer.h>
 #include <vkObj/instance/pipeline/shader/input/VStagingBuffer.h>
 #include <vkObj/instance/pipeline/shader/input/VIndexBuffer.h>
+#include <vkObj/instance/pipeline/shader/input/VUniformBuffer.h>
 #include <vector>
 
 
@@ -97,6 +98,10 @@ namespace engine {
         VIndexBuffer                _indexBuffer;
 //        VStagingBuffer              _indexStagingBuffer;
 
+        VulkanDescriptorSetLayout   _descriptorSetLayoutUBO {};
+
+        std::vector < VUniformBuffer < engine::SUniformBufferObject > > _uniformBuffers;
+
         double                      _fpsTimer = 0.0;
         double                      _fpsRefreshTimer = __SHOW_FPS_EVERY_S;
 
@@ -119,6 +124,7 @@ namespace engine {
         void createSynchronizationElements () noexcept (false);
 
         void createFrameBuffers () noexcept (false);
+        void createDescriptorSetLayout() noexcept (false);
         void createGraphicsPipeline() noexcept (false);
         void createSurface() noexcept (false);
         void setupDebugMessenger() noexcept (false);
@@ -129,6 +135,8 @@ namespace engine {
         void createBuffers () noexcept (false);
         void createExclusiveBuffers () noexcept (false);
         void createConcurrentBuffers () noexcept (false);
+        void createUniformBuffers () noexcept (false);
+        void updateUniformBuffer  ( uint32 ) noexcept (false);
 
         void freeStagingBuffers () noexcept (false);
 
