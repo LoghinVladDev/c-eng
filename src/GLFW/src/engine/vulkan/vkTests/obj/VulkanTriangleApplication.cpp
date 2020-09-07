@@ -300,6 +300,7 @@ void engine::VulkanTriangleApplication::recreateSwapChain() noexcept(false) {
     this->createGraphicsPipeline();
     this->createFrameBuffers();
     this->createUniformBuffers();
+//    this->createDescriptorPool();
     this->createCommandBuffers();
 //    this->createSynchronizationElements();
 }
@@ -307,6 +308,14 @@ void engine::VulkanTriangleApplication::recreateSwapChain() noexcept(false) {
 void engine::VulkanTriangleApplication::cleanupSwapChain() noexcept(false) {
     this->_frameBufferCollection.cleanup();
     this->_commandBufferCollection.free();
+
+    for ( auto uniformBuffer : this->_uniformBuffers ) {
+        uniformBuffer.free();
+        uniformBuffer.cleanup();
+    }
+
+    this->_descriptorPool.cleanup();
+
     this->_graphicsPipeline.cleanup();
     this->_vulkanLogicalDevice.cleanupSwapChain();
 }
@@ -409,10 +418,10 @@ void engine::VulkanTriangleApplication::updateUniformBuffer(uint32 uniformBuffer
     auto currentTime = std::chrono::high_resolution_clock::now();
 
     float time = std::chrono::duration < float , std::chrono::seconds::period > ( currentTime - startTime ).count();
-    static float FOV = 60.0f;
+    static float FOV = 45.0f;
 
     engine::SUniformBufferObject UBO {
-        .model = glm::rotate( glm::mat4 ( 1.0f ), time * glm::radians ( 90.0f ), glm::vec3 (0.0f, 0.0f, 1.0f) ),
+        .model = glm::rotate( glm::translate ( glm::mat4 ( 1.0f ), glm::vec3 ( std::sin ( time ) , 0.0f, 0.0f ) ), time * glm::radians ( 90.0f ), glm::vec3 (0.5f, 0.0f, 0.5f) ),
         .view  = glm::lookAt( glm::vec3 ( 2.0f, 2.0f, 2.0f ) , glm::vec3( 0.0f, 0.0f, 0.0f ), glm::vec3 (0.0f, 0.0f, 1.0f) ),
         .projection = glm::perspective (
                 glm::radians ( FOV ),
@@ -467,14 +476,13 @@ void engine::VulkanTriangleApplication::mainLoop() noexcept (false) {
 }
 
 void engine::VulkanTriangleApplication::createBuffers() noexcept(false) {
-    //// TODO : integrate staging buffers into regular buffers and create flush command for copying
     if ( this->_vulkanQueueFamilyCollection->getQueueFamilies().size() == 1 ) {
         this->createExclusiveBuffers();
     } else if ( this->_vulkanQueueFamilyCollection->getQueueFamilies().size() > 1 ) {
         this->createConcurrentBuffers();
     }
 
-    vkDeviceWaitIdle( this->_vulkanLogicalDevice.data() );
+//    vkDeviceWaitIdle( this->_vulkanLogicalDevice.data() );
 }
 
 void engine::VulkanTriangleApplication::createConcurrentBuffers() noexcept(false) {
@@ -514,13 +522,37 @@ void engine::VulkanTriangleApplication::createConcurrentBuffers() noexcept(false
     this->createUniformBuffers();
 }
 
+void engine::VulkanTriangleApplication::createDescriptorSets() noexcept(false) {
+    if ( this->_descriptorSetCollection.allocate(
+        this->_descriptorPool,
+        this->_descriptorSetLayoutUBO
+    ) != VulkanResult::VK_SUCCESS )
+        throw std::runtime_error ("Descriptor Set Allocate Error");
+
+    this->_descriptorSetCollection.configure(this->_uniformBuffers);
+}
+
+void engine::VulkanTriangleApplication::createDescriptorPool() noexcept(false) {
+    if ( this->_descriptorPool.setup( this->_vulkanLogicalDevice ) != VulkanResult::VK_SUCCESS )
+        throw std::runtime_error("Descriptor Pool Creation Failure");
+
+    this->createDescriptorSets();
+}
+
 void engine::VulkanTriangleApplication::createUniformBuffers() noexcept(false) {
     this->_uniformBuffers.resize( this->_vulkanLogicalDevice.getSwapChain()->getImages().size() );
-    for ( auto & uniformBuffer : this->_uniformBuffers )
-        uniformBuffer.setup(
+    for ( auto & uniformBuffer : this->_uniformBuffers ) {
+        if (  uniformBuffer.setup(
             this->_vulkanLogicalDevice,
             1U
-        );
+        ) != VulkanResult::VK_SUCCESS )
+            throw std::runtime_error ("Uniform Buffer Creation Failure");
+
+        if ( uniformBuffer.allocateMemory() != VulkanResult::VK_SUCCESS )
+            throw std::runtime_error ("Uniform Buffer Allocate Memory Failure");
+    }
+
+    this->createDescriptorPool();
 }
 
 void engine::VulkanTriangleApplication::createExclusiveBuffers() noexcept(false) {
@@ -571,6 +603,8 @@ void engine::VulkanTriangleApplication::cleanup() noexcept (false) {
         buffer.cleanup();
     }
 
+    this->_descriptorPool.cleanup();
+
     this->_graphicsPipeline.cleanup();
 
     vkDestroyDescriptorSetLayout( this->_vulkanLogicalDevice.data(), _descriptorSetLayoutUBO, nullptr );
@@ -611,12 +645,16 @@ void engine::VulkanTriangleApplication::createCommandBuffers() noexcept(false) {
 
     VulkanDeviceSize offsets [] = { 0 };
 
+    auto descriptorSetHandles = this->_descriptorSetCollection.getDescriptorSetHandles();
+
     if ( this->_commandBufferCollection.startRecord(
             this->_graphicsPipeline,
             & this->_vertexBuffer,
             offsets,
             1U,
-            & this->_indexBuffer
+            & this->_indexBuffer,
+            descriptorSetHandles.data(),
+            descriptorSetHandles.size()
         ) != VulkanResult::VK_SUCCESS )
         throw std::runtime_error ( "Command Buffers Record Error" );
 }

@@ -9,14 +9,14 @@
 #define VK_CHECK_EXT
 
 #ifdef VK_CHECK_EXT
-#define _VK_CHECK_EXT true
+#define _VK_CHECK_EXT true // NOLINT(bugprone-reserved-identifier)
 #endif
 
 #ifndef VK_CHECK_EXT
-#define _VK_CHECK_EXT false
+#define _VK_CHECK_EXT false // NOLINT(bugprone-reserved-identifier)
 #endif
 
-#define __SHOW_FPS_EVERY_S 0.100
+#define __SHOW_FPS_EVERY_S 0.100 // NOLINT(bugprone-reserved-identifier)
 
 #include <engineVulkanPreproc.h>
 #include <vkDefs/types/vulkanExplicitTypes.h>
@@ -37,6 +37,8 @@
 #include <vkObj/instance/pipeline/shader/input/VStagingBuffer.h>
 #include <vkObj/instance/pipeline/shader/input/VIndexBuffer.h>
 #include <vkObj/instance/pipeline/shader/input/VUniformBuffer.h>
+#include <vkObj/instance/pipeline/shader/input/VDescriptorPool.h>
+#include <vkObj/instance/pipeline/shader/input/VDescriptorSet.h>
 #include <vector>
 
 
@@ -93,13 +95,12 @@ namespace engine {
         VFenceCollection            _imagesInFlight;
 
         VVertexBuffer               _vertexBuffer;
-//        VStagingBuffer              _vertexStagingBuffer;
-
         VIndexBuffer                _indexBuffer;
-//        VStagingBuffer              _indexStagingBuffer;
 
         VulkanDescriptorSetLayout   _descriptorSetLayoutUBO {};
+        VDescriptorPool             _descriptorPool;
 
+        VDescriptorSetCollection < engine::SUniformBufferObject > _descriptorSetCollection;
         std::vector < VUniformBuffer < engine::SUniformBufferObject > > _uniformBuffers;
 
         double                      _fpsTimer = 0.0;
@@ -136,6 +137,8 @@ namespace engine {
         void createExclusiveBuffers () noexcept (false);
         void createConcurrentBuffers () noexcept (false);
         void createUniformBuffers () noexcept (false);
+        void createDescriptorPool() noexcept (false);
+        void createDescriptorSets() noexcept (false);
         void updateUniformBuffer  ( uint32 ) noexcept (false);
 
         void freeStagingBuffers () noexcept (false);

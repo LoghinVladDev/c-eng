@@ -60,6 +60,7 @@ VulkanResult engine::VUniformBuffer<T>::setup(
     const VLogicalDevice & device,
     uint32 size
 ) noexcept {
+    this->setElementCount( size );
     return VBuffer::setup(
         device,
         static_cast < std::size_t > ( size * sizeof ( T ) ),

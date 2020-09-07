@@ -38,6 +38,10 @@ namespace engine {
             return this->_handle;
         }
 
+        [[nodiscard]] const VulkanPipelineLayout & layout() const noexcept {
+            return this->_layoutHandle;
+        }
+
         [[nodiscard]] const VRenderPass * getRenderPassPtr () const noexcept {
             return & this->_renderPass;
         }

@@ -184,7 +184,9 @@ VulkanResult engine::VCommandBuffer::startRecord(
     const VBuffer * pVertexBuffers,
     const VulkanDeviceSize * pOffsets,
     uint32 vertexBufferCount,
-    const VIndexBuffer * pIndexBuffer
+    const VIndexBuffer * pIndexBuffer,
+    const VulkanDescriptorSet * pDescriptorSets,
+    uint32 descriptorSetCount
 ) noexcept {
     VulkanCommandBufferBeginInfo beginInfo { };
 
@@ -218,6 +220,9 @@ VulkanResult engine::VCommandBuffer::startRecord(
             vkCmdBindIndexBuffer( this->_handle, pIndexBuffer->data(), 0, pIndexBuffer->getIndexType() );
         }
     }
+
+    if ( pDescriptorSets != nullptr )
+        vkCmdBindDescriptorSets( this->_handle, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline.layout(), 0U, descriptorSetCount, pDescriptorSets, 0U, nullptr );
 
     if ( pIndexBuffer == nullptr )
         vkCmdDraw           ( this->_handle, vertexCount , 1, 0, 0 );
@@ -259,10 +264,25 @@ VulkanResult engine::VCommandBufferCollection::startRecord(
     const engine::VBuffer * pVertexBuffers,
     const VulkanDeviceSize * pOffsets,
     uint32 vertexBufferCount,
-    const VIndexBuffer * pIndexBuffer
+    const VIndexBuffer * pIndexBuffer,
+    const VulkanDescriptorSet * pDescriptorSets,
+    uint32 descriptorSetCount
 ) noexcept {
+    if ( pDescriptorSets != nullptr && descriptorSetCount != static_cast < uint32 > (this->_commandBuffers.size()) )
+        return VulkanResult::VK_ERROR_UNKNOWN; // todo : find something else for this
+
+    uint32 descriptorSetIndex = 0U;
+
     for ( auto & commandBuffer : this->_commandBuffers ) {
-        VulkanResult startRecordResult = commandBuffer.startRecord(pipeline, pVertexBuffers, pOffsets, vertexBufferCount, pIndexBuffer);
+        VulkanResult startRecordResult = commandBuffer.startRecord(
+            pipeline,
+            pVertexBuffers,
+            pOffsets,
+            vertexBufferCount,
+            pIndexBuffer,
+            pDescriptorSets + (descriptorSetIndex++),
+            1U
+        );
         if( startRecordResult != VulkanResult::VK_SUCCESS )
             return startRecordResult;
     }

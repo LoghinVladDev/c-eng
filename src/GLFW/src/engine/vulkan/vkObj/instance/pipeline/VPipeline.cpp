@@ -110,7 +110,8 @@ inline static void populateRasterizationStateCreateInfo (
         .rasterizerDiscardEnable    = VK_FALSE,
         .polygonMode                = VK_POLYGON_MODE_FILL,
         .cullMode                   = VK_CULL_MODE_BACK_BIT,
-        .frontFace                  = VK_FRONT_FACE_CLOCKWISE,
+//        .frontFace                  = VK_FRONT_FACE_CLOCKWISE,
+        .frontFace                  = VK_FRONT_FACE_COUNTER_CLOCKWISE, //openGL used -1 for y axis in 3d, here we flip to account for GLM library automatically flipping when glm::lookAt is called
         .depthBiasEnable            = VK_FALSE,
         .depthBiasConstantFactor    = 0.0f,
         .depthBiasClamp             = 0.0f,

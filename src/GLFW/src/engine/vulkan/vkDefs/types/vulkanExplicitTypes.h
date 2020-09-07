@@ -7,6 +7,8 @@
 
 #include <engineVulkanPreproc.h>
 
+typedef VkStructureType                             VulkanStructureType;
+
 typedef VkSurfaceKHR                                VulkanSurfaceKhronos;
 
 typedef VkFlags                                     VulkanFlags;
@@ -154,6 +156,18 @@ typedef VkDescriptorSetLayoutBinding                VulkanDescriptorSetLayoutBin
 typedef VkDescriptorSetLayout                       VulkanDescriptorSetLayout;
 typedef VkDescriptorSetLayoutCreateInfo             VulkanDescriptorSetLayoutCreateInfo;
 typedef VkDescriptorType                            VulkanDescriptorType;
+
+typedef VkDescriptorPool                            VulkanDescriptorPool;
+typedef VkDescriptorPoolCreateInfo                  VulkanDescriptorPoolCreateInfo;
+typedef VkDescriptorPoolCreateFlags                 VulkanDescriptorPoolCreateFlags;
+typedef VkDescriptorPoolCreateFlagBits              VulkanDescriptorPoolCreateFlagBits;
+typedef VkDescriptorPoolSize                        VulkanDescriptorPoolSize;
+
+typedef VkDescriptorSetAllocateInfo                 VulkanDescriptorSetAllocateInfo;
+typedef VkDescriptorSet                             VulkanDescriptorSet;
+typedef VkDescriptorBufferInfo                      VulkanDescriptorBufferInfo;
+typedef VkCopyDescriptorSet                         VulkanCopyDescriptorSet;
+typedef VkWriteDescriptorSet                        VulkanWriteDescriptorSet;
 
 constexpr VulkanFlags VULKAN_NULL_FLAGS = 0;
 

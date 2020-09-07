@@ -58,7 +58,9 @@ namespace engine {
             const VBuffer * = nullptr,
             const VulkanDeviceSize * = nullptr,
             uint32 = 0U,
-            const VIndexBuffer * = nullptr
+            const VIndexBuffer * = nullptr,
+            const VulkanDescriptorSet * = nullptr,
+            uint32 = 0U
         ) noexcept;
 
         VulkanResult startRecord (
@@ -93,7 +95,9 @@ namespace engine {
             const VBuffer * = nullptr,
             const VulkanDeviceSize * = nullptr,
             uint32 = 0U,
-            const VIndexBuffer * = nullptr
+            const VIndexBuffer * = nullptr,
+            const VulkanDescriptorSet * = nullptr,
+            uint32 = 0U
         ) noexcept;
 
         VulkanResult startRecord (
