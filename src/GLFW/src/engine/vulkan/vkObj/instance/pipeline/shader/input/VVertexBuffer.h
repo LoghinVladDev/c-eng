@@ -40,7 +40,7 @@ namespace engine {
 
 //        std::vector < engine::VVertex::SVertexPack >    _packedVertices;
 
-        VStagingBuffer < VVertex::SVertexPack>          _stagingBuffer;
+        VStagingBuffer < VVertex::SVertexPack >         _stagingBuffer;
         const VCommandPool                            * _pCommandPool               {nullptr};
 
         //// private functions

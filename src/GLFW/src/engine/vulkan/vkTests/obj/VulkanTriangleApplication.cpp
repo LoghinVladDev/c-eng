@@ -300,9 +300,7 @@ void engine::VulkanTriangleApplication::recreateSwapChain() noexcept(false) {
     this->createGraphicsPipeline();
     this->createFrameBuffers();
     this->createUniformBuffers();
-//    this->createDescriptorPool();
     this->createCommandBuffers();
-//    this->createSynchronizationElements();
 }
 
 void engine::VulkanTriangleApplication::cleanupSwapChain() noexcept(false) {
@@ -438,19 +436,7 @@ void engine::VulkanTriangleApplication::updateUniformBuffer(uint32 uniformBuffer
 }
 
 void engine::VulkanTriangleApplication::update() noexcept(false) {
-//    std::vector < engine::VVertex > newVertices (4);
-//
-//    for (int i = 0; i < 4; ++i) {
-//        newVertices[i] = VVertex (
-//            glm::vec2 (
-//                vertices[i].getPosition().x + std::pow (-1, i) * std::sin ( glfwGetTime() ) / 4,
-//                vertices[i].getPosition().y + -1 * std::pow (-1, i) * std::cos ( glfwGetTime() ) / 4
-//            ),
-//            vertices[i].getColor()
-//        );
-//    }
-//
-//    this->_vertexBuffer.load( newVertices );
+
 }
 
 void engine::VulkanTriangleApplication::mainLoop() noexcept (false) {
@@ -481,8 +467,6 @@ void engine::VulkanTriangleApplication::createBuffers() noexcept(false) {
     } else if ( this->_vulkanQueueFamilyCollection->getQueueFamilies().size() > 1 ) {
         this->createConcurrentBuffers();
     }
-
-//    vkDeviceWaitIdle( this->_vulkanLogicalDevice.data() );
 }
 
 void engine::VulkanTriangleApplication::createConcurrentBuffers() noexcept(false) {

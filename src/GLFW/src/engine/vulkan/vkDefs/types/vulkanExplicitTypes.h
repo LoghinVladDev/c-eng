@@ -184,6 +184,7 @@ typedef VkXcbSurfaceCreateInfoKHR                   VulkanSurfaceCreateInfoKhron
 extern VulkanResult (* vkCreateSurfaceKhronos ) (VulkanInstance, const VulkanSurfaceCreateInfoKhronos *, const VkAllocationCallbacks *, VulkanSurfaceKhronos *);
 
 #elif defined(ENGINE_OS_MAC_OS_X)
+
 #endif
 
 #endif //ENG1_VULKANEXPLICITTYPES_H
