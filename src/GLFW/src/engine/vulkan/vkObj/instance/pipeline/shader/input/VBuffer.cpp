@@ -3,6 +3,7 @@
 //
 #include "VBuffer.h"
 #include <src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/command/VCommandBuffer.h>
+#include <iostream>
 
 inline static void populateBufferCreateInfo (
     VulkanBufferCreateInfo    * createInfo,
@@ -43,7 +44,7 @@ inline static void populateVertexBufferMemoryAllocateInfo (
     };
 }
 
-inline static uint32 findMemoryType ( uint32 typeFilter, VulkanMemoryPropertyFlags properties, const engine::VLogicalDevice * pLogicalDevice ) noexcept (false) {
+inline uint32 findMemoryType ( uint32 typeFilter, VulkanMemoryPropertyFlags properties, const engine::VLogicalDevice * pLogicalDevice ) noexcept (false) {
     auto memoryProperties = pLogicalDevice->getBasePhysicalDevice()->getMemoryProperties();
 
     for ( uint32 memoryTypeIndex = 0; memoryTypeIndex < memoryProperties.memoryTypeCount; memoryTypeIndex++ ) {
@@ -99,6 +100,10 @@ void engine::VBuffer::cleanup() noexcept {
 VulkanResult engine::VBuffer::allocateMemory(
     VulkanMemoryPropertyFlags memoryPropertyFlags
 ) noexcept {
+    if ( this->_memoryAllocated )
+        return VulkanResult::VK_SUCCESS;
+    this->_memoryAllocated = true;
+
     this->_memoryPropertyFlags = memoryPropertyFlags;
 
     VulkanMemoryRequirements memoryRequirements;
@@ -166,11 +171,16 @@ VulkanResult engine::VBuffer::load(const void * pData, std::size_t dataSize) noe
 }
 
 void engine::VBuffer::free() noexcept {
+    if ( ! this->_memoryAllocated )
+        return;
+
     vkFreeMemory(
         this->_pLogicalDevice->data(),
         this->_memoryHandle,
         nullptr
     );
+
+    this->_memoryAllocated = false;
 }
 
 VulkanResult engine::VBuffer::copyFrom(

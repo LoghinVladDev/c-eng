@@ -169,6 +169,8 @@ typedef VkDescriptorBufferInfo                      VulkanDescriptorBufferInfo;
 typedef VkCopyDescriptorSet                         VulkanCopyDescriptorSet;
 typedef VkWriteDescriptorSet                        VulkanWriteDescriptorSet;
 
+typedef VkImageCreateInfo                           VulkanImageCreateInfo;
+
 constexpr VulkanFlags VULKAN_NULL_FLAGS = 0;
 
 #if defined(ENGINE_OS_WINDOWS_32_64)

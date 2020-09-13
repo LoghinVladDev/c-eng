@@ -65,8 +65,7 @@ VulkanResult engine::VVertexBuffer::setup(
     );
 }
 
-VulkanResult
-engine::VVertexBuffer::setup(
+VulkanResult engine::VVertexBuffer::setup(
     const engine::VLogicalDevice    & device,
     uint32                            vertexCount,
     const engine::VCommandPool      * pCommandPool,

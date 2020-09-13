@@ -26,6 +26,8 @@ namespace engine {
         VulkanSharingMode                   _sharingMode        {VulkanSharingMode::VK_SHARING_MODE_EXCLUSIVE};
         VulkanMemoryPropertyFlags           _memoryPropertyFlags{VULKAN_NULL_FLAGS};
 
+        bool                                _memoryAllocated    {false};
+
         //// private functions
 
     protected:
