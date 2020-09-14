@@ -64,6 +64,7 @@ typedef VkSurfaceCapabilitiesKHR                    VulkanSurfaceCapabilitiesKhr
 typedef VkSurfaceFormatKHR                          VulkanSurfaceFormatKhronos;
 typedef VkPresentModeKHR                            VulkanPresentModeKhronos;
 typedef VkExtent2D                                  VulkanExtent2D;
+typedef VkExtent3D                                  VulkanExtent3D;
 typedef VkSwapchainKHR                              VulkanSwapChainKhronos;
 typedef VkSwapchainCreateInfoKHR                    VulkanSwapChainCreateInfoKhronos;
 typedef VkImage                                     VulkanImage;
@@ -170,6 +171,12 @@ typedef VkCopyDescriptorSet                         VulkanCopyDescriptorSet;
 typedef VkWriteDescriptorSet                        VulkanWriteDescriptorSet;
 
 typedef VkImageCreateInfo                           VulkanImageCreateInfo;
+typedef VkImageType                                 VulkanImageType;
+typedef VkImageLayout                               VulkanImageLayout;
+typedef VkImageUsageFlagBits                        VulkanImageUsageFlagBits;
+typedef VkImageUsageFlags                           VulkanImageUsageFlags;
+typedef VkSampleCountFlagBits                       VulkanSampleCountFlagBits;
+typedef VkSampleCountFlags                          VulkanSampleCountFlags;
 
 constexpr VulkanFlags VULKAN_NULL_FLAGS = 0;
 

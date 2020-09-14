@@ -17,12 +17,12 @@
 #include <glm/vec4.hpp>
 #include <glm/mat4x4.hpp>
 
-#define STB_IMAGE_IMPLEMENTATION
-#include <stb-image.h>
-
 //#include <types.h>
 #include <dataTypes.h>
 
 #include <vkDefs/types/vulkanExplicitTypes.h>
+
+#include <iostream>
+#include <stb-image.h>
 
 #endif //ENG1_ENGINEVULKANPREPROC_H

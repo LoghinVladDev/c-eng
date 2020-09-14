@@ -24,6 +24,7 @@ namespace engine {
         //// private variables
         VulkanCommandBuffer     _handle         {nullptr};
         const VFrameBuffer    * _pFrameBuffer   {nullptr};
+        const VCommandPool    * _pCommandPool   {nullptr};
 
         //// private functions
 
@@ -34,11 +35,16 @@ namespace engine {
 
         //// public functions
         VCommandBuffer() noexcept = delete;
-        explicit VCommandBuffer ( const VulkanCommandBuffer & handle, const VFrameBuffer * pFrameBuffer = nullptr ) noexcept :
+        explicit VCommandBuffer ( const VulkanCommandBuffer & handle, const VCommandPool * pCommandPool = nullptr, const VFrameBuffer * pFrameBuffer = nullptr ) noexcept :
             _handle ( handle ),
-            _pFrameBuffer ( pFrameBuffer ){
+            _pFrameBuffer ( pFrameBuffer ),
+            _pCommandPool ( pCommandPool ){
 
         }
+
+        static VCommandBuffer getOneTimeUseBuffer (const VCommandPool &) noexcept;
+        VulkanResult beginOneTimeUse() noexcept;
+        VulkanResult submitOneTimeUse(const VQueue *) noexcept;
 
         VulkanResult submit (
             const VulkanPipelineStageFlags *,

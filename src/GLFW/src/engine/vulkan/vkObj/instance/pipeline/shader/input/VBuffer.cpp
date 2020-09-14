@@ -28,7 +28,7 @@ inline static void populateBufferCreateInfo (
     };
 }
 
-inline static void populateVertexBufferMemoryAllocateInfo (
+inline void populateMemoryAllocateInfo (
         VulkanMemoryAllocateInfo *  allocateInfo,
         VulkanDeviceSize            allocationSize,
         uint32                      memoryTypeIndex
@@ -112,14 +112,14 @@ VulkanResult engine::VBuffer::allocateMemory(
     VulkanMemoryAllocateInfo allocateInfo { };
 
     try {
-        populateVertexBufferMemoryAllocateInfo(
-            & allocateInfo,
-            memoryRequirements.size,
-            findMemoryType(
-                memoryRequirements.memoryTypeBits,
-                memoryPropertyFlags,
-                this->_pLogicalDevice
-            )
+        populateMemoryAllocateInfo(
+                &allocateInfo,
+                memoryRequirements.size,
+                findMemoryType(
+                        memoryRequirements.memoryTypeBits,
+                        memoryPropertyFlags,
+                        this->_pLogicalDevice
+                )
         );
     } catch ( std::runtime_error const & exception ) {
         return VulkanResult::VK_ERROR_INITIALIZATION_FAILED;

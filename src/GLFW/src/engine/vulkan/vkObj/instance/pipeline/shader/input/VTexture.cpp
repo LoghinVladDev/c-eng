@@ -5,6 +5,7 @@
 #include <bits/ios_base.h>
 #include "VTexture.h"
 #include "VTextureDefs.h"
+#include <vkUtils/VStdUtilsDefs.h>
 
 inline static void populateImageCreateInfo (
         VulkanImageCreateInfo * pCreateInfo,
@@ -13,7 +14,27 @@ inline static void populateImageCreateInfo (
         VulkanFormat format,
         VulkanSharingMode sharingMode
 ) noexcept {
+    if ( pCreateInfo == nullptr )
+        return;
 
+    * pCreateInfo = VulkanImageCreateInfo {
+        .sType          = VulkanStructureType::VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO,
+        .pNext          = nullptr,
+        .flags          = VULKAN_NULL_FLAGS,
+        .imageType      = VulkanImageType::VK_IMAGE_TYPE_2D,
+        .format         = format,
+        .extent         = VulkanExtent3D {
+            .width          = width,
+            .height         = height,
+            .depth          = 1U
+        },
+        .mipLevels      = 1U,
+        .arrayLayers    = 1U,
+        .samples        = VulkanSampleCountFlagBits::VK_SAMPLE_COUNT_1_BIT,
+        .usage          = engine::VTexture::TEXTURE_GPU_LOCAL,
+        .sharingMode    = sharingMode,
+        .initialLayout  = VulkanImageLayout::VK_IMAGE_LAYOUT_UNDEFINED
+    };
 }
 
 void engine::VTexture::load(const char * pImagePath, int32 desiredChannels) noexcept(false) {
@@ -40,6 +61,14 @@ void engine::VTexture::load(const char * pImagePath, int32 desiredChannels) noex
             : VulkanFormat::VK_FORMAT_R8G8B8_SRGB;
 }
 
+void engine::VTexture::unload() noexcept {
+    stbi_image_free( this->_stagingBuffer.getBufferData()._pImageData );
+    this->_stagingBuffer.getBufferData() = VTexture::STexturePack {
+        ._pImageData = nullptr,
+        ._imageSize  = 0ULL
+    };
+}
+
 VulkanResult engine::VTexture::setup(
         const char          * pImagePath,
         const VCommandPool  & commandPool,
@@ -55,44 +84,98 @@ VulkanResult engine::VTexture::setup(
         return VulkanResult::VK_ERROR_INITIALIZATION_FAILED;
     }
 
-    VulkanResult setupStagingBufferResult = this->_stagingBuffer.setup(
-            * this->_pCommandPool->getLogicalDevicePtr(),
+    ENG_RETURN_IF_NOT_SUCCESS_2 (
+        this->_stagingBuffer.setup(
+                * this->_pCommandPool->getLogicalDevicePtr(),
             VBuffer::getOptimalSharingMode( forceMemoryExclusivity, queueFamilyIndexCount, * this->_pCommandPool->getLogicalDevicePtr() ),
             pQueueFamilyIndices,
             queueFamilyIndexCount
+        ),
+        0,
+        this->unload()
+    )
+
+    VulkanImageCreateInfo createInfo {};
+    populateImageCreateInfo(
+            & createInfo,
+            this->_textureWidth,
+            this->_textureHeight,
+            this->_textureFormat,
+            VBuffer::getOptimalSharingMode( forceMemoryExclusivity, queueFamilyIndexCount, * this->_pCommandPool->getLogicalDevicePtr() )
     );
 
-    if ( setupStagingBufferResult != VulkanResult::VK_SUCCESS ) {
-        stbi_image_free( this->_stagingBuffer.getBufferData()._pImageData );
-        this->_stagingBuffer.getBufferData() = VTexture::STexturePack  {
-            ._pImageData = nullptr,
-            ._imageSize  = 0ULL
-        };
-        return setupStagingBufferResult;
-    }
+    ENG_RETURN_IF_NOT_SUCCESS_2(
+        vkCreateImage (
+            this->_pCommandPool->getLogicalDevicePtr()->data(),
+            & createInfo,
+            nullptr,
+            & this->_handle
+        ),
+        1,
+        this->unload()
+    )
 
-    VulkanResult allocateResult = this->allocateMemory();
-    if ( allocateResult != VulkanResult::VK_SUCCESS )
-        return allocateResult;
-
+    return this->allocateMemory();
 }
 
 VulkanResult engine::VTexture::allocateMemory() noexcept {
-    VulkanResult allocateResult = this->_stagingBuffer.allocateMemory();
-    if ( allocateResult != VulkanResult::VK_SUCCESS ) {
-        stbi_image_free( this->_stagingBuffer.getBufferData()._pImageData );
-        this->_stagingBuffer.getBufferData() = VTexture::STexturePack  {
-                ._pImageData = nullptr,
-                ._imageSize  = 0ULL
-        };
-        return allocateResult;
-    }
+    ENG_RETURN_IF_NOT_SUCCESS_2(
+        this->_stagingBuffer.allocateMemory(),
+        0,
+        this->unload()
+    );
 
-    VulkanResult loadStagingBufferResult = this->_stagingBuffer.load( this->_stagingBuffer.getBufferData()._pImageData, this->_stagingBuffer.getBufferData()._imageSize );
-    if( loadStagingBufferResult != VulkanResult::VK_SUCCESS )
-        return loadStagingBufferResult;
+    ENG_RETURN_IF_NOT_SUCCESS_2(
+        this->_stagingBuffer.load(
+                this->_stagingBuffer.getBufferData()._pImageData,
+                this->_stagingBuffer.getBufferData()._imageSize
+        ),
+        1,
+        this->unload()
+    );
 
-    extern uint32 findMemoryType( uint32, VulkanMemoryPropertyFlags, const engine::VLogicalDevice * );
+    extern uint32 findMemoryType( uint32, VulkanMemoryPropertyFlags, const engine::VLogicalDevice * ) noexcept;
+    extern void populateMemoryAllocateInfo ( VulkanMemoryAllocateInfo *, VulkanDeviceSize, uint32 ) noexcept;
+
+    VulkanMemoryRequirements memoryRequirements;
+    vkGetImageMemoryRequirements(
+            this->_pCommandPool->getLogicalDevicePtr()->data(),
+            this->_handle,
+            & memoryRequirements
+    );
+
+    VulkanMemoryAllocateInfo allocateInfo {};
+    populateMemoryAllocateInfo(
+        & allocateInfo,
+        memoryRequirements.size,
+        findMemoryType(
+            memoryRequirements.memoryTypeBits,
+            static_cast < VulkanMemoryPropertyFlags > ( VulkanMemoryPropertyFlagBits::VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT ),
+            this->_pCommandPool->getLogicalDevicePtr()
+        )
+    );
+
+    ENG_RETURN_IF_NOT_SUCCESS(
+        vkAllocateMemory(
+            this->_pCommandPool->getLogicalDevicePtr()->data(),
+            & allocateInfo,
+            nullptr,
+            & this->_memoryHandle
+        ),
+        2
+    );
+
+    ENG_RETURN_IF_NOT_SUCCESS(
+        vkBindImageMemory(
+            this->_pCommandPool->getLogicalDevicePtr()->data(),
+            this->_handle,
+            this->_memoryHandle,
+            0
+        ),
+        3
+    );
+
+    return result3;
 }
 
 void engine::VTexture::free() noexcept {

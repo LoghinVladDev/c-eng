@@ -3,6 +3,7 @@
 //
 
 #include "VCommandBuffer.h"
+#include <vkUtils/VStdUtilsDefs.h>
 
 inline static void populateCommandBufferAllocateInfo (
     VulkanCommandBufferAllocateInfo * allocateInfo,
@@ -118,7 +119,7 @@ inline static void populateBufferCopy (
     };
 }
 
-inline static void populateSubmitInfoBufferCopy (
+inline static void populateSubmitInfo (
     VulkanSubmitInfo          * submitInfo,
     const VulkanCommandBuffer * pCommandBuffers,
     uint32                      commandBufferCount
@@ -139,6 +140,93 @@ inline static void populateSubmitInfoBufferCopy (
     };
 }
 
+engine::VCommandBuffer engine::VCommandBuffer::getOneTimeUseBuffer(const VCommandPool & commandPool) noexcept {
+    VulkanCommandBufferAllocateInfo allocateInfo { };
+    populateCommandBufferAllocateInfo(
+        & allocateInfo,
+        commandPool,
+        1U,
+        VulkanCommandBufferLevel::VK_COMMAND_BUFFER_LEVEL_PRIMARY
+    );
+
+    VulkanCommandBuffer oneTimeUseBufferHandle = VK_NULL_HANDLE;
+    if( vkAllocateCommandBuffers(
+            commandPool.getLogicalDevicePtr()->data(),
+            & allocateInfo,
+            & oneTimeUseBufferHandle
+    ) != VulkanResult::VK_SUCCESS ) {
+        return VCommandBuffer( VK_NULL_HANDLE, nullptr );
+    }
+
+    return VCommandBuffer ( oneTimeUseBufferHandle, & commandPool );
+}
+
+VulkanResult engine::VCommandBuffer::beginOneTimeUse() noexcept {
+
+    VulkanCommandBufferBeginInfo beginInfo {};
+    populateCommandBufferBeginInfo( & beginInfo );
+
+    ENG_RETURN_IF_NOT_SUCCESS_2(
+        vkBeginCommandBuffer( this->_handle, & beginInfo ) ,
+        0,
+        vkFreeCommandBuffers(
+                this->_pCommandPool->getLogicalDevicePtr()->data(),
+                this->_pCommandPool->data(),
+                1U,
+                & this->_handle
+        )
+     )
+
+    return VulkanResult::VK_SUCCESS;
+}
+
+VulkanResult engine::VCommandBuffer::submitOneTimeUse(const VQueue* pQueue) noexcept {
+    ENG_RETURN_IF_NOT_SUCCESS_2(
+        vkEndCommandBuffer( this->_handle ) ,
+        0,
+        vkFreeCommandBuffers(
+                this->_pCommandPool->getLogicalDevicePtr()->data(),
+                this->_pCommandPool->data(),
+                1U,
+                & this->_handle
+        )
+    );
+
+    VulkanSubmitInfo submitInfo {};
+    populateSubmitInfo( & submitInfo, & this->_handle, 1U );
+
+    ENG_RETURN_IF_NOT_SUCCESS_2(
+        vkQueueSubmit( pQueue->data(), 1U, & submitInfo, VK_NULL_HANDLE ),
+        1,
+        vkFreeCommandBuffers(
+            this->_pCommandPool->getLogicalDevicePtr()->data(),
+            this->_pCommandPool->data(),
+            1U,
+            & this->_handle
+        )
+    );
+
+    ENG_RETURN_IF_NOT_SUCCESS_2(
+        vkQueueWaitIdle( pQueue->data() ),
+        2,
+        vkFreeCommandBuffers(
+                this->_pCommandPool->getLogicalDevicePtr()->data(),
+                this->_pCommandPool->data(),
+                1U,
+                & this->_handle
+        )
+    );
+
+    vkFreeCommandBuffers(
+        this->_pCommandPool->getLogicalDevicePtr()->data(),
+        this->_pCommandPool->data(),
+        1U,
+        & this->_handle
+    );
+
+    return result2;
+}
+
 VulkanResult engine::VCommandBufferCollection::allocate(const engine::VCommandPool & commandPool, const engine::VFrameBufferCollection & frameBufferCollection) noexcept {
     this->_pCommandPool = & commandPool;
     VulkanCommandBufferAllocateInfo allocateInfo { };
@@ -154,7 +242,7 @@ VulkanResult engine::VCommandBufferCollection::allocate(const engine::VCommandPo
     uint32 frameBufferIndex = 0U;
 
     for ( const auto & handle : handles ) {
-        this->_commandBuffers.emplace_back( handle, & frameBufferCollection.getFrameBuffers()[frameBufferIndex++] );
+        this->_commandBuffers.emplace_back( handle, & commandPool, & frameBufferCollection.getFrameBuffers()[frameBufferIndex++] );
     }
 
     return allocateResult;
@@ -173,7 +261,7 @@ VulkanResult engine::VCommandBufferCollection::allocate(const engine::VCommandPo
         return allocateResult;
 
     for ( const auto & handle : handles ) {
-        this->_commandBuffers.emplace_back( handle );
+        this->_commandBuffers.emplace_back( handle, & commandPool );
     }
 
     return allocateResult;
@@ -306,10 +394,10 @@ VulkanResult engine::VCommandBufferCollection::startRecord(
 VulkanResult engine::VCommandBuffer::submit(const VQueue * pQueue) const noexcept {
     VulkanSubmitInfo submitInfo {};
 
-    populateSubmitInfoBufferCopy(
-        & submitInfo,
-        & this->_handle,
-        1U
+    populateSubmitInfo(
+            &submitInfo,
+            &this->_handle,
+            1U
     );
 
     return vkQueueSubmit( pQueue->data(), 1U, & submitInfo, VK_NULL_HANDLE );

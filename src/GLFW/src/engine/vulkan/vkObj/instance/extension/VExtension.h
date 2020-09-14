@@ -100,7 +100,6 @@ namespace engine {
         [[nodiscard]] std::vector < const char * > getExtensionNames() const noexcept;
 
         [[nodiscard]] bool contains ( const VExtension& obj ) const noexcept {
-
 //            return std::ranges::any_of (); windows is always behind
             for( const auto & extension : this->_extensions ) // NOLINT(readability-use-anyofallof)
                 if ( std::strcmp( extension.getName(), obj.getName() ) == 0 )

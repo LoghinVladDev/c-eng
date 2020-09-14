@@ -63,7 +63,6 @@ namespace engine {
                 (VulkanBufferUsageFlags) VBuffer::INDEX_BUFFER |
                 (VulkanBufferUsageFlags) VBuffer::TRANSFER_DESTINATION_BUFFER;
 
-
         constexpr static VulkanBufferUsageFlags STAGING_BUFFER_CPU_LOCAL =
                 VBuffer::TRANSFER_SOURCE_BUFFER;
 

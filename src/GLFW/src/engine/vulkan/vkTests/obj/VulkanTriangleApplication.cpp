@@ -307,7 +307,7 @@ void engine::VulkanTriangleApplication::cleanupSwapChain() noexcept(false) {
     this->_frameBufferCollection.cleanup();
     this->_commandBufferCollection.free();
 
-    for ( auto uniformBuffer : this->_uniformBuffers ) {
+    for ( auto & uniformBuffer : this->_uniformBuffers ) {
         uniformBuffer.free();
         uniformBuffer.cleanup();
     }
@@ -436,7 +436,6 @@ void engine::VulkanTriangleApplication::updateUniformBuffer(uint32 uniformBuffer
 }
 
 void engine::VulkanTriangleApplication::update() noexcept(false) {
-
 }
 
 void engine::VulkanTriangleApplication::mainLoop() noexcept (false) {

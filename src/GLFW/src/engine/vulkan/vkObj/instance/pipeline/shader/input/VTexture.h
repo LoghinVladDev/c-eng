@@ -10,7 +10,6 @@
 #include <vkObj/instance/device/VLogicalDevice.h>
 #include <vkObj/instance/pipeline/command/VCommandPool.h>
 #include <vkObj/instance/pipeline/shader/input/VBuffer.h>
-
 namespace engine {
     class VTexture {
 
@@ -74,9 +73,22 @@ namespace engine {
 
         //// private functions
         void load ( const char*, int32 = STBI_rgb_alpha ) noexcept (false);
+        void unload() noexcept;
 
     public:
         //// public variables
+        constexpr static VulkanFormat IMAGE_FORMAT_SRGBA_32BIT = VulkanFormat::VK_FORMAT_R8G8B8A8_SRGB;
+        constexpr static VulkanFormat IMAGE_FORMAT_SRGB_24BIT = VulkanFormat::VK_FORMAT_R8G8B8_SRGB;
+
+        constexpr static VulkanImageUsageFlagBits TRANSFER_DESTINATION = VulkanImageUsageFlagBits::VK_IMAGE_USAGE_TRANSFER_DST_BIT;
+        constexpr static VulkanImageUsageFlagBits SAMPLED = VulkanImageUsageFlagBits::VK_IMAGE_USAGE_SAMPLED_BIT;
+
+        constexpr static VulkanImageUsageFlags TEXTURE_GPU_LOCAL =
+                static_cast < VulkanImageUsageFlags > ( VTexture::TRANSFER_DESTINATION ) |
+                static_cast < VulkanImageUsageFlags > ( VTexture::SAMPLED );
+
+        //// public functions
+
         VTexture() noexcept = default;
 
         VulkanResult setup (
@@ -91,9 +103,6 @@ namespace engine {
 
         void free() noexcept;
         void cleanup () noexcept;
-
-        //// public functions
-
     };
 
 }
