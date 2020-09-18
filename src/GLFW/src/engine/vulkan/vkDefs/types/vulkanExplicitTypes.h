@@ -6,7 +6,6 @@
 #define ENG1_VULKANEXPLICITTYPES_H
 
 #include <engineVulkanPreproc.h>
-
 typedef VkStructureType                             VulkanStructureType;
 
 typedef VkSurfaceKHR                                VulkanSurfaceKhronos;
@@ -65,6 +64,8 @@ typedef VkSurfaceFormatKHR                          VulkanSurfaceFormatKhronos;
 typedef VkPresentModeKHR                            VulkanPresentModeKhronos;
 typedef VkExtent2D                                  VulkanExtent2D;
 typedef VkExtent3D                                  VulkanExtent3D;
+typedef VkOffset2D                                  VulkanOffset2D;
+typedef VkOffset3D                                  VulkanOffset3D;
 typedef VkSwapchainKHR                              VulkanSwapChainKhronos;
 typedef VkSwapchainCreateInfoKHR                    VulkanSwapChainCreateInfoKhronos;
 typedef VkImage                                     VulkanImage;
@@ -149,6 +150,7 @@ typedef VkDeviceSize                                VulkanDeviceSize;
 typedef VkBlendOp                                   VulkanBlendOperation;
 typedef VkBlendFactor                               VulkanBlendFactor;
 typedef VkAccessFlagBits                            VulkanAccessFlagBits;
+typedef VkAccessFlags                               VulkanAccessFlags;
 typedef VkCommandBufferUsageFlagBits                VulkanCommandBufferUsageFlagBits;
 typedef VkBufferCopy                                VulkanBufferCopy;
 typedef VkIndexType                                 VulkanIndexType;
@@ -177,6 +179,13 @@ typedef VkImageUsageFlagBits                        VulkanImageUsageFlagBits;
 typedef VkImageUsageFlags                           VulkanImageUsageFlags;
 typedef VkSampleCountFlagBits                       VulkanSampleCountFlagBits;
 typedef VkSampleCountFlags                          VulkanSampleCountFlags;
+
+typedef VkImageMemoryBarrier                        VulkanImageMemoryBarrier;
+typedef VkImageSubresourceRange                     VulkanImageSubresourceRange;
+typedef VkImageAspectFlags                          VulkanImageAspectFlags;
+typedef VkImageAspectFlagBits                       VulkanImageAspectFlagBits;
+typedef VkBufferImageCopy                           VulkanBufferImageCopy;
+typedef VkImageSubresourceLayers                    VulkanImageSubresourceLayers;
 
 constexpr VulkanFlags VULKAN_NULL_FLAGS = 0;
 

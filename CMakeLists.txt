@@ -60,6 +60,18 @@ find_package(Vulkan)
 
 if(Vulkan_FOUND)
     include_directories(src/GLFW/src/engine/vulkan)
+    include_directories(src/GLFW/src/engine/vulkan/vkObj/instance)
+    include_directories(src/GLFW/src/engine/vulkan/vkObj/instance/device)
+    include_directories(src/GLFW/src/engine/vulkan/vkObj/instance/device/queue)
+    include_directories(src/GLFW/src/engine/vulkan/vkObj/instance/extension)
+    include_directories(src/GLFW/src/engine/vulkan/vkObj/instance/messenger)
+    include_directories(src/GLFW/src/engine/vulkan/vkObj/instance/validationLayer)
+    include_directories(src/GLFW/src/engine/vulkan/vkObj/instance/pipeline)
+    include_directories(src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/command)
+    include_directories(src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/shader)
+    include_directories(src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/shader/input)
+    include_directories(src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/synchronization)
+
 
     include_directories( ${Vulkan_INCLUDE_DIRS} )
 

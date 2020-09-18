@@ -65,6 +65,8 @@ namespace engine {
         uint32                          _textureChannels    {0U};
         VulkanFormat                    _textureFormat      {VulkanFormat::VK_FORMAT_R8G8B8A8_SRGB};
 
+        VulkanImageLayout               _currentLayout      {VulkanImageLayout::VK_IMAGE_LAYOUT_UNDEFINED};
+        VulkanSharingMode               _sharingMode        {VulkanSharingMode::VK_SHARING_MODE_EXCLUSIVE};
         VTextureStagingBuffer           _stagingBuffer;
         VulkanImage                     _handle             {VK_NULL_HANDLE};
         VulkanDeviceMemory              _memoryHandle       {VK_NULL_HANDLE};
@@ -74,6 +76,9 @@ namespace engine {
         //// private functions
         void load ( const char*, int32 = STBI_rgb_alpha ) noexcept (false);
         void unload() noexcept;
+        VulkanResult copy() noexcept;
+        VulkanResult transitionImageLayout ( VulkanImageLayout ) noexcept;
+        VulkanResult flush() noexcept;
 
     public:
         //// public variables
