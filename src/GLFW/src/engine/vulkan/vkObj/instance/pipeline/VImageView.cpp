@@ -6,8 +6,8 @@
 
 static inline void populateImageViewCreateInfo (
     VulkanImageViewCreateInfo * createInfo,
-    const engine::VSwapChain * swapChain,
-    uint32 imageIndex
+    VulkanImage                 image,
+    VulkanFormat                imageFormat
 ) noexcept {
     if( createInfo == nullptr )
         return;
@@ -15,9 +15,9 @@ static inline void populateImageViewCreateInfo (
     * createInfo = {};
 
     createInfo->sType                           = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
-    createInfo->image                           = swapChain->getImages()[imageIndex];
+    createInfo->image                           = image;
     createInfo->viewType                        = VK_IMAGE_VIEW_TYPE_2D;
-    createInfo->format                          = swapChain->getImagesInfo().format;
+    createInfo->format                          = imageFormat;
 
     createInfo->components.r                    = VK_COMPONENT_SWIZZLE_IDENTITY;
     createInfo->components.g                    = VK_COMPONENT_SWIZZLE_IDENTITY;
@@ -31,14 +31,14 @@ static inline void populateImageViewCreateInfo (
     createInfo->subresourceRange.layerCount     = 1U;
 }
 
-VulkanResult engine::VImageView::setup(const engine::VSwapChain * swapChain, uint32 index) noexcept {
-    this->_pSwapChain = swapChain;
+VulkanResult engine::VImageView::setup(VulkanImage image, VulkanFormat format, const VLogicalDevice & device) noexcept {
+    this->_pLogicalDevice = & device;
 
     VulkanImageViewCreateInfo createInfo {};
 
-    populateImageViewCreateInfo( & createInfo, swapChain, index );
+    populateImageViewCreateInfo( & createInfo, image, format );
 
-    return vkCreateImageView ( swapChain->getDevice()->data(), & createInfo ,nullptr, & this->_handle );
+    return vkCreateImageView ( this->_pLogicalDevice->data(), & createInfo ,nullptr, & this->_handle );
 }
 
 VulkanResult engine::VImageViewCollection::setup(const engine::VSwapChain * swapChain) noexcept {
@@ -48,7 +48,7 @@ VulkanResult engine::VImageViewCollection::setup(const engine::VSwapChain * swap
     uint32 index = 0;
 
     for( auto & imageView : this->_imageViews ) {
-        VulkanResult returnValue = imageView.setup(swapChain, index++);
+        VulkanResult returnValue = imageView.setup(swapChain->getImages()[index++], swapChain->getImagesInfo().format, * this->_pSwapChain->getDevice());
         if( returnValue != VulkanResult::VK_SUCCESS ) {
             for ( uint32 clearIndex = 0; clearIndex < index - 1; clearIndex++ )
                 this->_imageViews[clearIndex].cleanup();
@@ -71,15 +71,20 @@ engine::VImageViewCollection::VImageViewCollection(const engine::VImageViewColle
     this->_pSwapChain = pSwapChain;
 
     for ( const auto & imageView : pObj->_imageViews )
-        this->_imageViews.emplace_back ( & imageView, pSwapChain );
+        this->_imageViews.emplace_back ( & imageView, pSwapChain->getDevice() );
 }
 
 void engine::VImageView::cleanup() noexcept {
-    vkDestroyImageView ( this->_pSwapChain->getDevice()->data(), this->_handle, nullptr );
+    if ( this->_handle != VK_NULL_HANDLE )
+        vkDestroyImageView ( this->_pLogicalDevice->data(), this->_handle, nullptr );
 }
 
-engine::VImageView::VImageView(const engine::VImageView * pObj, const engine::VSwapChain * pSwapChain) noexcept {
-    this->_handle       = pObj->_handle;
-    this->_index        = pObj->_index;
-    this->_pSwapChain   = pSwapChain;
+engine::VImageView::VImageView(const engine::VImageView * pObj, const engine::VLogicalDevice * pLogicalDevice) noexcept {
+    this->_handle           = pObj->_handle;
+    this->_index            = pObj->_index;
+    this->_pLogicalDevice   = pLogicalDevice;
+}
+
+[[nodiscard]] const engine::VSwapChain * engine::VImageView::getSwapChain() const noexcept {
+    return this->_pLogicalDevice->getSwapChain();
 }

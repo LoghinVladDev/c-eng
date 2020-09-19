@@ -39,6 +39,9 @@
 #include <vkObj/instance/pipeline/shader/input/VUniformBuffer.h>
 #include <vkObj/instance/pipeline/shader/input/VDescriptorPool.h>
 #include <vkObj/instance/pipeline/shader/input/VDescriptorSet.h>
+#include <VTexture.h>
+#include <VTextureSampler.h>
+
 #include <vector>
 
 
@@ -100,6 +103,9 @@ namespace engine {
         VulkanDescriptorSetLayout   _descriptorSetLayoutUBO {};
         VDescriptorPool             _descriptorPool;
 
+        VTexture                    _texture;
+        VTextureSampler             _textureSampler;
+
         VDescriptorSetCollection < engine::SUniformBufferObject > _descriptorSetCollection;
         std::vector < VUniformBuffer < engine::SUniformBufferObject > > _uniformBuffers;
 
@@ -128,6 +134,7 @@ namespace engine {
         void createDescriptorSetLayout() noexcept (false);
         void createGraphicsPipeline() noexcept (false);
         void createSurface() noexcept (false);
+        void createTextures() noexcept (false);
         void setupDebugMessenger() noexcept (false);
         void autoPickPhysicalDevice() noexcept (false);
 

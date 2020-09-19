@@ -68,6 +68,10 @@ namespace engine {
             return this->_physicalDeviceFeatures;
         }
 
+        [[nodiscard]] constexpr bool anisotropySamplerSupported () const noexcept {
+            return this->_physicalDeviceFeatures.samplerAnisotropy;
+        }
+
         [[nodiscard]] uint32 getPhysicalDeviceRenderRating() const noexcept;
 
         [[nodiscard]] const VulkanPhysicalDevice & data() const noexcept {

@@ -187,6 +187,16 @@ typedef VkImageAspectFlagBits                       VulkanImageAspectFlagBits;
 typedef VkBufferImageCopy                           VulkanBufferImageCopy;
 typedef VkImageSubresourceLayers                    VulkanImageSubresourceLayers;
 
+typedef VkImageTiling                               VulkanImageTiling;
+
+typedef VkSamplerCreateInfo                         VulkanSamplerCreateInfo;
+typedef VkSampler                                   VulkanSampler;
+typedef VkFilter                                    VulkanFilter;
+typedef VkSamplerMipmapMode                         VulkanSamplerMipmapMode;
+typedef VkSamplerAddressMode                        VulkanSamplerAddressMode;
+typedef VkCompareOp                                 VulkanCompareOp;
+typedef VkBorderColor                               VulkanBorderColor;
+
 constexpr VulkanFlags VULKAN_NULL_FLAGS = 0;
 
 #if defined(ENGINE_OS_WINDOWS_32_64)

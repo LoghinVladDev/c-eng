@@ -71,6 +71,8 @@ namespace engine {
         VulkanImage                     _handle             {VK_NULL_HANDLE};
         VulkanDeviceMemory              _memoryHandle       {VK_NULL_HANDLE};
 
+        VImageView                      _imageView;
+
         const VCommandPool            * _pCommandPool       {nullptr};
 
         //// private functions
@@ -79,6 +81,7 @@ namespace engine {
         VulkanResult copy() noexcept;
         VulkanResult transitionImageLayout ( VulkanImageLayout ) noexcept;
         VulkanResult flush() noexcept;
+        VulkanResult allocateMemory () noexcept;
 
     public:
         //// public variables
@@ -103,8 +106,6 @@ namespace engine {
                 uint32 = 0U,
                 bool = false
         ) noexcept;
-
-        VulkanResult allocateMemory () noexcept;
 
         void free() noexcept;
         void cleanup () noexcept;

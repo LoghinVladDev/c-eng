@@ -7,19 +7,22 @@
 
 #include <engineVulkanPreproc.h>
 #include <vector>
-#include <vkObj/instance/device/VSwapChain.h>
+//#include <vkObj/instance/device/VSwapChain.h>
+#include <VLogicalDevice.h>
 
 namespace engine {
 
     class VSwapChain;
+    class VLogicalDevice;
 
     class VImageView {
     private:
         //// private variables
-        VulkanImageView     _handle     {};
-        uint32              _index      {0U};
+        VulkanImageView         _handle     {};
+        uint32                  _index      {0U};
 
-        const VSwapChain  * _pSwapChain { nullptr };
+//        const VSwapChain  * _pSwapChain { nullptr };
+        const VLogicalDevice  * _pLogicalDevice {nullptr};
 
         //// private functions
 
@@ -28,12 +31,14 @@ namespace engine {
 
         //// public functions
         VImageView () noexcept = default;
-        explicit VImageView ( const engine::VImageView *, const engine::VSwapChain * ) noexcept;
+        explicit VImageView ( const engine::VImageView *, const engine::VLogicalDevice * ) noexcept;
 
-        VulkanResult setup( const engine::VSwapChain *, uint32 ) noexcept;
+        VulkanResult setup( VulkanImage, VulkanFormat, const VLogicalDevice& ) noexcept;
 
-        [[nodiscard]] const engine::VSwapChain * getSwapChain () const noexcept {
-            return this->_pSwapChain;
+        [[nodiscard]] const engine::VSwapChain * getSwapChain () const noexcept;
+
+        [[nodiscard]] const engine::VLogicalDevice * getLogicalDevicePtr() const noexcept {
+            return this->_pLogicalDevice;
         }
 
         [[nodiscard]] const VulkanImageView & data () const noexcept {

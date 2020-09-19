@@ -4,6 +4,7 @@
 
 #include "VulkanTriangleApplication.h"
 #include <src/GLFW/src/engine/vulkan/vkUtils/VStdUtils.h>
+#include <src/GLFW/src/engine/vulkan/vkUtils/VStdUtilsDefs.h>
 #include <map>
 #include <obj/util/settings/SettingsSharedContainer.h>
 #include <obj/util/settings/SettingOptionGraphics.h>
@@ -129,6 +130,7 @@ void engine::VulkanTriangleApplication::run() noexcept (false) {
     this->createCommandPool();
     this->createBuffers();
     this->createCommandBuffers();
+    this->createTextures();
     this->freeStagingBuffers();
     this->createSynchronizationElements();
     this->mainLoop();
@@ -505,6 +507,29 @@ void engine::VulkanTriangleApplication::createConcurrentBuffers() noexcept(false
     this->createUniformBuffers();
 }
 
+void engine::VulkanTriangleApplication::createTextures() noexcept(false) {
+    ENG_THROW_IF_NOT_SUCCESS(
+            this->_textureSampler.setup(
+                this->_vulkanLogicalDevice,
+                true,
+                16.0f
+            ),
+            std::runtime_error("sampler create error")
+    )
+
+    auto queueFamilyIndices = this->_vulkanQueueFamilyCollection->getQueueFamilyIndices();
+
+    ENG_THROW_IF_NOT_SUCCESS(
+            this->_texture.setup(
+                    std::string(__TEXTURES_PATH__).append("statue.jpg").c_str(),
+                    this->_transferCommandPool,
+                    queueFamilyIndices.data(),
+                    queueFamilyIndices.size()
+            ),
+            std::runtime_error("Texture Creation Failure")
+    )
+}
+
 void engine::VulkanTriangleApplication::createDescriptorSets() noexcept(false) {
     if ( this->_descriptorSetCollection.allocate(
         this->_descriptorPool,
@@ -585,6 +610,9 @@ void engine::VulkanTriangleApplication::cleanup() noexcept (false) {
         buffer.free();
         buffer.cleanup();
     }
+
+    this->_texture.cleanup();
+    this->_textureSampler.cleanup();
 
     this->_descriptorPool.cleanup();
 

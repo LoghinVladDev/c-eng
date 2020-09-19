@@ -58,18 +58,27 @@
 #define __VK_PHYSICAL_DEVICE_TYPE_MAX_ENUM                      "Vulkan Physical Device Max Enum Value"
 #define __VK_PHYSICAL_DEVICE_UNKNOWN                            "Vulkan Physical Device Unknown"
 
-#define ENG_RETURN_IF_NOT_SUCCESS(_fCall, _callIndex) \
-    VulkanResult result ## _callIndex = _fCall; \
-    if ( result ## _callIndex != VulkanResult::VK_SUCCESS ) \
-        return result ## _callIndex
+#define ENG_RETURN_IF_NOT_SUCCESS(_fCall) \
+{ \
+    VulkanResult result = _fCall; \
+    if ( result != VulkanResult::VK_SUCCESS ) \
+        return result;                  \
+}
 
-#define ENG_RETURN_IF_NOT_SUCCESS_2(_fCall, _callIndex, _beforeReturn) \
-    VulkanResult result ## _callIndex = _fCall; \
-    if ( result ## _callIndex != VulkanResult::VK_SUCCESS ) { \
+#define ENG_RETURN_IF_NOT_SUCCESS_2(_fCall, _beforeReturn) \
+{ \
+    VulkanResult result = _fCall; \
+    if ( result != VulkanResult::VK_SUCCESS ) { \
         _beforeReturn;                                   \
-        return result ## _callIndex;                         \
-    }
+        return result;                                   \
+    }\
+}
 
+#define ENG_THROW_IF_NOT_SUCCESS(_fCall, _throw) \
+{                                                   \
+    if ( _fCall != VulkanResult::VK_SUCCESS )      \
+        throw _throw;                              \
+}
 
 #endif //ENG1_VSTDUTILSDEFS_H
 

@@ -167,8 +167,7 @@ VulkanResult engine::VCommandBuffer::beginOneTimeUse() noexcept {
     populateCommandBufferBeginInfo( & beginInfo );
 
     ENG_RETURN_IF_NOT_SUCCESS_2(
-        vkBeginCommandBuffer( this->_handle, & beginInfo ) ,
-        0,
+        vkBeginCommandBuffer( this->_handle, & beginInfo ),
         vkFreeCommandBuffers(
                 this->_pCommandPool->getLogicalDevicePtr()->data(),
                 this->_pCommandPool->data(),
@@ -183,39 +182,36 @@ VulkanResult engine::VCommandBuffer::beginOneTimeUse() noexcept {
 VulkanResult engine::VCommandBuffer::submitOneTimeUse(const VQueue* pQueue) noexcept {
     ENG_RETURN_IF_NOT_SUCCESS_2(
         vkEndCommandBuffer( this->_handle ) ,
-        0,
         vkFreeCommandBuffers(
                 this->_pCommandPool->getLogicalDevicePtr()->data(),
                 this->_pCommandPool->data(),
                 1U,
                 & this->_handle
         )
-    );
+    )
 
     VulkanSubmitInfo submitInfo {};
     populateSubmitInfo( & submitInfo, & this->_handle, 1U );
 
     ENG_RETURN_IF_NOT_SUCCESS_2(
         vkQueueSubmit( pQueue->data(), 1U, & submitInfo, VK_NULL_HANDLE ),
-        1,
         vkFreeCommandBuffers(
             this->_pCommandPool->getLogicalDevicePtr()->data(),
             this->_pCommandPool->data(),
             1U,
             & this->_handle
         )
-    );
+    )
 
     ENG_RETURN_IF_NOT_SUCCESS_2(
         vkQueueWaitIdle( pQueue->data() ),
-        2,
         vkFreeCommandBuffers(
                 this->_pCommandPool->getLogicalDevicePtr()->data(),
                 this->_pCommandPool->data(),
                 1U,
                 & this->_handle
         )
-    );
+    )
 
     vkFreeCommandBuffers(
         this->_pCommandPool->getLogicalDevicePtr()->data(),
@@ -224,7 +220,7 @@ VulkanResult engine::VCommandBuffer::submitOneTimeUse(const VQueue* pQueue) noex
         & this->_handle
     );
 
-    return result2;
+    return VulkanResult::VK_SUCCESS;
 }
 
 VulkanResult engine::VCommandBufferCollection::allocate(const engine::VCommandPool & commandPool, const engine::VFrameBufferCollection & frameBufferCollection) noexcept {

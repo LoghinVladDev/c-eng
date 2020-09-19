@@ -34,11 +34,12 @@ inline static void populateImageCreateInfo (
         .mipLevels              = 1U,
         .arrayLayers            = 1U,
         .samples                = VulkanSampleCountFlagBits::VK_SAMPLE_COUNT_1_BIT,
+        .tiling                 = VulkanImageTiling::VK_IMAGE_TILING_OPTIMAL,
         .usage                  = engine::VTexture::TEXTURE_GPU_LOCAL,
         .sharingMode            = sharingMode,
         .queueFamilyIndexCount  = queueFamilyIndexCount,
         .pQueueFamilyIndices    = pQueueFamilyIndices,
-        .initialLayout          = initialLayout
+        .initialLayout          = initialLayout,
     };
 }
 
@@ -158,7 +159,6 @@ VulkanResult engine::VTexture::setup(
             pQueueFamilyIndices,
             queueFamilyIndexCount
         ),
-        0,
         this->unload()
     )
 
@@ -181,19 +181,32 @@ VulkanResult engine::VTexture::setup(
             nullptr,
             & this->_handle
         ),
-        1,
         this->unload()
     )
 
-    ENG_RETURN_IF_NOT_SUCCESS(this->allocateMemory(), 2);
+    ENG_RETURN_IF_NOT_SUCCESS(this->allocateMemory())
+    ENG_RETURN_IF_NOT_SUCCESS(this->flush())
 
-    return this->flush();
+    ENG_RETURN_IF_NOT_SUCCESS(
+        this->_imageView.setup(
+            this->_handle,
+            VTexture::IMAGE_FORMAT_SRGBA_32BIT,
+            * this->_pCommandPool->getLogicalDevicePtr()
+        )
+    )
+
+    return VulkanResult::VK_SUCCESS;
 }
 
 VulkanResult engine::VTexture::flush() noexcept {
-    ENG_RETURN_IF_NOT_SUCCESS(this->transitionImageLayout(VulkanImageLayout::VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL), 0);
-    ENG_RETURN_IF_NOT_SUCCESS(this->copy(), 1);
-    return this->transitionImageLayout(VulkanImageLayout::VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+    ENG_RETURN_IF_NOT_SUCCESS(this->transitionImageLayout(VulkanImageLayout::VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL))
+    ENG_RETURN_IF_NOT_SUCCESS(this->copy())
+    ENG_RETURN_IF_NOT_SUCCESS(this->transitionImageLayout(VulkanImageLayout::VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL))
+
+    this->_stagingBuffer.free();
+    this->_stagingBuffer.cleanup();
+
+    return VulkanResult::VK_SUCCESS;
 }
 
 #include <vkObj/instance/pipeline/command/VCommandBuffer.h>
@@ -211,7 +224,33 @@ VulkanResult engine::VTexture::transitionImageLayout(VulkanImageLayout newLayout
         return VulkanResult::VK_ERROR_DEVICE_LOST;
 
     auto oneTimeUseBuffer = VCommandBuffer::getOneTimeUseBuffer( * this->_pCommandPool );
-    ENG_RETURN_IF_NOT_SUCCESS(oneTimeUseBuffer.beginOneTimeUse(),0);
+    ENG_RETURN_IF_NOT_SUCCESS(oneTimeUseBuffer.beginOneTimeUse())
+
+    VulkanPipelineStageFlags    sourceStage;
+    VulkanPipelineStageFlags    destinationStage;
+    VulkanAccessFlags           sourceAccessMask;
+    VulkanAccessFlags           destinationAccessMask;
+    if (
+            this->_currentLayout    == VulkanImageLayout::VK_IMAGE_LAYOUT_UNDEFINED &&
+            newLayout               == VulkanImageLayout::VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL
+    ) {
+        sourceStage             = VulkanPipelineStageFlagBits::VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
+        destinationStage        = VulkanPipelineStageFlagBits::VK_PIPELINE_STAGE_TRANSFER_BIT;
+
+        sourceAccessMask        = 0U;
+        destinationAccessMask   = VulkanAccessFlagBits::VK_ACCESS_TRANSFER_WRITE_BIT;
+    } else if (
+            this->_currentLayout    == VulkanImageLayout::VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL &&
+            newLayout               == VulkanImageLayout::VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL
+    ) {
+        sourceStage             = VulkanPipelineStageFlagBits::VK_PIPELINE_STAGE_TRANSFER_BIT;
+        destinationStage        = VulkanPipelineStageFlagBits::VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
+
+        sourceAccessMask        = VulkanAccessFlagBits::VK_ACCESS_TRANSFER_WRITE_BIT;
+        destinationAccessMask   = VulkanAccessFlagBits::VK_ACCESS_SHADER_READ_BIT;
+    } else {
+        return VulkanResult::VK_ERROR_INITIALIZATION_FAILED;
+    }
 
     VulkanImageMemoryBarrier barrier {};
 
@@ -220,14 +259,18 @@ VulkanResult engine::VTexture::transitionImageLayout(VulkanImageLayout newLayout
         this->_currentLayout,
         newLayout,
         this->_handle,
-        0U, // TODO
-        0U  // TODO
+//        0U, // TODO
+//        0U  // TODO,
+        sourceAccessMask,
+        destinationAccessMask
     );
 
     vkCmdPipelineBarrier(
         oneTimeUseBuffer.data(),
-        0U, // TODO
-        0U, // TODO
+//        0U, // TODO
+//        0U, // TODO
+        sourceStage,
+        destinationStage,
         0U,
         0U,
         nullptr,
@@ -256,7 +299,7 @@ VulkanResult engine::VTexture::copy () noexcept {
         return VulkanResult::VK_ERROR_DEVICE_LOST;
 
     auto oneTimeUseBuffer = VCommandBuffer::getOneTimeUseBuffer( * this->_pCommandPool );
-    ENG_RETURN_IF_NOT_SUCCESS( oneTimeUseBuffer.beginOneTimeUse(), 0 );
+    ENG_RETURN_IF_NOT_SUCCESS( oneTimeUseBuffer.beginOneTimeUse())
 
     VulkanBufferImageCopy region {};
     populateBufferImageCopy(
@@ -274,31 +317,25 @@ VulkanResult engine::VTexture::copy () noexcept {
         & region
     );
 
-
-
     return oneTimeUseBuffer.submitOneTimeUse( pQueue );
 }
 
-
+extern uint32 findMemoryType( uint32, VulkanMemoryPropertyFlags, const engine::VLogicalDevice * ) noexcept;
+extern void populateMemoryAllocateInfo ( VulkanMemoryAllocateInfo *, VulkanDeviceSize, uint32 ) noexcept;
 
 VulkanResult engine::VTexture::allocateMemory() noexcept {
     ENG_RETURN_IF_NOT_SUCCESS_2(
         this->_stagingBuffer.allocateMemory(),
-        0,
         this->unload()
-    );
+    )
 
     ENG_RETURN_IF_NOT_SUCCESS_2(
         this->_stagingBuffer.load(
                 this->_stagingBuffer.getBufferData()._pImageData,
                 this->_stagingBuffer.getBufferData()._imageSize
         ),
-        1,
         this->unload()
-    );
-
-    extern uint32 findMemoryType( uint32, VulkanMemoryPropertyFlags, const engine::VLogicalDevice * ) noexcept;
-    extern void populateMemoryAllocateInfo ( VulkanMemoryAllocateInfo *, VulkanDeviceSize, uint32 ) noexcept;
+    )
 
     VulkanMemoryRequirements memoryRequirements;
     vkGetImageMemoryRequirements(
@@ -324,9 +361,8 @@ VulkanResult engine::VTexture::allocateMemory() noexcept {
             & allocateInfo,
             nullptr,
             & this->_memoryHandle
-        ),
-        2
-    );
+        )
+    )
 
     ENG_RETURN_IF_NOT_SUCCESS(
         vkBindImageMemory(
@@ -334,21 +370,21 @@ VulkanResult engine::VTexture::allocateMemory() noexcept {
             this->_handle,
             this->_memoryHandle,
             0
-        ),
-        3
-    );
+        )
+    )
 
-    return result3;
+    return VulkanResult::VK_SUCCESS;
 }
 
 void engine::VTexture::free() noexcept {
     this->unload();
-    this->_stagingBuffer.free();
+    vkFreeMemory( this->_pCommandPool->getLogicalDevicePtr()->data(), this->_memoryHandle, nullptr );
 }
 
 void engine::VTexture::cleanup() noexcept {
     this->free();
-    this->_stagingBuffer.cleanup();
+    this->_imageView.cleanup();
+    vkDestroyImage( this->_pCommandPool->getLogicalDevicePtr()->data(), this->_handle, nullptr );
 }
 
 void engine::VTexture::VTextureStagingBuffer::free() noexcept {
