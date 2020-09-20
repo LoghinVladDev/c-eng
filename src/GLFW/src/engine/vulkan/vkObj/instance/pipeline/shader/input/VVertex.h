@@ -19,13 +19,14 @@ namespace engine {
         typedef struct {
             glm::vec2 position;
             glm::vec3 color;
+            glm::vec2 textureCoordinates;
         } SVertexPack;
 
     private:
         //// private variables
         SVertexPack _vertexPack;
 
-        constexpr static uint32 PACK_PROPERTIES_COUNT = 2U;
+        constexpr static uint32 PACK_PROPERTIES_COUNT = 3U;
 
         //// private functions
 
@@ -63,8 +64,8 @@ namespace engine {
 
         //// public functions
         VVertex() noexcept = default;
-        VVertex( const glm::vec2 & position, const glm::vec3 & color ) noexcept :
-            _vertexPack ( { position, color } ) {
+        VVertex( const glm::vec2 & position, const glm::vec3 & color, const glm::vec2 & textureCoordinates ) noexcept :
+            _vertexPack ( { position, color, textureCoordinates } ) {
 
         }
 
@@ -81,6 +82,10 @@ namespace engine {
             return this->_vertexPack.position;
         }
 
+        [[nodiscard]] const glm::vec2 & getTextureCoordinates () const noexcept {
+            return this->_vertexPack.textureCoordinates;
+        }
+
         [[nodiscard]] const glm::vec3 & getColor () const noexcept {
             return this->_vertexPack.color;
         }
@@ -91,6 +96,10 @@ namespace engine {
 
         void setColor ( const glm::vec3 & color ) noexcept {
             this->_vertexPack.color = color;
+        }
+
+        void setTextureCoordinates ( const glm::vec2 & textureCoordinates ) noexcept {
+            this->_vertexPack.textureCoordinates = textureCoordinates;
         }
 
         static VulkanVertexInputBindingDescription                                                           getBindingDescription ()    noexcept;

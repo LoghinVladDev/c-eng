@@ -72,5 +72,13 @@ std::array < VulkanVertexInputAttributeDescription, engine::VVertex::PACK_PROPER
         offsetof ( engine::VVertex::SVertexPack, color )
     );
 
+    populateVertexInputAttributeDescription(
+        & attributeDescriptions[ 2 ],
+        0U,
+        2U,
+        VVertex::FLOAT_VEC2_FORMAT,
+        offsetof ( engine::VVertex::SVertexPack, textureCoordinates )
+    );
+
     return attributeDescriptions;
 }

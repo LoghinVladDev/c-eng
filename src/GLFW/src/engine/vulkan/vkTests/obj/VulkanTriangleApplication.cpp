@@ -141,9 +141,9 @@ void engine::VulkanTriangleApplication::run() noexcept (false) {
     this->createGraphicsPipeline();
     this->createFrameBuffers();
     this->createCommandPool();
+    this->createTextures();
     this->createBuffers();
     this->createCommandBuffers();
-    this->createTextures();
     this->freeStagingBuffers();
     this->createSynchronizationElements();
     this->mainLoop();
@@ -412,10 +412,10 @@ void engine::VulkanTriangleApplication::drawImage () noexcept (false) {
 }
 
 const std::vector < engine::VVertex > vertices = {
-        {{-0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}},
-        {{0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}},
-        {{0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}},
-        {{-0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}}
+        {{-0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}, {0.0f, 0.0f}},
+        {{ 0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}, {1.0f, 0.0f}},
+        {{ 0.5f,  0.5f}, {0.0f, 0.0f, 1.0f}, {1.0f, 1.0f}},
+        {{-0.5f,  0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f}}
 };
 
 const std::vector < uint16 > indices = {

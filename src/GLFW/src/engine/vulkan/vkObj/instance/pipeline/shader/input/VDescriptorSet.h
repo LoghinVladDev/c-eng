@@ -195,7 +195,7 @@ static inline void populateWriteDescriptorSet (
         .dstArrayElement    = destinationArrayElementIndex,
         .descriptorCount    = 1U,
         .descriptorType     = descriptorType,
-        .pImageInfo         = nullptr,
+        .pImageInfo         = pDescriptorImageInfo,
         .pBufferInfo        = pDescriptorBufferInfo,
         .pTexelBufferView   = nullptr
     };
