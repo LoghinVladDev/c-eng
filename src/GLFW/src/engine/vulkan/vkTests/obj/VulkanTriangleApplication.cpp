@@ -100,19 +100,32 @@ void engine::VulkanTriangleApplication::updateResolutionSettings() noexcept {
 
 void engine::VulkanTriangleApplication::createDescriptorSetLayout() noexcept(false) {
     auto uniformBufferObjectBinding = VulkanDescriptorSetLayoutBinding {
-        .binding            = 0,
+        .binding            = 0U,
         .descriptorType     = VulkanDescriptorType::VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
         .descriptorCount    = 1U,
         .stageFlags         = VulkanShaderStageFlagBits::VK_SHADER_STAGE_VERTEX_BIT,
         .pImmutableSamplers = nullptr
     };
 
+    auto samplerObjectBinding = VulkanDescriptorSetLayoutBinding {
+            .binding            = 1U,
+            .descriptorType     = VulkanDescriptorType::VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
+            .descriptorCount    = 1U,
+            .stageFlags         = VulkanShaderStageFlagBits::VK_SHADER_STAGE_FRAGMENT_BIT,
+            .pImmutableSamplers = nullptr
+    };
+
+    std::array < VulkanDescriptorSetLayoutBinding, 2 > bindings = {
+            uniformBufferObjectBinding,
+            samplerObjectBinding
+    };
+
     VulkanDescriptorSetLayoutCreateInfo createInfo {
-        .sType              = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO,
+        .sType              = VulkanStructureType::VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO,
         .pNext              = nullptr,
         .flags              = 0U,
-        .bindingCount       = 1U,
-        .pBindings          = & uniformBufferObjectBinding
+        .bindingCount       = static_cast < uint32 > ( bindings.size() ),
+        .pBindings          = bindings.data()
     };
 
     if ( vkCreateDescriptorSetLayout( this->_vulkanLogicalDevice.data(), & createInfo, nullptr, & this->_descriptorSetLayoutUBO ) != VulkanResult::VK_SUCCESS )
@@ -538,6 +551,7 @@ void engine::VulkanTriangleApplication::createDescriptorSets() noexcept(false) {
         throw std::runtime_error ("Descriptor Set Allocate Error");
 
     this->_descriptorSetCollection.configure(this->_uniformBuffers);
+    this->_descriptorSetCollection.configure(this->_texture, this->_textureSampler);
 }
 
 void engine::VulkanTriangleApplication::createDescriptorPool() noexcept(false) {

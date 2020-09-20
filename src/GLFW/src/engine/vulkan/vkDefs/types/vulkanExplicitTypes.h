@@ -196,6 +196,7 @@ typedef VkSamplerMipmapMode                         VulkanSamplerMipmapMode;
 typedef VkSamplerAddressMode                        VulkanSamplerAddressMode;
 typedef VkCompareOp                                 VulkanCompareOp;
 typedef VkBorderColor                               VulkanBorderColor;
+typedef VkDescriptorImageInfo                       VulkanDescriptorImageInfo;
 
 constexpr VulkanFlags VULKAN_NULL_FLAGS = 0;
 

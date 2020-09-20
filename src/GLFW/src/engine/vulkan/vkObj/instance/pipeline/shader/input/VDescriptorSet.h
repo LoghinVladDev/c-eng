@@ -9,6 +9,8 @@
 #include <vkDefs/types/vulkanExplicitTypes.h>
 #include <vkObj/instance/pipeline/shader/input/VDescriptorPool.h>
 #include <vkObj/instance/pipeline/shader/input/VUniformBuffer.h>
+#include <VTextureSampler.h>
+#include <VTexture.h>
 #include <vector>
 
 namespace engine {
@@ -42,6 +44,7 @@ namespace engine {
         }
 
         void configure ( const VUniformBuffer <T> & ) noexcept;
+        void configure ( const VTexture& , const VTextureSampler & ) noexcept;
     };
 
     template <class T>
@@ -70,8 +73,11 @@ namespace engine {
         }
 
         void configure ( const std::vector < VUniformBuffer <T> > & ) noexcept;
+        void configure ( const VTexture&, const VTextureSampler & ) noexcept;
     };
 
+    typedef VDescriptorSet < uint8 > VSamplerDescriptorSet;
+    typedef VDescriptorSetCollection < uint8 > VSamplerDescriptorSetCollection;
 }
 
 template <class T>
@@ -153,12 +159,30 @@ static inline void populateDescriptorBufferInfo (
     };
 }
 
+static inline void populateDescriptorImageInfo (
+    VulkanDescriptorImageInfo * pImageInfo,
+    VulkanImageLayout           layout,
+    VulkanImageView             imageView,
+    VulkanSampler               sampler
+) noexcept {
+    if ( pImageInfo == nullptr )
+        return;
+
+    * pImageInfo = VulkanDescriptorImageInfo {
+            .sampler     = sampler,
+            .imageView   = imageView,
+            .imageLayout = layout
+    };
+}
+
 static inline void populateWriteDescriptorSet (
     VulkanWriteDescriptorSet          * pWriteDescriptorSet,
     VulkanDescriptorSet                 destinationDescriptorSetHandle,
+    VulkanDescriptorType                descriptorType
     uint32                              destinationBinding,
     uint32                              destinationArrayElementIndex,
-    const VulkanDescriptorBufferInfo  * pDescriptorBufferInfo
+    const VulkanDescriptorBufferInfo  * pDescriptorBufferInfo,
+    const VulkanDescriptorImageInfo   * pDescriptorImageInfo
 ) noexcept {
     if ( pWriteDescriptorSet == nullptr )
         return;
@@ -170,7 +194,7 @@ static inline void populateWriteDescriptorSet (
         .dstBinding         = destinationBinding,
         .dstArrayElement    = destinationArrayElementIndex,
         .descriptorCount    = 1U,
-        .descriptorType     = VulkanDescriptorType::VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
+        .descriptorType     = descriptorType,
         .pImageInfo         = nullptr,
         .pBufferInfo        = pDescriptorBufferInfo,
         .pTexelBufferView   = nullptr
@@ -181,6 +205,36 @@ template <class T>
 void engine::VDescriptorSetCollection<T>::configure(const std::vector<VUniformBuffer<T>> & uniformBuffers) noexcept {
     for ( uint32 it = 0; it < this->_descriptorSets.size(); it++ )
         this->_descriptorSets[it].configure ( uniformBuffers[ it ] );
+}
+
+template <class T>
+void engine::VDescriptorSetCollection<T>::configure(const VTexture & texture, const VTextureSampler & textureSampler) noexcept {
+    for ( auto & descriptorSet : this->_descriptorSets )
+        descriptorSet.configure ( texture, textureSampler );
+}
+
+template <class T>
+void engine::VDescriptorSet<T>::configure(const VTexture & texture, const VTextureSampler & textureSampler) noexcept {
+    VulkanDescriptorImageInfo imageInfo {};
+    populateDescriptorImageInfo(
+        & imageInfo,
+        texture.getLayout(),
+        texture.getImageView().data(),
+        textureSampler.data()
+    );
+
+    VulkanWriteDescriptorSet writeDescriptorSet{ };
+    populateWriteDescriptorSet(
+        & writeDescriptorSet,
+        this->_handle,
+        VulkanDescriptorType::VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
+        1U,
+        0U,
+        nullptr,
+        & imageInfo
+    );
+
+    vkUpdateDescriptorSets( this->_pLogicalDevice->data(), 1U, & writeDescriptorSet, 0U, nullptr );
 }
 
 template <class T>
@@ -197,9 +251,11 @@ void engine::VDescriptorSet<T>::configure(const VUniformBuffer<T> & uniformBuffe
     populateWriteDescriptorSet(
         & writeDescriptorSet,
         this->_handle,
+        VulkanDescriptorType::VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
         0U,
         0U,
-        & bufferInfo
+        & bufferInfo,
+        nullptr
     );
 
     vkUpdateDescriptorSets( this->_pLogicalDevice->data() , 1U, & writeDescriptorSet, 0U, nullptr );

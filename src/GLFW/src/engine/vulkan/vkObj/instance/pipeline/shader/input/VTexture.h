@@ -99,6 +99,18 @@ namespace engine {
 
         VTexture() noexcept = default;
 
+        [[nodiscard]] const VulkanImage & data () const noexcept {
+            return this->_handle;
+        }
+
+        [[nodiscard]] const VImageView & getImageView () const noexcept {
+            return this->_imageView;
+        }
+
+        [[nodiscard]] VulkanImageLayout getLayout () const noexcept {
+            return this->_currentLayout;
+        }
+
         VulkanResult setup (
                 const char*,
                 const VCommandPool &,
