@@ -28,15 +28,26 @@ VulkanResult engine::VDescriptorPool::setup(const VLogicalDevice & device) noexc
     auto swapChainImageCount = static_cast < uint32 > ( this->_pLogicalDevice->getSwapChain()->getImages().size() );
     VulkanDescriptorPoolCreateInfo createInfo {};
 
-    VulkanDescriptorPoolSize poolSize {
-        .type               = VulkanDescriptorType::VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
-        .descriptorCount    = swapChainImageCount
+    std::array < VulkanDescriptorPoolSize, 2 > poolSizes {
+        VulkanDescriptorPoolSize {
+            .type               = VulkanDescriptorType::VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
+            .descriptorCount    = swapChainImageCount
+        },
+        VulkanDescriptorPoolSize {
+            .type               = VulkanDescriptorType::VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
+            .descriptorCount    = swapChainImageCount
+        }
     };
+//
+//    VulkanDescriptorPoolSize poolSize {
+//        .type               = VulkanDescriptorType::VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
+//        .descriptorCount    = swapChainImageCount
+//    };
 
     populateDescriptorPoolCreateInfo(
         & createInfo,
-        & poolSize,
-        1U,
+        poolSizes.data(),
+        static_cast < uint32 > ( poolSizes.size() ),
         swapChainImageCount
     );
 

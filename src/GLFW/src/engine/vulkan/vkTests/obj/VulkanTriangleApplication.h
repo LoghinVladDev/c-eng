@@ -101,6 +101,8 @@ namespace engine {
         VIndexBuffer                _indexBuffer;
 
         VulkanDescriptorSetLayout   _descriptorSetLayoutUBO {};
+        VulkanDescriptorSetLayout   _descriptorSetLayoutSampler {};
+
         VDescriptorPool             _descriptorPool;
 
         VTexture                    _texture;
