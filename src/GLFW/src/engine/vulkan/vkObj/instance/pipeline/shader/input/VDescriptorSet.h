@@ -178,7 +178,7 @@ static inline void populateDescriptorImageInfo (
 static inline void populateWriteDescriptorSet (
     VulkanWriteDescriptorSet          * pWriteDescriptorSet,
     VulkanDescriptorSet                 destinationDescriptorSetHandle,
-    VulkanDescriptorType                descriptorType
+    VulkanDescriptorType                descriptorType,
     uint32                              destinationBinding,
     uint32                              destinationArrayElementIndex,
     const VulkanDescriptorBufferInfo  * pDescriptorBufferInfo,
