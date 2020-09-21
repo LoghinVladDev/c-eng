@@ -10,6 +10,7 @@
 
 #include <vkObj/instance/pipeline/VImageView.h>
 #include <vkObj/instance/pipeline/VRenderPass.h>
+#include <VDepthBuffer.h>
 
 #include <vector>
 
@@ -41,12 +42,12 @@ namespace engine {
         //// public variables
 
         //// public functions
-        VulkanResult setup ( const VImageView & imageView, const VRenderPass * pRenderPass ) noexcept {
+        VulkanResult setup ( const VImageView & imageView, const VRenderPass * pRenderPass, const VDepthBuffer * pDepthBuffer = nullptr ) noexcept {
             this->_pImageView = & imageView;
             this->_pRenderPass = pRenderPass;
-            return this->setup();
+            return this->setup( pDepthBuffer );
         }
-        VulkanResult setup (  ) noexcept;
+        VulkanResult setup ( const VDepthBuffer * = nullptr ) noexcept;
         void cleanup () noexcept;
 
         [[nodiscard]] const VImageView * getImageViewPtr () const noexcept {
@@ -75,7 +76,7 @@ namespace engine {
         //// public functions
 
         VFrameBufferCollection () noexcept = default;
-        VulkanResult setup ( const VRenderPass * ) noexcept (false);
+        VulkanResult setup ( const VRenderPass *, const VDepthBuffer * = nullptr ) noexcept (false);
 
         [[nodiscard]] const std::vector < VFrameBuffer > & getFrameBuffers () const noexcept {
             return this->_frameBuffers;

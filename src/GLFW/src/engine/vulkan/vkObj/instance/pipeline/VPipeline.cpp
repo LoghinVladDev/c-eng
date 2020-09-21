@@ -241,6 +241,44 @@ inline static void populateLayoutCreateInfo (
     };
 }
 
+inline static void populateDepthStencilCreateInfo (
+    VulkanPipelineDepthStencilStateCreateInfo * pCreateInfo
+) noexcept {
+    if ( pCreateInfo == nullptr )
+        return;
+
+    * pCreateInfo = VulkanPipelineDepthStencilStateCreateInfo {
+        .sType                  = VulkanStructureType::VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO,
+        .pNext                  = nullptr,
+        .flags                  = static_cast < VulkanPipelineDepthStencilStateCreateFlags > (0U),
+        .depthTestEnable        = VK_TRUE,
+        .depthWriteEnable       = VK_TRUE,
+        .depthCompareOp         = VulkanCompareOp::VK_COMPARE_OP_LESS,
+        .depthBoundsTestEnable  = VK_FALSE,
+        .stencilTestEnable      = VK_FALSE,
+        .front                  = VulkanStencilOpState {
+            .failOp                 = VulkanStencilOp::VK_STENCIL_OP_KEEP,
+            .passOp                 = VulkanStencilOp::VK_STENCIL_OP_KEEP,
+            .depthFailOp            = VulkanStencilOp::VK_STENCIL_OP_KEEP,
+            .compareOp              = VulkanCompareOp::VK_COMPARE_OP_NEVER,
+            .compareMask            = 0U,
+            .writeMask              = 0U,
+            .reference              = 0U
+        },
+        .back                   = VulkanStencilOpState {
+            .failOp                 = VulkanStencilOp::VK_STENCIL_OP_KEEP,
+            .passOp                 = VulkanStencilOp::VK_STENCIL_OP_KEEP,
+            .depthFailOp            = VulkanStencilOp::VK_STENCIL_OP_KEEP,
+            .compareOp              = VulkanCompareOp::VK_COMPARE_OP_NEVER,
+            .compareMask            = 0U,
+            .writeMask              = 0U,
+            .reference              = 0U
+        },
+        .minDepthBounds         = 0.0f,
+        .maxDepthBounds         = 1.0f
+    };
+}
+
 inline static void populateGraphicsPipelineCreateInfo (
     VulkanGraphicsPipelineCreateInfo                    * createInfo,
     const VulkanPipelineShaderStageCreateInfo           * pShaderStages,
@@ -358,6 +396,7 @@ VulkanResult engine::VPipeline::setup(
     VulkanPipelineMultisampleStateCreateInfo    multisampleStateCreateInfo      { };
     VulkanPipelineColorBlendAttachmentState     colorBlendAttachmentState       { };
     VulkanPipelineColorBlendStateCreateInfo     colorBlendStateCreateInfo       { };
+    VulkanPipelineDepthStencilStateCreateInfo   depthStencilStateCreateInfo     { };
     // dynamic state here ..., nullptr for now
 
     VulkanGraphicsPipelineCreateInfo            createInfo                      { };
@@ -371,6 +410,7 @@ VulkanResult engine::VPipeline::setup(
     populateMultisampleStateCreateInfo          ( & multisampleStateCreateInfo );
     populateColorBlendAttachmentStateDisabled   ( & colorBlendAttachmentState ); /// enabled doesn't work for now
     populateColorBlendStateCreateInfo           ( & colorBlendStateCreateInfo, & colorBlendAttachmentState, 1U );
+    populateDepthStencilCreateInfo              ( & depthStencilStateCreateInfo );
     // dynamic state populate call here
 
     populateGraphicsPipelineCreateInfo(
@@ -382,7 +422,7 @@ VulkanResult engine::VPipeline::setup(
             & viewportStateCreateInfo,
             & rasterizationStateCreateInfo,
             & multisampleStateCreateInfo,
-            nullptr,
+            & depthStencilStateCreateInfo,
             & colorBlendStateCreateInfo,
             nullptr,
             this->_layoutHandle,

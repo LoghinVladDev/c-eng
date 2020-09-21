@@ -4,6 +4,8 @@
 
 #include "VRenderPass.h"
 
+extern VulkanFormat getDepthFormat (const engine::VPhysicalDevice * pPhysicalDevice) noexcept;
+
 static inline void populateAttachmentDescription (
     VulkanAttachmentDescription     * colorAttachment,
     const engine::VSwapChain        * swapChain
@@ -24,32 +26,61 @@ static inline void populateAttachmentDescription (
     colorAttachment->finalLayout    = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
 }
 
-static inline void populateAttachmentReference (
-    VulkanAttachmentReference       * colorAttachmentRef,
-    uint32                            colorAttachmentIndex
+static inline void populateDepthBufferAttachmentDescription (
+    VulkanAttachmentDescription     * pDepthAttachment,
+    VulkanFormat                      format
 ) noexcept {
-    if ( colorAttachmentRef == nullptr )
+    if ( pDepthAttachment == nullptr )
         return;
 
-    * colorAttachmentRef = { };
+    * pDepthAttachment = VulkanAttachmentDescription {
+        .flags          = static_cast < VulkanAttachmentDescriptionFlags > (0U),
+        .format         = format,
+        .samples        = VulkanSampleCountFlagBits::VK_SAMPLE_COUNT_1_BIT,
+        .loadOp         = VulkanAttachmentLoadOp::VK_ATTACHMENT_LOAD_OP_CLEAR,
+        .storeOp        = VulkanAttachmentStoreOp::VK_ATTACHMENT_STORE_OP_DONT_CARE,
+        .stencilLoadOp  = VulkanAttachmentLoadOp::VK_ATTACHMENT_LOAD_OP_DONT_CARE,
+        .stencilStoreOp = VulkanAttachmentStoreOp::VK_ATTACHMENT_STORE_OP_DONT_CARE,
+        .initialLayout  = VulkanImageLayout::VK_IMAGE_LAYOUT_UNDEFINED,
+        .finalLayout    = VulkanImageLayout::VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL
+    };
+}
 
-    colorAttachmentRef->attachment  = colorAttachmentIndex;
-    colorAttachmentRef->layout      = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+static inline void populateAttachmentReference (
+    VulkanAttachmentReference       * attachmentRef,
+    uint32                            attachmentIndex,
+    VulkanImageLayout                 imageLayout = VulkanImageLayout::VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL
+) noexcept {
+    if ( attachmentRef == nullptr )
+        return;
+
+    * attachmentRef = VulkanAttachmentReference {
+        .attachment = attachmentIndex,
+        .layout     = imageLayout
+    };
 }
 
 static inline void populateSubpassDescription (
     VulkanSubpassDescription        * subpass,
-    const VulkanAttachmentReference * pAttachmentRefs,
-    uint32                            attachmentRefCount
+    const VulkanAttachmentReference * pColorAttachmentRefs,
+    uint32                            colorAttachmentCount,
+    const VulkanAttachmentReference * pDepthAttachmentRef = nullptr
 ) noexcept {
     if ( subpass == nullptr )
         return;
 
-    * subpass = { };
-
-    subpass->pipelineBindPoint      = VK_PIPELINE_BIND_POINT_GRAPHICS;
-    subpass->colorAttachmentCount   = attachmentRefCount;
-    subpass->pColorAttachments      = pAttachmentRefs;
+    * subpass = {
+        .flags                      = static_cast < VulkanSubpassDescriptionFlags > ( 0U ),
+        .pipelineBindPoint          = VulkanPipelineBindPoint::VK_PIPELINE_BIND_POINT_GRAPHICS,
+        .inputAttachmentCount       = 0U,
+        .pInputAttachments          = nullptr,
+        .colorAttachmentCount       = colorAttachmentCount,
+        .pColorAttachments          = pColorAttachmentRefs,
+        .pResolveAttachments        = nullptr,
+        .pDepthStencilAttachment    = pDepthAttachmentRef,
+        .preserveAttachmentCount    = 0U,
+        .pPreserveAttachments       = nullptr
+    };
 }
 
 static inline void populateRenderPassCreateInfo (
@@ -85,6 +116,9 @@ VulkanResult engine::VRenderPass::setup(
     VulkanSubpassDescription    subpassDescription          { };
     VulkanRenderPassCreateInfo  createInfo                  { };
 
+    VulkanAttachmentDescription depthAttachmentDescription  { };
+    VulkanAttachmentReference   depthAttachmentReference    { };
+
     this->_pLogicalDevice = & device;
 
     if ( this->_pLogicalDevice->getSwapChain() == nullptr )
@@ -92,11 +126,21 @@ VulkanResult engine::VRenderPass::setup(
 
     populateAttachmentDescription   ( & colorAttachmentDescription, this->_pLogicalDevice->getSwapChain() );
     populateAttachmentReference     ( & colorAttachmentReference, 0U );
-    populateSubpassDescription      ( & subpassDescription, & colorAttachmentReference, 1U );
+
+    populateDepthBufferAttachmentDescription ( & depthAttachmentDescription, getDepthFormat( this->_pLogicalDevice->getBasePhysicalDevice() ) );
+    populateAttachmentReference     ( & depthAttachmentReference, 1U, VulkanImageLayout::VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL );
+
+    populateSubpassDescription      ( & subpassDescription, & colorAttachmentReference, 1U, & depthAttachmentReference );
+
+    std::array < VulkanAttachmentDescription, 2 > attachmentDescriptions {
+        colorAttachmentDescription,
+        depthAttachmentDescription
+    };
+
     populateRenderPassCreateInfo    (
         & createInfo,
-        & colorAttachmentDescription,
-        1U,
+        attachmentDescriptions.data(),
+        static_cast < uint32 > ( attachmentDescriptions.size() ),
         & subpassDescription,
         1U,
         pSubpassDependencies,

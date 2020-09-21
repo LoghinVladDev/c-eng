@@ -95,6 +95,7 @@ typedef VkPipelineDynamicStateCreateInfo            VulkanPipelineDynamicStateCr
 typedef VkPipelineLayout                            VulkanPipelineLayout;
 typedef VkPipelineLayoutCreateInfo                  VulkanPipelineLayoutCreateInfo;
 typedef VkPipelineDepthStencilStateCreateInfo       VulkanPipelineDepthStencilStateCreateInfo;
+typedef VkPipelineDepthStencilStateCreateFlags      VulkanPipelineDepthStencilStateCreateFlags;
 
 typedef VkAttachmentDescription                     VulkanAttachmentDescription;
 typedef VkAttachmentReference                       VulkanAttachmentReference;
@@ -197,6 +198,19 @@ typedef VkSamplerAddressMode                        VulkanSamplerAddressMode;
 typedef VkCompareOp                                 VulkanCompareOp;
 typedef VkBorderColor                               VulkanBorderColor;
 typedef VkDescriptorImageInfo                       VulkanDescriptorImageInfo;
+
+typedef VkFormatFeatureFlags                        VulkanFormatFeatureFlags;
+typedef VkFormatFeatureFlagBits                     VulkanFormatFeatureFlagBits;
+typedef VkFormatProperties                          VulkanFormatProperties;
+typedef VkAttachmentDescriptionFlags                VulkanAttachmentDescriptionFlags;
+typedef VkAttachmentLoadOp                          VulkanAttachmentLoadOp;
+typedef VkAttachmentStoreOp                         VulkanAttachmentStoreOp;
+
+typedef VkSubpassDescriptionFlags                   VulkanSubpassDescriptionFlags;
+typedef VkSubpassDescriptionFlagBits                VulkanSubpassDescriptionFlagBits;
+typedef VkPipelineBindPoint                         VulkanPipelineBindPoint;
+typedef VkStencilOpState                            VulkanStencilOpState;
+typedef VkStencilOp                                 VulkanStencilOp;
 
 constexpr VulkanFlags VULKAN_NULL_FLAGS = 0;
 

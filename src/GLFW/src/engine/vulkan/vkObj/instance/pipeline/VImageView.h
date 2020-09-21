@@ -33,7 +33,7 @@ namespace engine {
         VImageView () noexcept = default;
         explicit VImageView ( const engine::VImageView *, const engine::VLogicalDevice * ) noexcept;
 
-        VulkanResult setup( VulkanImage, VulkanFormat, const VLogicalDevice& ) noexcept;
+        VulkanResult setup( VulkanImage, VulkanFormat, const VLogicalDevice&, VulkanImageAspectFlags = VulkanImageAspectFlagBits::VK_IMAGE_ASPECT_COLOR_BIT ) noexcept;
 
         [[nodiscard]] const engine::VSwapChain * getSwapChain () const noexcept;
 

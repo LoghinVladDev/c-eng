@@ -7,7 +7,8 @@
 static inline void populateImageViewCreateInfo (
     VulkanImageViewCreateInfo * createInfo,
     VulkanImage                 image,
-    VulkanFormat                imageFormat
+    VulkanFormat                imageFormat,
+    VulkanImageAspectFlags      aspectMask
 ) noexcept {
     if( createInfo == nullptr )
         return;
@@ -24,19 +25,19 @@ static inline void populateImageViewCreateInfo (
     createInfo->components.b                    = VK_COMPONENT_SWIZZLE_IDENTITY;
     createInfo->components.a                    = VK_COMPONENT_SWIZZLE_IDENTITY;
 
-    createInfo->subresourceRange.aspectMask     = VK_IMAGE_ASPECT_COLOR_BIT;
+    createInfo->subresourceRange.aspectMask     = aspectMask;
     createInfo->subresourceRange.baseMipLevel   = 0U;
     createInfo->subresourceRange.levelCount     = 1U;
     createInfo->subresourceRange.baseArrayLayer = 0U;
     createInfo->subresourceRange.layerCount     = 1U;
 }
 
-VulkanResult engine::VImageView::setup(VulkanImage image, VulkanFormat format, const VLogicalDevice & device) noexcept {
+VulkanResult engine::VImageView::setup(VulkanImage image, VulkanFormat format, const VLogicalDevice & device, VulkanImageAspectFlags aspectFlags) noexcept {
     this->_pLogicalDevice = & device;
 
     VulkanImageViewCreateInfo createInfo {};
 
-    populateImageViewCreateInfo( & createInfo, image, format );
+    populateImageViewCreateInfo( & createInfo, image, format, aspectFlags );
 
     return vkCreateImageView ( this->_pLogicalDevice->data(), & createInfo ,nullptr, & this->_handle );
 }

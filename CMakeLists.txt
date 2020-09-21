@@ -159,7 +159,12 @@ if(Vulkan_FOUND)
             src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/shader/input/VDescriptorSet.h
             src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/shader/input/VTexture.cpp
             src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/shader/input/VTexture.h
-            src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/shader/input/VTextureDefs.h src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/VTextureSampler.cpp src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/VTextureSampler.h)
+            src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/shader/input/VTextureDefs.h
+            src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/VTextureSampler.cpp
+            src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/VTextureSampler.h
+            src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/VDepthBuffer.cpp
+            src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/VDepthBuffer.h
+    )
 
 
     target_link_libraries( vkTriangle Vulkan::Vulkan )

@@ -282,9 +282,17 @@ VulkanResult engine::VCommandBuffer::startRecord(
         return recordResult;
 
     VulkanRenderPassBeginInfo renderPassBeginInfo { };
-    VulkanClearValue          clearColor          { 0.0f, 0.0f, 0.0f, 1.0f };
+//    VulkanClearValue          clearColor          { 0.0f, 0.0f, 0.0f, 1.0f };
+    std::array < VulkanClearValue, 2 > clearValues {};
+    clearValues[0].color        = { 0.0f, 0.0f, 0.0f, 1.0f };
+    clearValues[1].depthStencil = { 1.0f, 0 };
 
-    populateRenderPassBeginInfo( & renderPassBeginInfo, this->_pFrameBuffer, & clearColor, 1U );
+    populateRenderPassBeginInfo(
+            & renderPassBeginInfo,
+            this->_pFrameBuffer,
+            clearValues.data(),
+            static_cast < uint32 > ( clearValues.size() )
+    );
 
     vkCmdBeginRenderPass( this->_handle, & renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE );
     vkCmdBindPipeline   ( this->_handle, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline.data() );

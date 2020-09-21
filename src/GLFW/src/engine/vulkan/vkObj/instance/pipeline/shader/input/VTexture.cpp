@@ -43,13 +43,14 @@ inline static void populateImageCreateInfo (
     };
 }
 
-inline static void populateImageMemoryBarrier (
+inline void populateImageMemoryBarrier (
     VulkanImageMemoryBarrier * pMemoryBarrier,
     VulkanImageLayout          oldLayout,
     VulkanImageLayout          newLayout,
     VulkanImage                image,
     VulkanAccessFlags          sourceAccessMask = 0U,
-    VulkanAccessFlags          destinationAccessMask = 0U
+    VulkanAccessFlags          destinationAccessMask = 0U,
+    VulkanImageAspectFlags     imageAspectMask = VulkanImageAspectFlagBits::VK_IMAGE_ASPECT_COLOR_BIT
 ) noexcept {
     if ( pMemoryBarrier == nullptr )
         return;
@@ -65,7 +66,7 @@ inline static void populateImageMemoryBarrier (
         .dstQueueFamilyIndex    = VK_QUEUE_FAMILY_IGNORED,
         .image                  = image,
         .subresourceRange       = VulkanImageSubresourceRange {
-            .aspectMask             = (VulkanImageAspectFlags) VulkanImageAspectFlagBits::VK_IMAGE_ASPECT_COLOR_BIT,
+            .aspectMask             = static_cast < VulkanImageAspectFlags > (imageAspectMask),
             .baseMipLevel           = 0U,
             .levelCount             = 1U,
             .baseArrayLayer         = 0U,
@@ -213,8 +214,8 @@ VulkanResult engine::VTexture::flush() noexcept {
 VulkanResult engine::VTexture::transitionImageLayout(VulkanImageLayout newLayout) noexcept {
     bool isTransferOptimized =
             this->_pCommandPool->isOptimizedForTransfers() &&
-            this->_sharingMode == VulkanSharingMode::VK_SHARING_MODE_CONCURRENT &&
-            this->_stagingBuffer.getBufferSharingMode() == VulkanSharingMode::VK_SHARING_MODE_CONCURRENT;
+            this->_sharingMode == VulkanSharingMode::VK_SHARING_MODE_CONCURRENT; // &&
+//            this->_stagingBuffer.getBufferSharingMode() == VulkanSharingMode::VK_SHARING_MODE_CONCURRENT;
 
     const VQueue * pQueue = isTransferOptimized
             ? this->_pCommandPool->getLogicalDevicePtr()->getFirstTransferQueuePtr()
@@ -248,9 +249,8 @@ VulkanResult engine::VTexture::transitionImageLayout(VulkanImageLayout newLayout
 
         sourceAccessMask        = VulkanAccessFlagBits::VK_ACCESS_TRANSFER_WRITE_BIT;
         destinationAccessMask   = VulkanAccessFlagBits::VK_ACCESS_SHADER_READ_BIT;
-    } else {
+    } else
         return VulkanResult::VK_ERROR_INITIALIZATION_FAILED;
-    }
 
     VulkanImageMemoryBarrier barrier {};
 

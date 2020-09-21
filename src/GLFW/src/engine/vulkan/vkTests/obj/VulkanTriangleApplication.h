@@ -41,6 +41,7 @@
 #include <vkObj/instance/pipeline/shader/input/VDescriptorSet.h>
 #include <VTexture.h>
 #include <VTextureSampler.h>
+#include <VDepthBuffer.h>
 
 #include <vector>
 
@@ -108,6 +109,8 @@ namespace engine {
         VTexture                    _texture;
         VTextureSampler             _textureSampler;
 
+        VDepthBuffer                _depthBuffer;
+
         VDescriptorSetCollection < engine::SUniformBufferObject > _descriptorSetCollection;
         std::vector < VUniformBuffer < engine::SUniformBufferObject > > _uniformBuffers;
 
@@ -142,6 +145,7 @@ namespace engine {
 
         void recreateSwapChain () noexcept (false);
 
+        void createDepthBuffer () noexcept (false);
         void createBuffers () noexcept (false);
         void createExclusiveBuffers () noexcept (false);
         void createConcurrentBuffers () noexcept (false);

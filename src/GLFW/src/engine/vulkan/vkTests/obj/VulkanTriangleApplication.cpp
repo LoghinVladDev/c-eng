@@ -139,8 +139,9 @@ void engine::VulkanTriangleApplication::run() noexcept (false) {
     this->createShaderModules();
     this->createDescriptorSetLayout();
     this->createGraphicsPipeline();
-    this->createFrameBuffers();
     this->createCommandPool();
+    this->createDepthBuffer();
+    this->createFrameBuffers();
     this->createTextures();
     this->createBuffers();
     this->createCommandBuffers();
@@ -313,12 +314,14 @@ void engine::VulkanTriangleApplication::recreateSwapChain() noexcept(false) {
         throw std::runtime_error ( "Swap Chain Recreation Error" );
 
     this->createGraphicsPipeline();
+    this->createDepthBuffer();
     this->createFrameBuffers();
     this->createUniformBuffers();
     this->createCommandBuffers();
 }
 
 void engine::VulkanTriangleApplication::cleanupSwapChain() noexcept(false) {
+    this->_depthBuffer.cleanup();
     this->_frameBufferCollection.cleanup();
     this->_commandBufferCollection.free();
 
@@ -412,14 +415,20 @@ void engine::VulkanTriangleApplication::drawImage () noexcept (false) {
 }
 
 const std::vector < engine::VVertex > vertices = {
-        {{-0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}, {0.0f, 0.0f}},
-        {{ 0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}, {1.0f, 0.0f}},
-        {{ 0.5f,  0.5f}, {0.0f, 0.0f, 1.0f}, {1.0f, 1.0f}},
-        {{-0.5f,  0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f}}
+        {{-0.5f, -0.5f, 0.0f}, {1.0f, 0.0f, 0.0f}, {0.0f, 0.0f}},
+        {{ 0.5f, -0.5f, 0.0f}, {0.0f, 1.0f, 0.0f}, {1.0f, 0.0f}},
+        {{ 0.5f,  0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 1.0f}},
+        {{-0.5f,  0.5f, 0.0f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f}},
+
+        {{-0.5f, -0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}, {0.0f, 0.0f}},
+        {{0.5f, -0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}, {1.0f, 0.0f}},
+        {{0.5f, 0.5f, -0.5f}, {0.0f, 0.0f, 1.0f}, {1.0f, 1.0f}},
+        {{-0.5f, 0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f}}
 };
 
 const std::vector < uint16 > indices = {
-        0, 1, 2, 2, 3, 0
+        0, 1, 2, 2, 3, 0,
+        4, 5, 6, 6, 7, 4
 };
 
 #include <chrono>
@@ -482,6 +491,19 @@ void engine::VulkanTriangleApplication::createBuffers() noexcept(false) {
         this->createConcurrentBuffers();
     }
 }
+
+void engine::VulkanTriangleApplication::createDepthBuffer() noexcept(false) {
+    auto queueFamilyIndices = this->_vulkanQueueFamilyCollection->getQueueFamilyIndices();
+    ENG_THROW_IF_NOT_SUCCESS(
+            this->_depthBuffer.setup(
+                    this->_transferCommandPool,
+                    queueFamilyIndices.data(),
+                    queueFamilyIndices.size()
+            ),
+            std::runtime_error("depth buffer create failure")
+    )
+}
+
 
 void engine::VulkanTriangleApplication::createConcurrentBuffers() noexcept(false) {
     auto queueFamilyIndices = this->_vulkanQueueFamilyCollection->getQueueFamilyIndices();
@@ -618,6 +640,7 @@ void engine::VulkanTriangleApplication::cleanup() noexcept (false) {
     this->_commandPool.cleanup();
     this->_transferCommandPool.cleanup();
 
+    this->_depthBuffer.cleanup();
     this->_frameBufferCollection.cleanup();
 
     for ( auto & buffer : this->_uniformBuffers ) {
@@ -751,7 +774,7 @@ void engine::VulkanTriangleApplication::createGraphicsPipeline() noexcept(false)
 }
 
 void engine::VulkanTriangleApplication::createFrameBuffers() noexcept(false) {
-    if ( this->_frameBufferCollection.setup ( this->_renderPass ) != VulkanResult::VK_SUCCESS )
+    if ( this->_frameBufferCollection.setup ( this->_renderPass, & this->_depthBuffer ) != VulkanResult::VK_SUCCESS )
         throw std::runtime_error ( "Frame Buffers Creation Failure" );
 }
 

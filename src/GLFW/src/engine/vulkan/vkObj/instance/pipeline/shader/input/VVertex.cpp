@@ -38,8 +38,6 @@ inline static void populateVertexInputAttributeDescription (
     };
 }
 
-
-
 VulkanVertexInputBindingDescription engine::VVertex::getBindingDescription() noexcept {
     VulkanVertexInputBindingDescription bindingDescription { };
 
@@ -55,12 +53,13 @@ VulkanVertexInputBindingDescription engine::VVertex::getBindingDescription() noe
 
 std::array < VulkanVertexInputAttributeDescription, engine::VVertex::PACK_PROPERTIES_COUNT > engine::VVertex::getAttributeDescriptions() noexcept {
     std::array < VkVertexInputAttributeDescription, engine::VVertex::PACK_PROPERTIES_COUNT > attributeDescriptions { };
+    engine::VVertex::SVertexPack basePack;
 
     populateVertexInputAttributeDescription(
         & attributeDescriptions[ 0 ],
         0U,
         0U,
-        VVertex::FLOAT_VEC2_FORMAT,
+        VVertex::getShaderVariableFormat( basePack.position ),
         offsetof ( engine::VVertex::SVertexPack, position )
     );
 
@@ -68,7 +67,7 @@ std::array < VulkanVertexInputAttributeDescription, engine::VVertex::PACK_PROPER
         & attributeDescriptions[ 1 ],
         0U,
         1U,
-        VVertex::FLOAT_VEC3_FORMAT,
+        VVertex::getShaderVariableFormat ( basePack.color ),
         offsetof ( engine::VVertex::SVertexPack, color )
     );
 
@@ -76,7 +75,7 @@ std::array < VulkanVertexInputAttributeDescription, engine::VVertex::PACK_PROPER
         & attributeDescriptions[ 2 ],
         0U,
         2U,
-        VVertex::FLOAT_VEC2_FORMAT,
+        VVertex::getShaderVariableFormat( basePack.textureCoordinates ),
         offsetof ( engine::VVertex::SVertexPack, textureCoordinates )
     );
 

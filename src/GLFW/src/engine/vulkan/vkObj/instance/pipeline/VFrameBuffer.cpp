@@ -24,7 +24,7 @@ inline static void populateFrameBufferCreateInfo (
     createInfo->layers              = 1U;
 }
 
-VulkanResult engine::VFrameBufferCollection::setup(const engine::VRenderPass * pRenderPass) noexcept (false) {
+VulkanResult engine::VFrameBufferCollection::setup(const engine::VRenderPass * pRenderPass, const engine::VDepthBuffer * pDepthBuffer) noexcept (false) {
     if( pRenderPass == nullptr )
         throw engine::EngineVFrameBufferInvalidRenderPass();
 
@@ -32,7 +32,7 @@ VulkanResult engine::VFrameBufferCollection::setup(const engine::VRenderPass * p
     for ( const auto & imageView : pRenderPass->getLogicalDevicePtr()->getImageViewCollection()->getImageViews() ) {
         this->_frameBuffers.emplace_back( imageView, pRenderPass );
 
-        if ( this->_frameBuffers.back().setup() != VK_SUCCESS )
+        if ( this->_frameBuffers.back().setup( pDepthBuffer ) != VK_SUCCESS )
             throw std::runtime_error ("Frame Buffer Initialization Error");
     }
 
@@ -46,13 +46,32 @@ void engine::VFrameBufferCollection::cleanup() noexcept {
     this->_frameBuffers.clear();
 }
 
-VulkanResult engine::VFrameBuffer::setup() noexcept {
+VulkanResult engine::VFrameBuffer::setup( const engine::VDepthBuffer * pDepthBuffer ) noexcept {
     if ( this->_pImageView == nullptr || this->_pImageView == nullptr )
         return VulkanResult::VK_ERROR_INITIALIZATION_FAILED;
 
     VulkanFrameBufferCreateInfo createInfo { };
 
-    populateFrameBufferCreateInfo( & createInfo, this->_pRenderPass, &(this->_pImageView->data()), 1U);
+    if ( pDepthBuffer != nullptr ) {
+        std::array<VulkanImageView, 2> attachments = {
+                this->_pImageView->data(),
+                pDepthBuffer->getImageView().data()
+        };
+
+        populateFrameBufferCreateInfo(
+                &createInfo,
+                this->_pRenderPass,
+                attachments.data(),
+                static_cast < uint32 > ( attachments.size() )
+        );
+    } else {
+        populateFrameBufferCreateInfo(
+                &createInfo,
+                this->_pRenderPass,
+                &(this->_pImageView->data()),
+                1U
+        );
+    }
 
     return vkCreateFramebuffer( this->_pRenderPass->getLogicalDevicePtr()->data(), & createInfo, nullptr, & this->_handle );
 }

@@ -10,6 +10,7 @@
 #include <vkObj/instance/device/VLogicalDevice.h>
 #include <glm/glm.hpp>
 #include <array>
+#include <type_traits>
 
 namespace engine {
 
@@ -17,7 +18,7 @@ namespace engine {
     public:
 
         typedef struct {
-            glm::vec2 position;
+            glm::vec3 position;
             glm::vec3 color;
             glm::vec2 textureCoordinates;
         } SVertexPack;
@@ -32,6 +33,8 @@ namespace engine {
 
     public:
         //// public variables
+        constexpr static VulkanFormat UNKNOWN_FORMAT        = VulkanFormat::VK_FORMAT_UNDEFINED;
+
         constexpr static VulkanFormat FLOAT_FORMAT          = VulkanFormat::VK_FORMAT_R32_SFLOAT;
         constexpr static VulkanFormat FLOAT_VEC2_FORMAT     = VulkanFormat::VK_FORMAT_R32G32_SFLOAT;
         constexpr static VulkanFormat FLOAT_VEC3_FORMAT     = VulkanFormat::VK_FORMAT_R32G32B32_SFLOAT;
@@ -63,8 +66,33 @@ namespace engine {
         constexpr static VulkanFormat LINT_VEC4_FORMAT      = VulkanFormat::VK_FORMAT_R64G64B64A64_SINT;
 
         //// public functions
+
+#define __GEN_SHADER_VAR_FORMAT_CASE(_type1, _type2, _normLabel) \
+    if constexpr ( std::is_same_v < _type1, _type2 > ) \
+        return _normLabel ## _FORMAT;               \
+    else if constexpr ( std::is_same_v < _type1, glm::vec < 2, _type2, glm::defaultp > > ) \
+        return _normLabel ## _VEC2_FORMAT;                                     \
+    else if constexpr ( std::is_same_v < _type1, glm::vec < 3, _type2, glm::defaultp > > ) \
+        return _normLabel ## _VEC3_FORMAT;                                     \
+    else if constexpr ( std::is_same_v < _type1, glm::vec < 4, _type2, glm::defaultp > > ) \
+        return _normLabel ## _VEC4_FORMAT;
+
+        template <class T>
+        constexpr static VulkanFormat getShaderVariableFormat( T ) noexcept {
+            __GEN_SHADER_VAR_FORMAT_CASE( T, float, FLOAT )
+            else __GEN_SHADER_VAR_FORMAT_CASE( T, uint32, UINT )
+            else __GEN_SHADER_VAR_FORMAT_CASE( T, int32, INT)
+            else __GEN_SHADER_VAR_FORMAT_CASE( T, double, DOUBLE)
+            else __GEN_SHADER_VAR_FORMAT_CASE( T, uint64, LUINT)
+            else __GEN_SHADER_VAR_FORMAT_CASE( T, int64, LINT)
+
+            return VVertex::UNKNOWN_FORMAT;
+        }
+
+#undef __GEN_SHADER_VAR_FORMAT_CASE
+
         VVertex() noexcept = default;
-        VVertex( const glm::vec2 & position, const glm::vec3 & color, const glm::vec2 & textureCoordinates ) noexcept :
+        VVertex( const glm::vec3 & position, const glm::vec3 & color, const glm::vec2 & textureCoordinates ) noexcept :
             _vertexPack ( { position, color, textureCoordinates } ) {
 
         }
@@ -78,7 +106,7 @@ namespace engine {
             return this->_vertexPack;
         }
 
-        [[nodiscard]] const glm::vec2 & getPosition () const noexcept {
+        [[nodiscard]] const glm::vec3 & getPosition () const noexcept {
             return this->_vertexPack.position;
         }
 
@@ -90,7 +118,7 @@ namespace engine {
             return this->_vertexPack.color;
         }
 
-        void setPosition ( const glm::vec2 & position ) noexcept {
+        void setPosition ( const glm::vec3 & position ) noexcept {
             this->_vertexPack.position = position;
         }
 
