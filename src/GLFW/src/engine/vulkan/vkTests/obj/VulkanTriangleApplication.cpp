@@ -534,7 +534,7 @@ void engine::VulkanTriangleApplication::createTextures() noexcept(false) {
 
     ENG_THROW_IF_NOT_SUCCESS(
             this->_texture.setup(
-                    std::string(__TEXTURES_PATH__).append("statue.jpg").c_str(),
+                    std::string(__TEXTURES_PATH__).append("container.jpg").c_str(),
                     this->_transferCommandPool,
                     queueFamilyIndices.data(),
                     queueFamilyIndices.size()
