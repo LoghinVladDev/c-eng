@@ -111,6 +111,7 @@ void engine::VTexture::load(const char * pImagePath, int32 desiredChannels) noex
     int32 textureHeight;
     int32 textureChannels;
 
+    stbi_set_flip_vertically_on_load(true);
     this->_stagingBuffer.getBufferData()._pImageData = stbi_load( pImagePath, & textureWidth, & textureHeight, & textureChannels, desiredChannels );
 
     if ( this->_stagingBuffer.getBufferData()._pImageData == nullptr )

@@ -335,13 +335,13 @@ inline static void populateGraphicsPipelineCreateInfo (
 
 void engine::VPipeline::createRenderPass() noexcept (false) {
     VulkanSubpassDependency waitForImageSubpassDependency {
-        .srcSubpass = VK_SUBPASS_EXTERNAL,
-        .dstSubpass = VULKAN_NULL_FLAGS,
-        .srcStageMask = VulkanPipelineStageFlagBits::VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
-        .dstStageMask = VulkanPipelineStageFlagBits::VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
-        .srcAccessMask = VULKAN_NULL_FLAGS,
-        .dstAccessMask = VulkanAccessFlagBits::VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT,
-        .dependencyFlags = VULKAN_NULL_FLAGS,
+        .srcSubpass         = VK_SUBPASS_EXTERNAL,
+        .dstSubpass         = VULKAN_NULL_FLAGS,
+        .srcStageMask       = VulkanPipelineStageFlagBits::VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
+        .dstStageMask       = VulkanPipelineStageFlagBits::VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
+        .srcAccessMask      = VULKAN_NULL_FLAGS,
+        .dstAccessMask      = VulkanAccessFlagBits::VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT,
+        .dependencyFlags    = VULKAN_NULL_FLAGS,
     };
 
     if ( this->_renderPass.setup( * this->_pLogicalDevice, & waitForImageSubpassDependency, 1U ) != VulkanResult::VK_SUCCESS )

@@ -116,6 +116,7 @@ namespace engine {
 
         double                      _fpsTimer = 0.0;
         double                      _fpsRefreshTimer = __SHOW_FPS_EVERY_S;
+        double                      _deltaTime;
 
         bool _framebufferResized {false};
 

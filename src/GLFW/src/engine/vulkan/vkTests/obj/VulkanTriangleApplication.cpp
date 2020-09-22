@@ -151,6 +151,8 @@ void engine::VulkanTriangleApplication::run() noexcept (false) {
     this->cleanup();
 }
 
+void processInputCallback (GLFWwindow*, int, int, int, int);
+
 inline void engine::VulkanTriangleApplication::initWindow() noexcept (false) {
     if(glfwInit() == GLFW_FALSE) {
         throw engine::EngineVulkanTestException("GLFW Init failure");
@@ -169,6 +171,7 @@ inline void engine::VulkanTriangleApplication::initWindow() noexcept (false) {
 
     glfwSetWindowUserPointer( this->_window, this );
     glfwSetFramebufferSizeCallback( this->_window, engine::VulkanTriangleApplication::frameBufferResizeCallback );
+    glfwSetKeyCallback( this->_window, processInputCallback );
 }
 
 void engine::VulkanTriangleApplication::createSurface() noexcept(false) {
@@ -414,22 +417,61 @@ void engine::VulkanTriangleApplication::drawImage () noexcept (false) {
     currentFrame = ( currentFrame + 1 ) % MAX_FRAMES_IN_FLIGHT;
 }
 
-const std::vector < engine::VVertex > vertices = {
-        {{-0.5f, -0.5f, 0.0f}, {1.0f, 0.0f, 0.0f}, {0.0f, 0.0f}},
-        {{ 0.5f, -0.5f, 0.0f}, {0.0f, 1.0f, 0.0f}, {1.0f, 0.0f}},
-        {{ 0.5f,  0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 1.0f}},
-        {{-0.5f,  0.5f, 0.0f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f}},
 
-        {{-0.5f, -0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}, {0.0f, 0.0f}},
-        {{0.5f, -0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}, {1.0f, 0.0f}},
-        {{0.5f, 0.5f, -0.5f}, {0.0f, 0.0f, 1.0f}, {1.0f, 1.0f}},
-        {{-0.5f, 0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f}}
+const std::vector < engine::VVertex > vertices = {
+//
+//        { { -0.2f, -0.2f, 0.0f }, {0.3f, 0.3f, 0.3f} },
+//        { {  0.2f, -0.2f, 0.0f }, {0.3f, 0.3f, 0.3f} },
+//        { {  0.3f,  0.1f, 0.0f }, {0.3f, 0.3f, 0.3f} },
+//        { {  0.0f,  0.3f, 0.0f }, {0.3f, 0.3f, 0.3f} },
+//        { { -0.3f,  0.1f, 0.0f }, {0.3f, 0.3f, 0.3f} },
+//
+//        { { 0.0f, -0.6f, 0.0f }, {1.0f, 0.0f, 0.0f} },
+//        { { 0.6f, -0.2f, 0.0f }, {0.0f, 1.0f, 0.0f} },
+//        { { 0.4f,  0.55f, 0.0f }, {0.0f, 0.0f, 1.0f} },
+//        { {-0.4f,  0.55f, 0.0f }, {0.0f, 1.0f, 1.0f} },
+//        { {-0.6f, -0.2f, 0.0f }, {1.0f, 1.0f, 0.3f} },
+        {{-0.5f, -0.5f,  0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f}},
+        {{ 0.5f, -0.5f,  0.5f}, {1.0f, 1.0f, 1.0f}, {1.0f, 0.0f}},
+        {{ 0.5f,  0.5f,  0.5f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f}},
+        {{-0.5f,  0.5f,  0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f}},
+
+        {{-0.5f, -0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f}},
+        {{ 0.5f, -0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f}},
+        {{ 0.5f,  0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {1.0f, 0.0f}},
+        {{-0.5f,  0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f}},
+
+        {{ 0.5f, -0.5f,  0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f}},
+        {{ 0.5f,  0.5f,  0.5f}, {1.0f, 1.0f, 1.0f}, {1.0f, 0.0f}},
+        {{ 0.5f, -0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f}},
+        {{ 0.5f,  0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f}},
+
+        {{-0.5f, -0.5f,  0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f}},
+        {{-0.5f,  0.5f,  0.5f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f}},
+        {{-0.5f, -0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {1.0f, 0.0f}},
+        {{-0.5f,  0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f}},
 };
 
 const std::vector < uint16 > indices = {
+
+//        0, 1, 4,
+//        1, 3, 4,
+//        1, 2, 3,
+//
+//        0, 5, 1,
+//        1, 6, 2,
+//        2, 7, 3,
+//        3, 8, 4,
+//        4, 9, 0//
         0, 1, 2, 2, 3, 0,
-        4, 5, 6, 6, 7, 4
+        1, 0, 5, 4, 5, 0,
+        9, 8, 10, 10, 11, 9,
+        4, 6, 5, 6, 7, 4
 };
+
+float rotateValue = 0.0f;
+bool left = false;
+bool right = false;
 
 #include <chrono>
 #include <glm/gtc/matrix_transform.hpp>
@@ -438,12 +480,23 @@ void engine::VulkanTriangleApplication::updateUniformBuffer(uint32 uniformBuffer
 
     static auto startTime = std::chrono::high_resolution_clock::now();
     auto currentTime = std::chrono::high_resolution_clock::now();
+    double scaleFactor = 1.3f;
 
     float time = std::chrono::duration < float , std::chrono::seconds::period > ( currentTime - startTime ).count();
     static float FOV = 45.0f;
-
     engine::SUniformBufferObject UBO {
-        .model = glm::rotate( glm::translate ( glm::mat4 ( 1.0f ), glm::vec3 ( std::sin ( time ) , 0.0f, 0.0f ) ), time * glm::radians ( 90.0f ), glm::vec3 (0.5f, 0.0f, 0.5f) ),
+        .model = glm::rotate (
+            glm::scale (
+                glm::translate (
+                        glm::mat4 ( 1.0f ),
+                        glm::vec3 (0.0f, 0.0f, 0.0f)
+                    ),
+                    glm::vec3 ( scaleFactor, scaleFactor, scaleFactor )
+            ),
+            rotateValue * glm::radians (  90.0f ),
+            glm::vec3 ( 0.0f, 0.0f, 1.0f )
+        ),
+//        .model = glm::rotate( glm::translate ( glm::mat4 ( 1.0f ), glm::vec3 ( std::sin ( time ) , 0.0f, 0.0f ) ), time * glm::radians ( 90.0f ), glm::vec3 (0.5f, 0.0f, 0.5f) ),
         .view  = glm::lookAt( glm::vec3 ( 2.0f, 2.0f, 2.0f ) , glm::vec3( 0.0f, 0.0f, 0.0f ), glm::vec3 (0.0f, 0.0f, 1.0f) ),
         .projection = glm::perspective (
                 glm::radians ( FOV ),
@@ -459,25 +512,48 @@ void engine::VulkanTriangleApplication::updateUniformBuffer(uint32 uniformBuffer
     currentBuffer.load( & UBO, 1U );
 }
 
+
+
+void processInputCallback (GLFWwindow* window, int key, int scanCode, int action, int mods) {
+    if ( action == GLFW_PRESS ) {
+        if ( key == GLFW_KEY_A ) {
+            left = true;
+        }
+        if ( key == GLFW_KEY_D ) {
+            right = true;
+        }
+    } else if ( action == GLFW_RELEASE ) {
+        if ( key == GLFW_KEY_A ) {
+            left = false;
+        }
+        if ( key == GLFW_KEY_D ) {
+            right = false;
+        }
+    }
+}
+
 void engine::VulkanTriangleApplication::update() noexcept(false) {
+    if ( left )
+        rotateValue -= 2.0f * this->_deltaTime;
+    if ( right )
+        rotateValue += 2.0f * this->_deltaTime;
 }
 
 void engine::VulkanTriangleApplication::mainLoop() noexcept (false) {
     while ( ! glfwWindowShouldClose( this->_window ) ) {
         double startFrameTime = glfwGetTime();
-        static double deltaTime = 0.0;
 
         glfwPollEvents();
         this->update();
         this->drawImage();
 
-        deltaTime = ( glfwGetTime() - startFrameTime );
+        this->_deltaTime = ( glfwGetTime() - startFrameTime );
 
-        this->_fpsTimer += deltaTime;
+        this->_fpsTimer += this->_deltaTime;
 
         if ( this->_fpsTimer >= this->_fpsRefreshTimer ) {
             if ( VulkanTriangleApplication::SHOW_FPS_CONSOLE )
-                std::cout << "FPS : " << (1.0 / deltaTime) << '\n';
+                std::cout << "FPS : " << (1.0 / this->_deltaTime) << '\n';
             this->_fpsTimer = 0.0;
         }
     }
@@ -507,6 +583,25 @@ void engine::VulkanTriangleApplication::createDepthBuffer() noexcept(false) {
 
 void engine::VulkanTriangleApplication::createConcurrentBuffers() noexcept(false) {
     auto queueFamilyIndices = this->_vulkanQueueFamilyCollection->getQueueFamilyIndices();
+
+//const std::vector < engine::VVertex > vertices = {
+//        {{-0.5f, -0.5f, 0.0f}, {1.0f, 0.0f, 0.0f}, {0.0f, 0.0f}},
+//        {{ 0.5f, -0.5f, 0.0f}, {0.0f, 1.0f, 0.0f}, {1.0f, 0.0f}},
+//        {{ 0.5f,  0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 1.0f}},
+//        {{-0.5f,  0.5f, 0.0f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f}},
+//
+//        {{-0.5f, -0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}, {0.0f, 0.0f}},
+//        {{0.5f, -0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}, {1.0f, 0.0f}},
+//        {{0.5f, 0.5f, -0.5f}, {0.0f, 0.0f, 1.0f}, {1.0f, 1.0f}},
+//        {{-0.5f, 0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f}},
+
+
+//};
+
+//const std::vector < uint16 > indices = {
+//        0, 1, 2, 2, 3, 0,
+//        4, 5, 6, 6, 7, 4
+//};
 
     VulkanResult statusResult;
     if (( statusResult = this->_vertexBuffer.setup(
@@ -616,7 +711,7 @@ void engine::VulkanTriangleApplication::createExclusiveBuffers() noexcept(false)
 
     if (( statusResult = this->_indexBuffer.setup(
             this->_vulkanLogicalDevice,
-            indices.size(),
+            indices,
             & this->_transferCommandPool
     )) != VulkanResult::VK_SUCCESS
             ) {

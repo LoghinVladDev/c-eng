@@ -97,7 +97,22 @@ namespace engine {
 
         }
 
-        explicit VVertex( const VVertex::SVertexPack & pack ) noexcept :
+        VVertex( const glm::vec3 & position, const glm::vec3 & color ) noexcept :
+            _vertexPack ( { position, color, glm::vec2 { 0.0f, 0.0f } } ) {
+
+        }
+
+        VVertex( const glm::vec3 & position, const glm::vec2 & textureCoordinates ) noexcept :
+            _vertexPack ( { position, glm::vec3 {0.0f, 0.0f, 0.0f }, textureCoordinates } ) {
+
+        }
+
+        VVertex( const glm::vec3 & position ) noexcept :
+            _vertexPack ( { position, glm::vec3 { 0.0f, 0.0f, 0.0f }, glm::vec2 { 0.0f, 0.0f } } ) {
+
+        }
+
+        VVertex( const VVertex::SVertexPack & pack ) noexcept :
             _vertexPack ( pack ) {
 
         }

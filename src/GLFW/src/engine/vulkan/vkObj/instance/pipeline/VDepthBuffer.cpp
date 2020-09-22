@@ -85,10 +85,10 @@ extern void populateMemoryAllocateInfo ( VulkanMemoryAllocateInfo *, VulkanDevic
 
 #include <vkUtils/VStdUtilsDefs.h>
 VulkanResult engine::VDepthBuffer::setup(
-        const VCommandPool & commandPool,
-        const uint32 * pQueueFamilyIndices,
-        uint32 queueFamilyIndexCount,
-        bool forceMemoryExclusivity
+        const VCommandPool  & commandPool,
+        const uint32        * pQueueFamilyIndices,
+        uint32                queueFamilyIndexCount,
+        bool                  forceMemoryExclusivity
 ) noexcept {
     this->_pCommandPool = & commandPool;
     auto * pLogicalDevice = this->_pCommandPool->getLogicalDevicePtr();

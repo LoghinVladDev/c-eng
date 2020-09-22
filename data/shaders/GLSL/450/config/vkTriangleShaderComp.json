@@ -5,12 +5,12 @@
         "compilerInputDir"  : "../data/shaders/GLSL/450",
         "compilerOutputDir" : "../data/shaders/GLSL/450/out",
         "sources" : [ {
-                "path"          : "./vertexShader.vert",
+                "path"          : "./standardShaders/vertexColorShader.vert",
                 "outputName"    : "vertexShaderByteCode",
                 "tag"           : "vertexShader",
                 "type"          : "vert"
             }, {
-                "path"          : "./fragmentShader.frag",
+                "path"          : "./standardShaders/fragmentColorShader.frag",
                 "outputName"    : "fragmentShaderByteCode",
                 "tag"           : "fragmentShader",
                 "type"          : "frag"
