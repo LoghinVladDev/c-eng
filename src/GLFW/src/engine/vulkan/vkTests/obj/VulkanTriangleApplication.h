@@ -90,7 +90,8 @@ namespace engine {
 
         VCommandPool                _commandPool;
         VCommandPool                _transferCommandPool;
-        VCommandBufferCollection    _commandBufferCollection;
+//        VCommandBufferCollection    _cubeDrawCommandBufferCollection;
+        VCommandBufferCollection    _drawCommandBufferCollection;
 
         VSemaphoreCollection        _imageAvailableSemaphores;
         VSemaphoreCollection        _renderFinishedSemaphores;
@@ -98,21 +99,30 @@ namespace engine {
         VFenceCollection            _inFlightFences;
         VFenceCollection            _imagesInFlight;
 
-        VVertexBuffer               _vertexBuffer;
-        VIndexBuffer                _indexBuffer;
+        VVertexBuffer               _cubeVertexBuffer;
+        VIndexBuffer                _cubeIndexBuffer;
 
-        VulkanDescriptorSetLayout   _descriptorSetLayoutUBO {};
+        VVertexBuffer               _starVertexBuffer;
+        VIndexBuffer                _starIndexBuffer;
+
+        VulkanDescriptorSetLayout   _descriptorSetLayout {};
+//        VulkanDescriptorSetLayout   _starDescriptorSetLayoutUBO {};
         VulkanDescriptorSetLayout   _descriptorSetLayoutSampler {};
 
         VDescriptorPool             _descriptorPool;
 
-        VTexture                    _texture;
+        VTexture                    _cubeTexture;
+        VTexture                    _starTexture;
+
         VTextureSampler             _textureSampler;
 
         VDepthBuffer                _depthBuffer;
 
-        VDescriptorSetCollection < engine::SUniformBufferObject > _descriptorSetCollection;
-        std::vector < VUniformBuffer < engine::SUniformBufferObject > > _uniformBuffers;
+        VDescriptorSetCollection < engine::SUniformBufferObject >       _cubeDescriptorSetCollection;
+        std::vector < VUniformBuffer < engine::SUniformBufferObject > > _cubeUniformBuffers;
+
+        VDescriptorSetCollection < engine::SUniformBufferObject >       _starDescriptorSetCollection;
+        std::vector < VUniformBuffer < engine::SUniformBufferObject > > _starUniformBuffers;
 
         double                      _fpsTimer = 0.0;
         double                      _fpsRefreshTimer = __SHOW_FPS_EVERY_S;
@@ -167,7 +177,7 @@ namespace engine {
         constexpr static uint32 DEFAULT_WIDTH       = 800U;
         constexpr static uint32 DEFAULT_HEIGHT      = 600U;
         constexpr static bool   VULKAN_EXT_CHECK    = _VK_CHECK_EXT;
-        constexpr static bool   SHOW_FPS_CONSOLE    = false;
+        constexpr static bool   SHOW_FPS_CONSOLE    = true;
 
         static const int8*      DEFAULT_TITLE;
 

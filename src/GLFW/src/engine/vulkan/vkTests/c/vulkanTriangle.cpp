@@ -17,7 +17,9 @@ int main() {
     VulkanTriangleApplication app(1024, 768);
 
     try{
+#ifndef NDEBUG
         app.addValidationLayer( VValidationLayer::KHRONOS_VALIDATION );
+#endif
         app.run();
     } catch (std::exception const & e) {
         std::cerr << e.what() << '\n';

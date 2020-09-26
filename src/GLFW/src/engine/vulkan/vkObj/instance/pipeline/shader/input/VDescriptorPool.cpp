@@ -23,32 +23,25 @@ inline static void populateDescriptorPoolCreateInfo (
     };
 }
 
-VulkanResult engine::VDescriptorPool::setup(const VLogicalDevice & device) noexcept {
+VulkanResult engine::VDescriptorPool::setup(const VLogicalDevice & device, const VulkanDescriptorType * pDescriptorTypes, uint32 descriptorTypeCount, uint32 objectCount) noexcept {
     this->_pLogicalDevice = & device;
     auto swapChainImageCount = static_cast < uint32 > ( this->_pLogicalDevice->getSwapChain()->getImages().size() );
     VulkanDescriptorPoolCreateInfo createInfo {};
 
-    std::array < VulkanDescriptorPoolSize, 2 > poolSizes {
-        VulkanDescriptorPoolSize {
-            .type               = VulkanDescriptorType::VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
+    std::vector < VulkanDescriptorPoolSize > poolSizes (descriptorTypeCount);
+
+    for ( uint32 descriptorTypeIndex = 0U; descriptorTypeIndex < descriptorTypeCount; descriptorTypeIndex++ ) {
+        poolSizes[ descriptorTypeIndex ] = VulkanDescriptorPoolSize {
+            .type               = pDescriptorTypes[ descriptorTypeIndex ],
             .descriptorCount    = swapChainImageCount
-        },
-        VulkanDescriptorPoolSize {
-            .type               = VulkanDescriptorType::VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
-            .descriptorCount    = swapChainImageCount
-        }
-    };
-//
-//    VulkanDescriptorPoolSize poolSize {
-//        .type               = VulkanDescriptorType::VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
-//        .descriptorCount    = swapChainImageCount
-//    };
+        };
+    }
 
     populateDescriptorPoolCreateInfo(
         & createInfo,
         poolSizes.data(),
         static_cast < uint32 > ( poolSizes.size() ),
-        swapChainImageCount
+        swapChainImageCount * objectCount
     );
 
     return vkCreateDescriptorPool( this->_pLogicalDevice->data(), & createInfo, nullptr, & this->_handle );

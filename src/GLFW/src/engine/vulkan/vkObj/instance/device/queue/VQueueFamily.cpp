@@ -188,6 +188,8 @@ void engine::VQueueFamilyCollection::debugPrintQueueFamiliesReservations(std::os
     }
 }
 
+#endif
+
 std::vector< uint32 > engine::VQueueFamilyCollection::getQueueFamilyIndices() const noexcept {
     std::vector < uint32 > queueFamilyIndices;
 
@@ -196,8 +198,6 @@ std::vector< uint32 > engine::VQueueFamilyCollection::getQueueFamilyIndices() co
 
     return queueFamilyIndices;
 }
-
-#endif
 
 const engine::VPhysicalDevice & engine::VQueueFamily::getPhysicalDevice() const noexcept {
     return this->_parentCollection->getPhysicalDevice();

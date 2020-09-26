@@ -100,6 +100,8 @@ void engine::VExtensionCollection::debugPrint(std::ostream & buffer, const char*
         extension.debugPrint( buffer, std::string(prefix).append("\t").c_str() );
 }
 
+#endif
+
 bool engine::VExtensionCollection::contains(const engine::VExtensionCollection & otherCollection) const noexcept {
     for ( const auto& otherCollectionExtension : otherCollection._extensions ) { // NOLINT(readability-use-anyofallof)
         if ( this->contains( otherCollectionExtension ) )
@@ -107,5 +109,3 @@ bool engine::VExtensionCollection::contains(const engine::VExtensionCollection &
     }
     return false;
 }
-
-#endif

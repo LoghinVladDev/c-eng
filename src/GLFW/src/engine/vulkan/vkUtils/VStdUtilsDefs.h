@@ -80,6 +80,8 @@
         throw _throw;                              \
 }
 
+#define ENG_STD_THROW(_str) std::runtime_error ( std::string().append("File : ").append(__FILE__).append("\n\tAt line ").append(std::to_string(__LINE__)).append(" : ").append(_str) )
+
 #endif //ENG1_VSTDUTILSDEFS_H
 
 #pragma clang diagnostic pop

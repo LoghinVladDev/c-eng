@@ -68,9 +68,6 @@ inline static void populateSubmitInfo (
 ) noexcept {
     if (
         submitInfo          == nullptr ||
-        pWaitStages         == nullptr ||
-        pWaitSemaphores     == nullptr ||
-        pSignalSemaphores   == nullptr ||
         pCommandBuffers     == nullptr
     )
         return;
@@ -263,14 +260,17 @@ VulkanResult engine::VCommandBufferCollection::allocate(const engine::VCommandPo
     return allocateResult;
 }
 
+
+// merge buffer, index buffer into one !!!
 VulkanResult engine::VCommandBuffer::startRecord(
     const engine::VPipeline & pipeline,
-    const VBuffer * pVertexBuffers,
+    const VVertexBuffer * pVertexBuffers,
+    const VIndexBuffer * pIndexBuffers,
+    const std::vector < VulkanDescriptorSet > * pDescriptorSets,
+//    const uint32 * pDescriptorSetOffsets,
+    uint32 objectCount,
     const VulkanDeviceSize * pOffsets,
-    uint32 vertexBufferCount,
-    const VIndexBuffer * pIndexBuffer,
-    const VulkanDescriptorSet * pDescriptorSets,
-    uint32 descriptorSetCount
+    uint32 offsetCount
 ) noexcept {
     VulkanCommandBufferBeginInfo beginInfo { };
 
@@ -299,29 +299,60 @@ VulkanResult engine::VCommandBuffer::startRecord(
 
     uint32 vertexCount = 0U;
 
-    if ( pVertexBuffers != nullptr ) {
-        VulkanBuffer vertexBufferHandles [ vertexBufferCount ];
-        for ( uint32 vertexBufferIndex = 0U; vertexBufferIndex < vertexBufferCount; vertexBufferIndex ++ ) {
-            vertexBufferHandles[vertexBufferIndex] = pVertexBuffers[vertexBufferIndex].data();
-            vertexCount += pVertexBuffers[ vertexBufferIndex ].getElementCount();
+    for ( uint32 objectIndex = 0; objectIndex < objectCount; objectIndex ++ ) {
+        if ( pVertexBuffers != nullptr ) {
+            vkCmdBindVertexBuffers( this->_handle, 0, 1U, & pVertexBuffers[ objectIndex ].data(), pOffsets);
         }
 
-        vkCmdBindVertexBuffers( this->_handle, 0, vertexBufferCount, vertexBufferHandles, pOffsets );
-
-        if ( pIndexBuffer != nullptr ) {
-            vkCmdBindIndexBuffer( this->_handle, pIndexBuffer->data(), 0, pIndexBuffer->getIndexType() );
+        if ( pIndexBuffers != nullptr ) {
+            vkCmdBindIndexBuffer( this->_handle, pIndexBuffers[ objectIndex ].data(), 0, pIndexBuffers[ objectIndex ].getIndexType());
         }
+
+        if ( pDescriptorSets != nullptr ) {
+            vkCmdBindDescriptorSets(
+                    this->_handle,
+                    VulkanPipelineBindPoint::VK_PIPELINE_BIND_POINT_GRAPHICS,
+                    pipeline.layout(),
+                    0U,
+//                    pDescriptorSetOffsets[ objectIndex ],
+                    pDescriptorSets[ objectIndex ].size(),
+                    pDescriptorSets[ objectIndex ].data(),
+                    0U,
+                    nullptr
+            );
+        }
+
+        if ( pIndexBuffers == nullptr )
+            vkCmdDraw( this->_handle, pVertexBuffers[ objectCount ].getElementCount(), 1, 0, 0 );
+        else
+            vkCmdDrawIndexed( this->_handle, pIndexBuffers[ objectCount ].getElementCount(), 1, 0 ,0 ,0 );
     }
-
-    if ( pDescriptorSets != nullptr )
-        vkCmdBindDescriptorSets( this->_handle, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline.layout(), 0U, descriptorSetCount, pDescriptorSets, 0U, nullptr );
-
-    if ( pIndexBuffer == nullptr )
-        vkCmdDraw           ( this->_handle, vertexCount , 1, 0, 0 );
-    else
-        vkCmdDrawIndexed    ( this->_handle, pIndexBuffer->getElementCount(), 1, 0, 0, 0 );
-//    vkCmdDraw           ( this->_handle, 3 , 1, 3, 0 );
     vkCmdEndRenderPass  ( this->_handle );
+
+
+//    if ( pVertexBuffers != nullptr ) {
+//        VulkanBuffer vertexBufferHandles [ vertexBufferCount ];
+//        for ( uint32 vertexBufferIndex = 0U; vertexBufferIndex < vertexBufferCount; vertexBufferIndex ++ ) {
+//            vertexBufferHandles[vertexBufferIndex] = pVertexBuffers[vertexBufferIndex].data();
+//            vertexCount += pVertexBuffers[ vertexBufferIndex ].getElementCount();
+//        }
+//
+//        vkCmdBindVertexBuffers( this->_handle, 0, vertexBufferCount, vertexBufferHandles, pOffsets );
+//
+//        if ( pIndexBuffer != nullptr ) {
+//            vkCmdBindIndexBuffer( this->_handle, pIndexBuffer->data(), 0, pIndexBuffer->getIndexType() );
+//        }
+//    }
+//
+//    if ( pDescriptorSets != nullptr )
+//        vkCmdBindDescriptorSets( this->_handle, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline.layout(), 0U, descriptorSetCount, pDescriptorSets, 0U, nullptr );
+//
+//    if ( pIndexBuffer == nullptr )
+//        vkCmdDraw           ( this->_handle, vertexCount , 1, 0, 0 );
+//    else
+//        vkCmdDrawIndexed    ( this->_handle, pIndexBuffer->getElementCount(), 1, 0, 0, 0 );
+////    vkCmdDraw           ( this->_handle, 3 , 1, 3, 0 );
+//    vkCmdEndRenderPass  ( this->_handle );
 
     return vkEndCommandBuffer( this->_handle );
 }
@@ -353,15 +384,15 @@ VulkanResult engine::VCommandBuffer::startRecord(
 
 VulkanResult engine::VCommandBufferCollection::startRecord(
     const engine::VPipeline & pipeline,
-    const engine::VBuffer * pVertexBuffers,
+    const engine::VVertexBuffer * pVertexBuffers,
+    const VIndexBuffer * pIndexBuffers,
+    const std::vector < VulkanDescriptorSet > * pDescriptorSets,
+    uint32 objectCount,
     const VulkanDeviceSize * pOffsets,
-    uint32 vertexBufferCount,
-    const VIndexBuffer * pIndexBuffer,
-    const VulkanDescriptorSet * pDescriptorSets,
-    uint32 descriptorSetCount
+    uint32 offsetCount
 ) noexcept {
-    if ( pDescriptorSets != nullptr && descriptorSetCount != static_cast < uint32 > (this->_commandBuffers.size()) )
-        return VulkanResult::VK_ERROR_UNKNOWN; // todo : find something else for this
+//    if ( pDescriptorSets != nullptr && descriptorSetCount != static_cast < uint32 > (this->_commandBuffers.size()) )
+//        return VulkanResult::VK_ERROR_UNKNOWN; // todo : find something else for this todo 2 : idk?
 
     uint32 descriptorSetIndex = 0U;
 
@@ -369,11 +400,11 @@ VulkanResult engine::VCommandBufferCollection::startRecord(
         VulkanResult startRecordResult = commandBuffer.startRecord(
             pipeline,
             pVertexBuffers,
+            pIndexBuffers,
+            pDescriptorSets,
+            objectCount,
             pOffsets,
-            vertexBufferCount,
-            pIndexBuffer,
-            pDescriptorSets + (descriptorSetIndex++),
-            1U
+            offsetCount
         );
         if( startRecordResult != VulkanResult::VK_SUCCESS )
             return startRecordResult;
@@ -453,10 +484,10 @@ VulkanResult engine::VCommandBuffer::submit(
 
     populateSubmitInfo (
         & submitInfo,
-        pWaitStages,
+        waitSemaphoreCount == 0 ? nullptr : pWaitStages,
         waitHandles,
         waitSemaphoreCount,
-        signalHandles,
+        signalSemaphoreCount == 0 ? nullptr : signalHandles,
         signalSemaphoreCount,
         & this->_handle,
         1U

@@ -25,7 +25,13 @@ namespace engine {
         //// public functions
         VDescriptorPool() noexcept = default;
 
-        VulkanResult setup ( const VLogicalDevice & ) noexcept;
+        VulkanResult setup (
+                const VLogicalDevice &,
+                const VulkanDescriptorType *,
+                uint32,
+                uint32
+        ) noexcept;
+
         void cleanup() noexcept;
 
         [[nodiscard]] const VulkanDescriptorPool & data () const noexcept {

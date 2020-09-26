@@ -28,7 +28,7 @@ inline static void populateBufferCreateInfo (
     };
 }
 
-inline void populateMemoryAllocateInfo (
+void populateMemoryAllocateInfo (
         VulkanMemoryAllocateInfo *  allocateInfo,
         VulkanDeviceSize            allocationSize,
         uint32                      memoryTypeIndex
@@ -44,7 +44,7 @@ inline void populateMemoryAllocateInfo (
     };
 }
 
-inline uint32 findMemoryType ( uint32 typeFilter, VulkanMemoryPropertyFlags properties, const engine::VLogicalDevice * pLogicalDevice ) noexcept (false) {
+uint32 findMemoryType ( uint32 typeFilter, VulkanMemoryPropertyFlags properties, const engine::VLogicalDevice * pLogicalDevice ) noexcept (false) {
     auto memoryProperties = pLogicalDevice->getBasePhysicalDevice()->getMemoryProperties();
 
     for ( uint32 memoryTypeIndex = 0; memoryTypeIndex < memoryProperties.memoryTypeCount; memoryTypeIndex++ ) {

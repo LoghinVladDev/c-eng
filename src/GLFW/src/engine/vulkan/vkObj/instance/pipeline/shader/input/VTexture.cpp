@@ -43,7 +43,7 @@ inline static void populateImageCreateInfo (
     };
 }
 
-inline void populateImageMemoryBarrier (
+void populateImageMemoryBarrier (
     VulkanImageMemoryBarrier * pMemoryBarrier,
     VulkanImageLayout          oldLayout,
     VulkanImageLayout          newLayout,
