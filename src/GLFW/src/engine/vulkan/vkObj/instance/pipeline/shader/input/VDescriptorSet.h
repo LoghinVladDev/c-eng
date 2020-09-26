@@ -43,8 +43,8 @@ namespace engine {
             return this->_handle;
         }
 
-        void configure ( const VUniformBuffer <T> & ) noexcept;
-        void configure ( const VTexture& , const VTextureSampler & ) noexcept;
+        void configure ( const VUniformBuffer <T> &, uint32 ) noexcept;
+        void configure ( const VTexture& , const VTextureSampler &, uint32 ) noexcept;
     };
 
     template <class T>
@@ -53,6 +53,7 @@ namespace engine {
         //// private variables
         const VLogicalDevice                * _pLogicalDevice {nullptr};
         std::vector < VDescriptorSet <T> >    _descriptorSets;
+        uint32                                _autoIncrementDescriptorIndex {0U};
 
         //// private functions
     public:
@@ -72,8 +73,8 @@ namespace engine {
             return this->_pLogicalDevice;
         }
 
-        void configure ( const std::vector < VUniformBuffer <T> > & ) noexcept;
-        void configure ( const VTexture&, const VTextureSampler & ) noexcept;
+        void configure ( const std::vector < VUniformBuffer <T> > &, uint32 = 0U ) noexcept;
+        void configure ( const VTexture&, const VTextureSampler &, uint32 = 0U ) noexcept;
     };
 
     typedef VDescriptorSet < uint8 > VSamplerDescriptorSet;
@@ -202,19 +203,21 @@ static inline void populateWriteDescriptorSet (
 }
 
 template <class T>
-void engine::VDescriptorSetCollection<T>::configure(const std::vector<VUniformBuffer<T>> & uniformBuffers) noexcept {
+void engine::VDescriptorSetCollection<T>::configure(const std::vector<VUniformBuffer<T>> & uniformBuffers, uint32 descriptorIndex) noexcept {
     for ( uint32 it = 0; it < this->_descriptorSets.size(); it++ )
-        this->_descriptorSets[it].configure ( uniformBuffers[ it ] );
+        this->_descriptorSets[it].configure ( uniformBuffers[ it ], this->_autoIncrementDescriptorIndex );
+    this->_autoIncrementDescriptorIndex ++;
 }
 
 template <class T>
-void engine::VDescriptorSetCollection<T>::configure(const VTexture & texture, const VTextureSampler & textureSampler) noexcept {
+void engine::VDescriptorSetCollection<T>::configure(const VTexture & texture, const VTextureSampler & textureSampler, uint32 descriptorIndex) noexcept {
     for ( auto & descriptorSet : this->_descriptorSets )
-        descriptorSet.configure ( texture, textureSampler );
+        descriptorSet.configure ( texture, textureSampler, this->_autoIncrementDescriptorIndex );
+    this->_autoIncrementDescriptorIndex ++;
 }
 
 template <class T>
-void engine::VDescriptorSet<T>::configure(const VTexture & texture, const VTextureSampler & textureSampler) noexcept {
+void engine::VDescriptorSet<T>::configure(const VTexture & texture, const VTextureSampler & textureSampler, uint32 descriptorIndex) noexcept {
     VulkanDescriptorImageInfo imageInfo {};
     populateDescriptorImageInfo(
         & imageInfo,
@@ -228,7 +231,7 @@ void engine::VDescriptorSet<T>::configure(const VTexture & texture, const VTextu
         & writeDescriptorSet,
         this->_handle,
         VulkanDescriptorType::VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
-        1U,
+        descriptorIndex,
         0U,
         nullptr,
         & imageInfo
@@ -238,7 +241,7 @@ void engine::VDescriptorSet<T>::configure(const VTexture & texture, const VTextu
 }
 
 template <class T>
-void engine::VDescriptorSet<T>::configure(const VUniformBuffer<T> & uniformBuffer) noexcept {
+void engine::VDescriptorSet<T>::configure(const VUniformBuffer<T> & uniformBuffer, uint32 descriptorIndex) noexcept {
     VulkanDescriptorBufferInfo bufferInfo {};
     populateDescriptorBufferInfo(
         & bufferInfo,
@@ -252,7 +255,7 @@ void engine::VDescriptorSet<T>::configure(const VUniformBuffer<T> & uniformBuffe
         & writeDescriptorSet,
         this->_handle,
         VulkanDescriptorType::VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
-        0U,
+        descriptorIndex,
         0U,
         & bufferInfo,
         nullptr

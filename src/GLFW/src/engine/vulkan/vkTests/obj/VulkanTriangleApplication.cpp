@@ -776,26 +776,17 @@ void engine::VulkanTriangleApplication::createTextures() noexcept(false) {
 }
 
 void engine::VulkanTriangleApplication::createDescriptorSets() noexcept(false) {
-    if ( this->_cubeDescriptorSetCollection.allocate(
+    if ( this->_descriptorSetCollection.allocate(
         this->_descriptorPool,
         this->_descriptorSetLayout
     ) != VulkanResult::VK_SUCCESS )
         throw std::runtime_error ("Descriptor Set Allocate Error");
 
-    this->_cubeDescriptorSetCollection.configure(this->_cubeUniformBuffers);
-    this->_cubeDescriptorSetCollection.configure(this->_cubeTexture, this->_textureSampler);
+    this->_descriptorSetCollection.configure(this->_cubeUniformBuffers, 0U);
+    this->_descriptorSetCollection.configure(this->_cubeTexture, this->_textureSampler, 1U);
 
-    ENG_THROW_IF_NOT_SUCCESS (
-        this->_starDescriptorSetCollection.allocate (
-            this->_descriptorPool,
-            this->_descriptorSetLayout
-        ),
-        ENG_STD_THROW( "Star Descriptor Set Allocate Error" )
-    )
-
-
-    this->_starDescriptorSetCollection.configure( this->_starUniformBuffers );
-    this->_starDescriptorSetCollection.configure( this->_starTexture, this->_textureSampler );
+    this->_descriptorSetCollection.configure( this->_starUniformBuffers, 2U);
+    this->_descriptorSetCollection.configure( this->_starTexture, this->_textureSampler, 3U );
 }
 
 void engine::VulkanTriangleApplication::createDescriptorPool() noexcept(false) {
@@ -965,8 +956,7 @@ void engine::VulkanTriangleApplication::createCommandBuffers() noexcept(false) {
     };
 
     const std::vector <VulkanDescriptorSet> descriptorSetHandles [] = {
-            this->_cubeDescriptorSetCollection.getDescriptorSetHandles(),
-            this->_starDescriptorSetCollection.getDescriptorSetHandles()
+            this->_descriptorSetCollection.getDescriptorSetHandles(),
     };
 
     if ( this->_drawCommandBufferCollection.startRecord(

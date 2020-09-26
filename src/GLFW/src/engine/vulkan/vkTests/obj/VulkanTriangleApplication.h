@@ -118,10 +118,10 @@ namespace engine {
 
         VDepthBuffer                _depthBuffer;
 
-        VDescriptorSetCollection < engine::SUniformBufferObject >       _cubeDescriptorSetCollection;
+        VDescriptorSetCollection < engine::SUniformBufferObject >       _descriptorSetCollection;
         std::vector < VUniformBuffer < engine::SUniformBufferObject > > _cubeUniformBuffers;
 
-        VDescriptorSetCollection < engine::SUniformBufferObject >       _starDescriptorSetCollection;
+//        VDescriptorSetCollection < engine::SUniformBufferObject >       _starDescriptorSetCollection;
         std::vector < VUniformBuffer < engine::SUniformBufferObject > > _starUniformBuffers;
 
         double                      _fpsTimer = 0.0;
