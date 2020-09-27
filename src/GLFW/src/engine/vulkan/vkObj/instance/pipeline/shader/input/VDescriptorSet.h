@@ -114,6 +114,7 @@ VulkanResult engine::VDescriptorSetCollection<T>::allocate(
         const VDescriptorPool & descriptorPool,
         const VulkanDescriptorSetLayout & descriptorSetBaseLayout
 ) noexcept {
+    this->_autoIncrementDescriptorIndex = 0U;
     this->_pLogicalDevice = descriptorPool.getLogicalDevicePtr();
     auto swapChainImageCount = static_cast < uint32 > ( this->_pLogicalDevice->getSwapChain()->getImages().size() );
 
