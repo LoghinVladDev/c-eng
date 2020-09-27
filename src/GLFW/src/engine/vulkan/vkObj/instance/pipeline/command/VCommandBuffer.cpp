@@ -264,10 +264,9 @@ VulkanResult engine::VCommandBufferCollection::allocate(const engine::VCommandPo
 // merge buffer, index buffer into one !!!
 VulkanResult engine::VCommandBuffer::startRecord(
     const engine::VPipeline & pipeline,
-    const VVertexBuffer * pVertexBuffers,
+    const engine::VVertexBuffer * pVertexBuffers,
     const VIndexBuffer * pIndexBuffers,
-    const std::vector < VulkanDescriptorSet > * pDescriptorSets,
-//    const uint32 * pDescriptorSetOffsets,
+    const VulkanDescriptorSet * pDescriptorSets,
     uint32 objectCount,
     const VulkanDeviceSize * pOffsets,
     uint32 offsetCount
@@ -315,17 +314,17 @@ VulkanResult engine::VCommandBuffer::startRecord(
                     pipeline.layout(),
                     0U,
 //                    pDescriptorSetOffsets[ objectIndex ],
-                    pDescriptorSets[ objectIndex ].size(),
-                    pDescriptorSets[ objectIndex ].data(),
+                    1U,
+                    pDescriptorSets + objectIndex,
                     0U,
                     nullptr
             );
         }
 
         if ( pIndexBuffers == nullptr )
-            vkCmdDraw( this->_handle, pVertexBuffers[ objectCount ].getElementCount(), 1, 0, 0 );
+            vkCmdDraw( this->_handle, pVertexBuffers[ objectIndex ].getElementCount(), 1, 0, 0 );
         else
-            vkCmdDrawIndexed( this->_handle, pIndexBuffers[ objectCount ].getElementCount(), 1, 0 ,0 ,0 );
+            vkCmdDrawIndexed( this->_handle, pIndexBuffers[ objectIndex ].getElementCount(), 1, 0 ,0 ,0 );
     }
     vkCmdEndRenderPass  ( this->_handle );
 
@@ -386,10 +385,11 @@ VulkanResult engine::VCommandBufferCollection::startRecord(
     const engine::VPipeline & pipeline,
     const engine::VVertexBuffer * pVertexBuffers,
     const VIndexBuffer * pIndexBuffers,
-    const std::vector < VulkanDescriptorSet > * pDescriptorSets,
     uint32 objectCount,
     const VulkanDeviceSize * pOffsets,
-    uint32 offsetCount
+    uint32 offsetCount,
+    VulkanDescriptorSet const * const * ppDescriptorSets,
+    uint32 descriptorSetCount
 ) noexcept {
 //    if ( pDescriptorSets != nullptr && descriptorSetCount != static_cast < uint32 > (this->_commandBuffers.size()) )
 //        return VulkanResult::VK_ERROR_UNKNOWN; // todo : find something else for this todo 2 : idk?
@@ -401,7 +401,7 @@ VulkanResult engine::VCommandBufferCollection::startRecord(
             pipeline,
             pVertexBuffers,
             pIndexBuffers,
-            pDescriptorSets,
+            ppDescriptorSets [ descriptorSetIndex++ ],
             objectCount,
             pOffsets,
             offsetCount

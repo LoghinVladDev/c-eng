@@ -7,12 +7,12 @@
         "sources" : [ {
                 "path"          : "./standardShaders/vertexColorShader.vert",
                 "outputName"    : "vertexShaderByteCode",
-                "tag"           : "vertexShader",
+                "tag"           : "defObj",
                 "type"          : "vert"
             }, {
                 "path"          : "./standardShaders/fragmentColorShader.frag",
                 "outputName"    : "fragmentShaderByteCode",
-                "tag"           : "fragmentShader",
+                "tag"           : "defObj",
                 "type"          : "frag"
             }
         ]

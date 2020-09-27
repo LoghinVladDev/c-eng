@@ -106,7 +106,7 @@ namespace engine {
         VIndexBuffer                _starIndexBuffer;
 
         VulkanDescriptorSetLayout   _descriptorSetLayout {};
-//        VulkanDescriptorSetLayout   _starDescriptorSetLayoutUBO {};
+//        VulkanDescriptorSetLayout   _starDescriptorSetLayout {};
         VulkanDescriptorSetLayout   _descriptorSetLayoutSampler {};
 
         VDescriptorPool             _descriptorPool;
@@ -118,10 +118,10 @@ namespace engine {
 
         VDepthBuffer                _depthBuffer;
 
-        VDescriptorSetCollection < engine::SUniformBufferObject >       _descriptorSetCollection;
+        VDescriptorSetCollection < engine::SUniformBufferObject >       _cubeDescriptorSetCollection;
         std::vector < VUniformBuffer < engine::SUniformBufferObject > > _cubeUniformBuffers;
 
-//        VDescriptorSetCollection < engine::SUniformBufferObject >       _starDescriptorSetCollection;
+        VDescriptorSetCollection < engine::SUniformBufferObject >       _starDescriptorSetCollection;
         std::vector < VUniformBuffer < engine::SUniformBufferObject > > _starUniformBuffers;
 
         double                      _fpsTimer = 0.0;

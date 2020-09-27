@@ -63,7 +63,8 @@ namespace engine {
             const VPipeline&,
             const VVertexBuffer * = nullptr,
             const VIndexBuffer * = nullptr,
-            const std::vector < VulkanDescriptorSet > * = nullptr,
+            const VulkanDescriptorSet * = nullptr,
+//            const std::vector < VulkanDescriptorSet > * = nullptr,
 //            const uint32 * = nullptr,
             uint32 = 0U,
             const VulkanDeviceSize * = nullptr,
@@ -98,14 +99,16 @@ namespace engine {
         VulkanResult allocate ( const engine::VCommandPool &, const engine::VFrameBufferCollection & ) noexcept;
         VulkanResult allocate ( const engine::VCommandPool &, uint32 ) noexcept;
         VulkanResult startRecord (
-            const VPipeline&,
-            const VVertexBuffer * = nullptr,
-            const VIndexBuffer * = nullptr,
-            const std::vector < VulkanDescriptorSet > * = nullptr,
+                const VPipeline&,
+                const VVertexBuffer * = nullptr,
+                const VIndexBuffer * = nullptr,
+//            const std::vector < VulkanDescriptorSet > * = nullptr,
 //            const uint32 * = nullptr,
-            uint32 = 0U,
-            const VulkanDeviceSize * = nullptr,
-            uint32 = 0U
+                uint32 = 0U,
+                const VulkanDeviceSize * = nullptr,
+                uint32 = 0U,
+                VulkanDescriptorSet const * const * = nullptr,
+                uint32 = 0U
         ) noexcept;
 
         VulkanResult startRecord (
