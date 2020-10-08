@@ -514,6 +514,7 @@ void engine::VulkanTriangleApplication::updateUniformBuffer(uint32 uniformBuffer
 
     static auto startTime = std::chrono::high_resolution_clock::now();
     auto currentTime = std::chrono::high_resolution_clock::now();
+
     double scaleFactor = 1.3f;
 
     static float FOV = 45.0f;
@@ -551,12 +552,13 @@ void engine::VulkanTriangleApplication::updateUniformBuffer(uint32 uniformBuffer
     auto & starBuffer = this->_starUniformBuffers[ uniformBufferIndex ];
 
     engine::SUniformBufferObject starUBO {
-        .model = glm::scale (
+        .model = glm::rotate( glm::scale (
                 glm::translate(
                         glm::mat4 ( 1.0f ),
                         glm::vec3 (0.0f, 1.0f, 0.0f)
                 ),
                 glm::vec3 ( 1.5f, 1.5f, 1.5f )
+                  ), (float) glfwGetTime() * glm::radians( 90.0f ), glm::vec3 ( 1.0f, 0.0f, 0.0f )
         ),
         .view  = glm::lookAt( glm::vec3 ( 2.0f, 2.0f, 2.0f ) , glm::vec3( 0.0f, 0.0f, 0.0f ), glm::vec3 (0.0f, 0.0f, 1.0f) ),
         .projection = glm::perspective (
@@ -659,69 +661,88 @@ void engine::VulkanTriangleApplication::createDepthBuffer() noexcept(false) {
 
 
 void engine::VulkanTriangleApplication::createConcurrentBuffers() noexcept(false) {
-    auto queueFamilyIndices = this->_vulkanQueueFamilyCollection->getQueueFamilyIndices();
-
-    VulkanResult statusResult;
-    if (( statusResult = this->_cubeVertexBuffer.setup(
-            this->_vulkanLogicalDevice,
+//    auto queueFamilyIndices = this->_vulkanQueueFamilyCollection->getQueueFamilyIndices();
+//
+//    VulkanResult statusResult;
+//    if (( statusResult = this->_cubeVertexBuffer.setup(
+//            this->_vulkanLogicalDevice,
+//            cubeVertices,
+//            & this->_transferCommandPool,
+//            queueFamilyIndices.data(),
+//            queueFamilyIndices.size()
+//        )) != VulkanResult::VK_SUCCESS
+//    ) {
+//        std::cerr << VStandardUtils::to_string(statusResult) << '\n';
+//        throw std::runtime_error("Vertex Buffer Initialization failure");
+//    }
+//
+//    if ( this->_cubeVertexBuffer.allocateMemory() != VulkanResult::VK_SUCCESS )
+//        throw std::runtime_error ( "Vertex Buffer Allocation failure" );
+//
+//    if (( statusResult = this->_cubeIndexBuffer.setup(
+//            this->_vulkanLogicalDevice,
+//            cubeIndices,
+//            & this->_transferCommandPool,
+//            queueFamilyIndices.data(),
+//            queueFamilyIndices.size()
+//        )) != VulkanResult::VK_SUCCESS
+//    ) {
+//        std::cerr << VStandardUtils::to_string(statusResult) << '\n';
+//        throw std::runtime_error("Index Buffer Initialization failure");
+//    }
+//
+//    if ( this->_cubeIndexBuffer.allocateMemory() != VulkanResult::VK_SUCCESS )
+//        throw std::runtime_error("Index Buffer Allocation failure");
+//
+//    ENG_THROW_IF_NOT_SUCCESS (
+//        this->_starVertexBuffer.setup(
+//                this->_vulkanLogicalDevice,
+//                starVertices,
+//                & this->_transferCommandPool,
+//                queueFamilyIndices.data(),
+//                queueFamilyIndices.size()
+//        ),
+//        std::runtime_error("Vertex Buffer Initialization failure")
+//    )
+//
+//    ENG_THROW_IF_NOT_SUCCESS (
+//        this->_starVertexBuffer.allocateMemory(),
+//        std::runtime_error ( "Star Vert Buffer Alloc Failure" )
+//    )
+//
+//    ENG_THROW_IF_NOT_SUCCESS(
+//        this->_starIndexBuffer.setup(
+//                this->_vulkanLogicalDevice,
+//                starIndices,
+//                & this->_transferCommandPool,
+//                queueFamilyIndices.data(),
+//                queueFamilyIndices.size()
+//        ),
+//        std::runtime_error ( "Star Index Buffer Alloc Failure" )
+//    )
+//
+//    ENG_THROW_IF_NOT_SUCCESS (
+//            this->_starIndexBuffer.allocateMemory(),
+//            std::runtime_error ( "Star Index Buffer Alloc Failure" )
+//    )
+    ENG_THROW_IF_NOT_SUCCESS (
+        this->_cubeMesh.setup(
+            this->_transferCommandPool,
+            * this->_vulkanQueueFamilyCollection,
             cubeVertices,
-            & this->_transferCommandPool,
-            queueFamilyIndices.data(),
-            queueFamilyIndices.size()
-        )) != VulkanResult::VK_SUCCESS
-    ) {
-        std::cerr << VStandardUtils::to_string(statusResult) << '\n';
-        throw std::runtime_error("Vertex Buffer Initialization failure");
-    }
-
-    if ( this->_cubeVertexBuffer.allocateMemory() != VulkanResult::VK_SUCCESS )
-        throw std::runtime_error ( "Vertex Buffer Allocation failure" );
-
-    if (( statusResult = this->_cubeIndexBuffer.setup(
-            this->_vulkanLogicalDevice,
-            cubeIndices,
-            & this->_transferCommandPool,
-            queueFamilyIndices.data(),
-            queueFamilyIndices.size()
-        )) != VulkanResult::VK_SUCCESS
-    ) {
-        std::cerr << VStandardUtils::to_string(statusResult) << '\n';
-        throw std::runtime_error("Index Buffer Initialization failure");
-    }
-
-    if ( this->_cubeIndexBuffer.allocateMemory() != VulkanResult::VK_SUCCESS )
-        throw std::runtime_error("Index Buffer Allocation failure");
-
-    ENG_THROW_IF_NOT_SUCCESS (
-        this->_starVertexBuffer.setup(
-                this->_vulkanLogicalDevice,
-                starVertices,
-                & this->_transferCommandPool,
-                queueFamilyIndices.data(),
-                queueFamilyIndices.size()
+            cubeIndices
         ),
-        std::runtime_error("Vertex Buffer Initialization failure")
-    )
-
-    ENG_THROW_IF_NOT_SUCCESS (
-        this->_starVertexBuffer.allocateMemory(),
-        std::runtime_error ( "Star Vert Buffer Alloc Failure" )
+        ENG_STD_THROW("Cube Mesh Setup Error")
     )
 
     ENG_THROW_IF_NOT_SUCCESS(
-        this->_starIndexBuffer.setup(
-                this->_vulkanLogicalDevice,
-                starIndices,
-                & this->_transferCommandPool,
-                queueFamilyIndices.data(),
-                queueFamilyIndices.size()
+        this->_starMesh.setup(
+            this->_transferCommandPool,
+            * this->_vulkanQueueFamilyCollection,
+            starVertices,
+            starIndices
         ),
-        std::runtime_error ( "Star Index Buffer Alloc Failure" )
-    )
-
-    ENG_THROW_IF_NOT_SUCCESS (
-            this->_starIndexBuffer.allocateMemory(),
-            std::runtime_error ( "Star Index Buffer Alloc Failure" )
+        ENG_STD_THROW ("Star Mesh Setup Error")
     )
 
     this->createUniformBuffers();
@@ -839,31 +860,31 @@ void engine::VulkanTriangleApplication::createUniformBuffers() noexcept(false) {
 
 void engine::VulkanTriangleApplication::createExclusiveBuffers() noexcept(false) {
     VulkanResult statusResult;
-    if (( statusResult = this->_cubeVertexBuffer.setup(
-            this->_vulkanLogicalDevice,
-            cubeVertices,
-            & this->_transferCommandPool
-    )) != VulkanResult::VK_SUCCESS
-            ) {
-        std::cerr << VStandardUtils::to_string(statusResult) << '\n';
-        throw std::runtime_error("Vertex Buffer Initialization failure");
-    }
+//    if (( statusResult = this->_cubeVertexBuffer.setup(
+//            this->_vulkanLogicalDevice,
+//            cubeVertices,
+//            & this->_transferCommandPool
+//    )) != VulkanResult::VK_SUCCESS
+//            ) {
+//        std::cerr << VStandardUtils::to_string(statusResult) << '\n';
+//        throw std::runtime_error("Vertex Buffer Initialization failure");
+//    }
 
-    if ( this->_cubeVertexBuffer.allocateMemory() != VulkanResult::VK_SUCCESS )
-        throw std::runtime_error ( "Vertex Buffer Allocation failure" );
-
-    if (( statusResult = this->_cubeIndexBuffer.setup(
-            this->_vulkanLogicalDevice,
-            cubeIndices,
-            & this->_transferCommandPool
-    )) != VulkanResult::VK_SUCCESS
-            ) {
-        std::cerr << VStandardUtils::to_string(statusResult) << '\n';
-        throw std::runtime_error("Index Buffer Initialization failure");
-    }
-
-    if ( this->_cubeIndexBuffer.allocateMemory() != VulkanResult::VK_SUCCESS )
-        throw std::runtime_error("Index Buffer Allocation failure");
+//    if ( this->_cubeVertexBuffer.allocateMemory() != VulkanResult::VK_SUCCESS )
+//        throw std::runtime_error ( "Vertex Buffer Allocation failure" );
+//
+//    if (( statusResult = this->_cubeIndexBuffer.setup(
+//            this->_vulkanLogicalDevice,
+//            cubeIndices,
+//            & this->_transferCommandPool
+//    )) != VulkanResult::VK_SUCCESS
+//            ) {
+//        std::cerr << VStandardUtils::to_string(statusResult) << '\n';
+//        throw std::runtime_error("Index Buffer Initialization failure");
+//    }
+//
+//    if ( this->_cubeIndexBuffer.allocateMemory() != VulkanResult::VK_SUCCESS )
+//        throw std::runtime_error("Index Buffer Allocation failure");
 
     this->createUniformBuffers();
 }
@@ -905,15 +926,10 @@ void engine::VulkanTriangleApplication::cleanup() noexcept (false) {
     this->_vertexShader.cleanup();
     this->_fragmentShader.cleanup();
 
-    this->_cubeVertexBuffer.free();
-    this->_cubeVertexBuffer.cleanup();
-    this->_cubeIndexBuffer.free();
-    this->_cubeIndexBuffer.cleanup();
-
-    this->_starVertexBuffer.free();
-    this->_starVertexBuffer.cleanup();
-    this->_starIndexBuffer.free();
-    this->_starIndexBuffer.cleanup();
+    this->_cubeMesh.free();
+    this->_cubeMesh.cleanup();
+    this->_starMesh.free();
+    this->_starMesh.cleanup();
 
     this->_vulkanLogicalDevice.cleanup();
 
@@ -945,20 +961,14 @@ void engine::VulkanTriangleApplication::createCommandBuffers() noexcept(false) {
     VulkanDeviceSize offsets [] = { 0 };
 
     VVertexBuffer vertexBuffers [] = {
-            this->_cubeVertexBuffer,
-            this->_starVertexBuffer
+            this->_cubeMesh.getVertexBuffer(),
+            this->_starMesh.getVertexBuffer()
     };
 
     VIndexBuffer indexBuffers [] = {
-            this->_cubeIndexBuffer,
-            this->_starIndexBuffer
+            this->_cubeMesh.getIndexBuffer(),
+            this->_starMesh.getIndexBuffer()
     };
-
-//    const std::vector <VulkanDescriptorSet> descriptorSetHandles [] = {
-//            this->_descriptorSetCollection.getDescriptorSetHandles(),
-//    };
-
-//    auto descriptorSetHandles = this->_descriptorSetCollection.getDescriptorSetHandles();
 
     std::array < std::vector < VulkanDescriptorSet >, 2 > objectDescriptorSetHandles = {
             this->_cubeDescriptorSetCollection.getDescriptorSetHandles(),

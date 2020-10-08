@@ -19,6 +19,11 @@ namespace engine {
         glm::mat4 projection;
     } SUniformBufferObject;
 
+    typedef struct {
+        glm::mat4 view;
+        glm::mat4 projection;
+    } SUniformBufferCamera;
+
     template <class T>
     class VUniformBuffer : public VBuffer {
     private:

@@ -111,7 +111,7 @@ namespace engine {
                 uint32 = 0U
         ) noexcept;
 
-        VulkanResult startRecord (
+        [[nodiscard]] VulkanResult startRecord (
             const VBuffer &,
             const VBuffer &,
             uint32

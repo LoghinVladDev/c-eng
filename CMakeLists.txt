@@ -3,35 +3,20 @@ project(eng1)
 
 set(CMAKE_CXX_STANDARD 20)
 set(OpenGL_GL_PREFERENCE GLVND)
-#set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 
-#set(CMAKE_PREFIX_PATH "D:\\QT\\5.14.1\\mingw73_64\\")
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
-#set(CMAKE_C_COMPILE_OBJECT g++)
-
-#set(CMAKE_AUTOMOC ON)
-#set(CMAKE_AUTOUIC ON)
-#set(CMAKE_AUTORCC ON)
 
 add_subdirectory(dependencies/glfw_src)
 add_subdirectory(dependencies/glad)
 add_subdirectory(dependencies/glm)
 add_subdirectory(dependencies/assimp-5.0.1)
 add_subdirectory(dependencies/JSONCpp)
-#add_subdirectory(dependencies/sqlite-autoconf-3320300)
-#add_subdirectory(dependencies/stb_image)
-#add_subdirectory(messengerOffline)
-#add_subdirectory(messengerOffline/src)
-#add_subdirectory(glm/glm)
 
-#include_directories(glm/glm)
-#include_directories(cmake-build-debug/assimp-5.0.1/include)
 include_directories(dependencies/sqlite-autoconf-3320300)
-#include_directories(dependencies/assimp-5.0.1/include)
 include_directories(dependencies/glm)
 include_directories(dependencies/glfw_src/include)
 include_directories(dependencies/glad/include)
@@ -42,7 +27,6 @@ include_directories(src/GLFW/src/engine)
 
 find_package(OpenGL REQUIRED)
 find_package(ASSIMP)
-#find_package(SQLite3 REQUIRED)
 
 if(SQLite3_FOUND)
     include_directories(${SQLite3_INCLUDE_DIRS})
@@ -52,6 +36,14 @@ if(ASSIMP_FOUND)
     include_directories(${ASSIMP_INCLUDE_DIR})
 endif()
 
+
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+    add_compile_options(-fprofile-instr-generate -fcoverage-mapping)
+    add_link_options(-fprofile-instr-generate)
+elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+    add_compile_options(--coverage)
+    link_libraries(gcov)
+endif()
 
 
 # VULKAN extension
@@ -71,6 +63,7 @@ if(Vulkan_FOUND)
     include_directories(src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/shader)
     include_directories(src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/shader/input)
     include_directories(src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/synchronization)
+    include_directories(src/GLFW/src/engine/vulkan/vkObj/engine)
 
 
     include_directories( ${Vulkan_INCLUDE_DIRS} )
@@ -164,7 +157,10 @@ if(Vulkan_FOUND)
             src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/VTextureSampler.h
             src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/VDepthBuffer.cpp
             src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/VDepthBuffer.h
-    )
+            src/GLFW/src/engine/vulkan/vkObj/engine/space/VTransform.cpp
+            src/GLFW/src/engine/vulkan/vkObj/engine/space/VTransform.h
+            src/GLFW/src/engine/vulkan/vkObj/engine/obj/VMesh.cpp
+            src/GLFW/src/engine/vulkan/vkObj/engine/obj/VMesh.h)
 
 
     target_link_libraries( vkTriangle Vulkan::Vulkan )
@@ -704,7 +700,7 @@ add_executable( animateTest
         src/obj/engine/util/dataStructures/Array.cpp
         src/obj/engine/util/dataStructures/Array.h
         src/obj/engine/preCompiledHeaders.h
-        src/GLFW/src/engine/enginePreproc.h src/GLFW/src/engine/obj/util/func/KeyFunctions.cpp src/GLFW/src/engine/obj/util/func/KeyFunctions.h src/GLFW/src/engine/vulkan/vkTests/obj/VulkanTriangleApplication.cpp src/GLFW/src/engine/vulkan/vkTests/obj/VulkanTriangleApplication.h src/GLFW/src/engine/vulkan/vkObj/instance/device/VPhysicalDevice.cpp src/GLFW/src/engine/vulkan/vkObj/instance/device/VPhysicalDevice.h src/GLFW/src/engine/vulkan/vkDefs/VInstanceDefinitions.h src/GLFW/src/engine/vulkan/vkDefs/vkPlatformDefs.h src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/command/VCommandPool.cpp src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/command/VCommandPool.h)
+        src/GLFW/src/engine/enginePreproc.h src/GLFW/src/engine/obj/util/func/KeyFunctions.cpp src/GLFW/src/engine/obj/util/func/KeyFunctions.h src/GLFW/src/engine/vulkan/vkTests/obj/VulkanTriangleApplication.cpp src/GLFW/src/engine/vulkan/vkTests/obj/VulkanTriangleApplication.h src/GLFW/src/engine/vulkan/vkObj/instance/device/VPhysicalDevice.cpp src/GLFW/src/engine/vulkan/vkObj/instance/device/VPhysicalDevice.h src/GLFW/src/engine/vulkan/vkDefs/VInstanceDefinitions.h src/GLFW/src/engine/vulkan/vkDefs/vkPlatformDefs.h src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/command/VCommandPool.cpp src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/command/VCommandPool.h src/GLFW/src/engine/vulkan/vkObj/engine/space/VTransform.cpp src/GLFW/src/engine/vulkan/vkObj/engine/space/VTransform.h src/GLFW/src/engine/vulkan/vkObj/engine/space/VRotor.cpp src/GLFW/src/engine/vulkan/vkObj/engine/space/VRotor.h)
 
 target_link_libraries(animateTest -lOpenGL32 -lfreeGLUT -lglu32)
 

@@ -33,12 +33,10 @@
 #include <vkObj/instance/pipeline/synchronization/VSemaphore.h>
 #include <vkObj/instance/pipeline/synchronization/VFence.h>
 #include <vkObj/instance/pipeline/shader/input/VVertex.h>
-#include <vkObj/instance/pipeline/shader/input/VVertexBuffer.h>
-#include <vkObj/instance/pipeline/shader/input/VStagingBuffer.h>
-#include <vkObj/instance/pipeline/shader/input/VIndexBuffer.h>
 #include <vkObj/instance/pipeline/shader/input/VUniformBuffer.h>
 #include <vkObj/instance/pipeline/shader/input/VDescriptorPool.h>
 #include <vkObj/instance/pipeline/shader/input/VDescriptorSet.h>
+#include <vkObj/engine/obj/VMesh.h>
 #include <VTexture.h>
 #include <VTextureSampler.h>
 #include <VDepthBuffer.h>
@@ -99,11 +97,14 @@ namespace engine {
         VFenceCollection            _inFlightFences;
         VFenceCollection            _imagesInFlight;
 
-        VVertexBuffer               _cubeVertexBuffer;
-        VIndexBuffer                _cubeIndexBuffer;
+//        VVertexBuffer               _cubeVertexBuffer;
+//        VIndexBuffer                _cubeIndexBuffer;
 
-        VVertexBuffer               _starVertexBuffer;
-        VIndexBuffer                _starIndexBuffer;
+//        VVertexBuffer               _starVertexBuffer;
+//        VIndexBuffer                _starIndexBuffer;
+
+        VMesh                       _cubeMesh;
+        VMesh                       _starMesh;
 
         VulkanDescriptorSetLayout   _descriptorSetLayout {};
 //        VulkanDescriptorSetLayout   _starDescriptorSetLayout {};
@@ -118,6 +119,22 @@ namespace engine {
 
         VDepthBuffer                _depthBuffer;
 
+        glm::mat4                   _cubeModel  { glm::mat4( 0.0f ) };
+        glm::mat4                   _starModel  { glm::mat4( 0.0f ) };
+
+        glm::mat4                   _projection { glm::mat4( 0.0f ) };
+        glm::mat4                   _view       { glm::mat4( 0.0f ) };
+
+//        VDescriptorSetCollection    < engine::SUniformBufferCamera > _cameraDescriptorSetCollection;
+
+//        VDescriptorSetCollection    < glm::mat4 > _cubeDescriptorSetCollection;
+//        VDescriptorSetCollection    < glm::mat4 > _starDescriptorSetCollection;
+
+//        std::vector < VUniformBuffer < engine::SUniformBufferCamera > > _cameraUniformBuffers;
+
+//        std::vector < VUniformBuffer < glm::mat4 > > _cubeUniformModelBuffers;
+//        std::vector < VUniformBuffer < glm::mat4 > > _starUniformModelBuffers;
+
         VDescriptorSetCollection < engine::SUniformBufferObject >       _cubeDescriptorSetCollection;
         std::vector < VUniformBuffer < engine::SUniformBufferObject > > _cubeUniformBuffers;
 
@@ -126,7 +143,7 @@ namespace engine {
 
         double                      _fpsTimer = 0.0;
         double                      _fpsRefreshTimer = __SHOW_FPS_EVERY_S;
-        double                      _deltaTime;
+        double                      _deltaTime {0.0f};
 
         bool _framebufferResized {false};
 
