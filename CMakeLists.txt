@@ -160,7 +160,7 @@ if(Vulkan_FOUND)
             src/GLFW/src/engine/vulkan/vkObj/engine/space/VTransform.cpp
             src/GLFW/src/engine/vulkan/vkObj/engine/space/VTransform.h
             src/GLFW/src/engine/vulkan/vkObj/engine/obj/VMesh.cpp
-            src/GLFW/src/engine/vulkan/vkObj/engine/obj/VMesh.h)
+            src/GLFW/src/engine/vulkan/vkObj/engine/obj/VMesh.h src/GLFW/src/engine/vulkan/vkObj/engine/obj/VShader.cpp src/GLFW/src/engine/vulkan/vkObj/engine/obj/VShader.h)
 
 
     target_link_libraries( vkTriangle Vulkan::Vulkan )

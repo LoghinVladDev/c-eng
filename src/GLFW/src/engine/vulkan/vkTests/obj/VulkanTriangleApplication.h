@@ -88,7 +88,6 @@ namespace engine {
 
         VCommandPool                _commandPool;
         VCommandPool                _transferCommandPool;
-//        VCommandBufferCollection    _cubeDrawCommandBufferCollection;
         VCommandBufferCollection    _drawCommandBufferCollection;
 
         VSemaphoreCollection        _imageAvailableSemaphores;
@@ -97,17 +96,10 @@ namespace engine {
         VFenceCollection            _inFlightFences;
         VFenceCollection            _imagesInFlight;
 
-//        VVertexBuffer               _cubeVertexBuffer;
-//        VIndexBuffer                _cubeIndexBuffer;
-
-//        VVertexBuffer               _starVertexBuffer;
-//        VIndexBuffer                _starIndexBuffer;
-
         VMesh                       _cubeMesh;
         VMesh                       _starMesh;
 
         VulkanDescriptorSetLayout   _descriptorSetLayout {};
-//        VulkanDescriptorSetLayout   _starDescriptorSetLayout {};
         VulkanDescriptorSetLayout   _descriptorSetLayoutSampler {};
 
         VDescriptorPool             _descriptorPool;
@@ -124,16 +116,6 @@ namespace engine {
 
         glm::mat4                   _projection { glm::mat4( 0.0f ) };
         glm::mat4                   _view       { glm::mat4( 0.0f ) };
-
-//        VDescriptorSetCollection    < engine::SUniformBufferCamera > _cameraDescriptorSetCollection;
-
-//        VDescriptorSetCollection    < glm::mat4 > _cubeDescriptorSetCollection;
-//        VDescriptorSetCollection    < glm::mat4 > _starDescriptorSetCollection;
-
-//        std::vector < VUniformBuffer < engine::SUniformBufferCamera > > _cameraUniformBuffers;
-
-//        std::vector < VUniformBuffer < glm::mat4 > > _cubeUniformModelBuffers;
-//        std::vector < VUniformBuffer < glm::mat4 > > _starUniformModelBuffers;
 
         VDescriptorSetCollection < engine::SUniformBufferObject >       _cubeDescriptorSetCollection;
         std::vector < VUniformBuffer < engine::SUniformBufferObject > > _cubeUniformBuffers;

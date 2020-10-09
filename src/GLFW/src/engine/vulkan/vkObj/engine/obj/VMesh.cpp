@@ -39,7 +39,6 @@ VulkanResult engine::VMesh::setup(
 
     ENG_RETURN_IF_NOT_SUCCESS(this->_indexBuffer.allocateMemory())
 
-
     return VulkanResult::VK_SUCCESS;
 }
 
