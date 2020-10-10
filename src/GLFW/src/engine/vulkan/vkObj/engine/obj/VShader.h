@@ -17,11 +17,16 @@ namespace engine {
     class VShader {
     private:
         //// private variables
-        const VLogicalDevice  * _pLogicalDevice {nullptr};
-        VPipeline               _pipeline;
+        const VLogicalDevice                              * _pLogicalDevice         {nullptr};
+        VPipeline                                           _pipeline;
 
-        VShaderModule           _vertexShader;
-        VShaderModule           _fragmentShader;
+        VShaderModule                                       _vertexShader;
+        VShaderModule                                       _fragmentShader;
+
+        std::vector < VulkanPipelineShaderStageCreateInfo > _shaderStages;
+        VulkanDescriptorSetLayout                           _descriptorSetLayout    {VK_NULL_HANDLE};
+
+        std::vector < VulkanDescriptorSetLayoutBinding >    _descriptorSetLayoutBindings;
 
         //// private functions
 
@@ -55,11 +60,43 @@ namespace engine {
             return this->_fragmentShader;
         }
 
+        [[nodiscard]] const VRenderPass * getRenderPassPtr () const noexcept {
+            return this->_pipeline.getRenderPassPtr();
+        }
+
+        [[nodiscard]] const VulkanDescriptorSetLayout & getDescriptorSetLayout () const noexcept {
+            return this->_descriptorSetLayout;
+        }
+
+        [[nodiscard]] VulkanDescriptorSetLayout & getDescriptorSetLayout () noexcept {
+            return this->_descriptorSetLayout;
+        }
+
+        [[nodiscard]] const std::vector < VulkanDescriptorSetLayoutBinding > & getDescriptorSetLayoutBindings () const noexcept {
+            return this->_descriptorSetLayoutBindings;
+        }
+
+        [[nodiscard]] std::vector < VulkanDescriptorSetLayoutBinding > & getDescriptorSetLayoutBindings () noexcept {
+            return this->_descriptorSetLayoutBindings;
+        }
+
+        [[nodiscard]] std::vector < VulkanDescriptorType > getDescriptorTypeLayout () const noexcept {
+            std::vector < VulkanDescriptorType > descriptorTypes;
+
+            for ( const auto & binding : this->_descriptorSetLayoutBindings ) {
+                descriptorTypes.push_back( binding.descriptorType );
+            }
+
+            return descriptorTypes;
+        }
+
         VulkanResult setup (
             const VLogicalDevice &,
             const VShaderCompiler &,
             const std::string &
         ) noexcept;
+
+        VulkanResult recreateShader () noexcept;
 
         void cleanup() noexcept;
 

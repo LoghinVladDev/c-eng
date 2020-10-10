@@ -109,39 +109,6 @@ void engine::VulkanTriangleApplication::updateResolutionSettings() noexcept {
 }
 
 void engine::VulkanTriangleApplication::createDescriptorSetLayout() noexcept(false) {
-    auto cubeUniformBufferObjectBinding = VulkanDescriptorSetLayoutBinding {
-        .binding            = 0U,
-        .descriptorType     = VulkanDescriptorType::VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
-        .descriptorCount    = 1U,
-        .stageFlags         = VulkanShaderStageFlagBits::VK_SHADER_STAGE_VERTEX_BIT,
-        .pImmutableSamplers = nullptr
-    };
-
-    auto cubeSamplerObjectBinding = VulkanDescriptorSetLayoutBinding {
-        .binding            = 1U,
-        .descriptorType     = VulkanDescriptorType::VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
-        .descriptorCount    = 1U,
-        .stageFlags         = VulkanShaderStageFlagBits::VK_SHADER_STAGE_FRAGMENT_BIT,
-        .pImmutableSamplers = nullptr
-    };
-
-    std::array < VulkanDescriptorSetLayoutBinding, 2 > cubeBindings = {
-            cubeUniformBufferObjectBinding,
-            cubeSamplerObjectBinding
-//            starUnfiromBufferObjectBinding,
-//            starSamplerObjectBinding
-    };
-
-    VulkanDescriptorSetLayoutCreateInfo cubeCreateInfo {
-        .sType              = VulkanStructureType::VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO,
-        .pNext              = nullptr,
-        .flags              = 0U,
-        .bindingCount       = static_cast < uint32 > ( cubeBindings.size() ),
-        .pBindings          = cubeBindings.data()
-    };
-
-    if (vkCreateDescriptorSetLayout( this->_vulkanLogicalDevice.data(), & cubeCreateInfo, nullptr, & this->_descriptorSetLayout ) != VulkanResult::VK_SUCCESS )
-        throw std::runtime_error ("failed to create descriptor set layout");
 }
 
 void engine::VulkanTriangleApplication::run() noexcept (false) {
@@ -332,10 +299,23 @@ void engine::VulkanTriangleApplication::recreateSwapChain() noexcept(false) {
     if ( this->_vulkanLogicalDevice.recreateSwapChain() != VulkanResult::VK_SUCCESS )
         throw std::runtime_error ( "Swap Chain Recreation Error" );
 
-    this->createGraphicsPipeline();
+//    this->createGraphicsPipeline();
+
+    ENG_THROW_IF_NOT_SUCCESS (
+            this->_objectShader.recreateShader(),
+            ENG_STD_THROW( "shader recreation failure" )
+    )
+
+
     this->createDepthBuffer();
     this->createFrameBuffers();
-    this->createUniformBuffers();
+//    this->createUniformBuffers();
+
+
+    this->createDescriptorPool();
+    this->_cubeMeshRenderer.recreate();
+    this->_starMeshRenderer.recreate();
+
     this->createCommandBuffers();
 }
 
@@ -344,19 +324,13 @@ void engine::VulkanTriangleApplication::cleanupSwapChain() noexcept(false) {
     this->_frameBufferCollection.cleanup();
     this->_drawCommandBufferCollection.free();
 
-    for ( auto & uniformBuffer : this->_cubeUniformBuffers ) {
-        uniformBuffer.free();
-        uniformBuffer.cleanup();
-    }
-
-    for ( auto & uniformBuffer : this->_starUniformBuffers ) {
-        uniformBuffer.free();
-        uniformBuffer.cleanup();
-    }
+    this->_cubeMeshRenderer.cleanupUniformBuffers();
+    this->_starMeshRenderer.cleanupUniformBuffers();
 
     this->_descriptorPool.cleanup();
 
-    this->_graphicsPipeline.cleanup();
+    this->_objectShader.getPipeline().cleanup();
+
     this->_vulkanLogicalDevice.cleanupSwapChain();
 }
 
@@ -510,7 +484,7 @@ bool down = false;
 #include <chrono>
 #include <glm/gtc/matrix_transform.hpp>
 void engine::VulkanTriangleApplication::updateUniformBuffer(uint32 uniformBufferIndex) noexcept(false) {
-    auto & cubeCurrentBuffer = this->_cubeUniformBuffers[ uniformBufferIndex ];
+    auto & cubeCurrentBuffer = this->_cubeMeshRenderer.getMVPDescriptorBuffers()[ uniformBufferIndex ];
 
     static auto startTime = std::chrono::high_resolution_clock::now();
     auto currentTime = std::chrono::high_resolution_clock::now();
@@ -549,7 +523,7 @@ void engine::VulkanTriangleApplication::updateUniformBuffer(uint32 uniformBuffer
 
     cubeCurrentBuffer.load( & UBO, 1U );
 
-    auto & starBuffer = this->_starUniformBuffers[ uniformBufferIndex ];
+    auto & starBuffer = this->_starMeshRenderer.getMVPDescriptorBuffers()[ uniformBufferIndex ];
 
     engine::SUniformBufferObject starUBO {
         .model = glm::rotate( glm::scale (
@@ -685,67 +659,50 @@ void engine::VulkanTriangleApplication::createConcurrentBuffers() noexcept(false
 }
 
 void engine::VulkanTriangleApplication::createTextures() noexcept(false) {
+    auto anisotropyLevel = 16.0f;
+
     ENG_THROW_IF_NOT_SUCCESS(
             this->_textureSampler.setup(
                 this->_vulkanLogicalDevice,
                 true,
-                16.0f
+                anisotropyLevel
             ),
             std::runtime_error("sampler create error")
-    )
-
-    auto queueFamilyIndices = this->_vulkanQueueFamilyCollection->getQueueFamilyIndices();
-
-    ENG_THROW_IF_NOT_SUCCESS(
-            this->_cubeTexture.setup(
-                    std::string(__TEXTURES_PATH__).append("container.jpg").c_str(),
-                    this->_transferCommandPool,
-                    queueFamilyIndices.data(),
-                    queueFamilyIndices.size()
-            ),
-            std::runtime_error("Texture Creation Failure")
-    )
-
-    ENG_THROW_IF_NOT_SUCCESS(
-            this->_starTexture.setup(
-                    std::string(__TEXTURES_PATH__).append("container2.png").c_str(),
-                    this->_transferCommandPool,
-                    queueFamilyIndices.data(),
-                    queueFamilyIndices.size()
-            ),
-            std::runtime_error("Star Texture Creation Failure")
     )
 }
 
 void engine::VulkanTriangleApplication::createDescriptorSets() noexcept(false) {
-    if ( this->_cubeDescriptorSetCollection.allocate(
-        this->_descriptorPool,
-        this->_descriptorSetLayout
-    ) != VulkanResult::VK_SUCCESS )
-        throw std::runtime_error ("Descriptor Set Allocate Error");
-
-    this->_cubeDescriptorSetCollection.configure(this->_cubeUniformBuffers, 0U);
-    this->_cubeDescriptorSetCollection.configure(this->_cubeTexture, this->_textureSampler, 1U);
-
     ENG_THROW_IF_NOT_SUCCESS(
-        this->_starDescriptorSetCollection.allocate(
-            this->_descriptorPool,
-            this->_descriptorSetLayout
+        this->_cubeMeshRenderer.setup(
+                this->_transferCommandPool,
+                this->_descriptorPool,
+                this->_objectShader,
+                std::string(__TEXTURES_PATH__).append("container.jpg").c_str(),
+                this->_textureSampler,
+                * this->_vulkanQueueFamilyCollection
         ),
-        ENG_STD_THROW( "Star descriptor set alloc error" )
+        ENG_STD_THROW("Mesh Renderer Create Failure")
     )
 
-    this->_starDescriptorSetCollection.configure( this->_starUniformBuffers, 0U);
-    this->_starDescriptorSetCollection.configure( this->_starTexture, this->_textureSampler, 1U );
+    ENG_THROW_IF_NOT_SUCCESS(
+        this->_starMeshRenderer.setup(
+                this->_transferCommandPool,
+                this->_descriptorPool,
+                this->_objectShader,
+                std::string(__TEXTURES_PATH__).append("container2.png").c_str(),
+                this->_textureSampler,
+                * this->_vulkanQueueFamilyCollection
+        ),
+        ENG_STD_THROW("Mesh Renderer Create Failure")
+    )
 }
 
 void engine::VulkanTriangleApplication::createDescriptorPool() noexcept(false) {
-    std::array < VulkanDescriptorType, 4 > descriptorTypes = {
-            VulkanDescriptorType::VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
-            VulkanDescriptorType::VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
-            VulkanDescriptorType::VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
-            VulkanDescriptorType::VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
-    };
+    std::vector < VulkanDescriptorType > descriptorTypes;
+
+    for ( const auto & type : this->_objectShader.getDescriptorTypeLayout() ) {
+        descriptorTypes.push_back( type );
+    }
 
     uint32 objectCount = 2U; // star + cube
 
@@ -759,39 +716,11 @@ void engine::VulkanTriangleApplication::createDescriptorPool() noexcept(false) {
         std::runtime_error ( "Descriptor Pool Creation Failure" )
     )
 
-    this->createDescriptorSets();
 }
 
 void engine::VulkanTriangleApplication::createUniformBuffers() noexcept(false) {
-    this->_cubeUniformBuffers.resize( this->_vulkanLogicalDevice.getSwapChain()->getImages().size() );
-    for ( auto & uniformBuffer : this->_cubeUniformBuffers ) {
-        if (  uniformBuffer.setup(
-            this->_vulkanLogicalDevice,
-            1U
-        ) != VulkanResult::VK_SUCCESS )
-            throw std::runtime_error ("Uniform Buffer Creation Failure");
-
-        if ( uniformBuffer.allocateMemory() != VulkanResult::VK_SUCCESS )
-            throw std::runtime_error ("Uniform Buffer Allocate Memory Failure");
-    }
-
-    this->_starUniformBuffers.resize( this->_vulkanLogicalDevice.getSwapChain()->getImages().size() );
-    for ( auto & uniformBuffer : this->_starUniformBuffers ) {
-        ENG_THROW_IF_NOT_SUCCESS (
-            uniformBuffer.setup (
-                this->_vulkanLogicalDevice,
-                1U
-            ),
-            std::runtime_error ( "Star Uniform Buffer Creation Failure" )
-        )
-
-        ENG_THROW_IF_NOT_SUCCESS (
-            uniformBuffer.allocateMemory(),
-            std::runtime_error ("Star Uniform Buffer Alloc Failure")
-        )
-    }
-
     this->createDescriptorPool();
+    this->createDescriptorSets();
 }
 
 void engine::VulkanTriangleApplication::createExclusiveBuffers() noexcept(false) {
@@ -811,28 +740,14 @@ void engine::VulkanTriangleApplication::cleanup() noexcept (false) {
     this->_depthBuffer.cleanup();
     this->_frameBufferCollection.cleanup();
 
-    for ( auto & buffer : this->_cubeUniformBuffers ) {
-        buffer.free();
-        buffer.cleanup();
-    }
+    this->_cubeMeshRenderer.cleanup();
+    this->_starMeshRenderer.cleanup();
 
-    for ( auto & buffer : this->_starUniformBuffers ) {
-        buffer.free();
-        buffer.cleanup();
-    }
-
-    this->_cubeTexture.cleanup();
-    this->_starTexture.cleanup();
     this->_textureSampler.cleanup();
 
     this->_descriptorPool.cleanup();
 
-    this->_graphicsPipeline.cleanup();
-
-    vkDestroyDescriptorSetLayout(this->_vulkanLogicalDevice.data(), this->_descriptorSetLayout, nullptr );
-
-    this->_vertexShader.cleanup();
-    this->_fragmentShader.cleanup();
+    this->_objectShader.cleanup();
 
     this->_cubeMesh.free();
     this->_cubeMesh.cleanup();
@@ -879,8 +794,10 @@ void engine::VulkanTriangleApplication::createCommandBuffers() noexcept(false) {
     };
 
     std::array < std::vector < VulkanDescriptorSet >, 2 > objectDescriptorSetHandles = {
-            this->_cubeDescriptorSetCollection.getDescriptorSetHandles(),
-            this->_starDescriptorSetCollection.getDescriptorSetHandles()
+            this->_cubeMeshRenderer.getDescriptorSets().getDescriptorSetHandles(),
+            this->_starMeshRenderer.getDescriptorSets().getDescriptorSetHandles()
+//            this->_cubeDescriptorSetCollection.getDescriptorSetHandles(),
+//            this->_starDescriptorSetCollection.getDescriptorSetHandles()
     };
 
     std::vector < VulkanDescriptorSet * > descriptorSetHandles ( this->_drawCommandBufferCollection.getCommandBuffers().size());
@@ -891,7 +808,7 @@ void engine::VulkanTriangleApplication::createCommandBuffers() noexcept(false) {
     }
 
     if ( this->_drawCommandBufferCollection.startRecord(
-            this->_graphicsPipeline,
+            this->_objectShader.getPipeline(),
             vertexBuffers,
             indexBuffers,
             2U,
@@ -926,63 +843,27 @@ void engine::VulkanTriangleApplication::autoPickPhysicalDevice() noexcept(false)
 }
 
 void engine::VulkanTriangleApplication::createShaderModules() noexcept(false) {
+
+}
+
+void engine::VulkanTriangleApplication::createGraphicsPipeline() noexcept(false) {
     VShaderCompiler compiler;
 
     compiler.setConfigurationFileJSON( std::string(__VULKAN_SHADERS_PATH__).append("/config/vkTriangleShaderComp.json") );
     compiler.build();
-
-    for ( const auto & target : compiler.getTargets() ) {
-        if ( target.getTag () == "defObj" ) {
-            if (target.getType() == VShaderModule::VERTEX) {
-
-                this->_vertexShader.setType(VShaderModule::VERTEX);
-                if (this->_vertexShader.setup(target.getCompiledPath(), this->_vulkanLogicalDevice) !=
-                    VulkanResult::VK_SUCCESS)
-                    throw std::runtime_error("Shader module initialization failed");
-            } else if (target.getType() == VShaderModule::FRAGMENT) {
-
-                this->_fragmentShader.setType(VShaderModule::FRAGMENT);
-                if (this->_fragmentShader.setup(target.getCompiledPath(), this->_vulkanLogicalDevice) !=
-                    VulkanResult::VK_SUCCESS)
-                    throw std::runtime_error("Shader module initialization failed");
-            }
-        }
-    }
-}
-
-void engine::VulkanTriangleApplication::createGraphicsPipeline() noexcept(false) {
-    VulkanPipelineShaderStageCreateInfo shaderStages [] = {
-        this->_vertexShader.getShaderStageInfo(),
-        this->_fragmentShader.getShaderStageInfo()
-    };
-
-    auto bindingDescription = VVertex::getBindingDescription();
-    auto attributeDescriptions = VVertex::getAttributeDescriptions();
-
-    std::array < VkDescriptorSetLayout, 1 > descriptorSetLayouts = {
-            this->_descriptorSetLayout
-    };
-
-    if ( this->_graphicsPipeline.setup (
-            this->_vulkanLogicalDevice,
-            shaderStages,
-            2,
-            & bindingDescription,
-            1U,
-            attributeDescriptions.data(),
-            static_cast < uint32 > ( attributeDescriptions.size() ),
-            descriptorSetLayouts.data(),
-            static_cast < uint32 > ( descriptorSetLayouts.size() )
-        ) != VulkanResult::VK_SUCCESS
+    ENG_THROW_IF_NOT_SUCCESS (
+            this->_objectShader.setup(
+                    this->_vulkanLogicalDevice,
+                    compiler,
+                    "defObj"
+            ),
+            ENG_STD_THROW("shader creation error")
     )
-        throw std::runtime_error ("Graphics Pipeline initialization failed");
-
-    this->_renderPass = this->_graphicsPipeline.getRenderPassPtr();
 
 }
 
 void engine::VulkanTriangleApplication::createFrameBuffers() noexcept(false) {
-    if ( this->_frameBufferCollection.setup ( this->_renderPass, & this->_depthBuffer ) != VulkanResult::VK_SUCCESS )
+    if ( this->_frameBufferCollection.setup ( this->_objectShader.getRenderPassPtr(), & this->_depthBuffer ) != VulkanResult::VK_SUCCESS )
         throw std::runtime_error ( "Frame Buffers Creation Failure" );
 }
 

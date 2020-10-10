@@ -64,6 +64,8 @@ if(Vulkan_FOUND)
     include_directories(src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/shader/input)
     include_directories(src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/synchronization)
     include_directories(src/GLFW/src/engine/vulkan/vkObj/engine)
+    include_directories(src/GLFW/src/engine/vulkan/vkObj/engine/obj)
+    include_directories(src/GLFW/src/engine/vulkan/vkObj/engine/space)
 
 
     include_directories( ${Vulkan_INCLUDE_DIRS} )
@@ -160,7 +162,11 @@ if(Vulkan_FOUND)
             src/GLFW/src/engine/vulkan/vkObj/engine/space/VTransform.cpp
             src/GLFW/src/engine/vulkan/vkObj/engine/space/VTransform.h
             src/GLFW/src/engine/vulkan/vkObj/engine/obj/VMesh.cpp
-            src/GLFW/src/engine/vulkan/vkObj/engine/obj/VMesh.h src/GLFW/src/engine/vulkan/vkObj/engine/obj/VShader.cpp src/GLFW/src/engine/vulkan/vkObj/engine/obj/VShader.h)
+            src/GLFW/src/engine/vulkan/vkObj/engine/obj/VMesh.h
+            src/GLFW/src/engine/vulkan/vkObj/engine/obj/VShader.cpp
+            src/GLFW/src/engine/vulkan/vkObj/engine/obj/VShader.h
+            src/GLFW/src/engine/vulkan/vkObj/engine/obj/VMeshRenderer.cpp
+            src/GLFW/src/engine/vulkan/vkObj/engine/obj/VMeshRenderer.h)
 
 
     target_link_libraries( vkTriangle Vulkan::Vulkan )
@@ -242,8 +248,6 @@ if(Vulkan_FOUND)
     add_executable( vkPrecompiler
             ${JSONCpp_SOURCE}
             src/GLFW/src/engine/vulkan/vkTests/c/vulkanPrecompilerTest.cpp
-            src/GLFW/src/engine/vulkan/vkTests/obj/VulkanTriangleApplication.cpp
-            src/GLFW/src/engine/vulkan/vkTests/obj/VulkanTriangleApplication.h
             src/GLFW/src/engine/vulkan/vkTests/obj/VulkanInitTests.cpp
             src/GLFW/src/engine/vulkan/vkTests/obj/VulkanInitTests.h
             src/GLFW/src/engine/vulkan/engineVulkanPreproc.h
@@ -286,6 +290,8 @@ if(Vulkan_FOUND)
             src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/VImageView.h
             src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/shader/VShaderCompiler.cpp
             src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/shader/VShaderCompiler.h
+            src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/shader/VShaderModule.cpp
+            src/GLFW/src/engine/vulkan/vkObj/instance/pipeline/shader/VShaderModule.h
             )
 
 

@@ -26,8 +26,6 @@
 #include <vkObj/instance/device/VPhysicalDevice.h>
 #include <vkObj/instance/device/VLogicalDevice.h>
 #include <vkObj/window/surface/VSurface.h>
-#include <vkObj/instance/pipeline/shader/VShaderCompiler.h>
-#include <vkObj/instance/pipeline/VPipeline.h>
 #include <vkObj/instance/pipeline/VFrameBuffer.h>
 #include <vkObj/instance/pipeline/command/VCommandBuffer.h>
 #include <vkObj/instance/pipeline/synchronization/VSemaphore.h>
@@ -40,8 +38,10 @@
 #include <VTexture.h>
 #include <VTextureSampler.h>
 #include <VDepthBuffer.h>
+#include <VShader.h>
 
 #include <vector>
+#include <VMeshRenderer.h>
 
 
 namespace engine {
@@ -78,11 +78,7 @@ namespace engine {
 
         std::vector <VQueueFamily>  _graphicsCapableQueueFamily;
 
-        VShaderModule               _vertexShader;
-        VShaderModule               _fragmentShader;
-
-        const VRenderPass         * _renderPass                         {nullptr};
-        VPipeline                   _graphicsPipeline;
+        VShader                     _objectShader;
 
         VFrameBufferCollection      _frameBufferCollection;
 
@@ -99,13 +95,9 @@ namespace engine {
         VMesh                       _cubeMesh;
         VMesh                       _starMesh;
 
-        VulkanDescriptorSetLayout   _descriptorSetLayout {};
         VulkanDescriptorSetLayout   _descriptorSetLayoutSampler {};
 
         VDescriptorPool             _descriptorPool;
-
-        VTexture                    _cubeTexture;
-        VTexture                    _starTexture;
 
         VTextureSampler             _textureSampler;
 
@@ -117,11 +109,8 @@ namespace engine {
         glm::mat4                   _projection { glm::mat4( 0.0f ) };
         glm::mat4                   _view       { glm::mat4( 0.0f ) };
 
-        VDescriptorSetCollection < engine::SUniformBufferObject >       _cubeDescriptorSetCollection;
-        std::vector < VUniformBuffer < engine::SUniformBufferObject > > _cubeUniformBuffers;
-
-        VDescriptorSetCollection < engine::SUniformBufferObject >       _starDescriptorSetCollection;
-        std::vector < VUniformBuffer < engine::SUniformBufferObject > > _starUniformBuffers;
+        VMeshRenderer               _cubeMeshRenderer;
+        VMeshRenderer               _starMeshRenderer;
 
         double                      _fpsTimer = 0.0;
         double                      _fpsRefreshTimer = __SHOW_FPS_EVERY_S;

@@ -74,6 +74,8 @@ namespace engine {
             return this->_outputPath;
         }
 
+        [[nodiscard]] std::vector < VulkanDescriptorSetLayoutBinding > getLayoutBindings() const noexcept;
+
         [[nodiscard]] const std::string& getRelativePath () const noexcept {
             return this->_path;
         }

@@ -16,16 +16,18 @@ int main() {
     std::cout << compiler.getOutputDirectoryPath() << '\n';
 
     compiler.setConfigurationFileJSON( std::string(__VULKAN_SHADERS_PATH__).append("/config/vkTriangleShaderComp.json") );
-
-//    VShaderCompilerTarget target1 ("fragmentShader.frag");
-//    VShaderCompilerTarget target2 ("vertexShader.vert");
-
-//    compiler.addTarget( target1 );
-//    compiler.addTarget( target2 );
-
-//    compiler.build();
-
     compiler.build();
+
+    for(const auto & target : compiler.getTargets()) {
+        auto vect = target.getLayoutBindings();
+
+        for ( const auto & description : vect ) {
+            std::cout << description.stageFlags << '\n'
+                << description.descriptorCount << '\n'
+                << description.descriptorType << '\n'
+                << description.binding << "\n\n\n";
+        }
+    }
 
     return 0;
 }

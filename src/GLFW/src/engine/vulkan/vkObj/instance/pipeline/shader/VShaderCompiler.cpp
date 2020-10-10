@@ -98,6 +98,56 @@ static inline void platformDependantCompilation ( const std::string & input, con
 
 #endif
 
+static inline VulkanShaderStageFlagBits getShaderStageFlagBits ( engine::VShaderModule::ShaderType shaderType ) noexcept {
+    switch ( shaderType ) {
+        case engine::VShaderModule::VERTEX:         return VulkanShaderStageFlagBits::VK_SHADER_STAGE_VERTEX_BIT;
+        case engine::VShaderModule::GEOMETRY:       return VulkanShaderStageFlagBits::VK_SHADER_STAGE_GEOMETRY_BIT;
+        case engine::VShaderModule::FRAGMENT:       return VulkanShaderStageFlagBits::VK_SHADER_STAGE_FRAGMENT_BIT;
+        case engine::VShaderModule::TESSELATION:
+        case engine::VShaderModule::UNDEFINED:
+        default:                                    return VulkanShaderStageFlagBits::VK_SHADER_STAGE_ALL;
+    }
+}
+
+std::vector < VulkanDescriptorSetLayoutBinding > engine::VShaderCompilerTarget::getLayoutBindings() const noexcept {
+    std::string fullPath = this->_pCompiler->getInputDirectoryPath() + "/" + this->_path;
+
+    std::ifstream shaderFile;
+    std::stringstream stream;
+    shaderFile.open(fullPath);
+
+    stream << shaderFile.rdbuf();
+
+    std::string code = stream.str();
+    std::size_t previousIndex = 0U;
+    std::size_t currentIndex = 0U;
+    bool start = true;
+
+    std::vector < VulkanDescriptorSetLayoutBinding > bindings;
+
+    while ( ( currentIndex = code.find(" uniform ", start ? 0U : previousIndex + std::string(" uniform ").length() ) ) != std::string::npos ) {
+
+        bindings.push_back(
+            VulkanDescriptorSetLayoutBinding {
+                .binding            = static_cast< uint32 > ( std::strtol( code.substr ( code.find ( "=", code.rfind("binding", currentIndex) ) + 1 ).c_str(), nullptr, 10 ) ),
+                .descriptorType     = code.find( " uniform sampler2D ", currentIndex ) == currentIndex
+                        ? VulkanDescriptorType::VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER
+                        : VulkanDescriptorType::VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
+                .descriptorCount    = 1U,
+                .stageFlags         = getShaderStageFlagBits( this->_shaderType ),
+                .pImmutableSamplers = nullptr
+            }
+        );
+
+        previousIndex = currentIndex;
+        start = false;
+    }
+
+//    std::cout << code << '\n';
+
+    return bindings;
+}
+
 engine::VShaderCompiler::VShaderCompiler() noexcept (false) {
     this->_inputDirectoryPath     = __VULKAN_SHADERS_PATH__;
     this->_outputDirectoryPath    = std::string( __VULKAN_SHADERS_PATH__ ).append("/out");
@@ -194,6 +244,7 @@ void engine::VShaderCompilerTarget::compile() noexcept {
         std::cout << exception.what() << '\n';
     }
 }
+
 
 //engine::VShaderCompilerTarget & engine::VShaderCompilerTarget::setCompiler(engine::VShaderCompiler &compiler, bool calledFromWithin) noexcept {
 
