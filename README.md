@@ -117,20 +117,28 @@ In terminal
 
 ### Project Configuration - Cross Platform
 
-Use CMake compatible IDE and build & run target vkTriangle 
+Project Clone: 
+
+Clone through git bash / cmd / terminal, or any git client.\
+<strong>!!! Make sure to use recursive cloning. (--recurse-submodules) !!!\
+Or run git submodule update --init after clone. Otherwise, build will fail</strong>
+
+<pre>
+git clone https://github.com/LoghinVladDev/c-eng --recurse-submodules
+</pre>
+
+Open Directory in CMake compatible IDE and build & run target vkTriangle 
   * CLion - CMake Support out of the box. Must configure toolchain to be MinGW ( installed )
   * Visual Studio Code - With CMake Tools extension ( auto configure for project, select MinGW compiler ).
   * CodeBlocks - CMake Support, Select MinGW toolchain
   * Visual Studio - Open CMake Project. Configure CMake to use MinGW
 
-##### OR
+#### OR
 
-In desired directory:
+Build commands to run from 'c-eng' directory:
 
 Template:
 <pre>
-git clone https://github.com/LoghinVladDev/c-eng --recurse-submodules
-cd c-eng
 mkdir (build-dir)
 cmake -DCMAKE_BUILD_TYPE=Debug [-G "generator-name" ] . -B ./(build-dir)/
 cmake --build ./(build-dir)/ --target (target-name) -- -j (thread-count)
@@ -146,8 +154,6 @@ Arguments:
 
 #### Example: Win32 Building target vkTriangle with MinGW in directory build with 6 threads
 <pre>
-git clone https://github.com/LoghinVladDev/c-eng --recurse-submodules
-cd c-eng
 mkdir build
 cmake -DCMAKE_BUILD_TYPE=Debug -G "MinGW Makefiles" . -B ./build/
 cmake --build ./build/ --target vkTriangle -- -j 6
@@ -155,8 +161,6 @@ cmake --build ./build/ --target vkTriangle -- -j 6
 
 #### Example: Linux Building target vkTriangle in directory build with 6 threads
 <pre>
-git clone https://github.com/LoghinVladDev/c-eng --recurse-submodules
-cd c-eng
 mkdir cmake-build
 cmake -DCMAKE_BUILD_TYPE=Debug . -B ./cmake-build/
 cmake --build ./cmake-build/ --target vkTriangle -- -j 6
@@ -168,7 +172,6 @@ Multithreading is encouraged in build
 Executable will be in output directory, named after the target
 Target must be run from the build directory, paths not fully configures
 <pre>
-
 cd ./(build-dir)
 ./(target-name).exe
 
