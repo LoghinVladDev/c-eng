@@ -1,0 +1,16 @@
+{
+    "configurations": [
+        {
+            "name": "c-eng-Win32",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "${VULKAN_SDK}/include"
+            ],
+            "defines": [],
+            "cStandard": "gnu11",
+            "cppStandard": "c++20",
+            "intelliSenseMode": "gcc-x64"
+        }
+    ],
+    "version": 4
+}
