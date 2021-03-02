@@ -75,10 +75,15 @@ cmake --build ./build/ --target vkTriangle -- -j 6
 Multithreading is encouraged in build
 
 Executable will be in output directory, named after the target
+Target must be run from the build directory, paths not fully configures
 <pre>
-./(build-file)/(target-name).exe
 
-example : ./build/vkTriangle.exe
+cd ./(build-dir)
+./(target-name).exe
+
+example : 
+cd build
+./vkTriangle.exe
 </pre>
 
 ### Usage
