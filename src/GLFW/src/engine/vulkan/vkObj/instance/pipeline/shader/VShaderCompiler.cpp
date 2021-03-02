@@ -186,21 +186,21 @@ engine::VShaderCompiler &engine::VShaderCompiler::setConfigurationFile(const JSO
     JSON configuration = json.getJSON( "compilerConfig" );
 
     this->_targets.clear();
-    this->_inputDirectoryPath = std::string("./").append( configuration.getString("compilerInputDir") );
-    this->_outputDirectoryPath = std::string("./").append( configuration.getString("compilerOutputDir") );
+    this->_inputDirectoryPath = std::string("./").append( configuration.getString("compilerInputDir").toStdString() );
+    this->_outputDirectoryPath = std::string("./").append( configuration.getString("compilerOutputDir").toStdString() );
 
-    JSONArray targets = configuration.getJSONArray("sources");
+    auto targets = configuration.getArray("sources");
 
     for( uint32 index = 0; index < targets.length(); index++ ) {
         JSON targetJSON = targets.getJSON ( index );
 
         engine::VShaderCompilerTarget target;
 
-        target.setPath( targetJSON.getString("path") );
-        target.setTargetName( targetJSON.getString("outputName") );
-        target.setTag( targetJSON.getString("tag") );
+        target.setPath( targetJSON.getString("path").toStdString() );
+        target.setTargetName( targetJSON.getString("outputName").toStdString() );
+        target.setTag( targetJSON.getString("tag").toStdString() );
         target._pCompiler = this;
-        target._shaderType = engine::VShaderModule::stringToShaderType( targetJSON.getString( "type" ) );
+        target._shaderType = engine::VShaderModule::stringToShaderType( targetJSON.getString( "type" ).toStdString() );
 
         this->_targets.push_back( target );
     }

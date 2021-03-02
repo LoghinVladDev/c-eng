@@ -196,7 +196,7 @@ int main() {
     glfwMakeContextCurrent(window);
 
     if(! gladLoadGLLoader((GLADloadproc) glfwGetProcAddress )) {
-        std::cout << "glad init fail\n";
+        std::cout << "glad1 init fail\n";
         return -1;
     }
 
@@ -391,7 +391,7 @@ void update() noexcept {
 
     float origY = camera->getTransform().getLocation().y;
 
-//    glm::vec3 front = camera->getFront();
+//    glm1::vec3 front = camera->getFront();
 
     if(up && down) {
 
@@ -437,18 +437,18 @@ inline void render() noexcept {
     shader->setVec3("viewPosition", camera->getTransform().getLocation());
     shader->setFloat("material.shine", 32);
 
-//    shader->setVec3("light.ambient", glm::vec3(0.2f, 0.2f, 0.2f));
-//    shader->setVec3("light.diffuse", glm::vec3(0.5f, 0.5f, 0.5f));
-//    shader->setVec3("light.specular", glm::vec3(1.0f, 1.0f, 1.0f));
+//    shader->setVec3("light.ambient", glm1::vec3(0.2f, 0.2f, 0.2f));
+//    shader->setVec3("light.diffuse", glm1::vec3(0.5f, 0.5f, 0.5f));
+//    shader->setVec3("light.specular", glm1::vec3(1.0f, 1.0f, 1.0f));
 
 //    double time = glfwGetTime();
-//    glm::vec3 lightColor(sin(time * 2.0), sin(time * 0.7), sin(time * 1.3));
-//    glm::vec3 diffuseColor = lightColor * glm::vec3(0.5f);
-//    glm::vec3 ambientColor = lightColor * glm::vec3(0.2f);
+//    glm1::vec3 lightColor(sin(time * 2.0), sin(time * 0.7), sin(time * 1.3));
+//    glm1::vec3 diffuseColor = lightColor * glm1::vec3(0.5f);
+//    glm1::vec3 ambientColor = lightColor * glm1::vec3(0.2f);
 //
 //    shader->setVec3("light.ambient", ambientColor);
 //    shader->setVec3("light.diffuse", diffuseColor);
-//    shader->setVec3("light.specular", glm::vec3(1.0f, 1.0f, 1.0f));
+//    shader->setVec3("light.specular", glm1::vec3(1.0f, 1.0f, 1.0f));
 //
     SLight lightData = getLightStructByID(4);
 
@@ -456,7 +456,7 @@ inline void render() noexcept {
     shader->setVec3("light.diffuse", glm::vec3(0.5f));
     shader->setVec3("light.specular", glm::vec3(1.0f));
     shader->setVec3("light.position", lightLoc);
-//    shader->setVec3("light.direction", glm::vec3(-0.2f, -1.0f, -0.3f));
+//    shader->setVec3("light.direction", glm1::vec3(-0.2f, -1.0f, -0.3f));
     shader->setFloat("light.constant", lightData.constant);
     shader->setFloat("light.linear", lightData.linear);
     shader->setFloat("light.quadratic", lightData.quadratic);

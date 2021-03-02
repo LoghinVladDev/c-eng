@@ -219,7 +219,7 @@ int main() {
     glfwMakeContextCurrent(window);
 
     if(! gladLoadGLLoader((GLADloadproc) glfwGetProcAddress )) {
-        std::cout << "glad init fail\n";
+        std::cout << "glad1 init fail\n";
         return -1;
     }
 
@@ -415,7 +415,7 @@ void update() noexcept {
 
     float origY = camera->getTransform().getLocation().y;
 
-//    glm::vec3 front = camera->getFront();
+//    glm1::vec3 front = camera->getFront();
 
     if(up && down) {
 
@@ -539,7 +539,7 @@ inline void render() noexcept {
 
     double angleIncreaseConst = 40.0f;
     double offset = glfwGetTime() * angleIncreaseConst;
-//    std::cout << sin(glm::radians(offset)) << '\n';
+//    std::cout << sin(glm1::radians(offset)) << '\n';
 
     for(auto & lightCube : pointLights) {
         lightCube.position = glm::vec3(lightCube.position.x + cos(glm::radians(offset)) * ( 1.5 * deltaTime ),                     lightCube.position.y, lightCube.position.z);

@@ -24,6 +24,6 @@
 #include <vkDefs/types/vulkanExplicitTypes.h>
 
 #include <iostream>
-#include <stb-image.h>
+#include <stb_image.h>
 
 #endif //ENG1_ENGINEVULKANPREPROC_H

@@ -75,7 +75,7 @@ void initOpenGL() {
     glfwMakeContextCurrent(window);
 
     if(! gladLoadGLLoader((GLADloadproc) glfwGetProcAddress )) {
-        std::cout << "glad init fail\n";
+        std::cout << "glad1 init fail\n";
         return -1;
     }
 

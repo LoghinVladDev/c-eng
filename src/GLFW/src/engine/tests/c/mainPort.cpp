@@ -7,7 +7,7 @@
 #include <iostream>
 
 //#ifndef __gl_h_
-//#include <src/glfw_src/deps/glad/gl.h>
+//#include <src/glfw_src/deps/glad1/gl.h>
 //#endif
 
 #include <obj/util/event/KeyListener.h>

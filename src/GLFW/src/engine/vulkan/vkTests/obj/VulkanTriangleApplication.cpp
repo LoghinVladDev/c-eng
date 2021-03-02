@@ -508,7 +508,7 @@ void engine::VulkanTriangleApplication::updateUniformBuffer(uint32 uniformBuffer
             yRotateValue * glm::radians ( 90.0f ),
             glm::vec3 ( 0.0f, 1.0f, 0.0f )
         ),
-//        .model = glm::rotate( glm::translate ( glm::mat4 ( 1.0f ), glm::vec3 ( std::sin ( time ) , 0.0f, 0.0f ) ), time * glm::radians ( 90.0f ), glm::vec3 (0.5f, 0.0f, 0.5f) ),
+//        .model = glm1::rotate( glm1::translate ( glm1::mat4 ( 1.0f ), glm1::vec3 ( std::sin ( time ) , 0.0f, 0.0f ) ), time * glm1::radians ( 90.0f ), glm1::vec3 (0.5f, 0.0f, 0.5f) ),
         .view  = glm::lookAt( glm::vec3 ( 2.0f, 2.0f, 2.0f ) , glm::vec3( 0.0f, 0.0f, 0.0f ), glm::vec3 (0.0f, 0.0f, 1.0f) ),
         .projection = glm::perspective (
                 glm::radians ( FOV ),

@@ -129,7 +129,7 @@ uint8* data;
 float yaw = -90.0f;
 float pitch;
 
-//glm::vec4 vec(1.0f, 0.0f, 0.0f, 1.0f);
+//glm1::vec4 vec(1.0f, 0.0f, 0.0f, 1.0f);
 glm::mat4 trans = glm::mat4(1.0f);
 
 
@@ -155,7 +155,7 @@ int main() {
     glfwMakeContextCurrent(window);
 
     if(! gladLoadGLLoader((GLADloadproc) glfwGetProcAddress )) {
-        std::cout << "glad init fail\n";
+        std::cout << "glad1 init fail\n";
         return -1;
     }
 
@@ -333,16 +333,16 @@ inline void render() noexcept {
     shader->use();
     shader->setFloat("interpolation", interpolationVisibility);
 
-//    glm::mat4 model = glm::mat4(1.0f);
-//    model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-//    trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
-//    trans = glm::rotate(trans, (float)glfwGetTime(), glm::vec3(0.0, 0.0, 1.0));
-//    trans = glm::scale(trans, glm::vec3(0.5f, 0.5f, 0.5f));
-//    model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.5f, 1.0f, 1.0f));
+//    glm1::mat4 model = glm1::mat4(1.0f);
+//    model = glm1::rotate(model, glm1::radians(-55.0f), glm1::vec3(1.0f, 0.0f, 0.0f));
+//    trans = glm1::translate(trans, glm1::vec3(0.5f, -0.5f, 0.0f));
+//    trans = glm1::rotate(trans, (float)glfwGetTime(), glm1::vec3(0.0, 0.0, 1.0));
+//    trans = glm1::scale(trans, glm1::vec3(0.5f, 0.5f, 0.5f));
+//    model = glm1::rotate(model, (float)glfwGetTime() * glm1::radians(50.0f), glm1::vec3(0.5f, 1.0f, 1.0f));
 
-//    glm::mat4 view = glm::mat4(1.0f);
-//    view = glm::rotate(view, glm::radians(cameraRotate), glm::vec3(0.0f, 1.0f, 0.0f));
-//    view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f)); // objects in front of camera => camera pos reversed
+//    glm1::mat4 view = glm1::mat4(1.0f);
+//    view = glm1::rotate(view, glm1::radians(cameraRotate), glm1::vec3(0.0f, 1.0f, 0.0f));
+//    view = glm1::translate(view, glm1::vec3(0.0f, 0.0f, -3.0f)); // objects in front of camera => camera pos reversed
 
     constexpr float rad = 10.0f;
 
@@ -366,7 +366,7 @@ inline void render() noexcept {
 //    std::cout << glfwGetTime() << '\n';
 
 //    transformLoc = glGetUniformLocation(shader->getID(), "transform");
-//    glUniformMatrix4fv (transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
+//    glUniformMatrix4fv (transformLoc, 1, GL_FALSE, glm1::value_ptr(trans));
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture1);
@@ -393,13 +393,13 @@ inline void render() noexcept {
 //    shader->use();
 //    shader->setFloat("interpolation", interpolationVisibility);
 //
-//    trans = glm::mat4(1.0f);
-//    trans = glm::translate(trans, glm::vec3(-0.5f, 0.5f, 0.0f));
-//    trans = glm::rotate(trans, (float)std::sin(glfwGetTime()), glm::vec3(0.0, 0.0, 1.0));
-//    trans = glm::scale(trans, glm::vec3(0.5f, 0.5f, 0.5f));
+//    trans = glm1::mat4(1.0f);
+//    trans = glm1::translate(trans, glm1::vec3(-0.5f, 0.5f, 0.0f));
+//    trans = glm1::rotate(trans, (float)std::sin(glfwGetTime()), glm1::vec3(0.0, 0.0, 1.0));
+//    trans = glm1::scale(trans, glm1::vec3(0.5f, 0.5f, 0.5f));
 //
 //    transformLoc = glGetUniformLocation(shader->getID(), "transform");
-//    glUniformMatrix4fv (transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
+//    glUniformMatrix4fv (transformLoc, 1, GL_FALSE, glm1::value_ptr(trans));
 //
 //    glActiveTexture(GL_TEXTURE0);
 //    glBindTexture(GL_TEXTURE_2D, texture1);
@@ -524,9 +524,9 @@ void mouseCallback(GLFWwindow* window, double xPos, double yPos){
 //    std::cout << yaw << ' ' << pitch << '\n';
 
     glm::vec3 direction;
-//    direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-//    direction.y = sin(glm::radians(pitch));
-//    direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+//    direction.x = cos(glm1::radians(yaw)) * cos(glm1::radians(pitch));
+//    direction.y = sin(glm1::radians(pitch));
+//    direction.z = sin(glm1::radians(yaw)) * cos(glm1::radians(pitch));
 
     forwardMovementVec.x = cos(glm::radians(yaw));
     direction.y = sin(glm::radians(pitch));

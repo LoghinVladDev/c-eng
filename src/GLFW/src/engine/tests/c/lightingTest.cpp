@@ -115,22 +115,22 @@ struct cube {
     SMaterial material;
 };
 
-//glm::vec3 cubePositions[] = {
-//        glm::vec3( -1.0f,  0.0f,  1.0f),
-//        glm::vec3( 1.0f,  0.0f, 1.0f),
-//        glm::vec3( -1.0f,  0.0f,  -1.0f),
-//        glm::vec3( 1.0f,  0.0f, -1.0f),
-////        glm::vec3( -1.0f,  1.0f,  1.0f),
-////        glm::vec3( 1.0f,  1.0f, 1.0f),
-////        glm::vec3( -1.0f,  1.0f,  -1.0f),
-////        glm::vec3( 1.0f,  1.0f, -1.0f),
+//glm1::vec3 cubePositions[] = {
+//        glm1::vec3( -1.0f,  0.0f,  1.0f),
+//        glm1::vec3( 1.0f,  0.0f, 1.0f),
+//        glm1::vec3( -1.0f,  0.0f,  -1.0f),
+//        glm1::vec3( 1.0f,  0.0f, -1.0f),
+////        glm1::vec3( -1.0f,  1.0f,  1.0f),
+////        glm1::vec3( 1.0f,  1.0f, 1.0f),
+////        glm1::vec3( -1.0f,  1.0f,  -1.0f),
+////        glm1::vec3( 1.0f,  1.0f, -1.0f),
 //};
 
 cube cubes[] = {
-//        {glm::vec3(-1.0f, 0.0f, 1.0f), MATERIAL_EMERALD },
-//        {glm::vec3(1.0f,  0.0f, 1.0f),MATERIAL_GOLD },
-//        {glm::vec3(-1.0f,  0.0f,  -1.0f),MATERIAL_RUBBER_CYAN },
-//        {glm::vec3( 1.0f,  0.0f, -1.0f),MATERIAL_PLASTIC_CYAN },
+//        {glm1::vec3(-1.0f, 0.0f, 1.0f), MATERIAL_EMERALD },
+//        {glm1::vec3(1.0f,  0.0f, 1.0f),MATERIAL_GOLD },
+//        {glm1::vec3(-1.0f,  0.0f,  -1.0f),MATERIAL_RUBBER_CYAN },
+//        {glm1::vec3( 1.0f,  0.0f, -1.0f),MATERIAL_PLASTIC_CYAN },
         {glm::vec3(0.0f, 0.0f, 0.0f), MATERIAL_EMERALD},
         {glm::vec3(-1.5f, 0.0f, 0.0f), MATERIAL_JADE},
         {glm::vec3(-1.5f, 0.0f, -1.5f), MATERIAL_OBSIDIAN},
@@ -157,9 +157,9 @@ cube cubes[] = {
         {glm::vec3(0.0f, 1.5f, -1.5f), MATERIAL_RUBBER_RED},
         {glm::vec3(1.5f, 1.5f, -1.5f), MATERIAL_RUBBER_WHITE},
         {glm::vec3(1.5f, 1.5f, 0.0f), MATERIAL_RUBBER_YELLOW},
-//        {glm::vec3(1.5f, 1.5f, 1.5f), MATERIAL_PLASTIC_RED},
-//        {glm::vec3(0.0f, 1.5f, 1.5f), MATERIAL_PLASTIC_WHITE},
-//        {glm::vec3(-1.5f, 1.5f, 1.5f), MATERIAL_PLASTIC_YELLOW},
+//        {glm1::vec3(1.5f, 1.5f, 1.5f), MATERIAL_PLASTIC_RED},
+//        {glm1::vec3(0.0f, 1.5f, 1.5f), MATERIAL_PLASTIC_WHITE},
+//        {glm1::vec3(-1.5f, 1.5f, 1.5f), MATERIAL_PLASTIC_YELLOW},
 };
 
 unsigned int indices[] = {
@@ -229,7 +229,7 @@ int main() {
     glfwMakeContextCurrent(window);
 
     if(! gladLoadGLLoader((GLADloadproc) glfwGetProcAddress )) {
-        std::cout << "glad init fail\n";
+        std::cout << "glad1 init fail\n";
         return -1;
     }
 
@@ -423,7 +423,7 @@ void update() noexcept {
 
     float origY = camera->getTransform().getLocation().y;
 
-//    glm::vec3 front = camera->getFront();
+//    glm1::vec3 front = camera->getFront();
 
     if(up && down) {
 
@@ -468,18 +468,18 @@ inline void render() noexcept {
     shader->setVec3("lightPos", lightLoc);
     shader->setVec3("viewPosition", camera->getTransform().getLocation());
 
-//    shader->setVec3("light.ambient", glm::vec3(0.2f, 0.2f, 0.2f));
-//    shader->setVec3("light.diffuse", glm::vec3(0.5f, 0.5f, 0.5f));
-//    shader->setVec3("light.specular", glm::vec3(1.0f, 1.0f, 1.0f));
+//    shader->setVec3("light.ambient", glm1::vec3(0.2f, 0.2f, 0.2f));
+//    shader->setVec3("light.diffuse", glm1::vec3(0.5f, 0.5f, 0.5f));
+//    shader->setVec3("light.specular", glm1::vec3(1.0f, 1.0f, 1.0f));
 
 //    double time = glfwGetTime();
-//    glm::vec3 lightColor(sin(time * 2.0), sin(time * 0.7), sin(time * 1.3));
-//    glm::vec3 diffuseColor = lightColor * glm::vec3(0.5f);
-//    glm::vec3 ambientColor = lightColor * glm::vec3(0.2f);
+//    glm1::vec3 lightColor(sin(time * 2.0), sin(time * 0.7), sin(time * 1.3));
+//    glm1::vec3 diffuseColor = lightColor * glm1::vec3(0.5f);
+//    glm1::vec3 ambientColor = lightColor * glm1::vec3(0.2f);
 //
 //    shader->setVec3("light.ambient", ambientColor);
 //    shader->setVec3("light.diffuse", diffuseColor);
-//    shader->setVec3("light.specular", glm::vec3(1.0f, 1.0f, 1.0f));
+//    shader->setVec3("light.specular", glm1::vec3(1.0f, 1.0f, 1.0f));
 //
     shader->setVec3("light.ambient", glm::vec3(1.0f));
     shader->setVec3("light.diffuse", glm::vec3(1.0f));
