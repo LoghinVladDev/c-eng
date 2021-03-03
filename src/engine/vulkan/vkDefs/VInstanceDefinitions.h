@@ -5,8 +5,10 @@
 #ifndef ENG1_VINSTANCEDEFINITIONS_H
 #define ENG1_VINSTANCEDEFINITIONS_H
 
+#if !defined(_MSC_VER)
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "bugprone-reserved-identifier"
+#endif
 
 #define VULKAN_LAYERS_NONE 0
 
@@ -38,6 +40,8 @@
 
 #define __VULKAN_INSTANCE_APP_INFO_ENGINE_NO_ENGINE                       "No Engine"
 
+#if !defined(_MSC_VER)
 #pragma clang diagnostic pop
+#endif
 
 #endif //ENG1_VINSTANCEDEFINITIONS_H
