@@ -13,7 +13,7 @@ Game Engine Project. Started as a port from a small Java 2D game engine, turned 
 ### Prerequisites - Tools
 #### Win32
 * [CMake](https://cmake.org/download/) - Release 3.16 min
-* [MinGW](https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win32/Personal%20Builds/mingw-builds/installer/mingw-w64-install.exe/download) - 8.1.0. Settings in installation should not impact engine
+* [MinGW(recommended)/MSVC](https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win32/Personal%20Builds/mingw-builds/installer/mingw-w64-install.exe/download) - 8.1.0. Settings in installation should not impact engine / MSVC with Visual Studio 2019 16.9. 
 * [Git](https://git-scm.com/download/win) - For Submodules. Might not be required 
 * [Vulkan SDK](https://vulkan.lunarg.com/sdk/home) - Latest Windows SDK ( 1.2.170.0 )
 * Vulkan GPU Drivers
