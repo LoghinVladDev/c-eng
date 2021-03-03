@@ -62,7 +62,7 @@ namespace engine {
         }
 
         [[nodiscard]] uint32 size () const noexcept {
-            return this->_fences.size();
+            return static_cast<uint32>(this->_fences.size());
         }
 
         [[nodiscard]] const VFence & operator [] ( uint32 index ) const noexcept {

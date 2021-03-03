@@ -2,7 +2,9 @@
 // Created by Vlad on 9/11/2020.
 //
 
+#if !defined(_MSC_VER)
 #include <bits/ios_base.h>
+#endif
 #include "VTexture.h"
 #include "VTextureDefs.h"
 #include <vkUtils/VStdUtilsDefs.h>
@@ -151,6 +153,9 @@ VulkanResult engine::VTexture::setup(
     try {
         this->load( pImagePath, STBI_rgb_alpha );
     } catch ( std::runtime_error & exception ) {
+#if defined(_MSC_VER)
+        (void)exception;
+#endif
         return VulkanResult::VK_ERROR_INITIALIZATION_FAILED;
     }
 

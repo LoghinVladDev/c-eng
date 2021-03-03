@@ -129,12 +129,12 @@ std::vector < VulkanDescriptorSetLayoutBinding > engine::VShaderCompilerTarget::
 
         bindings.push_back(
             VulkanDescriptorSetLayoutBinding {
-                .binding            = static_cast< uint32 > ( std::strtol( code.substr ( code.find ( "=", code.rfind("binding", currentIndex) ) + 1 ).c_str(), nullptr, 10 ) ),
+                .binding            = static_cast< uint32 > ( std::strtol( code.substr ( code.find ( '=', code.rfind("binding", currentIndex) ) + 1 ).c_str(), nullptr, 10 ) ),
                 .descriptorType     = code.find( " uniform sampler2D ", currentIndex ) == currentIndex
                         ? VulkanDescriptorType::VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER
                         : VulkanDescriptorType::VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
                 .descriptorCount    = 1U,
-                .stageFlags         = getShaderStageFlagBits( this->_shaderType ),
+                .stageFlags         = static_cast<VkShaderStageFlags>(getShaderStageFlagBits( this->_shaderType )),
                 .pImmutableSamplers = nullptr
             }
         );

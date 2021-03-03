@@ -121,7 +121,10 @@ VulkanResult engine::VBuffer::allocateMemory(
                         this->_pLogicalDevice
                 )
         );
-    } catch ( std::runtime_error const & exception ) {
+    } catch ( std::runtime_error const & ignored ) {
+#if defined(_MSC_VER)
+        (void) ignored;
+#endif
         return VulkanResult::VK_ERROR_INITIALIZATION_FAILED;
     }
 
@@ -219,7 +222,7 @@ VulkanResult engine::VBuffer::copyFrom(
     VulkanResult startRecordResult = copyCommandBuffers.startRecord(
         * this,
         sourceBuffer,
-        ( ( size == 0ULL ) ? ( maxCopyMemory ) : ( std::min ( maxCopyMemory, size ) ) )
+        static_cast<uint32>( ( ( size == 0ULL ) ? ( maxCopyMemory ) : ( std::min ( maxCopyMemory, size ) ) ) )
     );
 
     if ( startRecordResult != VulkanResult::VK_SUCCESS )

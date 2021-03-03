@@ -106,6 +106,7 @@ static inline void populateRenderPassCreateInfo (
     createInfo->pDependencies       = pSubpassDependencies;
 }
 
+#include <array>
 VulkanResult engine::VRenderPass::setup(
     const engine::VLogicalDevice & device,
     const VulkanSubpassDependency * pSubpassDependencies,

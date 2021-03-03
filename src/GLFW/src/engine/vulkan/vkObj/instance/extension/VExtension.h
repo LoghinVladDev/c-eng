@@ -89,7 +89,7 @@ namespace engine {
         }
 
         [[nodiscard]] uint32 size() const noexcept {
-            return this->_extensions.size();
+            return static_cast<uint32>(this->_extensions.size());
         }
 
         [[nodiscard]] const std::vector < VExtension > & getExtensions () const noexcept {

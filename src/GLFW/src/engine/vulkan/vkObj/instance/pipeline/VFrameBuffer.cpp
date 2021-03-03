@@ -46,6 +46,7 @@ void engine::VFrameBufferCollection::cleanup() noexcept {
     this->_frameBuffers.clear();
 }
 
+#include <array>
 VulkanResult engine::VFrameBuffer::setup( const engine::VDepthBuffer * pDepthBuffer ) noexcept {
     if ( this->_pImageView == nullptr || this->_pImageView == nullptr )
         return VulkanResult::VK_ERROR_INITIALIZATION_FAILED;

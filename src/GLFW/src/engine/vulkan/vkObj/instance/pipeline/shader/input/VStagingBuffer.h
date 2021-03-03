@@ -122,7 +122,7 @@ VulkanResult engine::VStagingBuffer<T>::setup(
     uint32                 queueFamilyIndexCount
 ) noexcept {
     this->_data = data;
-    this->setElementCount( data.size() );
+    this->setElementCount( static_cast<uint32>(data.size()) );
 
     return VBuffer::setup(
         device,

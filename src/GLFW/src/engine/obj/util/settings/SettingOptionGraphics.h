@@ -58,14 +58,18 @@ namespace engine {
                 return this->_width;
             }
 
+#if !defined(_MSC_VER)
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "EndlessLoop"
+#endif
 
             [[nodiscard]] uint32 getHeight () const noexcept {
                 return this->_height;
             }
 
+#if !defined(_MSC_VER)
 #pragma clang diagnostic pop
+#endif
 
 #ifdef ENGINE_SETTINGS_USE_SAFE_MODE
             void resetToSaveValue() override {

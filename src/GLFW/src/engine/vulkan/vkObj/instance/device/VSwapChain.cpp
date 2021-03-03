@@ -254,10 +254,15 @@ engine::VImageViewCollection engine::VSwapChain::getImageViewCollection() const 
     return collection;
 }
 
+
 VulkanResult engine::VSwapChain::present( const VSemaphore * pWaitSemaphores, uint32 waitSemaphoreCount, uint32 imageIndex) const noexcept {
     VulkanPresentInfoKhronos presentInfo { };
 
+#if !defined(_MSC_VER)
     VulkanSemaphore waitSemaphoreHandles [ waitSemaphoreCount ];
+#else
+    auto * waitSemaphoreHandles = new VulkanSemaphore [ waitSemaphoreCount ];
+#endif
 
     for( uint32 i = 0; i < waitSemaphoreCount; i++ )
         waitSemaphoreHandles[i] = pWaitSemaphores[i].data();
@@ -277,6 +282,10 @@ VulkanResult engine::VSwapChain::present( const VSemaphore * pWaitSemaphores, ui
             pPresentQueue = & queue;
             break;
         }
+
+#if defined(_MSC_VER)
+    delete [] waitSemaphoreHandles;
+#endif
 
     if ( pPresentQueue == nullptr )
         return VulkanResult::VK_ERROR_INITIALIZATION_FAILED;

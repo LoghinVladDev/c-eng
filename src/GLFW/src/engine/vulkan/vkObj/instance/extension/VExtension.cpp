@@ -14,7 +14,11 @@
 }  
 
 engine::VExtension::VExtension( engine::VExtension::VExtensionType type ) noexcept (false) {
+#if !defined(_MSC_VER)
     std::strcpy( this->_extensionProperties.extensionName, getLiteralByType ( type ) );
+#else
+    strcpy_s( this->_extensionProperties.extensionName, 256, getLiteralByType(type) );
+#endif
 }
 
 [[nodiscard]] bool engine::VExtensionCollection::contains ( engine::VExtension::VExtensionType type ) const noexcept {

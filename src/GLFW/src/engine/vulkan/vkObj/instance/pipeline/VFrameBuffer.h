@@ -83,7 +83,7 @@ namespace engine {
         }
 
         [[nodiscard]] uint32 size () const noexcept {
-            return this->_frameBuffers.size();
+            return static_cast<uint32>(this->_frameBuffers.size());
         }
 
         void cleanup () noexcept;

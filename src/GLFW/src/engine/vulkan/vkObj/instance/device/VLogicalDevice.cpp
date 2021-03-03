@@ -118,7 +118,7 @@ VulkanResult engine::VLogicalDevice::setup( const engine::VPhysicalDevice& physi
         populateQueueCreateInfoStructure(
             (&queueCreateInfos[queueCreateInfoIndex++]),
             familyIndex,
-            familyIndexToQueuePriorities.find(familyIndex)->second.size(),
+            static_cast<uint32>(familyIndexToQueuePriorities.find(familyIndex)->second.size()),
             familyIndexToQueuePriorities.find(familyIndex)->second.data()
         );
     }
@@ -126,7 +126,12 @@ VulkanResult engine::VLogicalDevice::setup( const engine::VPhysicalDevice& physi
     VulkanDeviceCreateInfo      deviceCreateInfo    {};
     std::vector < VValidationLayer::VulkanValidationLayerLiteral > layerLiterals;
 
-    populateDeviceCreateInfoStructure( & deviceCreateInfo, physicalDevice.getPhysicalDeviceFeatures(), queueCreateInfos.data(), queueCreateInfos.size() );
+    populateDeviceCreateInfoStructure(
+            & deviceCreateInfo,
+            physicalDevice.getPhysicalDeviceFeatures(),
+            queueCreateInfos.data(),
+            static_cast<uint32>(queueCreateInfos.size())
+    );
 
 
     if( this->_validationLayerCollection != nullptr ) {

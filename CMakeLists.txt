@@ -27,7 +27,6 @@ include_directories(dependencies/cds/include)
 
 include_directories(src/GLFW/src/engine)
 
-
 find_package(OpenGL REQUIRED)
 #find_package(ASSIMP)
 
@@ -170,6 +169,12 @@ if(Vulkan_FOUND)
             src/GLFW/src/engine/vulkan/vkObj/engine/obj/VMeshRenderer.cpp
             src/GLFW/src/engine/vulkan/vkObj/engine/obj/VMeshRenderer.h)
 
+
+    set_target_properties(
+        vkTriangle
+        PROPERTIES 
+        RUNTIME_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/build"
+    )
 
     target_link_libraries( vkTriangle Vulkan::Vulkan )
 

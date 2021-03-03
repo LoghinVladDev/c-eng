@@ -10,6 +10,7 @@
 #include <vkObj/instance/device/VPhysicalDevice.h>
 #include <map>
 #include <set>
+#include <string>
 #include <src/GLFW/src/engine/vulkan/vkObj/window/surface/VSurface.h>
 
 namespace engine {

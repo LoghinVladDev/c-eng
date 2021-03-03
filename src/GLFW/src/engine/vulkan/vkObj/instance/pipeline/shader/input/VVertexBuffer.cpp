@@ -21,7 +21,7 @@ VulkanResult engine::VVertexBuffer::setup(
     uint32                            queueFamilyIndexCount,
     bool                              forceMemoryExclusivity
 ) noexcept {
-    auto packedVertices = getPackedVertices( vertices.data(), vertices.size() );
+    auto packedVertices = getPackedVertices( vertices.data(), static_cast<uint32>(vertices.size()) );
     return this->setup(
         device,
         packedVertices,
@@ -100,7 +100,7 @@ VulkanResult engine::VVertexBuffer::setup(
 }
 
 VulkanResult engine::VVertexBuffer::load(const std::vector<VVertex> & vertices) noexcept {
-    auto packedVertices = getPackedVertices( vertices.data(), vertices.size() );
+    auto packedVertices = getPackedVertices( vertices.data(), static_cast<uint32>(vertices.size()) );
     return this->load( packedVertices );
 }
 

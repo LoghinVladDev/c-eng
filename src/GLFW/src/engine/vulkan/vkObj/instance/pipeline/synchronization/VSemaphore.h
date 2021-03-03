@@ -59,7 +59,7 @@ namespace engine {
         }
 
         [[nodiscard]] uint32 size () const noexcept {
-            return this->_semaphores.size();
+            return static_cast<uint32>(this->_semaphores.size());
         }
 
         [[nodiscard]] const VSemaphore & operator [] (uint32 index) const noexcept {

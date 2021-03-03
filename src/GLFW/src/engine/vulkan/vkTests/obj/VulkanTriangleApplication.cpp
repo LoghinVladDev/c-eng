@@ -74,9 +74,11 @@ static void queueFamilyTests ( const engine::VQueueFamilyCollection & collection
 #endif
 }
 
+#if !defined(_MSC_VER)
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "Simplify"
 #pragma ide diagnostic ignored "UnreachableCode"
+#endif
 void engine::VulkanTriangleApplication::setupDebugMessenger() noexcept (false) {
 
     if ( ! enableValidationLayers ) return;
@@ -87,7 +89,9 @@ void engine::VulkanTriangleApplication::setupDebugMessenger() noexcept (false) {
         throw std::runtime_error("debug messenger setup failure : " + engine::VStandardUtils::to_string(res));
     }
 }
+#if !defined(_MSC_VER)
 #pragma clang diagnostic pop
+#endif
 
 void engine::VulkanTriangleApplication::initSettings() const noexcept {
     auto resolution = engine::ResolutionSetting( this->_width, this->_height );
@@ -170,9 +174,11 @@ static inline std::vector < const engine::VQueueFamily* > internalGatherGraphics
     return queueFamilies;
 }
 
+#if !defined(_MSC_VER)
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "Simplify"
 #pragma ide diagnostic ignored "UnreachableCode"
+#endif
 inline void engine::VulkanTriangleApplication::initVulkan() noexcept (false) {
     VExtensionCollection availableExtensions = VExtensionCollection::getAllAvailableExtensions();
 
@@ -280,10 +286,12 @@ void engine::VulkanTriangleApplication::createSynchronizationElements() noexcept
 
     if ( this->_inFlightFences.setup( this->_vulkanLogicalDevice, MAX_FRAMES_IN_FLIGHT, engine::VFence::START_SIGNALED ) != VulkanResult::VK_SUCCESS )
         throw std::runtime_error ( "Fence Creation Failure" );
-    this->_imagesInFlight.resize( this->_vulkanLogicalDevice.getSwapChain()->getImages().size() );
+    this->_imagesInFlight.resize( static_cast<uint32>(this->_vulkanLogicalDevice.getSwapChain()->getImages().size()) );
 }
 
+#if !defined(_MSC_VER)
 #pragma clang diagnostic pop
+#endif
 
 
 /**
@@ -627,7 +635,7 @@ void engine::VulkanTriangleApplication::createDepthBuffer() noexcept(false) {
             this->_depthBuffer.setup(
                     this->_transferCommandPool,
                     queueFamilyIndices.data(),
-                    queueFamilyIndices.size()
+                    static_cast<uint32>(queueFamilyIndices.size())
             ),
             std::runtime_error("depth buffer create failure")
     )
@@ -727,8 +735,10 @@ void engine::VulkanTriangleApplication::createExclusiveBuffers() noexcept(false)
     this->createUniformBuffers();
 }
 
+#if !defined(_MSC_VER)
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "Simplify"
+#endif
 void engine::VulkanTriangleApplication::cleanup() noexcept (false) {
     this->_imageAvailableSemaphores.cleanup();
     this->_renderFinishedSemaphores.cleanup();
@@ -867,4 +877,6 @@ void engine::VulkanTriangleApplication::createFrameBuffers() noexcept(false) {
         throw std::runtime_error ( "Frame Buffers Creation Failure" );
 }
 
+#if !defined(_MSC_VER)
 #pragma clang diagnostic pop
+#endif

@@ -53,7 +53,7 @@ VulkanVertexInputBindingDescription engine::VVertex::getBindingDescription() noe
 
 std::array < VulkanVertexInputAttributeDescription, engine::VVertex::PACK_PROPERTIES_COUNT > engine::VVertex::getAttributeDescriptions() noexcept {
     std::array < VkVertexInputAttributeDescription, engine::VVertex::PACK_PROPERTIES_COUNT > attributeDescriptions { };
-    engine::VVertex::SVertexPack basePack;
+    engine::VVertex::SVertexPack basePack {};
 
     populateVertexInputAttributeDescription(
         & attributeDescriptions[ 0 ],

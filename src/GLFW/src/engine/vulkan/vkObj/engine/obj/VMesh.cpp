@@ -33,7 +33,7 @@ VulkanResult engine::VMesh::setup(
             indices,
             this->_pCommandPool,
             queueFamilyIndices.data(),
-            queueFamilyIndices.size()
+            static_cast<uint32>(queueFamilyIndices.size())
         )
     )
 

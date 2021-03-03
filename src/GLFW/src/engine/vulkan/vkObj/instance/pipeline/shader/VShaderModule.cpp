@@ -47,7 +47,11 @@ VulkanResult engine::VShaderModule::setup( const engine::VLogicalDevice & device
 
     VulkanShaderModuleCreateInfo createInfo {};
 
-    populateShaderModuleCreateInfo( & createInfo, reinterpret_cast < const uint32 * > (this->_byteCode.data()), this->_byteCode.size() );
+    populateShaderModuleCreateInfo(
+            & createInfo,
+            reinterpret_cast < const uint32 * > (this->_byteCode.data()),
+            static_cast<uint32>(this->_byteCode.size())
+    );
 
     return vkCreateShaderModule ( this->_pLogicalDevice->data(), & createInfo, nullptr, & this->_handle );
 }

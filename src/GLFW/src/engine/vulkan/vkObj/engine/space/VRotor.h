@@ -67,12 +67,16 @@ namespace engine {
             ADJUST_ROTOR()
         }
 
+#if !defined(_MSC_VER)
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "EndlessLoop"
+#endif
         [[nodiscard]] float getYaw() const noexcept {
             return this->_yaw;
         }
+#if !defined(_MSC_VER)
 #pragma clang diagnostic pop
+#endif
 
         [[nodiscard]] float getPitch() const noexcept {
             return this->_pitch;

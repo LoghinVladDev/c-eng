@@ -1,5 +1,7 @@
+#if !defined(_MSC_VER)
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "bugprone-reserved-identifier"
+#endif
 //
 // Created by vladl on 07/08/2020.
 //
@@ -83,5 +85,6 @@
 #define ENG_STD_THROW(_str) std::runtime_error ( std::string().append("File : ").append(__FILE__).append("\n\tAt line ").append(std::to_string(__LINE__)).append(" : ").append(_str) )
 
 #endif //ENG1_VSTDUTILSDEFS_H
-
+#if !defined(_MSC_VER)
 #pragma clang diagnostic pop
+#endif
