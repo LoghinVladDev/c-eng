@@ -8,3 +8,4 @@
 /src/GLFW/src/engine/vulkan/vkTests/c/vulkanTriangle2.cpp
 ./externals/*
 /CMakeFiles/
+/out/
