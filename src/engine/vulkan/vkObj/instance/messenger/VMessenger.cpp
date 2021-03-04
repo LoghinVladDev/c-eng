@@ -17,6 +17,7 @@ static VULKAN_API_ATTRIBUTE VulkanBool32 VULKAN_API_CALL staticMessengerDebugCal
 
     if( messageSeverity >= VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT ) {
         std::cerr << "[LAYER DEBUG CALLBACK] validation layer: " << callbackDataPtr->pMessage << '\n';
+        std::cerr.flush();
     }
 
     return VULKAN_FALSE;

@@ -19,7 +19,7 @@ inline static void populateDescriptorPoolCreateInfo (
         .flags          = VULKAN_NULL_FLAGS,
         .maxSets        = maxSetCount,
         .poolSizeCount  = descriptorPoolSizeCount,
-        .pPoolSizes     = pDescriptorPoolSizes
+        .pPoolSizes     = pDescriptorPoolSizes,
     };
 }
 

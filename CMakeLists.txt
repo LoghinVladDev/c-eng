@@ -75,6 +75,9 @@ if(Vulkan_FOUND)
     include_directories(src/engine/vulkan/vkObj/engine/space)
     include_directories(src/engine/vulkan/vkUtils)
     include_directories(src/engine/obj/util/settings)
+    include_directories(src/engine/obj/util/proto)
+    include_directories(src/engine/app)
+    include_directories(src/engine/obj)
 
     include_directories( ${Vulkan_INCLUDE_DIRS} )
 
@@ -82,11 +85,11 @@ if(Vulkan_FOUND)
 
     add_executable( vkTriangle
             dependencies/cds/src/primitive/String.cpp
-            src/engine/vulkan/vkTests/c/vulkanTriangle.cpp
-            src/engine/vulkan/vkTests/obj/VulkanTriangleApplication.cpp
-            src/engine/vulkan/vkTests/obj/VulkanTriangleApplication.h
-            src/engine/vulkan/vkTests/obj/VulkanInitTests.cpp
-            src/engine/vulkan/vkTests/obj/VulkanInitTests.h
+            src/engine/app/vulkanTriangle.cpp
+            src/engine/obj/util/proto/VulkanTriangleApplication.cpp
+            src/engine/obj/util/proto/VulkanTriangleApplication.h
+            src/engine/obj/util/proto/VulkanInitTests.cpp
+            src/engine/obj/util/proto/VulkanInitTests.h
             src/engine/vulkan/engineVulkanPreproc.h
             src/engine/vulkan/vkDefs/types/vulkanExplicitTypes.h
             src/engine/vulkan/vkDefs/vkDefinitions.h
@@ -261,9 +264,9 @@ if(Vulkan_FOUND)
 
     add_executable( vkPrecompiler
             ${JSONCpp_SOURCE}
-            src/engine/vulkan/vkTests/c/vulkanPrecompilerTest.cpp
-            src/engine/vulkan/vkTests/obj/VulkanInitTests.cpp
-            src/engine/vulkan/vkTests/obj/VulkanInitTests.h
+            src/engine/app/vulkanPrecompilerTest.cpp
+            src/engine/obj/util/proto/VulkanInitTests.cpp
+            src/engine/obj/util/proto/VulkanInitTests.h
             src/engine/vulkan/engineVulkanPreproc.h
             src/engine/vulkan/vkDefs/types/vulkanExplicitTypes.h
             src/engine/vulkan/vkDefs/vkDefinitions.h

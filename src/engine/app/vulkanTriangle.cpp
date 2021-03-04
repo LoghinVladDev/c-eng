@@ -8,7 +8,7 @@
 
 #include <iostream>
 
-#include <vkTests/obj/VulkanTriangleApplication.h>
+#include <src/engine/obj/util/proto/VulkanTriangleApplication.h>
 
 
 using namespace engine;

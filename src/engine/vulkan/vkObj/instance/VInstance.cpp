@@ -14,14 +14,14 @@ inline static void populateApplicationInfoStructure( VulkanApplicationInfo * app
     if(applicationInfo == nullptr)
         return;
 
-    *applicationInfo = {};
-
-    applicationInfo->sType              = VK_STRUCTURE_TYPE_APPLICATION_INFO;
-    applicationInfo->pApplicationName   = engine::VInstance::DEFAULT_VULKAN_INSTANCE_TITLE;
-    applicationInfo->applicationVersion = VK_MAKE_VERSION(1U, 0U, 0U);  // NOLINT(hicpp-signed-bitwise)
-    applicationInfo->pEngineName        = __VULKAN_INSTANCE_APP_INFO_ENGINE_NO_ENGINE;
-    applicationInfo->engineVersion      = VK_MAKE_VERSION(1U, 0U, 0U);  // NOLINT(hicpp-signed-bitwise)
-    applicationInfo->apiVersion         = VK_API_VERSION_1_0;                               // NOLINT(hicpp-signed-bitwise)
+    *applicationInfo = {
+        .sType              = VK_STRUCTURE_TYPE_APPLICATION_INFO,
+        .pApplicationName   = engine::VInstance::DEFAULT_VULKAN_INSTANCE_TITLE,
+        .applicationVersion = VK_MAKE_VERSION(1U, 2U, 0U),  // NOLINT(hicpp-signed-bitwise)
+        .pEngineName        = __VULKAN_INSTANCE_APP_INFO_ENGINE_NO_ENGINE,
+        .engineVersion      = VK_MAKE_VERSION(1U, 2U, 0U),  // NOLINT(hicpp-signed-bitwise)
+        .apiVersion         = VK_API_VERSION_1_2                               // NOLINT(hicpp-signed-bitwise)
+    };
 
 }
 
