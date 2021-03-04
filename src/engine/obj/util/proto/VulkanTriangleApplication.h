@@ -34,14 +34,14 @@
 #include <vkObj/instance/pipeline/shader/input/VUniformBuffer.h>
 #include <vkObj/instance/pipeline/shader/input/VDescriptorPool.h>
 #include <vkObj/instance/pipeline/shader/input/VDescriptorSet.h>
-#include <vkObj/engine/obj/VMesh.h>
+#include <src/engine/gobj/model/VMesh.h>
 #include <VTexture.h>
 #include <VTextureSampler.h>
 #include <VDepthBuffer.h>
-#include <VShader.h>
+#include <src/engine/gobj/shader/VShader.h>
 
 #include <vector>
-#include <VMeshRenderer.h>
+#include <src/engine/gobj/model/VMeshRenderer.h>
 
 
 namespace engine {

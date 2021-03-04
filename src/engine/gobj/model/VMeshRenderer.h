@@ -9,7 +9,7 @@
 #include <vkDefs/types/vulkanExplicitTypes.h>
 #include <VLogicalDevice.h>
 #include <VDescriptorSet.h>
-#include <VShader.h>
+#include <src/engine/gobj/shader/VShader.h>
 #include <VCommandPool.h>
 
 namespace engine {
