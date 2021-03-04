@@ -84,7 +84,7 @@ if(Vulkan_FOUND)
     message(-- VULKAN_PATH :   ${Vulkan_LIBRARY} )
 
     add_executable( vkTriangle
-            dependencies/cds/src/primitive/String.cpp
+#            dependencies/cds/src/primitive/String.cpp
             src/engine/app/vulkanTriangle.cpp
             src/engine/obj/util/proto/VulkanTriangleApplication.cpp
             src/engine/obj/util/proto/VulkanTriangleApplication.h
@@ -188,7 +188,7 @@ if(Vulkan_FOUND)
 
     target_link_libraries( vkTriangle Vulkan::Vulkan )
 
-    target_link_libraries( vkTriangle glfw ${GLFW_LIBRARIES} )
+    target_link_libraries( vkTriangle glfw ${GLFW_LIBRARIES} CDS )
 
 #    add_executable( vkTriangleT
 #            ${JSONCpp_SOURCE}
