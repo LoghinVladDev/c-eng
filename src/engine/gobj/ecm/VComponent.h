@@ -31,13 +31,13 @@ namespace engine {
         explicit VComponent ( VEntity * = nullptr ) noexcept;
         ~VComponent() noexcept override = default;
 
-        [[nodiscard]] auto toString() const noexcept -> String override;
         [[nodiscard]] constexpr auto parent () const noexcept -> VEntity const * { return this->_pParentEntity; }
 
         static void * operator new(std::size_t) noexcept (false);
         static void operator delete(void *) noexcept(false);
-    };
 
+        [[nodiscard]] auto toString() const noexcept -> String override;
+    };
 }
 
 #endif //ENG1_VCOMPONENT_H

@@ -65,7 +65,6 @@ namespace engine {
         auto components () noexcept -> Array < VComponent * > & { return this->_components; }
         auto components () const noexcept -> Array < VComponent * > const & { return this->_components; }
     };
-
 }
 
 #endif //ENG1_VENTITY_H
