@@ -7,11 +7,13 @@
 
 #include <engineVulkanPreproc.h>
 #include <vkDefs/types/vulkanExplicitTypes.h>
-#include <space/VRotor.h>
+#include <transform/VRotor.h>
+
+#include <ecm/VComponent.h>
 
 namespace engine {
 
-    class VTransform {
+    class VTransform : public VComponent {
     private:
         //// private variables
         glm::vec3 _location { glm::vec3 (0.0f) };
@@ -24,25 +26,54 @@ namespace engine {
         //// public variable
 
         //// public functions
-        VTransform () noexcept = default;
-        explicit VTransform ( const glm::vec3 & location, const glm::vec3 & rotation = glm::vec3 ( 0.0f ), const glm::vec3 & scale = glm::vec3 ( 1.0f ) ) noexcept :
+//        operator = not required due to Base having operator =
+//        VTransform & operator = ( VTransform const & o ) noexcept {
+//            if ( this == & o ) return * this;
+//
+//            this->_location = o._location;
+//            this->_rotation = o._rotation;
+//            this->_scale = o._scale;
+//
+//            return * this;
+//        }
+
+        explicit VTransform ( VEntity * pParent ) noexcept : VComponent( pParent ) { }
+        explicit VTransform (
+                glm::vec3 const & location,
+                glm::vec3 const & rotation = glm::vec3 ( 0.0f ),
+                glm::vec3 const & scale = glm::vec3 ( 1.0f ),
+                VEntity * pParent = nullptr
+        ) noexcept :
             _location(location),
             _rotation(rotation),
-            _scale(scale){
+            _scale(scale),
+            VComponent(pParent) {
 
         }
 
-        explicit VTransform ( const glm::vec3 & location, engine::VRotor & rotor, const glm::vec3 & scale = glm::vec3 ( 1.0f ) ) noexcept :
+        explicit VTransform (
+                glm::vec3 const & location,
+                engine::VRotor const & rotor,
+                glm::vec3 const & scale = glm::vec3 ( 1.0f ),
+                VEntity * pParent = nullptr
+        ) noexcept :
             _location(location),
             _rotation(rotor),
-            _scale(scale) {
+            _scale(scale),
+            VComponent(pParent) {
 
         }
 
-        explicit VTransform ( float locationScalar, float rotationScalar = 0.0f, float scaleScalar = 0.0f ) noexcept :
+        explicit VTransform (
+                float locationScalar,
+                float rotationScalar = 0.0f,
+                float scaleScalar = 0.0f,
+                VEntity * pParent = nullptr
+        ) noexcept :
             _location ( glm::vec3 ( locationScalar ) ),
             _rotation ( glm::vec3 ( rotationScalar ) ),
-            _scale ( glm::vec3 ( scaleScalar ) ){
+            _scale ( glm::vec3 ( scaleScalar ) ),
+            VComponent(pParent) {
 
         }
 

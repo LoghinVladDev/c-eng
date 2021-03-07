@@ -4,6 +4,8 @@
 
 #include "VEntity.h"
 
+uint64 engine::VEntity::_IDCounter = 1llu;
+
 engine::VEntity::VEntity(const VEntity * pParent) noexcept : _pParentEntity(pParent) {
     if ( pParent != nullptr )
         pParent->addChild(this);
@@ -30,4 +32,28 @@ auto engine::VEntity::addComponent(VComponent * pComponent) noexcept -> void {
 auto engine::VEntity::addChild(VEntity * pChild) const noexcept -> void {
     this->_children.pushBack(pChild);
     pChild->_pParentEntity = this;
+}
+
+auto engine::VEntity::toString() const noexcept -> String {
+    return String().append("VEntity { id = ").append(this->_ID).append(" }");
+}
+
+engine::VEntity::~VEntity() noexcept {
+    for ( auto * p : this->_components ) {
+        p->_pParentEntity = nullptr;
+        delete p;
+    }
+
+    for ( auto * p : this->_children ) {
+        p->_pParentEntity = nullptr;
+        delete p;
+    }
+}
+
+auto engine::VEntity::removeComponent(VComponent * pComponent) noexcept -> void {
+    this->_components.removeFirst(pComponent);
+}
+
+auto engine::VEntity::removeChild(VEntity * pChild) noexcept -> void {
+    this->_children.removeFirst(pChild);
 }

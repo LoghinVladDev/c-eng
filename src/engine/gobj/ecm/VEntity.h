@@ -5,6 +5,8 @@
 #ifndef ENG1_VENTITY_H
 #define ENG1_VENTITY_H
 
+#include <engineVulkanPreproc.h>
+
 #include <CDS/Object>
 #include <CDS/Array>
 #include <gobj/ecm/VComponent.h>
@@ -47,23 +49,41 @@ namespace engine {
         Array < VComponent * >          _components;
         Array < VEntity * >    mutable  _children;
 
+        uint64                          _ID { VEntity::nextID() };
+        static uint64                   _IDCounter;
+
         //// private functions
+        static auto nextID() noexcept -> uint64 { return VEntity::_IDCounter++; }
+
+    protected:
+        explicit VEntity ( VEntity const * = nullptr ) noexcept;
 
     public:
         //// public variables
 
         //// public functions
-        explicit VEntity ( VEntity const * = nullptr ) noexcept;
-        ~VEntity() noexcept override = default;
+        ~VEntity() noexcept override;
 
         auto addComponent ( VComponent * ) noexcept -> void;
         auto addChild ( VEntity * ) const noexcept -> void;
+
+        auto removeComponent ( VComponent * ) noexcept -> void;
+        auto removeChild ( VEntity * ) noexcept -> void;
+
         constexpr auto parent() const noexcept -> VEntity const * { return this->_pParentEntity; }
 
         auto children () const noexcept -> Array < VEntity * > & { return this->_children; }
         auto siblings () const noexcept -> Array < VEntity * >;
         auto components () noexcept -> Array < VComponent * > & { return this->_components; }
         auto components () const noexcept -> Array < VComponent * > const & { return this->_components; }
+
+        [[nodiscard]] auto toString() const noexcept -> String override;
+        [[nodiscard]] constexpr auto hash () const noexcept -> Index override { return static_cast < Index > (this->_ID); }
+        [[nodiscard]] constexpr auto ID () const noexcept -> uint64 { return this->_ID; }
+
+        VEntity & operator = ( VEntity const & o ) noexcept { // NOLINT(bugprone-unhandled-self-assignment)
+            return * this;
+        }
     };
 }
 

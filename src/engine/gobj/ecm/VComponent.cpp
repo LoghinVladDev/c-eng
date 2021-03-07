@@ -5,8 +5,10 @@
 #include "VComponent.h"
 #include <gobj/ecm/VEntity.h>
 
+uint64 engine::VComponent::_IDCounter = 1llu;
+
 auto engine::VComponent::toString() const noexcept -> String {
-    return String() + "<VComponent : " + reinterpret_cast < Size > ( this ) + "(dec)>";
+    return String().append("VComponent { id = ").append(this->_ID).append(" }");
 }
 
 engine::VComponent::VComponent(VEntity * pParentEntity) noexcept : _pParentEntity(pParentEntity) {
@@ -19,8 +21,13 @@ void * engine::VComponent::operator new(std::size_t s) noexcept(false) {
 }
 
 void engine::VComponent::operator delete(void * pToDelete) noexcept(false) {
-    if ( reinterpret_cast < VComponent * > (pToDelete)->_pParentEntity == nullptr )
+    auto self = reinterpret_cast < VComponent * > (pToDelete);
+    if ( self->_pParentEntity == nullptr )
         throw VComponent::RootComponentDeleteException();
+
+    if ( self->_pParentEntity != nullptr )
+        const_cast < VEntity * > ( self->_pParentEntity )->removeComponent( self );
 
     ::operator delete(pToDelete);
 }
+

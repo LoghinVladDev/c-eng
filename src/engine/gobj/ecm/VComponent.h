@@ -5,6 +5,7 @@
 #ifndef ENG1_VCOMPONENT_H
 #define ENG1_VCOMPONENT_H
 
+#include <engineVulkanPreproc.h>
 #include <CDS/Object>
 
 namespace engine {
@@ -13,9 +14,19 @@ namespace engine {
         friend class VEntity;
     private:
         //// private variables
+        uint64          _ID { VComponent::nextID() };
+        static uint64   _IDCounter;
+
         VEntity const * _pParentEntity {nullptr};
 
         //// private functions
+        static auto nextID () noexcept -> uint64 { return VComponent::_IDCounter++; }
+
+    protected:
+        /// protected variables
+
+        /// protected functions
+        explicit VComponent ( VEntity * = nullptr ) noexcept;
 
     public:
         class RootComponentDeleteException : public std::exception {
@@ -28,7 +39,6 @@ namespace engine {
         //// public variables
 
         //// public functions
-        explicit VComponent ( VEntity * = nullptr ) noexcept;
         ~VComponent() noexcept override = default;
 
         [[nodiscard]] constexpr auto parent () const noexcept -> VEntity const * { return this->_pParentEntity; }
@@ -37,6 +47,12 @@ namespace engine {
         static void operator delete(void *) noexcept(false);
 
         [[nodiscard]] auto toString() const noexcept -> String override;
+        [[nodiscard]] constexpr auto hash () const noexcept -> Index override { return static_cast < Index > (this->_ID); }
+        [[nodiscard]] constexpr auto ID () const noexcept -> uint64 { return this->_ID; }
+
+        VComponent & operator = ( VComponent const & o ) noexcept { // NOLINT(bugprone-unhandled-self-assignment)
+            return * this;
+        }
     };
 }
 
