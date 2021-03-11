@@ -17,7 +17,7 @@ static std::vector < int8 > readFile ( const std::string& fileName ) noexcept (f
     std::vector < int8 > buffer ( fileSize );
 
     file.seekg (0);
-    file.read( buffer.data(), fileSize );
+    file.read( reinterpret_cast<char *> (buffer.data()), fileSize );
 
     file.close();
 

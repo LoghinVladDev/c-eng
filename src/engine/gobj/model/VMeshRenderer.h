@@ -12,9 +12,11 @@
 #include <src/engine/gobj/shader/VShader.h>
 #include <VCommandPool.h>
 
+#include <ecm/VComponent.h>
+
 namespace engine {
 
-    class VMeshRenderer {
+    class VMeshRenderer : public VComponent {
     private:
         //// private variables
         const VLogicalDevice                                          * _pLogicalDevice       {nullptr};
@@ -25,7 +27,6 @@ namespace engine {
 
         VTexture                                                        _texture;
 
-//        VulkanDescriptorSetLayout                                       _descriptorSetLayout   {VK_NULL_HANDLE};
         VDescriptorSetCollection < engine::SUniformBufferObject >       _descriptorSets;     // NOLINT(bugprone-reserved-identifier)
         std::vector < VUniformBuffer < engine::SUniformBufferObject > > _MVPDescriptorBuffers;  // NOLINT(bugprone-reserved-identifier)
 
@@ -36,6 +37,20 @@ namespace engine {
 
         //// public functions
         VMeshRenderer () noexcept = default;
+        ~VMeshRenderer() noexcept override = default;
+
+        [[nodiscard]] auto toString () const noexcept -> String override {
+            return String().append("VMeshRenderer {\n")
+                .append("\tlogicalDevice address = ").append(reinterpret_cast<uint64>(this->_pLogicalDevice)).append("\n")
+                .append("\ttextureSampler address = ").append(reinterpret_cast<uint64>(this->_pTextureSampler)).append("\n")
+                .append("\tshader address = ").append(reinterpret_cast<uint64>(this->_pShader)).append("\n")
+                .append("\tdescriptorPool address = ").append(reinterpret_cast<uint64>(this->_pDescriptorPool)).append("\n")
+                .append("\tcommandPool address = ").append(reinterpret_cast<uint64>(this->_pCommandPool)).append("\n")
+                .append("\ttexture = ").append("<?>").append("\n")
+                .append("\tdescriptorSets = ").append("<?>").append("\n")
+                .append("\tmodelViewProjectionDescriptorBuffers").append("<?>").append("\n")
+                .append("}");
+        }
 
         [[nodiscard]] const VLogicalDevice * getLogicalDevicePtr () const noexcept {
             return this->_pLogicalDevice;
@@ -52,14 +67,6 @@ namespace engine {
         [[nodiscard]] VTexture & getTexture () noexcept {
             return this->_texture;
         }
-
-//        [[nodiscard]] const VulkanDescriptorSetLayout & getDescriptorSetLayout () const noexcept {
-//            return this->_descriptorSetLayout;
-//        }
-//
-//        [[nodiscard]] VulkanDescriptorSetLayout & getDescriptorSetLayout () noexcept {
-//            return this->_descriptorSetLayout;
-//        }
 
         [[nodiscard]] const VDescriptorSetCollection < engine::SUniformBufferObject > & getDescriptorSets () const noexcept {
             return this->_descriptorSets;

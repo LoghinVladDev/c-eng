@@ -19,7 +19,11 @@ namespace engine {
         //// public variables
 
         //// public functions
-
+        [[nodiscard]] auto toString () const noexcept -> String override {
+            return String().append("VGameObject { \n")
+                .append("\tbase = ").append(VEntity::toString()).append("\n")
+                .append("}");
+        }
     };
 
 }

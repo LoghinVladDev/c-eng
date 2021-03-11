@@ -116,6 +116,26 @@ namespace engine {
         void setScale ( const glm::vec3 & scale ) noexcept {
             this->_scale = scale;
         }
+
+        [[nodiscard]] auto toString () const noexcept -> String override {
+            return String().append("VTransform { \n")
+                .append("\tbase = ").append(VComponent::toString()).append(",\n")
+                .append("\tlocation = (")
+                    .append("x = ").append(this->_location.x).append(", ")
+                    .append("y = ").append(this->_location.y).append(", ")
+                    .append("z = ").append(this->_location.z).append("),\n")
+                .append("\trotation = VRotor { ")
+                    .append("yaw = ").append(this->_rotation.yaw()).append(", ")
+                    .append("pitch = ").append(this->_rotation.pitch()).append(", ")
+                    .append("roll = ").append(this->_rotation.roll()).append("},\n")
+                .append("\tscale = (")
+                    .append("x = ").append(this->_location.x).append(", ")
+                    .append("y = ").append(this->_location.y).append(", ")
+                    .append("z = ").append(this->_location.z).append(")\n")
+                .append("}");
+        }
+
+        ~VTransform() noexcept override = default;
     };
 
 }

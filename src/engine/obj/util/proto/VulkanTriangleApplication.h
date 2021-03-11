@@ -167,7 +167,7 @@ namespace engine {
         constexpr static bool   VULKAN_EXT_CHECK    = _VK_CHECK_EXT;
         constexpr static bool   SHOW_FPS_CONSOLE    = true;
 
-        static const int8*      DEFAULT_TITLE;
+        static const char *     DEFAULT_TITLE;
 
         //// public_functions
         VulkanTriangleApplication() noexcept = default;

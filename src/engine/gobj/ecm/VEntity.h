@@ -52,7 +52,7 @@ namespace engine {
         uint64                          _ID { VEntity::nextID() };
         static uint64                   _IDCounter;
 
-        //// private functions
+        //// private
         static auto nextID() noexcept -> uint64 { return VEntity::_IDCounter++; }
 
     protected:

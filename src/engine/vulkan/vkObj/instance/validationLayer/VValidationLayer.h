@@ -48,7 +48,7 @@ namespace engine {
             ROCKSTAR_GAMES_SOCIAL_CLUB_OVERLAY
         } VulkanValidationLayer;
 
-        typedef const int8* VulkanValidationLayerLiteral;
+        typedef char const * VulkanValidationLayerLiteral;
 
         typedef VkBool32 ( * VulkanLayerDebugFunctionCallbackPointer ) (
             VulkanDebugMessageSeverityFlagBits,

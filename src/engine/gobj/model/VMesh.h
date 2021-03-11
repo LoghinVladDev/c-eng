@@ -11,9 +11,11 @@
 #include <vkObj/instance/pipeline/shader/input/VVertexBuffer.h>
 #include <vkObj/instance/pipeline/shader/input/VIndexBuffer.h>
 
+#include <ecm/VComponent.h>
+
 namespace engine {
 
-    class VMesh {
+    class VMesh : public VComponent {
     private:
         //// private variables
         const VCommandPool            * _pCommandPool           {nullptr};
@@ -27,7 +29,17 @@ namespace engine {
         //// public variables
 
         //// public functions
+        [[nodiscard]] auto toString () const noexcept -> String override {
+            return String().append("VMesh {\n")
+                .append("\tcommandPool address = ").append(reinterpret_cast<uint64>(this->_pCommandPool)).append("\n")
+                .append("\tqueueFamilyCollection address = ").append(reinterpret_cast<uint64>(this->_pQueueFamilyCollection)).append("\n")
+                .append("\tvertexBuffer = ").append("<?>").append("\n")
+                .append("\tindexBuffer = ").append("<?>").append("\n")
+                .append("}");
+        }
+
         VMesh() noexcept = default;
+        ~VMesh () noexcept override = default;
 
         [[nodiscard]] VulkanResult setup(
                 const VCommandPool &,

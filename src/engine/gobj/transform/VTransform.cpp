@@ -3,3 +3,5 @@
 //
 
 #include "VTransform.h"
+
+//auto engine::VTransform::toString() const noexcept -> String

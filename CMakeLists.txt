@@ -8,6 +8,8 @@ set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 add_subdirectory(dependencies/glfw)
@@ -180,7 +182,12 @@ if(Vulkan_FOUND)
             src/engine/gobj/shader/VShader.cpp
             src/engine/gobj/shader/VShader.h
             src/engine/gobj/model/VMeshRenderer.cpp
-            src/engine/gobj/model/VMeshRenderer.h)
+            src/engine/gobj/model/VMeshRenderer.h
+            src/engine/gobj/ecm/VComponent.cpp
+            src/engine/gobj/ecm/VComponent.h
+            src/engine/gobj/ecm/VEntity.cpp
+            src/engine/gobj/ecm/VEntity.h
+    )
 
 
     set_target_properties(

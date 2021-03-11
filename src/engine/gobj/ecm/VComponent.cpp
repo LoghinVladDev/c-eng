@@ -22,7 +22,7 @@ void * engine::VComponent::operator new(std::size_t s) noexcept(false) {
 
 void engine::VComponent::operator delete(void * pToDelete) noexcept(false) {
     auto self = reinterpret_cast < VComponent * > (pToDelete);
-    if ( self->_pParentEntity == nullptr )
+    if ( self->_pParentEntity != nullptr && self->_pParentEntity->parent() == nullptr )
         throw VComponent::RootComponentDeleteException();
 
     if ( self->_pParentEntity != nullptr )

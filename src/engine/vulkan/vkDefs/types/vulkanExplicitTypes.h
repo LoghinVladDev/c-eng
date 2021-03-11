@@ -40,8 +40,8 @@ typedef VkExtensionProperties                       VulkanExtensionProperties;
 typedef VkLayerProperties                           VulkanLayerProperties;
 
 
-typedef const int8 *                                GLFWExtensionLiteral;
-typedef const int8 **                               GLFWExtensionLiteralArray;
+typedef char const *                                GLFWExtensionLiteral;
+typedef GLFWExtensionLiteral const *                GLFWExtensionLiteralArray;
 
 
 typedef VkDebugUtilsMessengerCreateInfoEXT          VulkanDebugMessengerCreateInfo;

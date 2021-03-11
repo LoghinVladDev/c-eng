@@ -11,19 +11,19 @@
 #define ADJUST_YAW()                                            \
 {                                                               \
     while ( this->_yaw   <  0.0f )      this->_yaw   += 360.0f; \
-    while ( this->_yaw   <= 360.0f )    this->_yaw   -= 360.0f; \
+    while ( this->_yaw   >= 360.0f )    this->_yaw   -= 360.0f; \
 }
 
 #define ADJUST_PITCH()                                          \
 {                                                               \
     while ( this->_pitch <  0.0f )      this->_pitch += 360.0f; \
-    while ( this->_pitch <= 360.0f )    this->_pitch -= 360.0f; \
+    while ( this->_pitch >= 360.0f )    this->_pitch -= 360.0f; \
 }
 
 #define ADJUST_ROLL()                                           \
 {                                                               \
     while ( this->_roll  <  0.0f )      this->_roll  += 360.0f; \
-    while ( this->_roll  <= 360.0f )    this->_roll  -= 360.0f; \
+    while ( this->_roll  >= 360.0f )    this->_roll  -= 360.0f; \
 }
 #define ADJUST_ROTOR()                                          \
 {                                                               \
@@ -52,39 +52,37 @@ namespace engine {
         } RotationType;
 
         //// public functions
-        VRotor() noexcept = default;
-        explicit VRotor ( float yaw, float pitch, float roll ) noexcept :
+        constexpr VRotor() noexcept = default;
+        constexpr explicit VRotor ( float yaw, float pitch, float roll ) noexcept :
             _yaw(yaw),
             _pitch(pitch),
             _roll(roll) {
             ADJUST_ROTOR()
         }
 
-        explicit VRotor ( const glm::vec3 & rotation ) noexcept :
+        constexpr explicit VRotor ( const glm::vec3 & rotation ) noexcept :
             _yaw ( rotation.x ),
             _pitch ( rotation.y ),
             _roll ( rotation.z ){
             ADJUST_ROTOR()
         }
 
+        constexpr VRotor (VRotor const &) noexcept = default;
+
 #if !defined(_MSC_VER)
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "EndlessLoop"
 #endif
-        [[nodiscard]] float getYaw() const noexcept {
-            return this->_yaw;
-        }
+        [[nodiscard]] constexpr auto yaw() const noexcept -> float { return this->_yaw; }
+        [[nodiscard]] constexpr auto pitch() const noexcept -> float { return this->_pitch; }
+        [[nodiscard]] constexpr auto roll() const noexcept -> float { return this->_roll; }
 #if !defined(_MSC_VER)
 #pragma clang diagnostic pop
 #endif
 
-        [[nodiscard]] float getPitch() const noexcept {
-            return this->_pitch;
-        }
-
-        [[nodiscard]] float getRoll() const noexcept {
-            return this->_roll;
-        }
+        constexpr auto yaw () noexcept -> float & { return this->_yaw; }
+        constexpr auto pitch () noexcept -> float & { return this->_pitch; }
+        constexpr auto roll () noexcept -> float & { return this->_roll; }
 
         void rotate ( RotationType type, float angle ) noexcept {
             switch ( type ) {
@@ -156,7 +154,7 @@ namespace engine {
             ADJUST_ROTOR()
         }
 
-        VRotor & operator = ( const glm::vec3 & vector ) noexcept {
+        constexpr VRotor & operator = ( const glm::vec3 & vector ) noexcept {
             this->_yaw      = vector.x;
             this->_pitch    = vector.y;
             this->_roll     = vector.z;
