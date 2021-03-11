@@ -64,11 +64,11 @@ namespace engine {
         //// public functions
         ~VEntity() noexcept override;
 
-        auto addComponent ( VComponent * ) noexcept -> void;
-        auto addChild ( VEntity * ) const noexcept -> void;
+        virtual auto addComponent ( VComponent * ) noexcept -> bool;
+        virtual auto addChild ( VEntity * ) const noexcept -> bool;
 
-        auto removeComponent ( VComponent * ) noexcept -> void;
-        auto removeChild ( VEntity * ) noexcept -> void;
+        virtual auto removeComponent ( VComponent * ) noexcept -> bool;
+        virtual auto removeChild ( VEntity * ) const noexcept -> bool;
 
         constexpr auto parent() const noexcept -> VEntity const * { return this->_pParentEntity; }
 

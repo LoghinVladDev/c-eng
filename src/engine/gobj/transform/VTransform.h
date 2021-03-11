@@ -37,11 +37,11 @@ namespace engine {
 //            return * this;
 //        }
 
-        [[nodiscard]] auto className() const noexcept -> String override {
+        [[nodiscard]] auto className() const noexcept -> ClassName override {
             return "VTransform";
         }
 
-        explicit VTransform ( VEntity * pParent ) noexcept : VComponent( VComponent::Tag::DISTINCT, pParent ) { }
+        explicit VTransform ( VEntity * pParent = nullptr ) noexcept : VComponent( VComponent::Tag::DISTINCT, pParent ) { }
         explicit VTransform (
                 glm::vec3 const & location,
                 glm::vec3 const & rotation = glm::vec3 ( 0.0f ),

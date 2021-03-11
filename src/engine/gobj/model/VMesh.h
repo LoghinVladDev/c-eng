@@ -38,7 +38,7 @@ namespace engine {
                 .append("}");
         }
 
-        [[nodiscard]] auto className () const noexcept -> String override {
+        [[nodiscard]] auto className () const noexcept -> ClassName override {
             return "VMesh";
         }
 

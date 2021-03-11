@@ -13,8 +13,8 @@ namespace engine {
     class VComponent : public Object {
     public:
         enum Tag: uint8 {
-            DISTINCT = 0x01,
-            HAS_DEPENDENCY = 0x02
+            DISTINCT        = 0x01,
+            HAS_DEPENDENCY  = 0x02
         };
 
         using Tags = uint8;
@@ -24,14 +24,16 @@ namespace engine {
                 DISTINCT        |
                 HAS_DEPENDENCY;
 
+        using ClassName = String;
+
     private:
         friend class VEntity;
         //// private variables
-        uint64          _ID { VComponent::nextID() }; // NOLINT(bugprone-reserved-identifier)
-        static uint64   _IDCounter; // NOLINT(bugprone-reserved-identifier)
+        uint64          _ID             { VComponent::nextID() }; // NOLINT(bugprone-reserved-identifier)
+        static uint64   _IDCounter;                               // NOLINT(bugprone-reserved-identifier)
 
-        VEntity const * _pParentEntity {nullptr};
-        Tags            _tags {NO_TAGS};
+        VEntity const * _pParentEntity  { nullptr };
+        Tags            _tags           { NO_TAGS };
 
         //// private functions
         static auto nextID () noexcept -> uint64 { return VComponent::_IDCounter++; }
@@ -55,7 +57,7 @@ namespace engine {
         //// public functions
         ~VComponent() noexcept override = default;
 
-        [[nodiscard]] virtual auto className () const noexcept -> String = 0;
+        [[nodiscard]] virtual auto className () const noexcept -> ClassName = 0;
 
         [[nodiscard]] constexpr auto parent () const noexcept -> VEntity const * { return this->_pParentEntity; }
 

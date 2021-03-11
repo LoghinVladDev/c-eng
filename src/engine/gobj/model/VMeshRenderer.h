@@ -38,7 +38,7 @@ namespace engine {
         //// public functions
 //        VMeshRenderer () noexcept = default;
 
-        [[nodiscard]] auto className() const noexcept -> String override {
+        [[nodiscard]] auto className() const noexcept -> ClassName override {
             return "VMeshRenderer";
         }
 

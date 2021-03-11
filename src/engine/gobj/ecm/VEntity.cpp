@@ -24,19 +24,21 @@ auto engine::VEntity::siblings() const noexcept -> Array< VEntity * > {
     return parentChildren;
 }
 
-auto engine::VEntity::addComponent(VComponent * pComponent) noexcept -> void {
+auto engine::VEntity::addComponent(VComponent * pComponent) noexcept -> bool {
     if ( pComponent->hasTag(VComponent::DISTINCT) )
         for ( auto * p : this->_components )
             if ( p->hasTag(VComponent::DISTINCT) && p->className() == pComponent->className() )
-                return;
+                return false;
 
     this->_components.pushBack(pComponent);
     pComponent->_pParentEntity = this;
+    return true;
 }
 
-auto engine::VEntity::addChild(VEntity * pChild) const noexcept -> void {
+auto engine::VEntity::addChild(VEntity * pChild) const noexcept -> bool {
     this->_children.pushBack(pChild);
     pChild->_pParentEntity = this;
+    return true;
 }
 
 auto engine::VEntity::toString() const noexcept -> String {
@@ -78,15 +80,15 @@ engine::VEntity::~VEntity() noexcept {
     }
 }
 
-auto engine::VEntity::removeComponent(VComponent * pComponent) noexcept -> void {
-    this->_components.removeFirst(pComponent);
+auto engine::VEntity::removeComponent(VComponent * pComponent) noexcept -> bool {
+    return this->_components.removeFirst(pComponent);
 }
 
-auto engine::VEntity::removeChild(VEntity * pChild) noexcept -> void {
-    this->_children.removeFirst(pChild);
+auto engine::VEntity::removeChild(VEntity * pChild) const noexcept -> bool {
+    return this->_children.removeFirst(pChild);
 }
 
-auto engine::VEntity::getComponentByClassName(const String & className) noexcept -> VComponent * {
+auto engine::VEntity::getComponentByClassName(const VComponent::ClassName & className) noexcept -> VComponent * {
     VComponent * pComponent = nullptr;
 
     for ( auto * p : this->_components )
@@ -100,7 +102,7 @@ auto engine::VEntity::getComponentByClassName(const String & className) noexcept
     return pComponent;
 }
 
-auto engine::VEntity::getComponentByClassName(const String & className) const noexcept -> VComponent const * {
+auto engine::VEntity::getComponentByClassName(const VComponent::ClassName & className) const noexcept -> VComponent const * {
     VComponent const * pComponent = nullptr;
 
     for ( auto * p : this->_components )
@@ -114,7 +116,7 @@ auto engine::VEntity::getComponentByClassName(const String & className) const no
     return pComponent;
 }
 
-auto engine::VEntity::getComponentsByClassName(const String & className) noexcept -> Array < VComponent * > {
+auto engine::VEntity::getComponentsByClassName(const VComponent::ClassName & className) noexcept -> Array < VComponent * > {
     Array < VComponent * > componentAddresses;
 
     for ( auto * p : this->_components )
@@ -124,7 +126,7 @@ auto engine::VEntity::getComponentsByClassName(const String & className) noexcep
     return componentAddresses;
 }
 
-auto engine::VEntity::getComponentsByClassName(const String & className) const noexcept -> Array< VComponent const * > {
+auto engine::VEntity::getComponentsByClassName(const VComponent::ClassName & className) const noexcept -> Array< VComponent const * > {
     Array < VComponent const * > componentAddresses;
 
     for ( auto * p : this->_components )
