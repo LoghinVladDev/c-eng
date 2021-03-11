@@ -49,8 +49,8 @@ namespace engine {
         Array < VComponent * >          _components;
         Array < VEntity * >    mutable  _children;
 
-        uint64                          _ID { VEntity::nextID() };
-        static uint64                   _IDCounter;
+        uint64                          _ID { VEntity::nextID() }; // NOLINT(bugprone-reserved-identifier)
+        static uint64                   _IDCounter; // NOLINT(bugprone-reserved-identifier)
 
         //// private
         static auto nextID() noexcept -> uint64 { return VEntity::_IDCounter++; }
@@ -76,6 +76,12 @@ namespace engine {
         auto siblings () const noexcept -> Array < VEntity * >;
         auto components () noexcept -> Array < VComponent * > & { return this->_components; }
         auto components () const noexcept -> Array < VComponent * > const & { return this->_components; }
+
+        auto getComponentByClassName (String const &) noexcept -> VComponent *;
+        auto getComponentByClassName (String const &) const noexcept -> VComponent const *;
+
+        auto getComponentsByClassName (String const &) noexcept -> Array < VComponent * >;
+        auto getComponentsByClassName (String const &) const noexcept -> Array < VComponent const * >;
 
         [[nodiscard]] auto toString() const noexcept -> String override;
         [[nodiscard]] constexpr auto hash () const noexcept -> Index override { return static_cast < Index > (this->_ID); }

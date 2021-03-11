@@ -38,7 +38,16 @@ namespace engine {
                 .append("}");
         }
 
-        VMesh() noexcept = default;
+        [[nodiscard]] auto className () const noexcept -> String override {
+            return "VMesh";
+        }
+
+//        VMesh() noexcept = default;
+        explicit VMesh(VEntity * pParent = nullptr) noexcept :
+            VComponent(VComponent::Tag::DISTINCT | VComponent::Tag::HAS_DEPENDENCY, pParent) {
+
+        }
+
         ~VMesh () noexcept override = default;
 
         [[nodiscard]] VulkanResult setup(

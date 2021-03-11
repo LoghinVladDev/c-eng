@@ -36,7 +36,17 @@ namespace engine {
         //// public variables
 
         //// public functions
-        VMeshRenderer () noexcept = default;
+//        VMeshRenderer () noexcept = default;
+
+        [[nodiscard]] auto className() const noexcept -> String override {
+            return "VMeshRenderer";
+        }
+
+        explicit VMeshRenderer (VEntity * pParent = nullptr) noexcept :
+            VComponent(VComponent::Tag::DISTINCT | VComponent::Tag::HAS_DEPENDENCY, pParent) {
+
+        }
+
         ~VMeshRenderer() noexcept override = default;
 
         [[nodiscard]] auto toString () const noexcept -> String override {

@@ -11,7 +11,7 @@ auto engine::VComponent::toString() const noexcept -> String {
     return String().append("VComponent { id = ").append(this->_ID).append(" }");
 }
 
-engine::VComponent::VComponent(VEntity * pParentEntity) noexcept : _pParentEntity(pParentEntity) {
+engine::VComponent::VComponent(Tags tags, VEntity * pParentEntity) noexcept : _pParentEntity(pParentEntity), _tags(tags) {
     if ( pParentEntity != nullptr )
         pParentEntity->addComponent(this);
 }

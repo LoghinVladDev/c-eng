@@ -40,4 +40,6 @@ int main () {
     o.addChild(child2);
 
     std::cout << o << '\n';
+
+    std::cout << o.getComponentByClassName("VTransform")->toString() << '\n';
 }

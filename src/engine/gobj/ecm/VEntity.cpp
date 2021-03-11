@@ -25,6 +25,11 @@ auto engine::VEntity::siblings() const noexcept -> Array< VEntity * > {
 }
 
 auto engine::VEntity::addComponent(VComponent * pComponent) noexcept -> void {
+    if ( pComponent->hasTag(VComponent::DISTINCT) )
+        for ( auto * p : this->_components )
+            if ( p->hasTag(VComponent::DISTINCT) && p->className() == pComponent->className() )
+                return;
+
     this->_components.pushBack(pComponent);
     pComponent->_pParentEntity = this;
 }
@@ -79,4 +84,52 @@ auto engine::VEntity::removeComponent(VComponent * pComponent) noexcept -> void 
 
 auto engine::VEntity::removeChild(VEntity * pChild) noexcept -> void {
     this->_children.removeFirst(pChild);
+}
+
+auto engine::VEntity::getComponentByClassName(const String & className) noexcept -> VComponent * {
+    VComponent * pComponent = nullptr;
+
+    for ( auto * p : this->_components )
+        if ( p->className() == className ) {
+            if (p->hasTag(VComponent::DISTINCT) && pComponent != nullptr)
+                return nullptr;
+            else
+                pComponent = p;
+        }
+
+    return pComponent;
+}
+
+auto engine::VEntity::getComponentByClassName(const String & className) const noexcept -> VComponent const * {
+    VComponent const * pComponent = nullptr;
+
+    for ( auto * p : this->_components )
+        if ( p->className() == className ) {
+            if (p->hasTag(VComponent::DISTINCT) && pComponent != nullptr)
+                return nullptr;
+            else
+                pComponent = p;
+        }
+
+    return pComponent;
+}
+
+auto engine::VEntity::getComponentsByClassName(const String & className) noexcept -> Array < VComponent * > {
+    Array < VComponent * > componentAddresses;
+
+    for ( auto * p : this->_components )
+        if ( p->className() == className )
+            componentAddresses.pushBack(p);
+
+    return componentAddresses;
+}
+
+auto engine::VEntity::getComponentsByClassName(const String & className) const noexcept -> Array< VComponent const * > {
+    Array < VComponent const * > componentAddresses;
+
+    for ( auto * p : this->_components )
+        if ( p->className() == className )
+            componentAddresses.pushBack(p);
+
+    return componentAddresses;
 }
