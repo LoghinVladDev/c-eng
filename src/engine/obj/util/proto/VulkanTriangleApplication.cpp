@@ -856,7 +856,8 @@ void engine::VulkanTriangleApplication::createCommandBuffers() noexcept(false) {
     auto indexBuffers               = new VIndexBuffer[gameObjects.size()];
     auto objectDescriptorSetHandles = new std::vector < VulkanDescriptorSet > [gameObjects.size()];
 
-    for ( Index i = 0; auto * o : gameObjects ) {
+    Index i = 0;
+    for ( auto * o : gameObjects ) {
         auto * pGameObject = dynamic_cast<VGameObject *>(o);
 
         vertexBuffers[i]                = pGameObject->meshPtr()->getVertexBuffer();

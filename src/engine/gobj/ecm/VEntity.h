@@ -60,7 +60,7 @@ namespace engine {
         static auto nextID() noexcept -> uint64 { return VEntity::_IDCounter++; }
 
     protected:
-        explicit VEntity ( nullptr_t = nullptr ) noexcept : _pScene(nullptr), _pParentEntity(nullptr) {}
+        explicit VEntity ( std::nullptr_t = nullptr ) noexcept : _pScene(nullptr), _pParentEntity(nullptr) {}
 
         explicit VEntity ( VEntity const * ) noexcept;
         explicit VEntity ( VScene * ) noexcept;
@@ -89,11 +89,11 @@ namespace engine {
 
         virtual auto add ( VComponent * ) noexcept -> bool;
         virtual auto add ( VEntity * ) const noexcept -> bool;
-        virtual auto add ( nullptr_t ) const noexcept -> bool { return false; } // NOLINT(readability-convert-member-functions-to-static)
+        virtual auto add ( std::nullptr_t ) const noexcept -> bool { return false; } // NOLINT(readability-convert-member-functions-to-static)
 
         virtual auto remove ( VComponent * ) noexcept -> bool;
         virtual auto remove ( VEntity * ) const noexcept -> bool;
-        virtual auto remove ( nullptr_t ) const noexcept -> bool { return false; } // NOLINT(readability-convert-member-functions-to-static)
+        virtual auto remove ( std::nullptr_t ) const noexcept -> bool { return false; } // NOLINT(readability-convert-member-functions-to-static)
 
         constexpr auto parentPtr() const noexcept -> VEntity const * { return this->_pParentEntity; }
         constexpr auto scenePtr() const noexcept -> VScene const * { return this->_pScene; }

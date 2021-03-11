@@ -34,11 +34,11 @@ namespace engine {
         const static VGameObject EMPTY;
 
         //// public functions
-        explicit VGameObject ( nullptr_t = nullptr ) noexcept : VEntity(nullptr), _name(nextID()) { }
+        explicit VGameObject ( std::nullptr_t = nullptr ) noexcept : VEntity(nullptr), _name(nextID()) { }
         explicit VGameObject ( VEntity * pParentEntity ) noexcept : VEntity(pParentEntity), _name(nextID()) { }
         explicit VGameObject ( VScene * pScene ) noexcept : VEntity ( pScene ), _name(nextID()) { }
 
-        explicit VGameObject ( String const & name, nullptr_t = nullptr ) noexcept : VEntity(nullptr), _name(name) { }
+        explicit VGameObject ( String const & name, std::nullptr_t = nullptr ) noexcept : VEntity(nullptr), _name(name) { }
         explicit VGameObject ( String const & name, VEntity * pParentEntity ) noexcept : VEntity(pParentEntity), _name(name) { }
         explicit VGameObject ( String const & name, VScene * pScene ) noexcept : VEntity(pScene), _name(name) { }
 
@@ -64,11 +64,11 @@ namespace engine {
 
         auto add ( VComponent * ) noexcept -> bool override;
         inline auto add ( VEntity * pEntity ) const noexcept -> bool override { return VEntity::add(pEntity); }
-        inline auto add ( nullptr_t ) const noexcept -> bool override { return VEntity::add(nullptr); }
+        inline auto add ( std::nullptr_t ) const noexcept -> bool override { return VEntity::add(nullptr); }
 
         auto remove ( VComponent * ) noexcept -> bool override;
         inline auto remove ( VEntity * pEntity ) const noexcept -> bool override { return VEntity::remove(pEntity); }
-        inline auto remove ( nullptr_t ) const noexcept -> bool override { return VEntity::remove(nullptr); }
+        inline auto remove ( std::nullptr_t ) const noexcept -> bool override { return VEntity::remove(nullptr); }
 
         constexpr auto transformPtr () noexcept -> VTransform * { return this->_pTransform; }
         constexpr auto transformPtr () const noexcept -> VTransform const * { return this->_pTransform; }

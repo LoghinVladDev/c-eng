@@ -247,8 +247,17 @@ auto static gatherEntitiesWithComponentsOfClass ( engine::VEntity * pEntity, Str
     Array < engine::VEntity * > entityAddressArray;
 
     for ( auto * pSubEntity : pEntity->children() ) {
+#if defined(__cpp_concepts) && !defined(_MSC_VER)
         if (pSubEntity->components().any([&className](auto & c)noexcept -> bool{return c->className() == className;}) )
             entityAddressArray.pushBack(pSubEntity);
+#else
+        for ( auto * pComponent : pSubEntity->components() )
+            if ( pComponent->className () == className ) {
+                entityAddressArray.pushBack ( pSubEntity );
+                break;
+            }
+
+#endif
 
         if (pSubEntity->children().empty())
             continue;
@@ -266,8 +275,16 @@ auto engine::VScene::entitiesWithComponentsOfClass(String const & className) noe
     Array < engine::VEntity * > entityAddressArray;
 
     for ( auto * pEntity : this->_rootEntities ) {
-        if (pEntity->components().any([&className](auto & c)noexcept -> bool{return c->className() == className;}))
+#if defined(__cpp_concepts) && !defined(_MSC_VER)
+        if (pEntity->components().any([&className](auto & c)noexcept -> bool{return c->className() == className;}) )
             entityAddressArray.pushBack(pEntity);
+#else
+        for ( auto * pComponent : pEntity->components() )
+            if ( pComponent->className () == className ) {
+                entityAddressArray.pushBack ( pEntity );
+                break;
+            }
+#endif
 
         if (pEntity->children().empty())
             continue;
@@ -284,17 +301,39 @@ auto engine::VScene::entitiesWithComponentsOfClass(String const & className) noe
 auto static gatherEntitiesWithComponentsOfClass ( engine::VEntity const * pEntity, String const & className ) noexcept -> Array < engine::VEntity const * > {
     Array < engine::VEntity const * > entityAddressArray;
 
-    if ( pEntity->components().any([&className](auto & c)noexcept -> bool{return c->className() == className; }))
-        entityAddressArray.pushBack(pEntity);
+//    if ( pEntity->components().any([&className](auto & c)noexcept -> bool{return c->className() == className; }))
+//        entityAddressArray.pushBack(pEntity);
+#if defined(__cpp_concepts) && !defined(_MSC_VER)
+    if (pEntity->components().any([&className](auto & c)noexcept -> bool{return c->className() == className;}) )
+            entityAddressArray.pushBack(pEntity);
+#else
+    for ( auto * pComponent : pEntity->components() )
+        if ( pComponent->className () == className ) {
+            entityAddressArray.pushBack ( pEntity );
+            break;
+        }
+#endif
 
     for ( auto * pSubEntity : pEntity->children() ) {
-        if (
-                pSubEntity->children().empty() &&
-                pSubEntity->components().any([&className](auto & c)noexcept -> bool{return c->className() == className;})
-        ) {
-            entityAddressArray.pushBack(pEntity);
+//        if (
+//                pSubEntity->children().empty() &&
+//                pSubEntity->components().any([&className](auto & c)noexcept -> bool{return c->className() == className;})
+//        ) {
+//            entityAddressArray.pushBack(pEntity);
+//            continue;
+//        }
+#if defined(__cpp_concepts) && !defined(_MSC_VER)
+        if (pSubEntity->components().any([&className](auto & c)noexcept -> bool{return c->className() == className;}) )
+            entityAddressArray.pushBack(pSubEntity);
+#else
+        for ( auto * pComponent : pSubEntity->components() )
+            if ( pComponent->className () == className ) {
+                entityAddressArray.pushBack ( pSubEntity );
+                break;
+            }
+#endif
+        if ( pSubEntity->children().empty() )
             continue;
-        }
 
         auto subEntityChildren = gatherEntities(pSubEntity);
 
@@ -309,13 +348,25 @@ auto engine::VScene::entitiesWithComponentsOfClass(String const & className) con
     Array < engine::VEntity const * > entityAddressArray;
 
     for ( auto * pEntity : this->_rootEntities ) {
-        if (
-                pEntity->children().empty() &&
-                pEntity->components().any([&className](auto & c)noexcept -> bool{return c->className() == className;})
-        ) {
+//        if (
+//                pEntity->children().empty() &&
+//                pEntity->components().any([&className](auto & c)noexcept -> bool{return c->className() == className;})
+//        ) {
+//            entityAddressArray.pushBack(pEntity);
+//            continue;
+//        }
+#if defined(__cpp_concepts) && !defined(_MSC_VER)
+        if (pEntity->components().any([&className](auto & c)noexcept -> bool{return c->className() == className;}) )
             entityAddressArray.pushBack(pEntity);
+#else
+        for ( auto * pComponent : pEntity->components() )
+            if ( pComponent->className () == className ) {
+                entityAddressArray.pushBack ( pEntity );
+                break;
+            }
+#endif
+        if ( pEntity->children().empty() )
             continue;
-        }
 
         auto subEntityChildren = gatherEntitiesWithComponentsOfClass(pEntity, className);
 

@@ -14,7 +14,8 @@ inline static void populateApplicationInfoStructure( VulkanApplicationInfo * app
     if(applicationInfo == nullptr)
         return;
 
-    *applicationInfo = {
+#if !defined(_MSC_VER)
+    *applicationInfo = (VulkanApplicationInfo){
         .sType              = VK_STRUCTURE_TYPE_APPLICATION_INFO,
         .pApplicationName   = engine::VInstance::DEFAULT_VULKAN_INSTANCE_TITLE,
         .applicationVersion = VK_MAKE_VERSION(1U, 2U, 0U),  // NOLINT(hicpp-signed-bitwise)
@@ -22,6 +23,15 @@ inline static void populateApplicationInfoStructure( VulkanApplicationInfo * app
         .engineVersion      = VK_MAKE_VERSION(1U, 2U, 0U),  // NOLINT(hicpp-signed-bitwise)
         .apiVersion         = VK_API_VERSION_1_2                               // NOLINT(hicpp-signed-bitwise)
     };
+#else
+    applicationInfo->sType              = VK_STRUCTURE_TYPE_APPLICATION_INFO;
+    applicationInfo->pApplicationName   = engine::VInstance::DEFAULT_VULKAN_INSTANCE_TITLE;
+    applicationInfo->applicationVersion = VK_MAKE_VERSION(1U, 2U, 0U);  // NOLINT(hicpp-signed-bitwise)
+    applicationInfo->pEngineName        = __VULKAN_INSTANCE_APP_INFO_ENGINE_NO_ENGINE;
+    applicationInfo->engineVersion      = VK_MAKE_VERSION(1U, 2U, 0U);  // NOLINT(hicpp-signed-bitwise)
+    applicationInfo->apiVersion         = VK_API_VERSION_1_2;                               // NOLINT(hicpp-signed-bitwise)
+
+#endif
 
 }
 

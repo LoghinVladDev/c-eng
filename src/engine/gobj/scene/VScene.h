@@ -35,11 +35,11 @@ namespace engine {
 
         auto index ( VEntity *, bool = false ) const noexcept -> void;
         auto index ( VComponent * ) const noexcept -> void;
-        auto index ( nullptr_t ) const noexcept -> void {}
+        auto index ( std::nullptr_t ) const noexcept -> void {}
 
         auto unIndex ( VEntity *, bool = false ) const noexcept -> void;
         auto unIndex ( VComponent * ) const noexcept -> void;
-        auto unIndex ( nullptr_t ) const noexcept -> void {}
+        auto unIndex ( std::nullptr_t ) const noexcept -> void {}
 
         auto add ( VEntity * ) noexcept -> bool;
         auto remove ( VEntity * ) noexcept -> bool;

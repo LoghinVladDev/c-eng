@@ -69,7 +69,8 @@ auto engine::VEntity::toString() const noexcept -> String {
 
     res.append("VEntity {\n\tid = ").append(this->_ID).append(",\n\tcomponents = [");
     if ( ! this->_components.empty() ) res.append("\n");
-    for ( Index i = 0; auto & e : this->_components ) {
+    Index i = 0;
+    for ( auto & e : this->_components ) {
         res.append("\t\t").append(e->toString());
         if ( i + 1 < this->_components.size() ) res.append(",");
         res.append("\n");
@@ -79,7 +80,8 @@ auto engine::VEntity::toString() const noexcept -> String {
 
     res.append("],\n\tchildren = [");
     if ( ! this->_children.empty() ) res.append("\n");
-    for ( Index i = 0; auto & c : this->_children ) {
+    i = 0;
+    for ( auto & c : this->_children ) {
         res.append("\t\t").append(c->toString());
         if ( i + 1 < this->_children.size() ) res.append(",");
         res.append("\n");
