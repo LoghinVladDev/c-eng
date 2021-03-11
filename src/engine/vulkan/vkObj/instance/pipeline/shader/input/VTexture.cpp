@@ -9,6 +9,7 @@
 #include "VTextureDefs.h"
 #include <vkUtils/VStdUtilsDefs.h>
 
+
 inline static void populateImageCreateInfo (
         VulkanImageCreateInfo * pCreateInfo,
         uint32 width,

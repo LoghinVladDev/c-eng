@@ -253,13 +253,71 @@ if(Vulkan_FOUND)
     target_link_libraries( vkPrecompiler Vulkan::Vulkan )
 
     target_link_libraries( vkPrecompiler glfw ${GLFW_LIBRARIES} )
+
+
+    add_executable (
+            vk-eng-sandbox1
+            src/engine/app/sandbox/sandbox1.cpp
+            src/engine/gobj/ecm/VEntity.cpp
+            src/engine/gobj/ecm/VEntity.h
+            src/engine/gobj/ecm/VComponent.cpp
+            src/engine/gobj/ecm/VComponent.h
+            src/engine/gobj/scene/VScene.cpp
+            src/engine/gobj/scene/VScene.h
+            src/engine/gobj/VGameObject.cpp
+            src/engine/gobj/VGameObject.h
+
+            src/engine/vulkan/vkObj/instance/pipeline/shader/input/VBuffer.cpp
+            src/engine/vulkan/vkObj/instance/pipeline/shader/input/VBuffer.h
+            src/engine/vulkan/vkObj/instance/pipeline/shader/input/VVertexBuffer.cpp
+            src/engine/vulkan/vkObj/instance/pipeline/shader/input/VVertexBuffer.h
+            src/engine/vulkan/vkObj/instance/pipeline/shader/input/VIndexBuffer.cpp
+            src/engine/vulkan/vkObj/instance/pipeline/shader/input/VIndexBuffer.h
+            src/engine/vulkan/vkObj/instance/pipeline/shader/input/VTexture.cpp
+            src/engine/vulkan/vkObj/instance/pipeline/shader/input/VTexture.h
+
+            src/engine/vulkan/vkObj/instance/device/VLogicalDevice.cpp
+            src/engine/vulkan/vkObj/instance/device/VLogicalDevice.h
+            src/engine/vulkan/vkObj/instance/device/VPhysicalDevice.cpp
+            src/engine/vulkan/vkObj/instance/device/VPhysicalDevice.h
+
+            src/engine/vulkan/vkObj/instance/extension/VExtension.cpp
+            src/engine/vulkan/vkObj/instance/extension/VExtension.h
+
+            src/engine/vulkan/vkObj/instance/validationLayer/VValidationLayer.cpp
+            src/engine/vulkan/vkObj/instance/validationLayer/VValidationLayer.h
+
+            src/engine/vulkan/vkObj/instance/pipeline/command/VCommandBuffer.cpp
+            src/engine/vulkan/vkObj/instance/pipeline/command/VCommandBuffer.h
+            src/engine/vulkan/vkObj/instance/pipeline/command/VCommandPool.cpp
+            src/engine/vulkan/vkObj/instance/pipeline/command/VCommandPool.h
+
+            src/engine/vulkan/vkObj/instance/pipeline/VImageView.cpp
+            src/engine/vulkan/vkObj/instance/pipeline/VImageView.h
+
+            src/engine/vulkan/vkObj/instance/device/queue/VQueue.cpp
+            src/engine/vulkan/vkObj/instance/device/queue/VQueueFamily.cpp
+            src/engine/vulkan/vkObj/instance/device/queue/VQueue.h
+            src/engine/vulkan/vkObj/instance/device/queue/VQueueFamily.h
+
+            src/engine/vulkan/vkObj/instance/device/VSwapChain.cpp
+            src/engine/vulkan/vkObj/instance/device/VSwapChain.h
+
+            src/engine/obj/util/settings/SettingOption.cpp
+            src/engine/obj/util/settings/SettingOption.h
+            src/engine/obj/util/settings/SettingOptionGraphics.cpp
+            src/engine/obj/util/settings/SettingOptionGraphics.h
+            src/engine/obj/util/settings/SettingsSharedContainer.cpp
+            src/engine/obj/util/settings/SettingsSharedContainer.h
+    )
+
+    target_compile_definitions(vk-eng-sandbox1 PUBLIC V_TEXTURE_USE_STBI_INDIVIDUAL)
+
+    target_link_libraries (
+            vk-eng-sandbox1 ${CDS_LIB}
+    )
+
+    target_link_libraries( vk-eng-sandbox1 Vulkan::Vulkan )
+
+    target_link_libraries( vk-eng-sandbox1 glfw ${GLFW_LIBRARIES} )
 endif()
-
-add_executable (
-        vk-eng-sandbox1
-        src/engine/app/sandbox/sandbox1.cpp
-        src/engine/gobj/ecm/VEntity.cpp src/engine/gobj/ecm/VEntity.h src/engine/gobj/ecm/VComponent.cpp src/engine/gobj/ecm/VComponent.h src/engine/gobj/scene/VScene.cpp src/engine/gobj/scene/VScene.h src/engine/gobj/VGameObject.cpp src/engine/gobj/VGameObject.h)
-
-target_link_libraries (
-        vk-eng-sandbox1 ${CDS_LIB}
-)
