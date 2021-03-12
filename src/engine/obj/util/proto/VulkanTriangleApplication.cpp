@@ -44,7 +44,7 @@ static void queueFamilyTests ( const engine::VQueueFamilyCollection & collection
 #endif
 
     for ( const auto & queueFamily : collection.getQueueFamilies() ) {
-        uint32 reservationTarget = 4U;
+        uint32 reservationTarget = 4U; /// reserve 4 queues if possible
         uint32 reservations = queueFamily.reserveQueues(reservationTarget);
 
         std::cout << "Managed to reserve " << reservations << " out of " << reservationTarget << " requested\n";
@@ -146,30 +146,35 @@ inline void engine::VulkanTriangleApplication::initWindow() noexcept (false) {
     glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API); /// No OpenGL API, Vulkan is not self-configurable
 
     this->_window = glfwCreateWindow( /// Create Window from GLFW
-        this->_width,
-        this->_height,
-        VulkanTriangleApplication::DEFAULT_TITLE,
-        nullptr,
-        nullptr
+        this->_width, // with width
+        this->_height,// height
+        VulkanTriangleApplication::DEFAULT_TITLE, // title
+        nullptr, // any monitor
+        nullptr    // not shared to any other instance / application
     );
 
-    glfwSetWindowUserPointer( this->_window, this ); /// Enable Cursor Interaction
+    glfwSetWindowUserPointer( this->_window, this ); /// Set "this" as owner of window. Will be used to re-acquire "this" address in callback, since it is static
     glfwSetFramebufferSizeCallback( this->_window, engine::VulkanTriangleApplication::frameBufferResizeCallback ); /// Set Window Resize Callback
     glfwSetKeyCallback( this->_window, processInputCallback ); /// Set Keyboard Callback
 }
 
 void engine::VulkanTriangleApplication::createSurface() noexcept(false) {
+    // surface created on window, linked to vulkan instance
     if( this->_vulkanSurface.setup(this->_window, this->_vulkanInstance) != VK_SUCCESS )
         throw std::runtime_error("failed to create vulkan surface");
 }
 
 static inline std::vector < const engine::VQueueFamily* > internalGatherGraphicsAndPresentQueueFamilies( const engine::VQueueFamilyCollection& collection ) noexcept {
-    auto queueFamilies = collection.getFlagsCapableQueueFamilies( engine::VQueueFamily::GRAPHICS_FLAG | engine::VQueueFamily::PRESENT_FLAG | engine::VQueueFamily::TRANSFER_FLAG );
+    auto queueFamilies = collection.getFlagsCapableQueueFamilies(
+            engine::VQueueFamily::GRAPHICS_FLAG |
+            engine::VQueueFamily::PRESENT_FLAG |
+            engine::VQueueFamily::TRANSFER_FLAG
+    );  /// try gathering queue families capable of graphics, present and transfer. Rarely happens in specialised GPUs
 
-    if( queueFamilies.empty() ) {
 
-        queueFamilies.push_back( collection.getGraphicsCapableQueueFamilies()[0] );
-        queueFamilies.push_back( collection.getPresentCapableQueueFamilies()[0] );
+    if( queueFamilies.empty() ) { /// if no jack-of-all-trades queue family is available, gather them individually
+        queueFamilies.push_back( collection.getGraphicsCapableQueueFamilies()[0] ); // get first graphics capable queue family
+        queueFamilies.push_back( collection.getPresentCapableQueueFamilies()[0] );  // get first present capable queue family
     }
 
     return queueFamilies;
@@ -259,11 +264,11 @@ inline void engine::VulkanTriangleApplication::initVulkan() noexcept (false) {
 
     /// Link to-be-created SwapChain to the Surface Created Previously
     deviceFactory.createSwapChainToSurface( & this->_vulkanSurface );
-//
+
     this->_vulkanLogicalDevice = deviceFactory.build( this->_vulkanPhysicalDevice ); /// Build Logical Device
     std::cout << "Logical Device Handle : " << this->_vulkanLogicalDevice.data() << '\n';
-//
-//
+
+
     std::cout << "Queues : \n";
     for(const auto & queue : this->_vulkanLogicalDevice.getQueues()) {
         std::cout << "\tQueue :\n";
@@ -322,6 +327,7 @@ auto engine::VulkanTriangleApplication::createGameObjects() noexcept -> void {
     star->add(new VMesh());
     star->add(new VMeshRenderer());
 
+
     /// Move the star a bit above and to the left
     star->transformPtr()->getLocation().x += 1.0f;
     star->transformPtr()->getLocation().z += 1.0f;
@@ -330,49 +336,47 @@ auto engine::VulkanTriangleApplication::createGameObjects() noexcept -> void {
     this->_activeScene.add(star); /// Add object to scene
 }
 
-/**
- * Will recreate in flight
- */
 void engine::VulkanTriangleApplication::recreateSwapChain() noexcept(false) {
-    vkDeviceWaitIdle( this->_vulkanLogicalDevice.data() );
+    vkDeviceWaitIdle( this->_vulkanLogicalDevice.data() ); /// wait until GPU finishes drawing
 
-    this->cleanupSwapChain();
+    this->cleanupSwapChain(); /// Cleanup previous swapchain objects
 
-    this->updateResolutionSettings();
+    this->updateResolutionSettings(); /// Update global resolution according to new resolution
 
+    /// attempt to recreate the swapchain. Throw std::runtime_error if not successful
     if ( this->_vulkanLogicalDevice.recreateSwapChain() != VulkanResult::VK_SUCCESS )
         throw std::runtime_error ( "Swap Chain Recreation Error" );
 
+    /// attempt to recreate the pipeline used. Throw std::runtime_error if not successful
     ENG_THROW_IF_NOT_SUCCESS (
             this->_objectShader.recreateShader(),
             ENG_STD_THROW( "shader recreation failure" )
     )
 
+    this->createDepthBuffer(); /// recreate the depth test buffer
+    this->createFrameBuffers();/// recreate the frame buffers
 
-    this->createDepthBuffer();
-    this->createFrameBuffers();
-
-    this->createDescriptorPool();
+    this->createDescriptorPool();/// recreate the descriptor pools and mesh renderers ( descriptor pool sets )
 
     for ( auto * pComponent : this->_activeScene.componentsOfClass("VMeshRenderer") )
         dynamic_cast<VMeshRenderer *>(pComponent)->recreate();
 
-    this->createCommandBuffers();
+    this->createCommandBuffers(); /// recreate draw commands
 }
 
 void engine::VulkanTriangleApplication::cleanupSwapChain() noexcept {
-    this->_depthBuffer.cleanup();
-    this->_frameBufferCollection.cleanup();
-    this->_drawCommandBufferCollection.free();
+    this->_depthBuffer.cleanup(); /// clean depth test buffer
+    this->_frameBufferCollection.cleanup(); /// clean all framebuffers
+    this->_drawCommandBufferCollection.free(); /// free all draw buffers
 
     for ( auto * pComponent : this->_activeScene.componentsOfClass("VMeshRenderer") )
-        dynamic_cast<VMeshRenderer *>(pComponent)->cleanupUniformBuffers();
+        dynamic_cast<VMeshRenderer *>(pComponent)->cleanupUniformBuffers(); /// cleanup all uniform buffers
 
-    this->_descriptorPool.cleanup();
+    this->_descriptorPool.cleanup(); /// cleanup all descriptors
 
-    this->_objectShader.getPipeline().cleanup();
+    this->_objectShader.getPipeline().cleanup(); /// cleanup pipeline
 
-    this->_vulkanLogicalDevice.cleanupSwapChain();
+    this->_vulkanLogicalDevice.cleanupSwapChain(); /// cleanup swap chain from logical device
 }
 
 
@@ -380,79 +384,88 @@ void engine::VulkanTriangleApplication::cleanupSwapChain() noexcept {
 void engine::VulkanTriangleApplication::frameBufferResizeCallback(GLFWwindow * pWindow, [[maybe_unused]] int32 width, [[maybe_unused]] int32 height) noexcept {
     auto * baseObj = reinterpret_cast< engine::VulkanTriangleApplication * > ( glfwGetWindowUserPointer( pWindow ) );
     baseObj->_framebufferResized = true;
+
+    /// we get "this" address by obtaining the address associated with the window and toggle the resized variable
+    /// specifying that next draw has to recreate the swapchain
 }
 
 void engine::VulkanTriangleApplication::drawImage () noexcept (false) {
     vkWaitForFences(
-        this->_vulkanLogicalDevice.data(),
+        this->_vulkanLogicalDevice.data(), /// on this GPU
         1U,
-        & this->_inFlightFences[ currentFrame ].data(),
-        VK_TRUE,
-        UINT64_MAX
-    );
+        & this->_inFlightFences[ currentFrame ].data(), /// wait for this image's sync elements ( fence )
+        VK_TRUE, /// TRUE = wait for all ( only waiting on 1 , this image's fence )
+        UINT64_MAX /// timeout for wait
+    ); /// wait for this image's fence to be available
 
     uint32 imageIndex;
     VulkanResult acquireImageResult = vkAcquireNextImageKHR(
-        this->_vulkanLogicalDevice.data(),
-        this->_vulkanLogicalDevice.getSwapChain()->data(),
-        UINT64_MAX,
-        this->_imageAvailableSemaphores[ currentFrame ].data(),
-        VK_NULL_HANDLE,
-        & imageIndex
-    );
+        this->_vulkanLogicalDevice.data(), /// from this GPU
+        this->_vulkanLogicalDevice.getSwapChain()->data(), /// from the swapchain
+        UINT64_MAX, /// indefinetly
+        this->_imageAvailableSemaphores[ currentFrame ].data(), /// trigger this when image is available
+        VK_NULL_HANDLE, /// do not
+        & imageIndex /// index of the acquired image
+    ); /// acquire the current image
 
     if ( acquireImageResult == VulkanResult::VK_ERROR_OUT_OF_DATE_KHR ) {
-        this->recreateSwapChain();
+        this->recreateSwapChain(); /// recreate swapchain if out of date
         return;
-    } else if ( acquireImageResult != VulkanResult::VK_SUCCESS )
+    } else if ( acquireImageResult != VulkanResult::VK_SUCCESS ) /// throw std::runtime_error if error
         throw std::runtime_error ( "Image Acquisition Failure" );
 
     if ( ! this->_imagesInFlight [ imageIndex ].empty() ) {
         vkWaitForFences(
-            this->_vulkanLogicalDevice.data(),
+            this->_vulkanLogicalDevice.data(), /// on this GPU
             1U,
-            & this->_imagesInFlight[ imageIndex ].data(),
-            VK_TRUE,
-            UINT64_MAX
+            & this->_imagesInFlight[ imageIndex ].data(), /// this image's fence
+            VK_TRUE, /// all fences
+            UINT64_MAX /// wait indefinetly
         );
-    }
+    } /// if an image is being sent to the surface, wait for it
 
-    this->updateUniformBuffer( imageIndex );
+    this->updateUniformBuffer( imageIndex );  /// update of uniform buffer data for the GPU
 
-    this->_imagesInFlight[ imageIndex ] = this->_inFlightFences [ currentFrame ];
+    this->_imagesInFlight[ imageIndex ] = this->_inFlightFences [ currentFrame ]; /// this becomes the image next to be sent
 
-    VkPipelineStageFlags waitStages[] = { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
+    VkPipelineStageFlags waitStages[] = { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT }; /// semaphore wait stages : signal when
+                                                                                        /// "color attachment" is output'ed - end of fragment shader
 
+    /// submit draw command
     if ( this->_drawCommandBufferCollection.getCommandBuffers()[ imageIndex ].submit(
-            waitStages,
-            & this->_imageAvailableSemaphores[ currentFrame ],
+            waitStages, /// signal upon fragment shader end
+            & this->_imageAvailableSemaphores[ currentFrame ], /// start when image is avaiable
             1U,
-            & this->_renderFinishedSemaphores[ currentFrame ],
+            & this->_renderFinishedSemaphores[ currentFrame ], /// trigger when render is finished
             1U,
-            & this->_inFlightFences[ currentFrame ]
+            & this->_inFlightFences[ currentFrame ]            /// bind these to this image's status
         ) != VulkanResult::VK_SUCCESS
-    )
+    ) /// if command submit fails, throw std::runtime_error
         throw std::runtime_error ( "Command Buffer Submit Failure" );
 
+    /// present image on swap chain
     VulkanResult presentResult = this->_vulkanLogicalDevice.getSwapChain()->present(
-            & this->_renderFinishedSemaphores[ currentFrame ],
-            1U, imageIndex
+            & this->_renderFinishedSemaphores[ currentFrame ], /// start when render is finished
+            1U, imageIndex /// draw image associated with current synchronisation elements
     );
 
     if (
-        presentResult == VulkanResult::VK_ERROR_OUT_OF_DATE_KHR ||
-        presentResult == VulkanResult::VK_SUBOPTIMAL_KHR ||
-        this->_framebufferResized
+        presentResult == VulkanResult::VK_ERROR_OUT_OF_DATE_KHR || /// desynchronisation of the swapchain OR
+        presentResult == VulkanResult::VK_SUBOPTIMAL_KHR ||        /// swapchain overloaded               OR
+        this->_framebufferResized                                  /// window resized toggle
     ) {
-        this->_framebufferResized = false;
-        this->recreateSwapChain();
+        this->_framebufferResized = false;                         /// toggle off recreation
+        this->recreateSwapChain();                                 /// recreate
     }
-    else if ( presentResult != VulkanResult::VK_SUCCESS )
+    else if ( presentResult != VulkanResult::VK_SUCCESS ) /// if any other error, throw std::runtime_error
         throw std::runtime_error ( "Swap Chain Present Failure" );
 
-    currentFrame = ( currentFrame + 1 ) % MAX_FRAMES_IN_FLIGHT;
+    currentFrame = ( currentFrame + 1 ) % MAX_FRAMES_IN_FLIGHT; /// increment frame index
 }
 
+/**
+ * Vertices of a star, with colors
+ */
 const std::vector < engine::VVertex > starVertices = {
 
         { { -0.2f, -0.2f, 0.0f }, {0.3f, 0.3f, 0.3f} },
@@ -468,6 +481,9 @@ const std::vector < engine::VVertex > starVertices = {
         { {-0.6f, -0.2f, 0.0f }, {1.0f, 1.0f, 0.3f} },
 };
 
+/**
+ * Indices of the star object, triangles, in draw order CCW
+ */
 const std::vector < uint16 > starIndices = {
 
         0, 1, 4,
@@ -481,6 +497,9 @@ const std::vector < uint16 > starIndices = {
         4, 9, 0,
 };
 
+/**
+ * Cube Vertices, with color ( 1.0, 1.0, 1.0 = no color modif. ), texture coords
+ */
 const std::vector < engine::VVertex > cubeVertices = {
 
 
@@ -505,6 +524,9 @@ const std::vector < engine::VVertex > cubeVertices = {
         {{-0.5f,  0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {1.0f, 0.0f}}, // 1
 };
 
+/**
+ * order of drawing, CCW, triangles
+ */
 const std::vector < uint16 > cubeIndices = {
 
         0,   1,  2,  2,  3,  0,
@@ -515,34 +537,67 @@ const std::vector < uint16 > cubeIndices = {
         4,   6,  5,  7,  6,  4
 };
 
-bool left = false;
-bool right = false;
-bool up = false;
-bool down = false;
+/**
+ * variables used in testing
+ */
+bool left = false; ///a
+bool right = false;///d
+bool up = false;   ///w
+bool down = false; ///s
 
 #include <chrono>
 #include <glm/gtc/matrix_transform.hpp>
 void engine::VulkanTriangleApplication::updateUniformBuffer(uint32 uniformBufferIndex) noexcept {
-    static float FOV = 45.0f;
+    static float FOV = 45.0f; /// Field Of View of Camera
+
+    /**
+     * Uniform Buffer =
+     *  * at least an MVP
+     *      Reason : Objects have static vertices on GPU
+     *               Each GPU core will make calculations for ONE single vertex at a time
+     *               GPU has to use data to "move" vertex, "color" vertex, etc.
+     *
+     *
+     *      MVP matrix = Model View Projection Matrix
+     *          - Contains one 4x4 matrix representing the current view - camera location
+     *          - Contains one 4x4 matrix representing projection of the view
+     *          - Contains one 4x4 matrix representing the model of the object
+     *      When multiplied with the vertex coordinates, the output is the vertex coordinates as if seen
+     *          from our eyes (located at 0,0,0 - screen coordinates)
+     *      The equation <=> projVertex = projection * view * model * ( vertexCoordinates.xyz, 1.0f );
+     *      The GPU's cores do matrix 4x4 * matrix 4x4 and matrix 4x4 * vector 4x4 fast, by default
+     *
+     *      3d coordinates are stored in a matrix like this :
+     *
+     *      vec3 (x, y, z) -> mat4 ( x, 0, 0, 0
+     *                               0, y, 0, 0
+     *                               0, 0, z, 0
+     *                               0, 0, 0, 0 )
+     */
 
     auto view = glm::lookAt(
-            glm::vec3(2.0f, 2.0f, 2.0f),
-            glm::vec3(0.0f, 0.0f, 0.0f),
-            glm::vec3(0.0f, 0.0f, 1.0f)
-    );
+            glm::vec3(2.0f, 2.0f, 2.0f), /// current camera position ( "eyes" )
+            glm::vec3(0.0f, 0.0f, 0.0f), /// center position ( "where we want to look, center" )
+            glm::vec3(0.0f, 0.0f, 1.0f)   /// normal of the camera. Orientation
+    ); /// view matrix = 4x4 matrix
 
     auto projection = glm::perspective (
-            glm::radians ( FOV ),
-            this->_vulkanLogicalDevice.getSwapChain()->getImagesInfo().extent.width /
+            glm::radians ( FOV ), /// with this FOV in radians
+            this->_vulkanLogicalDevice.getSwapChain()->getImagesInfo().extent.width / /// projected on our width / heigth ( aspect ratio )
             (float) this->_vulkanLogicalDevice.getSwapChain()->getImagesInfo().extent.height,
-            0.1f,
-            10.0f
+            0.1f, /// clip start ( objects behind will not be projected )
+            10.0f  /// clip end ( objects far will not be projected )
     );
 
-    projection[1][1] *= -1;
+    projection[1][1] *= -1; /// reverse y component of projection, as GLM library was designed for OpenGL, and we use Vulkan
+                            /// in OpenGL, the drawing is reversed at y axis level
 
-    glm::mat4 baseLocation (1.0f);
+    glm::mat4 baseLocation (1.0f); /// all objects start as base location x = 1.0f, y = 1.0f, z = 1.0f
 
+    /**
+     * We will apply local transformations to the Uniform Buffer Object's model matrix as follows :
+     *      translate
+     */
     for ( auto * pEntity : this->_activeScene.entitiesOfClass("VGameObject") ) {
         auto pGameObject = dynamic_cast < VGameObject * > (pEntity);
         engine::SUniformBufferObject UBO {
@@ -613,6 +668,9 @@ void engine::VulkanTriangleApplication::update() noexcept {
     auto pStar = dynamic_cast<VGameObject *>(this->_activeScene.getGameObjectByName("star"));
 
     pStar->transformPtr()->getRotation().rotate(VRotor::ROLL, 180.0f * static_cast<float>(this->_deltaTime));
+
+    for ( auto * pGameObject: this -> _activeScene.entitiesOfClass("VGameObject") )
+        dynamic_cast < VGameObject * > (pGameObject) -> update( static_cast <float>(this -> _deltaTime)  );
 }
 
 void engine::VulkanTriangleApplication::mainLoop() noexcept (false) {

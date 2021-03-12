@@ -10,6 +10,7 @@
 #include <transform/VTransform.h>
 #include <model/VMeshRenderer.h>
 #include <model/VMesh.h>
+#include <cmath>
 
 namespace engine {
 
@@ -41,6 +42,19 @@ namespace engine {
         explicit VGameObject ( String const & name, std::nullptr_t = nullptr ) noexcept : VEntity(nullptr), _name(name) { }
         explicit VGameObject ( String const & name, VEntity * pParentEntity ) noexcept : VEntity(pParentEntity), _name(name) { }
         explicit VGameObject ( String const & name, VScene * pScene ) noexcept : VEntity(pScene), _name(name) { }
+
+        virtual auto update (float deltaTime = 0.0f) noexcept -> void {
+            //this -> _pTransform -> getScale().x *= 1.0f + deltaTime / 100.0f;
+            //this -> _pTransform -> getScale().y *= 1.0f + deltaTime / 100.0f;
+            // this -> _pTransform -> getScale().z *= 1.0f + deltaTime / 100.0f;
+
+//            static float angle = 0.0f;
+//            if ( this -> _name == "star" ){
+//                this -> _pTransform -> getLocation().x = 0.0f + cosf ( angle ) * 1.0f;
+//                this -> _pTransform -> getLocation().y = 0.0f + sinf ( angle ) * 1.0f;
+//                angle += deltaTime;
+//            }
+        }
 
         [[nodiscard]] auto className () const noexcept -> ClassName override {
             return "VGameObject";
