@@ -62,69 +62,100 @@ namespace engine {
         }
     };
 
+    /**
+     * @class Vulkan Prototype Engine Class
+     *
+     * To be Split Into VWindow
+     *                  VEngine
+     *
+     */
     class VulkanTriangleApplication {
     private:
         //// private_vars
+
+        //// window width
         uint32                      _width                              {VulkanTriangleApplication::DEFAULT_WIDTH};
+        //// window height
         uint32                      _height                             {VulkanTriangleApplication::DEFAULT_HEIGHT};
 
+        //// window address
         GLFWwindow *                _window                             {nullptr};
 
+        //// error callback messenger for GPU errors
         VMessenger                  _vulkanMessenger;
+        //// collection of multiple validation layers
         VValidationLayerCollection  _vulkanValidationLayerCollection;
+        //// vulkan instance
         VInstance                   _vulkanInstance;
+        //// surface to print GPU images on
         VSurface                    _vulkanSurface;
+        //// GPU handle and interfaces
         VPhysicalDevice             _vulkanPhysicalDevice;
 
+        //// Address of Queue Families
         VQueueFamilyCollection    * _vulkanQueueFamilyCollection        {nullptr};
+        //// GPU + CPU-GPU buses used + GPU-surface bus used interface
         VLogicalDevice              _vulkanLogicalDevice;
 
+        //// Shader used for all objects
         VShader                     _objectShader;
 
+        //// Frame Buffers used to draw on
         VFrameBufferCollection      _frameBufferCollection;
 
+        //// Command Pool for Draw Commands
         VCommandPool                _commandPool;
+        //// Command Pool for Transfer from GPU to Surface
         VCommandPool                _transferCommandPool;
+        //// Command Buffer Storage
         VCommandBufferCollection    _drawCommandBufferCollection;
 
+        //// All semaphores signaling image availability finish per image
         VSemaphoreCollection        _imageAvailableSemaphores;
+        //// All semaphores signaling render finish of images per image
         VSemaphoreCollection        _renderFinishedSemaphores;
 
+        //// Fences synchronising semaphores for image swapping and semaphore sync
         VFenceCollection            _inFlightFences;
+        //// Fences synchronising semaphores for image swapping and semaphore sync
         VFenceCollection            _imagesInFlight;
 
+        //// Descriptor Pool for Allocation of Descriptors ( Locations ) for Buffers on GPU and shared CPU-GPU Buffers
         VDescriptorPool             _descriptorPool;
 
+        //// Texture Sampler Object.
         VTextureSampler             _textureSampler;
-
+        //// Depth Buffer Object. Does depth testing - draws objects closer to the camera over objects further away
         VDepthBuffer                _depthBuffer;
 
+        //// Active Scene - Hierarchy of Entities
         VScene                      _activeScene;
 
-//        VGameObject                 _cube;
-//        VGameObject                 _star;
-
+        //// Current FPS
         double                      _fpsTimer = 0.0;
+        //// Show FPS every .... seconds
         double                      _fpsRefreshTimer = __SHOW_FPS_EVERY_S;
+        //// Time Between start of draw and end of draw for last image
         double                      _deltaTime {0.0f};
 
+        //// Used to recreate all resources using surface resolution when window is resized
         bool _framebufferResized {false};
 
         //// private_functions
-        void initSettings() const noexcept;
-        void initWindow() noexcept(false);
-        void initVulkan() noexcept(false);
-        void mainLoop() noexcept(false);
-        void cleanup() noexcept(false);
-        void update() noexcept(false);
-        void drawImage() noexcept (false);
+        void initSettings() const noexcept; //// initialisation of settings ( resolution ... )
+        void initWindow() noexcept(false);  //// creation of window context
+        void initVulkan() noexcept(false);  //// creation of vulkan instance
+        void mainLoop() noexcept(false);    //// start of MVC application
+        void cleanup() noexcept(false);     //// cleanup of all data created
+        void update() noexcept(false);      //// Periodic call per frame for each object
+        void drawImage() noexcept (false);  //// Periodic call to draw a free image
 
-        void createShaderModules () noexcept (false);
+        void createShaderModules () noexcept (false); //// creation of shaders - Deprecated. Will be built by Precompiler
 
-        void createCommandPool() noexcept (false);
-        void createCommandBuffers() noexcept (false);
+        void createCommandPool() noexcept (false);    //// creation of command pool - any draw commands, allocated from a pool ( cached on gpu )
+        void createCommandBuffers() noexcept (false); //// creation of command buffers - GPU draw commands, pre-recorder for optimisation
 
-        void createSynchronizationElements () noexcept (false);
+        void createSynchronizationElements () noexcept (false); //// creation of CPU-GPU sync elements - semaphores, fences, barriers
 
         void createFrameBuffers () noexcept (false);
         void createDescriptorSetLayout() noexcept (false);
