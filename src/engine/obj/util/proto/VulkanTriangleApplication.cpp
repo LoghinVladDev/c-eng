@@ -119,9 +119,9 @@ void engine::VulkanTriangleApplication::run() noexcept (false) {
     this->initSettings();                   //// initialisation of settings ( resolution ... )
     this->initWindow();                     //// creation of window context
     this->initVulkan();                     //// creation of vulkan instance
-    this->createShaderModules();            //// creation of shaders
-    this->createDescriptorSetLayout();      //// creation of layout of descriptors for CPU-GPU data
-    this->createGraphicsPipeline();         //// creation of graphical pipeline ( GPU - queue - swapchain - screen )
+    this->createShaderModules();            //// creation of shaders - Deprecated. Will be built by Precompiler
+    this->createDescriptorSetLayout();      //// creation of layout of descriptors for CPU-GPU data - Deprecated. Will be build by Precompiler
+    this->createGraphicsPipeline();         //// creation of graphical pipeline - A single Shader - ( GPU - queue - swapchain - screen )
     this->createCommandPool();              //// creation of command pool - any draw commands, allocated from a pool ( cached on gpu )
     this->createDepthBuffer();              //// creation of depth buffer - so that objects do not overlap. Objects closer to the camera will be rendered first
     this->createFrameBuffers();             //// creation of frame buffers - drawable buffers
@@ -292,11 +292,14 @@ void engine::VulkanTriangleApplication::freeStagingBuffers() noexcept(false) {
 }
 
 void engine::VulkanTriangleApplication::createSynchronizationElements() noexcept(false) {
+    //// A semaphore for image draw finish per frame buffer
     if ( this->_imageAvailableSemaphores.setup( this->_vulkanLogicalDevice, MAX_FRAMES_IN_FLIGHT ) != VulkanResult::VK_SUCCESS )
         throw std::runtime_error ( "Semaphore Creation Failure : Image Availability" );
+    //// A semaphore for each render on surface per each frame buffer
     if ( this->_renderFinishedSemaphores.setup( this->_vulkanLogicalDevice, MAX_FRAMES_IN_FLIGHT ) != VulkanResult::VK_SUCCESS )
         throw std::runtime_error ( "Semaphore Creation Failure : Render Finish" );
 
+    //// Fences for synchronising semaphores and Logical Device busy scheduling. One per frame
     if ( this->_inFlightFences.setup( this->_vulkanLogicalDevice, MAX_FRAMES_IN_FLIGHT, engine::VFence::START_SIGNALED ) != VulkanResult::VK_SUCCESS )
         throw std::runtime_error ( "Fence Creation Failure" );
     this->_imagesInFlight.resize( static_cast<uint32>(this->_vulkanLogicalDevice.getSwapChain()->getImages().size()) );
@@ -307,6 +310,11 @@ void engine::VulkanTriangleApplication::createSynchronizationElements() noexcept
 #endif
 
 auto engine::VulkanTriangleApplication::createGameObjects() noexcept -> void {
+    /***
+     * Create Two Objects and Add them to the Active Scene
+     * Will be loaded later from configurations - Saved Scenes -> json containing hierarchical data
+     */
+
     auto cube = new VGameObject("cube");
     cube->add(new VTransform());
     cube->add(new VMesh());
@@ -317,11 +325,12 @@ auto engine::VulkanTriangleApplication::createGameObjects() noexcept -> void {
     star->add(new VMesh());
     star->add(new VMeshRenderer());
 
+    /// Move the star a bit above and to the left
     star->transformPtr()->getLocation().x += 1.0f;
     star->transformPtr()->getLocation().z += 1.0f;
 
     this->_activeScene.add(cube);
-    this->_activeScene.add(star);
+    this->_activeScene.add(star); /// Add object to scene
 }
 
 /**
@@ -615,14 +624,14 @@ void engine::VulkanTriangleApplication::update() noexcept(false) {
 }
 
 void engine::VulkanTriangleApplication::mainLoop() noexcept (false) {
-    while ( ! glfwWindowShouldClose( this->_window ) ) {
-        double startFrameTime = glfwGetTime();
+    while ( ! glfwWindowShouldClose( this->_window ) ) { /// while window is active
+        double startFrameTime = glfwGetTime(); /// get current time accurately
 
-        glfwPollEvents();
-        this->update();
-        this->drawImage();
+        glfwPollEvents(); /// poll all interrupting events - Window Minimise, Window Resize, Key Press etc.
+        this->update(); /// Periodic call per frame for each object
+        this->drawImage(); /// Periodic call to draw a free image
 
-        this->_deltaTime = ( glfwGetTime() - startFrameTime );
+        this->_deltaTime = ( glfwGetTime() - startFrameTime ); /// Calculate frame time
 
         this->_fpsTimer += this->_deltaTime;
 
@@ -632,10 +641,15 @@ void engine::VulkanTriangleApplication::mainLoop() noexcept (false) {
             this->_fpsTimer = 0.0;
         }
     }
-    vkDeviceWaitIdle( this->_vulkanLogicalDevice.data() );
+    vkDeviceWaitIdle( this->_vulkanLogicalDevice.data() ); //// Wait until GPU draw Task is finished before closing
 }
 
 void engine::VulkanTriangleApplication::createBuffers() noexcept(false) {
+    /**
+     * Based on configuration on logical device, we use memory exclusivity if only one graphics queue
+     * has been found for Graphics and Present Transfers.
+     * Otherwise, we use concurrency
+     */
     if ( this->_vulkanQueueFamilyCollection->getQueueFamilies().size() == 1 ) {
         this->createExclusiveBuffers();
     } else if ( this->_vulkanQueueFamilyCollection->getQueueFamilies().size() > 1 ) {
@@ -644,6 +658,7 @@ void engine::VulkanTriangleApplication::createBuffers() noexcept(false) {
 }
 
 void engine::VulkanTriangleApplication::createDepthBuffer() noexcept(false) {
+    /// Create Depth Buffer, Deciding which object prints first. Requires Queue Family Indices
     auto queueFamilyIndices = this->_vulkanQueueFamilyCollection->getQueueFamilyIndices();
     ENG_THROW_IF_NOT_SUCCESS(
             this->_depthBuffer.setup(
@@ -686,6 +701,7 @@ void engine::VulkanTriangleApplication::createConcurrentBuffers() noexcept(false
 }
 
 void engine::VulkanTriangleApplication::createTextures() noexcept(false) {
+    /// Create and Load Texture Sampler. Use Default Anisotropy = 16. Configurable Later
     auto anisotropyLevel = 16.0f;
 
     ENG_THROW_IF_NOT_SUCCESS(
@@ -764,6 +780,10 @@ void engine::VulkanTriangleApplication::createExclusiveBuffers() noexcept(false)
 #pragma ide diagnostic ignored "Simplify"
 #endif
 void engine::VulkanTriangleApplication::cleanup() noexcept (false) {
+    /**
+     * Free and cleanup objects in reverse allocation + creation order
+     */
+
     this->_imageAvailableSemaphores.cleanup();
     this->_renderFinishedSemaphores.cleanup();
     this->_inFlightFences.cleanup();
@@ -804,6 +824,7 @@ void engine::VulkanTriangleApplication::cleanup() noexcept (false) {
 }
 
 void engine::VulkanTriangleApplication::createCommandPool() noexcept(false) {
+    //// Create Two Command Pools. One for Drawing, One for Transfer to Screen
     if ( this->_commandPool.setup( this->_vulkanLogicalDevice ) != VulkanResult::VK_SUCCESS )
         throw std::runtime_error ( "Command Pool Creation Error" );
     if ( this->_transferCommandPool.setup( this->_vulkanLogicalDevice, this->_vulkanLogicalDevice.getFirstTransferQueuePtr()->getQueueFamily() ) != VulkanResult::VK_SUCCESS )
@@ -812,6 +833,12 @@ void engine::VulkanTriangleApplication::createCommandPool() noexcept(false) {
 
 /// Reminder : objects of same type, store in same buffer !
 void engine::VulkanTriangleApplication::createCommandBuffers() noexcept(false) {
+    /**
+     * Creation of Command Buffers - Draw Commands
+     *
+     * First they are allocated onto the Frame Buffers, give an Output
+     * Allocated from a Pool
+     */
     if ( this->_drawCommandBufferCollection.allocate( this->_commandPool, this->_frameBufferCollection ) != VulkanResult::VK_SUCCESS )
         throw std::runtime_error ( "Command Buffers Allocation Error" );
 
@@ -819,6 +846,12 @@ void engine::VulkanTriangleApplication::createCommandBuffers() noexcept(false) {
 
     auto gameObjects = this->_activeScene.entitiesOfClass("VGameObject");
 
+    //// Input Data
+    /**
+     * Vertices of Objects - vertexBuffers
+     * Indices of Vertices - Order of line drawing. - indexBuffers
+     * layout of vertices, indices, model view projection matrix, textures on the CPU-GPU bus ( queue ) - object descriptor handles
+     */
     auto vertexBuffers              = new VVertexBuffer[gameObjects.size()];
     auto indexBuffers               = new VIndexBuffer[gameObjects.size()];
     auto objectDescriptorSetHandles = new std::vector < VulkanDescriptorSet > [gameObjects.size()];
@@ -833,6 +866,11 @@ void engine::VulkanTriangleApplication::createCommandBuffers() noexcept(false) {
         i++;
     }
 
+    /**
+     * Same handles as above, but rearranged as follows :
+     * Previous Arrangement : Array of [FrameBufferCount] Array per Object
+     * Current Arrangement : Array of Object Descriptor Set Array per Frame Buffer Image
+     */
     std::vector < VulkanDescriptorSet * > descriptorSetHandles ( this->_drawCommandBufferCollection.getCommandBuffers().size());
     for ( uint32 i = 0; i < descriptorSetHandles.size(); i++ ) {
         descriptorSetHandles[i]     = new VulkanDescriptorSet[gameObjects.size()];
@@ -840,6 +878,9 @@ void engine::VulkanTriangleApplication::createCommandBuffers() noexcept(false) {
             descriptorSetHandles[i][j] = objectDescriptorSetHandles[j][i];
     }
 
+    /**
+     * Create Drawing Buffer for each FrameBuffer
+     */
     if ( this->_drawCommandBufferCollection.startRecord(
             this->_objectShader.getPipeline(),
             vertexBuffers,
@@ -884,12 +925,13 @@ void engine::VulkanTriangleApplication::createShaderModules() noexcept(false) {
 }
 
 void engine::VulkanTriangleApplication::createGraphicsPipeline() noexcept(false) {
-    VShaderCompiler compiler;
+    VShaderCompiler compiler; /// Create a Precompiler
 
+    /// Use JSON Configuration for shader data
     compiler.setConfigurationFileJSON( std::string(__VULKAN_SHADERS_PATH__).append("/config/vkTriangleShaderComp.json") );
-    compiler.build();
+    compiler.build(); /// Build Shaders in outputs mentioned in JSON Configuration
     ENG_THROW_IF_NOT_SUCCESS (
-            this->_objectShader.setup(
+            this->_objectShader.setup(  ///Setup Shader for GPU
                     this->_vulkanLogicalDevice,
                     compiler,
                     "defObj"
@@ -900,6 +942,7 @@ void engine::VulkanTriangleApplication::createGraphicsPipeline() noexcept(false)
 }
 
 void engine::VulkanTriangleApplication::createFrameBuffers() noexcept(false) {
+    //// Create Frame Buffers - Images that will be swapped in flight, used by Double or Triple Buffering ( currently enabled - Triple )
     if ( this->_frameBufferCollection.setup ( this->_objectShader.getRenderPassPtr(), & this->_depthBuffer ) != VulkanResult::VK_SUCCESS )
         throw std::runtime_error ( "Frame Buffers Creation Failure" );
 }
