@@ -191,13 +191,14 @@ void engine::VEntity::operator delete(void * pToDelete) noexcept(false) {
     auto self = reinterpret_cast< VEntity * > (pToDelete);
 
     if ( self->_pScene != nullptr ) {
+        auto childrenCopy = self->_children;
         if ( self->_pParentEntity == nullptr ) {
-            for ( auto & c : self->_children ) {
+            for ( auto & c : childrenCopy ) {
                 self->remove(c);
                 const_cast < VScene * > ( self->_pScene )->add(c);
             }
         } else {
-            for ( auto & c : self->_children ) {
+            for ( auto & c : childrenCopy ) {
                 self->remove(c);
                 const_cast < VEntity * > (self->_pParentEntity)->add(c);
             }
