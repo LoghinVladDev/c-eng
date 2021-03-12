@@ -5,6 +5,8 @@
 #include "VMesh.h"
 #include <vkUtils/VStdUtilsDefs.h>
 
+const engine::VMesh engine::VMesh::EMPTY = VMesh(UINT64_MAX);
+
 VulkanResult engine::VMesh::setup(
         const engine::VCommandPool              & transferCommandPool,
         const engine::VQueueFamilyCollection    & queueFamilyCollection,

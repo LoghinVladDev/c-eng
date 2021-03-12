@@ -10,6 +10,9 @@
 
 #include <src/engine/obj/util/proto/VulkanTriangleApplication.h>
 
+/**
+ * Base Prototype Application
+ */
 
 using namespace engine;
 
@@ -17,6 +20,9 @@ int main() {
     VulkanTriangleApplication app(1024, 768);
 
     try{
+        /**
+         * Enable validation layers if in debug
+         */
 #ifndef NDEBUG
         app.addValidationLayer( VValidationLayer::KHRONOS_VALIDATION );
 #endif

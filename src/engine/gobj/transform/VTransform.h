@@ -22,8 +22,10 @@ namespace engine {
 
         //// private functions
 
+        explicit VTransform ( uint64 ignoredIncrementConstructor ) noexcept : VComponent( VComponent::DISTINCT, ignoredIncrementConstructor) { }
     public:
-        //// public variable
+        //// public variables
+        const static VTransform EMPTY;
 
         //// public functions
 //        operator = not required due to Base having operator =

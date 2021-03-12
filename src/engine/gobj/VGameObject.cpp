@@ -4,13 +4,17 @@
 
 #include "VGameObject.h"
 
-auto engine::VGameObject::addComponent ( VComponent * pComponent ) noexcept -> bool {
-    if ( VEntity::addComponent(pComponent) ) {
-        if ( pComponent->className() == VTransform().className() )
+uint64 engine::VGameObject::_IDCounter = 1llu;
+
+const engine::VGameObject engine::VGameObject::EMPTY = engine::VGameObject(UINT64_MAX);
+
+auto engine::VGameObject::add ( VComponent * pComponent ) noexcept -> bool {
+    if ( VEntity::add(pComponent) ) {
+        if ( pComponent->className() == VTransform::EMPTY.className() )
             this->_pTransform = dynamic_cast < VTransform * > (pComponent);
-        else if ( pComponent->className() == VMesh().className() )
+        else if ( pComponent->className() == VMesh::EMPTY.className() )
             this->_pMesh = dynamic_cast < VMesh * > (pComponent);
-        else if ( pComponent->className() == VMeshRenderer().className() )
+        else if ( pComponent->className() == VMeshRenderer::EMPTY.className() )
             this->_pMeshRenderer = dynamic_cast < VMeshRenderer * > (pComponent);
 
         return true;
@@ -19,8 +23,8 @@ auto engine::VGameObject::addComponent ( VComponent * pComponent ) noexcept -> b
     return false;
 }
 
-auto engine::VGameObject::removeComponent ( VComponent * pComponent ) noexcept -> bool {
-    if ( VEntity::removeComponent(pComponent) ) {
+auto engine::VGameObject::remove ( VComponent * pComponent ) noexcept -> bool {
+    if ( VEntity::remove(pComponent) ) {
         if ( pComponent->className() == VTransform().className() )
             this->_pTransform = nullptr;
         else if ( pComponent->className() == VMesh().className() )

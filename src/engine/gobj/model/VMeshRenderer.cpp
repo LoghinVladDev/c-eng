@@ -5,6 +5,8 @@
 #include "VMeshRenderer.h"
 #include <vkUtils/VStdUtilsDefs.h>
 
+const engine::VMeshRenderer engine::VMeshRenderer::EMPTY = VMeshRenderer(UINT64_MAX);
+
 VulkanResult engine::VMeshRenderer::recreateUniformBuffers() noexcept {
     this->_MVPDescriptorBuffers.resize( this->_pLogicalDevice->getSwapChain()->getImages().size() );
 

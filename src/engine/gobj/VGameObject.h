@@ -20,14 +20,35 @@ namespace engine {
         VMesh           * _pMesh          {nullptr};
         VMeshRenderer   * _pMeshRenderer  {nullptr};
 
+        String            _name;
+
+        static uint64     _IDCounter; //NOLINT(bugprone-reserved-identifier)
+
         //// private functions
+        static auto nextID () noexcept -> String { return String("GameObject").append( VGameObject::_IDCounter ++); }
+
+        explicit VGameObject(uint64 ignoredID) noexcept : VEntity(ignoredID), _name("EMPTY") {}
 
     public:
         //// public variables
+        const static VGameObject EMPTY;
 
         //// public functions
+        explicit VGameObject ( nullptr_t = nullptr ) noexcept : VEntity(nullptr), _name(nextID()) { }
+        explicit VGameObject ( VEntity * pParentEntity ) noexcept : VEntity(pParentEntity), _name(nextID()) { }
+        explicit VGameObject ( VScene * pScene ) noexcept : VEntity ( pScene ), _name(nextID()) { }
+
+        explicit VGameObject ( String const & name, nullptr_t = nullptr ) noexcept : VEntity(nullptr), _name(name) { }
+        explicit VGameObject ( String const & name, VEntity * pParentEntity ) noexcept : VEntity(pParentEntity), _name(name) { }
+        explicit VGameObject ( String const & name, VScene * pScene ) noexcept : VEntity(pScene), _name(name) { }
+
+        [[nodiscard]] auto className () const noexcept -> ClassName override {
+            return "VGameObject";
+        }
+
         [[nodiscard]] auto toString () const noexcept -> String override {
             return String().append("VGameObject { \n")
+                .append("\tname = ").append(this->_name).append("\n")
                 .append("\tbase = ").append(VEntity::toString()).append("\n")
                 .append("\ttransform address = ").append(reinterpret_cast<uint64>(this->_pTransform)).append("\n")
                 .append("\tmesh address = ").append(reinterpret_cast<uint64>(this->_pMesh)).append("\n")
@@ -35,8 +56,19 @@ namespace engine {
                 .append("}");
         }
 
-        auto addComponent ( VComponent * ) noexcept -> bool override;
-        auto removeComponent ( VComponent * ) noexcept -> bool override;
+        auto setName ( String const & name ) noexcept -> void {
+            this->_name = name;
+        }
+
+        inline auto getName() const noexcept -> String const & { return this->_name; }
+
+        auto add ( VComponent * ) noexcept -> bool override;
+        inline auto add ( VEntity * pEntity ) const noexcept -> bool override { return VEntity::add(pEntity); }
+        inline auto add ( nullptr_t ) const noexcept -> bool override { return VEntity::add(nullptr); }
+
+        auto remove ( VComponent * ) noexcept -> bool override;
+        inline auto remove ( VEntity * pEntity ) const noexcept -> bool override { return VEntity::remove(pEntity); }
+        inline auto remove ( nullptr_t ) const noexcept -> bool override { return VEntity::remove(nullptr); }
 
         constexpr auto transformPtr () noexcept -> VTransform * { return this->_pTransform; }
         constexpr auto transformPtr () const noexcept -> VTransform const * { return this->_pTransform; }
@@ -47,7 +79,6 @@ namespace engine {
         constexpr auto meshRendererPtr () noexcept -> VMeshRenderer * { return this->_pMeshRenderer; }
         constexpr auto meshRendererPtr () const noexcept -> VMeshRenderer const * { return this->_pMeshRenderer; }
     };
-
 }
 
 #endif //ENG1_VGAMEOBJECT_H

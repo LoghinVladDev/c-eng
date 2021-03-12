@@ -32,8 +32,10 @@ namespace engine {
 
         //// private functions
 
+        explicit VMeshRenderer ( uint64 ignoredIDConstructor ) noexcept : VComponent( VComponent::DISTINCT | VComponent::HAS_DEPENDENCY, ignoredIDConstructor ) { }
     public:
         //// public variables
+        const static VMeshRenderer EMPTY;
 
         //// public functions
 //        VMeshRenderer () noexcept = default;

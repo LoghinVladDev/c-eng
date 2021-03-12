@@ -94,9 +94,9 @@ void engine::VulkanTriangleApplication::setupDebugMessenger() noexcept (false) {
 #endif
 
 void engine::VulkanTriangleApplication::initSettings() const noexcept {
-    auto resolution = engine::ResolutionSetting( this->_width, this->_height );
+    auto resolution = engine::ResolutionSetting( this->_width, this->_height ); //// Create Resolution Setting based on current resolution from Class Variables
 
-    engine::SettingsSharedContainer::getInstance().put( & resolution );
+    engine::SettingsSharedContainer::getInstance().put( & resolution ); //// Save Resolution for reuse later in other classes
 }
 
 void engine::VulkanTriangleApplication::updateResolutionSettings() noexcept {
@@ -116,35 +116,35 @@ void engine::VulkanTriangleApplication::createDescriptorSetLayout() noexcept(fal
 }
 
 void engine::VulkanTriangleApplication::run() noexcept (false) {
-    this->initSettings();
-    this->initWindow();
-    this->initVulkan();
-    this->createShaderModules();
-    this->createDescriptorSetLayout();
-    this->createGraphicsPipeline();
-    this->createCommandPool();
-    this->createDepthBuffer();
-    this->createFrameBuffers();
-    this->createTextures();
-    this->createBuffers();
-    this->createCommandBuffers();
-    this->freeStagingBuffers();
-    this->createSynchronizationElements();
-    this->mainLoop();
-    this->cleanup();
+    this->initSettings();                   //// initialisation of settings ( resolution ... )
+    this->initWindow();                     //// creation of window context
+    this->initVulkan();                     //// creation of vulkan instance
+    this->createShaderModules();            //// creation of shaders
+    this->createDescriptorSetLayout();      //// creation of layout of descriptors for CPU-GPU data
+    this->createGraphicsPipeline();         //// creation of graphical pipeline ( GPU - queue - swapchain - screen )
+    this->createCommandPool();              //// creation of command pool - any draw commands, allocated from a pool ( cached on gpu )
+    this->createDepthBuffer();              //// creation of depth buffer - so that objects do not overlap. Objects closer to the camera will be rendered first
+    this->createFrameBuffers();             //// creation of frame buffers - drawable buffers
+    this->createTextures();                 //// creation of texture objects - GPU data
+    this->createGameObjects();              //// creation of EC Game Objects
+    this->createBuffers();                  //// creation of Data Buffers - GPU - Vertex + Index + Uniform.
+    this->createCommandBuffers();           //// creation of command buffers - GPU draw commands, pre-recorder for optimisation
+    this->freeStagingBuffers();             //// free of staging buffers - copy buffers for CPU-GPU. Deprecated
+    this->createSynchronizationElements();  //// creation of CPU-GPU sync elements - semaphores, fences, barriers
+    this->mainLoop();                       //// start of MVC application
+    this->cleanup();                        //// cleanup of all data created
 }
 
 void processInputCallback (GLFWwindow*, int, int, int, int);
 
 inline void engine::VulkanTriangleApplication::initWindow() noexcept (false) {
     if(glfwInit() == GLFW_FALSE) {
-        throw engine::EngineVulkanTestException("GLFW Init failure");
+        throw engine::EngineVulkanTestException("GLFW Init failure"); //// if GLFW could not initialise, we cannot draw on a window
     }
 
-    glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-//    glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+    glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API); //// No OpenGL API, Vulkan is not self-configurable
 
-    this->_window = glfwCreateWindow(
+    this->_window = glfwCreateWindow( //// Create Window from GLFW
         this->_width,
         this->_height,
         VulkanTriangleApplication::DEFAULT_TITLE,
@@ -152,9 +152,9 @@ inline void engine::VulkanTriangleApplication::initWindow() noexcept (false) {
         nullptr
     );
 
-    glfwSetWindowUserPointer( this->_window, this );
-    glfwSetFramebufferSizeCallback( this->_window, engine::VulkanTriangleApplication::frameBufferResizeCallback );
-    glfwSetKeyCallback( this->_window, processInputCallback );
+    glfwSetWindowUserPointer( this->_window, this ); //// Enable Cursor Interaction
+    glfwSetFramebufferSizeCallback( this->_window, engine::VulkanTriangleApplication::frameBufferResizeCallback ); //// Set Window Resize Callback
+    glfwSetKeyCallback( this->_window, processInputCallback ); //// Set Keyboard Callback
 }
 
 void engine::VulkanTriangleApplication::createSurface() noexcept(false) {
@@ -180,14 +180,14 @@ static inline std::vector < const engine::VQueueFamily* > internalGatherGraphics
 #pragma ide diagnostic ignored "UnreachableCode"
 #endif
 inline void engine::VulkanTriangleApplication::initVulkan() noexcept (false) {
-    VExtensionCollection availableExtensions = VExtensionCollection::getAllAvailableExtensions();
+    VExtensionCollection availableExtensions = VExtensionCollection::getAllAvailableExtensions(); //// Acquire supported Vulkan SDK Extensions
 
 #ifndef NDEBUG
-    if( VulkanTriangleApplication::VULKAN_EXT_CHECK )
+    if( VulkanTriangleApplication::VULKAN_EXT_CHECK ) // in debug, print extensions
         availableExtensions.debugPrint(std::cout );
 #endif
 
-    if( enableValidationLayers ) {
+    if( enableValidationLayers ) { // enabled in debug, disabled in release
         VValidationLayer::debugPrintAvailableValidationLayers(std::cout);
 
         std::cout << "\nRequested Validation Layers : \n";
@@ -202,51 +202,64 @@ inline void engine::VulkanTriangleApplication::initVulkan() noexcept (false) {
 
         std::cout << "\nRequested Layers are available!\n";
 
+        /// Initialise Vulkan WITH Validation Layers
         if ( this->_vulkanInstance.setup( this->_vulkanValidationLayerCollection ) != VK_SUCCESS ) {
             throw std::runtime_error ("failed to create Vulkan instance");
         }
-    } else
-    {
+    } else {
+        /// Initialise Vulkan WITHOUT Validation Layers
         if ( this->_vulkanInstance.setup() != VK_SUCCESS )
             throw std::runtime_error ("failed to create Vulkan instance");
     }
 
 
-    this->setupDebugMessenger();
-    this->createSurface();
-    this->autoPickPhysicalDevice();
+    this->setupDebugMessenger(); //// Setup a Validation Layer Violation Error Callback
+    this->createSurface();  //// Create a printable surface on the window for ImageBuffers
+    this->autoPickPhysicalDevice(); //// Select Best GPU for the Engine
 
     std::cout << "Most Suitable GPU : \n";
 
 #ifndef NDEBUG
-    this->_vulkanPhysicalDevice.debugPrintPhysicalDeviceProperties( std::cout, true, "\t");
+    this->_vulkanPhysicalDevice.debugPrintPhysicalDeviceProperties( std::cout, true, "\t"); /// In debug, print best GPU
 #endif
 
+    /// Acquire Queue Families
     this->_vulkanQueueFamilyCollection = new VQueueFamilyCollection ( this->_vulkanPhysicalDevice, &this->_vulkanSurface );
 
+    //// Do basic tests for Queue Allocation
     queueFamilyTests( * this->_vulkanQueueFamilyCollection );
 
     engine::VLogicalDevice::VLogicalDeviceFactory::enableExceptions();
-    engine::VLogicalDevice::VLogicalDeviceFactory deviceFactory;
+    engine::VLogicalDevice::VLogicalDeviceFactory deviceFactory; /// Factory For Logical Device. Logical Device =
+    ////                                              Physical Device (GPU) +
+    ////                                              Queues Interface (CPU-GPU buses)
+    ////                                              Swapchain Interface (GPU - Surface buses)
 
+    //// If using validationLayers, build Logical Device + Validation Layers. We need the callbacks on the GPU
     if( enableValidationLayers )
         deviceFactory.withValidationLayers( this->_vulkanValidationLayerCollection );
 
+    //// Gather CPU-GPU Buses capable of
+    ///         Graphic Transfers ( Vertex, Index, Texture, Compression etc )
+    ///         Present Transfers ( GPU Image -> Window Surface )
     auto queues = internalGatherGraphicsAndPresentQueueFamilies ( * this->_vulkanQueueFamilyCollection );
 
     if( queues.size() == 1 ) { // graphics & present queues in same family
+    //// if only one queue capable of Graphics + Present, use exclusivity of memory for one queue family
         deviceFactory.addQueue(*queues[0], 1.0f);
         deviceFactory.addQueue(* this->_vulkanQueueFamilyCollection->getTransferCapableQueueFamilies()[0], 1.0f);
     }
     else {
+    //// if one graphics and one present queue have been found, use concurrency of memory for both queue families
         deviceFactory.addQueue( * queues[0], 1.0f );
         deviceFactory.addQueue( * queues[1], 1.0f );
         deviceFactory.addQueue(* this->_vulkanQueueFamilyCollection->getTransferCapableQueueFamilies()[0], 1.0f);
     }
 
+    //// Link to-be-created SwapChain to the Surface Created Previously
     deviceFactory.createSwapChainToSurface( & this->_vulkanSurface );
 //
-    this->_vulkanLogicalDevice = deviceFactory.build( this->_vulkanPhysicalDevice );
+    this->_vulkanLogicalDevice = deviceFactory.build( this->_vulkanPhysicalDevice ); /// Build Logical Device
     std::cout << "Logical Device Handle : " << this->_vulkanLogicalDevice.data() << '\n';
 //
 //
@@ -293,6 +306,23 @@ void engine::VulkanTriangleApplication::createSynchronizationElements() noexcept
 #pragma clang diagnostic pop
 #endif
 
+auto engine::VulkanTriangleApplication::createGameObjects() noexcept -> void {
+    auto cube = new VGameObject("cube");
+    cube->add(new VTransform());
+    cube->add(new VMesh());
+    cube->add(new VMeshRenderer());
+
+    auto star = new VGameObject("star");
+    star->add(new VTransform());
+    star->add(new VMesh());
+    star->add(new VMeshRenderer());
+
+    star->transformPtr()->getLocation().x += 1.0f;
+    star->transformPtr()->getLocation().z += 1.0f;
+
+    this->_activeScene.add(cube);
+    this->_activeScene.add(star);
+}
 
 /**
  * Will recreate in flight
@@ -307,8 +337,6 @@ void engine::VulkanTriangleApplication::recreateSwapChain() noexcept(false) {
     if ( this->_vulkanLogicalDevice.recreateSwapChain() != VulkanResult::VK_SUCCESS )
         throw std::runtime_error ( "Swap Chain Recreation Error" );
 
-//    this->createGraphicsPipeline();
-
     ENG_THROW_IF_NOT_SUCCESS (
             this->_objectShader.recreateShader(),
             ENG_STD_THROW( "shader recreation failure" )
@@ -317,12 +345,11 @@ void engine::VulkanTriangleApplication::recreateSwapChain() noexcept(false) {
 
     this->createDepthBuffer();
     this->createFrameBuffers();
-//    this->createUniformBuffers();
-
 
     this->createDescriptorPool();
-    this->_cubeMeshRenderer.recreate();
-    this->_starMeshRenderer.recreate();
+
+    for ( auto * pComponent : this->_activeScene.componentsOfClass("VMeshRenderer") )
+        dynamic_cast<VMeshRenderer *>(pComponent)->recreate();
 
     this->createCommandBuffers();
 }
@@ -332,8 +359,8 @@ void engine::VulkanTriangleApplication::cleanupSwapChain() noexcept(false) {
     this->_frameBufferCollection.cleanup();
     this->_drawCommandBufferCollection.free();
 
-    this->_cubeMeshRenderer.cleanupUniformBuffers();
-    this->_starMeshRenderer.cleanupUniformBuffers();
+    for ( auto * pComponent : this->_activeScene.componentsOfClass("VMeshRenderer") )
+        dynamic_cast<VMeshRenderer *>(pComponent)->cleanupUniformBuffers();
 
     this->_descriptorPool.cleanup();
 
@@ -482,8 +509,6 @@ const std::vector < uint16 > cubeIndices = {
         4,   6,  5,  7,  6,  4
 };
 
-float xRotateValue = 0.0f;
-float yRotateValue = 0.0f;
 bool left = false;
 bool right = false;
 bool up = false;
@@ -492,71 +517,50 @@ bool down = false;
 #include <chrono>
 #include <glm/gtc/matrix_transform.hpp>
 void engine::VulkanTriangleApplication::updateUniformBuffer(uint32 uniformBufferIndex) noexcept(false) {
-    auto & cubeCurrentBuffer = this->_cubeMeshRenderer.getMVPDescriptorBuffers()[ uniformBufferIndex ];
-
-    static auto startTime = std::chrono::high_resolution_clock::now();
-    auto currentTime = std::chrono::high_resolution_clock::now();
-
-    double scaleFactor = 1.3f;
-
     static float FOV = 45.0f;
-    engine::SUniformBufferObject UBO {
-        .model = glm::rotate (
+
+    auto view = glm::lookAt(
+            glm::vec3(2.0f, 2.0f, 2.0f),
+            glm::vec3(0.0f, 0.0f, 0.0f),
+            glm::vec3(0.0f, 0.0f, 1.0f)
+    );
+
+    auto projection = glm::perspective (
+            glm::radians ( FOV ),
+            this->_vulkanLogicalDevice.getSwapChain()->getImagesInfo().extent.width /
+            (float) this->_vulkanLogicalDevice.getSwapChain()->getImagesInfo().extent.height,
+            0.1f,
+            10.0f
+    );
+
+    glm::mat4 baseLocation (1.0f);
+
+    for ( auto * pEntity : this->_activeScene.entitiesOfClass("VGameObject") ) {
+        auto pGameObject = dynamic_cast < VGameObject * > (pEntity);
+        engine::SUniformBufferObject UBO {
+            .model = glm::rotate(
                 glm::rotate (
-                    glm::scale (
-                        glm::translate (
-                                glm::mat4 ( 1.0f ),
-                                glm::vec3 (0.0f, 0.0f, 0.0f)
-                            ),
-                            glm::vec3 ( scaleFactor, scaleFactor, scaleFactor )
+                    glm::rotate(
+                        glm::scale(
+                            glm::translate(baseLocation, pGameObject->transformPtr()->getLocation() ),
+                            pGameObject->transformPtr()->getScale()
+                        ),
+                        glm::radians(pGameObject->transformPtr()->getRotation().yaw()), glm::vec3(1.0f, 0.0f, 0.0f)
+                    ),
+                    glm::radians(pGameObject->transformPtr()->getRotation().pitch()), glm::vec3(0.0f, 1.0f, 0.0f)
                 ),
-                    xRotateValue * glm::radians (90.0f ),
-                    glm::vec3 ( 0.0f, 0.0f, 1.0f )
+                glm::radians(pGameObject->transformPtr()->getRotation().roll()), glm::vec3(0.0f, 0.0f, 1.0f)
             ),
-            yRotateValue * glm::radians ( 90.0f ),
-            glm::vec3 ( 0.0f, 1.0f, 0.0f )
-        ),
-//        .model = glm1::rotate( glm1::translate ( glm1::mat4 ( 1.0f ), glm1::vec3 ( std::sin ( time ) , 0.0f, 0.0f ) ), time * glm1::radians ( 90.0f ), glm1::vec3 (0.5f, 0.0f, 0.5f) ),
-        .view  = glm::lookAt( glm::vec3 ( 2.0f, 2.0f, 2.0f ) , glm::vec3( 0.0f, 0.0f, 0.0f ), glm::vec3 (0.0f, 0.0f, 1.0f) ),
-        .projection = glm::perspective (
-                glm::radians ( FOV ),
-                this->_vulkanLogicalDevice.getSwapChain()->getImagesInfo().extent.width /
-                (float) this->_vulkanLogicalDevice.getSwapChain()->getImagesInfo().extent.height,
-                0.1f,
-                10.0f
-        )
-    };
+            .view       = view,
+            .projection = projection
+        };
 
-    UBO.projection[1][1] *= -1; /// OPENGL - VULKAN diff
+        UBO.projection[1][1] *= -1;
 
-    cubeCurrentBuffer.load( & UBO, 1U );
-
-    auto & starBuffer = this->_starMeshRenderer.getMVPDescriptorBuffers()[ uniformBufferIndex ];
-
-    engine::SUniformBufferObject starUBO {
-        .model = glm::rotate( glm::scale (
-                glm::translate(
-                        glm::mat4 ( 1.0f ),
-                        glm::vec3 (0.0f, 1.0f, 0.0f)
-                ),
-                glm::vec3 ( 1.5f, 1.5f, 1.5f )
-                  ), (float) glfwGetTime() * glm::radians( 90.0f ), glm::vec3 ( 1.0f, 0.0f, 0.0f )
-        ),
-        .view  = glm::lookAt( glm::vec3 ( 2.0f, 2.0f, 2.0f ) , glm::vec3( 0.0f, 0.0f, 0.0f ), glm::vec3 (0.0f, 0.0f, 1.0f) ),
-        .projection = glm::perspective (
-                glm::radians ( FOV ),
-                this->_vulkanLogicalDevice.getSwapChain()->getImagesInfo().extent.width /
-                (float) this->_vulkanLogicalDevice.getSwapChain()->getImagesInfo().extent.height,
-                0.1f,
-                10.0f
-        )
-    };
-
-    starUBO.projection[1][1] *= -1;
-    starBuffer.load( & starUBO, 1U );
+        auto & currentBuffer = pGameObject->meshRendererPtr()->getMVPDescriptorBuffers()[ uniformBufferIndex ];
+        currentBuffer.load( & UBO, 1U );
+    }
 }
-
-
 
 void processInputCallback (GLFWwindow* window, int key, int scanCode, int action, int mods) {
     if ( action == GLFW_PRESS ) {
@@ -589,15 +593,25 @@ void processInputCallback (GLFWwindow* window, int key, int scanCode, int action
 }
 
 void engine::VulkanTriangleApplication::update() noexcept(false) {
+    auto pCube = dynamic_cast<VGameObject *>(this->_activeScene.getGameObjectByName("cube"));
+    if ( pCube == nullptr ) return;
+
     if ( left )
-        xRotateValue -= static_cast < float > (2.0 * this->_deltaTime);
+        pCube->transformPtr()->getRotation().rotate(VRotor::ROLL, 90.0f * static_cast<float>(this->_deltaTime));
+
     if ( right )
-        xRotateValue += static_cast < float > (2.0 * this->_deltaTime);
+        pCube->transformPtr()->getRotation().rotate(VRotor::ROLL, - 90.0f * static_cast<float>(this->_deltaTime));
+
 
     if ( up )
-        yRotateValue -= static_cast < float > (2.0 * this->_deltaTime);
+        pCube->transformPtr()->getRotation().rotate(VRotor::PITCH, 90.0f * static_cast<float>(this->_deltaTime));
+
     if ( down )
-        yRotateValue += static_cast < float > (2.0 * this->_deltaTime);
+        pCube->transformPtr()->getRotation().rotate(VRotor::PITCH, - 90.0f * static_cast<float>(this->_deltaTime));
+
+    auto pStar = dynamic_cast<VGameObject *>(this->_activeScene.getGameObjectByName("star"));
+
+    pStar->transformPtr()->getRotation().rotate(VRotor::ROLL, 180.0f * static_cast<float>(this->_deltaTime));
 }
 
 void engine::VulkanTriangleApplication::mainLoop() noexcept (false) {
@@ -643,25 +657,30 @@ void engine::VulkanTriangleApplication::createDepthBuffer() noexcept(false) {
 
 
 void engine::VulkanTriangleApplication::createConcurrentBuffers() noexcept(false) {
-    ENG_THROW_IF_NOT_SUCCESS (
-        this->_cubeMesh.setup(
-            this->_transferCommandPool,
-            * this->_vulkanQueueFamilyCollection,
-            cubeVertices,
-            cubeIndices
-        ),
-        ENG_STD_THROW("Cube Mesh Setup Error")
-    )
+    auto * pCube = this->_activeScene.getGameObjectByName("cube");
+    auto * pStar = this->_activeScene.getGameObjectByName("star");
 
-    ENG_THROW_IF_NOT_SUCCESS(
-        this->_starMesh.setup(
-            this->_transferCommandPool,
-            * this->_vulkanQueueFamilyCollection,
-            starVertices,
-            starIndices
-        ),
-        ENG_STD_THROW ("Star Mesh Setup Error")
-    )
+    if ( pCube != nullptr )
+        ENG_THROW_IF_NOT_SUCCESS (
+            pCube->meshPtr()->setup(
+                this->_transferCommandPool,
+                * this->_vulkanQueueFamilyCollection,
+                cubeVertices,
+                cubeIndices
+            ),
+            ENG_STD_THROW("Cube Mesh Setup Error")
+      )
+
+    if ( pStar != nullptr )
+        ENG_THROW_IF_NOT_SUCCESS(
+            pStar->meshPtr()->setup(
+                this->_transferCommandPool,
+                * this->_vulkanQueueFamilyCollection,
+                starVertices,
+                starIndices
+            ),
+            ENG_STD_THROW ("Star Mesh Setup Error")
+        )
 
     this->createUniformBuffers();
 }
@@ -680,29 +699,34 @@ void engine::VulkanTriangleApplication::createTextures() noexcept(false) {
 }
 
 void engine::VulkanTriangleApplication::createDescriptorSets() noexcept(false) {
-    ENG_THROW_IF_NOT_SUCCESS(
-        this->_cubeMeshRenderer.setup(
-                this->_transferCommandPool,
-                this->_descriptorPool,
-                this->_objectShader,
-                std::string(__TEXTURES_PATH__).append("container.jpg").c_str(),
-                this->_textureSampler,
-                * this->_vulkanQueueFamilyCollection
-        ),
-        ENG_STD_THROW("Mesh Renderer Create Failure")
-    )
+    auto * pCube = this->_activeScene.getGameObjectByName("cube");
+    auto * pStar = this->_activeScene.getGameObjectByName("star");
 
-    ENG_THROW_IF_NOT_SUCCESS(
-        this->_starMeshRenderer.setup(
-                this->_transferCommandPool,
-                this->_descriptorPool,
-                this->_objectShader,
-                std::string(__TEXTURES_PATH__).append("container2.png").c_str(),
-                this->_textureSampler,
-                * this->_vulkanQueueFamilyCollection
-        ),
-        ENG_STD_THROW("Mesh Renderer Create Failure")
-    )
+    if ( pCube != nullptr )
+        ENG_THROW_IF_NOT_SUCCESS(
+            pCube->meshRendererPtr()->setup(
+                    this->_transferCommandPool,
+                    this->_descriptorPool,
+                    this->_objectShader,
+                    std::string(__TEXTURES_PATH__).append("container.jpg").c_str(),
+                    this->_textureSampler,
+                    * this->_vulkanQueueFamilyCollection
+            ),
+            ENG_STD_THROW("Mesh Renderer Create Failure")
+        )
+
+    if ( pStar != nullptr )
+        ENG_THROW_IF_NOT_SUCCESS(
+            pStar->meshRendererPtr()->setup(
+                    this->_transferCommandPool,
+                    this->_descriptorPool,
+                    this->_objectShader,
+                    std::string(__TEXTURES_PATH__).append("container3.jpg").c_str(),
+                    this->_textureSampler,
+                    * this->_vulkanQueueFamilyCollection
+            ),
+            ENG_STD_THROW("Mesh Renderer Create Failure")
+        )
 }
 
 void engine::VulkanTriangleApplication::createDescriptorPool() noexcept(false) {
@@ -712,7 +736,7 @@ void engine::VulkanTriangleApplication::createDescriptorPool() noexcept(false) {
         descriptorTypes.push_back( type );
     }
 
-    uint32 objectCount = 2U; // star + cube
+    uint32 objectCount = static_cast<uint32>(this->_activeScene.entitiesOfClass("VGameObject").size());
 
     ENG_THROW_IF_NOT_SUCCESS (
         this->_descriptorPool.setup (
@@ -750,19 +774,19 @@ void engine::VulkanTriangleApplication::cleanup() noexcept (false) {
     this->_depthBuffer.cleanup();
     this->_frameBufferCollection.cleanup();
 
-    this->_cubeMeshRenderer.cleanup();
-    this->_starMeshRenderer.cleanup();
+    for ( auto * pComponent : this->_activeScene.componentsOfClass("VMeshRenderer") )
+        dynamic_cast<VMeshRenderer *>(pComponent)->cleanup();
 
     this->_textureSampler.cleanup();
-
     this->_descriptorPool.cleanup();
-
     this->_objectShader.cleanup();
 
-    this->_cubeMesh.free();
-    this->_cubeMesh.cleanup();
-    this->_starMesh.free();
-    this->_starMesh.cleanup();
+    for ( auto * pComponent : this->_activeScene.componentsOfClass("VMesh") ) {
+        auto * pMesh = dynamic_cast<VMesh *>(pComponent);
+
+        pMesh->free();
+        pMesh->cleanup();
+    }
 
     this->_vulkanLogicalDevice.cleanup();
 
@@ -793,35 +817,34 @@ void engine::VulkanTriangleApplication::createCommandBuffers() noexcept(false) {
 
     VulkanDeviceSize offsets [] = { 0 };
 
-    VVertexBuffer vertexBuffers [] = {
-            this->_cubeMesh.getVertexBuffer(),
-            this->_starMesh.getVertexBuffer()
-    };
+    auto gameObjects = this->_activeScene.entitiesOfClass("VGameObject");
 
-    VIndexBuffer indexBuffers [] = {
-            this->_cubeMesh.getIndexBuffer(),
-            this->_starMesh.getIndexBuffer()
-    };
+    auto vertexBuffers              = new VVertexBuffer[gameObjects.size()];
+    auto indexBuffers               = new VIndexBuffer[gameObjects.size()];
+    auto objectDescriptorSetHandles = new std::vector < VulkanDescriptorSet > [gameObjects.size()];
 
-    std::array < std::vector < VulkanDescriptorSet >, 2 > objectDescriptorSetHandles = {
-            this->_cubeMeshRenderer.getDescriptorSets().getDescriptorSetHandles(),
-            this->_starMeshRenderer.getDescriptorSets().getDescriptorSetHandles()
-//            this->_cubeDescriptorSetCollection.getDescriptorSetHandles(),
-//            this->_starDescriptorSetCollection.getDescriptorSetHandles()
-    };
+    for ( Index i = 0; auto * o : gameObjects ) {
+        auto * pGameObject = dynamic_cast<VGameObject *>(o);
+
+        vertexBuffers[i]                = pGameObject->meshPtr()->getVertexBuffer();
+        indexBuffers[i]                 = pGameObject->meshPtr()->getIndexBuffer();
+        objectDescriptorSetHandles[i]   = pGameObject->meshRendererPtr()->getDescriptorSets().getDescriptorSetHandles();
+
+        i++;
+    }
 
     std::vector < VulkanDescriptorSet * > descriptorSetHandles ( this->_drawCommandBufferCollection.getCommandBuffers().size());
     for ( uint32 i = 0; i < descriptorSetHandles.size(); i++ ) {
-        descriptorSetHandles[i]     = new VulkanDescriptorSet[2];
-        descriptorSetHandles[i][0]  = objectDescriptorSetHandles[0][i];
-        descriptorSetHandles[i][1]  = objectDescriptorSetHandles[1][i];
+        descriptorSetHandles[i]     = new VulkanDescriptorSet[gameObjects.size()];
+        for ( Index j = 0; j < gameObjects.size(); j++ )
+            descriptorSetHandles[i][j] = objectDescriptorSetHandles[j][i];
     }
 
     if ( this->_drawCommandBufferCollection.startRecord(
             this->_objectShader.getPipeline(),
             vertexBuffers,
             indexBuffers,
-            2U,
+            gameObjects.size(),
             offsets,
             1U,
             descriptorSetHandles.data(),
@@ -831,6 +854,10 @@ void engine::VulkanTriangleApplication::createCommandBuffers() noexcept(false) {
 
     for ( auto & handles : descriptorSetHandles )
         delete [] handles;
+
+    delete [] vertexBuffers;
+    delete [] indexBuffers;
+    delete [] objectDescriptorSetHandles;
 }
 
 void engine::VulkanTriangleApplication::autoPickPhysicalDevice() noexcept(false) {

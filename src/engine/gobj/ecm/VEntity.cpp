@@ -6,10 +6,17 @@
 
 uint64 engine::VEntity::_IDCounter = 1llu;
 
-engine::VEntity::VEntity(const VEntity * pParent) noexcept : _pParentEntity(pParent) {
-    if ( pParent != nullptr )
-        pParent->addChild(this);
+#include <scene/VScene.h>
+
+engine::VEntity::VEntity(VEntity const * pParent) noexcept : _pParentEntity(pParent) {
+    pParent->add(this);
 }
+
+engine::VEntity::VEntity(VScene * pScene) noexcept : _pScene(pScene), _pParentEntity(nullptr) {
+    pScene->add(this);
+}
+
+engine::VEntity::VEntity(uint64 ignoredIDConstructor) noexcept : _pParentEntity(nullptr), _pScene(nullptr), _ID(UINT64_MAX) {}
 
 auto engine::VEntity::siblings() const noexcept -> Array< VEntity * > {
     if ( this->_pParentEntity == nullptr )
@@ -24,7 +31,7 @@ auto engine::VEntity::siblings() const noexcept -> Array< VEntity * > {
     return parentChildren;
 }
 
-auto engine::VEntity::addComponent(VComponent * pComponent) noexcept -> bool {
+auto engine::VEntity::add(VComponent * pComponent) noexcept -> bool {
     if ( pComponent->hasTag(VComponent::DISTINCT) )
         for ( auto * p : this->_components )
             if ( p->hasTag(VComponent::DISTINCT) && p->className() == pComponent->className() )
@@ -32,12 +39,27 @@ auto engine::VEntity::addComponent(VComponent * pComponent) noexcept -> bool {
 
     this->_components.pushBack(pComponent);
     pComponent->_pParentEntity = this;
+
+    if ( this->_pScene != nullptr )
+        this->_pScene->index(pComponent);
+
     return true;
 }
 
-auto engine::VEntity::addChild(VEntity * pChild) const noexcept -> bool {
+auto engine::VEntity::add(VEntity * pChild) const noexcept -> bool {
     this->_children.pushBack(pChild);
     pChild->_pParentEntity = this;
+
+    if ( pChild->_pScene != this->_pScene ) {
+        if ( pChild->_pScene != nullptr )
+            pChild->_pScene->unIndex(pChild);
+
+        pChild->_pScene = this->_pScene;
+
+        if ( this->_pScene != nullptr )
+            this->_pScene->index(pChild, true);
+    }
+
     return true;
 }
 
@@ -69,6 +91,9 @@ auto engine::VEntity::toString() const noexcept -> String {
 }
 
 engine::VEntity::~VEntity() noexcept {
+    if ( this->_pScene != nullptr )
+        this->_pScene->unIndex( this );
+
     for ( auto * p : this->_components ) {
         p->_pParentEntity = nullptr;
         delete p;
@@ -78,14 +103,32 @@ engine::VEntity::~VEntity() noexcept {
         p->_pParentEntity = nullptr;
         delete p;
     }
+
+    this->_components.clear();
+    this->_children.clear();
 }
 
-auto engine::VEntity::removeComponent(VComponent * pComponent) noexcept -> bool {
-    return this->_components.removeFirst(pComponent);
+auto engine::VEntity::remove(VComponent * pComponent) noexcept -> bool {
+    if ( this->_components.removeFirst(pComponent) ) {
+        if ( this->_pScene != nullptr )
+            this->_pScene->unIndex(pComponent);
+        return true;
+    }
+
+    return false;
 }
 
-auto engine::VEntity::removeChild(VEntity * pChild) const noexcept -> bool {
-    return this->_children.removeFirst(pChild);
+auto engine::VEntity::remove(VEntity * pChild) const noexcept -> bool {
+    if ( this->_children.removeFirst(pChild) ) {
+        if ( this->_pScene != nullptr )
+            this->_pScene->unIndex(pChild, true);
+
+        pChild->_pParentEntity = nullptr;
+        pChild->_pScene = nullptr;
+        return true;
+    }
+
+    return false;
 }
 
 auto engine::VEntity::getComponentByClassName(const VComponent::ClassName & className) noexcept -> VComponent * {
@@ -134,4 +177,30 @@ auto engine::VEntity::getComponentsByClassName(const VComponent::ClassName & cla
             componentAddresses.pushBack(p);
 
     return componentAddresses;
+}
+
+void * engine::VEntity::operator new(std::size_t s) noexcept(false) {
+    return ::operator new(s);
+}
+
+void engine::VEntity::operator delete(void * pToDelete) noexcept(false) {
+    if ( pToDelete == nullptr ) return;
+
+    auto self = reinterpret_cast< VEntity * > (pToDelete);
+
+    if ( self->_pScene != nullptr ) {
+        if ( self->_pParentEntity == nullptr ) {
+            for ( auto & c : self->_children ) {
+                self->remove(c);
+                const_cast < VScene * > ( self->_pScene )->add(c);
+            }
+        } else {
+            for ( auto & c : self->_children ) {
+                self->remove(c);
+                const_cast < VEntity * > (self->_pParentEntity)->add(c);
+            }
+        }
+    }
+
+    ::operator delete(pToDelete);
 }

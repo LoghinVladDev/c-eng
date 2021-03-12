@@ -34,15 +34,18 @@
 #include <vkObj/instance/pipeline/shader/input/VUniformBuffer.h>
 #include <vkObj/instance/pipeline/shader/input/VDescriptorPool.h>
 #include <vkObj/instance/pipeline/shader/input/VDescriptorSet.h>
-#include <src/engine/gobj/model/VMesh.h>
+//#include <src/engine/gobj/model/VMesh.h>
 #include <VTexture.h>
 #include <VTextureSampler.h>
 #include <VDepthBuffer.h>
 #include <src/engine/gobj/shader/VShader.h>
 
 #include <vector>
-#include <src/engine/gobj/model/VMeshRenderer.h>
+//#include <src/engine/gobj/model/VMeshRenderer.h>
 
+#include <VGameObject.h>
+
+#include <scene/VScene.h>
 
 namespace engine {
 
@@ -76,8 +79,6 @@ namespace engine {
         VQueueFamilyCollection    * _vulkanQueueFamilyCollection        {nullptr};
         VLogicalDevice              _vulkanLogicalDevice;
 
-        std::vector <VQueueFamily>  _graphicsCapableQueueFamily;
-
         VShader                     _objectShader;
 
         VFrameBufferCollection      _frameBufferCollection;
@@ -92,25 +93,16 @@ namespace engine {
         VFenceCollection            _inFlightFences;
         VFenceCollection            _imagesInFlight;
 
-        VMesh                       _cubeMesh;
-        VMesh                       _starMesh;
-
-        VulkanDescriptorSetLayout   _descriptorSetLayoutSampler {};
-
         VDescriptorPool             _descriptorPool;
 
         VTextureSampler             _textureSampler;
 
         VDepthBuffer                _depthBuffer;
 
-        glm::mat4                   _cubeModel  { glm::mat4( 0.0f ) };
-        glm::mat4                   _starModel  { glm::mat4( 0.0f ) };
+        VScene                      _activeScene;
 
-        glm::mat4                   _projection { glm::mat4( 0.0f ) };
-        glm::mat4                   _view       { glm::mat4( 0.0f ) };
-
-        VMeshRenderer               _cubeMeshRenderer;
-        VMeshRenderer               _starMeshRenderer;
+//        VGameObject                 _cube;
+//        VGameObject                 _star;
 
         double                      _fpsTimer = 0.0;
         double                      _fpsRefreshTimer = __SHOW_FPS_EVERY_S;
@@ -160,10 +152,12 @@ namespace engine {
         void updateResolutionSettings() noexcept;
 
         static void frameBufferResizeCallback ( GLFWwindow*, [[maybe_unused]] int32, int32 );
+
+        auto createGameObjects () noexcept -> void;
     public:
         //// public_vars
-        constexpr static uint32 DEFAULT_WIDTH       = 800U;
-        constexpr static uint32 DEFAULT_HEIGHT      = 600U;
+        constexpr static uint32 DEFAULT_WIDTH       = 1024U;
+        constexpr static uint32 DEFAULT_HEIGHT      = 768U;
         constexpr static bool   VULKAN_EXT_CHECK    = _VK_CHECK_EXT;
         constexpr static bool   SHOW_FPS_CONSOLE    = true;
 

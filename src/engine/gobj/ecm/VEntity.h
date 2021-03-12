@@ -13,10 +13,14 @@
 
 namespace engine {
 
+    class VScene;
     class VEntity : public Object {
     private:
+        friend class VScene;
+    private:
         //// private variables
-        VEntity                 const * _pParentEntity {nullptr};
+        VEntity                 const * _pParentEntity  {nullptr};
+        VScene                  const * _pScene         {nullptr};
 
         /**
          * Components immutable
@@ -56,21 +60,43 @@ namespace engine {
         static auto nextID() noexcept -> uint64 { return VEntity::_IDCounter++; }
 
     protected:
-        explicit VEntity ( VEntity const * = nullptr ) noexcept;
+        explicit VEntity ( nullptr_t = nullptr ) noexcept : _pScene(nullptr), _pParentEntity(nullptr) {}
+
+        explicit VEntity ( VEntity const * ) noexcept;
+        explicit VEntity ( VScene * ) noexcept;
+
+        explicit VEntity ( uint64 ) noexcept;
 
     public:
+        using ClassName = String;
+
+        class RootEntityDeleteException : public std::exception {
+        public:
+            [[nodiscard]] auto what() const noexcept -> StringLiteral override {
+                return "Invalid delete operation. Cannot delete Entity placed at top-most level in Scene";
+            }
+        };
+
         //// public variables
 
         //// public functions
         ~VEntity() noexcept override;
 
-        virtual auto addComponent ( VComponent * ) noexcept -> bool;
-        virtual auto addChild ( VEntity * ) const noexcept -> bool;
+        [[nodiscard]] virtual auto className () const noexcept -> ClassName = 0;
 
-        virtual auto removeComponent ( VComponent * ) noexcept -> bool;
-        virtual auto removeChild ( VEntity * ) const noexcept -> bool;
+        static void * operator new(std::size_t) noexcept (false);
+        static void operator delete(void *) noexcept (false);
 
-        constexpr auto parent() const noexcept -> VEntity const * { return this->_pParentEntity; }
+        virtual auto add ( VComponent * ) noexcept -> bool;
+        virtual auto add ( VEntity * ) const noexcept -> bool;
+        virtual auto add ( nullptr_t ) const noexcept -> bool { return false; } // NOLINT(readability-convert-member-functions-to-static)
+
+        virtual auto remove ( VComponent * ) noexcept -> bool;
+        virtual auto remove ( VEntity * ) const noexcept -> bool;
+        virtual auto remove ( nullptr_t ) const noexcept -> bool { return false; } // NOLINT(readability-convert-member-functions-to-static)
+
+        constexpr auto parentPtr() const noexcept -> VEntity const * { return this->_pParentEntity; }
+        constexpr auto scenePtr() const noexcept -> VScene const * { return this->_pScene; }
 
         auto children () const noexcept -> Array < VEntity * > & { return this->_children; }
         auto siblings () const noexcept -> Array < VEntity * >;

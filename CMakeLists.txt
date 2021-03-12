@@ -187,6 +187,12 @@ if(Vulkan_FOUND)
             src/engine/gobj/ecm/VComponent.h
             src/engine/gobj/ecm/VEntity.cpp
             src/engine/gobj/ecm/VEntity.h
+
+            src/engine/gobj/VGameObject.cpp
+            src/engine/gobj/VGameObject.h
+
+            src/engine/gobj/scene/VScene.cpp
+            src/engine/gobj/scene/VScene.h
     )
 
 
@@ -266,6 +272,14 @@ if(Vulkan_FOUND)
             src/engine/gobj/scene/VScene.h
             src/engine/gobj/VGameObject.cpp
             src/engine/gobj/VGameObject.h
+
+            src/engine/gobj/transform/VTransform.cpp
+            src/engine/gobj/transform/VTransform.h
+
+            src/engine/gobj/model/VMesh.cpp
+            src/engine/gobj/model/VMesh.h
+            src/engine/gobj/model/VMeshRenderer.cpp
+            src/engine/gobj/model/VMeshRenderer.h
 
             src/engine/vulkan/vkObj/instance/pipeline/shader/input/VBuffer.cpp
             src/engine/vulkan/vkObj/instance/pipeline/shader/input/VBuffer.h

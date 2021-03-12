@@ -43,6 +43,7 @@ namespace engine {
 
         /// protected functions
         explicit VComponent ( Tags, VEntity * = nullptr ) noexcept;
+        explicit VComponent ( Tags, uint64 ) noexcept;
 
     public:
         class RootComponentDeleteException : public std::exception {

@@ -25,8 +25,10 @@ namespace engine {
 
         //// private functions
 
+        explicit VMesh ( uint64 ignoredIDConstructor ) noexcept : VComponent( VComponent::DISTINCT | VComponent::HAS_DEPENDENCY, ignoredIDConstructor ) { }
     public:
         //// public variables
+        const static VMesh EMPTY;
 
         //// public functions
         [[nodiscard]] auto toString () const noexcept -> String override {
