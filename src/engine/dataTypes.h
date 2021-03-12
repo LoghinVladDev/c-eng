@@ -5,6 +5,10 @@
 #ifndef ENG1_DATATYPES_H
 #define ENG1_DATATYPES_H
 
+/**
+ * Standard data types, with size in variable name
+ */
+
 [[maybe_unused]] typedef unsigned char uint8;
 [[maybe_unused]] typedef unsigned short uint16;
 [[maybe_unused]] typedef unsigned int uint32;

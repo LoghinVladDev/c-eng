@@ -6,10 +6,6 @@
 #ifndef ENG1_TYPES_H
 #define ENG1_TYPES_H
 
-//#ifndef _glfw3_h_
-//#include <GL/freeglut_std.h>
-//#endif
-
 #include <glm/glm.hpp>
 
 #include <engStdDefs.h>

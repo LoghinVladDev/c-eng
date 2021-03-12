@@ -35,6 +35,10 @@ static void queueFamilyTests ( const engine::VQueueFamilyCollection & collection
     }
 #endif
 
+/**
+ * Do some queue reservation - free tests
+ */
+
 #ifndef NDEBUG
     collection.debugPrintQueueFamiliesReservations( std::cout );
 #endif
@@ -81,70 +85,67 @@ static void queueFamilyTests ( const engine::VQueueFamilyCollection & collection
 #endif
 void engine::VulkanTriangleApplication::setupDebugMessenger() noexcept (false) {
 
+    /// if validation layers are not enabled, do not setup messenger
     if ( ! enableValidationLayers ) return;
 
     VulkanResult res;
 
-    if( ( res = this->_vulkanMessenger.setup ( & this->_vulkanInstance ) ) != VK_SUCCESS ) {
+    if( ( res = this->_vulkanMessenger.setup ( & this->_vulkanInstance ) ) != VK_SUCCESS )
         throw std::runtime_error("debug messenger setup failure : " + engine::VStandardUtils::to_string(res));
-    }
 }
 #if !defined(_MSC_VER)
 #pragma clang diagnostic pop
 #endif
 
 void engine::VulkanTriangleApplication::initSettings() const noexcept {
-    auto resolution = engine::ResolutionSetting( this->_width, this->_height ); //// Create Resolution Setting based on current resolution from Class Variables
+    auto resolution = engine::ResolutionSetting( this->_width, this->_height ); /// Create Resolution Setting based on current resolution from Class Variables
 
-    engine::SettingsSharedContainer::getInstance().put( & resolution ); //// Save Resolution for reuse later in other classes
+    engine::SettingsSharedContainer::getInstance().put( & resolution ); /// Save Resolution for reuse later in other classes
 }
 
 void engine::VulkanTriangleApplication::updateResolutionSettings() noexcept {
     int width = 0, height = 0;
-    glfwGetFramebufferSize( this->_window, & width, & height );
-    while ( width == 0 || height == 0 ) {
+    glfwGetFramebufferSize( this->_window, & width, & height ); // get current resolution
+    while ( width == 0 || height == 0 ) { // while window is too small to render, acquire resolution
         glfwGetFramebufferSize( this->_window, & width, & height );
         glfwWaitEvents();
     }
 
     auto resolution = engine::ResolutionSetting( width, height );
 
-    engine::SettingsSharedContainer::getInstance().put( & resolution );
-}
-
-void engine::VulkanTriangleApplication::createDescriptorSetLayout() noexcept(false) {
+    engine::SettingsSharedContainer::getInstance().put( & resolution ); //update resolution
 }
 
 void engine::VulkanTriangleApplication::run() noexcept (false) {
-    this->initSettings();                   //// initialisation of settings ( resolution ... )
-    this->initWindow();                     //// creation of window context
-    this->initVulkan();                     //// creation of vulkan instance
-    this->createShaderModules();            //// creation of shaders - Deprecated. Will be built by Precompiler
-    this->createDescriptorSetLayout();      //// creation of layout of descriptors for CPU-GPU data - Deprecated. Will be build by Precompiler
-    this->createGraphicsPipeline();         //// creation of graphical pipeline - A single Shader - ( GPU - queue - swapchain - screen )
-    this->createCommandPool();              //// creation of command pool - any draw commands, allocated from a pool ( cached on gpu )
-    this->createDepthBuffer();              //// creation of depth buffer - so that objects do not overlap. Objects closer to the camera will be rendered first
-    this->createFrameBuffers();             //// creation of frame buffers - drawable buffers
-    this->createTextures();                 //// creation of texture objects - GPU data
-    this->createGameObjects();              //// creation of EC Game Objects
-    this->createBuffers();                  //// creation of Data Buffers - GPU - Vertex + Index + Uniform.
-    this->createCommandBuffers();           //// creation of command buffers - GPU draw commands, pre-recorder for optimisation
-    this->freeStagingBuffers();             //// free of staging buffers - copy buffers for CPU-GPU. Deprecated
-    this->createSynchronizationElements();  //// creation of CPU-GPU sync elements - semaphores, fences, barriers
-    this->mainLoop();                       //// start of MVC application
-    this->cleanup();                        //// cleanup of all data created
+    this->initSettings();                   /// initialisation of settings ( resolution ... )
+    this->initWindow();                     /// creation of window context
+    this->initVulkan();                     /// creation of vulkan instance
+    this->createShaderModules();            /// creation of shaders - Deprecated. Will be built by Precompiler
+    this->createDescriptorSetLayout();      /// creation of layout of descriptors for CPU-GPU data - Deprecated. Will be build by Precompiler
+    this->createGraphicsPipeline();         /// creation of graphical pipeline - A single Shader - ( GPU - queue - swapchain - screen )
+    this->createCommandPool();              /// creation of command pool - any draw commands, allocated from a pool ( cached on gpu )
+    this->createDepthBuffer();              /// creation of depth buffer - so that objects do not overlap. Objects closer to the camera will be rendered first
+    this->createFrameBuffers();             /// creation of frame buffers - drawable buffers
+    this->createTextures();                 /// creation of texture objects - GPU data
+    this->createGameObjects();              /// creation of EC Game Objects
+    this->createBuffers();                  /// creation of Data Buffers - GPU - Vertex + Index + Uniform.
+    this->createCommandBuffers();           /// creation of command buffers - GPU draw commands, pre-recorder for optimisation
+    this->freeStagingBuffers();             /// free of staging buffers - copy buffers for CPU-GPU. Deprecated
+    this->createSynchronizationElements();  /// creation of CPU-GPU sync elements - semaphores, fences, barriers
+    this->mainLoop();                       /// start of MVC application
+    this->cleanup();                        /// cleanup of all data created
 }
 
 void processInputCallback (GLFWwindow*, int, int, int, int);
 
 inline void engine::VulkanTriangleApplication::initWindow() noexcept (false) {
     if(glfwInit() == GLFW_FALSE) {
-        throw engine::EngineVulkanTestException("GLFW Init failure"); //// if GLFW could not initialise, we cannot draw on a window
+        throw engine::EngineVulkanTestException("GLFW Init failure"); /// if GLFW could not initialise, we cannot draw on a window
     }
 
-    glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API); //// No OpenGL API, Vulkan is not self-configurable
+    glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API); /// No OpenGL API, Vulkan is not self-configurable
 
-    this->_window = glfwCreateWindow( //// Create Window from GLFW
+    this->_window = glfwCreateWindow( /// Create Window from GLFW
         this->_width,
         this->_height,
         VulkanTriangleApplication::DEFAULT_TITLE,
@@ -152,9 +153,9 @@ inline void engine::VulkanTriangleApplication::initWindow() noexcept (false) {
         nullptr
     );
 
-    glfwSetWindowUserPointer( this->_window, this ); //// Enable Cursor Interaction
-    glfwSetFramebufferSizeCallback( this->_window, engine::VulkanTriangleApplication::frameBufferResizeCallback ); //// Set Window Resize Callback
-    glfwSetKeyCallback( this->_window, processInputCallback ); //// Set Keyboard Callback
+    glfwSetWindowUserPointer( this->_window, this ); /// Enable Cursor Interaction
+    glfwSetFramebufferSizeCallback( this->_window, engine::VulkanTriangleApplication::frameBufferResizeCallback ); /// Set Window Resize Callback
+    glfwSetKeyCallback( this->_window, processInputCallback ); /// Set Keyboard Callback
 }
 
 void engine::VulkanTriangleApplication::createSurface() noexcept(false) {
@@ -180,7 +181,7 @@ static inline std::vector < const engine::VQueueFamily* > internalGatherGraphics
 #pragma ide diagnostic ignored "UnreachableCode"
 #endif
 inline void engine::VulkanTriangleApplication::initVulkan() noexcept (false) {
-    VExtensionCollection availableExtensions = VExtensionCollection::getAllAvailableExtensions(); //// Acquire supported Vulkan SDK Extensions
+    VExtensionCollection availableExtensions = VExtensionCollection::getAllAvailableExtensions(); /// Acquire supported Vulkan SDK Extensions
 
 #ifndef NDEBUG
     if( VulkanTriangleApplication::VULKAN_EXT_CHECK ) // in debug, print extensions
@@ -213,9 +214,9 @@ inline void engine::VulkanTriangleApplication::initVulkan() noexcept (false) {
     }
 
 
-    this->setupDebugMessenger(); //// Setup a Validation Layer Violation Error Callback
-    this->createSurface();  //// Create a printable surface on the window for ImageBuffers
-    this->autoPickPhysicalDevice(); //// Select Best GPU for the Engine
+    this->setupDebugMessenger(); /// Setup a Validation Layer Violation Error Callback
+    this->createSurface();  /// Create a printable surface on the window for ImageBuffers
+    this->autoPickPhysicalDevice(); /// Select Best GPU for the Engine
 
     std::cout << "Most Suitable GPU : \n";
 
@@ -226,37 +227,37 @@ inline void engine::VulkanTriangleApplication::initVulkan() noexcept (false) {
     /// Acquire Queue Families
     this->_vulkanQueueFamilyCollection = new VQueueFamilyCollection ( this->_vulkanPhysicalDevice, &this->_vulkanSurface );
 
-    //// Do basic tests for Queue Allocation
+    /// Do basic tests for Queue Allocation
     queueFamilyTests( * this->_vulkanQueueFamilyCollection );
 
     engine::VLogicalDevice::VLogicalDeviceFactory::enableExceptions();
     engine::VLogicalDevice::VLogicalDeviceFactory deviceFactory; /// Factory For Logical Device. Logical Device =
-    ////                                              Physical Device (GPU) +
-    ////                                              Queues Interface (CPU-GPU buses)
-    ////                                              Swapchain Interface (GPU - Surface buses)
+    ///                                              Physical Device (GPU) +
+    ///                                              Queues Interface (CPU-GPU buses)
+    ///                                              Swapchain Interface (GPU - Surface buses)
 
-    //// If using validationLayers, build Logical Device + Validation Layers. We need the callbacks on the GPU
+    /// If using validationLayers, build Logical Device + Validation Layers. We need the callbacks on the GPU
     if( enableValidationLayers )
         deviceFactory.withValidationLayers( this->_vulkanValidationLayerCollection );
 
-    //// Gather CPU-GPU Buses capable of
+    /// Gather CPU-GPU Buses capable of
     ///         Graphic Transfers ( Vertex, Index, Texture, Compression etc )
     ///         Present Transfers ( GPU Image -> Window Surface )
     auto queues = internalGatherGraphicsAndPresentQueueFamilies ( * this->_vulkanQueueFamilyCollection );
 
     if( queues.size() == 1 ) { // graphics & present queues in same family
-    //// if only one queue capable of Graphics + Present, use exclusivity of memory for one queue family
+    /// if only one queue capable of Graphics + Present, use exclusivity of memory for one queue family
         deviceFactory.addQueue(*queues[0], 1.0f);
         deviceFactory.addQueue(* this->_vulkanQueueFamilyCollection->getTransferCapableQueueFamilies()[0], 1.0f);
     }
     else {
-    //// if one graphics and one present queue have been found, use concurrency of memory for both queue families
+    /// if one graphics and one present queue have been found, use concurrency of memory for both queue families
         deviceFactory.addQueue( * queues[0], 1.0f );
         deviceFactory.addQueue( * queues[1], 1.0f );
         deviceFactory.addQueue(* this->_vulkanQueueFamilyCollection->getTransferCapableQueueFamilies()[0], 1.0f);
     }
 
-    //// Link to-be-created SwapChain to the Surface Created Previously
+    /// Link to-be-created SwapChain to the Surface Created Previously
     deviceFactory.createSwapChainToSurface( & this->_vulkanSurface );
 //
     this->_vulkanLogicalDevice = deviceFactory.build( this->_vulkanPhysicalDevice ); /// Build Logical Device
@@ -287,19 +288,15 @@ inline void engine::VulkanTriangleApplication::initVulkan() noexcept (false) {
     }
 }
 
-void engine::VulkanTriangleApplication::freeStagingBuffers() noexcept(false) {
-
-}
-
 void engine::VulkanTriangleApplication::createSynchronizationElements() noexcept(false) {
-    //// A semaphore for image draw finish per frame buffer
+    /// A semaphore for image draw finish per frame buffer
     if ( this->_imageAvailableSemaphores.setup( this->_vulkanLogicalDevice, MAX_FRAMES_IN_FLIGHT ) != VulkanResult::VK_SUCCESS )
         throw std::runtime_error ( "Semaphore Creation Failure : Image Availability" );
-    //// A semaphore for each render on surface per each frame buffer
+    /// A semaphore for each render on surface per each frame buffer
     if ( this->_renderFinishedSemaphores.setup( this->_vulkanLogicalDevice, MAX_FRAMES_IN_FLIGHT ) != VulkanResult::VK_SUCCESS )
         throw std::runtime_error ( "Semaphore Creation Failure : Render Finish" );
 
-    //// Fences for synchronising semaphores and Logical Device busy scheduling. One per frame
+    /// Fences for synchronising semaphores and Logical Device busy scheduling. One per frame
     if ( this->_inFlightFences.setup( this->_vulkanLogicalDevice, MAX_FRAMES_IN_FLIGHT, engine::VFence::START_SIGNALED ) != VulkanResult::VK_SUCCESS )
         throw std::runtime_error ( "Fence Creation Failure" );
     this->_imagesInFlight.resize( static_cast<uint32>(this->_vulkanLogicalDevice.getSwapChain()->getImages().size()) );
@@ -363,7 +360,7 @@ void engine::VulkanTriangleApplication::recreateSwapChain() noexcept(false) {
     this->createCommandBuffers();
 }
 
-void engine::VulkanTriangleApplication::cleanupSwapChain() noexcept(false) {
+void engine::VulkanTriangleApplication::cleanupSwapChain() noexcept {
     this->_depthBuffer.cleanup();
     this->_frameBufferCollection.cleanup();
     this->_drawCommandBufferCollection.free();
@@ -380,7 +377,7 @@ void engine::VulkanTriangleApplication::cleanupSwapChain() noexcept(false) {
 
 
 
-void engine::VulkanTriangleApplication::frameBufferResizeCallback(GLFWwindow * pWindow, [[maybe_unused]] int32 width, [[maybe_unused]] int32 height) {
+void engine::VulkanTriangleApplication::frameBufferResizeCallback(GLFWwindow * pWindow, [[maybe_unused]] int32 width, [[maybe_unused]] int32 height) noexcept {
     auto * baseObj = reinterpret_cast< engine::VulkanTriangleApplication * > ( glfwGetWindowUserPointer( pWindow ) );
     baseObj->_framebufferResized = true;
 }
@@ -525,7 +522,7 @@ bool down = false;
 
 #include <chrono>
 #include <glm/gtc/matrix_transform.hpp>
-void engine::VulkanTriangleApplication::updateUniformBuffer(uint32 uniformBufferIndex) noexcept(false) {
+void engine::VulkanTriangleApplication::updateUniformBuffer(uint32 uniformBufferIndex) noexcept {
     static float FOV = 45.0f;
 
     auto view = glm::lookAt(
@@ -541,6 +538,8 @@ void engine::VulkanTriangleApplication::updateUniformBuffer(uint32 uniformBuffer
             0.1f,
             10.0f
     );
+
+    projection[1][1] *= -1;
 
     glm::mat4 baseLocation (1.0f);
 
@@ -564,8 +563,6 @@ void engine::VulkanTriangleApplication::updateUniformBuffer(uint32 uniformBuffer
             .projection = projection
         };
 
-        UBO.projection[1][1] *= -1;
-
         auto & currentBuffer = pGameObject->meshRendererPtr()->getMVPDescriptorBuffers()[ uniformBufferIndex ];
         currentBuffer.load( & UBO, 1U );
     }
@@ -573,12 +570,10 @@ void engine::VulkanTriangleApplication::updateUniformBuffer(uint32 uniformBuffer
 
 void processInputCallback (GLFWwindow* window, int key, int scanCode, int action, int mods) {
     if ( action == GLFW_PRESS ) {
-        if ( key == GLFW_KEY_A ) {
+        if ( key == GLFW_KEY_A )
             left = true;
-        }
-        if ( key == GLFW_KEY_D ) {
+        if ( key == GLFW_KEY_D )
             right = true;
-        }
 
         if ( key == GLFW_KEY_W )
             up = true;
@@ -586,22 +581,19 @@ void processInputCallback (GLFWwindow* window, int key, int scanCode, int action
         if ( key == GLFW_KEY_S )
             down = true;
     } else if ( action == GLFW_RELEASE ) {
-        if ( key == GLFW_KEY_A ) {
+        if ( key == GLFW_KEY_A )
             left = false;
-        }
-        if ( key == GLFW_KEY_D ) {
+        if ( key == GLFW_KEY_D )
             right = false;
-        }
 
         if ( key == GLFW_KEY_W )
             up = false;
-
         if ( key == GLFW_KEY_S )
             down = false;
     }
 }
 
-void engine::VulkanTriangleApplication::update() noexcept(false) {
+void engine::VulkanTriangleApplication::update() noexcept {
     auto pCube = dynamic_cast<VGameObject *>(this->_activeScene.getGameObjectByName("cube"));
     if ( pCube == nullptr ) return;
 
@@ -636,12 +628,15 @@ void engine::VulkanTriangleApplication::mainLoop() noexcept (false) {
         this->_fpsTimer += this->_deltaTime;
 
         if ( this->_fpsTimer >= this->_fpsRefreshTimer ) {
-            if ( VulkanTriangleApplication::SHOW_FPS_CONSOLE )
-                std::cout << "FPS : " << (1.0 / this->_deltaTime) << '\n';
+            if ( VulkanTriangleApplication::SHOW_FPS_CONSOLE ) {
+//                std::cout << "FPS : " << (1.0 / this->_deltaTime) << '\n';
+                auto rot = this->_activeScene.getGameObjectByName("cube")->transformPtr()->getRotation();
+                std::cout << "(yaw = " << rot.yaw() << ", pitch = " << rot.pitch() << ", roll = " << rot.roll() << ")\n";
+            }
             this->_fpsTimer = 0.0;
         }
     }
-    vkDeviceWaitIdle( this->_vulkanLogicalDevice.data() ); //// Wait until GPU draw Task is finished before closing
+    vkDeviceWaitIdle( this->_vulkanLogicalDevice.data() ); /// Wait until GPU draw Task is finished before closing
 }
 
 void engine::VulkanTriangleApplication::createBuffers() noexcept(false) {
@@ -772,6 +767,7 @@ void engine::VulkanTriangleApplication::createUniformBuffers() noexcept(false) {
 }
 
 void engine::VulkanTriangleApplication::createExclusiveBuffers() noexcept(false) {
+    throw std::runtime_error("Exclusive Buffer Objects not Implemented");
     this->createUniformBuffers();
 }
 
@@ -779,7 +775,7 @@ void engine::VulkanTriangleApplication::createExclusiveBuffers() noexcept(false)
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "Simplify"
 #endif
-void engine::VulkanTriangleApplication::cleanup() noexcept (false) {
+void engine::VulkanTriangleApplication::cleanup() noexcept {
     /**
      * Free and cleanup objects in reverse allocation + creation order
      */
@@ -824,7 +820,7 @@ void engine::VulkanTriangleApplication::cleanup() noexcept (false) {
 }
 
 void engine::VulkanTriangleApplication::createCommandPool() noexcept(false) {
-    //// Create Two Command Pools. One for Drawing, One for Transfer to Screen
+    /// Create Two Command Pools. One for Drawing, One for Transfer to Screen
     if ( this->_commandPool.setup( this->_vulkanLogicalDevice ) != VulkanResult::VK_SUCCESS )
         throw std::runtime_error ( "Command Pool Creation Error" );
     if ( this->_transferCommandPool.setup( this->_vulkanLogicalDevice, this->_vulkanLogicalDevice.getFirstTransferQueuePtr()->getQueueFamily() ) != VulkanResult::VK_SUCCESS )
@@ -846,7 +842,7 @@ void engine::VulkanTriangleApplication::createCommandBuffers() noexcept(false) {
 
     auto gameObjects = this->_activeScene.entitiesOfClass("VGameObject");
 
-    //// Input Data
+    /// Input Data
     /**
      * Vertices of Objects - vertexBuffers
      * Indices of Vertices - Order of line drawing. - indexBuffers
@@ -921,10 +917,6 @@ void engine::VulkanTriangleApplication::autoPickPhysicalDevice() noexcept(false)
     this->_vulkanPhysicalDevice = ( * bestDevice );
 }
 
-void engine::VulkanTriangleApplication::createShaderModules() noexcept(false) {
-
-}
-
 void engine::VulkanTriangleApplication::createGraphicsPipeline() noexcept(false) {
     VShaderCompiler compiler; /// Create a Precompiler
 
@@ -943,7 +935,7 @@ void engine::VulkanTriangleApplication::createGraphicsPipeline() noexcept(false)
 }
 
 void engine::VulkanTriangleApplication::createFrameBuffers() noexcept(false) {
-    //// Create Frame Buffers - Images that will be swapped in flight, used by Double or Triple Buffering ( currently enabled - Triple )
+    /// Create Frame Buffers - Images that will be swapped in flight, used by Double or Triple Buffering ( currently enabled - Triple )
     if ( this->_frameBufferCollection.setup ( this->_objectShader.getRenderPassPtr(), & this->_depthBuffer ) != VulkanResult::VK_SUCCESS )
         throw std::runtime_error ( "Frame Buffers Creation Failure" );
 }
