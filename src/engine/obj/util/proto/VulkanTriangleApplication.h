@@ -47,15 +47,35 @@
 
 namespace engine {
 
+    /**
+     * @class engine::EngineVulkanTestException, inherits std::exception
+     *
+     * @brief Exception type thrown when an engine internal test fails
+     */
     class EngineVulkanTestException : public std::exception {
     private:
+        /// Exception message
         std::string message = "Exception thrown!";
     public:
+        /**
+         * @brief Constructor with message
+         *
+         * @param msg : std::string cref = message to be attached to exception
+         *
+         * @exceptsafe
+         */
         [[maybe_unused]] explicit EngineVulkanTestException(std::string const & msg) noexcept {
             this->message = msg;
         }
 
-        [[nodiscard]] const char * what() const noexcept override {
+        /**
+         * @brief getter for the Exception Message
+         *
+         * @exceptsafe
+         *
+         * @return StringLiteral = Exception Message
+         */
+        [[nodiscard]] auto what() const noexcept -> StringLiteral override {
             return this->message.c_str();
         }
     };
@@ -143,208 +163,295 @@ namespace engine {
 
         /**
          * @brief initialisation of settings ( resolution ... )
+         *
          * @exceptsafe
          */
-        void initSettings() const noexcept;
+        auto initSettings() const noexcept -> void;
 
         /**
          * @brief creation of window context
-         * @throws engine::EngineVulkanTestException
+         *
+         * @throws engine::EngineVulkanTestException if GLFW could not initialise
          */
-        void initWindow() noexcept(false);
+        auto initWindow() noexcept(false) -> void;
 
         /**
          * @brief creation of vulkan instance
-         * @throws std::runtime_error
+         *
+         * @throws std::runtime_error if
+         *      enableValidationLayers == true AND (
+         *          requested layers are not available OR
+         *          failed to create vulkan instance with layers
+         *      ) OR
+         *      failed to create vulkan instance without layers
          */
-        void initVulkan() noexcept(false);
+        auto initVulkan() noexcept(false) -> void;
 
         /**
          * @brief start of MVC application
-         * @brief std::runtime_error
+         *
+         * @throws std::runtime_error if
+         *      drawImage throws exception
          */
-        void mainLoop() noexcept(false);
+        auto mainLoop() noexcept(false) -> void;
 
         /**
          * @brief cleanup of all data created
+         *
          * @exceptsafe
          */
-        void cleanup() noexcept;
+        auto cleanup() noexcept -> void;
 
         /**
          * @brief Periodic call per frame for each object
+         *
          * @exceptsafe
          */
-        void update() noexcept;
+        auto update() noexcept -> void;
 
         /**
          * @brief Periodic call to draw a free image
-         * @throws std::runtime_error
+         *
+         * @throws std::runtime_error if
+         *      Cannot Acquire Image from SwapChain OR
+         *      Submit Draw Command to GPU fails OR
+         *      Image Present to Surface fails
          */
-        void drawImage() noexcept (false);
+        auto drawImage() noexcept (false) -> void;
 
         /**
          * @brief creation of shaders - Deprecated. Will be built by Precompiler
+         *
          * @deprecated
+         *
          * @exceptsafe
          */
-        inline void createShaderModules () noexcept {}
+        inline auto createShaderModules () noexcept -> void {}
 
         /**
          * @brief creation of command pool - any draw commands, allocated from a pool ( cached on gpu )
-         * @throws std::runtime_error
+         *
+         * @throws std::runtime_error if
+         *      Command Pool cannot be created
+         *      Command Pool Dedicated for transfers cannot be created
          */
-        void createCommandPool() noexcept(false);
+        auto createCommandPool() noexcept(false) -> void;
 
         /**
          * @brief  creation of command buffers - GPU draw commands, pre-recorder for optimisation
-         * @throws std::runtime_error
+         *
+         * One Draw Command is Ideally created for one Shader Pipeline, containing all objects
+         * rendered with that Shader
+         *
+         * Worst case : one Draw Buffer per Object
+         *
+         * @throws std::runtime_error if
+         *      Cannot allocate Command Buffers in Command Pool
+         *      Cannot record Command Buffers
          */
-        void createCommandBuffers() noexcept (false);
+        auto createCommandBuffers() noexcept (false) -> void;
 
         /**
          * @brief creation of CPU-GPU sync elements - semaphores, fences, barriers
-         * @throws std::runtime_error
+         *
+         * @throws std::runtime_error if
+         *      Semaphore Collection creation for Image Availability fails OR
+         *      Semaphore Collection creation for Render Finishing fails OR
+         *      Fence Collection creation for in flight fences fails
          */
-        void createSynchronizationElements () noexcept (false);
+        auto createSynchronizationElements () noexcept (false) -> void;
 
         /**
          * @brief creation of frame buffers - drawable buffers
-         * @throws std::runtime_error
+         *
+         * @throws std::runtime_error if
+         *      Frame Buffers cannot be created
          */
-        void createFrameBuffers () noexcept (false);
+        auto createFrameBuffers () noexcept (false) -> void;
 
         /**
          * @deprecated
+         *
          * @brief creation of layout of descriptors for CPU-GPU data - Deprecated. Will be build by Precompiler
+         *
          * @exceptsafe
          */
-        inline void createDescriptorSetLayout() noexcept {}
+        inline auto createDescriptorSetLayout() noexcept -> void {}
 
         /**
          * @brief creation of graphical pipeline - A single Shader - ( GPU - queue - swapchain - screen )
-         * @throws std::runtime_error
+         *
+         * @throws std::runtime_error if
+         *      Shader Creation fails
          */
-        void createGraphicsPipeline() noexcept (false);
+        auto createGraphicsPipeline() noexcept (false) -> void;
 
         /**
          * @brief Create a printable surface on the window for FrameBuffers
-         * @throws std::runtime_error
+         *
+         * @throws std::runtime_error if
+         *      Surface could not be created
          */
-        void createSurface() noexcept (false);
+        auto createSurface() noexcept (false) -> void;
 
         /**
-         * @brief creation of texture objects - GPU data
-         * @throws std::runtime_error
+         * @brief creation of texture sampler - GPU filter and acquisition tool for images
+         *
+         * @throws std::runtime_error if
+         *      Texture Sampler fails to create
          */
-        void createTextures() noexcept (false);
+        auto createTextureSampler () noexcept (false) -> void;
 
         /**
          * @brief Setup a Validation Layer Violation Error Callback
-         * @throws std::runtime_error
+         *
+         * @throws std::runtime_error if
+         *      Messenger Creation Fails
          */
-        void setupDebugMessenger() noexcept (false);
+        auto setupDebugMessenger() noexcept (false) -> void;
 
         /**
          * @brief Select Best GPU for the Engine
-         * @throws std::runtime_error
+         *
+         * @throws std::runtime_error if
+         *      no GPU than can support Vulkan is found
          */
-        void autoPickPhysicalDevice() noexcept (false);
+        auto autoPickPhysicalDevice() noexcept (false) -> void;
 
         /**
          * @brief Will recreate swapchain for GPU
+         *
          * Recreation Occurs each time it is required
          * Recreation Triggers : Initial Creation, Window Resized, Pipeline Changed
-         * @throws std::runtime_error
+         *
+         * @throws std::runtime_error if
+         *      SwapChain on GPU could not recreate itself OR
+         *      shader and pipeline recreation fails OR
+         *      recreation of depth buffer fails OR
+         *      recreation of frame buffers fails OR
+         *      recreation of descriptors fails OR
+         *      recreation of command buffers fails
          */
-        void recreateSwapChain () noexcept (false);
+        auto recreateSwapChain () noexcept (false) -> void;
 
         /**
          * @brief creation of depth buffer
+         *
          * Depth Buffering/Testing - objects do not overlap. Objects closer to the camera will be rendered first
-         * @throws std::runtime_error
+         *
+         * @throws std::runtime_error if
+         *      Depth Buffer Creation Fails
          */
-        void createDepthBuffer () noexcept (false);
+        auto createDepthBuffer () noexcept (false) -> void;
 
         /**
          * @brief creation of Data Buffers - GPU - Vertex + Index + Uniform
-         * @throws std::runtime_error
+         *
+         * @throws std::runtime_error if
+         *      createExclusiveBuffers() throws OR
+         *      createConcurrentBuffers() throws
          */
-        void createBuffers () noexcept (false);
+        auto createBuffers () noexcept (false) -> void;
 
         /**
          * @brief creation of Data Buffers with Exclusive Memory Usage
+         *
          * Used when one Queue Family is available capable of both Graphic and Present Transportation
+         *
          * @throws std::runtime_error
+         *      always. Not Implemented
          */
-        void createExclusiveBuffers () noexcept (false);
+        auto createExclusiveBuffers () noexcept (false) -> void;
 
         /**
          * @brief  creation of Data Buffers with Concurrent Memory Usage
+         *
          * Used when multiple Queue Families are used, each capable of a different task - need access to same memory
-         * @throws std::runtime_error
+         *
+         * @throws std::runtime_error if
+         *      A Mesh fails to be loaded onto GPU
          */
-        void createConcurrentBuffers () noexcept (false);
+        auto createConcurrentBuffers () noexcept (false) -> void;
 
         /**
          * @brief creation of Data Buffers with CPU-GPU memory sharing
+         *
          * Examples : Model View Projection Matrix, Texture
-         * @throws std::runtime_error
+         *
+         * @throws std::runtime_error if
+         *      createDescriptorPool () throws OR
+         *      createDescriptorSets () throws
          */
-        void createUniformBuffers () noexcept (false);
+        auto createUniformBuffers () noexcept (false) -> void;
 
         /**
          * @brief creation of Descriptor Pool
+         *
          * Memory Area for Bindings and Location for Buffers sent to GPU
-         * @throws std::runtime_error
+         *
+         * @throws std::runtime_error if
+         *      Descriptor Pool fails to create
          */
-        void createDescriptorPool() noexcept (false);
+        auto createDescriptorPool() noexcept (false) -> void;
 
         /**
          * @brief creation of Descriptor Sets
+         *
          * Bindings for one Object's Data sent to GPU
-         * @throws std::runtime_error
+         *
+         * @throws std::runtime_error if
+         *      One Mesh Renderer fails to create
          */
-        void createDescriptorSets() noexcept (false);
+        auto createDescriptorSets() noexcept (false) -> void;
 
         /**
          * @brief update of Uniform Buffer assigned for current image with object data
+         *
          * @param uniformBufferIndex : uint32 = index of assigned UniformBuffer for FrameBuffer
+         *
          * @exceptsafe
          */
-        void updateUniformBuffer  ( uint32 ) noexcept;
+        auto updateUniformBuffer  ( uint32 ) noexcept -> void;
 
         /**
          * @brief free of staging buffers - copy buffers for CPU-GPU. Deprecated
+         *
          * @deprecated
+         *
          * @exceptsafe
          */
-        inline void freeStagingBuffers () noexcept {}
+        inline auto freeStagingBuffers () noexcept -> void {}
 
         /**
          * @brief cleanup of swapchain elements.
+         *
          * used when recreating swapchain, to clean previous swapchain
+         *
          * @exceptsafe
          */
-        void cleanupSwapChain () noexcept;
+        auto cleanupSwapChain () noexcept -> void;
 
         /**
          * @brief update of global resolution when window is resized
+         *
          * @exceptsafe
          */
-        void updateResolutionSettings() noexcept;
+        auto updateResolutionSettings() noexcept -> void;
 
         /**
          * @brief callback for window resize
+         *
          * @param pWindow : GLFWwindow * = address of the window that was resized
          * @param width : int32 = new width
          * @param height : int32 = new height
+         *
          * @exceptsafe
          */
-        static void frameBufferResizeCallback ( GLFWwindow*, [[maybe_unused]] int32, int32 ) noexcept;
+        static auto frameBufferResizeCallback ( GLFWwindow*, [[maybe_unused]] int32, int32 ) noexcept -> void;
 
         /**
          * @brief creation of EC Game Object
+         *
          * @exceptsafe
          */
         auto createGameObjects () noexcept -> void;
@@ -364,53 +471,66 @@ namespace engine {
 
         /**
          * @brief Default Constructor
+         *
          * @exceptsafe
          */
         VulkanTriangleApplication() noexcept = default;
         /**
          * @brief Constructor with Window Width + Height
+         *
          * @exceptsafe
          */
         explicit VulkanTriangleApplication(uint32, uint32) noexcept;
 
         /**
          * @brief Getter for Validation Layer Collection
+         *
          * @exceptsafe
+         *
          * @return VValidationLayerCollection ref
          */
-        [[nodiscard]] VValidationLayerCollection & getValidationLayerCollection() noexcept {
+        [[nodiscard]] auto getValidationLayerCollection() noexcept -> VValidationLayerCollection & {
             return this->_vulkanValidationLayerCollection;
         }
 
         /**
          * @brief Function used to add a Validation Layer to the used Layers
+         *
          * @param layer : engine::VValidationLayer cref = constant reference to the layer to be added
+         *
          * @exceptsafe
+         *
          * @return VulkanTriangleApplication ref = reference to this object
          */
-        VulkanTriangleApplication & addValidationLayer ( const engine::VValidationLayer & layer ) noexcept {
+        auto addValidationLayer ( engine::VValidationLayer const & layer ) noexcept -> VulkanTriangleApplication & {
             this->_vulkanValidationLayerCollection.addValidationLayer(layer );
             return *this;
         }
 
         /**
          * @brief Function used to add a Validation Layer to the used Layers
+         *
          * @param layerType : engine::VValidationLayer::VulkanValidationLayer = layer type to add
+         *
          * @exceptsafe
+         *
          * @return VulkanTriangleApplication ref = reference to this object
          */
-        VulkanTriangleApplication & addValidationLayer ( engine::VValidationLayer::VulkanValidationLayer layerType ) noexcept {
+        auto addValidationLayer ( engine::VValidationLayer::VulkanValidationLayer layerType ) noexcept -> VulkanTriangleApplication & {
             this->_vulkanValidationLayerCollection.addValidationLayer( engine::VValidationLayer().setLayerType(layerType) );
             return *this;
         }
 
         /**
          * @brief Function used to add Validation Layers to the used Layers
+         *
          * @param layerCollection : engine::VValidationLayerCollection cref = layer collection to add
+         *
          * @exceptsafe
+         *
          * @retrun VulkanTriangleApplication ref = reference to object
          */
-        VulkanTriangleApplication & addValidationLayers( const engine::VValidationLayerCollection & layerCollection ) noexcept {
+        auto addValidationLayers( const engine::VValidationLayerCollection & layerCollection ) noexcept -> VulkanTriangleApplication & {
             for( const auto & layer : layerCollection.getValidationLayers() ) {
                 this->_vulkanValidationLayerCollection.addValidationLayer(layer );
             }
@@ -419,19 +539,35 @@ namespace engine {
 
         /**
          * @brief Clears Validation Layers
+         *
          * @exceptsafe
+         *
          * @return VulkanTriangleApplication ref = reference to object
          */
-        VulkanTriangleApplication & clearValidationLayers() noexcept {
+        auto clearValidationLayers() noexcept -> VulkanTriangleApplication & {
             this->_vulkanValidationLayerCollection.clear();
             return *this;
         }
 
         /**
          * @brief Starts the engine, giving control to the VulkanTriangleApplication instance
-         * @throws std::runtime_error
+         *
+         * Function should not return until game window is closed
+         *
+         * @throws std::runtime_error if
+         *      initWindow () throws                    OR
+         *      initVulkan () throws                    OR
+         *      createGraphicsPipeline () throws        OR
+         *      createCommandPool () throws             OR
+         *      createDepthBuffer () throws             OR
+         *      createFrameBuffers () throws            OR
+         *      createTextureSampler () throws          OR
+         *      createBuffers () throws                 OR
+         *      createCommandBuffers () throws          OR
+         *      createSynchronizationElements () throws OR
+         *      mainLoop () throws
          */
-        void run() noexcept (false);
+        auto run() noexcept (false) -> void;
     };
 
 }

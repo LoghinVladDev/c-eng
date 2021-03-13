@@ -5,6 +5,10 @@
 #ifndef ENG1_VKDEFINITIONS_H
 #define ENG1_VKDEFINITIONS_H
 
+/**
+ * explicit definitions
+ */
+
 #define VULKAN_API_ATTRIBUTE                      VKAPI_ATTR
 #define VULKAN_API_CALL                           VKAPI_CALL
 

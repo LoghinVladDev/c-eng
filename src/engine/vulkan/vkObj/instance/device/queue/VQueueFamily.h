@@ -13,69 +13,183 @@
 #include <string>
 #include <VSurface.h>
 
+#include <CDS/String>
+
 namespace engine {
 
+    /**
+     * @class engine::EngineVQueueFamilyNoQueuesAvailable, inherits std::exception
+     *
+     * @brief Exception Class marking an exception thrown when a queue requested cannot be allocated due to no free queues being left
+     */
     class EngineVQueueFamilyNoQueuesAvailable : public std::exception {
     private:
+        /// message of the exception
         std::string _message;
     public:
+        /**
+         * @brief Constructor, without parameters
+         *
+         * @exceptsafe
+         */
         EngineVQueueFamilyNoQueuesAvailable() noexcept {
             this->_message = "Could not reserve the requested queue count";
         }
 
+        /**
+         * @brief Constructor
+         *
+         * @param reqQueueCount : uint32 = number of requested queues
+         * @param availableQueueCount : uint32 = number of free queues
+         *
+         * @exceptsafe
+         */
         explicit EngineVQueueFamilyNoQueuesAvailable( uint32 reqQueueCount, uint32 availableQueueCount ) noexcept {
             this->_message = "Could not reserve the requested queue count. Requested : " + std::to_string(reqQueueCount) + ", Available : " + std::to_string(availableQueueCount);
         }
 
-        [[nodiscard]] const char * what() const noexcept override {
+        /**
+         * @brief getter for the exception message
+         *
+         * @exceptsafe
+         *
+         * @return StringLiteral = Exception message
+         */
+        [[nodiscard]] auto what() const noexcept -> StringLiteral override {
             return this->_message.c_str();
         }
     };
 
+    /**
+     * Predeclare class VQueueFamilyCollection to avoid circular/recursive includes
+     */
     class VQueueFamilyCollection;
 
+    /**
+     * @class engine::VQueueFamily
+     *
+     * @brief Family of VQueues - Collection ( internal, GPU ) of Queues (buses), each with same behaviour.
+     * A Queue can be "requested" from the Family, Resulting in allocation of said queue to the requester program
+     */
     class VQueueFamily {
     private:
         //// private variables
+
+        /// index of the family in all of the queue families
         uint32                                      _familyIndex            {0};
+
+        /// properties of the queue family
         VulkanQueueFamilyProperties                 _queueFamilyProperties  { };
+
+        /// pointer to the collection owning all the queue families
         VQueueFamilyCollection                    * _parentCollection       { nullptr };
+
+        /// boolean variable mentioning whether queue family supports present operations or not
         VulkanBool32                                _presentSupport         { false };
 
         //// private functions
-        [[nodiscard]] constexpr static bool queueFamilyPropertiesTransferBit( const VulkanQueueFamilyProperties& properties ) noexcept {
+
+        /**
+         * @brief Function testing whether queue family properties include Transfer Capabilities
+         *
+         * @param properties : VulkanQueueFamilyProperties cref = Structure containing the properties of a queue family
+         *
+         * @exceptsafe
+         *
+         * @return bool = true if properties include Transfer Capabilities, false otherwise
+         */
+        [[nodiscard]] constexpr static auto queueFamilyPropertiesTransferBit( VulkanQueueFamilyProperties const & properties ) noexcept -> bool {
             return (bool) ( properties.queueFlags & VQueueFamily::TRANSFER_FLAG);
         }
 
-        [[nodiscard]] constexpr static bool queueFamilyPropertiesGraphicsBit( const VulkanQueueFamilyProperties& properties ) noexcept {
+        /**
+         * @brief Function testing whether queue family properties include Graphics Capabilities
+         *
+         * @param properties : VulkanQueueFamilyProperties cref = Structure containing the properties of a queue family
+         *
+         * @exceptsafe
+         *
+         * @return bool = true if properties include Graphics Capabilities, false otherwise
+         */
+        [[nodiscard]] constexpr static auto queueFamilyPropertiesGraphicsBit( VulkanQueueFamilyProperties const & properties ) noexcept -> bool {
             return (bool) ( properties.queueFlags & VQueueFamily::GRAPHICS_FLAG);
         }
 
-        [[nodiscard]] constexpr static bool queueFamilyPropertiesComputeBit( const VulkanQueueFamilyProperties& properties ) noexcept {
+        /**
+         * @brief Function testing whether queue family properties include Compute Capabilities
+         *
+         * @param properties : VulkanQueueFamilyProperties cref = Structure containing the properties of a queue family
+         *
+         * @exceptsafe
+         *
+         * @return bool = true if properties include Compute Capabilities, false otherwise
+         */
+        [[nodiscard]] constexpr static auto queueFamilyPropertiesComputeBit( VulkanQueueFamilyProperties const & properties ) noexcept -> bool {
             return (bool) ( properties.queueFlags & VQueueFamily::COMPUTE_FLAG);
         }
 
-        [[nodiscard]] constexpr static bool queueFamilyPropertiesProtectedBit( const VulkanQueueFamilyProperties& properties ) noexcept {
+        /**
+         * @brief Function testing whether queue family properties include Protection of Memory Capabilities
+         *
+         * @param properties : VulkanQueueFamilyProperties cref = Structure containing the properties of a queue family
+         *
+         * @exceptsafe
+         *
+         * @return bool = true if properties include Protection of Memory Capabilities, false otherwise
+         */
+        [[nodiscard]] constexpr static auto queueFamilyPropertiesProtectedBit( VulkanQueueFamilyProperties const & properties ) noexcept -> bool {
             return (bool) ( properties.queueFlags & VQueueFamily::PROTECTED_FLAG);
         }
 
-        [[nodiscard]] constexpr static bool queueFamilyPropertiesSparseBindingBit( const VulkanQueueFamilyProperties& properties ) noexcept {
+        /**
+         * @brief Function testing whether queue family properties include Sparse Binding Capabilities - binding memory to pages instead of blocks, flexible
+         *
+         * @param properties : VulkanQueueFamilyProperties cref = Structure containing the properties of a queue family
+         *
+         * @exceptsafe
+         *
+         * @return bool = true if properties include Sparse Binding Capabilities, false otherwise
+         */
+        [[nodiscard]] constexpr static auto queueFamilyPropertiesSparseBindingBit( VulkanQueueFamilyProperties const & properties ) noexcept -> bool {
             return (bool) ( properties.queueFlags & VQueueFamily::SPARSE_BINDING_FLAG);
         }
 
-        [[nodiscard]] constexpr static bool queueFamilyPropertiesCompatibleFlagBits( const VulkanQueueFamilyProperties& properties, VulkanQueueFlags flags ) noexcept {
+        /**
+         * @brief Function testing whether queue family properties include several Property Flags
+         *
+         * @param properties : VulkanQueueFamilyProperties cref = Structure containing the properties of a queue family
+         * @param VulkanQueueFlags : Flags obtaining by bitwise OR-ing several VulkanQueueFlagBits
+         *
+         * @exceptsafe
+         *
+         * @return bool = true if properties include the properties described by the flags, false otherwise
+         */
+        [[nodiscard]] constexpr static auto queueFamilyPropertiesCompatibleFlagBits( VulkanQueueFamilyProperties const & properties, VulkanQueueFlags flags ) noexcept -> bool {
             return (bool) ( ( properties.queueFlags & flags ) == flags );
         }
 
     public:
         //// public variables
-        constexpr static VulkanQueueFlags GRAPHICS_FLAG       = VK_QUEUE_GRAPHICS_BIT;
-        constexpr static VulkanQueueFlags COMPUTE_FLAG        = VK_QUEUE_COMPUTE_BIT;
-        constexpr static VulkanQueueFlags TRANSFER_FLAG       = VK_QUEUE_TRANSFER_BIT;
-        constexpr static VulkanQueueFlags SPARSE_BINDING_FLAG = VK_QUEUE_SPARSE_BINDING_BIT;
-        constexpr static VulkanQueueFlags PROTECTED_FLAG      = VK_QUEUE_PROTECTED_BIT;
+
+        /// flag definition for Graphics Capabilities
+        constexpr static VulkanQueueFlags GRAPHICS_FLAG       = VkQueueFlagBits::VK_QUEUE_GRAPHICS_BIT;
+
+        /// flag definition for Compute Capabilities
+        constexpr static VulkanQueueFlags COMPUTE_FLAG        = VkQueueFlagBits::VK_QUEUE_COMPUTE_BIT;
+
+        /// flag definition for Transfer Capabilities
+        constexpr static VulkanQueueFlags TRANSFER_FLAG       = VkQueueFlagBits::VK_QUEUE_TRANSFER_BIT;
+
+        /// flag definition for Sparse Binding Capabilities
+        constexpr static VulkanQueueFlags SPARSE_BINDING_FLAG = VkQueueFlagBits::VK_QUEUE_SPARSE_BINDING_BIT;
+
+        /// flag definition for Protected Memory Capabilities
+        constexpr static VulkanQueueFlags PROTECTED_FLAG      = VkQueueFlagBits::VK_QUEUE_PROTECTED_BIT;
+
+        /// flag definition for Present Capabilities
         constexpr static VulkanQueueFlags PRESENT_FLAG        = VkQueueFlagBits::VK_QUEUE_PROTECTED_BIT * 2;
 
+        /// mask for all flags, except PRESENT_FLAG <- not part of standard Vulkan Suite
         constexpr static VulkanQueueFlags STANDARD_QUEUE_PROPERTIES_MASK =
                 VQueueFamily::GRAPHICS_FLAG         |
                 VQueueFamily::COMPUTE_FLAG          |
@@ -84,96 +198,327 @@ namespace engine {
                 VQueueFamily::SPARSE_BINDING_FLAG;
 
         //// public functions
+
+        /**
+         * @brief Default Constructor
+         *
+         * @exceptsafe
+         */
         VQueueFamily() noexcept = default;
-        explicit VQueueFamily (VQueueFamilyCollection * parent, const VulkanQueueFamilyProperties & properties, uint32 family) noexcept {
+
+        /**
+         * @brief Constructor with initialisation of parent family collection, properties and family index
+         *
+         * @param parent : engine::VQueueFamilyCollection ptr = Address of the Family Collection
+         * @param properties : VulkanQueueFamilyProperties cref = Reference to the properties structure
+         * @param family : uint32 = Index of the Queue Family in the Queue Family Collection
+         *
+         * @exceptsafe
+         */
+        explicit VQueueFamily (VQueueFamilyCollection * parent, VulkanQueueFamilyProperties const & properties, uint32 family) noexcept {
             this->_parentCollection = parent;
             this->_queueFamilyProperties = properties;
             this->_familyIndex = family;
         }
 
-        VQueueFamily(const VQueueFamily& obj) noexcept {
+        /**
+         * @brief Copy Constructor
+         *
+         * @param obj : VQueueFamily cref = VQueueFamily to initialise from
+         *
+         * @exceptsafe
+         */
+        VQueueFamily(VQueueFamily const & obj) noexcept {
             this->_parentCollection = obj._parentCollection;
             this->_queueFamilyProperties = obj._queueFamilyProperties;
             this->_familyIndex = obj._familyIndex;
             this->_presentSupport = obj._presentSupport;
         }
 
+        /**
+         * @brief Destructor, default Implementation
+         *
+         * @exceptsafe
+         */
         ~VQueueFamily() noexcept = default;
 
-        [[nodiscard]] uint32 reserveQueues          ( uint32 ) const noexcept;
-        void                 freeQueues             ( uint32 ) const noexcept;
+        /**
+         * @brief reserve number of queues from the family, to be acquired later
+         * Will reserve from parent queue family
+         *
+         * @param targetQueueCount : uint32 = number of queues to reserve
+         *
+         * @exceptsafe
+         *
+         * @return uint32 = number of queues that were actuall reserved. <= targetQueueCount
+         */
+        [[nodiscard]] auto reserveQueues          ( uint32 ) const noexcept -> uint32;
 
-        [[nodiscard]] uint32 getAvailableQueueIndex ( )        const noexcept;
-        void                 freeQueueIndex         ( uint32 ) const noexcept;
+        /**
+         * @brief free number of queues from the family that have been previously reserved
+         *
+         * @exceptsafe
+         *
+         * @param targetQueueCount : uint32 = number of queues to free
+         */
+        auto               freeQueues             ( uint32 ) const noexcept -> void;
 
-        [[nodiscard]] const VPhysicalDevice & getPhysicalDevice () const noexcept;
+        /**
+         * @brief getter for the first index of an available queue
+         *
+         * @exceptsafe
+         *
+         * @return uint32 = index of the first available queue
+         */
+        [[nodiscard]] auto getAvailableQueueIndex ( )        const noexcept -> uint32;
 
-        [[nodiscard]] uint32 getQueueFamilyIndex ( ) const noexcept {
+        /**
+         * @brief free queue with index given
+         *
+         * @param index : uint32 = index of the queue to be freed
+         *
+         * @exceptsafe
+         */
+        auto               freeQueueIndex         ( uint32 ) const noexcept -> void;
+
+        /**
+         * @brief getter for the physical device owning from which the queue will be allocated
+         *
+         * @exceptsafe
+         *
+         * @return engine::VPhysicalDevice cref = Reference to the Physical Device
+         */
+        [[nodiscard]] auto getPhysicalDevice () const noexcept -> VPhysicalDevice const &;
+
+        /**
+         * @brief getter for the index of this family in the family collection
+         *
+         * @exceptsafe
+         *
+         * @return uint32 = index of this family in the family collection
+         */
+        [[nodiscard]] auto getQueueFamilyIndex ( ) const noexcept -> uint32 {
             return this->_familyIndex;
         }
 
-        [[nodiscard]] uint32 getQueueCount ( ) const noexcept {
+        /**
+         * @brief getter for the queue count in this queue family
+         *
+         * @exceptsafe
+         *
+         * @return uint32 = number of queues this family controls / owns
+         */
+        [[nodiscard]] auto getQueueCount ( ) const noexcept -> uint32 {
             return this->_queueFamilyProperties.queueCount;
         }
 
-        [[nodiscard]] const VulkanQueueFamilyProperties & getQueueFamilyProperties ( ) const noexcept {
+        /**
+         * @brief getter for this family's properties
+         *
+         * @exceptsafe
+         *
+         * @return VulkanQueueFamilyProperties cref = Reference to structure containing properties
+         */
+        [[nodiscard]] auto getQueueFamilyProperties ( ) const noexcept -> VulkanQueueFamilyProperties const & {
             return this->_queueFamilyProperties;
         }
 
-        [[maybe_unused]] [[nodiscard]] constexpr bool isTransferCapable() const noexcept {
+        /**
+         * @brief function checking whether this family is Transfer Capable
+         *
+         * @exceptsafe
+         *
+         * @return bool = true if family is Transfer Capable, false otherwise
+         */
+        [[maybe_unused]] [[nodiscard]] constexpr auto isTransferCapable() const noexcept -> bool {
             return VQueueFamily::queueFamilyPropertiesTransferBit(this->_queueFamilyProperties);
         }
 
-        [[maybe_unused]] [[nodiscard]] constexpr bool isGraphicsCapable() const noexcept {
+        /**
+         * @brief function checking whether this family is Graphics Capable
+         *
+         * @exceptsafe
+         *
+         * @return bool = true if family is Graphics Capable, false otherwise
+         */
+        [[maybe_unused]] [[nodiscard]] constexpr auto isGraphicsCapable() const noexcept -> bool {
             return VQueueFamily::queueFamilyPropertiesGraphicsBit(this->_queueFamilyProperties);
         }
 
-        [[maybe_unused]] [[nodiscard]] constexpr bool isComputeCapable() const noexcept {
+        /**
+         * @brief function checking whether this family is Compute Capable
+         *
+         * @exceptsafe
+         *
+         * @return bool = true if family is Compute Capable, false otherwise
+         */
+        [[maybe_unused]] [[nodiscard]] constexpr auto isComputeCapable() const noexcept -> bool {
             return VQueueFamily::queueFamilyPropertiesComputeBit(this->_queueFamilyProperties);
         }
 
-        [[maybe_unused]] [[nodiscard]] constexpr bool isProtectedCapable() const noexcept {
+        /**
+         * @brief function checking whether this family is Protected Memory Capable
+         *
+         * @exceptsafe
+         *
+         * @return bool = true if family is Protected Memory Capable, false otherwise
+         */
+        [[maybe_unused]] [[nodiscard]] constexpr auto isProtectedCapable() const noexcept -> bool {
             return VQueueFamily::queueFamilyPropertiesProtectedBit(this->_queueFamilyProperties);
         }
 
-        [[maybe_unused]] [[nodiscard]] constexpr bool isSparseBindingCapable() const noexcept {
+        /**
+         * @brief function checking whether this family is Sparse Binding Capable
+         *
+         * @exceptsafe
+         *
+         * @return bool = true if family is Sparse Binding Capable, false otherwise
+         */
+        [[maybe_unused]] [[nodiscard]] constexpr auto isSparseBindingCapable() const noexcept -> bool {
             return VQueueFamily::queueFamilyPropertiesSparseBindingBit(this->_queueFamilyProperties);
         }
 
-        [[maybe_unused]] [[nodiscard]] constexpr bool isPresentCapable () const noexcept {
+        /**
+         * @brief function checking whether this family is Present Capable
+         *
+         * @exceptsafe
+         *
+         * @return bool = true if family is Present Capable, false otherwise
+         */
+        [[maybe_unused]] [[nodiscard]] constexpr auto isPresentCapable () const noexcept -> bool {
             return ( (bool) this->_presentSupport );
         }
 
-        [[nodiscard]] constexpr bool isCapableOfPropertiesFlags ( VulkanQueueFlags flags ) const noexcept {
+        /**
+         * @brief functions checking whether this family is capable of property flags
+         *
+         * @param flags : VulkanQueueFlags = flags for queues
+         *
+         * @exceptsafe
+         *
+         * @return bool = true if family is capable of all properties mentioned in flags, false otherwise
+         */
+        [[nodiscard]] constexpr auto isCapableOfPropertiesFlags ( VulkanQueueFlags flags ) const noexcept -> bool {
             return VQueueFamily::queueFamilyPropertiesCompatibleFlagBits( this->_queueFamilyProperties, flags );
         }
 
-        void syncWithSurface ( const VSurface& ) noexcept;
+        /**
+         * @brief function synchronises this queue's utilised capabilities with the surface, enabling features on the surface
+         *
+         * @param surface : engine::VSurface cref = Reference to the Surface to sync with
+         *
+         * @exceptsafe
+         */
+        auto syncWithSurface ( VSurface const & ) noexcept -> void;
 
 #ifndef NDEBUG
-        void debugPrintQueueFamily ( std::ostream&, const char * = "" ) const noexcept;
-        void debugPrintQueueFamilyReservation( std::ostream&, const char* = "" ) const noexcept;
-        static void debugPrintQueueFamilyPropertiesStructureQueueFlags ( const VulkanQueueFamilyProperties & ,std::ostream&, const char * = "" ) noexcept;
-        static void debugPrintQueueFamilyPropertiesStructure ( const VulkanQueueFamilyProperties &, std::ostream&, const char * = "" ) noexcept;
+        /**
+         * @brief Debug Function for printing queue family data
+         *
+         * @param buffer : std::ostream ref = Reference to an Output Stream to place the data in
+         * @param prefix : StringLiteral = Prefix before each line ( ex. no. of tabs )
+         *
+         * @exceptsafe
+         */
+        auto debugPrintQueueFamily ( std::ostream &, StringLiteral = "" ) const noexcept -> void;
+
+        /**
+         * @brief Debug Function for printing no. of reserved queues in this family
+         *
+         * @param buffer : std::ostream ref = Reference to an Output Stream to place the data in
+         * @param prefix : StringLiteral = Prefix before each line ( ex. no. of tabs )
+         *
+         * @exceptsafe
+         */
+        auto debugPrintQueueFamilyReservation( std::ostream &, StringLiteral = "" ) const noexcept -> void;
+
+        /**
+         * @brief Debug Function for printing Queue Family Flags Capabilities
+         *
+         * @param properties : VulkanQueueFamilyProperties cref = properties of a Queue Family
+         * @param buffer : std::ostream ref = Reference to an Output Stream to place the data in
+         * @param prefix : StringLiteral = Prefix before each line ( ex. no. of tabs )
+         *
+         * @exceptsafe
+         */
+        static auto debugPrintQueueFamilyPropertiesStructureQueueFlags ( VulkanQueueFamilyProperties const & ,std::ostream &, StringLiteral ) noexcept -> void;
+
+        /**
+         * @brief Debug Function for printing Queue Family Properties Structure
+         *
+         * @param properties : VulkanQueueFamilyProperties cref = properties of a Queue Family
+         * @param buffer : std::ostream ref = Reference to an Output Stream to place the data in
+         * @param prefix : StringLiteral = Prefix before each line ( ex. no. of tabs )
+         *
+         * @exceptsafe
+         */
+        static auto debugPrintQueueFamilyPropertiesStructure ( VulkanQueueFamilyProperties const &, std::ostream &, StringLiteral ) noexcept -> void;
 #endif
     };
 
+    /**
+     * @class engine::VQueueFamilyCollection
+     *
+     * @brief A Collection of Queue Families
+     */
     class VQueueFamilyCollection {
     private:
         //// private variables
+
+        /// Pointer to the owner Physical Device
         const VPhysicalDevice         * _physicalDevice { nullptr };
+
+        /// std::vector of VQueueFamily
         std::vector < VQueueFamily >    _queueFamilies;
+
+        /// std::map of uint32, uint32 - queue family index -> reserved queue count
         std::map < uint32, uint32 >     _reservedQueuesForFamilies;
+
+        /// std::map of uint32, std::set of uint32 - queue family index -> set of indices reserved
         std::map < uint32, std::set < uint32 > > _reservedQueueIndicesForFamilies;
+
         //// private functions
-        void unReserveAllQueueFamilies ( ) noexcept (false);
-        void queryAvailableQueueFamilies ( ) noexcept (false);
+
+        /**
+         * @brief function for de-allocating all of the queue families
+         *
+         * @exceptsafe
+         */
+        auto unReserveAllQueueFamilies ( ) noexcept -> void;
+
+        /**
+         * @brief function for acquiring all the queue families from the device to the collection
+         *
+         * @throws engine::EngineNullVPhysicalDevice if
+         *      Queue Family Collection does not have a valid VPhysicalDevice address in _physicalDevice
+         */
+        auto queryAvailableQueueFamilies ( ) noexcept (false) -> void;
     public:
         //// public variables
 
         //// public functions
+
+        /**
+         * @brief Default Constructor
+         *
+         * Deleted as to require use of the Explicit Constructor
+         *
+         * @exceptsafe
+         *
+         * @deprecated
+         */
         VQueueFamilyCollection () noexcept = delete;
-        explicit VQueueFamilyCollection ( const VPhysicalDevice & physicalDevice , const VSurface * surfaceToSync = nullptr ) noexcept (false) {
+
+        /**
+         * @brief Explicit Constructor, acquiring a physical device and, optionally, a surface address
+         *
+         * @param physicalDevice : engine::VPhysicalDevice cref = Reference to the Physical Device the Queue Family Collection is initialised from
+         * @param surfaceToSync : engine::VSurface cptr = Address of a Surface to synchronise features with. Default nullptr
+         *
+         * @throws engine::EngineNullVPhysicalDevice if
+         *      queryAvailableQueueFamilies() throws
+         */
+        explicit VQueueFamilyCollection ( VPhysicalDevice const & physicalDevice , VSurface const * surfaceToSync = nullptr ) noexcept (false) {
             this->_physicalDevice = (& physicalDevice);
             this->queryAvailableQueueFamilies();
             this->unReserveAllQueueFamilies();
@@ -181,20 +526,76 @@ namespace engine {
                 this->syncWithSurface( * surfaceToSync );
         }
 
-        [[nodiscard]] uint32 reserveQueues( const VQueueFamily&, uint32 ) noexcept;
-        void                 freeQueues(    const VQueueFamily&, uint32 ) noexcept;
-        uint32               getAvailableQueueIndex ( const VQueueFamily& ) noexcept;
-        void                 freeQueueIndex ( const VQueueFamily& ,uint32 ) noexcept;
+        /**
+         * @brief function used to reserve target amount of queues from a queue family, managed by collection
+         *
+         * @param queueFamily : engine::VQueueFamily cref = Reference to Queue Family from which to reserve
+         * @param targetQueueCount : uint32 = number of queues to reserve
+         *
+         * @exceptsafe
+         *
+         * @return uint32 = number of queues that could be reserved
+         */
+        [[nodiscard]] auto reserveQueues ( VQueueFamily const &, uint32 ) noexcept -> uint32;
 
-        [[nodiscard]] const std::map < uint32, uint32 > & getReservedQueueFamiliesMap () const noexcept {
+        /**
+         * @brief function used to free a number of queues from a queue family
+         *
+         * @param queueFamily : engine::VQueueFamily cref = Reference to Queue Family from which to free
+         * @param targetQueueCount : uint32 = number of queues to free
+         *
+         * @exceptsafe
+         */
+        auto freeQueues ( VQueueFamily const &, uint32 ) noexcept -> void;
+
+        /**
+         * @brief function used to get the index of the first free queue in a family
+         *
+         * @param queueFamily : engine::VQueueFamily cref = Reference to Queue Family from which to get the index from
+         *
+         * @exceptsafe
+         *
+         * @return uint32 = index of the first free queue
+         */
+        auto getAvailableQueueIndex ( VQueueFamily const & ) noexcept -> uint32;
+
+        /**
+         * @brief function used to free a queue with a given index in a queue family
+         *
+         * @param queueFamily : engine::VQueueFamily cref = Reference to Queue Family from which to free Queue from
+         * @param index : uint32 = Index of the Queue to free
+         *
+         * @exceptsafe
+         */
+        auto freeQueueIndex ( VQueueFamily const & ,uint32 ) noexcept -> void;
+
+        /**
+         * @brief getter for the Reserved Queue Families Map
+         *
+         * @exceptsafe
+         *
+         * @return std::map < uint32, uint32 > cref = Reference to the Map
+         */
+        [[nodiscard]] auto getReservedQueueFamiliesMap () const noexcept -> std::map < uint32, uint32 > const & {
             return this->_reservedQueuesForFamilies;
         }
 
-        [[nodiscard]] const VPhysicalDevice & getPhysicalDevice ( ) const noexcept {
+        /**
+         * @brief getter for the parent Physical Device
+         *
+         * @exceptsafe
+         *
+         * @return engine::VPhysicalDevice cref = Reference to the Physical Device
+         */
+        [[nodiscard]] auto getPhysicalDevice ( ) const noexcept -> VPhysicalDevice const & {
             return * this->_physicalDevice;
         }
 
-        [[nodiscard]] const std::vector < VQueueFamily > & getQueueFamilies () const noexcept {
+        /**
+         *
+         * @return
+         */
+        [[nodiscard]] auto getQueueFamilies () const noexcept -> std::vector < VQueueFamily > const & {
             return this->_queueFamilies;
         }
 

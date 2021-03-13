@@ -5,6 +5,10 @@
 #ifndef ENG1_VKPLATFORMDEFS_H
 #define ENG1_VKPLATFORMDEFS_H
 
+/**
+ * Platform Definitions for cross-platform
+ */
+
 #if defined(_WIN32)
 
 #define GLFW_EXPOSE_NATIVE_WIN32

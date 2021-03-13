@@ -11,22 +11,39 @@
 
 namespace engine {
 
+    /**
+     * Predeclare Logical Device for parent ownership of queue and avoidance
+     * of recursive inclusion problem
+     */
     class VLogicalDevice;
 
+    /**
+     * @class engine::VQueue
+     *
+     * @brief Representation of a Queue - A bus of communication between the CPU and the GPU
+     */
     class VQueue {
     private:
 
         //// private variables
         constexpr static float  DEFAULT_MIN_QUEUE_PRIORITY  = 0.0f;
         constexpr static float  DEFAULT_MAX_QUEUE_PRIORITY  = 1.0f;
-        /// TODO : fix:0002. Make Returns from queueFamily by type to return std::vector < VQueueFamily*> instead of std::vector < VQueueFamily >.
+
+        /// Vulkan Handler for queue
         VulkanQueue             _queueHandler               {};
-        const VQueueFamily    * _parentFamily               {nullptr}; // fix:0002 temporary fix for problematic pointer
-//        VQueueFamilyCollection* _parentFamilyCollection     {nullptr};
+
+        /// Family of the queue
+        const VQueueFamily    * _parentFamily               {nullptr};
+
+        /// Owner GPU
         const VLogicalDevice  * _parentLogicalDevice        {nullptr};
+
+        /// Priority
         float                   _priority                   {engine::VQueue::DEFAULT_QUEUE_PRIORITY};
+
+        /// Index of the Queue in the Family
         uint32                  _queueIndex                 {0U};
-//        uint32                  _queueFamilyIndex           {0U}; // fix:0002 temporary fix for problematic pointer issue
+
         //// private functions
 
     public:
@@ -35,34 +52,98 @@ namespace engine {
 
         //// public functions
 
+        /**
+         * @brief Default Constructor
+         * @exceptsafe
+         */
         VQueue () noexcept = default;
+
+        /**
+         * @brief Constructor Initialising Queue Family and Priority
+         *
+         * @param family : engine::VQueueFamily cref = family of the queue
+         * @param priority : float = priority assigned to queue. Value between 0.0f - 1.0f (min-max)
+         *
+         * @exceptsafe
+         */
         explicit VQueue ( const engine::VQueueFamily&, float = engine::VQueue::DEFAULT_QUEUE_PRIORITY ) noexcept;
 
-        void setup ( const VLogicalDevice&, uint32 ) noexcept;
-        [[nodiscard]] float getPriority () const noexcept {
+        /**
+         * @brief setup function initialising the queue
+         *
+         * @param logicalDevice: engine::VLogicalDevice cref = logical device owning the queue, where the queue will be created
+         * @param index : uint32 = index of queue
+         *
+         * @exceptsafe
+         */
+        auto setup ( const VLogicalDevice&, uint32 ) noexcept -> void;
+
+        /**
+         * @brief getter for priority
+         *
+         * @exceptsafe
+         *
+         * @return float = priority of queue
+         */
+        [[nodiscard]] constexpr float getPriority () const noexcept {
             return this->_priority;
         }
 
-        [[nodiscard]] const VLogicalDevice * getLogicalDevice () const noexcept {
+        /**
+         * @brief getter for Logical Device Owner ( GPU Interface )
+         *
+         * @exceptsafe
+         *
+         * @return engine::VLogicalDevice cptr = Address to the owner GPU Interface object
+         */
+        [[nodiscard]] auto getLogicalDevice () const noexcept -> VLogicalDevice const * {
             return this->_parentLogicalDevice;
         }
 
-        [[nodiscard]] const VQueueFamily * getQueueFamily () const noexcept {
+        /**
+         * @brief getter for Parent Queue Family
+         *
+         * @exceptsafe
+         *
+         * @return engine::VQueueFamily cptr = Address to the owner queue family object inside the GPU interface
+         */
+        [[nodiscard]] auto getQueueFamily () const noexcept -> VQueueFamily const * {
             return this->_parentFamily;
         }
 
-        [[nodiscard]] const VulkanQueue & data () const noexcept {
+        /**
+         * @brief getter for the Vulkan Handler associated with the object
+         * @return VulkanQueue cref = handler assigned by Vulkan for Vulkan Functions
+         */
+        [[nodiscard]] auto data () const noexcept -> VulkanQueue const & {
             return this->_queueHandler;
         }
 
-        [[nodiscard]] uint32 getIndex () const noexcept {
+        /**
+         * @brief getter for the index in the Queue Family
+         *
+         * @exceptsafe
+         *
+         * @return uint32 = index of the queue in the family
+         */
+        [[nodiscard]] auto getIndex () const noexcept -> uint32 {
             return this->_queueIndex;
         }
 
-        void cleanup () noexcept {
+        /**
+         * @brief function de-allocates the queue in the queue family
+         *
+         * @exceptsafe
+         */
+        auto cleanup () noexcept -> void {
             this->_parentFamily->freeQueueIndex (this->_queueIndex);
         }
 
+        /**
+         * @brief Destructor for VQueue, default
+         *
+         * @exceptsafe
+         */
         ~VQueue () noexcept = default;
     };
 

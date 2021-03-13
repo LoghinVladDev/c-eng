@@ -6,8 +6,8 @@
 #define ENG1_VULKANSHORTHANDTYPES_H
 
 
-#include <src/GLFW/src/engine/vulkan/vkObj/instance/device/queue/VQueue.h>
-#include <src/GLFW/src/engine/vulkan/vkObj/instance/messenger/VMessenger.h>
+#include <VQueue.h>
+#include <VMessenger.h>
 
 namespace engine {
     typedef VQueue                                  VQ;

@@ -20,7 +20,12 @@ engine::VulkanTriangleApplication::VulkanTriangleApplication(uint32 width, uint3
 
 }
 
-static void queueFamilyTests ( const engine::VQueueFamilyCollection & collection ) noexcept {
+/**
+ * @brief internal tests for queue families, acquiring queues and releasing them
+ * @param collection : engine::VQueueFamilyCollection cref = on which collection to test
+ * @exceptsafe
+ */
+static auto queueFamilyTests ( engine::VQueueFamilyCollection const & collection ) noexcept -> void {
     std::cout << "Available Queue Families : \n";
 
 #ifndef NDEBUG
@@ -83,7 +88,7 @@ static void queueFamilyTests ( const engine::VQueueFamilyCollection & collection
 #pragma ide diagnostic ignored "Simplify"
 #pragma ide diagnostic ignored "UnreachableCode"
 #endif
-void engine::VulkanTriangleApplication::setupDebugMessenger() noexcept (false) {
+auto engine::VulkanTriangleApplication::setupDebugMessenger() noexcept (false) -> void {
 
     /// if validation layers are not enabled, do not setup messenger
     if ( ! enableValidationLayers ) return;
@@ -97,13 +102,13 @@ void engine::VulkanTriangleApplication::setupDebugMessenger() noexcept (false) {
 #pragma clang diagnostic pop
 #endif
 
-void engine::VulkanTriangleApplication::initSettings() const noexcept {
+auto engine::VulkanTriangleApplication::initSettings() const noexcept -> void {
     auto resolution = engine::ResolutionSetting( this->_width, this->_height ); /// Create Resolution Setting based on current resolution from Class Variables
 
     engine::SettingsSharedContainer::getInstance().put( & resolution ); /// Save Resolution for reuse later in other classes
 }
 
-void engine::VulkanTriangleApplication::updateResolutionSettings() noexcept {
+auto engine::VulkanTriangleApplication::updateResolutionSettings() noexcept -> void {
     int width = 0, height = 0;
     glfwGetFramebufferSize( this->_window, & width, & height ); // get current resolution
     while ( width == 0 || height == 0 ) { // while window is too small to render, acquire resolution
@@ -116,7 +121,7 @@ void engine::VulkanTriangleApplication::updateResolutionSettings() noexcept {
     engine::SettingsSharedContainer::getInstance().put( & resolution ); //update resolution
 }
 
-void engine::VulkanTriangleApplication::run() noexcept (false) {
+auto engine::VulkanTriangleApplication::run() noexcept (false) -> void {
     this->initSettings();                   /// initialisation of settings ( resolution ... )
     this->initWindow();                     /// creation of window context
     this->initVulkan();                     /// creation of vulkan instance
@@ -126,7 +131,7 @@ void engine::VulkanTriangleApplication::run() noexcept (false) {
     this->createCommandPool();              /// creation of command pool - any draw commands, allocated from a pool ( cached on gpu )
     this->createDepthBuffer();              /// creation of depth buffer - so that objects do not overlap. Objects closer to the camera will be rendered first
     this->createFrameBuffers();             /// creation of frame buffers - drawable buffers
-    this->createTextures();                 /// creation of texture objects - GPU data
+    this->createTextureSampler();                 /// creation of texture objects - GPU data
     this->createGameObjects();              /// creation of EC Game Objects
     this->createBuffers();                  /// creation of Data Buffers - GPU - Vertex + Index + Uniform.
     this->createCommandBuffers();           /// creation of command buffers - GPU draw commands, pre-recorder for optimisation
@@ -136,9 +141,9 @@ void engine::VulkanTriangleApplication::run() noexcept (false) {
     this->cleanup();                        /// cleanup of all data created
 }
 
-void processInputCallback (GLFWwindow*, int, int, int, int);
+auto static processInputCallback (GLFWwindow*, int, int, int, int) noexcept -> void;
 
-inline void engine::VulkanTriangleApplication::initWindow() noexcept (false) {
+auto engine::VulkanTriangleApplication::initWindow() noexcept (false) -> void {
     if(glfwInit() == GLFW_FALSE) {
         throw engine::EngineVulkanTestException("GLFW Init failure"); /// if GLFW could not initialise, we cannot draw on a window
     }
@@ -158,13 +163,19 @@ inline void engine::VulkanTriangleApplication::initWindow() noexcept (false) {
     glfwSetKeyCallback( this->_window, processInputCallback ); /// Set Keyboard Callback
 }
 
-void engine::VulkanTriangleApplication::createSurface() noexcept(false) {
+auto engine::VulkanTriangleApplication::createSurface() noexcept(false) -> void {
     // surface created on window, linked to vulkan instance
     if( this->_vulkanSurface.setup(this->_window, this->_vulkanInstance) != VK_SUCCESS )
         throw std::runtime_error("failed to create vulkan surface");
 }
 
-static inline std::vector < const engine::VQueueFamily* > internalGatherGraphicsAndPresentQueueFamilies( const engine::VQueueFamilyCollection& collection ) noexcept {
+/**
+ * @brief getter for optimal queue families
+ * @param collection : engine::VQueueFamilyCollection cref = where to get queue families from
+ * @exceptsafe
+ * @return std::vector < engine::VQueueFamily const pointer > = vector of pointers to constant queue family
+ */
+static inline auto internalGatherGraphicsAndPresentQueueFamilies( engine::VQueueFamilyCollection const & collection ) noexcept -> std::vector < engine::VQueueFamily const * > {
     auto queueFamilies = collection.getFlagsCapableQueueFamilies(
             engine::VQueueFamily::GRAPHICS_FLAG |
             engine::VQueueFamily::PRESENT_FLAG |
@@ -185,7 +196,7 @@ static inline std::vector < const engine::VQueueFamily* > internalGatherGraphics
 #pragma ide diagnostic ignored "Simplify"
 #pragma ide diagnostic ignored "UnreachableCode"
 #endif
-inline void engine::VulkanTriangleApplication::initVulkan() noexcept (false) {
+inline auto engine::VulkanTriangleApplication::initVulkan() noexcept (false) -> void {
     VExtensionCollection availableExtensions = VExtensionCollection::getAllAvailableExtensions(); /// Acquire supported Vulkan SDK Extensions
 
 #ifndef NDEBUG
@@ -293,7 +304,7 @@ inline void engine::VulkanTriangleApplication::initVulkan() noexcept (false) {
     }
 }
 
-void engine::VulkanTriangleApplication::createSynchronizationElements() noexcept(false) {
+auto engine::VulkanTriangleApplication::createSynchronizationElements() noexcept(false) -> void {
     /// A semaphore for image draw finish per frame buffer
     if ( this->_imageAvailableSemaphores.setup( this->_vulkanLogicalDevice, MAX_FRAMES_IN_FLIGHT ) != VulkanResult::VK_SUCCESS )
         throw std::runtime_error ( "Semaphore Creation Failure : Image Availability" );
@@ -336,7 +347,7 @@ auto engine::VulkanTriangleApplication::createGameObjects() noexcept -> void {
     this->_activeScene.add(star); /// Add object to scene
 }
 
-void engine::VulkanTriangleApplication::recreateSwapChain() noexcept(false) {
+auto engine::VulkanTriangleApplication::recreateSwapChain() noexcept(false) -> void {
     vkDeviceWaitIdle( this->_vulkanLogicalDevice.data() ); /// wait until GPU finishes drawing
 
     this->cleanupSwapChain(); /// Cleanup previous swapchain objects
@@ -364,7 +375,7 @@ void engine::VulkanTriangleApplication::recreateSwapChain() noexcept(false) {
     this->createCommandBuffers(); /// recreate draw commands
 }
 
-void engine::VulkanTriangleApplication::cleanupSwapChain() noexcept {
+auto engine::VulkanTriangleApplication::cleanupSwapChain() noexcept -> void {
     this->_depthBuffer.cleanup(); /// clean depth test buffer
     this->_frameBufferCollection.cleanup(); /// clean all framebuffers
     this->_drawCommandBufferCollection.free(); /// free all draw buffers
@@ -379,9 +390,7 @@ void engine::VulkanTriangleApplication::cleanupSwapChain() noexcept {
     this->_vulkanLogicalDevice.cleanupSwapChain(); /// cleanup swap chain from logical device
 }
 
-
-
-void engine::VulkanTriangleApplication::frameBufferResizeCallback(GLFWwindow * pWindow, [[maybe_unused]] int32 width, [[maybe_unused]] int32 height) noexcept {
+auto engine::VulkanTriangleApplication::frameBufferResizeCallback(GLFWwindow * pWindow, [[maybe_unused]] int32 width, [[maybe_unused]] int32 height) noexcept -> void {
     auto * baseObj = reinterpret_cast< engine::VulkanTriangleApplication * > ( glfwGetWindowUserPointer( pWindow ) );
     baseObj->_framebufferResized = true;
 
@@ -389,7 +398,7 @@ void engine::VulkanTriangleApplication::frameBufferResizeCallback(GLFWwindow * p
     /// specifying that next draw has to recreate the swapchain
 }
 
-void engine::VulkanTriangleApplication::drawImage () noexcept (false) {
+auto engine::VulkanTriangleApplication::drawImage () noexcept (false) -> void {
     vkWaitForFences(
         this->_vulkanLogicalDevice.data(), /// on this GPU
         1U,
@@ -547,7 +556,7 @@ bool down = false; ///s
 
 #include <chrono>
 #include <glm/gtc/matrix_transform.hpp>
-void engine::VulkanTriangleApplication::updateUniformBuffer(uint32 uniformBufferIndex) noexcept {
+auto engine::VulkanTriangleApplication::updateUniformBuffer(uint32 uniformBufferIndex) noexcept -> void {
     static float FOV = 45.0f; /// Field Of View of Camera
 
     /**
@@ -592,38 +601,55 @@ void engine::VulkanTriangleApplication::updateUniformBuffer(uint32 uniformBuffer
     projection[1][1] *= -1; /// reverse y component of projection, as GLM library was designed for OpenGL, and we use Vulkan
                             /// in OpenGL, the drawing is reversed at y axis level
 
-    glm::mat4 baseLocation (1.0f); /// all objects start as base location x = 1.0f, y = 1.0f, z = 1.0f
+    glm::mat4 baseModel (1.0f); /// all objects start as base model x = 1.0f, y = 1.0f, z = 1.0f
 
     /**
      * We will apply local transformations to the Uniform Buffer Object's model matrix as follows :
-     *      translate
+     *      base model = 1.0f
+     *      translate to location()
+     *      rotate with rotation() - needs to be done for each axis
+     *          rotate yaw   - around x axis
+     *          rotate pitch - around y axis
+     *          rotate roll  - around z axis
+     *      scale to scale()
      */
     for ( auto * pEntity : this->_activeScene.entitiesOfClass("VGameObject") ) {
         auto pGameObject = dynamic_cast < VGameObject * > (pEntity);
         engine::SUniformBufferObject UBO {
-            .model = glm::rotate(
-                glm::rotate (
-                    glm::rotate(
-                        glm::scale(
-                            glm::translate(baseLocation, pGameObject->transformPtr()->getLocation() ),
-                            pGameObject->transformPtr()->getScale()
+            .model = glm::scale( /// scale with scale
+                glm::rotate( /// rotate roll
+                    glm::rotate ( /// rotate pitch
+                        glm::rotate( /// rotate yaw
+                            glm::translate(baseModel, pGameObject->transformPtr()->getLocation() ), /// translate to location
+                            glm::radians(pGameObject->transformPtr()->getRotation().yaw()), glm::vec3(1.0f, 0.0f, 0.0f)
                         ),
-                        glm::radians(pGameObject->transformPtr()->getRotation().yaw()), glm::vec3(1.0f, 0.0f, 0.0f)
+                        glm::radians(pGameObject->transformPtr()->getRotation().pitch()), glm::vec3(0.0f, 1.0f, 0.0f)
                     ),
-                    glm::radians(pGameObject->transformPtr()->getRotation().pitch()), glm::vec3(0.0f, 1.0f, 0.0f)
+                    glm::radians(pGameObject->transformPtr()->getRotation().roll()), glm::vec3(0.0f, 0.0f, 1.0f)
                 ),
-                glm::radians(pGameObject->transformPtr()->getRotation().roll()), glm::vec3(0.0f, 0.0f, 1.0f)
+                pGameObject->transformPtr()->getScale()
             ),
             .view       = view,
             .projection = projection
         };
 
+        /// acquire current renderer uniform buffer
         auto & currentBuffer = pGameObject->meshRendererPtr()->getMVPDescriptorBuffers()[ uniformBufferIndex ];
-        currentBuffer.load( & UBO, 1U );
+        currentBuffer.load( & UBO, 1U ); /// load the uniform buffer object
     }
 }
 
-void processInputCallback (GLFWwindow* window, int key, int scanCode, int action, int mods) {
+/**
+ * @brief internal callback function for key presses
+ * @param window : GLFWwindow pointer = window on which a keypress has been detected
+ * @param key : int = keyPress in GLFW values
+ * @param scanCode : int = actual scancode of key ( keyboard code )
+ * @param action : int = action of the key = pressed, released, repeat
+ * @param mods : int = modifiers of key = CTRL | SHIFT | ALT or any combination of these
+ *
+ * @exceptsafe
+ */
+auto processInputCallback (GLFWwindow* window, int key, int scanCode, int action, int mods) noexcept -> void { /// rudimentary input callback
     if ( action == GLFW_PRESS ) {
         if ( key == GLFW_KEY_A )
             left = true;
@@ -648,7 +674,8 @@ void processInputCallback (GLFWwindow* window, int key, int scanCode, int action
     }
 }
 
-void engine::VulkanTriangleApplication::update() noexcept {
+auto engine::VulkanTriangleApplication::update() noexcept -> void {
+    /// interactions with objects periodically
     auto pCube = dynamic_cast<VGameObject *>(this->_activeScene.getGameObjectByName("cube"));
     if ( pCube == nullptr ) return;
 
@@ -669,11 +696,12 @@ void engine::VulkanTriangleApplication::update() noexcept {
 
     pStar->transformPtr()->getRotation().rotate(VRotor::ROLL, 180.0f * static_cast<float>(this->_deltaTime));
 
-    for ( auto * pGameObject: this -> _activeScene.entitiesOfClass("VGameObject") )
-        dynamic_cast < VGameObject * > (pGameObject) -> update( static_cast <float>(this -> _deltaTime)  );
+    /// call of update for each GameObject
+    for ( auto * pGameObject: this->_activeScene.entitiesOfClass("VGameObject") )
+        dynamic_cast < VGameObject * > (pGameObject)->update( static_cast <float>(this->_deltaTime)  );
 }
 
-void engine::VulkanTriangleApplication::mainLoop() noexcept (false) {
+auto engine::VulkanTriangleApplication::mainLoop() noexcept (false) -> void {
     while ( ! glfwWindowShouldClose( this->_window ) ) { /// while window is active
         double startFrameTime = glfwGetTime(); /// get current time accurately
 
@@ -687,9 +715,7 @@ void engine::VulkanTriangleApplication::mainLoop() noexcept (false) {
 
         if ( this->_fpsTimer >= this->_fpsRefreshTimer ) {
             if ( VulkanTriangleApplication::SHOW_FPS_CONSOLE ) {
-//                std::cout << "FPS : " << (1.0 / this->_deltaTime) << '\n';
-                auto rot = this->_activeScene.getGameObjectByName("cube")->transformPtr()->getRotation();
-                std::cout << "(yaw = " << rot.yaw() << ", pitch = " << rot.pitch() << ", roll = " << rot.roll() << ")\n";
+                std::cout << "FPS : " << (1.0 / this->_deltaTime) << '\n';
             }
             this->_fpsTimer = 0.0;
         }
@@ -697,7 +723,7 @@ void engine::VulkanTriangleApplication::mainLoop() noexcept (false) {
     vkDeviceWaitIdle( this->_vulkanLogicalDevice.data() ); /// Wait until GPU draw Task is finished before closing
 }
 
-void engine::VulkanTriangleApplication::createBuffers() noexcept(false) {
+auto engine::VulkanTriangleApplication::createBuffers() noexcept(false) -> void {
     /**
      * Based on configuration on logical device, we use memory exclusivity if only one graphics queue
      * has been found for Graphics and Present Transfers.
@@ -710,31 +736,31 @@ void engine::VulkanTriangleApplication::createBuffers() noexcept(false) {
     }
 }
 
-void engine::VulkanTriangleApplication::createDepthBuffer() noexcept(false) {
-    /// Create Depth Buffer, Deciding which object prints first. Requires Queue Family Indices
+auto engine::VulkanTriangleApplication::createDepthBuffer() noexcept(false) -> void {
+    /// Create Depth Buffer, Deciding which object display order. Requires Queue Family Indices
     auto queueFamilyIndices = this->_vulkanQueueFamilyCollection->getQueueFamilyIndices();
     ENG_THROW_IF_NOT_SUCCESS(
             this->_depthBuffer.setup(
                     this->_transferCommandPool,
                     queueFamilyIndices.data(),
-                    static_cast<uint32>(queueFamilyIndices.size())
+                    static_cast<uint32>(queueFamilyIndices.size()) /// queue families are required to select a queue
+                                                                   /// for transfer
             ),
             std::runtime_error("depth buffer create failure")
     )
 }
 
-
-void engine::VulkanTriangleApplication::createConcurrentBuffers() noexcept(false) {
+auto engine::VulkanTriangleApplication::createConcurrentBuffers() noexcept(false) -> void {
     auto * pCube = this->_activeScene.getGameObjectByName("cube");
     auto * pStar = this->_activeScene.getGameObjectByName("star");
 
     if ( pCube != nullptr )
         ENG_THROW_IF_NOT_SUCCESS (
             pCube->meshPtr()->setup(
-                this->_transferCommandPool,
-                * this->_vulkanQueueFamilyCollection,
-                cubeVertices,
-                cubeIndices
+                this->_transferCommandPool, /// mesh will be transfered to the GPU
+                * this->_vulkanQueueFamilyCollection, /// through a queue
+                cubeVertices, /// vertices
+                cubeIndices   /// indices, vertices draw order
             ),
             ENG_STD_THROW("Cube Mesh Setup Error")
       )
@@ -753,33 +779,33 @@ void engine::VulkanTriangleApplication::createConcurrentBuffers() noexcept(false
     this->createUniformBuffers();
 }
 
-void engine::VulkanTriangleApplication::createTextures() noexcept(false) {
+auto engine::VulkanTriangleApplication::createTextureSampler() noexcept(false) -> void {
     /// Create and Load Texture Sampler. Use Default Anisotropy = 16. Configurable Later
     auto anisotropyLevel = 16.0f;
 
     ENG_THROW_IF_NOT_SUCCESS(
             this->_textureSampler.setup(
-                this->_vulkanLogicalDevice,
-                true,
-                anisotropyLevel
+                this->_vulkanLogicalDevice, /// sample textures loaded on GPU
+                true,                       /// anisotropy toggle
+                anisotropyLevel             /// anisotropy value
             ),
             std::runtime_error("sampler create error")
     )
 }
 
-void engine::VulkanTriangleApplication::createDescriptorSets() noexcept(false) {
+auto engine::VulkanTriangleApplication::createDescriptorSets() noexcept(false) -> void {
     auto * pCube = this->_activeScene.getGameObjectByName("cube");
     auto * pStar = this->_activeScene.getGameObjectByName("star");
 
     if ( pCube != nullptr )
         ENG_THROW_IF_NOT_SUCCESS(
             pCube->meshRendererPtr()->setup(
-                    this->_transferCommandPool,
-                    this->_descriptorPool,
-                    this->_objectShader,
-                    std::string(__TEXTURES_PATH__).append("container.jpg").c_str(),
-                    this->_textureSampler,
-                    * this->_vulkanQueueFamilyCollection
+                    this->_transferCommandPool,  /// again, on transfer, we need to load the bindings in memory for the texture
+                    this->_descriptorPool,       /// load on this pool
+                    this->_objectShader,         /// for this pipeline
+                    std::string(__TEXTURES_PATH__).append("container.jpg").c_str(), /// this texture's data
+                    this->_textureSampler,       /// with this sampler
+                    * this->_vulkanQueueFamilyCollection /// get a queue from this collection
             ),
             ENG_STD_THROW("Mesh Renderer Create Failure")
         )
@@ -798,33 +824,35 @@ void engine::VulkanTriangleApplication::createDescriptorSets() noexcept(false) {
         )
 }
 
-void engine::VulkanTriangleApplication::createDescriptorPool() noexcept(false) {
+auto engine::VulkanTriangleApplication::createDescriptorPool() noexcept(false) -> void {
     std::vector < VulkanDescriptorType > descriptorTypes;
 
     for ( const auto & type : this->_objectShader.getDescriptorTypeLayout() ) {
-        descriptorTypes.push_back( type );
+        descriptorTypes.push_back( type ); /// to create the pool, get a layout from the pipeline
     }
 
+    /// number of objects that will use individual descriptors - individual buffers on the pipeline.
+    /// make a descriptor set for each
     uint32 objectCount = static_cast<uint32>(this->_activeScene.entitiesOfClass("VGameObject").size());
 
     ENG_THROW_IF_NOT_SUCCESS (
         this->_descriptorPool.setup (
-            this->_vulkanLogicalDevice,
-            descriptorTypes.data(),
-            static_cast < uint32 > (descriptorTypes.size()),
-            objectCount
+            this->_vulkanLogicalDevice, /// on this GPU
+            descriptorTypes.data(),     /// with this layout
+            static_cast < uint32 > (descriptorTypes.size()), /// number of sets described on layout
+            objectCount                 /// number of objects
         ),
         std::runtime_error ( "Descriptor Pool Creation Failure" )
     )
 
 }
 
-void engine::VulkanTriangleApplication::createUniformBuffers() noexcept(false) {
+auto engine::VulkanTriangleApplication::createUniformBuffers() noexcept(false) -> void {
     this->createDescriptorPool();
     this->createDescriptorSets();
 }
 
-void engine::VulkanTriangleApplication::createExclusiveBuffers() noexcept(false) {
+auto engine::VulkanTriangleApplication::createExclusiveBuffers() noexcept(false) -> void {
     throw std::runtime_error("Exclusive Buffer Objects not Implemented");
     this->createUniformBuffers();
 }
@@ -833,7 +861,7 @@ void engine::VulkanTriangleApplication::createExclusiveBuffers() noexcept(false)
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "Simplify"
 #endif
-void engine::VulkanTriangleApplication::cleanup() noexcept {
+auto engine::VulkanTriangleApplication::cleanup() noexcept -> void {
     /**
      * Free and cleanup objects in reverse allocation + creation order
      */
@@ -877,7 +905,7 @@ void engine::VulkanTriangleApplication::cleanup() noexcept {
     glfwTerminate();
 }
 
-void engine::VulkanTriangleApplication::createCommandPool() noexcept(false) {
+auto engine::VulkanTriangleApplication::createCommandPool() noexcept(false) -> void {
     /// Create Two Command Pools. One for Drawing, One for Transfer to Screen
     if ( this->_commandPool.setup( this->_vulkanLogicalDevice ) != VulkanResult::VK_SUCCESS )
         throw std::runtime_error ( "Command Pool Creation Error" );
@@ -885,8 +913,7 @@ void engine::VulkanTriangleApplication::createCommandPool() noexcept(false) {
         throw std::runtime_error ( "Transfer Command Pool Creation Error" );
 }
 
-/// Reminder : objects of same type, store in same buffer !
-void engine::VulkanTriangleApplication::createCommandBuffers() noexcept(false) {
+auto engine::VulkanTriangleApplication::createCommandBuffers() noexcept(false) -> void {
     /**
      * Creation of Command Buffers - Draw Commands
      *
@@ -927,27 +954,28 @@ void engine::VulkanTriangleApplication::createCommandBuffers() noexcept(false) {
      * Current Arrangement : Array of Object Descriptor Set Array per Frame Buffer Image
      */
     std::vector < VulkanDescriptorSet * > descriptorSetHandles ( this->_drawCommandBufferCollection.getCommandBuffers().size());
-    for ( uint32 i = 0; i < descriptorSetHandles.size(); i++ ) {
-        descriptorSetHandles[i]     = new VulkanDescriptorSet[gameObjects.size()];
-        for ( Index j = 0; j < gameObjects.size(); j++ )
-            descriptorSetHandles[i][j] = objectDescriptorSetHandles[j][i];
+    for (uint32 j = 0; j < descriptorSetHandles.size(); j++ ) {
+        descriptorSetHandles[j]     = new VulkanDescriptorSet[gameObjects.size()];
+        for (Index k = 0; k < gameObjects.size(); k++ )
+            descriptorSetHandles[j][k] = objectDescriptorSetHandles[k][j];
     }
 
     /**
-     * Create Drawing Buffer for each FrameBuffer
+     * Record Drawing Buffer for each FrameBuffer
      */
     if ( this->_drawCommandBufferCollection.startRecord(
-            this->_objectShader.getPipeline(),
-            vertexBuffers,
-            indexBuffers,
-            gameObjects.size(),
-            offsets,
-            1U,
-            descriptorSetHandles.data(),
-            static_cast < uint32 > ( descriptorSetHandles.size() )
+            this->_objectShader.getPipeline(), /// on this shader's pipeline
+            vertexBuffers,                     /// for all objects' vertices involved in this shader's drawing
+            indexBuffers,                      /// draw in this order
+            gameObjects.size(),                /// for this many objects
+            offsets,                           /// offsets ( if two objects have vertices in same buffer )
+            1U,                                /// offset Count
+            descriptorSetHandles.data(),       /// descriptor sets handles - to load Uniforms and Textures
+            static_cast < uint32 > ( descriptorSetHandles.size() ) /// number of descriptor set handles
         ) != VulkanResult::VK_SUCCESS )
         throw std::runtime_error ( "Command Buffers Record Error" );
 
+    /// clean up dynamically allocated resources
     for ( auto & handles : descriptorSetHandles )
         delete [] handles;
 
@@ -956,11 +984,13 @@ void engine::VulkanTriangleApplication::createCommandBuffers() noexcept(false) {
     delete [] objectDescriptorSetHandles;
 }
 
-void engine::VulkanTriangleApplication::autoPickPhysicalDevice() noexcept(false) {
+auto engine::VulkanTriangleApplication::autoPickPhysicalDevice() noexcept(false) -> void {
+    /// acquire all the render devices the vulkan instance detects
     auto devices = VPhysicalDevice::getAvailablePhysicalDevices( this->_vulkanInstance );
     const VPhysicalDevice * bestDevice = nullptr;
     uint32 maxDeviceRating = 0U;
 
+    /// get the device with the best rating. Heavy bias towards dedicated GPU's
     for ( const auto & device : devices ) {
         uint32 rating = device.getPhysicalDeviceRenderRating();
         if( rating > maxDeviceRating ) {
@@ -969,13 +999,14 @@ void engine::VulkanTriangleApplication::autoPickPhysicalDevice() noexcept(false)
         }
     }
 
+    /// if no vulkan capable GPU is found, throw std::runtime_error
     if( bestDevice == nullptr )
         throw std::runtime_error ( "failed to find a suitable GPU" );
 
     this->_vulkanPhysicalDevice = ( * bestDevice );
 }
 
-void engine::VulkanTriangleApplication::createGraphicsPipeline() noexcept(false) {
+auto engine::VulkanTriangleApplication::createGraphicsPipeline() noexcept(false) -> void {
     VShaderCompiler compiler; /// Create a Precompiler
 
     /// Use JSON Configuration for shader data
@@ -983,16 +1014,16 @@ void engine::VulkanTriangleApplication::createGraphicsPipeline() noexcept(false)
     compiler.build(); /// Build Shaders in outputs mentioned in JSON Configuration
     ENG_THROW_IF_NOT_SUCCESS (
             this->_objectShader.setup(  ///Setup Shader for GPU
-                    this->_vulkanLogicalDevice,
-                    compiler,
-                    "defObj"
+                    this->_vulkanLogicalDevice, /// on this GPU
+                    compiler,                   /// using this compiler
+                    "defObj"                    /// tags to look for, this shader uses defObj as tag. it is vertex + fragment at the moment
             ),
             ENG_STD_THROW("shader creation error")
     )
 
 }
 
-void engine::VulkanTriangleApplication::createFrameBuffers() noexcept(false) {
+auto engine::VulkanTriangleApplication::createFrameBuffers() noexcept(false) -> void {
     /// Create Frame Buffers - Images that will be swapped in flight, used by Double or Triple Buffering ( currently enabled - Triple )
     if ( this->_frameBufferCollection.setup ( this->_objectShader.getRenderPassPtr(), & this->_depthBuffer ) != VulkanResult::VK_SUCCESS )
         throw std::runtime_error ( "Frame Buffers Creation Failure" );

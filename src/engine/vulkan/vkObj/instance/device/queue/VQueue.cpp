@@ -9,7 +9,7 @@ engine::VQueue::VQueue(const engine::VQueueFamily& family, float priority) noexc
     _priority( priority ){
 }
 
-void engine::VQueue::setup ( const VLogicalDevice& logicalDevice, uint32 index ) noexcept {
+auto engine::VQueue::setup ( const VLogicalDevice& logicalDevice, uint32 index ) noexcept -> void {
     this->_parentLogicalDevice = ( & logicalDevice );
     this->_queueIndex = index;
     vkGetDeviceQueue( logicalDevice.data(), this->_parentFamily->getQueueFamilyIndex(), index, & this->_queueHandler );

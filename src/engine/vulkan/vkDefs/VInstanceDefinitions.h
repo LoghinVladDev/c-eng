@@ -5,6 +5,10 @@
 #ifndef ENG1_VINSTANCEDEFINITIONS_H
 #define ENG1_VINSTANCEDEFINITIONS_H
 
+/**
+ * Defines for validation layers string literals
+ */
+
 #if !defined(_MSC_VER)
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "bugprone-reserved-identifier"
@@ -31,10 +35,16 @@
 
 #define __VULKAN_LAYER_UNDEFINED                  "__UNDEFINED__VK__LAYER__"
 
-
+/**
+ * Defines for function bindings
+ */
 
 #define __VULKAN_INSTANCE_PROC_ADDRESS_CREATE_DEBUG_UTIL_MESSENGER_EXT    "vkCreateDebugUtilsMessengerEXT"
 #define __VULKAN_INSTANCE_PROC_ADDRESS_DESTROY_DEBUG_UTIL_MESSENGER_EXT   "vkDestroyDebugUtilsMessengerEXT"
+
+/**
+ * Defines for instance creation
+ */
 
 #define __VULKAN_INSTANCE_DEFAULT_TITLE                                   "Vulkan Application"
 

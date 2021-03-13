@@ -6,6 +6,11 @@
 #define ENG1_VULKANEXPLICITTYPES_H
 
 #include <engineVulkanPreproc.h>
+
+/**
+ * Header used to Label Vulkan Data Types Explicitly to avoid confusion with internal naming of objects
+ */
+
 typedef VkStructureType                             VulkanStructureType;
 
 typedef VkSurfaceKHR                                VulkanSurfaceKhronos;

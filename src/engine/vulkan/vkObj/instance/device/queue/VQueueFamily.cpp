@@ -5,7 +5,7 @@
 #include "VQueueFamily.h"
 #include <vkUtils/VStdUtils.h>
 
-void engine::VQueueFamilyCollection::queryAvailableQueueFamilies( ) noexcept (false) {
+auto engine::VQueueFamilyCollection::queryAvailableQueueFamilies( ) noexcept (false) -> void {
     if ( this->_physicalDevice->data() == VK_NULL_HANDLE )
         throw engine::EngineNullVPhysicalDevice();
 
@@ -20,7 +20,7 @@ void engine::VQueueFamilyCollection::queryAvailableQueueFamilies( ) noexcept (fa
         this->_queueFamilies.emplace_back( this, queueFamilyProperties, queueGraphicsFamily++ );
 }
 
-void engine::VQueueFamilyCollection::unReserveAllQueueFamilies() noexcept(false) {
+auto engine::VQueueFamilyCollection::unReserveAllQueueFamilies() noexcept -> void {
     for ( const auto & queueFamily : this->_queueFamilies ) {
         this->_reservedQueuesForFamilies.emplace(queueFamily.getQueueFamilyIndex(), 0);
         this->_reservedQueueIndicesForFamilies.emplace(queueFamily.getQueueFamilyIndex(), std::set< uint32 > ());
@@ -29,7 +29,7 @@ void engine::VQueueFamilyCollection::unReserveAllQueueFamilies() noexcept(false)
 
 #ifndef NDEBUG
 
-void engine::VQueueFamily::debugPrintQueueFamily( std::ostream& buffer, const char* prefix ) const noexcept {
+auto engine::VQueueFamily::debugPrintQueueFamily( std::ostream & buffer, StringLiteral prefix ) const noexcept -> void {
     if ( this->_parentCollection->getPhysicalDevice().data() == VK_NULL_HANDLE ) {
         buffer << prefix << "Queue Family is Empty. No Physical Device Attached";
         return;
@@ -58,7 +58,11 @@ void engine::VQueueFamilyCollection::debugPrintQueueFamilies( std::ostream& buff
 
 #ifndef NDEBUG
 
-void engine::VQueueFamily::debugPrintQueueFamilyPropertiesStructure(const VulkanQueueFamilyProperties & properties,std::ostream & buffer, const char * prefix) noexcept {
+auto engine::VQueueFamily::debugPrintQueueFamilyPropertiesStructure(
+        VulkanQueueFamilyProperties const & properties,
+        std::ostream & buffer,
+        StringLiteral prefix
+) noexcept -> void {
     buffer << prefix << "Queue Count :                              " << properties.queueCount                           << '\n';
     buffer << prefix << "Queue Flags :                              " << properties.queueFlags                           << '\n';
     buffer << prefix << "Timestamp Valid Bits :                     " << properties.timestampValidBits                   << '\n';
@@ -73,7 +77,11 @@ void engine::VQueueFamily::debugPrintQueueFamilyPropertiesStructure(const Vulkan
 #endif
 
 #ifndef NDEBUG
-void engine::VQueueFamily::debugPrintQueueFamilyPropertiesStructureQueueFlags(const VulkanQueueFamilyProperties & properties,std::ostream & buffer, const char * prefix) noexcept {
+auto engine::VQueueFamily::debugPrintQueueFamilyPropertiesStructureQueueFlags(
+        VulkanQueueFamilyProperties const & properties,
+        std::ostream & buffer,
+        StringLiteral prefix
+) noexcept -> void {
     buffer << prefix << "Queue Family Graphics Capable :        " << VStandardUtils::constexprBoolAlpha ( VQueueFamily::queueFamilyPropertiesGraphicsBit(properties) )      << '\n' ;
     buffer << prefix << "Queue Family Compute Capable :         " << VStandardUtils::constexprBoolAlpha ( VQueueFamily::queueFamilyPropertiesComputeBit(properties) )       << '\n' ;
     buffer << prefix << "Queue Family Transfer Capable :        " << VStandardUtils::constexprBoolAlpha ( VQueueFamily::queueFamilyPropertiesTransferBit(properties) )      << '\n' ;
@@ -170,7 +178,7 @@ void engine::VQueueFamilyCollection::freeQueueIndex(const VQueueFamily & queueFa
 
 #ifndef NDEBUG
 
-void engine::VQueueFamily::debugPrintQueueFamilyReservation( std::ostream& buffer, const char* prefix ) const noexcept {
+auto engine::VQueueFamily::debugPrintQueueFamilyReservation( std::ostream & buffer, StringLiteral prefix ) const noexcept -> void {
     buffer << prefix << this->_parentCollection->getReservedQueueFamiliesMap()
         .find( this->_familyIndex )
         ->second
