@@ -10,45 +10,106 @@
 #include <vkObj/instance/validationLayer/VValidationLayer.h>
 #include <vkObj/instance/device/queue/VQueue.h>
 #include <vkObj/instance/extension/VExtension.h>
-//#include <vkObj/window/surface/VSurface.h>
 #include <vkObj/instance/device/VSwapChain.h>
 
 namespace engine {
 
+    /**
+     * Predeclare VQueue, VSwapChain, VImageViewCollection to avoid
+     * circular importing
+     */
     class VQueue;
     class VSwapChain;
     class VImageViewCollection;
 
+    /**
+     * @class engine::EngineVLogicalDeviceFactoryInvalidSwapChain, inherits std::exception
+     *
+     * @brief throws when no valid Surface is given to LogicalDevice Creation
+     */
     class EngineVLogicalDeviceFactoryInvalidSwapChain : public std::exception {
     public:
-        [[nodiscard]] const char * what() const noexcept override {
+
+        /**
+         * @brief getter function for the Exception Message
+         *
+         * @exceptsafe
+         *
+         * @return StringLiteral = Exception Message
+         */
+        [[nodiscard]] auto what() const noexcept -> StringLiteral override {
             return "Given Swap Chain is not configured with a proper surface";
         }
     };
 
+    /**
+     * @class engine::EngineVLogicalDeviceQueuePhysicalDeviceMismatch, inherits std::exception
+     *
+     * @brief throws when Queue Families Specified are not obtained from the Physical Device attached
+     */
     class EngineVLogicalDeviceQueuePhysicalDeviceMismatch : public std::exception {
     public:
-        [[nodiscard]] const char * what() const noexcept override {
+
+        /**
+         * @brief getter function for the Exception Message
+         *
+         * @exceptsafe
+         *
+         * @return StringLiteral = Exception Message
+         */
+        [[nodiscard]] auto what() const noexcept -> StringLiteral override {
             return "Queue families attached are from a separate physical device";
         }
     };
 
+    /**
+     * @class engine::EngineVLogicalDeviceSwapChainIncompatible, inherits std::exception
+     *
+     * @brief throws when given a Physical Device incapable of Vulkan Operations
+     */
     class EngineVLogicalDeviceSwapChainIncompatible : public std::exception {
     public:
-        [[nodiscard]] const char * what() const noexcept override {
+
+        /**
+         * @brief getter function for the Exception Message
+         *
+         * @exceptsafe
+         *
+         * @return StringLiteral = Exception Message
+         */
+        [[nodiscard]] auto what() const noexcept -> StringLiteral override {
             return "Swap Chain Failed to Configure. Either Device is Incompatible or Instantiation Failed";
         }
     };
 
+    /**
+     * @class engine::EngineVLogicalDeviceUnsupportedExtension, inherits std::exception
+     *
+     * @brief throws when given an Exception that is not supported by the Physical Device
+     */
     class EngineVLogicalDeviceUnsupportedExtension : public std::exception {
     private:
+        /// Message of the exception
         std::string _message;
     public:
+
+        /**
+         * @brief Default Constructor
+         *
+         * @exceptsafe
+         */
         EngineVLogicalDeviceUnsupportedExtension () noexcept {
             this->_message = "Physical Device given to Logical Device Factory does not support given Extension";
         }
 
-        explicit EngineVLogicalDeviceUnsupportedExtension ( const VExtension& problematicExtension ) noexcept {
+        /**
+         * @brief Constructor with attached Extension that has caused the issue
+         *
+         * @param problematicExtension : engine::VExtension cref = Reference to the Extension that is incompatible
+         *
+         * @exceptsafe
+         */
+        explicit EngineVLogicalDeviceUnsupportedExtension ( VExtension const & problematicExtension ) noexcept {
             this->_message = std::string("Physical Device given to Logical Device Factory does not support given Extension : { Name : ")
                     .append(problematicExtension.getName())
                     .append(", spec version : ")
@@ -56,75 +117,249 @@ namespace engine {
                     .append("} ");
         }
 
-        [[nodiscard]] const char * what() const noexcept override {
+        /**
+         * @brief getter function for the Exception Message
+         *
+         * @exceptsafe
+         *
+         * @return StringLiteral = Exception Message
+         */
+        [[nodiscard]] auto what() const noexcept -> StringLiteral override {
             return this->_message.c_str();
         }
     };
 
-//    class VQueue;
-
+    /**
+     * @class engine::VLogicalDevice
+     *
+     * @brief Represents a Physical Device with Interface for Drawing Operations - SwapChain, ImageViews, Queues etc
+     *
+     * Physical Device = GPU
+     * SwapChain = Delivery Mechanism for Images from GPU to Screen Surface
+     * ImageViews - Image that is Delivered
+     * Queues - Transfer Buses of Images and Data
+     */
     class VLogicalDevice {
     private:
         //// private variables
+
+        /// workaround variable for a default queue priority that is adjustable
         static float _internal_explicitWrapper_DEFAULT_QUEUE_PRIORITY;
 
+        /// Vulkan Handle for the Logical Device
         VulkanDevice                        _vulkanDevice               {};
+
+        /// Queues Owned and Used by this Object
         std::vector < VQueue >              _queues;
+
+        /// Variable specifying whether device can operate a Swap Chain or not
         bool                                _swapChainAdequate          {false};
 
-        const VValidationLayerCollection *  _validationLayerCollection  {nullptr};
+        /// CPtr to a Validation Layer Collection to get Layers from
+        VValidationLayerCollection const *  _validationLayerCollection  {nullptr};
+
+        /// An Extension Collection to get Extensions from
         VExtensionCollection                _enabledExtensions;
-        
-        const VSurface                   *  _surfacePtr                 {nullptr};
-        const VPhysicalDevice            *  _physicalDevice             {nullptr};
+
+        /// CPtr to the surface to print on
+        VSurface                  const *  _surfacePtr                 {nullptr};
+
+        /// CPtr to the Logical Device ( GPU )
+        VPhysicalDevice           const *  _physicalDevice             {nullptr};
+
+        /// Ptr to the created swap chain
         VSwapChain                       *  _swapChain                  {nullptr};
+
+        /// Ptr to the Image View Collection
         VImageViewCollection             *  _imageViewCollection        {nullptr};
 
         //// private functions
-        VulkanResult setup( const VPhysicalDevice &) noexcept (false);
-        void setupQueues () noexcept;
+
+        /**
+         * @brief Private setup function used by the Logical Device Factory to setup the created Device
+         *
+         * @param physicalDevice : engine::PhysicalDevice cref = Reference to the Base Physical Device
+         *
+         * @throws engine::EngineVLogicalDeviceQueuePhysicalDeviceMismatch if
+         *      given Queue Families to the Builder do not come from the given Physical Device
+         * @throws engine::EngineVLogicalDeviceSwapChainIncompatible if
+         *      this object is not able to produce a swap chain, extension not present
+         *
+         * @return VulkanResult =
+         *      VulkanResult::VK_SUCCESS if Logical Device setup was successful OR
+         *      A VulkanResult returned from vkCreateDevice - Internal Vulkan Function - different from VulkanResult::VK_SUCCESS OR
+         *      VulkanResult::VK_ERROR_TOO_MANY_OBJECTS if a SwapChain already existed on the Logical Device
+         *      A VulkanResult returned from vkCreateImageView - Internal Vulkan Function - different from VulkanResult::VK_SUCCESS
+         */
+        auto setup( VPhysicalDevice const & ) noexcept (false) -> VulkanResult;
+
+        /**
+         * @brief Private setup function used by the Logical Device Factory to setup the Queues
+         *
+         * Assigns the Queues from the QueueFamilies given
+         *
+         * @exceptsafe
+         */
+        auto setupQueues () noexcept -> void;
     public:
 
+        /**
+         * @class engine::VLogicalDevice::VLogicalDeviceFactory
+         *
+         * @brief Factory Pattern Class for Logical Devices, used as they have a lot of parameters to set up
+         */
         class [[maybe_unused]] VLogicalDeviceFactory {
         private:
             //// private variables
+
+            /// variable used to enable exceptions thrown by the Factory
             static bool                         _exceptionsToggle;
-            const VValidationLayerCollection *  _validationLayerCollection  {nullptr};
+
+            /// CPtr to the Validation Layer Collection
+            VValidationLayerCollection const *  _validationLayerCollection  {nullptr};
+
+            /// Queues that will be attached to the device
             std::vector < VQueue >              _queues;
+
+            /// Extensions that will be enabled on the device
             VExtensionCollection                _extensions;
-            const VSurface                   *  _surface                    {nullptr};
-//            const VSwapChain                    _swapChain;
+
+            /// CPtr to the Surface that the Device's Swap Chain will Present on
+            VSurface                   const *  _surface                    {nullptr};
 
         public:
             //// public variables
 
             //// public functions
-            static void setExceptionEnableStatus ( bool toggle ) noexcept {
+
+            /**
+             * @brief function used to enable/disable exceptions globally on device factory
+             *
+             * @param toggle : bool = if true, enables exceptions, if false, disables them
+             *
+             * @static
+             *
+             * @exceptsafe
+             */
+            static auto setExceptionEnableStatus ( bool toggle ) noexcept -> void {
                 VLogicalDevice::VLogicalDeviceFactory::_exceptionsToggle = toggle;
             }
 
-            static void enableExceptions ( ) noexcept {
+            /**
+             * @brief function used to enable exceptions globally on device factory
+             *
+             * @static
+             *
+             * @exceptsafe
+             */
+            static auto enableExceptions ( ) noexcept -> void {
                 VLogicalDevice::VLogicalDeviceFactory::_exceptionsToggle = true;
             }
 
-            static void disableExceptions ( ) noexcept {
+            /**
+             * @brief function used to disable exceptions globally on device factory
+             *
+             * @static
+             *
+             * @exceptsafe
+             */
+            static auto disableExceptions ( ) noexcept -> void {
                 VLogicalDevice::VLogicalDeviceFactory::_exceptionsToggle = false;
             }
 
-            VLogicalDeviceFactory& withValidationLayers ( const VValidationLayerCollection& collection ) noexcept {
+            /**
+             * @brief add validation layers to the current device in-build
+             *
+             * @param collection : engine::VValidationLayerCollection cref = Reference to validation layer collection
+             *
+             * @exceptsafe
+             *
+             * @return engine::VLogicalDevice::VLogicalDeviceFactory ref = Reference to newly modified object
+             */
+            auto withValidationLayers ( VValidationLayerCollection const & collection ) noexcept -> VLogicalDeviceFactory & {
                 this->_validationLayerCollection = ( & collection );
                 return *this;
             }
 
-            VLogicalDeviceFactory& addQueue                 ( const VQueueFamily&, float = _internal_explicitWrapper_DEFAULT_QUEUE_PRIORITY) noexcept (false);
-            VLogicalDeviceFactory& addQueues                ( const VQueueFamily&, uint32, const float* ) noexcept (false);
-            VLogicalDeviceFactory& addExtension             ( const VExtension& ) noexcept;
-            VLogicalDeviceFactory& addExtensions            ( const VExtensionCollection& ) noexcept;
-//            VLogicalDeviceFactory& addSwapChainToSurface    ( const VSurface* ) noexcept;
-            VLogicalDeviceFactory& createSwapChainToSurface ( const VSurface* ) noexcept (false);
+            /**
+             * @brief function adds a Queue to the current in-build object
+             *
+             * @param queueFamily : engine::VQueueFamily cref = Reference to the Queue Family to allocate a Queue from
+             * @param priority : float = Priority of the Operations done on this Queue
+             *
+             * @throws engine::EngineVQueueFamilyNoQueuesAvailable if
+             *      exceptions are enabled AND did not manage to reserve any queues from the Physical Device
+             *
+             * @return engine::VLogicalDevice::VLogicalDeviceFactory ref = Reference to the newly modified object
+             */
+            auto addQueue ( VQueueFamily const &, float = _internal_explicitWrapper_DEFAULT_QUEUE_PRIORITY) noexcept (false) -> VLogicalDeviceFactory &;
 
-            VLogicalDevice build ( const VPhysicalDevice& ) noexcept (false);
+            /**
+             * @brief function adds multiple Queues to the current in-build object
+             *
+             * @param queueFamily : engine::VQueueFamily cref = Reference to the Queue Family to allocate Queues from
+             * @param queueCount : uint32 = Number of Queues to allocate on this Device
+             * @param priorities : float cptr ( array ) = Array of priorities, each having a value for a queue, representing the priority of said queue
+             *
+             * If priorities is nullptr (default value), all queues allocated are created with maximum priority
+             *
+             * @throws engine::EngineVQueueFamilyNoQueuesAvailable if
+             *      exceptions are enabled AND did not manage to reserve the specified number of queues desired from the Physical Device
+             *
+             * @return engine::VLogicalDevice::VLogicalDeviceFactory ref = Reference to the newly modified object
+             */
+            auto addQueues ( VQueueFamily const &, uint32, const float * = nullptr ) noexcept (false) -> VLogicalDeviceFactory &;
 
+            /**
+             * @brief function adds an Extension to the in-build Device
+             *
+             * @param extension : engine::VExtension cref = Reference to the Extension to be added
+             *
+             * @exceptsafe
+             *
+             * @return engine::VLogicalDevice::VLogicalDeviceFactory ref = Reference to the newly modified object
+             */
+            auto addExtension ( VExtension const & ) noexcept ->  VLogicalDeviceFactory &;
+
+            /**
+             * @brief function adds multiple Extensions to the in-build Device
+             *
+             * @param collection : engine::VExtensionCollection cref = Reference to the Extension Collection to be added
+             *
+             * @exceptsafe
+             *
+             * @return engine::VLogicalDevice::VLogicalDeviceFactory ref = Reference to the newly modified object
+             */
+            auto addExtensions ( VExtensionCollection const & ) noexcept -> VLogicalDeviceFactory &;
+
+            /**
+             * @brief function adds a surface ptr to create the swapchain to
+             *
+             * @param surface : engine::VSurface cptr = Constant Address to the Surface to pass to the Swap Chain
+             *
+             * @exceptsafe
+             *
+             * @return engine::VLogicalDevice::VLogicalDeviceFactory ref = Reference to the newly modified object
+             */
+            auto createSwapChainToSurface ( VSurface const * ) noexcept -> VLogicalDeviceFactory &;
+
+            /**
+             *  @brief function builds the Logical Device with the parameters specified to the factory
+             *
+             *  @param physicalDevice : engine::VPhysicalDevice cref = Reference to the Physical Device to build the Logical Device from
+             *
+             *  @throws engine::EngineVLogicalDeviceUnsupportedExtension if
+             *          exceptions are enabled and given extension to the builder is not supported by the physical device
+             *
+             * @return VLogicalDevice = newly built logical device
+             */
+            auto build ( VPhysicalDevice const & ) noexcept (false) -> VLogicalDevice;
+
+            /**
+             * @brief Destructor for the factory, defaulted
+             *
+             * @exceptsafe
+             */
             ~VLogicalDeviceFactory() noexcept = default;
 
         };
@@ -133,63 +368,191 @@ namespace engine {
 
         //// public functions
 
+        /**
+         * @brief Constructor for Logical Device, defaulted
+         *
+         * @exceptsafe
+         */
         VLogicalDevice ( ) noexcept = default;
-        VLogicalDevice ( const VLogicalDevice& ) noexcept;
 
-        VLogicalDevice & operator = ( const VLogicalDevice& ) noexcept;
+        /**
+         * @brief Copy Constructor for Logical Device, required as it has internal allocated memory
+         *
+         * @param obj : engine::VLogicalDevice cref = Constant Reference to the Logical Device to copy
+         *
+         * @exceptsafe
+         */
+        VLogicalDevice ( VLogicalDevice const & ) noexcept;
 
-        [[nodiscard]] const VQueue * getFirstPresentQueuePtr () const noexcept;
-        [[nodiscard]] const VQueue * getFirstGraphicsQueuePtr () const noexcept;
-        [[nodiscard]] const VQueue * getFirstTransferQueuePtr () const noexcept;
+        /**
+         * @brief Operator = overload for Logical Device, required as it has internal allocated memory
+         *
+         * @param obj : engine::VLogicalDevice cref = Constant Reference to the Logical Device to copy
+         *
+         * @overload
+         *
+         * @exceptsafe
+         *
+         * @return engine::VLogicalDevice ref = Reference to the newly modified object
+         */
+        VLogicalDevice & operator = ( VLogicalDevice const & ) noexcept;
 
-        [[nodiscard]] const VPhysicalDevice * getBasePhysicalDevice () const noexcept {
+        /**
+         * @brief getter function for the first Queue capable of Present Operations
+         *
+         * @exceptsafe
+         *
+         * @return engine::VQueue cptr = Address to Constant Queue allocated to the Logical Device
+         */
+        [[nodiscard]] auto getFirstPresentQueuePtr () const noexcept -> VQueue const *;
+
+        /**
+         * @brief getter function for the first Queue capable of Graphics Operations
+         *
+         * @exceptsafe
+         *
+         * @return engine::VQueue cptr = Address to Constant Queue allocated to the Logical Device
+         */
+        [[nodiscard]] auto getFirstGraphicsQueuePtr () const noexcept -> VQueue const *;
+
+        /**
+         * @brief getter function for the first Queue capable of Transfer Operations
+         *
+         * @exceptsafe
+         *
+         * @return engine::VQueue cptr = Address to Constant Queue allocated to the Logical Device
+         */
+        [[nodiscard]] auto getFirstTransferQueuePtr () const noexcept -> VQueue const *;
+
+        /**
+         * @brief getter function for the Address of the Physical Device used by the Logical Device
+         *
+         * @exceptsafe
+         *
+         * @return engine::VPhysicalDevice cptr = Address to Constant Physical Device
+         */
+        [[nodiscard]] auto getBasePhysicalDevice () const noexcept -> VPhysicalDevice const * {
             return this->_physicalDevice;
         }
 
         /**
+         * @brief getter for Surface used by Swap Chain
          *
-         * @return nullptr if device does not have a swap chain configured
+         * @exceptsafe
+         *
+         * @return engine::VSurface cptr = Address of Surface OR
+         *                                 nullptr if device does not have a swap chain configured
          */
-        [[nodiscard]] const VSurface * getSwapChainSurface() const noexcept {
+        [[nodiscard]] auto getSwapChainSurface() const noexcept -> VSurface const * {
             return this->_surfacePtr;
         }
 
         /**
+         * @brief getter for Swap Chain on the Logical Device
          *
-         * @return nullptr if device does not have a swap chain configured
+         * @exceptsafe
+         *
+         * @return engine::VSwapChain cptr = Address of Swap Chain OR
+         *                                   nullptr if device does not have a swap chain configured
          */
-        [[nodiscard]] const VSwapChain * getSwapChain() const noexcept {
+        [[nodiscard]] auto getSwapChain() const noexcept -> VSwapChain const * {
             return this->_swapChain;
         }
 
         /**
+         * @brief getter for Image View Collection used by Swap Chain
          *
-         * @return nullptr if device does not have a swap chain configured
+         * @exceptsafe
+         *
+         * @return engine::VImageViewCollection cptr = Address of Image View Collection OR
+         *                                             nullptr if device does not have a swap chain configured
          */
-        [[nodiscard]] const VImageViewCollection * getImageViewCollection () const noexcept {
+        [[nodiscard]] auto getImageViewCollection () const noexcept -> VImageViewCollection const * {
             return this->_imageViewCollection;
         }
 
-        [[nodiscard]] const std::vector < VQueue > & getQueues() const noexcept {
+        /**
+         * @brief getter for the Queue array, queues used by Logical Device
+         *
+         * @exceptsafe
+         *
+         * @return std::vector < engine::VQueue > cref = Constant Reference to vector of Queues
+         */
+        [[nodiscard]] auto getQueues() const noexcept -> std::vector < VQueue > const & {
             return this->_queues;
         }
 
-        [[nodiscard]] std::set < const VQueueFamily * > getQueueFamilies () const noexcept;
-        [[nodiscard]] std::vector < uint32 > getQueueFamilyIndices () const noexcept;
+        /**
+         * @brief getter for the queue families of the Queues allocated to Logical Device
+         *
+         * @exceptsafe
+         *
+         * @return std::set < engine::VQueueFamily cptr > = Vector of Addresses to Constant Queue Family
+         */
+        [[nodiscard]] auto getQueueFamilies () const noexcept -> std::set < VQueueFamily const * >;
 
-        [[nodiscard]] const VulkanDevice & data() const noexcept {
+        /**
+         * @brief getter for the queue family indices of the Queues allocated to Logical Device
+         *
+         * @exceptsafe
+         *
+         * @return std::vector < uint32 > = Vector of indices of QueueFamily of Queues
+         */
+        [[nodiscard]] auto getQueueFamilyIndices () const noexcept -> std::vector < uint32 >;
+
+        /**
+         * @brief getter for Vulkan Handler of Logical Device
+         *
+         * @exceptsafe
+         *
+         * @return VulkanDevice cref = Reference to Handler
+         */
+        [[nodiscard]] constexpr auto data() const noexcept -> VulkanDevice const & {
             return this->_vulkanDevice;
         }
 
-        [[nodiscard]] bool isSwapChainAdequate () const noexcept {
+        /**
+         * @brief getter function for swapChainAdequate property
+         *
+         * @exceptsafe
+         *
+         * @return true if Logical Device can have a Swap Chain, false otherwise
+         */
+        [[nodiscard]] constexpr auto isSwapChainAdequate () const noexcept -> bool {
             return this->_swapChainAdequate;
         }
 
-        void cleanupSwapChain () noexcept;
-        VulkanResult recreateSwapChain () noexcept;
+        /**
+         * @brief function used to cleanup the swapchain of the Device
+         *
+         * @exceptsafe
+         */
+        auto cleanupSwapChain () noexcept -> void;
 
-        void cleanup () noexcept;
+        /**
+         * @brief function used to recreate the swapchain of the device
+         *
+         * @exceptsafe
+         *
+         * @return VulkanResult =
+         *      VulkanResult::VK_SUCCESS if recreation was successful                                        OR
+         *      VulkanResult::VK_ERROR_TOO_MANY_OBJECTS if Logical Device has a SwapChain configured already OR
+         *      Return Value of vkCreateImageView - internal Vulkan function - if it is not VulkanResult::VK_SUCCESS
+         */
+        auto recreateSwapChain () noexcept -> VulkanResult;
 
+        /**
+         * @brief function used to cleanup the Logical Device
+         *
+         * @exceptsafe
+         */
+        auto cleanup () noexcept -> void;
+
+        /**
+         * @brief destructor of Logical Device
+         *
+         * @exceptsafe
+         */
         ~VLogicalDevice() noexcept;
     };
 

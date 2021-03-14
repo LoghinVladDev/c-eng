@@ -22,7 +22,11 @@ engine::VulkanTriangleApplication::VulkanTriangleApplication(uint32 width, uint3
 
 /**
  * @brief internal tests for queue families, acquiring queues and releasing them
+ *
  * @param collection : engine::VQueueFamilyCollection cref = on which collection to test
+ *
+ * @static
+ *
  * @exceptsafe
  */
 static auto queueFamilyTests ( engine::VQueueFamilyCollection const & collection ) noexcept -> void {
@@ -171,8 +175,13 @@ auto engine::VulkanTriangleApplication::createSurface() noexcept(false) -> void 
 
 /**
  * @brief getter for optimal queue families
+ *
  * @param collection : engine::VQueueFamilyCollection cref = where to get queue families from
+ *
  * @exceptsafe
+ *
+ * @static
+ *
  * @return std::vector < engine::VQueueFamily const pointer > = vector of pointers to constant queue family
  */
 static inline auto internalGatherGraphicsAndPresentQueueFamilies( engine::VQueueFamilyCollection const & collection ) noexcept -> std::vector < engine::VQueueFamily const * > {
@@ -641,11 +650,14 @@ auto engine::VulkanTriangleApplication::updateUniformBuffer(uint32 uniformBuffer
 
 /**
  * @brief internal callback function for key presses
+ *
  * @param window : GLFWwindow pointer = window on which a keypress has been detected
  * @param key : int = keyPress in GLFW values
  * @param scanCode : int = actual scancode of key ( keyboard code )
  * @param action : int = action of the key = pressed, released, repeat
  * @param mods : int = modifiers of key = CTRL | SHIFT | ALT or any combination of these
+ *
+ * @static
  *
  * @exceptsafe
  */

@@ -14,7 +14,29 @@
 bool engine::VLogicalDevice::VLogicalDeviceFactory::_exceptionsToggle = false;
 float engine::VLogicalDevice::_internal_explicitWrapper_DEFAULT_QUEUE_PRIORITY = engine::VQueue::DEFAULT_QUEUE_PRIORITY;
 
-static inline bool checkForSwapChainCapability ( const engine::VExtensionCollection& extensionCollection, const engine::VPhysicalDevice& device, const engine::VSurface *surface ) noexcept {
+/**
+ * @brief internal function used to check whether a swap chain can be created or not
+ *
+ * Checks :
+ *      Surface Validity
+ *      Extension Collection - needs KHRONOS_SWAPCHAIN
+ *      Swap Chain Properties - needs extent, needs present
+ *
+ * @param extensionCollection : engine::VExtensionCollection cref = Constant Reference to extension collection used
+ * @param device : engine::VPhysicalDevice cref = Constant Reference to the GPU Object ( Physical Device ) used
+ * @param surface : engine::VSurface cptr = Address to Constant Surface object
+ *
+ * @exceptsafe
+ *
+ * @static
+ *
+ * @return bool = true if swap chain capabilities are met, false otherwise
+ */
+static inline auto checkForSwapChainCapability (
+        engine::VExtensionCollection    const & extensionCollection,
+        engine::VPhysicalDevice         const & device,
+        engine::VSurface                const * surface
+) noexcept -> bool {
     if ( surface == nullptr )
         return false;
 
@@ -23,65 +45,129 @@ static inline bool checkForSwapChainCapability ( const engine::VExtensionCollect
 
     auto swapChainSupportDetails = device.querySwapChainOnSurfaceSupport ( surface );
 
+#ifndef NDEBUG
     std::cout << extensionCollection.contains( engine::VExtension::KHRONOS_SWAPCHAIN ) << '\n';
+#endif
 
-    return ( extensionCollection.contains ( engine::VExtension::KHRONOS_SWAPCHAIN ) ) && ( ! swapChainSupportDetails.formats.empty() ) && ( ! swapChainSupportDetails.presentModes.empty() );
+    return
+        ( extensionCollection.contains ( engine::VExtension::KHRONOS_SWAPCHAIN ) ) && /// must have KHRONOS_SWAPCHAIN extension
+        ( ! swapChainSupportDetails.formats.empty() ) && /// must have supported formats
+        ( ! swapChainSupportDetails.presentModes.empty() ); /// must have present modes
 }
 
-static inline void fArrSet( float * ptr, float val, uint64 len ) noexcept {
+/**
+ * @brief internal function for defaulting a float array ( memset for float )
+ *
+ * @param ptr : float ptr = address of the first element of the array
+ * @param val : float = value to default the array with
+ * @param len : uint64 = length of the array
+ *
+ * @static
+ *
+ * @exceptsafe
+ */
+static inline auto fArrSet( float * ptr, float val, uint64 len ) noexcept -> void {
     for( uint64 it = 0; it < len; it++ )
         ptr[it] = val;
 }
 
-static inline bool queueFamilyComparator ( const engine::VQueue& a, const engine::VQueue& b ) noexcept {
+/**
+ * @brief comparator function for two Queues. Orders by Family
+ *
+ * @param a : engine::VQueue cref = Reference to one Queue
+ * @param b : engine::VQueue cref = Reference to another Queue to be compared with the first
+ *
+ * @static
+ *
+ * @exceptsafe
+ *
+ * @return bool = true if the first Queue is ordered compared to the other, false otherwise
+ */
+static inline auto queueFamilyComparator ( engine::VQueue const & a, engine::VQueue const & b ) noexcept -> bool {
     return a.getQueueFamily()->getQueueFamilyIndex() < b.getQueueFamily()->getQueueFamilyIndex();
 }
 
-static inline void populateQueueCreateInfoStructure (VulkanDeviceQueueCreateInfo * createInfo, uint32 qFamilyIndex, uint32 qCount, const float * qPrioritiesPtr) noexcept {
+/**
+ * @brief internal function for populating the Queue Creation Structure
+ *
+ * @param createInfo : VulkanDeviceQueueCreateInfo ptr = address to the structure to be populated
+ * @param qFamilyIndex : uint32 = index of the queue's family
+ * @param qCount : uint32 = number of queues to be allocated
+ * @param qPrioritiesPtr : float cptr = address of the first element in a priorities array, representing queues priority
+ *
+ * @static
+ *
+ * @exceptsafe
+ */
+static inline auto populateQueueCreateInfoStructure (
+        VulkanDeviceQueueCreateInfo       * createInfo,
+        uint32                              qFamilyIndex,
+        uint32                              qCount,
+        float                       const * qPrioritiesPtr
+) noexcept -> void {
     if ( createInfo == nullptr )
         return;
 
-    * createInfo = {};
-    createInfo->sType                       = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
-    createInfo->queueFamilyIndex            = qFamilyIndex;
-    createInfo->queueCount                  = qCount;
-    createInfo->pQueuePriorities            = qPrioritiesPtr;
+    * createInfo = {
+        .sType              = VulkanStructureType::VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO,
+        .queueFamilyIndex   = qFamilyIndex,
+        .queueCount         = qCount,
+        .pQueuePriorities   = qPrioritiesPtr
+    };
 }
 
-static inline void populateDeviceCreateInfoStructure (VulkanDeviceCreateInfo * createInfo, const VulkanPhysicalDeviceFeatures & physicalDeviceFeatures, const VulkanDeviceQueueCreateInfo * queueCreateInfoPtr, uint32 queueCreateInfoCount = 1U) noexcept {
+/**
+ * @brief internal function for populating the Logical Device Creation Structure
+ *
+ * @param createInfo : VulkanDeviceCreateInfo ptr = address to the structure to be populated
+ * @param physicalDeviceFeatures : VulkanPhysicalDeviceFeatures cref = Reference to a structure containing the features of a Physical Device
+ * @param queueCreateInfoPtr : VulkanDeviceQueueCreateInfo cptr = Address to the Structure ( or to the first Structure in an array ) containing Queues Allocation for the Device
+ * @param queueCreateInfoCount : uint32 = Number of structures of Queue Create Info ( defaults to 1 if not array )
+ *
+ * @static
+ *
+ * @exceptsafe
+ */
+static inline auto populateDeviceCreateInfoStructure (
+        VulkanDeviceCreateInfo              * createInfo,
+        VulkanPhysicalDeviceFeatures  const & physicalDeviceFeatures,
+        VulkanDeviceQueueCreateInfo   const * queueCreateInfoPtr,
+        uint32                                queueCreateInfoCount      = 1U
+) noexcept -> void {
     if ( createInfo == nullptr )
         return;
 
-    *createInfo = {};
-    createInfo->sType                       = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
-    createInfo->pQueueCreateInfos           = queueCreateInfoPtr;
-    createInfo->queueCreateInfoCount        = queueCreateInfoCount;
-    createInfo->pEnabledFeatures            = & physicalDeviceFeatures;
-    createInfo->enabledExtensionCount       = 0U;
+    * createInfo = {
+        .sType                  = VulkanStructureType::VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO,
+        .queueCreateInfoCount   = queueCreateInfoCount,
+        .pQueueCreateInfos      = queueCreateInfoPtr,
+        .enabledExtensionCount  = 0U,
+        .pEnabledFeatures       = & physicalDeviceFeatures
+    };
 }
 
-engine::VLogicalDevice::VLogicalDeviceFactory & engine::VLogicalDevice::VLogicalDeviceFactory::createSwapChainToSurface(const VSurface* surface) noexcept (false) {
-    if( surface == nullptr )
+auto engine::VLogicalDevice::VLogicalDeviceFactory::createSwapChainToSurface(
+        VSurface const * surface
+) noexcept -> VLogicalDeviceFactory & {
+    if( surface == nullptr ) /// do nothing if given invalid surface
         return *this;
 
-    this->_extensions.emplace ( VExtension::KHRONOS_SWAPCHAIN );
+    this->_extensions.emplace ( VExtension::KHRONOS_SWAPCHAIN ); /// add swapchain extension if surface has been provided
     this->_surface = surface;
 
     return *this;
 }
 
-[[nodiscard]] std::vector < uint32 > engine::VLogicalDevice::getQueueFamilyIndices () const noexcept {
+auto engine::VLogicalDevice::getQueueFamilyIndices () const noexcept -> std::vector < uint32 > {
     std::set < uint32 > uniqueQueueFamilyIndices;
 
     for ( const auto& queue : this->_queues )
-        uniqueQueueFamilyIndices.insert( queue.getQueueFamily()->getQueueFamilyIndex() );
+        uniqueQueueFamilyIndices.insert( queue.getQueueFamily()->getQueueFamilyIndex() ); /// save non-duplicating queue family indices
 
-    std::vector < uint32 > queueFamilyIndices ( uniqueQueueFamilyIndices.begin(), uniqueQueueFamilyIndices.end() );
-
-    return queueFamilyIndices;
+    return { uniqueQueueFamilyIndices.begin(), uniqueQueueFamilyIndices.end() }; /// return vector of set's elements
 }
 
-[[nodiscard]] std::set < const engine::VQueueFamily* > engine::VLogicalDevice::getQueueFamilies() const noexcept {
+auto engine::VLogicalDevice::getQueueFamilies() const noexcept -> std::set < engine::VQueueFamily const * > {
     std::set < const engine::VQueueFamily * > queueFamilies;
 
     for ( const auto& queue : this->_queues )
@@ -90,78 +176,91 @@ engine::VLogicalDevice::VLogicalDeviceFactory & engine::VLogicalDevice::VLogical
     return queueFamilies;
 }
 
-VulkanResult engine::VLogicalDevice::setup( const engine::VPhysicalDevice& physicalDevice ) noexcept (false) {
+auto engine::VLogicalDevice::setup( const engine::VPhysicalDevice& physicalDevice ) noexcept (false) -> VulkanResult {
     std::set < uint32 > queueFamiliesIndices;
-    std::map < uint32, std::vector < float > > familyIndexToQueuePriorities;
+    std::map < uint32, std::vector < float > > familyIndexToQueuePriorities; /// each family with their own priorities
 
-    this->_physicalDevice = & physicalDevice;
+    this->_physicalDevice = & physicalDevice; /// save physical device address
 
     uint32 queueCreateInfoIndex = 0U;
     for( const auto & queue : this->_queues ) {
-        if (queue.getQueueFamily()->getPhysicalDevice().data() != physicalDevice.data())
-            throw engine::EngineVLogicalDeviceQueuePhysicalDeviceMismatch();
+        if (queue.getQueueFamily()->getPhysicalDevice().data() != physicalDevice.data()) /// if queue comes from another device handle
+            throw engine::EngineVLogicalDeviceQueuePhysicalDeviceMismatch(); /// throw
 
         uint32 familyIndex = queue.getQueueFamily()->getQueueFamilyIndex();
 
-        queueFamiliesIndices.insert( familyIndex );
+        queueFamiliesIndices.insert( familyIndex ); /// save index of queue family
 
-        auto findResPriorities = familyIndexToQueuePriorities.find( familyIndex );
+        auto findResPriorities = familyIndexToQueuePriorities.find( familyIndex ); /// either create new priority vector, or append
         if( findResPriorities == familyIndexToQueuePriorities.end() )
             familyIndexToQueuePriorities.insert( std::make_pair ( familyIndex, std::vector <float> { queue.getPriority() } ) );
         else
             findResPriorities->second.push_back( queue.getPriority() );
     }
 
-    std::vector < VulkanDeviceQueueCreateInfo > queueCreateInfos ( queueFamiliesIndices.size() );
+    std::vector < VulkanDeviceQueueCreateInfo > queueCreateInfos ( queueFamiliesIndices.size() ); /// one queue create info per family used
 
-    for ( const auto& familyIndex : queueFamiliesIndices ) {
+    for ( const auto& familyIndex : queueFamiliesIndices ) { /// for each family
         populateQueueCreateInfoStructure(
-            (&queueCreateInfos[queueCreateInfoIndex++]),
-            familyIndex,
-            static_cast<uint32>(familyIndexToQueuePriorities.find(familyIndex)->second.size()),
-            familyIndexToQueuePriorities.find(familyIndex)->second.data()
+            ( & queueCreateInfos [ queueCreateInfoIndex ++ ] ), /// pass address and move onto the next
+            familyIndex, /// queue's family index
+            static_cast < uint32 > ( familyIndexToQueuePriorities.find(familyIndex)->second.size() ), /// get priorities size
+            familyIndexToQueuePriorities.find(familyIndex)->second.data() /// get priorities
         );
     }
 
-    VulkanDeviceCreateInfo      deviceCreateInfo    {};
+    VulkanDeviceCreateInfo deviceCreateInfo {};
     std::vector < VValidationLayer::VulkanValidationLayerLiteral > layerLiterals;
 
     populateDeviceCreateInfoStructure(
-            & deviceCreateInfo,
-            physicalDevice.getPhysicalDeviceFeatures(),
-            queueCreateInfos.data(),
+            & deviceCreateInfo, /// structure's address to populate
+            physicalDevice.getPhysicalDeviceFeatures(), /// features of device
+            queueCreateInfos.data(), /// pass all queue create infos
             static_cast<uint32>(queueCreateInfos.size())
     );
 
 
-    if( this->_validationLayerCollection != nullptr ) {
-        layerLiterals = this->_validationLayerCollection->getValidationLayerLiterals();
-        deviceCreateInfo.enabledLayerCount      = static_cast <uint32> (layerLiterals.size());
-        deviceCreateInfo.ppEnabledLayerNames    = layerLiterals.data();
+    if( this->_validationLayerCollection != nullptr ) { /// if using validation layers
+        layerLiterals                           = this->_validationLayerCollection->getValidationLayerLiterals(); /// get layers lames
+        deviceCreateInfo.enabledLayerCount      = static_cast <uint32> (layerLiterals.size()); /// number of enabled layers
+        deviceCreateInfo.ppEnabledLayerNames    = layerLiterals.data(); /// layer names
     } else {
-        deviceCreateInfo.enabledLayerCount = 0U;
+        deviceCreateInfo.enabledLayerCount = 0U; /// no layers
     }
 
-    auto requiredExtensionsProperties = this->_enabledExtensions.getExtensionNames ();
+    auto requiredExtensionsProperties = this->_enabledExtensions.getExtensionNames (); /// extensions used
 
-    if( ! requiredExtensionsProperties.empty() ) {
+    if( ! requiredExtensionsProperties.empty() ) { /// if using extensions, add to create info
         deviceCreateInfo.enabledExtensionCount =  static_cast <uint32> ( requiredExtensionsProperties.size() );
         deviceCreateInfo.ppEnabledExtensionNames = requiredExtensionsProperties.data();
     }
 
-    this->_swapChainAdequate = checkForSwapChainCapability( this->_enabledExtensions, physicalDevice, this->_surfacePtr );
+    /// check swapchain capability
+    this->_swapChainAdequate = checkForSwapChainCapability(
+            this->_enabledExtensions,
+            physicalDevice,
+            this->_surfacePtr
+    );
 
+    /// if a surface was attached at creation
     if ( this->_surfacePtr != nullptr ) {
-        if (!this->_swapChainAdequate)
-            throw engine::EngineVLogicalDeviceSwapChainIncompatible();
+        if (!this->_swapChainAdequate) /// and device cannot pass to surface
+            throw engine::EngineVLogicalDeviceSwapChainIncompatible(); /// throw
         else {
-            this->_swapChain            = new VSwapChain( this );
+            this->_swapChain            = new VSwapChain( this ); /// create swapchain and image views
             this->_imageViewCollection  = new VImageViewCollection;
         }
     }
 
-    VulkanResult createDeviceResult = vkCreateDevice ( physicalDevice.data(), & deviceCreateInfo, nullptr, & this->_vulkanDevice );
-    if( createDeviceResult != VK_SUCCESS ) {
+    /// create logical device
+    VulkanResult createDeviceResult = vkCreateDevice (
+            physicalDevice.data(), /// with this Physical Device Handler ( GPU )
+            & deviceCreateInfo,    /// with the parameters in this structure
+            nullptr,     /// no custom allocator
+            & this->_vulkanDevice  /// save handler here
+    );
+
+    if( createDeviceResult != VK_SUCCESS ) { /// if creation unsuccessful
         delete this->_swapChain;
         delete this->_imageViewCollection;
         this->_swapChain = nullptr;
@@ -171,7 +270,7 @@ VulkanResult engine::VLogicalDevice::setup( const engine::VPhysicalDevice& physi
     }
 
     VulkanResult createSwapChainResult = this->_swapChain->setup();
-    if( createSwapChainResult != VK_SUCCESS ) {
+    if( createSwapChainResult != VK_SUCCESS ) { /// if swap chain setup unsuccessful
         delete this->_swapChain;
         delete this->_imageViewCollection;
         this->_swapChain = nullptr;
@@ -181,7 +280,7 @@ VulkanResult engine::VLogicalDevice::setup( const engine::VPhysicalDevice& physi
     }
 
     VulkanResult createImageViewCollectionResult = this->_imageViewCollection->setup( this->_swapChain );
-    if( createImageViewCollectionResult != VK_SUCCESS ) {
+    if( createImageViewCollectionResult != VK_SUCCESS ) { /// if image view creation unsuccessful
         delete this->_imageViewCollection;
         this->_imageViewCollection = nullptr;
 
@@ -191,69 +290,88 @@ VulkanResult engine::VLogicalDevice::setup( const engine::VPhysicalDevice& physi
     return VulkanResult::VK_SUCCESS;
 }
 
-void engine::VLogicalDevice::setupQueues() noexcept {
-    for( auto& queue : this->_queues ) {
+auto engine::VLogicalDevice::setupQueues() noexcept -> void {
+    for( auto& queue : this->_queues ) { /// setup each queue individually
         queue.setup( *this, queue.getQueueFamily()->getAvailableQueueIndex() );
     }
 }
 
-engine::VLogicalDevice::VLogicalDeviceFactory & engine::VLogicalDevice::VLogicalDeviceFactory::addQueue(const VQueueFamily & queueFamily, float priority) noexcept (false) {
-    uint32 reservedQueuesCount = queueFamily.reserveQueues( 1U );
+auto engine::VLogicalDevice::VLogicalDeviceFactory::addQueue(
+        VQueueFamily const & queueFamily,
+        float priority
+) noexcept (false) -> VLogicalDeviceFactory & {
+    uint32 reservedQueuesCount = queueFamily.reserveQueues( 1U ); /// add one queue => reserve 1 in advance
 
     if( reservedQueuesCount == 1U )
         this->_queues.emplace_back( queueFamily, priority );
-    else if ( engine::VLogicalDevice::VLogicalDeviceFactory::_exceptionsToggle )
+    else if ( engine::VLogicalDevice::VLogicalDeviceFactory::_exceptionsToggle ) /// if none avaiable, throw
         throw engine::EngineVQueueFamilyNoQueuesAvailable( 1U, reservedQueuesCount );
 
     return *this;
 }
 
-engine::VLogicalDevice::VLogicalDeviceFactory & engine::VLogicalDevice::VLogicalDeviceFactory::addQueues(const VQueueFamily & queueFamily, uint32 queueCount, const float * priorities) noexcept(false) {
-    if( priorities == nullptr ){
+auto engine::VLogicalDevice::VLogicalDeviceFactory::addQueues(
+        VQueueFamily const & queueFamily,
+        uint32 queueCount,
+        float const * priorities
+) noexcept(false) -> VLogicalDeviceFactory & {
+    float const * prioritiesAllocatedHere = nullptr; /// tracking for in-place allocated priorities
+
+    if( priorities == nullptr ){ /// if no priorities given
         auto * newPriorities = new float[queueCount];
-        fArrSet( newPriorities, engine::VQueue::DEFAULT_QUEUE_PRIORITY, queueCount );
+
+        prioritiesAllocatedHere = newPriorities; /// track allocation
+
+        fArrSet( newPriorities, engine::VQueue::DEFAULT_QUEUE_PRIORITY, queueCount ); /// default priorities
         priorities = newPriorities;
     }
 
-    uint32 reservedQueuesCount = queueFamily.reserveQueues( queueCount );
+    uint32 reservedQueuesCount = queueFamily.reserveQueues( queueCount ); /// reserve the required queue count
 
     if( engine::VLogicalDevice::VLogicalDeviceFactory::_exceptionsToggle && ( reservedQueuesCount < queueCount ) )
-        throw engine::EngineVQueueFamilyNoQueuesAvailable( queueCount, reservedQueuesCount );
+        throw engine::EngineVQueueFamilyNoQueuesAvailable( queueCount, reservedQueuesCount ); /// if cannot reserve and exceptions enabled, throw
 
     for( uint32 i = 0; i < queueCount; i++ ) {
         this->_queues.emplace_back( queueFamily, priorities[i] );
     }
 
+    delete [] prioritiesAllocatedHere; /// delete internally allocated priorities
+
     return *this;
 }
 
-engine::VLogicalDevice::VLogicalDeviceFactory & engine::VLogicalDevice::VLogicalDeviceFactory::addExtension ( const engine::VExtension& extension ) noexcept {
-    this->_extensions.add ( extension );
+auto engine::VLogicalDevice::VLogicalDeviceFactory::addExtension (
+        engine::VExtension const & extension
+) noexcept ->  VLogicalDeviceFactory & {
+    this->_extensions.add ( extension ); /// add extension to enabled extensions
     return *this;
 }
 
-engine::VLogicalDevice::VLogicalDeviceFactory & engine::VLogicalDevice::VLogicalDeviceFactory::addExtensions ( const engine::VExtensionCollection& collection ) noexcept {
-    this->_extensions.add ( collection );
+auto engine::VLogicalDevice::VLogicalDeviceFactory::addExtensions (
+        engine::VExtensionCollection const & collection
+) noexcept -> VLogicalDeviceFactory & {
+    this->_extensions.add ( collection ); /// add all extensions to enabled extensions
     return *this; 
 }
 
-engine::VLogicalDevice engine::VLogicalDevice::VLogicalDeviceFactory::build ( const engine::VPhysicalDevice& physicalDevice ) noexcept (false) {
+auto engine::VLogicalDevice::VLogicalDeviceFactory::build (
+        engine::VPhysicalDevice const & physicalDevice
+) noexcept (false) -> VLogicalDevice {
 
-    VLogicalDevice builtObject;
+    VLogicalDevice builtObject; ///start from empty object
 
-    std::sort( this->_queues.begin(), this->_queues.end(), queueFamilyComparator );
+    std::sort( this->_queues.begin(), this->_queues.end(), queueFamilyComparator ); /// sort queues
 
-    builtObject._queues                     = this->_queues;
-    builtObject._validationLayerCollection  = this->_validationLayerCollection;
-    builtObject._surfacePtr                 = this->_surface;
-//    builtObject._swapChain                  = this->_swapChain;
+    builtObject._queues                     = this->_queues; /// add queues from factory to device
+    builtObject._validationLayerCollection  = this->_validationLayerCollection; /// add validation layers from factory to device
+    builtObject._surfacePtr                 = this->_surface; /// add surface from factory to device
 
-    if ( engine::VLogicalDevice::VLogicalDeviceFactory::_exceptionsToggle ) {
-        for ( auto & extension : this->_extensions.getExtensions() ) 
+    if ( engine::VLogicalDevice::VLogicalDeviceFactory::_exceptionsToggle ) { /// if exceptions enabled
+        for ( auto & extension : this->_extensions.getExtensions() )  /// check for unsupported exceptions
             if ( ! physicalDevice.supportsExtension( extension ) )
-                throw engine::EngineVLogicalDeviceUnsupportedExtension( extension );
+                throw engine::EngineVLogicalDeviceUnsupportedExtension( extension ); /// throw if unsupported
     } else {
-        VExtensionCollection filteredExtensions;
+        VExtensionCollection filteredExtensions; /// else just filter unsupported exceptions
         for ( auto & extension : this->_extensions.getExtensions() )
             if( physicalDevice.supportsExtension ( extension ) )
                 filteredExtensions.add( extension );
@@ -261,45 +379,45 @@ engine::VLogicalDevice engine::VLogicalDevice::VLogicalDeviceFactory::build ( co
         this->_extensions = filteredExtensions;
     }
 
-    builtObject._enabledExtensions = this->_extensions;
+    builtObject._enabledExtensions = this->_extensions; /// pass exceptions from Factory to Object
 
-    if( builtObject.setup( physicalDevice ) != VK_SUCCESS )
-        throw std::runtime_error ( "logical device creation failure" );
+    if( builtObject.setup( physicalDevice ) != VK_SUCCESS ) /// setup physical device
+        throw std::runtime_error ( "logical device creation failure" ); /// if failed, throw
 
-    builtObject.setupQueues();
+    builtObject.setupQueues(); /// setup queues
 
     return builtObject;
 }
 
 void engine::VLogicalDevice::cleanup() noexcept {
-    for( auto & queue : this->_queues )
+    for( auto & queue : this->_queues ) /// cleanup queues
         queue.cleanup();
 
-    if( this->_swapChain != nullptr ) {
+    if( this->_swapChain != nullptr ) { /// cleanup image views and swapchain
         this->_imageViewCollection->cleanup();
         this->_swapChain->cleanup();
     }
 
-    vkDestroyDevice( this->_vulkanDevice, nullptr );
+    vkDestroyDevice( this->_vulkanDevice, nullptr ); /// destroy logical device hanldes
 }
 
-engine::VLogicalDevice::~VLogicalDevice() noexcept {
+engine::VLogicalDevice::~VLogicalDevice() noexcept { /// on destruction, free dynamically allocated objects
     delete this->_imageViewCollection;
     delete this->_swapChain;
 }
 
-engine::VLogicalDevice::VLogicalDevice(const engine::VLogicalDevice & obj) noexcept {
-    this->_vulkanDevice                 = obj._vulkanDevice;
-    this->_queues                       = obj._queues;
-    this->_swapChainAdequate            = obj._swapChainAdequate;
-    this->_validationLayerCollection    = obj._validationLayerCollection;
-    this->_enabledExtensions            = obj._enabledExtensions;
-    this->_surfacePtr                   = obj._surfacePtr;
-    this->_physicalDevice               = obj._physicalDevice;
+engine::VLogicalDevice::VLogicalDevice(engine::VLogicalDevice const & obj) noexcept {
+    this->_vulkanDevice                 = obj._vulkanDevice;                /// pass handle
+    this->_queues                       = obj._queues;                      /// pass queues
+    this->_swapChainAdequate            = obj._swapChainAdequate;           /// copy swap chain adequacy
+    this->_validationLayerCollection    = obj._validationLayerCollection;   /// pass validation layer collection
+    this->_enabledExtensions            = obj._enabledExtensions;           /// pass enabled extensions
+    this->_surfacePtr                   = obj._surfacePtr;                  /// pass surface ptr
+    this->_physicalDevice               = obj._physicalDevice;              /// pass physical device address
 
     if( obj._swapChain != nullptr ) {
-        this->_swapChain            = new VSwapChain(*obj._swapChain, this);
-        this->_imageViewCollection  = new VImageViewCollection ( obj._imageViewCollection, this->_swapChain );
+        this->_swapChain            = new VSwapChain(*obj._swapChain, this);/// construct new swapchain of existing
+        this->_imageViewCollection  = new VImageViewCollection ( obj._imageViewCollection, this->_swapChain ); /// construct new image view collection
 //        this->_swapChain->setLogicalDevice( this ); cannot because upon copy ctr call, obj is initialized
 //                                                           set of logical device works before init. Same for img collection
     }
@@ -309,15 +427,15 @@ engine::VLogicalDevice::VLogicalDevice(const engine::VLogicalDevice & obj) noexc
     }
 }
 
-engine::VLogicalDevice &engine::VLogicalDevice::operator=(const engine::VLogicalDevice & obj) noexcept {
+engine::VLogicalDevice &engine::VLogicalDevice::operator=( engine::VLogicalDevice const & obj ) noexcept {
     if( this == & obj )
         return *this;
 
-    if ( this->_vulkanDevice != VulkanDevice() )
-        this->cleanup();
+    if ( this->_vulkanDevice != VulkanDevice() ) // if device existed here
+        this->cleanup(); /// cleanup
     delete this->_swapChain;
 
-    this->_vulkanDevice                 = obj._vulkanDevice;
+    this->_vulkanDevice                 = obj._vulkanDevice; /// same as copy ctor
     this->_queues                       = obj._queues;
     this->_swapChainAdequate            = obj._swapChainAdequate;
     this->_validationLayerCollection    = obj._validationLayerCollection;
@@ -338,21 +456,21 @@ engine::VLogicalDevice &engine::VLogicalDevice::operator=(const engine::VLogical
     return *this;
 }
 
-const engine::VQueue * engine::VLogicalDevice::getFirstPresentQueuePtr() const noexcept {
+auto engine::VLogicalDevice::getFirstPresentQueuePtr() const noexcept -> VQueue const * {
     for( const auto & queue : this->_queues )
         if ( queue.getQueueFamily()->isPresentCapable() )
-            return ( & queue );
+            return ( & queue ); /// return address of queue
     return nullptr;
 }
 
-const engine::VQueue * engine::VLogicalDevice::getFirstGraphicsQueuePtr() const noexcept {
+auto engine::VLogicalDevice::getFirstGraphicsQueuePtr() const noexcept -> VQueue const * {
     for( const auto & queue : this->_queues )
         if ( queue.getQueueFamily()->isGraphicsCapable() )
             return ( & queue );
     return nullptr;
 }
 
-const engine::VQueue * engine::VLogicalDevice::getFirstTransferQueuePtr() const noexcept {
+auto engine::VLogicalDevice::getFirstTransferQueuePtr() const noexcept -> VQueue const * {
     const VQueue * pGraphicsQueue = nullptr;
 
     for ( const auto & queue : this->_queues )
@@ -364,12 +482,12 @@ const engine::VQueue * engine::VLogicalDevice::getFirstTransferQueuePtr() const 
     return pGraphicsQueue;
 }
 
-void engine::VLogicalDevice::cleanupSwapChain() noexcept {
+auto engine::VLogicalDevice::cleanupSwapChain() noexcept -> void {
     this->_imageViewCollection->cleanup();
     this->_swapChain->cleanup();
 }
 
-VulkanResult engine::VLogicalDevice::recreateSwapChain() noexcept {
+auto engine::VLogicalDevice::recreateSwapChain() noexcept -> VulkanResult {
     VulkanResult createSwapChainResult = this->_swapChain->setup( this );
     if ( createSwapChainResult != VulkanResult::VK_SUCCESS ) {
         delete this->_swapChain;

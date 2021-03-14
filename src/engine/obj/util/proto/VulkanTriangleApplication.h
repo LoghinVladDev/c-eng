@@ -445,6 +445,8 @@ namespace engine {
          * @param width : int32 = new width
          * @param height : int32 = new height
          *
+         * @static
+         *
          * @exceptsafe
          */
         static auto frameBufferResizeCallback ( GLFWwindow*, [[maybe_unused]] int32, int32 ) noexcept -> void;

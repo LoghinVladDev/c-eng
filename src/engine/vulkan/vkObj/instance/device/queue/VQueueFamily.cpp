@@ -6,24 +6,30 @@
 #include <vkUtils/VStdUtils.h>
 
 auto engine::VQueueFamilyCollection::queryAvailableQueueFamilies( ) noexcept (false) -> void {
+    /// if queue families were queried but no Physical Device is assigned, throw
     if ( this->_physicalDevice->data() == VK_NULL_HANDLE )
         throw engine::EngineNullVPhysicalDevice();
 
+    /// value to store the number of queue families
     uint32 queueFamilyCount = 0;
+    /// acquire queue family count
     vkGetPhysicalDeviceQueueFamilyProperties( this->_physicalDevice->data(), & queueFamilyCount, nullptr );
 
+    /// queue family properties
     std::vector < VulkanQueueFamilyProperties > queueFamiliesProperties ( queueFamilyCount );
+    /// acquire queue family properties
     vkGetPhysicalDeviceQueueFamilyProperties( this->_physicalDevice->data(), & queueFamilyCount, queueFamiliesProperties.data() );
 
+    /// asign each family to their object
     uint32 queueGraphicsFamily = 0;
     for (const auto & queueFamilyProperties : queueFamiliesProperties)
         this->_queueFamilies.emplace_back( this, queueFamilyProperties, queueGraphicsFamily++ );
 }
 
 auto engine::VQueueFamilyCollection::unReserveAllQueueFamilies() noexcept -> void {
-    for ( const auto & queueFamily : this->_queueFamilies ) {
-        this->_reservedQueuesForFamilies.emplace(queueFamily.getQueueFamilyIndex(), 0);
-        this->_reservedQueueIndicesForFamilies.emplace(queueFamily.getQueueFamilyIndex(), std::set< uint32 > ());
+    for ( const auto & queueFamily : this->_queueFamilies ) { /// for each family
+        this->_reservedQueuesForFamilies.emplace(queueFamily.getQueueFamilyIndex(), 0); /// reset reserved families count
+        this->_reservedQueueIndicesForFamilies.emplace(queueFamily.getQueueFamilyIndex(), std::set< uint32 > ()); /// reset the indices reserved for each family
     }
 }
 
@@ -41,14 +47,16 @@ auto engine::VQueueFamily::debugPrintQueueFamily( std::ostream & buffer, StringL
     buffer << prefix << "\t" << "Queue Family Properties : \n";
 
     VQueueFamily::debugPrintQueueFamilyPropertiesStructure( this->_queueFamilyProperties, buffer, std::string(prefix).append("\t\t").c_str() );
-//    buffer << prefix << "\t\t" << this->_queueFamilyProperties.
 }
 
 #endif
 
 #ifndef NDEBUG
 
-void engine::VQueueFamilyCollection::debugPrintQueueFamilies( std::ostream& buffer, const char* prefix ) const noexcept {
+auto engine::VQueueFamilyCollection::debugPrintQueueFamilies(
+        std::ostream & buffer,
+        StringLiteral prefix
+) const noexcept -> void {
     for ( const auto & queueFamily : this->_queueFamilies ) {
         queueFamily.debugPrintQueueFamily(buffer, prefix);
     }
@@ -90,48 +98,47 @@ auto engine::VQueueFamily::debugPrintQueueFamilyPropertiesStructureQueueFlags(
 }
 #endif
 
-[[nodiscard]] std::vector < const engine::VQueueFamily* > engine::VQueueFamilyCollection::getFlagsCapableQueueFamilies(VulkanQueueFlags flags) const noexcept {
+auto engine::VQueueFamilyCollection::getFlagsCapableQueueFamilies(VulkanQueueFlags flags) const noexcept -> std::vector < engine::VQueueFamily const * > {
     auto capableQueueFamilies = std::vector < const engine::VQueueFamily * > ();
 
-    bool checkForPresentQueues = (bool) ( flags & engine::VQueueFamily::PRESENT_FLAG );
-    flags &= engine::VQueueFamily::STANDARD_QUEUE_PROPERTIES_MASK;
+    bool checkForPresentQueues = (bool) ( flags & engine::VQueueFamily::PRESENT_FLAG ); /// look for present queues ?
+    flags &= engine::VQueueFamily::STANDARD_QUEUE_PROPERTIES_MASK; /// apply mask
 
     for( const auto & queueFamily : this->_queueFamilies )
-        if( queueFamily.isCapableOfPropertiesFlags( flags ) ) {
-            if (!checkForPresentQueues)
-                capableQueueFamilies.push_back(&queueFamily);
+        if( queueFamily.isCapableOfPropertiesFlags( flags ) ) { // / if is capable of requested flags
+            if (!checkForPresentQueues) /// if looking for present capabilities
+                capableQueueFamilies.push_back(&queueFamily); /// add family to the queue families returned
             else {
-//                std::cout << queueFamily.getQueueFamilyIndex() << ", present cap : " << queueFamily.isPresentCapable() << '\n';
-                if ( queueFamily.isPresentCapable() )
-                    capableQueueFamilies.push_back(&queueFamily);
+                if ( queueFamily.isPresentCapable() )  /// if is capable of present
+                    capableQueueFamilies.push_back(&queueFamily); /// add family to the queue families returned
             }
         }
 
     return capableQueueFamilies;
 }
 
-[[nodiscard]] uint32 engine::VQueueFamily::reserveQueues(uint32 targetQueueCount) const noexcept {
+auto engine::VQueueFamily::reserveQueues(uint32 targetQueueCount) const noexcept -> uint32 {
     return this->_parentCollection->reserveQueues( *this, targetQueueCount );
 }
 
-void engine::VQueueFamily::freeQueues(uint32 targetQueueCount) const noexcept {
+auto engine::VQueueFamily::freeQueues(uint32 targetQueueCount) const noexcept -> void {
     return this->_parentCollection->freeQueues( *this, targetQueueCount);
 }
 
-[[nodiscard]] uint32 engine::VQueueFamily::getAvailableQueueIndex() const noexcept {
+auto engine::VQueueFamily::getAvailableQueueIndex() const noexcept -> uint32 {
     return this->_parentCollection->getAvailableQueueIndex( *this );
 }
 
-void engine::VQueueFamily::freeQueueIndex(uint32 index) const noexcept {
+auto engine::VQueueFamily::freeQueueIndex(uint32 index) const noexcept -> void {
     return this->_parentCollection->freeQueueIndex( *this, index);
 }
 
-[[nodiscard]] uint32 engine::VQueueFamilyCollection::reserveQueues( const VQueueFamily & queueFamily, uint32 targetQueueCount ) noexcept {
+auto engine::VQueueFamilyCollection::reserveQueues( const VQueueFamily & queueFamily, uint32 targetQueueCount ) noexcept -> uint32 {
     auto searchResult = this->_reservedQueuesForFamilies.find( queueFamily.getQueueFamilyIndex() );
     uint32 reservedQueues;
 
     if( searchResult == this->_reservedQueuesForFamilies.end() ) {
-        reservedQueues = std::min ( queueFamily.getQueueFamilyProperties().queueCount, targetQueueCount );
+        reservedQueues = std::min ( queueFamily.getQueueFamilyProperties().queueCount, targetQueueCount ); /// reserve the minimum between target queue count and number of queue families
         this->_reservedQueuesForFamilies.emplace ( queueFamily.getQueueFamilyIndex(), reservedQueues );
     } else {
         uint32 availableQueues = queueFamily.getQueueFamilyProperties().queueCount - searchResult->second;
@@ -143,17 +150,17 @@ void engine::VQueueFamily::freeQueueIndex(uint32 index) const noexcept {
     return reservedQueues;
 }
 
-void engine::VQueueFamilyCollection::freeQueues(const VQueueFamily & queueFamily, uint32 targetQueueCount ) noexcept {
+auto engine::VQueueFamilyCollection::freeQueues(const VQueueFamily & queueFamily, uint32 targetQueueCount ) noexcept -> void {
     auto searchResult = this->_reservedQueuesForFamilies.find( queueFamily.getQueueFamilyIndex() );
 
     if( searchResult == this->_reservedQueuesForFamilies.end() ) {
-        this->_reservedQueuesForFamilies.emplace( queueFamily.getQueueFamilyIndex(), 0U );
+        this->_reservedQueuesForFamilies.emplace( queueFamily.getQueueFamilyIndex(), 0U ); /// if no map-entry exists, do not free any, reset to 0 reserved
     } else {
-        searchResult->second = ( targetQueueCount > searchResult->second ) ? ( 0U ) : ( searchResult->second - targetQueueCount );
+        searchResult->second = ( targetQueueCount > searchResult->second ) ? ( 0U ) : ( searchResult->second - targetQueueCount ); /// set reserved count to 0, if freed more that were allocated, or reserved count - freed count
     }
 }
 
-[[nodiscard]] uint32 engine::VQueueFamilyCollection::getAvailableQueueIndex(const VQueueFamily & queueFamily) noexcept {
+auto engine::VQueueFamilyCollection::getAvailableQueueIndex(const VQueueFamily & queueFamily) noexcept -> uint32 {
     uint32 firstAvailableIndex = 0U;
 
     auto searchResult = this->_reservedQueueIndicesForFamilies.find( queueFamily.getQueueFamilyIndex() );
@@ -169,7 +176,7 @@ void engine::VQueueFamilyCollection::freeQueues(const VQueueFamily & queueFamily
     return firstAvailableIndex;
 }
 
-void engine::VQueueFamilyCollection::freeQueueIndex(const VQueueFamily & queueFamily, uint32 index) noexcept {
+auto engine::VQueueFamilyCollection::freeQueueIndex(const VQueueFamily & queueFamily, uint32 index) noexcept -> void {
     auto searchResult = this->_reservedQueueIndicesForFamilies.find( queueFamily.getQueueFamilyIndex() );
 
     if ( searchResult != this->_reservedQueueIndicesForFamilies.end() )
@@ -189,7 +196,7 @@ auto engine::VQueueFamily::debugPrintQueueFamilyReservation( std::ostream & buff
 
 #ifndef NDEBUG
 
-void engine::VQueueFamilyCollection::debugPrintQueueFamiliesReservations(std::ostream & buffer, const char * prefix) const noexcept {
+auto engine::VQueueFamilyCollection::debugPrintQueueFamiliesReservations(std::ostream & buffer, StringLiteral prefix) const noexcept -> void {
     buffer << prefix << "Collection queue families reservations : \n";
     for(const auto & queueFamily : this->_queueFamilies) {
         queueFamily.debugPrintQueueFamilyReservation( buffer, std::string(prefix).append("\t").c_str() );
@@ -198,7 +205,7 @@ void engine::VQueueFamilyCollection::debugPrintQueueFamiliesReservations(std::os
 
 #endif
 
-std::vector< uint32 > engine::VQueueFamilyCollection::getQueueFamilyIndices() const noexcept {
+auto engine::VQueueFamilyCollection::getQueueFamilyIndices() const noexcept -> std::vector < uint32 > {
     std::vector < uint32 > queueFamilyIndices;
 
     for ( const auto & queueFamily : this->_queueFamilies )
@@ -207,10 +214,10 @@ std::vector< uint32 > engine::VQueueFamilyCollection::getQueueFamilyIndices() co
     return queueFamilyIndices;
 }
 
-const engine::VPhysicalDevice & engine::VQueueFamily::getPhysicalDevice() const noexcept {
+auto engine::VQueueFamily::getPhysicalDevice() const noexcept -> engine::VPhysicalDevice const & {
     return this->_parentCollection->getPhysicalDevice();
 }
 
-void engine::VQueueFamily::syncWithSurface(const engine::VSurface & surface) noexcept {
+auto engine::VQueueFamily::syncWithSurface(engine::VSurface const & surface) noexcept -> void {
     vkGetPhysicalDeviceSurfaceSupportKHR( this->_parentCollection->getPhysicalDevice().data(), this->getQueueFamilyIndex(), surface.data(), & this->_presentSupport );
 }

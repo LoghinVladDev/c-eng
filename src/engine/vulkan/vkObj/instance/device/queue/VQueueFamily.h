@@ -96,6 +96,8 @@ namespace engine {
          *
          * @exceptsafe
          *
+         * @static
+         *
          * @return bool = true if properties include Transfer Capabilities, false otherwise
          */
         [[nodiscard]] constexpr static auto queueFamilyPropertiesTransferBit( VulkanQueueFamilyProperties const & properties ) noexcept -> bool {
@@ -108,6 +110,8 @@ namespace engine {
          * @param properties : VulkanQueueFamilyProperties cref = Structure containing the properties of a queue family
          *
          * @exceptsafe
+         *
+         * @static
          *
          * @return bool = true if properties include Graphics Capabilities, false otherwise
          */
@@ -122,6 +126,8 @@ namespace engine {
          *
          * @exceptsafe
          *
+         * @static
+         *
          * @return bool = true if properties include Compute Capabilities, false otherwise
          */
         [[nodiscard]] constexpr static auto queueFamilyPropertiesComputeBit( VulkanQueueFamilyProperties const & properties ) noexcept -> bool {
@@ -134,6 +140,8 @@ namespace engine {
          * @param properties : VulkanQueueFamilyProperties cref = Structure containing the properties of a queue family
          *
          * @exceptsafe
+         *
+         * @static
          *
          * @return bool = true if properties include Protection of Memory Capabilities, false otherwise
          */
@@ -148,6 +156,8 @@ namespace engine {
          *
          * @exceptsafe
          *
+         * @static
+         *
          * @return bool = true if properties include Sparse Binding Capabilities, false otherwise
          */
         [[nodiscard]] constexpr static auto queueFamilyPropertiesSparseBindingBit( VulkanQueueFamilyProperties const & properties ) noexcept -> bool {
@@ -161,6 +171,8 @@ namespace engine {
          * @param VulkanQueueFlags : Flags obtaining by bitwise OR-ing several VulkanQueueFlagBits
          *
          * @exceptsafe
+         *
+         * @static
          *
          * @return bool = true if properties include the properties described by the flags, false otherwise
          */
@@ -439,6 +451,8 @@ namespace engine {
          * @param buffer : std::ostream ref = Reference to an Output Stream to place the data in
          * @param prefix : StringLiteral = Prefix before each line ( ex. no. of tabs )
          *
+         * @static
+         *
          * @exceptsafe
          */
         static auto debugPrintQueueFamilyPropertiesStructureQueueFlags ( VulkanQueueFamilyProperties const & ,std::ostream &, StringLiteral ) noexcept -> void;
@@ -449,6 +463,8 @@ namespace engine {
          * @param properties : VulkanQueueFamilyProperties cref = properties of a Queue Family
          * @param buffer : std::ostream ref = Reference to an Output Stream to place the data in
          * @param prefix : StringLiteral = Prefix before each line ( ex. no. of tabs )
+         *
+         * @static
          *
          * @exceptsafe
          */
@@ -592,50 +608,137 @@ namespace engine {
         }
 
         /**
+         * @brief getter for queue families owned by this object
          *
-         * @return
+         * @exceptsafe
+         *
+         * @return std::vector < VQueueFamily > cref = Constant Reference to the queue families vector
          */
         [[nodiscard]] auto getQueueFamilies () const noexcept -> std::vector < VQueueFamily > const & {
             return this->_queueFamilies;
         }
 
-        [[nodiscard]] std::vector < uint32 > getQueueFamilyIndices () const noexcept;
+        /**
+         * @brief getter for queue family indices owned
+         *
+         * @exceptsafe
+         *
+         * @return std::vector < uint32 > = Vector containing queue family indices
+         */
+        [[nodiscard]] auto getQueueFamilyIndices () const noexcept -> std::vector < uint32 >;
 
-        /// fix:0002 . Have to return *, otherwise duplicates that will destroy logical devices and queues will appear
-        [[nodiscard]] std::vector < const VQueueFamily* > getGraphicsCapableQueueFamilies () const noexcept {
+        /**
+         * @brief getter for graphics capable queue families
+         * fix:0002 . Have to return *, otherwise duplicates that will destroy logical devices and queues will appear
+         *
+         * @exceptsafe
+         *
+         * @return std::vector < VQueueFamily cptr > = Vector containing addresses to constant VQueueFamily
+         */
+        [[nodiscard]] auto getGraphicsCapableQueueFamilies () const noexcept -> std::vector < VQueueFamily const * > {
             return this->getFlagsCapableQueueFamilies( VQueueFamily::GRAPHICS_FLAG );
         }
 
-        [[nodiscard]] std::vector < const VQueueFamily* > getComputeCapableQueueFamilies () const noexcept {
+        /**
+         * @brief getter for compute capable queue families
+         * fix:0002 . Have to return *, otherwise duplicates that will destroy logical devices and queues will appear
+         *
+         * @exceptsafe
+         *
+         * @return std::vector < VQueueFamily cptr > = Vector containing addresses to constant VQueueFamily
+         */
+        [[nodiscard]] auto getComputeCapableQueueFamilies () const noexcept -> std::vector < VQueueFamily const * >  {
             return this->getFlagsCapableQueueFamilies( VQueueFamily::COMPUTE_FLAG );
         }
 
-        [[nodiscard]] std::vector < const VQueueFamily* > getTransferCapableQueueFamilies () const noexcept {
+        /**
+         * @brief getter for transfer capable queue families
+         * fix:0002 . Have to return *, otherwise duplicates that will destroy logical devices and queues will appear
+         *
+         * @exceptsafe
+         *
+         * @return std::vector < VQueueFamily cptr > = Vector containing addresses to constant VQueueFamily
+         */
+        [[nodiscard]] auto getTransferCapableQueueFamilies () const noexcept -> std::vector < VQueueFamily const * > {
             return this->getFlagsCapableQueueFamilies( VQueueFamily::TRANSFER_FLAG );
         }
 
-        [[nodiscard]] std::vector < const VQueueFamily* > getProtectedCapableQueueFamilies () const noexcept {
+        /**
+         * @brief getter for protected memory capable queue families
+         * fix:0002 . Have to return *, otherwise duplicates that will destroy logical devices and queues will appear
+         *
+         * @exceptsafe
+         *
+         * @return std::vector < VQueueFamily cptr > = Vector containing addresses to constant VQueueFamily
+         */
+        [[nodiscard]] auto getProtectedCapableQueueFamilies () const noexcept -> std::vector < VQueueFamily const * > {
             return this->getFlagsCapableQueueFamilies( VQueueFamily::PROTECTED_FLAG );
         }
 
-        [[nodiscard]] std::vector < const VQueueFamily* > getSparseBindingCapableQueueFamilies () const noexcept {
+        /**
+         * @brief getter for Sparse Binding capable queue families
+         * fix:0002 . Have to return *, otherwise duplicates that will destroy logical devices and queues will appear
+         *
+         * @exceptsafe
+         *
+         * @return std::vector < VQueueFamily cptr > = Vector containing addresses to constant VQueueFamily
+         */
+        [[nodiscard]] auto getSparseBindingCapableQueueFamilies () const noexcept -> std::vector < VQueueFamily const * > {
             return this->getFlagsCapableQueueFamilies( VQueueFamily::SPARSE_BINDING_FLAG );
         }
 
-        [[nodiscard]] std::vector < const VQueueFamily* > getPresentCapableQueueFamilies () const noexcept {
+        /**
+         * @brief getter for present capable queue families
+         * fix:0002 . Have to return *, otherwise duplicates that will destroy logical devices and queues will appear
+         *
+         * @exceptsafe
+         *
+         * @return std::vector < VQueueFamily cptr > = Vector containing addresses to constant VQueueFamily
+         */
+        [[nodiscard]] auto getPresentCapableQueueFamilies () const noexcept -> std::vector < VQueueFamily const * > {
             return this->getFlagsCapableQueueFamilies( VQueueFamily::PRESENT_FLAG );
         }
 
-        [[nodiscard]] std::vector < const VQueueFamily* > getFlagsCapableQueueFamilies ( VulkanQueueFlags ) const noexcept;
+        /**
+         * @brief getter for flags capable queue families
+         *
+         * @exceptsafe
+         *
+         * @return std::vector < VQueueFamily cptr > = Vector containing addresses to constant VQueueFamily capable of flags given
+         */
+        [[nodiscard]] auto getFlagsCapableQueueFamilies ( VulkanQueueFlags ) const noexcept -> std::vector < VQueueFamily const * >;
 
-        void syncWithSurface ( const VSurface& surface ) noexcept {
+        /**
+         * @brief function syncing queue families to a surface, requesting surface to enable features on Surface
+         *
+         * @param surface : VSurface cref = Reference to the Surface Object
+         *
+         * @exceptsafe
+         */
+        auto syncWithSurface ( VSurface const & surface ) noexcept -> void {
             for ( auto & queueFamily : this->_queueFamilies )
                 queueFamily.syncWithSurface( surface );
         }
 
 #ifndef NDEBUG
-        void debugPrintQueueFamilies ( std::ostream&, const char* = "" ) const noexcept;
-        void debugPrintQueueFamiliesReservations ( std::ostream&, const char * = "" ) const noexcept;
+
+        /**
+         * @brief Debug Function used to print all Queue Families in the Collection
+         *
+         * @param buffer : std::ostream ref = Reference to an Output Stream to put the data in
+         * @param prefix : StringLiteral = Prefix to be printed before each line ( eg. no. of tabs )
+         *
+         * @exceptsafe
+         */
+        auto debugPrintQueueFamilies ( std::ostream &, StringLiteral = "" ) const noexcept -> void;
+
+        /**
+         * @brief Debug Function used to print all Queue Families Reservations
+         *
+         * @param buffer : std::ostream ref = Reference to an Output Stream to put the data in
+         * @param prefix : StringLiteral = Prefix to be printed before each line ( eg. no. of tabs )
+         */
+        auto debugPrintQueueFamiliesReservations ( std::ostream &, StringLiteral = "" ) const noexcept -> void;
 #endif
     };
 
