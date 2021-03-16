@@ -23,6 +23,14 @@ namespace engine {
      */
     class EngineNullVPhysicalDevice : public std::exception{
     public:
+
+        /**
+         * @brief getter function for the exception message
+         *
+         * @exceptsafe
+         *
+         * @return StringLiteral = Exception Message
+         */
         [[nodiscard]] auto what() const noexcept -> StringLiteral override {
             return "Physical Device Attached has a VK_NULL_HANDLE physical handle";
         }

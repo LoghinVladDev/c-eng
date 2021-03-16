@@ -15,7 +15,7 @@ namespace engine {
     typedef VQueueFamilyCollection                  VQFC;
 
     typedef VLogicalDevice                          VLD;
-    typedef VLogicalDevice::VLogicalDeviceFactory   VLDF;
+    typedef VLogicalDevice::Factory   VLDF;
 
     typedef VPhysicalDevice                         VPD;
 

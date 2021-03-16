@@ -36,7 +36,7 @@ namespace engine {
     public:
 
         /**
-         * @struct engine::VSwapChain::VSwapChainImageInfo
+         * @struct engine::VSwapChain::ImageInfo
          *
          * @brief Represents the Swap Chain's image-transfer properties.
          */
@@ -45,7 +45,7 @@ namespace engine {
             VulkanFormat    format;
             /// The size of the images ( width x height )
             VulkanExtent2D  extent;
-        } VSwapChainImageInfo;
+        } ImageInfo;
 
     private:
         //// private variables
@@ -66,7 +66,7 @@ namespace engine {
           *                         AND
           *                    Default Extent. Will be acquired on creation
           */
-        VSwapChainImageInfo             _imagesInfo     { VulkanFormat::VK_FORMAT_A8B8G8R8_SRGB_PACK32, { } };
+        ImageInfo                       _imagesInfo     {VulkanFormat::VK_FORMAT_A8B8G8R8_SRGB_PACK32, { } };
 
         //// private functions
 
@@ -120,9 +120,9 @@ namespace engine {
          *
          * @exceptsafe
          *
-         * @return engine::VSwapChain::VSwapChainImageInfo cref = Constant Reference to Structure Containing Image Info
+         * @return engine::VSwapChain::ImageInfo cref = Constant Reference to Structure Containing Image Info
          */
-        [[nodiscard]] auto getImagesInfo () const noexcept -> VSwapChainImageInfo const & {
+        [[nodiscard]] auto getImagesInfo () const noexcept -> ImageInfo const & {
             return this->_imagesInfo;
         }
 

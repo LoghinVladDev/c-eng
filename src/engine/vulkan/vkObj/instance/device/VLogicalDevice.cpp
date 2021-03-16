@@ -11,7 +11,7 @@
 #include <cstdint>
 #endif
 
-bool engine::VLogicalDevice::VLogicalDeviceFactory::_exceptionsToggle = false;
+bool engine::VLogicalDevice::Factory::_exceptionsToggle = false;
 float engine::VLogicalDevice::_internal_explicitWrapper_DEFAULT_QUEUE_PRIORITY = engine::VQueue::DEFAULT_QUEUE_PRIORITY;
 
 /**
@@ -146,9 +146,9 @@ static inline auto populateDeviceCreateInfoStructure (
     };
 }
 
-auto engine::VLogicalDevice::VLogicalDeviceFactory::createSwapChainToSurface(
+auto engine::VLogicalDevice::Factory::createSwapChainToSurface(
         VSurface const * surface
-) noexcept -> VLogicalDeviceFactory & {
+) noexcept -> Factory & {
     if( surface == nullptr ) /// do nothing if given invalid surface
         return *this;
 
@@ -296,25 +296,25 @@ auto engine::VLogicalDevice::setupQueues() noexcept -> void {
     }
 }
 
-auto engine::VLogicalDevice::VLogicalDeviceFactory::addQueue(
+auto engine::VLogicalDevice::Factory::addQueue(
         VQueueFamily const & queueFamily,
         float priority
-) noexcept (false) -> VLogicalDeviceFactory & {
+) noexcept (false) -> Factory & {
     uint32 reservedQueuesCount = queueFamily.reserveQueues( 1U ); /// add one queue => reserve 1 in advance
 
     if( reservedQueuesCount == 1U )
         this->_queues.emplace_back( queueFamily, priority );
-    else if ( engine::VLogicalDevice::VLogicalDeviceFactory::_exceptionsToggle ) /// if none avaiable, throw
+    else if ( engine::VLogicalDevice::Factory::_exceptionsToggle ) /// if none avaiable, throw
         throw engine::EngineVQueueFamilyNoQueuesAvailable( 1U, reservedQueuesCount );
 
     return *this;
 }
 
-auto engine::VLogicalDevice::VLogicalDeviceFactory::addQueues(
+auto engine::VLogicalDevice::Factory::addQueues(
         VQueueFamily const & queueFamily,
         uint32 queueCount,
         float const * priorities
-) noexcept(false) -> VLogicalDeviceFactory & {
+) noexcept(false) -> Factory & {
     float const * prioritiesAllocatedHere = nullptr; /// tracking for in-place allocated priorities
 
     if( priorities == nullptr ){ /// if no priorities given
@@ -328,7 +328,7 @@ auto engine::VLogicalDevice::VLogicalDeviceFactory::addQueues(
 
     uint32 reservedQueuesCount = queueFamily.reserveQueues( queueCount ); /// reserve the required queue count
 
-    if( engine::VLogicalDevice::VLogicalDeviceFactory::_exceptionsToggle && ( reservedQueuesCount < queueCount ) )
+    if(engine::VLogicalDevice::Factory::_exceptionsToggle && (reservedQueuesCount < queueCount ) )
         throw engine::EngineVQueueFamilyNoQueuesAvailable( queueCount, reservedQueuesCount ); /// if cannot reserve and exceptions enabled, throw
 
     for( uint32 i = 0; i < queueCount; i++ ) {
@@ -340,21 +340,21 @@ auto engine::VLogicalDevice::VLogicalDeviceFactory::addQueues(
     return *this;
 }
 
-auto engine::VLogicalDevice::VLogicalDeviceFactory::addExtension (
+auto engine::VLogicalDevice::Factory::addExtension (
         engine::VExtension const & extension
-) noexcept ->  VLogicalDeviceFactory & {
+) noexcept ->  Factory & {
     this->_extensions.add ( extension ); /// add extension to enabled extensions
     return *this;
 }
 
-auto engine::VLogicalDevice::VLogicalDeviceFactory::addExtensions (
+auto engine::VLogicalDevice::Factory::addExtensions (
         engine::VExtensionCollection const & collection
-) noexcept -> VLogicalDeviceFactory & {
+) noexcept -> Factory & {
     this->_extensions.add ( collection ); /// add all extensions to enabled extensions
     return *this; 
 }
 
-auto engine::VLogicalDevice::VLogicalDeviceFactory::build (
+auto engine::VLogicalDevice::Factory::build (
         engine::VPhysicalDevice const & physicalDevice
 ) noexcept (false) -> VLogicalDevice {
 
@@ -366,7 +366,7 @@ auto engine::VLogicalDevice::VLogicalDeviceFactory::build (
     builtObject._validationLayerCollection  = this->_validationLayerCollection; /// add validation layers from factory to device
     builtObject._surfacePtr                 = this->_surface; /// add surface from factory to device
 
-    if ( engine::VLogicalDevice::VLogicalDeviceFactory::_exceptionsToggle ) { /// if exceptions enabled
+    if ( engine::VLogicalDevice::Factory::_exceptionsToggle ) { /// if exceptions enabled
         for ( auto & extension : this->_extensions.getExtensions() )  /// check for unsupported exceptions
             if ( ! physicalDevice.supportsExtension( extension ) )
                 throw engine::EngineVLogicalDeviceUnsupportedExtension( extension ); /// throw if unsupported

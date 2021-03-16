@@ -23,7 +23,7 @@ namespace engine {
     class VImageViewCollection;
 
     /**
-     * @class engine::EngineVLogicalDeviceFactoryInvalidSwapChain, inherits std::exception
+     * @class engine::EngineFactoryInvalidSwapChain, inherits std::exception
      *
      * @brief throws when no valid Surface is given to LogicalDevice Creation
      */
@@ -204,11 +204,11 @@ namespace engine {
     public:
 
         /**
-         * @class engine::VLogicalDevice::VLogicalDeviceFactory
+         * @class engine::VLogicalDevice::Factory
          *
          * @brief Factory Pattern Class for Logical Devices, used as they have a lot of parameters to set up
          */
-        class [[maybe_unused]] VLogicalDeviceFactory {
+        class [[maybe_unused]] Factory {
         private:
             //// private variables
 
@@ -242,7 +242,7 @@ namespace engine {
              * @exceptsafe
              */
             static auto setExceptionEnableStatus ( bool toggle ) noexcept -> void {
-                VLogicalDevice::VLogicalDeviceFactory::_exceptionsToggle = toggle;
+                VLogicalDevice::Factory::_exceptionsToggle = toggle;
             }
 
             /**
@@ -253,7 +253,7 @@ namespace engine {
              * @exceptsafe
              */
             static auto enableExceptions ( ) noexcept -> void {
-                VLogicalDevice::VLogicalDeviceFactory::_exceptionsToggle = true;
+                VLogicalDevice::Factory::_exceptionsToggle = true;
             }
 
             /**
@@ -264,7 +264,7 @@ namespace engine {
              * @exceptsafe
              */
             static auto disableExceptions ( ) noexcept -> void {
-                VLogicalDevice::VLogicalDeviceFactory::_exceptionsToggle = false;
+                VLogicalDevice::Factory::_exceptionsToggle = false;
             }
 
             /**
@@ -274,9 +274,9 @@ namespace engine {
              *
              * @exceptsafe
              *
-             * @return engine::VLogicalDevice::VLogicalDeviceFactory ref = Reference to newly modified object
+             * @return engine::VLogicalDevice::Factory ref = Reference to newly modified object
              */
-            auto withValidationLayers ( VValidationLayerCollection const & collection ) noexcept -> VLogicalDeviceFactory & {
+            auto withValidationLayers ( VValidationLayerCollection const & collection ) noexcept -> Factory & {
                 this->_validationLayerCollection = ( & collection );
                 return *this;
             }
@@ -290,9 +290,9 @@ namespace engine {
              * @throws engine::EngineVQueueFamilyNoQueuesAvailable if
              *      exceptions are enabled AND did not manage to reserve any queues from the Physical Device
              *
-             * @return engine::VLogicalDevice::VLogicalDeviceFactory ref = Reference to the newly modified object
+             * @return engine::VLogicalDevice::Factory ref = Reference to the newly modified object
              */
-            auto addQueue ( VQueueFamily const &, float = _internal_explicitWrapper_DEFAULT_QUEUE_PRIORITY) noexcept (false) -> VLogicalDeviceFactory &;
+            auto addQueue ( VQueueFamily const &, float = _internal_explicitWrapper_DEFAULT_QUEUE_PRIORITY) noexcept (false) -> Factory &;
 
             /**
              * @brief function adds multiple Queues to the current in-build object
@@ -306,9 +306,9 @@ namespace engine {
              * @throws engine::EngineVQueueFamilyNoQueuesAvailable if
              *      exceptions are enabled AND did not manage to reserve the specified number of queues desired from the Physical Device
              *
-             * @return engine::VLogicalDevice::VLogicalDeviceFactory ref = Reference to the newly modified object
+             * @return engine::VLogicalDevice::Factory ref = Reference to the newly modified object
              */
-            auto addQueues ( VQueueFamily const &, uint32, const float * = nullptr ) noexcept (false) -> VLogicalDeviceFactory &;
+            auto addQueues ( VQueueFamily const &, uint32, const float * = nullptr ) noexcept (false) -> Factory &;
 
             /**
              * @brief function adds an Extension to the in-build Device
@@ -317,9 +317,9 @@ namespace engine {
              *
              * @exceptsafe
              *
-             * @return engine::VLogicalDevice::VLogicalDeviceFactory ref = Reference to the newly modified object
+             * @return engine::VLogicalDevice::Factory ref = Reference to the newly modified object
              */
-            auto addExtension ( VExtension const & ) noexcept ->  VLogicalDeviceFactory &;
+            auto addExtension ( VExtension const & ) noexcept ->  Factory &;
 
             /**
              * @brief function adds multiple Extensions to the in-build Device
@@ -328,9 +328,9 @@ namespace engine {
              *
              * @exceptsafe
              *
-             * @return engine::VLogicalDevice::VLogicalDeviceFactory ref = Reference to the newly modified object
+             * @return engine::VLogicalDevice::Factory ref = Reference to the newly modified object
              */
-            auto addExtensions ( VExtensionCollection const & ) noexcept -> VLogicalDeviceFactory &;
+            auto addExtensions ( VExtensionCollection const & ) noexcept -> Factory &;
 
             /**
              * @brief function adds a surface ptr to create the swapchain to
@@ -339,9 +339,9 @@ namespace engine {
              *
              * @exceptsafe
              *
-             * @return engine::VLogicalDevice::VLogicalDeviceFactory ref = Reference to the newly modified object
+             * @return engine::VLogicalDevice::Factory ref = Reference to the newly modified object
              */
-            auto createSwapChainToSurface ( VSurface const * ) noexcept -> VLogicalDeviceFactory &;
+            auto createSwapChainToSurface ( VSurface const * ) noexcept -> Factory &;
 
             /**
              *  @brief function builds the Logical Device with the parameters specified to the factory
@@ -360,7 +360,7 @@ namespace engine {
              *
              * @exceptsafe
              */
-            ~VLogicalDeviceFactory() noexcept = default;
+            ~Factory() noexcept = default;
 
         };
 

@@ -179,7 +179,7 @@ static inline auto swapChainLinkQueueFamilies (
  * @param device : engine::VLogicalDevice cptr = Address to Constant Logical Device
  * @param imageCount : uint32 = Number of images to create with Swap Chain
  * @param swapChainSupportDetails : engine::VPhysicalDevice::SwapChainSupportDetails cref = Details of Device's Swap Chain support capabilities
- * @param savedSwapChainInformation : engine::VSwapChain::VSwapChainImageInfo ptr = Address to Swap Chain Image Information, if previously saved
+ * @param savedSwapChainInformation : engine::VSwapChain::ImageInfo ptr = Address to Swap Chain Image Information, if previously saved
  *
  * @static
  *
@@ -190,7 +190,7 @@ static inline auto populateSwapChainCreateInfoStructure (
     engine::VLogicalDevice                           const * device,
     uint32                                                   imageCount,
     engine::VPhysicalDevice::SwapChainSupportDetails const & swapChainSupportDetails,
-    engine::VSwapChain::VSwapChainImageInfo                * savedSwapChainInformation = nullptr
+    engine::VSwapChain::ImageInfo                * savedSwapChainInformation = nullptr
 ) noexcept -> void {
 
     if( createInfo == nullptr ) /// if nothing to populate, return

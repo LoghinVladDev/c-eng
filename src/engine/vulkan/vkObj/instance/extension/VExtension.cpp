@@ -5,15 +5,27 @@
 #include "VExtension.h"
 #include "VExtensionDefs.h"
 
-[[nodiscard]] static inline VExtensionLiteral getLiteralByType ( engine::VExtension::VExtensionType type ) noexcept (false) {
-    switch ( type ) {
-        case engine::VExtension::VExtensionType::KHRONOS_SWAPCHAIN : return ( __V_EXTENSION_TYPE_KHR_SWAPCHAIN );
+#include <VPhysicalDevice.h>
+
+/**
+ * @brief internal function used to get Extension Literal from Extension Type
+ *
+ * @param type : engine::VExtension::Type = type of extension
+ *
+ * @throws engine::EngineVExtensionUnknownType if
+ *      given type of extension that does not exist
+ *
+ * @return VExtensionLiteral = Literal of Extension ( StringLiteral )
+ */
+[[nodiscard]] static inline VExtensionLiteral getLiteralByType ( engine::VExtension::Type type ) noexcept (false) {
+    switch ( type ) { // NOLINT(hicpp-multiway-paths-covered)
+        case engine::VExtension::Type::KHRONOS_SWAPCHAIN : return ( __V_EXTENSION_TYPE_KHR_SWAPCHAIN );
         
         default : throw engine::EngineVExtensionUnknownType();
     }
 }  
 
-engine::VExtension::VExtension( engine::VExtension::VExtensionType type ) noexcept (false) {
+engine::VExtension::VExtension( engine::VExtension::Type type ) noexcept (false) {
 #if !defined(_MSC_VER)
     std::strcpy( this->_extensionProperties.extensionName, getLiteralByType ( type ) );
 #else
@@ -21,46 +33,50 @@ engine::VExtension::VExtension( engine::VExtension::VExtensionType type ) noexce
 #endif
 }
 
-[[nodiscard]] bool engine::VExtensionCollection::contains ( engine::VExtension::VExtensionType type ) const noexcept {
+auto engine::VExtensionCollection::contains ( engine::VExtension::Type type ) const noexcept -> bool {
     for ( const auto & extension : this->_extensions ) // NOLINT(readability-use-anyofallof)
         if ( std::strcmp ( extension.getName(), getLiteralByType( type ) ) == 0 )
             return true;
     return false;
 }
 
-engine::VExtensionCollection engine::VExtensionCollection::getAllAvailableExtensions() noexcept {
+auto engine::VExtensionCollection::getAllAvailableExtensions() noexcept -> engine::VExtensionCollection {
     VExtensionCollection collection;
 
-    uint32 extensionCount = 0U;
+    uint32 extensionCount = 0U; /// query number of extensions first
     vkEnumerateInstanceExtensionProperties( nullptr, & extensionCount, nullptr );
 
+    /// query all extension properties
     std::vector < VulkanExtensionProperties > extensionsProperties (extensionCount);
     vkEnumerateInstanceExtensionProperties(nullptr, & extensionCount, extensionsProperties.data() );
 
     for( const auto & extensionProperties : extensionsProperties ) {
-        collection._extensions.emplace_back( extensionProperties );
+        collection._extensions.emplace_back( extensionProperties ); /// emplace extensions from properties
     }
 
     return collection;
 }
 
-engine::VExtensionCollection engine::VExtensionCollection::getPhysicalDeviceAvailableExtensions( const VPhysicalDevice & device ) noexcept {
+auto engine::VExtensionCollection::getPhysicalDeviceAvailableExtensions(
+        VPhysicalDevice const & device
+) noexcept -> engine::VExtensionCollection {
     VExtensionCollection collection;
 
-    uint32 extensionCount = 0U;
+    uint32 extensionCount = 0U; /// acquire count first
     vkEnumerateDeviceExtensionProperties( device.data(), nullptr, &extensionCount, nullptr );
 
+    /// acquire properties of extensions supported by device
     std::vector < VulkanExtensionProperties > extensionsProperties ( extensionCount );
     vkEnumerateDeviceExtensionProperties( device.data(), nullptr, &extensionCount, extensionsProperties.data() );
 
     for ( const auto& extensionProperties : extensionsProperties ) {
-        collection._extensions.emplace_back( extensionProperties );
+        collection._extensions.emplace_back( extensionProperties ); /// emplace
     }
 
     return collection;
 }
 
-[[nodiscard]] std::vector < VulkanExtensionProperties > engine::VExtensionCollection::getExtensionsProperties () const noexcept {
+auto engine::VExtensionCollection::getExtensionsProperties () const noexcept -> std::vector < VulkanExtensionProperties > {
     std::vector < VulkanExtensionProperties > extensionsProperties ( this->_extensions.size() );
 
     for ( const auto & extension : this->_extensions )
@@ -69,8 +85,7 @@ engine::VExtensionCollection engine::VExtensionCollection::getPhysicalDeviceAvai
     return extensionsProperties;
 }
 
-
-[[nodiscard]] std::vector < const char * > engine::VExtensionCollection::getExtensionNames () const noexcept {
+auto engine::VExtensionCollection::getExtensionNames () const noexcept -> std::vector < StringLiteral > {
     std::vector < const char * > extensionNames ;
 
     for ( const auto & extension : this->_extensions ) {
@@ -80,11 +95,12 @@ engine::VExtensionCollection engine::VExtensionCollection::getPhysicalDeviceAvai
     return extensionNames;
 }
 
-
-
 #ifndef NDEBUG
 
-void engine::VExtension::debugPrint(std::ostream & buffer, const char * prefix) const noexcept {
+auto engine::VExtension::debugPrint(
+        std::ostream & buffer,
+        StringLiteral prefix
+) const noexcept -> void {
     buffer << prefix << "Extension : \n";
     buffer << prefix << "\tName : " << this->_extensionProperties.extensionName << '\n';
     buffer << prefix << "\tSpec Version : " << this->_extensionProperties.specVersion << '\n';
@@ -94,7 +110,10 @@ void engine::VExtension::debugPrint(std::ostream & buffer, const char * prefix) 
 
 #ifndef NDEBUG
 
-void engine::VExtensionCollection::debugPrint(std::ostream & buffer, const char* prefix) const noexcept {
+auto engine::VExtensionCollection::debugPrint(
+        std::ostream & buffer,
+        StringLiteral prefix
+) const noexcept -> void {
     buffer << prefix << "Extension Collection : \n";
 
     if ( this->_extensions.empty() )
@@ -106,7 +125,7 @@ void engine::VExtensionCollection::debugPrint(std::ostream & buffer, const char*
 
 #endif
 
-bool engine::VExtensionCollection::contains(const engine::VExtensionCollection & otherCollection) const noexcept {
+auto engine::VExtensionCollection::contains(const engine::VExtensionCollection & otherCollection) const noexcept -> bool {
     for ( const auto& otherCollectionExtension : otherCollection._extensions ) { // NOLINT(readability-use-anyofallof)
         if ( this->contains( otherCollectionExtension ) )
             return true;

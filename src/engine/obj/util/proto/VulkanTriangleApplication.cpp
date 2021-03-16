@@ -255,8 +255,8 @@ inline auto engine::VulkanTriangleApplication::initVulkan() noexcept (false) -> 
     /// Do basic tests for Queue Allocation
     queueFamilyTests( * this->_vulkanQueueFamilyCollection );
 
-    engine::VLogicalDevice::VLogicalDeviceFactory::enableExceptions();
-    engine::VLogicalDevice::VLogicalDeviceFactory deviceFactory; /// Factory For Logical Device. Logical Device =
+    engine::VLogicalDevice::Factory::enableExceptions();
+    engine::VLogicalDevice::Factory deviceFactory; /// Factory For Logical Device. Logical Device =
     ///                                              Physical Device (GPU) +
     ///                                              Queues Interface (CPU-GPU buses)
     ///                                              Swapchain Interface (GPU - Surface buses)
