@@ -10,85 +10,133 @@ bool engine::VPhysicalDevice::_physicalDevicesQueried = false;
 std::vector < VulkanPhysicalDevice > engine::VPhysicalDevice::_availablePhysicalDeviceHandles = std::vector < VulkanPhysicalDevice > ();
 std::vector < engine::VPhysicalDevice > engine::VPhysicalDevice::_availablePhysicalDevices = std::vector < engine::VPhysicalDevice > ();
 
-[[nodiscard]] engine::VPhysicalDevice::SwapChainSupportDetails engine::VPhysicalDevice::querySwapChainOnSurfaceSupport( const engine::VSurface * surface ) const noexcept {
+auto engine::VPhysicalDevice::querySwapChainOnSurfaceSupport(
+        engine::VSurface const * surface
+) const noexcept -> engine::VPhysicalDevice::SwapChainSupportDetails {
     SwapChainSupportDetails details;
 
     if( surface == nullptr )
-        return details;
+        return details; /// if surface is invalid, return empty details
 
     uint32 formatCount      = 0U;
     uint32 presentModeCount = 0U;
 
-    vkGetPhysicalDeviceSurfaceCapabilitiesKHR( this->_physicalDeviceHandle, surface->data(), & details.capabilities );
-    vkGetPhysicalDeviceSurfaceFormatsKHR( this->_physicalDeviceHandle, surface->data(), & formatCount, nullptr );
-    vkGetPhysicalDeviceSurfacePresentModesKHR( this->_physicalDeviceHandle, surface->data(), & presentModeCount, nullptr );
+    /// query capabilities
+    vkGetPhysicalDeviceSurfaceCapabilitiesKHR(
+            this->_physicalDeviceHandle,
+            surface->data(),
+            & details.capabilities
+    );
 
-    if( formatCount != 0U ) {
+    /// query format count
+    vkGetPhysicalDeviceSurfaceFormatsKHR(
+            this->_physicalDeviceHandle,
+            surface->data(),
+            & formatCount,
+            nullptr // do not pass any linear data structure yet as we do not know the count
+    );
+
+    /// query present mode count
+    vkGetPhysicalDeviceSurfacePresentModesKHR(
+            this->_physicalDeviceHandle,
+            surface->data(),
+            & presentModeCount,
+            nullptr // same as above
+    );
+
+    if( formatCount != 0U ) { /// re-query formats if count != 0
         details.formats.resize ( formatCount );
-        vkGetPhysicalDeviceSurfaceFormatsKHR( this->_physicalDeviceHandle, surface->data(), & formatCount, details.formats.data() );
+        vkGetPhysicalDeviceSurfaceFormatsKHR(
+                this->_physicalDeviceHandle,
+                surface->data(),
+                & formatCount,
+                details.formats.data()
+        );
     }
 
-    if( presentModeCount != 0U ) {
+    if( presentModeCount != 0U ) { // re-query present modes if count != 0
         details.presentModes.resize ( presentModeCount );
-        vkGetPhysicalDeviceSurfacePresentModesKHR( this->_physicalDeviceHandle, surface->data(), & presentModeCount, details.presentModes.data() );
+        vkGetPhysicalDeviceSurfacePresentModesKHR(
+                this->_physicalDeviceHandle,
+                surface->data(),
+                & presentModeCount,
+                details.presentModes.data()
+        );
     }
 
     return details;
 }
 
-[[nodiscard]] uint32 engine::VPhysicalDevice::getPhysicalDeviceRenderRating() const noexcept {
+auto engine::VPhysicalDevice::getPhysicalDeviceRenderRating() const noexcept -> uint32 {
     uint32 deviceScore = 0U;
 
     // TODO : definitely research into "scoring" of GPUs, but for development reasons, this will do
 
-    if ( ! this->_physicalDeviceFeatures.geometryShader )
+    if ( ! this->_physicalDeviceFeatures.geometryShader ) /// if incapable of rendering, score is 0
         return 0U;
 
-    if( this->_physicalDeviceProperties.deviceType == __VK_PHYSICAL_DEVICE_TYPE_DEDICATED_GPU )
-        deviceScore += __VK_PHYSICAL_DEVICE_DEDICATED_GPU_VALUE_CONSTANT;
+    if( this->_physicalDeviceProperties.deviceType == __VK_PHYSICAL_DEVICE_TYPE_DEDICATED_GPU ) /// if dedicated GPU
+        deviceScore += __VK_PHYSICAL_DEVICE_DEDICATED_GPU_VALUE_CONSTANT; /// apply dedicated GPU bias
 
     deviceScore += this->_physicalDeviceProperties.limits.maxImageDimension2D *
-            __VK_PHYSICAL_DEVICE_PROPERTY_LIMIT_MAX_IMAGE_DIM_2D_SCALE;
+            __VK_PHYSICAL_DEVICE_PROPERTY_LIMIT_MAX_IMAGE_DIM_2D_SCALE; /// apply max image dimension as a score ( texture or resolution )
 
     return deviceScore;
 }
 
-void engine::VPhysicalDevice::queryAvailablePhysicalDevices(const engine::VInstance & instance) noexcept (false) {
-    if( VPhysicalDevice::_physicalDevicesQueried )
+auto engine::VPhysicalDevice::queryAvailablePhysicalDevices(
+        engine::VInstance const & instance
+) noexcept (false) -> void {
+    if( VPhysicalDevice::_physicalDevicesQueried ) /// if already queried, do not re-query
         return;
 
     uint32 deviceCount = 0U;
 
-    vkEnumeratePhysicalDevices( instance.data(), & deviceCount, nullptr );
+    vkEnumeratePhysicalDevices( instance.data(), & deviceCount, nullptr ); /// acquire number of devices first
 
-    if(deviceCount == 0U)
+    if(deviceCount == 0U) /// if no devices, throw
         throw std::runtime_error ( "failed to find Vulkan supported GPUS" );
 
+    /// acquire device handles
     VPhysicalDevice::_availablePhysicalDeviceHandles = std::vector < VulkanPhysicalDevice > ( deviceCount );
     vkEnumeratePhysicalDevices( instance.data(), & deviceCount, VPhysicalDevice::_availablePhysicalDeviceHandles.data() );
 
+    /// create vector of Physical Device Objects
     VPhysicalDevice::_availablePhysicalDevices = std::vector < VPhysicalDevice > ();
 
     for( const auto & deviceHandle : VPhysicalDevice::_availablePhysicalDeviceHandles ) {
-        VPhysicalDevice::_availablePhysicalDevices.emplace_back( deviceHandle );
+        /// emplace will create an object in place, calling the constructor with the argument given -> will call "copy"
+        /// constructor, the one where a handle is given and a Physical Device will be constructed, its' properties
+        /// being queried on creation
+        VPhysicalDevice::_availablePhysicalDevices.emplace_back( deviceHandle ); // attach handles to objects, by creation
     }
 
-    VPhysicalDevice::_physicalDevicesQueried = true;
+    VPhysicalDevice::_physicalDevicesQueried = true; /// do not re-query again later
 }
 
 
-[[nodiscard]] bool engine::VPhysicalDevice::supportsExtension  ( const engine::VExtension & extension ) const noexcept {
+auto engine::VPhysicalDevice::supportsExtension (
+        engine::VExtension const & extension
+) const noexcept -> bool {
+    /// aggregate operation, obtain extensions for device, see if it exists
     return VExtensionCollection::getPhysicalDeviceAvailableExtensions ( *this ).contains ( extension );
 }
 
-[[nodiscard]] bool engine::VPhysicalDevice::supportsExtensions ( const engine::VExtensionCollection & collection ) const noexcept {
+auto engine::VPhysicalDevice::supportsExtensions (
+        engine::VExtensionCollection const & collection
+) const noexcept -> bool {
+    /// same as above, but for collection of extensions
     return VExtensionCollection::getPhysicalDeviceAvailableExtensions ( *this ).contains ( collection );
 }
 
 
 #ifndef NDEBUG
 
-void engine::VPhysicalDevice::debugPrintPhysicalDeviceProperties(std::ostream& buffer, bool detailedDebug, const char* prefix) const noexcept {
+auto engine::VPhysicalDevice::debugPrintPhysicalDeviceProperties(
+        std::ostream & buffer,
+        bool detailedDebug,
+        StringLiteral prefix
+) const noexcept -> void {
     buffer << prefix << "VPhysicalDevice : \n";
     buffer << prefix << "\tHandle Ptr :                                                      " << this->_physicalDeviceHandle << '\n';
     buffer << prefix << "\tEngine Render Device Score :                                      " << this->getPhysicalDeviceRenderRating() << '\n';
@@ -97,23 +145,33 @@ void engine::VPhysicalDevice::debugPrintPhysicalDeviceProperties(std::ostream& b
     VPhysicalDevice::debugPrintPhysicalDeviceBasicPropertiesStructure( this->_physicalDeviceProperties, buffer, std::string(prefix).append("\t\t").c_str() );
 
     if( detailedDebug ) {
+        /// detailed debug = print all data
         this->debugPrintPhysicalDeviceSparseProperties(buffer, prefix);
         this->debugPrintPhysicalDeviceLimits(buffer, prefix);
         this->debugPrintPhysicalDeviceFeatures(buffer, prefix);
     }
 }
 
-void engine::VPhysicalDevice::debugPrintPhysicalDeviceSparseProperties(std::ostream& buffer, const char* prefix) const noexcept {
+auto engine::VPhysicalDevice::debugPrintPhysicalDeviceSparseProperties(
+        std::ostream & buffer,
+        StringLiteral prefix
+) const noexcept -> void {
     buffer << prefix << "\tSparse Properties : \n";
     VPhysicalDevice::debugPrintPhysicalDeviceSparsePropertiesStructure( this->_physicalDeviceProperties.sparseProperties, buffer, std::string(prefix).append("\t\t").c_str() );
 }
 
-void engine::VPhysicalDevice::debugPrintPhysicalDeviceLimits(std::ostream& buffer, const char* prefix) const noexcept {
+auto engine::VPhysicalDevice::debugPrintPhysicalDeviceLimits(
+        std::ostream & buffer,
+        StringLiteral prefix
+) const noexcept -> void {
     buffer << prefix << "\tLimits : \n";
     VPhysicalDevice::debugPrintPhysicalDeviceLimitsStructure( this->_physicalDeviceProperties.limits, buffer, std::string(prefix).append("\t\t").c_str() );
 }
 
-void engine::VPhysicalDevice::debugPrintPhysicalDeviceFeatures(std::ostream& buffer, const char* prefix) const noexcept {
+auto engine::VPhysicalDevice::debugPrintPhysicalDeviceFeatures(
+        std::ostream & buffer,
+        StringLiteral prefix
+) const noexcept -> void {
     buffer << prefix << "\tFeatures : \n";
     VPhysicalDevice::debugPrintPhysicalDeviceFeaturesStructure( this->_physicalDeviceFeatures, buffer, std::string(prefix).append("\t\t").c_str() );
 }
@@ -122,7 +180,10 @@ void engine::VPhysicalDevice::debugPrintPhysicalDeviceFeatures(std::ostream& buf
 
 #ifndef NDEBUG
 
-void engine::VPhysicalDevice::debugPrintAvailablePhysicalDevices(const VInstance & instance, std::ostream& buffer) noexcept {
+auto engine::VPhysicalDevice::debugPrintAvailablePhysicalDevices(
+        VInstance const & instance,
+        std::ostream& buffer
+) noexcept (false) -> void {
     VPhysicalDevice::queryAvailablePhysicalDevices( instance );
     uint32 deviceIndex = 0;
 
@@ -139,7 +200,11 @@ void engine::VPhysicalDevice::debugPrintAvailablePhysicalDevices(const VInstance
 
 #ifndef NDEBUG
 
-void engine::VPhysicalDevice::debugPrintPhysicalDeviceBasicPropertiesStructure( const VulkanPhysicalDeviceProperties & properties, std::ostream & buffer, const char * prefix) noexcept {
+auto engine::VPhysicalDevice::debugPrintPhysicalDeviceBasicPropertiesStructure(
+        VulkanPhysicalDeviceProperties const & properties,
+        std::ostream & buffer,
+        StringLiteral prefix
+) noexcept -> void {
     buffer << prefix << "Name :                                                    " << properties.deviceName << '\n';
     buffer << prefix << "Device ID :                                               " << properties.deviceID << '\n';
     buffer << prefix << "Device Type :                                             " << properties.deviceType << '\n';
@@ -158,7 +223,11 @@ void engine::VPhysicalDevice::debugPrintPhysicalDeviceBasicPropertiesStructure( 
 
 #ifndef NDEBUG
 
-void engine::VPhysicalDevice::debugPrintPhysicalDeviceSparsePropertiesStructure( const VulkanPhysicalDeviceSparseProperties & sparseProperties, std::ostream & buffer,const char * prefix) noexcept {
+auto engine::VPhysicalDevice::debugPrintPhysicalDeviceSparsePropertiesStructure(
+        VulkanPhysicalDeviceSparseProperties const & sparseProperties,
+        std::ostream & buffer,
+        StringLiteral prefix
+) noexcept -> void {
     /* VkBool32 */  buffer << prefix << "Residency Aligned MIP Size :                              " <<  engine::VStandardUtils::constexprBoolAlpha( sparseProperties.residencyAlignedMipSize )                     << '\n';
     /* VkBool32 */  buffer << prefix << "Residency Non Resident Strict :                           " <<  engine::VStandardUtils::constexprBoolAlpha( sparseProperties.residencyNonResidentStrict )                  << '\n';
     /* VkBool32 */  buffer << prefix << "Residency Standard 2D Block Shape :                       " <<  engine::VStandardUtils::constexprBoolAlpha( sparseProperties.residencyStandard2DBlockShape )               << '\n';
@@ -170,7 +239,11 @@ void engine::VPhysicalDevice::debugPrintPhysicalDeviceSparsePropertiesStructure(
 
 #ifndef NDEBUG
 
-void engine::VPhysicalDevice::debugPrintPhysicalDeviceLimitsStructure( const VulkanPhysicalDeviceLimits & limits, std::ostream & buffer,const char * prefix) noexcept {
+auto engine::VPhysicalDevice::debugPrintPhysicalDeviceLimitsStructure(
+        VulkanPhysicalDeviceLimits const & limits,
+        std::ostream & buffer,
+        StringLiteral prefix
+) noexcept -> void {
 
     /* uint32_t              */ buffer << prefix << "Max Image Dimension 1D :                                  " << limits.maxImageDimension1D                               << '\n';
     /* uint32_t              */ buffer << prefix << "Max Image Dimension 2D :                                  " << limits.maxImageDimension2D                               << '\n';
@@ -292,7 +365,11 @@ void engine::VPhysicalDevice::debugPrintPhysicalDeviceLimitsStructure( const Vul
 
 #ifndef NDEBUG
 
-void engine::VPhysicalDevice::debugPrintPhysicalDeviceFeaturesStructure( const VulkanPhysicalDeviceFeatures & features, std::ostream & buffer, const char * prefix) noexcept {
+auto engine::VPhysicalDevice::debugPrintPhysicalDeviceFeaturesStructure(
+        VulkanPhysicalDeviceFeatures const & features,
+        std::ostream & buffer,
+        StringLiteral prefix
+) noexcept -> void {
     /* VkBool32 */  buffer << prefix << "Robust Buffer Access :                                    " << engine::VStandardUtils::constexprBoolAlpha( features.robustBufferAccess )                         << '\n';
     /* VkBool32 */  buffer << prefix << "Full Draw Index Unsigned Integer 32 :                     " << engine::VStandardUtils::constexprBoolAlpha( features.fullDrawIndexUint32 )                        << '\n';
     /* VkBool32 */  buffer << prefix << "Image Cube Array :                                        " << engine::VStandardUtils::constexprBoolAlpha( features.imageCubeArray )                             << '\n';
