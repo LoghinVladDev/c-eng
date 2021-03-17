@@ -59,14 +59,14 @@ uint32 findMemoryType ( uint32 typeFilter, VulkanMemoryPropertyFlags properties,
     throw std::runtime_error ( "failed to find suitable memory type" );
 }
 
-VulkanResult engine::VBuffer::setup(
-    const VLogicalDevice & device,
-    std::size_t dataSize,
-    VulkanBufferUsageFlags usageFlags,
-    VulkanSharingMode sharingMode,
-    const uint32 * pQueueFamilyIndices,
-    uint32 queueFamilyIndexCount
-) noexcept {
+auto engine::VBuffer::setup(
+    VLogicalDevice          const & device,
+    std::size_t                     dataSize,
+    VulkanBufferUsageFlags          usageFlags,
+    VulkanSharingMode               sharingMode,
+    uint32                  const * pQueueFamilyIndices,
+    uint32                          queueFamilyIndexCount
+) noexcept -> VulkanResult {
     if ( sharingMode == VulkanSharingMode::VK_SHARING_MODE_CONCURRENT && (
             queueFamilyIndexCount == 0 ||
             pQueueFamilyIndices == nullptr
@@ -97,9 +97,9 @@ void engine::VBuffer::cleanup() noexcept {
     vkDestroyBuffer( this->_pLogicalDevice->data(), this->_handle, nullptr );
 }
 
-VulkanResult engine::VBuffer::allocateMemory(
+auto engine::VBuffer::allocateMemory(
     VulkanMemoryPropertyFlags memoryPropertyFlags
-) noexcept {
+) noexcept -> VulkanResult {
     if ( this->_memoryAllocated )
         return VulkanResult::VK_SUCCESS;
     this->_memoryAllocated = true;
