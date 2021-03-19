@@ -2,9 +2,9 @@
 // Created by vladl on 06/08/2020.
 //
 
-#include "VInstance.h"
+#include "VInstance.hpp"
 #include <vkDefs/VInstanceDefinitions.h>
-#include <vkUtils/VStdUtils.h>
+#include <vkUtils/VStdUtils.hpp>
 
 [[maybe_unused]] const char* engine::VInstance::DEFAULT_VULKAN_INSTANCE_TITLE = __VULKAN_INSTANCE_DEFAULT_TITLE;
 

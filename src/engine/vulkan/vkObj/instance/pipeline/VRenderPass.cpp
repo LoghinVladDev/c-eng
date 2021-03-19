@@ -2,7 +2,7 @@
 // Created by Vlad on 19/08/2020.
 //
 
-#include "VRenderPass.h"
+#include "VRenderPass.hpp"
 
 extern VulkanFormat getDepthFormat (const engine::VPhysicalDevice * pPhysicalDevice) noexcept;
 

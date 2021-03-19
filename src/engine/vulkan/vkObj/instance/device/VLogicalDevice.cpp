@@ -2,7 +2,7 @@
 // Created by Vlad on 10/08/2020.
 //
 
-#include "VLogicalDevice.h"
+#include "VLogicalDevice.hpp"
 #include <algorithm>
 #include <set>
 #include <map>

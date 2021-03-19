@@ -2,8 +2,8 @@
 // Created by vladl on 9/21/2020.
 //
 
-#include "VDepthBuffer.h"
-#include <VBuffer.h>
+#include "VDepthBuffer.hpp"
+#include <VBuffer.hpp>
 
 static VulkanFormat findSupportedFormat(
         const std::vector<VulkanFormat> & candidates,
@@ -186,7 +186,7 @@ void engine::VDepthBuffer::cleanup() noexcept {
     this->_format           = VulkanFormat::VK_FORMAT_D32_SFLOAT;
 }
 
-#include <VCommandBuffer.h>
+#include <VCommandBuffer.hpp>
 extern void populateImageMemoryBarrier (
         VulkanImageMemoryBarrier * pMemoryBarrier,
         VulkanImageLayout          oldLayout,

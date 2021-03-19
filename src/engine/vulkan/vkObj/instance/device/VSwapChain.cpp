@@ -2,10 +2,10 @@
 // Created by Vlad on 16/08/2020.
 //
 
-#include "VSwapChain.h"
+#include "VSwapChain.hpp"
 #include "VSwapChainDefs.h"
 
-#include <obj/util/settings/SettingOptionGraphics.h>
+#include <obj/util/settings/SettingOptionGraphics.hpp>
 
 /**
  * @brief internal function used to choose optimal Surface Format for Swap Chain

@@ -2,7 +2,7 @@
 // Created by vladl on 10/5/2020.
 //
 
-#include "VMesh.h"
+#include "VMesh.hpp"
 #include <vkUtils/VStdUtilsDefs.h>
 
 const engine::VMesh engine::VMesh::EMPTY = VMesh(UINT64_MAX);

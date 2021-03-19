@@ -2,7 +2,7 @@
 // Created by Vlad on 19/08/2020.
 //
 
-#include "VFrameBuffer.h"
+#include "VFrameBuffer.hpp"
 
 inline static void populateFrameBufferCreateInfo (
     VulkanFrameBufferCreateInfo * createInfo,

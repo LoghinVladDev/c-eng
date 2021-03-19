@@ -2,7 +2,7 @@
 // Created by Vlad on 17/08/2020.
 //
 
-#include "VImageView.h"
+#include "VImageView.hpp"
 
 static inline void populateImageViewCreateInfo (
     VulkanImageViewCreateInfo * createInfo,

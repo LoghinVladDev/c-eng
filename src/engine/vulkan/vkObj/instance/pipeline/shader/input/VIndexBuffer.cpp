@@ -2,7 +2,7 @@
 // Created by vladl on 9/5/2020.
 //
 
-#include "VIndexBuffer.h"
+#include "VIndexBuffer.hpp"
 
 VulkanResult engine::VIndexBuffer16::flush() noexcept {
     return this->copyFrom(

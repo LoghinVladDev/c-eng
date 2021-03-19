@@ -11,13 +11,13 @@
 #undef STB_IMAGE_IMPLEMENTATION
 
 #include <iostream>
-#include <ecm/VEntity.h>
-#include <ecm/VComponent.h>
-#include <VGameObject.h>
-#include <transform/VTransform.h>
-#include <model/VMesh.h>
-#include <model/VMeshRenderer.h>
-#include <scene/VScene.h>
+#include <ecm/VEntity.hpp>
+#include <ecm/VComponent.hpp>
+#include <VGameObject.hpp>
+#include <transform/VTransform.hpp>
+#include <model/VMesh.hpp>
+#include <model/VMeshRenderer.hpp>
+#include <scene/VScene.hpp>
 
 using namespace engine;
 

@@ -2,7 +2,7 @@
 // Created by Vlad on 21/08/2020.
 //
 
-#include "VSemaphore.h"
+#include "VSemaphore.hpp"
 
 inline static void populateSemaphoreCreateInfo (
     VulkanSemaphoreCreateInfo * createInfo

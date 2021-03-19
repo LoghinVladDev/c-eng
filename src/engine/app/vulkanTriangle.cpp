@@ -8,7 +8,7 @@
 
 #include <iostream>
 
-#include <src/engine/obj/util/proto/VulkanTriangleApplication.h>
+#include <src/engine/obj/util/proto/VulkanTriangleApplication.hpp>
 
 /**
  * Base Prototype Application

@@ -2,8 +2,8 @@
 // Created by vladl on 07/08/2020.
 //
 
-#include <VStdUtils.h>
-#include "VPhysicalDevice.h"
+#include <VStdUtils.hpp>
+#include "VPhysicalDevice.hpp"
 #include "VPhysicalDeviceDefs.h"
 
 bool engine::VPhysicalDevice::_physicalDevicesQueried = false;

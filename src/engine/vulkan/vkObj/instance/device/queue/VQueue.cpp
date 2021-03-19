@@ -2,7 +2,7 @@
 // Created by Vlad on 10/08/2020.
 //
 
-#include "VQueue.h"
+#include "VQueue.hpp"
 
 engine::VQueue::VQueue(const engine::VQueueFamily& family, float priority) noexcept :
     _parentFamily( & family ),

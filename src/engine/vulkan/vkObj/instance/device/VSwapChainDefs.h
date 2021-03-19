@@ -5,7 +5,7 @@
 #ifndef ENG1_VSWAPCHAINDEFS_H
 #define ENG1_VSWAPCHAINDEFS_H
 
-#include <engineVulkanPreproc.h>
+#include <engineVulkanPreproc.hpp>
 #include <vkDefs/types/vulkanExplicitTypes.h>
 
 #define __VK_FORMAT_8BIT_BGRA_SRGB      VK_FORMAT_B8G8R8A8_SRGB

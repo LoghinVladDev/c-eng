@@ -2,7 +2,7 @@
 // Created by vladl on 8/30/2020.
 //
 
-#include "VVertexBuffer.h"
+#include "VVertexBuffer.hpp"
 
 inline static std::vector < engine::VVertex::SVertexPack > getPackedVertices ( const engine::VVertex * vertices, uint32 size ) noexcept {
     std::vector < engine::VVertex::SVertexPack > packedVertices (size) ;

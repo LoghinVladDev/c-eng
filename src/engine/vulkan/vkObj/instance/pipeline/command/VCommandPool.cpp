@@ -2,7 +2,7 @@
 // Created by Vlad on 19/08/2020.
 //
 
-#include "VCommandPool.h"
+#include "VCommandPool.hpp"
 
 /**
  * @brief internal function used to populate Command Pool Create Info Structure

@@ -3,9 +3,9 @@
 //
 
 #include <vulkanExplicitTypes.h>
-#include <VValidationLayer.h>
+#include <VValidationLayer.hpp>
 #include <vkDefinitions.h>
-#include "VMessenger.h"
+#include "VMessenger.hpp"
 #include <VInstanceDefinitions.h>
 
 /**

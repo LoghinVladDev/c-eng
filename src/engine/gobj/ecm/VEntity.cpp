@@ -2,11 +2,11 @@
 // Created by loghin on 04.03.2021.
 //
 
-#include "VEntity.h"
+#include "VEntity.hpp"
 
 uint64 engine::VEntity::_IDCounter = 1llu;
 
-#include <scene/VScene.h>
+#include <scene/VScene.hpp>
 
 engine::VEntity::VEntity(VEntity const * pParent) noexcept : _pParentEntity(pParent) {
     pParent->add(this);

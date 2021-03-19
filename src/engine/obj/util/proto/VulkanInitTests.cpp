@@ -2,8 +2,8 @@
 // Created by vladl on 05/08/2020.
 //
 
-#include "VulkanInitTests.h"
-#include <engineVulkanPreproc.h>
+#include "VulkanInitTests.hpp"
+#include <engineVulkanPreproc.hpp>
 
 inline void engine::VulkanInitTests::glfwInitTest() {
     glfwInit();

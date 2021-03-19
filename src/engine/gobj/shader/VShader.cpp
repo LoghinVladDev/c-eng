@@ -2,9 +2,9 @@
 // Created by vladl on 10/9/2020.
 //
 
-#include "VShader.h"
+#include "VShader.hpp"
 #include <vkUtils/VStdUtilsDefs.h>
-#include <VVertex.h>
+#include <VVertex.hpp>
 
 VulkanResult engine::VShader::setup(
         const engine::VLogicalDevice    & logicalDevice,

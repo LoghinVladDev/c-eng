@@ -2,8 +2,8 @@
 // Created by loghin on 04.03.2021.
 //
 
-#include "VComponent.h"
-#include <gobj/ecm/VEntity.h>
+#include "VComponent.hpp"
+#include <gobj/ecm/VEntity.hpp>
 
 uint64 engine::VComponent::_IDCounter = 1llu;
 

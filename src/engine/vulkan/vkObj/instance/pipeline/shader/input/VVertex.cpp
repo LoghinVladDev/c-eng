@@ -2,7 +2,7 @@
 // Created by vladl on 8/27/2020.
 //
 
-#include "VVertex.h"
+#include "VVertex.hpp"
 
 inline static void populateVertexInputBindingDescription (
     VulkanVertexInputBindingDescription * description,

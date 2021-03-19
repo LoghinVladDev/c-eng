@@ -2,7 +2,7 @@
 // Created by Vlad on 21/08/2020.
 //
 
-#include "VFence.h"
+#include "VFence.hpp"
 
 static inline void populateFenceCreateInfo (
     VulkanFenceCreateInfo * createInfo,

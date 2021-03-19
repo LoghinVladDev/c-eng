@@ -2,12 +2,12 @@
 // Created by vladl on 05/08/2020.
 //
 
-#include "VulkanTriangleApplication.h"
-#include <VStdUtils.h>
+#include "VulkanTriangleApplication.hpp"
+#include <VStdUtils.hpp>
 #include <VStdUtilsDefs.h>
 #include <map>
-#include <SettingsSharedContainer.h>
-#include <SettingOptionGraphics.h>
+#include <SettingsSharedContainer.hpp>
+#include <SettingOptionGraphics.hpp>
 
 constexpr uint32 MAX_FRAMES_IN_FLIGHT = 2U;
 const char* engine::VulkanTriangleApplication::DEFAULT_TITLE = "Vulkan Application";

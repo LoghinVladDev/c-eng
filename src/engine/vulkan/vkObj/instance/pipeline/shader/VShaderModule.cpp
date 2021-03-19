@@ -2,10 +2,10 @@
 // Created by Vlad on 18/08/2020.
 //
 
-#include "VShaderModule.h"
+#include "VShaderModule.hpp"
 #include "VShaderModuleDefs.h"
 #include <fstream>
-#include <vkObj/instance/pipeline/shader/VShaderCompiler.h>
+#include <vkObj/instance/pipeline/shader/VShaderCompiler.hpp>
 
 static std::vector < int8 > readFile ( const std::string& fileName ) noexcept (false) {
     std::ifstream file ( fileName, std::ios::ate | std::ios::binary );

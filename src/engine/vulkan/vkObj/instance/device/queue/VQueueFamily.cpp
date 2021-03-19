@@ -2,8 +2,8 @@
 // Created by vladl on 08/08/2020.
 //
 
-#include "VQueueFamily.h"
-#include <vkUtils/VStdUtils.h>
+#include "VQueueFamily.hpp"
+#include <vkUtils/VStdUtils.hpp>
 
 auto engine::VQueueFamilyCollection::queryAvailableQueueFamilies( ) noexcept (false) -> void {
     /// if queue families were queried but no Physical Device is assigned, throw

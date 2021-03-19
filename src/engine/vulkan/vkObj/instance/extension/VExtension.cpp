@@ -2,10 +2,10 @@
 // Created by vladl on 06/08/2020.
 //
 
-#include "VExtension.h"
+#include "VExtension.hpp"
 #include "VExtensionDefs.h"
 
-#include <VPhysicalDevice.h>
+#include <VPhysicalDevice.hpp>
 
 /**
  * @brief internal function used to get Extension Literal from Extension Type

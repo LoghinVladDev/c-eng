@@ -2,14 +2,24 @@
 // Created by Vlad on 07/09/2020.
 //
 
-#include "VDescriptorPool.h"
+#include "VDescriptorPool.hpp"
 
-inline static void populateDescriptorPoolCreateInfo (
-    VulkanDescriptorPoolCreateInfo  * pCreateInfo,
-    VulkanDescriptorPoolSize        * pDescriptorPoolSizes,
-    uint32                            descriptorPoolSizeCount,
-    uint32                            maxSetCount
-) noexcept {
+/**
+ * @brief Internal Function used to populate Descriptor Pool Create Info Structure
+ *
+ * @param pCreateInfo : VulkanDescriptorPoolCreateInfo ptr = Address to Structure to populate
+ * @param pDescriptorPoolSizes : VulkanDescriptorPoolSize cptr = Address to one / an array of Descriptor Pool Sizes, representing the size of individual Descriptors used by one Shader Computation in a Layout / Object
+ * @param descriptorPoolSizeCount : uint32 = Number of Sizes in the array above
+ * @param maxSetCount : uint32 = Max Size to be allocated. Usually no. of objects * number of frame buffers in swapchain
+ *
+ * @exceptsafe
+ */
+inline static auto populateDescriptorPoolCreateInfo (
+    VulkanDescriptorPoolCreateInfo        * pCreateInfo,
+    VulkanDescriptorPoolSize        const * pDescriptorPoolSizes,
+    uint32                                  descriptorPoolSizeCount,
+    uint32                                  maxSetCount
+) noexcept -> void {
     if ( pCreateInfo == nullptr )
         return;
 
@@ -23,7 +33,12 @@ inline static void populateDescriptorPoolCreateInfo (
     };
 }
 
-VulkanResult engine::VDescriptorPool::setup(const VLogicalDevice & device, const VulkanDescriptorType * pDescriptorTypes, uint32 descriptorTypeCount, uint32 objectCount) noexcept {
+auto engine::VDescriptorPool::setup(
+        VLogicalDevice          const & device,
+        VulkanDescriptorType    const * pDescriptorTypes,
+        uint32                          descriptorTypeCount,
+        uint32                          objectCount
+) noexcept -> VulkanResult {
     this->_pLogicalDevice = & device;
     auto swapChainImageCount = static_cast < uint32 > ( this->_pLogicalDevice->getSwapChain()->getImages().size() );
     VulkanDescriptorPoolCreateInfo createInfo {};
@@ -31,7 +46,7 @@ VulkanResult engine::VDescriptorPool::setup(const VLogicalDevice & device, const
     std::vector < VulkanDescriptorPoolSize > poolSizes (descriptorTypeCount);
 
     for ( uint32 descriptorTypeIndex = 0U; descriptorTypeIndex < descriptorTypeCount; descriptorTypeIndex++ ) {
-        poolSizes[ descriptorTypeIndex ] = VulkanDescriptorPoolSize {
+        poolSizes[ descriptorTypeIndex ] = VulkanDescriptorPoolSize { /// populate pool sizes = type * number to be allocated per object
             .type               = pDescriptorTypes[ descriptorTypeIndex ],
             .descriptorCount    = swapChainImageCount
         };
@@ -44,6 +59,7 @@ VulkanResult engine::VDescriptorPool::setup(const VLogicalDevice & device, const
         swapChainImageCount * objectCount
     );
 
+    /// create pool
     return vkCreateDescriptorPool( this->_pLogicalDevice->data(), & createInfo, nullptr, & this->_handle );
 }
 

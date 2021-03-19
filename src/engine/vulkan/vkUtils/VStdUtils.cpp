@@ -2,7 +2,7 @@
 // Created by vladl on 07/08/2020.
 //
 
-#include "VStdUtils.h"
+#include "VStdUtils.hpp"
 #include "VStdUtilsDefs.h"
 
 constexpr static bool constexprVulkanVersionCheck ( int version, int required ) {

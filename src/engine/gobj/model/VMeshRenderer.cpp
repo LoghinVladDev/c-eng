@@ -2,7 +2,7 @@
 // Created by vladl on 10/10/2020.
 //
 
-#include "VMeshRenderer.h"
+#include "VMeshRenderer.hpp"
 #include <vkUtils/VStdUtilsDefs.h>
 
 const engine::VMeshRenderer engine::VMeshRenderer::EMPTY = VMeshRenderer(UINT64_MAX);

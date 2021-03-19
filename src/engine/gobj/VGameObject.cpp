@@ -2,7 +2,7 @@
 // Created by loghin on 04.03.2021.
 //
 
-#include "VGameObject.h"
+#include "VGameObject.hpp"
 
 uint64 engine::VGameObject::_IDCounter = 1llu;
 

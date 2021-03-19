@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(eng1)
+project(c-eng)
 
 set(CMAKE_CXX_STANDARD 20)
 set(OpenGL_GL_PREFERENCE GLVND)
@@ -92,107 +92,107 @@ if(Vulkan_FOUND)
 #            dependencies/cds/src/primitive/String.cpp
             src/engine/app/vulkanTriangle.cpp
             src/engine/obj/util/proto/VulkanTriangleApplication.cpp
-            src/engine/obj/util/proto/VulkanTriangleApplication.h
+            src/engine/obj/util/proto/VulkanTriangleApplication.hpp
             src/engine/obj/util/proto/VulkanInitTests.cpp
-            src/engine/obj/util/proto/VulkanInitTests.h
-            src/engine/vulkan/engineVulkanPreproc.h
+            src/engine/obj/util/proto/VulkanInitTests.hpp
+            src/engine/vulkan/engineVulkanPreproc.hpp
             src/engine/vulkan/vkDefs/types/vulkanExplicitTypes.h
             src/engine/vulkan/vkDefs/vkDefinitions.h
             src/engine/vulkan/vkObj/instance/validationLayer/VValidationLayer.cpp
-            src/engine/vulkan/vkObj/instance/validationLayer/VValidationLayer.h
+            src/engine/vulkan/vkObj/instance/validationLayer/VValidationLayer.hpp
             src/engine/vulkan/vkObj/instance/VInstance.cpp
-            src/engine/vulkan/vkObj/instance/VInstance.h
+            src/engine/vulkan/vkObj/instance/VInstance.hpp
             src/engine/vulkan/vkObj/instance/messenger/VMessenger.cpp
-            src/engine/vulkan/vkObj/instance/messenger/VMessenger.h
+            src/engine/vulkan/vkObj/instance/messenger/VMessenger.hpp
             src/engine/vulkan/vkObj/instance/extension/VExtension.cpp
-            src/engine/vulkan/vkObj/instance/extension/VExtension.h
+            src/engine/vulkan/vkObj/instance/extension/VExtension.hpp
             src/engine/vulkan/vkUtils/VStdUtils.cpp
-            src/engine/vulkan/vkUtils/VStdUtils.h
+            src/engine/vulkan/vkUtils/VStdUtils.hpp
             src/engine/vulkan/vkUtils/VStdUtilsDefs.h
             src/engine/vulkan/vkObj/instance/device/VPhysicalDevice.cpp
-            src/engine/vulkan/vkObj/instance/device/VPhysicalDevice.h
+            src/engine/vulkan/vkObj/instance/device/VPhysicalDevice.hpp
             src/engine/vulkan/vkObj/instance/device/VPhysicalDeviceDefs.h
             src/engine/vulkan/vkObj/instance/device/queue/VQueueFamily.cpp
-            src/engine/vulkan/vkObj/instance/device/queue/VQueueFamily.h
+            src/engine/vulkan/vkObj/instance/device/queue/VQueueFamily.hpp
             src/engine/vulkan/vkObj/instance/device/VLogicalDevice.cpp
-            src/engine/vulkan/vkObj/instance/device/VLogicalDevice.h
+            src/engine/vulkan/vkObj/instance/device/VLogicalDevice.hpp
             src/engine/vulkan/vkObj/instance/device/queue/VQueue.cpp
-            src/engine/vulkan/vkObj/instance/device/queue/VQueue.h
+            src/engine/vulkan/vkObj/instance/device/queue/VQueue.hpp
             src/engine/vulkan/vkObj/window/surface/VSurface.cpp
-            src/engine/vulkan/vkObj/window/surface/VSurface.h
+            src/engine/vulkan/vkObj/window/surface/VSurface.hpp
             src/engine/vulkan/vkDefs/types/vkPlatformDefs.cpp
-            src/engine/vulkan/vkDefs/types/vulkanShortHandTypes.h
+            src/engine/vulkan/vkDefs/types/vulkanShortHandTypes.hpp
             src/engine/vulkan/vkObj/instance/device/VSwapChainDefs.h
             src/engine/obj/util/settings/SettingsSharedContainer.cpp
-            src/engine/obj/util/settings/SettingsSharedContainer.h
+            src/engine/obj/util/settings/SettingsSharedContainer.hpp
             src/engine/obj/util/settings/SettingOption.cpp
-            src/engine/obj/util/settings/SettingOption.h
+            src/engine/obj/util/settings/SettingOption.hpp
             src/engine/obj/util/settings/SettingOptionGraphics.cpp
-            src/engine/obj/util/settings/SettingOptionGraphics.h
+            src/engine/obj/util/settings/SettingOptionGraphics.hpp
             src/engine/vulkan/vkObj/instance/device/VSwapChain.cpp
-            src/engine/vulkan/vkObj/instance/device/VSwapChain.h
+            src/engine/vulkan/vkObj/instance/device/VSwapChain.hpp
             src/engine/vulkan/vkObj/instance/pipeline/VImageView.cpp
-            src/engine/vulkan/vkObj/instance/pipeline/VImageView.h
+            src/engine/vulkan/vkObj/instance/pipeline/VImageView.hpp
             src/engine/vulkan/vkObj/instance/pipeline/shader/VShaderCompiler.cpp
-            src/engine/vulkan/vkObj/instance/pipeline/shader/VShaderCompiler.h
+            src/engine/vulkan/vkObj/instance/pipeline/shader/VShaderCompiler.hpp
             src/engine/vulkan/vkObj/instance/pipeline/shader/VShaderModule.cpp
-            src/engine/vulkan/vkObj/instance/pipeline/shader/VShaderModule.h
+            src/engine/vulkan/vkObj/instance/pipeline/shader/VShaderModule.hpp
             src/engine/vulkan/vkObj/instance/pipeline/shader/VShaderModuleDefs.h
             src/engine/vulkan/vkObj/instance/pipeline/VPipeline.cpp
-            src/engine/vulkan/vkObj/instance/pipeline/VPipeline.h
+            src/engine/vulkan/vkObj/instance/pipeline/VPipeline.hpp
             src/engine/vulkan/vkObj/instance/pipeline/VRenderPass.cpp
-            src/engine/vulkan/vkObj/instance/pipeline/VRenderPass.h
+            src/engine/vulkan/vkObj/instance/pipeline/VRenderPass.hpp
             src/engine/vulkan/vkObj/instance/pipeline/VFrameBuffer.cpp
-            src/engine/vulkan/vkObj/instance/pipeline/VFrameBuffer.h
+            src/engine/vulkan/vkObj/instance/pipeline/VFrameBuffer.hpp
             src/engine/vulkan/vkObj/instance/pipeline/command/VCommandBuffer.cpp
-            src/engine/vulkan/vkObj/instance/pipeline/command/VCommandBuffer.h
+            src/engine/vulkan/vkObj/instance/pipeline/command/VCommandBuffer.hpp
             src/engine/vulkan/vkObj/instance/pipeline/command/VCommandPool.cpp
-            src/engine/vulkan/vkObj/instance/pipeline/command/VCommandPool.h
+            src/engine/vulkan/vkObj/instance/pipeline/command/VCommandPool.hpp
             src/engine/vulkan/vkObj/instance/pipeline/synchronization/VSemaphore.cpp
-            src/engine/vulkan/vkObj/instance/pipeline/synchronization/VSemaphore.h
+            src/engine/vulkan/vkObj/instance/pipeline/synchronization/VSemaphore.hpp
             src/engine/vulkan/vkObj/instance/pipeline/synchronization/VFence.cpp
-            src/engine/vulkan/vkObj/instance/pipeline/synchronization/VFence.h
+            src/engine/vulkan/vkObj/instance/pipeline/synchronization/VFence.hpp
             src/engine/vulkan/vkObj/instance/pipeline/shader/input/VVertex.cpp
-            src/engine/vulkan/vkObj/instance/pipeline/shader/input/VVertex.h
+            src/engine/vulkan/vkObj/instance/pipeline/shader/input/VVertex.hpp
             src/engine/vulkan/vkObj/instance/pipeline/shader/input/VVertexBuffer.cpp
-            src/engine/vulkan/vkObj/instance/pipeline/shader/input/VVertexBuffer.h
+            src/engine/vulkan/vkObj/instance/pipeline/shader/input/VVertexBuffer.hpp
             src/engine/vulkan/vkObj/instance/pipeline/shader/input/VBuffer.cpp
-            src/engine/vulkan/vkObj/instance/pipeline/shader/input/VBuffer.h
+            src/engine/vulkan/vkObj/instance/pipeline/shader/input/VBuffer.hpp
             src/engine/vulkan/vkObj/instance/pipeline/shader/input/VStagingBuffer.cpp
-            src/engine/vulkan/vkObj/instance/pipeline/shader/input/VStagingBuffer.h
+            src/engine/vulkan/vkObj/instance/pipeline/shader/input/VStagingBuffer.hpp
             src/engine/vulkan/vkObj/instance/pipeline/shader/input/VIndexBuffer.cpp
-            src/engine/vulkan/vkObj/instance/pipeline/shader/input/VIndexBuffer.h
+            src/engine/vulkan/vkObj/instance/pipeline/shader/input/VIndexBuffer.hpp
             src/engine/vulkan/vkObj/instance/pipeline/shader/input/VUniformBuffer.cpp
-            src/engine/vulkan/vkObj/instance/pipeline/shader/input/VUniformBuffer.h
+            src/engine/vulkan/vkObj/instance/pipeline/shader/input/VUniformBuffer.hpp
             src/engine/vulkan/vkObj/instance/pipeline/shader/input/VDescriptorPool.cpp
-            src/engine/vulkan/vkObj/instance/pipeline/shader/input/VDescriptorPool.h
+            src/engine/vulkan/vkObj/instance/pipeline/shader/input/VDescriptorPool.hpp
             src/engine/vulkan/vkObj/instance/pipeline/shader/input/VDescriptorSet.cpp
-            src/engine/vulkan/vkObj/instance/pipeline/shader/input/VDescriptorSet.h
+            src/engine/vulkan/vkObj/instance/pipeline/shader/input/VDescriptorSet.hpp
             src/engine/vulkan/vkObj/instance/pipeline/shader/input/VTexture.cpp
-            src/engine/vulkan/vkObj/instance/pipeline/shader/input/VTexture.h
+            src/engine/vulkan/vkObj/instance/pipeline/shader/input/VTexture.hpp
             src/engine/vulkan/vkObj/instance/pipeline/shader/input/VTextureDefs.h
             src/engine/vulkan/vkObj/instance/pipeline/VTextureSampler.cpp
-            src/engine/vulkan/vkObj/instance/pipeline/VTextureSampler.h
+            src/engine/vulkan/vkObj/instance/pipeline/VTextureSampler.hpp
             src/engine/vulkan/vkObj/instance/pipeline/VDepthBuffer.cpp
-            src/engine/vulkan/vkObj/instance/pipeline/VDepthBuffer.h
+            src/engine/vulkan/vkObj/instance/pipeline/VDepthBuffer.hpp
             src/engine/gobj/transform/VTransform.cpp
-            src/engine/gobj/transform/VTransform.h
+            src/engine/gobj/transform/VTransform.hpp
             src/engine/gobj/model/VMesh.cpp
-            src/engine/gobj/model/VMesh.h
+            src/engine/gobj/model/VMesh.hpp
             src/engine/gobj/shader/VShader.cpp
-            src/engine/gobj/shader/VShader.h
+            src/engine/gobj/shader/VShader.hpp
             src/engine/gobj/model/VMeshRenderer.cpp
-            src/engine/gobj/model/VMeshRenderer.h
+            src/engine/gobj/model/VMeshRenderer.hpp
             src/engine/gobj/ecm/VComponent.cpp
-            src/engine/gobj/ecm/VComponent.h
+            src/engine/gobj/ecm/VComponent.hpp
             src/engine/gobj/ecm/VEntity.cpp
-            src/engine/gobj/ecm/VEntity.h
+            src/engine/gobj/ecm/VEntity.hpp
 
             src/engine/gobj/VGameObject.cpp
-            src/engine/gobj/VGameObject.h
+            src/engine/gobj/VGameObject.hpp
 
             src/engine/gobj/scene/VScene.cpp
-            src/engine/gobj/scene/VScene.h
+            src/engine/gobj/scene/VScene.hpp
     )
 
 
@@ -210,49 +210,49 @@ if(Vulkan_FOUND)
             ${JSONCpp_SOURCE}
             src/engine/app/vulkanPrecompilerTest.cpp
             src/engine/obj/util/proto/VulkanInitTests.cpp
-            src/engine/obj/util/proto/VulkanInitTests.h
-            src/engine/vulkan/engineVulkanPreproc.h
+            src/engine/obj/util/proto/VulkanInitTests.hpp
+            src/engine/vulkan/engineVulkanPreproc.hpp
             src/engine/vulkan/vkDefs/types/vulkanExplicitTypes.h
             src/engine/vulkan/vkDefs/vkDefinitions.h
             src/engine/vulkan/vkObj/instance/validationLayer/VValidationLayer.cpp
-            src/engine/vulkan/vkObj/instance/validationLayer/VValidationLayer.h
+            src/engine/vulkan/vkObj/instance/validationLayer/VValidationLayer.hpp
             src/engine/vulkan/vkObj/instance/VInstance.cpp
-            src/engine/vulkan/vkObj/instance/VInstance.h
+            src/engine/vulkan/vkObj/instance/VInstance.hpp
             src/engine/vulkan/vkObj/instance/messenger/VMessenger.cpp
-            src/engine/vulkan/vkObj/instance/messenger/VMessenger.h
+            src/engine/vulkan/vkObj/instance/messenger/VMessenger.hpp
             src/engine/vulkan/vkObj/instance/extension/VExtension.cpp
-            src/engine/vulkan/vkObj/instance/extension/VExtension.h
+            src/engine/vulkan/vkObj/instance/extension/VExtension.hpp
             src/engine/vulkan/vkUtils/VStdUtils.cpp
-            src/engine/vulkan/vkUtils/VStdUtils.h
+            src/engine/vulkan/vkUtils/VStdUtils.hpp
             src/engine/vulkan/vkUtils/VStdUtilsDefs.h
             src/engine/vulkan/vkObj/instance/device/VPhysicalDevice.cpp
-            src/engine/vulkan/vkObj/instance/device/VPhysicalDevice.h
+            src/engine/vulkan/vkObj/instance/device/VPhysicalDevice.hpp
             src/engine/vulkan/vkObj/instance/device/VPhysicalDeviceDefs.h
             src/engine/vulkan/vkObj/instance/device/queue/VQueueFamily.cpp
-            src/engine/vulkan/vkObj/instance/device/queue/VQueueFamily.h
+            src/engine/vulkan/vkObj/instance/device/queue/VQueueFamily.hpp
             src/engine/vulkan/vkObj/instance/device/VLogicalDevice.cpp
-            src/engine/vulkan/vkObj/instance/device/VLogicalDevice.h
+            src/engine/vulkan/vkObj/instance/device/VLogicalDevice.hpp
             src/engine/vulkan/vkObj/instance/device/queue/VQueue.cpp
-            src/engine/vulkan/vkObj/instance/device/queue/VQueue.h
+            src/engine/vulkan/vkObj/instance/device/queue/VQueue.hpp
             src/engine/vulkan/vkObj/window/surface/VSurface.cpp
-            src/engine/vulkan/vkObj/window/surface/VSurface.h
+            src/engine/vulkan/vkObj/window/surface/VSurface.hpp
             src/engine/vulkan/vkDefs/types/vkPlatformDefs.cpp
-            src/engine/vulkan/vkDefs/types/vulkanShortHandTypes.h
+            src/engine/vulkan/vkDefs/types/vulkanShortHandTypes.hpp
             src/engine/vulkan/vkObj/instance/device/VSwapChainDefs.h
             src/engine/obj/util/settings/SettingsSharedContainer.cpp
-            src/engine/obj/util/settings/SettingsSharedContainer.h
+            src/engine/obj/util/settings/SettingsSharedContainer.hpp
             src/engine/obj/util/settings/SettingOption.cpp
-            src/engine/obj/util/settings/SettingOption.h
+            src/engine/obj/util/settings/SettingOption.hpp
             src/engine/obj/util/settings/SettingOptionGraphics.cpp
-            src/engine/obj/util/settings/SettingOptionGraphics.h
+            src/engine/obj/util/settings/SettingOptionGraphics.hpp
             src/engine/vulkan/vkObj/instance/device/VSwapChain.cpp
-            src/engine/vulkan/vkObj/instance/device/VSwapChain.h
+            src/engine/vulkan/vkObj/instance/device/VSwapChain.hpp
             src/engine/vulkan/vkObj/instance/pipeline/VImageView.cpp
-            src/engine/vulkan/vkObj/instance/pipeline/VImageView.h
+            src/engine/vulkan/vkObj/instance/pipeline/VImageView.hpp
             src/engine/vulkan/vkObj/instance/pipeline/shader/VShaderCompiler.cpp
-            src/engine/vulkan/vkObj/instance/pipeline/shader/VShaderCompiler.h
+            src/engine/vulkan/vkObj/instance/pipeline/shader/VShaderCompiler.hpp
             src/engine/vulkan/vkObj/instance/pipeline/shader/VShaderModule.cpp
-            src/engine/vulkan/vkObj/instance/pipeline/shader/VShaderModule.h
+            src/engine/vulkan/vkObj/instance/pipeline/shader/VShaderModule.hpp
     )
 
 
@@ -265,64 +265,64 @@ if(Vulkan_FOUND)
             vk-eng-sandbox1
             src/engine/app/sandbox/sandbox1.cpp
             src/engine/gobj/ecm/VEntity.cpp
-            src/engine/gobj/ecm/VEntity.h
+            src/engine/gobj/ecm/VEntity.hpp
             src/engine/gobj/ecm/VComponent.cpp
-            src/engine/gobj/ecm/VComponent.h
+            src/engine/gobj/ecm/VComponent.hpp
             src/engine/gobj/scene/VScene.cpp
-            src/engine/gobj/scene/VScene.h
+            src/engine/gobj/scene/VScene.hpp
             src/engine/gobj/VGameObject.cpp
-            src/engine/gobj/VGameObject.h
+            src/engine/gobj/VGameObject.hpp
 
             src/engine/gobj/transform/VTransform.cpp
-            src/engine/gobj/transform/VTransform.h
+            src/engine/gobj/transform/VTransform.hpp
 
             src/engine/gobj/model/VMesh.cpp
-            src/engine/gobj/model/VMesh.h
+            src/engine/gobj/model/VMesh.hpp
             src/engine/gobj/model/VMeshRenderer.cpp
-            src/engine/gobj/model/VMeshRenderer.h
+            src/engine/gobj/model/VMeshRenderer.hpp
 
             src/engine/vulkan/vkObj/instance/pipeline/shader/input/VBuffer.cpp
-            src/engine/vulkan/vkObj/instance/pipeline/shader/input/VBuffer.h
+            src/engine/vulkan/vkObj/instance/pipeline/shader/input/VBuffer.hpp
             src/engine/vulkan/vkObj/instance/pipeline/shader/input/VVertexBuffer.cpp
-            src/engine/vulkan/vkObj/instance/pipeline/shader/input/VVertexBuffer.h
+            src/engine/vulkan/vkObj/instance/pipeline/shader/input/VVertexBuffer.hpp
             src/engine/vulkan/vkObj/instance/pipeline/shader/input/VIndexBuffer.cpp
-            src/engine/vulkan/vkObj/instance/pipeline/shader/input/VIndexBuffer.h
+            src/engine/vulkan/vkObj/instance/pipeline/shader/input/VIndexBuffer.hpp
             src/engine/vulkan/vkObj/instance/pipeline/shader/input/VTexture.cpp
-            src/engine/vulkan/vkObj/instance/pipeline/shader/input/VTexture.h
+            src/engine/vulkan/vkObj/instance/pipeline/shader/input/VTexture.hpp
 
             src/engine/vulkan/vkObj/instance/device/VLogicalDevice.cpp
-            src/engine/vulkan/vkObj/instance/device/VLogicalDevice.h
+            src/engine/vulkan/vkObj/instance/device/VLogicalDevice.hpp
             src/engine/vulkan/vkObj/instance/device/VPhysicalDevice.cpp
-            src/engine/vulkan/vkObj/instance/device/VPhysicalDevice.h
+            src/engine/vulkan/vkObj/instance/device/VPhysicalDevice.hpp
 
             src/engine/vulkan/vkObj/instance/extension/VExtension.cpp
-            src/engine/vulkan/vkObj/instance/extension/VExtension.h
+            src/engine/vulkan/vkObj/instance/extension/VExtension.hpp
 
             src/engine/vulkan/vkObj/instance/validationLayer/VValidationLayer.cpp
-            src/engine/vulkan/vkObj/instance/validationLayer/VValidationLayer.h
+            src/engine/vulkan/vkObj/instance/validationLayer/VValidationLayer.hpp
 
             src/engine/vulkan/vkObj/instance/pipeline/command/VCommandBuffer.cpp
-            src/engine/vulkan/vkObj/instance/pipeline/command/VCommandBuffer.h
+            src/engine/vulkan/vkObj/instance/pipeline/command/VCommandBuffer.hpp
             src/engine/vulkan/vkObj/instance/pipeline/command/VCommandPool.cpp
-            src/engine/vulkan/vkObj/instance/pipeline/command/VCommandPool.h
+            src/engine/vulkan/vkObj/instance/pipeline/command/VCommandPool.hpp
 
             src/engine/vulkan/vkObj/instance/pipeline/VImageView.cpp
-            src/engine/vulkan/vkObj/instance/pipeline/VImageView.h
+            src/engine/vulkan/vkObj/instance/pipeline/VImageView.hpp
 
             src/engine/vulkan/vkObj/instance/device/queue/VQueue.cpp
             src/engine/vulkan/vkObj/instance/device/queue/VQueueFamily.cpp
-            src/engine/vulkan/vkObj/instance/device/queue/VQueue.h
-            src/engine/vulkan/vkObj/instance/device/queue/VQueueFamily.h
+            src/engine/vulkan/vkObj/instance/device/queue/VQueue.hpp
+            src/engine/vulkan/vkObj/instance/device/queue/VQueueFamily.hpp
 
             src/engine/vulkan/vkObj/instance/device/VSwapChain.cpp
-            src/engine/vulkan/vkObj/instance/device/VSwapChain.h
+            src/engine/vulkan/vkObj/instance/device/VSwapChain.hpp
 
             src/engine/obj/util/settings/SettingOption.cpp
-            src/engine/obj/util/settings/SettingOption.h
+            src/engine/obj/util/settings/SettingOption.hpp
             src/engine/obj/util/settings/SettingOptionGraphics.cpp
-            src/engine/obj/util/settings/SettingOptionGraphics.h
+            src/engine/obj/util/settings/SettingOptionGraphics.hpp
             src/engine/obj/util/settings/SettingsSharedContainer.cpp
-            src/engine/obj/util/settings/SettingsSharedContainer.h
+            src/engine/obj/util/settings/SettingsSharedContainer.hpp
     )
 
     target_compile_definitions(vk-eng-sandbox1 PUBLIC V_TEXTURE_USE_STBI_INDIVIDUAL)

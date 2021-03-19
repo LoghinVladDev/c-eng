@@ -2,7 +2,7 @@
 // Created by Vlad on 19/08/2020.
 //
 
-#include "VPipeline.h"
+#include "VPipeline.hpp"
 
 inline static void populateVertexInputStateCreateInfo (
     VulkanPipelineVertexInputStateCreateInfo       * createInfo,

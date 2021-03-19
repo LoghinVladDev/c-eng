@@ -2,7 +2,7 @@
 // Created by Vlad on 12/08/2020.
 //
 
-#include "VSurface.h"
+#include "VSurface.hpp"
 
 static inline void populateSurfaceCreateInfo ( VulkanSurfaceCreateInfoKhronos * createInfo, GLFWwindow* window ) noexcept {
     if( createInfo == nullptr )

@@ -2,7 +2,7 @@
 // Created by loghin on 9/20/20.
 //
 
-#include "VTextureSampler.h"
+#include "VTextureSampler.hpp"
 
 inline static void populateSamplerCreateInfo (
         VulkanSamplerCreateInfo * pCreateInfo,

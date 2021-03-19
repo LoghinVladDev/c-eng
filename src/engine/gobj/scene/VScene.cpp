@@ -2,7 +2,7 @@
 // Created by loghin on 04.03.2021.
 //
 
-#include "VScene.h"
+#include "VScene.hpp"
 
 engine::VScene::~VScene() noexcept {
     for ( auto * p : this->_rootEntities )

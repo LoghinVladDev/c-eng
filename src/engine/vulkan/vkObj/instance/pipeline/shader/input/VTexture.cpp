@@ -5,7 +5,7 @@
 #if !defined(_MSC_VER)
 #include <bits/ios_base.h>
 #endif
-#include "VTexture.h"
+#include "VTexture.hpp"
 #include "VTextureDefs.h"
 #include <vkUtils/VStdUtilsDefs.h>
 
@@ -217,7 +217,7 @@ VulkanResult engine::VTexture::flush() noexcept {
     return VulkanResult::VK_SUCCESS;
 }
 
-#include <vkObj/instance/pipeline/command/VCommandBuffer.h>
+#include <vkObj/instance/pipeline/command/VCommandBuffer.hpp>
 VulkanResult engine::VTexture::transitionImageLayout(VulkanImageLayout newLayout) noexcept {
     bool isTransferOptimized =
             this->_pCommandPool->isOptimizedForTransfers() &&

@@ -2,7 +2,7 @@
 // Created by Vlad on 17/08/2020.
 //
 
-#include "VShaderCompiler.h"
+#include "VShaderCompiler.hpp"
 
 //const std::string engine::VShaderCompiler::defaultInputDirectoryPath    = __VULKAN_SHADERS_PATH__;
 //const std::string engine::VShaderCompiler::defaultOutputDirectoryPath   = std::string ( __VULKAN_SHADERS_PATH__ ).append( "./out" );

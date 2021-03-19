@@ -6,8 +6,8 @@
  * Shader Precompiler Test Source
  */
 
-#include <engineVulkanPreproc.h>
-#include <vkObj/instance/pipeline/shader/VShaderCompiler.h>
+#include <engineVulkanPreproc.hpp>
+#include <vkObj/instance/pipeline/shader/VShaderCompiler.hpp>
 #include <iostream>
 
 using namespace engine;
