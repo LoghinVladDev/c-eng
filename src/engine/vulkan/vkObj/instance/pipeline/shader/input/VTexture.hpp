@@ -11,17 +11,37 @@
 #include <vkObj/instance/pipeline/command/VCommandPool.hpp>
 #include <vkObj/instance/pipeline/shader/input/VBuffer.hpp>
 namespace engine {
-    class VTexture {
 
+    /**
+     * @class engine::VTexture
+     *
+     * @brief Represents a Texture to be loaded into the GPU memory for shaders
+     */
+    class VTexture {
     private:
+
+        /**
+         * @struct engine::VTexture::STexturePack
+         *
+         * @brief Represents an Image's Data representation
+         */
         typedef struct {
+            /// byte array
             uint8             * _pImageData;
+            /// array size
             VulkanDeviceSize    _imageSize;
         } STexturePack;
 
-        class VTextureStagingBuffer : public VBuffer {
+        /**
+         * @class engine::VTexture::StagingBuffer, inherits VBuffer
+         *
+         * @brief Represents a Texture's Staging Buffer
+         */
+        class StagingBuffer : public VBuffer {
         private:
             //// private variables
+
+            /// CPU data for Staging Buffer
             STexturePack    _texturePack    {
                 STexturePack {
                     ._pImageData    = nullptr,
@@ -35,18 +55,63 @@ namespace engine {
             //// public variables
 
             //// public functions
-            VTextureStagingBuffer () noexcept = default;
-            VulkanResult setup(
-                const VLogicalDevice&,
-                VulkanSharingMode = VBuffer::TRANSFER_EXCLUSIVITY,
-                const uint32 * = nullptr,
-                uint32 = 0U
-            ) noexcept;
 
-            VulkanResult allocateMemory() noexcept;
-            VulkanResult reload() noexcept;
+            /**
+             * @brief Default Constructor
+             *
+             * @exceptsafe
+             */
+            StagingBuffer () noexcept = default;
 
-            [[nodiscard]] constexpr const STexturePack & getBufferData () const noexcept {
+            /**
+             * @brief Function initialises the Texture Staging Buffer
+             *
+             * @param device : engine::VLogicalDevice cref = Constant Reference to a Logical Device
+             * @param sharingMode : VulkanSharingMode = Requested Sharing Mode for Memory
+             * @param pQueueFamilyIndices : uint32 cptr = Address to one / an array of Queue Family Indices, used when sharing mode requested is CONCURRENT
+             * @param queueFamilyIndexCount : uint32 = Number of Queue Family Indices at address above
+             *
+             * @exceptsafe
+             *
+             * @return VulkanResult::VK_SUCCESS if initialisation was successful OR
+             * @return VulkanResult::VK_ERROR_INITIALIZATION_FAILED if Concurrency Mode Chosen but not supported OR
+             * @return VulkanResult returned vkCreateBuffer on error occurrence - internal vulkan function
+             */
+            auto setup (
+                VLogicalDevice      const &,
+                VulkanSharingMode           = VBuffer::TRANSFER_EXCLUSIVITY,
+                uint32              const * = nullptr,
+                uint32                      = 0U
+            ) noexcept -> VulkanResult;
+
+            /**
+             * @brief Function Allocates Staging Buffer Memory
+             *
+             * @exceptsafe
+             *
+             * @return VulkanResult::VK_SUCCESS if allocate of memory was successful OR
+             * @return VulkanResult::VK_ERROR_INITIALIZATION_FAILED if memory type requested is not available OR
+             * @return VulkanResult returned by vkAllocateMemory on error occurrence - internal vulkan function OR
+             * @return VulkanResult returned by vkBindBufferMemory on error occurrence - internal vulkan function
+             */
+            auto allocateMemory() noexcept -> VulkanResult;
+
+            /**
+             * @brief Function reloads Data into GPU memory
+             *
+             * @exceptsafe
+             *
+             * @return VulkanResult::VK_SUCCESS if loading of memory onto buffer was successful OR
+             * @return VulkanResult::VK_ERROR_MEMORY_MAP_FAILED if Memory was not allocated with flag MEMORY_CPU_WRITABLE OR
+             * @return VulkanResult returned by vkMapMemory on error occurrence - internal vulkan function
+             */
+            auto reload() noexcept -> VulkanResult;
+
+            /**
+             *
+             * @return
+             */
+            [[nodiscard]] auto getBufferData () const noexcept {
                 return this->_texturePack;
             }
 
@@ -67,7 +132,7 @@ namespace engine {
 
         VulkanImageLayout               _currentLayout      {VulkanImageLayout::VK_IMAGE_LAYOUT_UNDEFINED};
         VulkanSharingMode               _sharingMode        {VulkanSharingMode::VK_SHARING_MODE_EXCLUSIVE};
-        VTextureStagingBuffer           _stagingBuffer;
+        StagingBuffer           _stagingBuffer;
         VulkanImage                     _handle             {VK_NULL_HANDLE};
         VulkanDeviceMemory              _memoryHandle       {VK_NULL_HANDLE};
 

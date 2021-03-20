@@ -26,7 +26,7 @@ namespace engine {
      *
      * @brief Represents a CPU-GPU Memory Layout Binding of a Data Type ( shared variable location between CPU and GPU, i.e. MVP Matrix )
      *
-     * @tparam T = type of Data Type to bind to CPU-GPU pipeline
+     * @tparam T = Data Type to bind to CPU-GPU pipeline
      */
     template <class T>
     class VDescriptorSet {
@@ -104,12 +104,25 @@ namespace engine {
         auto configure ( VTexture const & , VTextureSampler const &, uint32 ) noexcept -> void;
     };
 
+    /**
+     * @class engine::VDescriptorSetCollection
+     *
+     * @brief Represents Multiple Descriptor Sets. Usually one for each frame
+     *
+     * @tparam T = Data Type to bind to CPU-GPU pipeline
+     */
     template <class T>
     class VDescriptorSetCollection {
     private:
         //// private variables
-        const VLogicalDevice                * _pLogicalDevice {nullptr};
+
+        /// Address of Logical Device
+        VLogicalDevice                const * _pLogicalDevice {nullptr};
+
+        /// Vector of Descriptor Sets
         std::vector < VDescriptorSet <T> >    _descriptorSets;
+
+        /// Descriptor Sequence Increment for Index Assignation
         uint32                                _autoIncrementDescriptorIndex {0U};
 
         //// private functions
@@ -117,43 +130,122 @@ namespace engine {
         //// public variables
 
         //// public functions
-        VDescriptorSetCollection () noexcept = default;
-        VulkanResult allocate ( const VDescriptorPool & , const VulkanDescriptorSetLayout & ) noexcept;
 
-        [[nodiscard]] const std::vector < VDescriptorSet <T> > & getDescriptorSets () const noexcept {
+        /**
+         * @brief Default Constructor. Creates Empty Collection
+         *
+         * @exceptsafe
+         */
+        VDescriptorSetCollection () noexcept = default;
+
+        /**
+         * @brief Function Allocates Descriptor Sets from a Descriptor Pool based on a Descriptor Set Layout
+         *
+         * Descriptor Set Layout = In what order are parameters bound
+         *
+         * GPU GLSL Code :
+         *
+         *      layout(binding = 0) uniform UniformBufferObject {
+         *          mat4 model;
+         *          mat4 view;
+         *          mat4 projection;
+         *      } uniformBufferObject;
+         *
+         *      layout(binding = 1) uniform sampler2D textureSampler;
+         *
+         * Layout on CPU : Uniform Buffer Object will have binding 0, Texture Sampler will have binding 1
+         *                 Order is strict, because of CPU-GPU required optimisations on data bus
+         *
+         * @param descriptorPool : engine::VDescriptorPool cref = Constant Reference to Pool to allocate Descriptors from
+         * @param descriptorSetBaseLayout : VulkanDescriptorSetLayout cref = Constant Reference to Layout of Descriptor Sets on GPU, for shader program
+         *
+         * @exceptsafe
+         *
+         * @return VulkanResult::VK_SUCCESS if allocation was successful OR
+         * @return VulkanResult returned by vkAllocateDescriptorSets if error occurred - vulkan internal function
+         */
+        auto allocate (
+                VDescriptorPool             const &,
+                VulkanDescriptorSetLayout   const &
+        ) noexcept -> VulkanResult;
+
+        /**
+         * @brief Getter for Descriptor Sets contained in Collection
+         *
+         * @exceptsafe
+         *
+         * @return std::vector < engine::VDescriptorSet < T > > cref = Constant Reference to Descriptor Set vector
+         */
+        [[nodiscard]] auto getDescriptorSets () const noexcept -> std::vector < VDescriptorSet <T> > const & {
             return this->_descriptorSets;
         }
 
-        [[nodiscard]] std::vector < VulkanDescriptorSet > getDescriptorSetHandles () const noexcept;
+        /**
+         * @brief Getter for Descriptor Set Handles inside Collection
+         *
+         * @exceptsafe
+         *
+         * @return std::vector < VulkanDescriptorSet > = vector of Descriptor Set Handles
+         */
+        [[nodiscard]] auto getDescriptorSetHandles () const noexcept -> std::vector < VulkanDescriptorSet >;
 
-        [[nodiscard]] const VLogicalDevice * getLogicalDevicePtr () const noexcept {
+        /**
+         * @brief Getter for Logical Device Address
+         *
+         * @exceptsafe
+         *
+         * @return engine::VLogicalDevice cptr = Address to Constant Logical Device
+         */
+        [[nodiscard]] auto getLogicalDevicePtr () const noexcept -> VLogicalDevice const * {
             return this->_pLogicalDevice;
         }
 
-        void configure ( const std::vector < VUniformBuffer <T> > &, uint32 = 0U ) noexcept;
-        void configure ( const VTexture&, const VTextureSampler &, uint32 = 0U ) noexcept;
+        /**
+         * @brief Function configures contained Descriptor Sets for Uniform Buffers given
+         *
+         * @param uniformBuffers : std::vector < engine::VUniformBuffer < T > > cref = Constant Reference to vector of Uniform Buffers to be configured (bound) for Descriptor Sets
+         * @param descriptorIndex : uint32 = unused parameter TODO : remove
+         *
+         * @exceptsafe
+         */
+        auto configure ( std::vector < VUniformBuffer <T> > const &, uint32 = 0U ) noexcept -> void;
+
+        /**
+         * @brief Function configures contained Descriptor Sets for Texture and Texture Sampler Given
+         *
+         * @param texture : engine::VTexture cref = Constant Reference to the Texture to be attached
+         * @param textureSampler : engine::VTextureSampler cref = Constant Reference to the Texture Sampler to be attached
+         * @param descriptorIndex : uint32 = unused parameter TODO : remove
+         *
+         * @exceptsafe
+         */
+        auto configure ( VTexture const &, VTextureSampler const &, uint32 = 0U ) noexcept -> void;
     };
 
+    /// maybe unused
     typedef VDescriptorSet < uint8 > VSamplerDescriptorSet;
+    /// maybe unused
     typedef VDescriptorSetCollection < uint8 > VSamplerDescriptorSetCollection;
 }
 
-template <class T>
-[[nodiscard]] std::vector < VulkanDescriptorSet > engine::VDescriptorSetCollection<T>::getDescriptorSetHandles () const noexcept {
-    std::vector < VulkanDescriptorSet > handles;
-
-    for ( auto & descriptorSet : this->_descriptorSets )
-        handles.push_back( descriptorSet.data() );
-
-    return handles;
-}
-
-inline static void populateDescriptorSetAllocateInfo (
+/**
+ * @brief Internal Function used to populate Descriptor Set Allocate Info
+ *
+ * @param pAllocateInfo : VulkanDescriptorSetAllocateInfo ptr = Address to Structure to populate
+ * @param descriptorPool : VulkanDescriptorPool = Pool Handle to allocate from
+ * @param descriptorSetCount : uint32 = Number of Descriptor Sets
+ * @param pSetLayouts : VulkanDescriptorSetLayout cptr = Address to one / an array of Descriptor Set Layouts, one for each Set
+ *
+ * @static
+ *
+ * @exceptsafe
+ */
+inline static auto populateDescriptorSetAllocateInfo (
         VulkanDescriptorSetAllocateInfo * pAllocateInfo,
         VulkanDescriptorPool              descriptorPool,
         uint32                            descriptorSetCount,
-        const VulkanDescriptorSetLayout * pSetLayouts
-) noexcept {
+        VulkanDescriptorSetLayout const * pSetLayouts
+) noexcept -> void {
     if ( pAllocateInfo == nullptr || pSetLayouts == nullptr )
         return;
 
@@ -167,47 +259,69 @@ inline static void populateDescriptorSetAllocateInfo (
 }
 
 template <class T>
-VulkanResult engine::VDescriptorSetCollection<T>::allocate(
-        const VDescriptorPool & descriptorPool,
-        const VulkanDescriptorSetLayout & descriptorSetBaseLayout
-) noexcept {
-    this->_autoIncrementDescriptorIndex = 0U;
+auto engine::VDescriptorSetCollection<T>::getDescriptorSetHandles () const noexcept -> std::vector < VulkanDescriptorSet > {
+    std::vector < VulkanDescriptorSet > handles;
+
+    for ( auto & descriptorSet : this->_descriptorSets )
+        handles.push_back( descriptorSet.data() );
+
+    return handles;
+}
+
+template <class T>
+auto engine::VDescriptorSetCollection<T>::allocate(
+        VDescriptorPool             const & descriptorPool,
+        VulkanDescriptorSetLayout   const & descriptorSetBaseLayout
+) noexcept -> VulkanResult {
+    this->_autoIncrementDescriptorIndex = 0U; /// start with index 0 for sequence. After allocation, configuration occurs
     this->_pLogicalDevice = descriptorPool.getLogicalDevicePtr();
-    auto swapChainImageCount = static_cast < uint32 > ( this->_pLogicalDevice->getSwapChain()->getImages().size() );
+    auto swapChainImageCount = static_cast < uint32 > ( this->_pLogicalDevice->getSwapChain()->getImages().size() ); /// image count from swap chain
 
     std::vector < VulkanDescriptorSet >         descriptorSetHandles ( swapChainImageCount );
-    std::vector < VulkanDescriptorSetLayout >   layouts ( swapChainImageCount, descriptorSetBaseLayout );
+    std::vector < VulkanDescriptorSetLayout >   layouts ( swapChainImageCount, descriptorSetBaseLayout ); /// create layout for each image
 
     VulkanDescriptorSetAllocateInfo             allocateInfo {};
     populateDescriptorSetAllocateInfo(
             & allocateInfo,
-            descriptorPool.data(),
-            swapChainImageCount,
-            layouts.data()
+            descriptorPool.data(), /// allocate from this pool
+            swapChainImageCount,   /// number of sets
+            layouts.data()         /// pass layout for each set
     );
 
-    VulkanResult allocateResult = vkAllocateDescriptorSets(
-            this->_pLogicalDevice->data(),
-            & allocateInfo,
-            descriptorSetHandles.data()
+    VulkanResult allocateResult = vkAllocateDescriptorSets( /// allocate
+            this->_pLogicalDevice->data(), /// on device
+            & allocateInfo, /// with parameters
+            descriptorSetHandles.data() /// save handles here
     );
 
     if ( allocateResult != VulkanResult::VK_SUCCESS )
         return allocateResult;
 
-    this->_descriptorSets.clear();
-    for ( const auto & descriptorSetHandle : descriptorSetHandles )
+    this->_descriptorSets.clear(); /// clear any previous config
+    for ( const auto & descriptorSetHandle : descriptorSetHandles ) /// emplace each set into vector
         this->_descriptorSets.emplace_back( descriptorSetHandle, this->_pLogicalDevice );
 
     return VulkanResult::VK_SUCCESS;
 }
 
-static inline void populateDescriptorBufferInfo (
+/**
+ * @brief Internal Function used to populate Descriptor Buffer Info, for specifying uniform buffer for descriptor
+ *
+ * @param pBufferInfo : VulkanDescriptorBufferInfo ptr = Address of Structure to populate
+ * @param uniformBufferHandle : VulkanBuffer = Buffer to Bind to Descriptor
+ * @param offset : uint32 = Buffer's offset in Descriptor
+ * @param size : uint32 = Size of Buffer Data
+ *
+ * @static
+ *
+ * @exceptsafe
+ */
+static inline auto populateDescriptorBufferInfo (
     VulkanDescriptorBufferInfo * pBufferInfo,
     VulkanBuffer                 uniformBufferHandle,
     uint32                       offset,
     uint32                       size
-) noexcept {
+) noexcept -> void {
     if ( pBufferInfo == nullptr )
         return;
 
@@ -218,12 +332,24 @@ static inline void populateDescriptorBufferInfo (
     };
 }
 
-static inline void populateDescriptorImageInfo (
+/**
+ * @brief Internal Function used to populate Descriptor Image Info, specifying Image Bound to Descriptor
+ *
+ * @param pImageInfo : VulkanDescriptorImageInfo ptr = Address of Structure to populate
+ * @param layout : VulkanImageLayout = Layout of the Texture to be bound
+ * @param imageView : VulkanImageView = Image View of the Texture
+ * @param sampler : VulkanSampler = Handle of the Texture Sampler used
+ *
+ * @static
+ *
+ * @exceptsafe
+ */
+static inline auto populateDescriptorImageInfo (
     VulkanDescriptorImageInfo * pImageInfo,
     VulkanImageLayout           layout,
     VulkanImageView             imageView,
     VulkanSampler               sampler
-) noexcept {
+) noexcept -> void {
     if ( pImageInfo == nullptr )
         return;
 
@@ -234,7 +360,22 @@ static inline void populateDescriptorImageInfo (
     };
 }
 
-static inline void populateWriteDescriptorSet (
+/**
+ * @brief Internal Function used to populate Write Descriptor Set Structure. Represents information required to write binding data to a Descriptor Set
+ *
+ * @param pWriteDescriptorSet : VulkanWriteDescriptorSet ptr = Address to the Structure to populate
+ * @param destinationDescriptorSetHandle : Vulkan Descriptor Set = Descriptor Set to be bound
+ * @param descriptorType : VulkanDescriptorType = Descriptor Type to be bound
+ * @param destinationBinding : uint32 = Binding to bind
+ * @param destinationArrayElementIndex : uint32 = Index of the Element to be Bound in the Descriptor Set
+ * @param pDescriptorBufferInfo : VulkanDescriptorBufferInfo cptr = Address to one / an array of Uniform Buffers Descriptor Information to bind. If null, currently not binding Uniforms
+ * @param pDescriptorImageInfo : VulkanDescriptorImageInfo cptr = Address to one / an array of Image Descriptor Info to bind. If null, currently not binidng images
+ *
+ * @static
+ *
+ * @exceptsafe
+ */
+static inline auto populateWriteDescriptorSet (
     VulkanWriteDescriptorSet          * pWriteDescriptorSet,
     VulkanDescriptorSet                 destinationDescriptorSetHandle,
     VulkanDescriptorType                descriptorType,
@@ -242,7 +383,7 @@ static inline void populateWriteDescriptorSet (
     uint32                              destinationArrayElementIndex,
     const VulkanDescriptorBufferInfo  * pDescriptorBufferInfo,
     const VulkanDescriptorImageInfo   * pDescriptorImageInfo
-) noexcept {
+) noexcept -> void {
     if ( pWriteDescriptorSet == nullptr )
         return;
 
@@ -256,20 +397,27 @@ static inline void populateWriteDescriptorSet (
         .descriptorType     = descriptorType,
         .pImageInfo         = pDescriptorImageInfo,
         .pBufferInfo        = pDescriptorBufferInfo,
-        .pTexelBufferView   = nullptr
+        .pTexelBufferView   = nullptr /// not using texels
     };
 }
 
 template <class T>
-void engine::VDescriptorSetCollection<T>::configure(const std::vector<VUniformBuffer<T>> & uniformBuffers, uint32 descriptorIndex) noexcept {
+auto engine::VDescriptorSetCollection<T>::configure(
+        std::vector<VUniformBuffer<T>>  const & uniformBuffers,
+        uint32                                  descriptorIndex /// unused param, to be removed
+) noexcept -> void {
     for ( uint32 it = 0; it < this->_descriptorSets.size(); it++ )
-        this->_descriptorSets[it].configure ( uniformBuffers[ it ], this->_autoIncrementDescriptorIndex );
-    this->_autoIncrementDescriptorIndex ++;
+        this->_descriptorSets[it].configure ( uniformBuffers[ it ], this->_autoIncrementDescriptorIndex ); /// configure for each descriptor set
+    this->_autoIncrementDescriptorIndex ++; /// go to next descriptor set in layout
 }
 
 template <class T>
-void engine::VDescriptorSetCollection<T>::configure(const VTexture & texture, const VTextureSampler & textureSampler, uint32 descriptorIndex) noexcept {
-    for ( auto & descriptorSet : this->_descriptorSets )
+auto engine::VDescriptorSetCollection<T>::configure(
+        VTexture        const & texture,
+        VTextureSampler const & textureSampler,
+        uint32                  descriptorIndex /// unused param
+) noexcept -> void {
+    for ( auto & descriptorSet : this->_descriptorSets ) /// same as above
         descriptorSet.configure ( texture, textureSampler, this->_autoIncrementDescriptorIndex );
     this->_autoIncrementDescriptorIndex ++;
 }
@@ -280,26 +428,26 @@ auto engine::VDescriptorSet<T>::configure(
         VTextureSampler const & textureSampler,
         uint32                  descriptorIndex
 ) noexcept -> void {
-    VulkanDescriptorImageInfo imageInfo {};
+    VulkanDescriptorImageInfo imageInfo {}; /// configuring texture, bind image
     populateDescriptorImageInfo(
         & imageInfo,
-        texture.getLayout(),
-        texture.getImageView().data(),
-        textureSampler.data()
+        texture.getLayout(), /// get layout of texture
+        texture.getImageView().data(), /// get image view of texture
+        textureSampler.data() /// acquire sampler handle
     );
 
-    VulkanWriteDescriptorSet writeDescriptorSet{ };
+    VulkanWriteDescriptorSet writeDescriptorSet{ }; /// populate descriptor write info
     populateWriteDescriptorSet(
         & writeDescriptorSet,
-        this->_handle,
-        VulkanDescriptorType::VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
-        descriptorIndex,
-        0U,
-        nullptr,
-        & imageInfo
+        this->_handle, /// write in this descriptor
+        VulkanDescriptorType::VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, /// type is image sampler
+        descriptorIndex, /// index is given index
+        0U, /// in array ( array at binding ) it is 0
+        nullptr, /// no uniform
+        & imageInfo /// pass image info
     );
 
-    vkUpdateDescriptorSets( this->_pLogicalDevice->data(), 1U, & writeDescriptorSet, 0U, nullptr );
+    vkUpdateDescriptorSets( this->_pLogicalDevice->data(), 1U, & writeDescriptorSet, 0U, nullptr ); /// write descriptor binding info
 }
 
 template <class T>
@@ -307,26 +455,26 @@ auto engine::VDescriptorSet<T>::configure(
         VUniformBuffer<T>   const & uniformBuffer,
         uint32                      descriptorIndex
 ) noexcept -> void {
-    VulkanDescriptorBufferInfo bufferInfo {};
+    VulkanDescriptorBufferInfo bufferInfo {}; /// configure for uniform buffer
     populateDescriptorBufferInfo(
         & bufferInfo,
-        uniformBuffer.data(),
-        0U,
-        sizeof ( T )
+        uniformBuffer.data(), /// uniform buffer handle
+        0U, /// inside buffer, data is at offset 0
+        sizeof ( T ) /// one buffer contains one T for uniform. TODO : might be sizeof(T) * element Count
     );
 
-    VulkanWriteDescriptorSet writeDescriptorSet{ };
+    VulkanWriteDescriptorSet writeDescriptorSet{ }; /// write info
     populateWriteDescriptorSet(
         & writeDescriptorSet,
-        this->_handle,
-        VulkanDescriptorType::VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
-        descriptorIndex,
-        0U,
-        & bufferInfo,
-        nullptr
+        this->_handle, /// bind to this set handle
+        VulkanDescriptorType::VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, /// bind uniform buffer
+        descriptorIndex, /// index of the descriptor, given
+        0U, /// position 0 in binding array
+        & bufferInfo, /// pass buffer info - uniform
+        nullptr /// no image to bind
     );
 
-    vkUpdateDescriptorSets( this->_pLogicalDevice->data() , 1U, & writeDescriptorSet, 0U, nullptr );
+    vkUpdateDescriptorSets( this->_pLogicalDevice->data() , 1U, & writeDescriptorSet, 0U, nullptr ); /// write binding to descriptor set
 }
 
 #endif //ENG1_VDESCRIPTORSET_HPP

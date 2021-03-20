@@ -26,7 +26,7 @@ namespace engine {
         static std::string to_string ( VulkanResult ) noexcept;
         static std::string to_string ( VulkanPhysicalDeviceType ) noexcept;
 
-        constexpr static const char * constexprBoolAlpha ( bool value ) noexcept {
+        constexpr static const char * boolAlpha (bool value ) noexcept {
             return value ? "true" : "false";
         }
 

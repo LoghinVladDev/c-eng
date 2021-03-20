@@ -90,11 +90,16 @@ auto engine::VQueueFamily::debugPrintQueueFamilyPropertiesStructureQueueFlags(
         std::ostream & buffer,
         StringLiteral prefix
 ) noexcept -> void {
-    buffer << prefix << "Queue Family Graphics Capable :        " << VStandardUtils::constexprBoolAlpha ( VQueueFamily::queueFamilyPropertiesGraphicsBit(properties) )      << '\n' ;
-    buffer << prefix << "Queue Family Compute Capable :         " << VStandardUtils::constexprBoolAlpha ( VQueueFamily::queueFamilyPropertiesComputeBit(properties) )       << '\n' ;
-    buffer << prefix << "Queue Family Transfer Capable :        " << VStandardUtils::constexprBoolAlpha ( VQueueFamily::queueFamilyPropertiesTransferBit(properties) )      << '\n' ;
-    buffer << prefix << "Queue Family Protected Capable :       " << VStandardUtils::constexprBoolAlpha ( VQueueFamily::queueFamilyPropertiesProtectedBit(properties) )     << '\n' ;
-    buffer << prefix << "Queue Family Sparse Binding Capable :  " << VStandardUtils::constexprBoolAlpha ( VQueueFamily::queueFamilyPropertiesSparseBindingBit(properties) ) << '\n' ;
+    buffer << prefix << "Queue Family Graphics Capable :        " << VStandardUtils::boolAlpha(
+            VQueueFamily::queueFamilyPropertiesGraphicsBit(properties)) << '\n' ;
+    buffer << prefix << "Queue Family Compute Capable :         " << VStandardUtils::boolAlpha(
+            VQueueFamily::queueFamilyPropertiesComputeBit(properties)) << '\n' ;
+    buffer << prefix << "Queue Family Transfer Capable :        " << VStandardUtils::boolAlpha(
+            VQueueFamily::queueFamilyPropertiesTransferBit(properties)) << '\n' ;
+    buffer << prefix << "Queue Family Protected Capable :       " << VStandardUtils::boolAlpha(
+            VQueueFamily::queueFamilyPropertiesProtectedBit(properties)) << '\n' ;
+    buffer << prefix << "Queue Family Sparse Binding Capable :  " << VStandardUtils::boolAlpha(
+            VQueueFamily::queueFamilyPropertiesSparseBindingBit(properties)) << '\n' ;
 }
 #endif
 

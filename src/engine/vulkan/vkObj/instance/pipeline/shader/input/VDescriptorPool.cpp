@@ -63,6 +63,6 @@ auto engine::VDescriptorPool::setup(
     return vkCreateDescriptorPool( this->_pLogicalDevice->data(), & createInfo, nullptr, & this->_handle );
 }
 
-void engine::VDescriptorPool::cleanup() noexcept {
+auto engine::VDescriptorPool::cleanup() noexcept -> void {
     vkDestroyDescriptorPool( this->_pLogicalDevice->data(), this->_handle, nullptr );
 }

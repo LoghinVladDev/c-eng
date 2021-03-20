@@ -228,11 +228,16 @@ auto engine::VPhysicalDevice::debugPrintPhysicalDeviceSparsePropertiesStructure(
         std::ostream & buffer,
         StringLiteral prefix
 ) noexcept -> void {
-    /* VkBool32 */  buffer << prefix << "Residency Aligned MIP Size :                              " <<  engine::VStandardUtils::constexprBoolAlpha( sparseProperties.residencyAlignedMipSize )                     << '\n';
-    /* VkBool32 */  buffer << prefix << "Residency Non Resident Strict :                           " <<  engine::VStandardUtils::constexprBoolAlpha( sparseProperties.residencyNonResidentStrict )                  << '\n';
-    /* VkBool32 */  buffer << prefix << "Residency Standard 2D Block Shape :                       " <<  engine::VStandardUtils::constexprBoolAlpha( sparseProperties.residencyStandard2DBlockShape )               << '\n';
-    /* VkBool32 */  buffer << prefix << "Residency Standard 3D Block Shape :                       " <<  engine::VStandardUtils::constexprBoolAlpha( sparseProperties.residencyStandard3DBlockShape )               << '\n';
-    /* VkBool32 */  buffer << prefix << "Residency Standard 2D Multisample Block Shape :           " <<  engine::VStandardUtils::constexprBoolAlpha( sparseProperties.residencyStandard2DMultisampleBlockShape )    << '\n';
+    /* VkBool32 */  buffer << prefix << "Residency Aligned MIP Size :                              " << engine::VStandardUtils::boolAlpha(
+            sparseProperties.residencyAlignedMipSize) << '\n';
+    /* VkBool32 */  buffer << prefix << "Residency Non Resident Strict :                           " << engine::VStandardUtils::boolAlpha(
+            sparseProperties.residencyNonResidentStrict) << '\n';
+    /* VkBool32 */  buffer << prefix << "Residency Standard 2D Block Shape :                       " << engine::VStandardUtils::boolAlpha(
+            sparseProperties.residencyStandard2DBlockShape) << '\n';
+    /* VkBool32 */  buffer << prefix << "Residency Standard 3D Block Shape :                       " << engine::VStandardUtils::boolAlpha(
+            sparseProperties.residencyStandard3DBlockShape) << '\n';
+    /* VkBool32 */  buffer << prefix << "Residency Standard 2D Multisample Block Shape :           " << engine::VStandardUtils::boolAlpha(
+            sparseProperties.residencyStandard2DMultisampleBlockShape) << '\n';
 }
 
 #endif
@@ -370,61 +375,116 @@ auto engine::VPhysicalDevice::debugPrintPhysicalDeviceFeaturesStructure(
         std::ostream & buffer,
         StringLiteral prefix
 ) noexcept -> void {
-    /* VkBool32 */  buffer << prefix << "Robust Buffer Access :                                    " << engine::VStandardUtils::constexprBoolAlpha( features.robustBufferAccess )                         << '\n';
-    /* VkBool32 */  buffer << prefix << "Full Draw Index Unsigned Integer 32 :                     " << engine::VStandardUtils::constexprBoolAlpha( features.fullDrawIndexUint32 )                        << '\n';
-    /* VkBool32 */  buffer << prefix << "Image Cube Array :                                        " << engine::VStandardUtils::constexprBoolAlpha( features.imageCubeArray )                             << '\n';
-    /* VkBool32 */  buffer << prefix << "Implement Blend :                                         " << engine::VStandardUtils::constexprBoolAlpha( features.independentBlend )                           << '\n';
-    /* VkBool32 */  buffer << prefix << "Geometry Shader :                                         " << engine::VStandardUtils::constexprBoolAlpha( features.geometryShader )                             << '\n';
-    /* VkBool32 */  buffer << prefix << "Tesselation Shader :                                      " << engine::VStandardUtils::constexprBoolAlpha( features.tessellationShader )                         << '\n';
-    /* VkBool32 */  buffer << prefix << "Sample Rate Shading :                                     " << engine::VStandardUtils::constexprBoolAlpha( features.sampleRateShading )                          << '\n';
-    /* VkBool32 */  buffer << prefix << "Dual Source Blend :                                       " << engine::VStandardUtils::constexprBoolAlpha( features.dualSrcBlend )                               << '\n';
-    /* VkBool32 */  buffer << prefix << "Logic Operations :                                        " << engine::VStandardUtils::constexprBoolAlpha( features.logicOp )                                    << '\n';
-    /* VkBool32 */  buffer << prefix << "Multi Draw Indirect :                                     " << engine::VStandardUtils::constexprBoolAlpha( features.multiDrawIndirect )                          << '\n';
-    /* VkBool32 */  buffer << prefix << "Draw Indirect First Instance :                            " << engine::VStandardUtils::constexprBoolAlpha( features.drawIndirectFirstInstance )                  << '\n';
-    /* VkBool32 */  buffer << prefix << "Depth Clamp :                                             " << engine::VStandardUtils::constexprBoolAlpha( features.depthClamp )                                 << '\n';
-    /* VkBool32 */  buffer << prefix << "Depth Bias Clamp :                                        " << engine::VStandardUtils::constexprBoolAlpha( features.depthBiasClamp )                             << '\n';
-    /* VkBool32 */  buffer << prefix << "Fill Mode Non Solid :                                     " << engine::VStandardUtils::constexprBoolAlpha( features.fillModeNonSolid )                           << '\n';
-    /* VkBool32 */  buffer << prefix << "Depth Bounds :                                            " << engine::VStandardUtils::constexprBoolAlpha( features.depthBounds )                                << '\n';
-    /* VkBool32 */  buffer << prefix << "Wide Lines :                                              " << engine::VStandardUtils::constexprBoolAlpha( features.wideLines )                                  << '\n';
-    /* VkBool32 */  buffer << prefix << "Large Points :                                            " << engine::VStandardUtils::constexprBoolAlpha( features.largePoints )                                << '\n';
-    /* VkBool32 */  buffer << prefix << "Alpha to One :                                            " << engine::VStandardUtils::constexprBoolAlpha( features.alphaToOne )                                 << '\n';
-    /* VkBool32 */  buffer << prefix << "Multiple Viewports :                                      " << engine::VStandardUtils::constexprBoolAlpha( features.multiViewport )                              << '\n';
-    /* VkBool32 */  buffer << prefix << "Sampler Anisotropy :                                      " << engine::VStandardUtils::constexprBoolAlpha( features.samplerAnisotropy )                          << '\n';
-    /* VkBool32 */  buffer << prefix << "Texture Compression ETC2 :                                " << engine::VStandardUtils::constexprBoolAlpha( features.textureCompressionETC2 )                     << '\n';
-    /* VkBool32 */  buffer << prefix << "Texture Compression ATSC_LDR :                            " << engine::VStandardUtils::constexprBoolAlpha( features.textureCompressionASTC_LDR )                 << '\n';
-    /* VkBool32 */  buffer << prefix << "Texture Compression BC :                                  " << engine::VStandardUtils::constexprBoolAlpha( features.textureCompressionBC )                       << '\n';
-    /* VkBool32 */  buffer << prefix << "Occlusion Query Precise :                                 " << engine::VStandardUtils::constexprBoolAlpha( features.occlusionQueryPrecise )                      << '\n';
-    /* VkBool32 */  buffer << prefix << "Pipeline Statistics Query :                               " << engine::VStandardUtils::constexprBoolAlpha( features.pipelineStatisticsQuery )                    << '\n';
-    /* VkBool32 */  buffer << prefix << "Vertex Pipeline Stores And Atomics :                      " << engine::VStandardUtils::constexprBoolAlpha( features.vertexPipelineStoresAndAtomics )             << '\n';
-    /* VkBool32 */  buffer << prefix << "Fragment Stores and Atomics :                             " << engine::VStandardUtils::constexprBoolAlpha( features.fragmentStoresAndAtomics )                   << '\n';
-    /* VkBool32 */  buffer << prefix << "Shader Tesselation and Geometry Point Size :              " << engine::VStandardUtils::constexprBoolAlpha( features.shaderTessellationAndGeometryPointSize )     << '\n';
-    /* VkBool32 */  buffer << prefix << "Shader Image Gather Extended :                            " << engine::VStandardUtils::constexprBoolAlpha( features.shaderImageGatherExtended )                  << '\n';
-    /* VkBool32 */  buffer << prefix << "Shader Storage Image Extended Formats :                   " << engine::VStandardUtils::constexprBoolAlpha( features.shaderStorageImageExtendedFormats )          << '\n';
-    /* VkBool32 */  buffer << prefix << "Shader Storage Image Multisample :                        " << engine::VStandardUtils::constexprBoolAlpha( features.shaderStorageImageMultisample )              << '\n';
-    /* VkBool32 */  buffer << prefix << "Shader Storage Image Read Without Format :                " << engine::VStandardUtils::constexprBoolAlpha( features.shaderStorageImageReadWithoutFormat )        << '\n';
-    /* VkBool32 */  buffer << prefix << "Shader Storage Image Write Without Format :               " << engine::VStandardUtils::constexprBoolAlpha( features.shaderStorageImageWriteWithoutFormat )       << '\n';
-    /* VkBool32 */  buffer << prefix << "Shader Uniform Buffer Array Dynamic Indexing :            " << engine::VStandardUtils::constexprBoolAlpha( features.shaderUniformBufferArrayDynamicIndexing )    << '\n';
-    /* VkBool32 */  buffer << prefix << "Shader Sampled Image Array Dynamic Indexing :             " << engine::VStandardUtils::constexprBoolAlpha( features.shaderSampledImageArrayDynamicIndexing )     << '\n';
-    /* VkBool32 */  buffer << prefix << "Shader Storage Buffer Array Dynamic Indexing :            " << engine::VStandardUtils::constexprBoolAlpha( features.shaderStorageBufferArrayDynamicIndexing )    << '\n';
-    /* VkBool32 */  buffer << prefix << "Shader Storage Image Array Dynamic Indexing :             " << engine::VStandardUtils::constexprBoolAlpha( features.shaderStorageImageArrayDynamicIndexing )     << '\n';
-    /* VkBool32 */  buffer << prefix << "Shader Clip Distance :                                    " << engine::VStandardUtils::constexprBoolAlpha( features.shaderClipDistance )                         << '\n';
-    /* VkBool32 */  buffer << prefix << "Shader Cull Distance :                                    " << engine::VStandardUtils::constexprBoolAlpha( features.shaderCullDistance )                         << '\n';
-    /* VkBool32 */  buffer << prefix << "Shader Float 64 :                                         " << engine::VStandardUtils::constexprBoolAlpha( features.shaderFloat64 )                              << '\n';
-    /* VkBool32 */  buffer << prefix << "Shader Int 64 :                                           " << engine::VStandardUtils::constexprBoolAlpha( features.shaderInt64 )                                << '\n';
-    /* VkBool32 */  buffer << prefix << "Shader Int 16 :                                           " << engine::VStandardUtils::constexprBoolAlpha( features.shaderInt16 )                                << '\n';
-    /* VkBool32 */  buffer << prefix << "Shader Resource Residency :                               " << engine::VStandardUtils::constexprBoolAlpha( features.shaderResourceResidency )                    << '\n';
-    /* VkBool32 */  buffer << prefix << "Shader Resource Min LOD :                                 " << engine::VStandardUtils::constexprBoolAlpha( features.shaderResourceMinLod )                       << '\n';
-    /* VkBool32 */  buffer << prefix << "Sparse Binding :                                          " << engine::VStandardUtils::constexprBoolAlpha( features.sparseBinding )                              << '\n';
-    /* VkBool32 */  buffer << prefix << "Sparse Residency Buffer :                                 " << engine::VStandardUtils::constexprBoolAlpha( features.sparseResidencyBuffer )                      << '\n';
-    /* VkBool32 */  buffer << prefix << "Sparse Residency Image 2D :                               " << engine::VStandardUtils::constexprBoolAlpha( features.sparseResidencyImage2D )                     << '\n';
-    /* VkBool32 */  buffer << prefix << "Sparse Residency Image 3D :                               " << engine::VStandardUtils::constexprBoolAlpha( features.sparseResidencyImage3D )                     << '\n';
-    /* VkBool32 */  buffer << prefix << "Sparse Residency 2 Samples :                              " << engine::VStandardUtils::constexprBoolAlpha( features.sparseResidency2Samples )                    << '\n';
-    /* VkBool32 */  buffer << prefix << "Sparse Residency 4 Samples :                              " << engine::VStandardUtils::constexprBoolAlpha( features.sparseResidency4Samples )                    << '\n';
-    /* VkBool32 */  buffer << prefix << "Sparse Residency 8 Samples :                              " << engine::VStandardUtils::constexprBoolAlpha( features.sparseResidency8Samples )                    << '\n';
-    /* VkBool32 */  buffer << prefix << "Sparse Residency 16 Samples :                             " << engine::VStandardUtils::constexprBoolAlpha( features.sparseResidency16Samples )                   << '\n';
-    /* VkBool32 */  buffer << prefix << "Sparse Residency Aliased :                                " << engine::VStandardUtils::constexprBoolAlpha( features.sparseResidencyAliased )                     << '\n';
-    /* VkBool32 */  buffer << prefix << "Variable Multisample Rate :                               " << engine::VStandardUtils::constexprBoolAlpha( features.variableMultisampleRate )                    << '\n';
-    /* VkBool32 */  buffer << prefix << "Inherited Queries :                                       " << engine::VStandardUtils::constexprBoolAlpha( features.inheritedQueries )                           << '\n';
+    /* VkBool32 */  buffer << prefix << "Robust Buffer Access :                                    " << engine::VStandardUtils::boolAlpha(
+            features.robustBufferAccess) << '\n';
+    /* VkBool32 */  buffer << prefix << "Full Draw Index Unsigned Integer 32 :                     " << engine::VStandardUtils::boolAlpha(
+            features.fullDrawIndexUint32) << '\n';
+    /* VkBool32 */  buffer << prefix << "Image Cube Array :                                        " << engine::VStandardUtils::boolAlpha(
+            features.imageCubeArray) << '\n';
+    /* VkBool32 */  buffer << prefix << "Implement Blend :                                         " << engine::VStandardUtils::boolAlpha(
+            features.independentBlend) << '\n';
+    /* VkBool32 */  buffer << prefix << "Geometry Shader :                                         " << engine::VStandardUtils::boolAlpha(
+            features.geometryShader) << '\n';
+    /* VkBool32 */  buffer << prefix << "Tesselation Shader :                                      " << engine::VStandardUtils::boolAlpha(
+            features.tessellationShader) << '\n';
+    /* VkBool32 */  buffer << prefix << "Sample Rate Shading :                                     " << engine::VStandardUtils::boolAlpha(
+            features.sampleRateShading) << '\n';
+    /* VkBool32 */  buffer << prefix << "Dual Source Blend :                                       " << engine::VStandardUtils::boolAlpha(
+            features.dualSrcBlend) << '\n';
+    /* VkBool32 */  buffer << prefix << "Logic Operations :                                        " << engine::VStandardUtils::boolAlpha(
+            features.logicOp) << '\n';
+    /* VkBool32 */  buffer << prefix << "Multi Draw Indirect :                                     " << engine::VStandardUtils::boolAlpha(
+            features.multiDrawIndirect) << '\n';
+    /* VkBool32 */  buffer << prefix << "Draw Indirect First Instance :                            " << engine::VStandardUtils::boolAlpha(
+            features.drawIndirectFirstInstance) << '\n';
+    /* VkBool32 */  buffer << prefix << "Depth Clamp :                                             " << engine::VStandardUtils::boolAlpha(
+            features.depthClamp) << '\n';
+    /* VkBool32 */  buffer << prefix << "Depth Bias Clamp :                                        " << engine::VStandardUtils::boolAlpha(
+            features.depthBiasClamp) << '\n';
+    /* VkBool32 */  buffer << prefix << "Fill Mode Non Solid :                                     " << engine::VStandardUtils::boolAlpha(
+            features.fillModeNonSolid) << '\n';
+    /* VkBool32 */  buffer << prefix << "Depth Bounds :                                            " << engine::VStandardUtils::boolAlpha(
+            features.depthBounds) << '\n';
+    /* VkBool32 */  buffer << prefix << "Wide Lines :                                              " << engine::VStandardUtils::boolAlpha(
+            features.wideLines) << '\n';
+    /* VkBool32 */  buffer << prefix << "Large Points :                                            " << engine::VStandardUtils::boolAlpha(
+            features.largePoints) << '\n';
+    /* VkBool32 */  buffer << prefix << "Alpha to One :                                            " << engine::VStandardUtils::boolAlpha(
+            features.alphaToOne) << '\n';
+    /* VkBool32 */  buffer << prefix << "Multiple Viewports :                                      " << engine::VStandardUtils::boolAlpha(
+            features.multiViewport) << '\n';
+    /* VkBool32 */  buffer << prefix << "Sampler Anisotropy :                                      " << engine::VStandardUtils::boolAlpha(
+            features.samplerAnisotropy) << '\n';
+    /* VkBool32 */  buffer << prefix << "Texture Compression ETC2 :                                " << engine::VStandardUtils::boolAlpha(
+            features.textureCompressionETC2) << '\n';
+    /* VkBool32 */  buffer << prefix << "Texture Compression ATSC_LDR :                            " << engine::VStandardUtils::boolAlpha(
+            features.textureCompressionASTC_LDR) << '\n';
+    /* VkBool32 */  buffer << prefix << "Texture Compression BC :                                  " << engine::VStandardUtils::boolAlpha(
+            features.textureCompressionBC) << '\n';
+    /* VkBool32 */  buffer << prefix << "Occlusion Query Precise :                                 " << engine::VStandardUtils::boolAlpha(
+            features.occlusionQueryPrecise) << '\n';
+    /* VkBool32 */  buffer << prefix << "Pipeline Statistics Query :                               " << engine::VStandardUtils::boolAlpha(
+            features.pipelineStatisticsQuery) << '\n';
+    /* VkBool32 */  buffer << prefix << "Vertex Pipeline Stores And Atomics :                      " << engine::VStandardUtils::boolAlpha(
+            features.vertexPipelineStoresAndAtomics) << '\n';
+    /* VkBool32 */  buffer << prefix << "Fragment Stores and Atomics :                             " << engine::VStandardUtils::boolAlpha(
+            features.fragmentStoresAndAtomics) << '\n';
+    /* VkBool32 */  buffer << prefix << "Shader Tesselation and Geometry Point Size :              " << engine::VStandardUtils::boolAlpha(
+            features.shaderTessellationAndGeometryPointSize) << '\n';
+    /* VkBool32 */  buffer << prefix << "Shader Image Gather Extended :                            " << engine::VStandardUtils::boolAlpha(
+            features.shaderImageGatherExtended) << '\n';
+    /* VkBool32 */  buffer << prefix << "Shader Storage Image Extended Formats :                   " << engine::VStandardUtils::boolAlpha(
+            features.shaderStorageImageExtendedFormats) << '\n';
+    /* VkBool32 */  buffer << prefix << "Shader Storage Image Multisample :                        " << engine::VStandardUtils::boolAlpha(
+            features.shaderStorageImageMultisample) << '\n';
+    /* VkBool32 */  buffer << prefix << "Shader Storage Image Read Without Format :                " << engine::VStandardUtils::boolAlpha(
+            features.shaderStorageImageReadWithoutFormat) << '\n';
+    /* VkBool32 */  buffer << prefix << "Shader Storage Image Write Without Format :               " << engine::VStandardUtils::boolAlpha(
+            features.shaderStorageImageWriteWithoutFormat) << '\n';
+    /* VkBool32 */  buffer << prefix << "Shader Uniform Buffer Array Dynamic Indexing :            " << engine::VStandardUtils::boolAlpha(
+            features.shaderUniformBufferArrayDynamicIndexing) << '\n';
+    /* VkBool32 */  buffer << prefix << "Shader Sampled Image Array Dynamic Indexing :             " << engine::VStandardUtils::boolAlpha(
+            features.shaderSampledImageArrayDynamicIndexing) << '\n';
+    /* VkBool32 */  buffer << prefix << "Shader Storage Buffer Array Dynamic Indexing :            " << engine::VStandardUtils::boolAlpha(
+            features.shaderStorageBufferArrayDynamicIndexing) << '\n';
+    /* VkBool32 */  buffer << prefix << "Shader Storage Image Array Dynamic Indexing :             " << engine::VStandardUtils::boolAlpha(
+            features.shaderStorageImageArrayDynamicIndexing) << '\n';
+    /* VkBool32 */  buffer << prefix << "Shader Clip Distance :                                    " << engine::VStandardUtils::boolAlpha(
+            features.shaderClipDistance) << '\n';
+    /* VkBool32 */  buffer << prefix << "Shader Cull Distance :                                    " << engine::VStandardUtils::boolAlpha(
+            features.shaderCullDistance) << '\n';
+    /* VkBool32 */  buffer << prefix << "Shader Float 64 :                                         " << engine::VStandardUtils::boolAlpha(
+            features.shaderFloat64) << '\n';
+    /* VkBool32 */  buffer << prefix << "Shader Int 64 :                                           " << engine::VStandardUtils::boolAlpha(
+            features.shaderInt64) << '\n';
+    /* VkBool32 */  buffer << prefix << "Shader Int 16 :                                           " << engine::VStandardUtils::boolAlpha(
+            features.shaderInt16) << '\n';
+    /* VkBool32 */  buffer << prefix << "Shader Resource Residency :                               " << engine::VStandardUtils::boolAlpha(
+            features.shaderResourceResidency) << '\n';
+    /* VkBool32 */  buffer << prefix << "Shader Resource Min LOD :                                 " << engine::VStandardUtils::boolAlpha(
+            features.shaderResourceMinLod) << '\n';
+    /* VkBool32 */  buffer << prefix << "Sparse Binding :                                          " << engine::VStandardUtils::boolAlpha(
+            features.sparseBinding) << '\n';
+    /* VkBool32 */  buffer << prefix << "Sparse Residency Buffer :                                 " << engine::VStandardUtils::boolAlpha(
+            features.sparseResidencyBuffer) << '\n';
+    /* VkBool32 */  buffer << prefix << "Sparse Residency Image 2D :                               " << engine::VStandardUtils::boolAlpha(
+            features.sparseResidencyImage2D) << '\n';
+    /* VkBool32 */  buffer << prefix << "Sparse Residency Image 3D :                               " << engine::VStandardUtils::boolAlpha(
+            features.sparseResidencyImage3D) << '\n';
+    /* VkBool32 */  buffer << prefix << "Sparse Residency 2 Samples :                              " << engine::VStandardUtils::boolAlpha(
+            features.sparseResidency2Samples) << '\n';
+    /* VkBool32 */  buffer << prefix << "Sparse Residency 4 Samples :                              " << engine::VStandardUtils::boolAlpha(
+            features.sparseResidency4Samples) << '\n';
+    /* VkBool32 */  buffer << prefix << "Sparse Residency 8 Samples :                              " << engine::VStandardUtils::boolAlpha(
+            features.sparseResidency8Samples) << '\n';
+    /* VkBool32 */  buffer << prefix << "Sparse Residency 16 Samples :                             " << engine::VStandardUtils::boolAlpha(
+            features.sparseResidency16Samples) << '\n';
+    /* VkBool32 */  buffer << prefix << "Sparse Residency Aliased :                                " << engine::VStandardUtils::boolAlpha(
+            features.sparseResidencyAliased) << '\n';
+    /* VkBool32 */  buffer << prefix << "Variable Multisample Rate :                               " << engine::VStandardUtils::boolAlpha(
+            features.variableMultisampleRate) << '\n';
+    /* VkBool32 */  buffer << prefix << "Inherited Queries :                                       " << engine::VStandardUtils::boolAlpha(
+            features.inheritedQueries) << '\n';
 }
 
 #endif

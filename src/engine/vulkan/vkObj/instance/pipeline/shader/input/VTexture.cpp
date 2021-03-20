@@ -394,30 +394,30 @@ void engine::VTexture::cleanup() noexcept {
     vkDestroyImage( this->_pCommandPool->getLogicalDevicePtr()->data(), this->_handle, nullptr );
 }
 
-void engine::VTexture::VTextureStagingBuffer::free() noexcept {
+void engine::VTexture::StagingBuffer::free() noexcept {
     return VBuffer::free();
 }
 
-void engine::VTexture::VTextureStagingBuffer::cleanup() noexcept {
+void engine::VTexture::StagingBuffer::cleanup() noexcept {
     return VBuffer::cleanup();
 }
 
-VulkanResult engine::VTexture::VTextureStagingBuffer::allocateMemory() noexcept {
+VulkanResult engine::VTexture::StagingBuffer::allocateMemory() noexcept {
     return VBuffer::allocateMemory( VBuffer::MEMORY_CPU_BUFFER_FLAGS );
 }
 
-VulkanResult engine::VTexture::VTextureStagingBuffer::reload() noexcept {
+VulkanResult engine::VTexture::StagingBuffer::reload() noexcept {
     return VBuffer::load (
             static_cast < const void * > ( this->_texturePack._pImageData ),
             static_cast < std::size_t  > ( this->_texturePack._imageSize )
     );
 }
 
-VulkanResult engine::VTexture::VTextureStagingBuffer::setup(
-        const VLogicalDevice  & device,
-        VulkanSharingMode       sharingMode,
-        const uint32 *          pQueueFamilyIndices,
-        uint32                  queueFamilyIndexCount
+VulkanResult engine::VTexture::StagingBuffer::setup(
+        VLogicalDevice      const & device,
+        VulkanSharingMode           sharingMode,
+        uint32              const * pQueueFamilyIndices,
+        uint32                      queueFamilyIndexCount
 ) noexcept {
     this->setElementCount( 1U );
 

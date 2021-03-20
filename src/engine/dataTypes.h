@@ -10,7 +10,7 @@
  */
 
 [[maybe_unused]] typedef unsigned char uint8;
-[[maybe_unused]] typedef unsigned short uint16;
+[[maybe_unused]] typedef unsigned short int uint16;
 [[maybe_unused]] typedef unsigned int uint32;
 [[maybe_unused]] typedef unsigned long long int uint64;
 
