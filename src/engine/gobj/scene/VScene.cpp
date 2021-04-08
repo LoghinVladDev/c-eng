@@ -61,6 +61,14 @@ auto engine::VScene::add(VEntity * pEntity) noexcept -> bool {
     return true;
 }
 
+auto engine::VScene::setActiveCamera(VCamera * pCamera) noexcept -> bool {
+    if ( ! this->_rootEntities.contains( pCamera ) )
+        if ( ! this->add(pCamera) ) return false;
+
+    this->_activeCamera = pCamera;
+    return true;
+}
+
 auto engine::VScene::remove(VEntity * pEntity) noexcept -> bool {
     if ( this->_rootEntities.removeFirst(pEntity) ) {
         this->setEntitySceneRoot(pEntity, nullptr);

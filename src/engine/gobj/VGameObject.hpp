@@ -31,6 +31,8 @@ namespace engine {
         explicit VGameObject(uint64 ignoredID) noexcept : VEntity(ignoredID), _name("EMPTY") {}
 
     public:
+        constexpr auto isDrawable () const noexcept -> bool { return this->_pMesh != nullptr && this->_pMeshRenderer != nullptr; }
+
         //// public variables
         const static VGameObject EMPTY;
 

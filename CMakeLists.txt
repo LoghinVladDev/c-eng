@@ -323,7 +323,7 @@ if(Vulkan_FOUND)
             src/engine/obj/util/settings/SettingOptionGraphics.hpp
             src/engine/obj/util/settings/SettingsSharedContainer.cpp
             src/engine/obj/util/settings/SettingsSharedContainer.hpp
-            src/engine/VCamera.cpp src/engine/VCamera.h)
+            src/engine/gobj/VCamera.cpp src/engine/gobj/VCamera.hpp)
 
     target_compile_definitions(vk-eng-sandbox1 PUBLIC V_TEXTURE_USE_STBI_INDIVIDUAL)
 

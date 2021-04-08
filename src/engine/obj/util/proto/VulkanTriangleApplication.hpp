@@ -570,6 +570,8 @@ namespace engine {
          *      mainLoop () throws
          */
         auto run() noexcept (false) -> void;
+
+        constexpr auto scene() noexcept -> VScene & { return this->_activeScene; }
     };
 
 }

@@ -10,6 +10,7 @@
 #include <CDS/HashMap>
 #include <ecm/VEntity.hpp>
 #include <VGameObject.hpp>
+#include <VCamera.hpp>
 
 namespace engine {
 
@@ -21,6 +22,8 @@ namespace engine {
         Array < VEntity * >                         _rootEntities;
         HashMap < uint64, VEntity * >    mutable    _indexedEntities;
         HashMap < uint64, VComponent * > mutable    _indexedComponents;
+
+        VCamera                                   * _activeCamera {nullptr};
 
         //TODO : name indexing
 
@@ -43,6 +46,10 @@ namespace engine {
 
         auto add ( VEntity * ) noexcept -> bool;
         auto remove ( VEntity * ) noexcept -> bool;
+
+        auto setActiveCamera ( VCamera * ) noexcept -> bool;
+        constexpr auto activeCamera () noexcept -> VCamera * { return this->_activeCamera; }
+        constexpr auto activeCamera () const noexcept -> VCamera const * { return this->_activeCamera; }
 
         [[nodiscard]] auto getEntityByID ( uint64 ) noexcept -> VEntity *;
         [[nodiscard]] auto getEntityByID ( uint64 ) const noexcept -> VEntity const *;

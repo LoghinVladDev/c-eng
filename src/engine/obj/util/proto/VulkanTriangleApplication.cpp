@@ -146,6 +146,7 @@ auto engine::VulkanTriangleApplication::run() noexcept (false) -> void {
 }
 
 auto static processInputCallback (GLFWwindow*, int, int, int, int) noexcept -> void;
+auto static rawMouseInputCallback (GLFWwindow *, double, double ) noexcept -> void;
 
 auto engine::VulkanTriangleApplication::initWindow() noexcept (false) -> void {
     if(glfwInit() == GLFW_FALSE) {
@@ -162,9 +163,11 @@ auto engine::VulkanTriangleApplication::initWindow() noexcept (false) -> void {
         nullptr    // not shared to any other instance / application
     );
 
+    glfwSetInputMode(this->_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     glfwSetWindowUserPointer( this->_window, this ); /// Set "this" as owner of window. Will be used to re-acquire "this" address in callback, since it is static
     glfwSetFramebufferSizeCallback( this->_window, engine::VulkanTriangleApplication::frameBufferResizeCallback ); /// Set Window Resize Callback
     glfwSetKeyCallback( this->_window, processInputCallback ); /// Set Keyboard Callback
+    glfwSetCursorPosCallback(this->_window, rawMouseInputCallback);
 }
 
 auto engine::VulkanTriangleApplication::createSurface() noexcept(false) -> void {
@@ -354,6 +357,7 @@ auto engine::VulkanTriangleApplication::createGameObjects() noexcept -> void {
 
     this->_activeScene.add(cube);
     this->_activeScene.add(star); /// Add object to scene
+    this->_activeScene.setActiveCamera(new VCamera({0.0f, 2.0f, 3.0f}));
 }
 
 auto engine::VulkanTriangleApplication::recreateSwapChain() noexcept(false) -> void {
@@ -593,11 +597,17 @@ auto engine::VulkanTriangleApplication::updateUniformBuffer(uint32 uniformBuffer
      *                               0, 0, 0, 0 )
      */
 
-    auto view = glm::lookAt(
-            glm::vec3(2.0f, 2.0f, 2.0f), /// current camera position ( "eyes" )
-            glm::vec3(0.0f, 0.0f, 0.0f), /// center position ( "where we want to look, center" )
-            glm::vec3(0.0f, 0.0f, 1.0f)   /// normal of the camera. Orientation
-    ); /// view matrix = 4x4 matrix
+
+    glm::mat4 view;
+
+    if ( this->_activeScene.activeCamera() != nullptr )
+        view = this->_activeScene.activeCamera()->viewMatrix();
+    else
+        view = glm::lookAt(
+                glm::vec3(2.0f, 2.0f, 2.0f), /// current camera position ( "eyes" )
+                glm::vec3(0.0f, 0.0f, 0.0f), /// center position ( "where we want to look, center" )
+                glm::vec3(0.0f, 0.0f, 1.0f)   /// normal of the camera. Orientation
+        ); /// view matrix = 4x4 matrix
 
     auto projection = glm::perspective (
             glm::radians ( FOV ), /// with this FOV in radians
@@ -624,6 +634,9 @@ auto engine::VulkanTriangleApplication::updateUniformBuffer(uint32 uniformBuffer
      */
     for ( auto * pEntity : this->_activeScene.entitiesOfClass("VGameObject") ) {
         auto pGameObject = dynamic_cast < VGameObject * > (pEntity);
+        if ( ! pGameObject->isDrawable() )
+            continue;
+
         engine::SUniformBufferObject UBO {
             .model = glm::scale( /// scale with scale
                 glm::rotate( /// rotate roll
@@ -646,6 +659,34 @@ auto engine::VulkanTriangleApplication::updateUniformBuffer(uint32 uniformBuffer
         auto & currentBuffer = pGameObject->meshRendererPtr()->getMVPDescriptorBuffers()[ uniformBufferIndex ];
         currentBuffer.load( & UBO, 1U ); /// load the uniform buffer object
     }
+}
+
+auto rawMouseInputCallback (
+        GLFWwindow * pWindow,
+        double xPos,
+        double yPos
+) noexcept -> void {
+    static bool firstCallback = true;
+    static float lastXPos;
+    static float lastYPos;
+    static float xOffset;
+    static float yOffset;
+
+    constexpr static float sensitivity = 0.1f;
+
+    if ( firstCallback ) {
+        lastXPos = static_cast < float > (xPos);
+        lastYPos = static_cast < float > (yPos);
+        firstCallback = false;
+    }
+
+    xOffset = (static_cast < float > (xPos) - lastXPos) * sensitivity;
+    yOffset = (lastYPos - static_cast < float > (yPos)) * sensitivity;
+
+    lastXPos = static_cast < float > (xPos);
+    lastYPos = static_cast < float > (yPos);
+
+    ((engine::VulkanTriangleApplication *)glfwGetWindowUserPointer(pWindow))->scene().activeCamera()->collectRawInput(xOffset, yOffset);
 }
 
 /**
@@ -845,7 +886,7 @@ auto engine::VulkanTriangleApplication::createDescriptorPool() noexcept(false) -
 
     /// number of objects that will use individual descriptors - individual buffers on the pipeline.
     /// make a descriptor set for each
-    uint32 objectCount = static_cast<uint32>(this->_activeScene.entitiesOfClass("VGameObject").size());
+    uint32 objectCount = static_cast<uint32>(this->_activeScene.entitiesOfClass("VGameObject").count([](VEntity * pObj){return ((VGameObject *)pObj)->isDrawable();}));
 
     ENG_THROW_IF_NOT_SUCCESS (
         this->_descriptorPool.setup (
@@ -937,7 +978,9 @@ auto engine::VulkanTriangleApplication::createCommandBuffers() noexcept(false) -
 
     VulkanDeviceSize offsets [] = { 0 };
 
-    auto gameObjects = this->_activeScene.entitiesOfClass("VGameObject");
+    auto drawableGameObjects = this->_activeScene.entitiesOfClass("VGameObject").view()
+            .filter([](VEntity * pEntity) -> bool { return ((VGameObject * )pEntity)->isDrawable(); })
+            .toArray();
 
     /// Input Data
     /**
@@ -945,12 +988,12 @@ auto engine::VulkanTriangleApplication::createCommandBuffers() noexcept(false) -
      * Indices of Vertices - Order of line drawing. - indexBuffers
      * layout of vertices, indices, model view projection matrix, textures on the CPU-GPU bus ( queue ) - object descriptor handles
      */
-    auto vertexBuffers              = new VVertexBuffer[gameObjects.size()];
-    auto indexBuffers               = new VIndexBuffer[gameObjects.size()];
-    auto objectDescriptorSetHandles = new std::vector < VulkanDescriptorSet > [gameObjects.size()];
+    auto vertexBuffers              = new VVertexBuffer[drawableGameObjects.size()];
+    auto indexBuffers               = new VIndexBuffer[drawableGameObjects.size()];
+    auto objectDescriptorSetHandles = new std::vector < VulkanDescriptorSet > [drawableGameObjects.size()];
 
     Index i = 0;
-    for ( auto * o : gameObjects ) {
+    for ( auto * o : drawableGameObjects ) {
         auto * pGameObject = dynamic_cast<VGameObject *>(o);
 
         vertexBuffers[i]                = pGameObject->meshPtr()->getVertexBuffer();
@@ -967,8 +1010,8 @@ auto engine::VulkanTriangleApplication::createCommandBuffers() noexcept(false) -
      */
     std::vector < VulkanDescriptorSet * > descriptorSetHandles ( this->_drawCommandBufferCollection.getCommandBuffers().size());
     for (uint32 j = 0; j < descriptorSetHandles.size(); j++ ) {
-        descriptorSetHandles[j]     = new VulkanDescriptorSet[gameObjects.size()];
-        for (Index k = 0; k < gameObjects.size(); k++ )
+        descriptorSetHandles[j]     = new VulkanDescriptorSet[drawableGameObjects.size()];
+        for (Index k = 0; k < drawableGameObjects.size(); k++ )
             descriptorSetHandles[j][k] = objectDescriptorSetHandles[k][j];
     }
 
@@ -979,7 +1022,7 @@ auto engine::VulkanTriangleApplication::createCommandBuffers() noexcept(false) -
             this->_objectShader.getPipeline(), /// on this shader's pipeline
             vertexBuffers,                     /// for all objects' vertices involved in this shader's drawing
             indexBuffers,                      /// draw in this order
-            gameObjects.size(),                /// for this many objects
+            drawableGameObjects.size(),                /// for this many objects
             offsets,                           /// offsets ( if two objects have vertices in same buffer )
             1U,                                /// offset Count
             descriptorSetHandles.data(),       /// descriptor sets handles - to load Uniforms and Textures
