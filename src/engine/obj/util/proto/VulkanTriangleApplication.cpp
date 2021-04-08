@@ -357,7 +357,7 @@ auto engine::VulkanTriangleApplication::createGameObjects() noexcept -> void {
 
     this->_activeScene.add(cube);
     this->_activeScene.add(star); /// Add object to scene
-    this->_activeScene.setActiveCamera(new VCamera({0.0f, 2.0f, 3.0f}));
+    this->_activeScene.setActiveCamera(new VCamera({0.0f, 0.0f, 3.0f}));
 }
 
 auto engine::VulkanTriangleApplication::recreateSwapChain() noexcept(false) -> void {
@@ -642,7 +642,8 @@ auto engine::VulkanTriangleApplication::updateUniformBuffer(uint32 uniformBuffer
                 glm::rotate( /// rotate roll
                     glm::rotate ( /// rotate pitch
                         glm::rotate( /// rotate yaw
-                            glm::translate(baseModel, pGameObject->transformPtr()->getLocation() ), /// translate to location
+                            glm::translate(baseModel, this->_activeScene.locationInScene(pGameObject)),
+//                            glm::translate(baseModel, pGameObject->transformPtr()->getLocation() ), /// translate to location
                             glm::radians(pGameObject->transformPtr()->getRotation().yaw()), glm::vec3(1.0f, 0.0f, 0.0f)
                         ),
                         glm::radians(pGameObject->transformPtr()->getRotation().pitch()), glm::vec3(0.0f, 1.0f, 0.0f)
@@ -686,6 +687,7 @@ auto rawMouseInputCallback (
     lastXPos = static_cast < float > (xPos);
     lastYPos = static_cast < float > (yPos);
 
+//    std::cout << ((engine::VulkanTriangleApplication *)glfwGetWindowUserPointer(pWindow))->scene().activeCamera()->toString() << '\n';
     ((engine::VulkanTriangleApplication *)glfwGetWindowUserPointer(pWindow))->scene().activeCamera()->collectRawInput(xOffset, yOffset);
 }
 

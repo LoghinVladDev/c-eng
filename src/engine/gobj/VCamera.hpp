@@ -51,7 +51,7 @@ namespace engine {
             float startingYaw = DEFAULT_YAW,
             float startingPitch = DEFAULT_PITCH
         ) noexcept : VCamera(){
-            this->_up = up;
+            this->_worldUp = up;
             this->transform()->setLocation( location );
             this->transform()->getRotation().yaw() = startingYaw;
             this->transform()->getRotation().pitch() = startingPitch;
@@ -72,10 +72,16 @@ namespace engine {
         constexpr auto right() const noexcept -> glm::vec3 const & { return this->_right; }
         constexpr auto up() const noexcept -> glm::vec3 const & { return this->_up; }
 
+        [[nodiscard]] auto toString () const noexcept -> String override {
+             return String("VCamera {")
+                .append("transform=").append(this->transform()->toString())
+                .append("}");
+        }
+
         inline auto viewMatrix () const noexcept -> glm::mat4 {
             return glm::lookAt (
                 this->transform()->getLocation(),
-                this->transform()->getLocation() * this->front(),
+                this->transform()->getLocation() + this->front(),
                 this->up()
             );
         }

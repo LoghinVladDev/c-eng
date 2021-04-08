@@ -464,7 +464,7 @@ namespace engine {
         //// check extensions toggle
         constexpr static bool   VULKAN_EXT_CHECK    = _VK_CHECK_EXT;
         //// fps show toggle
-        constexpr static bool   SHOW_FPS_CONSOLE    = true;
+        constexpr static bool   SHOW_FPS_CONSOLE    = false;
 
         //// default window title
         static const char *     DEFAULT_TITLE;

@@ -135,9 +135,9 @@ namespace engine {
                     .append("pitch = ").append(this->_rotation.pitch()).append(", ")
                     .append("roll = ").append(this->_rotation.roll()).append("},\n")
                 .append("\tscale = (")
-                    .append("x = ").append(this->_location.x).append(", ")
-                    .append("y = ").append(this->_location.y).append(", ")
-                    .append("z = ").append(this->_location.z).append(")\n")
+                    .append("x = ").append(this->_scale.x).append(", ")
+                    .append("y = ").append(this->_scale.y).append(", ")
+                    .append("z = ").append(this->_scale.z).append(")\n")
                 .append("}");
         }
 

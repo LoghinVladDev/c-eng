@@ -497,3 +497,19 @@ auto engine::VScene::getGameObjectByName(const String & name) noexcept -> VGameO
 
     return nullptr;
 }
+
+auto engine::VScene::locationInScene(VEntity * pEntity) const noexcept -> glm::vec3 {
+    VTransform * pTransform = nullptr;
+    if ( pEntity->className() == "VGameObject" )
+        pTransform = ((VGameObject *)pEntity)->transformPtr();
+    else {
+        pEntity->components().forEach([& pTransform](VComponent * pComp) -> void {
+            if ( pComp->className() == "VTransform" ) pTransform = (VTransform *) pComp;
+        });
+    }
+
+    if ( pEntity->parentPtr() == nullptr )
+        return pTransform == nullptr ? glm::vec3(0.0f, 0.0f, 0.0f) : pTransform->getLocation();
+
+    return pTransform == nullptr ? glm::vec3(0.0f, 0.0f, 0.0f) : pTransform->getLocation() + this->locationInScene(const_cast<VEntity *>(pEntity->_pParentEntity));
+}

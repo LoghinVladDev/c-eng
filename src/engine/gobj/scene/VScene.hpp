@@ -75,6 +75,8 @@ namespace engine {
         [[nodiscard]] auto getGameObjectByName (String const &) noexcept -> VGameObject *;
 
         [[nodiscard]] auto toString () const noexcept -> String override;
+
+        [[nodiscard]] auto locationInScene (VEntity *) const noexcept -> glm::vec3;
     };
 }
 
