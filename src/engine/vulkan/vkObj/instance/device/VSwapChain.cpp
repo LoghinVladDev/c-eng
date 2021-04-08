@@ -259,8 +259,9 @@ inline static auto populatePresentInfo (
     )
         return;
 
-    * presentInfo = {
+    * presentInfo = (VulkanPresentInfoKhronos) {
         .sType              = VulkanStructureType::VK_STRUCTURE_TYPE_PRESENT_INFO_KHR,
+        .pNext              = nullptr,
         .waitSemaphoreCount = waitSemaphoreCount,
         .pWaitSemaphores    = pWaitSemaphores,
         .swapchainCount     = swapChainCount,

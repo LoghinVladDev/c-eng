@@ -108,8 +108,10 @@ static inline auto populateQueueCreateInfoStructure (
     if ( createInfo == nullptr )
         return;
 
-    * createInfo = {
+    * createInfo = (VulkanDeviceQueueCreateInfo) {
         .sType              = VulkanStructureType::VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO,
+        .pNext              = nullptr,
+        .flags              = VULKAN_NULL_FLAGS,
         .queueFamilyIndex   = qFamilyIndex,
         .queueCount         = qCount,
         .pQueuePriorities   = qPrioritiesPtr
@@ -137,8 +139,10 @@ static inline auto populateDeviceCreateInfoStructure (
     if ( createInfo == nullptr )
         return;
 
-    * createInfo = {
+    * createInfo = (VulkanDeviceCreateInfo) {
         .sType                  = VulkanStructureType::VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO,
+        .pNext                  = nullptr,
+        .flags                  = VULKAN_NULL_FLAGS,
         .queueCreateInfoCount   = queueCreateInfoCount,
         .pQueueCreateInfos      = queueCreateInfoPtr,
         .enabledExtensionCount  = 0U,

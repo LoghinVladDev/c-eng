@@ -1,3 +1,15 @@
+//
+// Created by loghin on 04.03.2021.
+//
+
+/**
+ * Test Source 1
+ */
+
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb_image.h>
+#undef STB_IMAGE_IMPLEMENTATION
+
 #include <iostream>
 
 using namespace std;

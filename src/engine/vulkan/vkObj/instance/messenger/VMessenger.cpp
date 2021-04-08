@@ -97,8 +97,10 @@ auto populateDebugMessengerCreateInfo ( VulkanDebugMessengerCreateInfo * createI
     if( createInfo == nullptr )
         return;
 
-    * createInfo = {
+    * createInfo = (VulkanDebugMessengerCreateInfo) {
         .sType            = VulkanStructureType::VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT,
+        .pNext            = nullptr,
+        .flags            = VULKAN_NULL_FLAGS,
         .messageSeverity  = engine::VMessenger::DEFAULT_DEBUG_MESSAGE_SEVERITY, /// filter for severity
         .messageType      = engine::VMessenger::DEFAULT_DEBUG_MESSAGE_TYPE, /// filter for types
         .pfnUserCallback  = staticMessengerDebugCallback, /// callback for errors
