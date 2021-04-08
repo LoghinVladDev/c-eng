@@ -108,17 +108,30 @@ namespace engine {
             auto reload() noexcept -> VulkanResult;
 
             /**
+             * @brief Function Returns the Texture Pack stored inside the Object
              *
-             * @return
+             * @exceptsafe
+             *
+             * @return engine::VTexture::STexturePack cref = Constant Reference to Texture Pack
              */
-            [[nodiscard]] auto getBufferData () const noexcept {
+            [[nodiscard]] constexpr auto getBufferData () const noexcept -> STexturePack const & {
                 return this->_texturePack;
             }
 
+            /**
+             * @brief Function Returns the Texture Pack stored inside the Object
+             *
+             * @exceptsafe
+             *
+             * @return engine::VTexture::STexturePack ref = Reference to Texture Pack
+             */
             [[nodiscard]] constexpr STexturePack& getBufferData () noexcept {
                 return this->_texturePack;
             }
 
+            /**
+             *
+             */
             void free () noexcept override;
             void cleanup () noexcept override;
 

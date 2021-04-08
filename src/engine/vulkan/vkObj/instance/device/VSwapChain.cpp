@@ -25,7 +25,7 @@ static inline auto chooseSwapSurfaceFormat (
         if (
                 availableFormat.format      == __VK_FORMAT_8BIT_BGRA_SRGB &&
                 availableFormat.colorSpace  == __VK_COLORSPACE_NONLINEAR_SRGB
-                ) /// if SRGB available, use SRGB
+        ) /// if SRGB available, use SRGB
             return availableFormat;
     }
 
