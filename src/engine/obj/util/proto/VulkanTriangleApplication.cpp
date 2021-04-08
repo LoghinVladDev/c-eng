@@ -355,7 +355,11 @@ auto engine::VulkanTriangleApplication::createGameObjects() noexcept -> void {
     star->transformPtr()->getLocation().x += 1.0f;
     star->transformPtr()->getLocation().z += 1.0f;
 
-    this->_activeScene.add(cube);
+    cube->transformPtr()->getLocation().y += 1.0f;
+
+    star->add(cube);
+
+//    this->_activeScene.add(cube);
     this->_activeScene.add(star); /// Add object to scene
     this->_activeScene.setActiveCamera(new VCamera({0.0f, 0.0f, 3.0f}));
 }
