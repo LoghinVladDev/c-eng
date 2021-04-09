@@ -501,7 +501,7 @@ auto engine::VScene::getGameObjectByName(const String & name) noexcept -> VGameO
 auto engine::VScene::locationInScene(VEntity * pEntity) const noexcept -> glm::vec3 {
     VTransform * pTransform = nullptr;
     if ( pEntity->className() == "VGameObject" )
-        pTransform = ((VGameObject *)pEntity)->transformPtr();
+        pTransform = ((VGameObject *)pEntity)->transform();
     else {
         pEntity->components().forEach([& pTransform](VComponent * pComp) -> void {
             if ( pComp->className() == "VTransform" ) pTransform = (VTransform *) pComp;
@@ -509,7 +509,36 @@ auto engine::VScene::locationInScene(VEntity * pEntity) const noexcept -> glm::v
     }
 
     if ( pEntity->parentPtr() == nullptr )
-        return pTransform == nullptr ? glm::vec3(0.0f, 0.0f, 0.0f) : pTransform->getLocation();
+        return pTransform == nullptr ? glm::vec3(0.0f, 0.0f, 0.0f) : pTransform->location();
 
-    return pTransform == nullptr ? glm::vec3(0.0f, 0.0f, 0.0f) : pTransform->getLocation() + this->locationInScene(const_cast<VEntity *>(pEntity->_pParentEntity));
+    return pTransform == nullptr ? glm::vec3(0.0f, 0.0f, 0.0f) : pTransform->location() + this->locationInScene(const_cast<VEntity *>(pEntity->_pParentEntity));
+}
+
+auto engine::VScene::transformInScene(VEntity * pEntity) const noexcept -> VTransform {
+    VTransform * pTransform = nullptr;
+    if ( pEntity->className() == "VGameObject" )
+        pTransform = ((VGameObject *)pEntity)->transform();
+    else
+        pEntity->components().forEach([ & pTransform ](VComponent * pComponent) -> void { if ( pComponent->className() == "VTransform" ) pTransform = (VTransform *) pComponent; });
+
+    if ( pEntity->parentPtr() == nullptr ) {
+        return pTransform == nullptr ? VTransform() : ( * pTransform );
+    }
+
+    VTransform result = pTransform == nullptr ? VTransform() : ( * pTransform );
+    auto parentTransform = transformInScene(const_cast < VEntity * > (pEntity->parentPtr()));
+
+//    result.location() += parentTransform.location();
+    result.rotation() += parentTransform.rotation();
+
+    /// roll = z => xy
+    /// pitch = x => yz
+    /// yaw = y => zx
+    result.location() = parentTransform.location() + glm::vec3 {
+        result.location().x * ( std::cos(glm::radians(result.rotation().roll())) + std::sin(glm::radians(result.rotation().yaw())) ),
+        result.location().y * ( std::cos(glm::radians(result.rotation().pitch())) + std::sin(glm::radians(result.rotation().roll())) ),
+        result.location().z * ( std::cos(glm::radians(result.rotation().yaw())) + std::sin(glm::radians(result.rotation().pitch())) )
+    };
+
+    return result;
 }

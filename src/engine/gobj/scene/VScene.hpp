@@ -77,6 +77,7 @@ namespace engine {
         [[nodiscard]] auto toString () const noexcept -> String override;
 
         [[nodiscard]] auto locationInScene (VEntity *) const noexcept -> glm::vec3;
+        [[nodiscard]] auto transformInScene (VEntity *) const noexcept -> VTransform;
     };
 }
 

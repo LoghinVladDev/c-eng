@@ -41,8 +41,8 @@ namespace engine {
 
         VCamera() noexcept {
             this->add(this->_pTransform);
-            this->transform()->getRotation().yaw()      = DEFAULT_YAW;
-            this->transform()->getRotation().pitch()    = DEFAULT_PITCH;
+            this->transform()->rotation().yaw()      = DEFAULT_YAW;
+            this->transform()->rotation().pitch()    = DEFAULT_PITCH;
         }
 
         explicit VCamera(
@@ -53,12 +53,9 @@ namespace engine {
         ) noexcept : VCamera(){
             this->_worldUp = up;
             this->transform()->setLocation( location );
-            this->transform()->getRotation().yaw() = startingYaw;
-            this->transform()->getRotation().pitch() = startingPitch;
+            this->transform()->rotation().yaw() = startingYaw;
+            this->transform()->rotation().pitch() = startingPitch;
         }
-
-        constexpr auto transform() noexcept -> VTransform * { return this->_pTransform; }
-        constexpr auto transform() const noexcept -> VTransform const * { return this->_pTransform; }
 
         constexpr auto front() noexcept -> glm::vec3 & { return this->_front; }
         constexpr auto worldUp () noexcept -> glm::vec3 & { return this->_worldUp; }
@@ -80,21 +77,21 @@ namespace engine {
 
         inline auto viewMatrix () const noexcept -> glm::mat4 {
             return glm::lookAt (
-                this->transform()->getLocation(),
-                this->transform()->getLocation() + this->front(),
+                    this->transform()->location(),
+                this->transform()->location() + this->front(),
                 this->up()
             );
         }
 
         inline auto collectRawInput ( float xOffset, float yOffset, bool constraintPitch = true ) noexcept -> void {
-            this->transform()->getRotation().yaw() += xOffset;
-            this->transform()->getRotation().pitch() += yOffset;
+            this->transform()->rotation().yaw() += xOffset;
+            this->transform()->rotation().pitch() += yOffset;
 
             if ( constraintPitch ) {
-                if ( this->transform()->getRotation().pitch() > VCamera::DEFAULT_PITCH_CONSTRAINT_MAX )
-                    this->transform()->getRotation().pitch() = VCamera::DEFAULT_PITCH_CONSTRAINT_MAX;
-                if ( this->transform()->getRotation().pitch() < VCamera::DEFAULT_PITCH_CONSTRAINT_MIN )
-                    this->transform()->getRotation().pitch() = VCamera::DEFAULT_PITCH_CONSTRAINT_MIN;
+                if (this->transform()->rotation().pitch() > VCamera::DEFAULT_PITCH_CONSTRAINT_MAX )
+                    this->transform()->rotation().pitch() = VCamera::DEFAULT_PITCH_CONSTRAINT_MAX;
+                if (this->transform()->rotation().pitch() < VCamera::DEFAULT_PITCH_CONSTRAINT_MIN )
+                    this->transform()->rotation().pitch() = VCamera::DEFAULT_PITCH_CONSTRAINT_MIN;
             }
 
             this->processVectors();
@@ -102,11 +99,11 @@ namespace engine {
 
     private:
         auto processVectors() noexcept -> void {
-            auto cosYaw = std::cos(glm::radians(this->transform()->getRotation().yaw()));
-            auto cosPitch = std::cos(glm::radians(this->transform()->getRotation().pitch()));
+            auto cosYaw = std::cos(glm::radians(this->transform()->rotation().yaw()));
+            auto cosPitch = std::cos(glm::radians(this->transform()->rotation().pitch()));
 
-            auto sinYaw = std::sin(glm::radians(this->transform()->getRotation().yaw()));
-            auto sinPitch = std::sin(glm::radians(this->transform()->getRotation().pitch()));
+            auto sinYaw = std::sin(glm::radians(this->transform()->rotation().yaw()));
+            auto sinPitch = std::sin(glm::radians(this->transform()->rotation().pitch()));
 
             this->front() = glm::normalize ( glm::vec3 (
                 cosYaw * cosPitch,

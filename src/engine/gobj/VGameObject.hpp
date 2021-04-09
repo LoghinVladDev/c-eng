@@ -52,8 +52,8 @@ namespace engine {
 
             static float angle = 0.0f;
             if ( this-> _name == "star" ){
-                this-> _pTransform -> getLocation().x = 0.0f + cosf ( angle ) * 1.0f;
-                this-> _pTransform -> getLocation().y = 0.0f + sinf ( angle ) * 1.0f;
+                this-> _pTransform -> location().x = 0.0f + cosf ( angle ) * 1.0f;
+                this-> _pTransform -> location().y = 0.0f + sinf ( angle ) * 1.0f;
                 angle += deltaTime;
             }
         }
@@ -86,8 +86,8 @@ namespace engine {
         inline auto remove ( VEntity * pEntity ) const noexcept -> bool override { return VEntity::remove(pEntity); }
         inline auto remove ( std::nullptr_t ) const noexcept -> bool override { return VEntity::remove(nullptr); }
 
-        constexpr auto transformPtr () noexcept -> VTransform * { return this->_pTransform; }
-        constexpr auto transformPtr () const noexcept -> VTransform const * { return this->_pTransform; }
+        constexpr auto transform () noexcept -> VTransform * { return this->_pTransform; }
+        constexpr auto transform () const noexcept -> VTransform const * { return this->_pTransform; }
 
         constexpr auto meshPtr () noexcept -> VMesh * { return this->_pMesh; }
         constexpr auto meshPtr () const noexcept -> VMesh const * { return this->_pMesh; }

@@ -8,6 +8,7 @@
 #include <engineVulkanPreproc.hpp>
 #include <vkDefs/types/vulkanExplicitTypes.h>
 
+#if !defined(VROTOR_NO_ADJUST)
 #define ADJUST_YAW()                                            \
 {                                                               \
     while ( this->_yaw   <  0.0f )      this->_yaw   += 360.0f; \
@@ -31,6 +32,12 @@
     ADJUST_PITCH()                                              \
     ADJUST_ROLL()                                               \
 }
+#else
+#define ADJUST_YAW()
+#define ADJUST_PITCH()
+#define ADJUST_ROLL()
+#define ADJUST_ROTOR()
+#endif
 
 namespace engine {
 
@@ -84,7 +91,7 @@ namespace engine {
         constexpr auto pitch () noexcept -> float & { return this->_pitch; }
         constexpr auto roll () noexcept -> float & { return this->_roll; }
 
-        void rotate ( RotationType type, float angle ) noexcept {
+        constexpr auto rotate ( RotationType type, float angle ) noexcept -> void {
             switch ( type ) {
                 case YAW:
                     this->_yaw += angle;
@@ -101,53 +108,53 @@ namespace engine {
             }
         }
 
-        void rotateYaw ( float angle ) noexcept {
+        constexpr auto rotateYaw ( float angle ) noexcept -> void {
             this->_yaw += angle;
             ADJUST_YAW()
         }
 
-        void rotatePitch ( float angle ) noexcept {
+        constexpr auto rotatePitch ( float angle ) noexcept -> void {
             this->_pitch += angle;
             ADJUST_PITCH()
         }
 
-        void rotateRoll ( float angle ) noexcept {
+        constexpr auto rotateRoll ( float angle ) noexcept -> void {
             this->_roll += angle;
             ADJUST_ROLL()
         }
 
-        void rotate3D ( float yaw, float pitch, float roll ) noexcept {
+        constexpr auto rotate3D ( float yaw, float pitch, float roll ) noexcept -> void {
             this->_yaw += yaw;
             this->_pitch += pitch;
             this->_roll += roll;
             ADJUST_ROTOR()
         }
 
-        void setYaw ( float yaw ) noexcept {
+        constexpr auto setYaw ( float yaw ) noexcept -> void {
             this->_yaw = yaw;
             while ( this->_yaw   <  0.0f )      this->_yaw   += 360.0f;
             while ( this->_yaw   <= 360.0f )    this->_yaw   -= 360.0f;
             ADJUST_YAW()
         }
 
-        void setPitch ( float pitch ) noexcept {
+        constexpr auto setPitch ( float pitch ) noexcept -> void {
             this->_pitch = pitch;
             ADJUST_PITCH()
         }
 
-        void setRoll ( float roll ) noexcept {
+        constexpr auto setRoll ( float roll ) noexcept -> void {
             this->_roll = roll;
             ADJUST_ROLL()
         }
 
-        void setRotor ( float yaw, float pitch, float roll ) noexcept {
+        constexpr auto setRotor ( float yaw, float pitch, float roll ) noexcept -> void {
             this->_yaw      = yaw;
             this->_pitch    = pitch;
             this->_roll     = roll;
             ADJUST_ROTOR()
         }
 
-        void setRotor ( const glm::vec3 & rotation ) noexcept {
+        constexpr auto setRotor ( const glm::vec3 & rotation ) noexcept -> void {
             this->_yaw      = rotation.x;
             this->_pitch    = rotation.y;
             this->_roll     = rotation.z;
@@ -161,6 +168,28 @@ namespace engine {
             ADJUST_ROTOR()
 
             return *this;
+        }
+
+        constexpr auto operator + (VRotor const & o) const noexcept -> VRotor {
+            return VRotor(this->_yaw + o._yaw, this->_pitch + o._pitch, this->_roll + o._roll);
+        }
+
+        constexpr auto operator - (VRotor const & o) const noexcept -> VRotor {
+            return VRotor(this->_yaw - o._yaw, this->_pitch - o._pitch, this->_roll - o._roll);
+        }
+
+        constexpr auto operator += (VRotor const & o) noexcept -> VRotor & {
+            this->_yaw += o._yaw;
+            this->_pitch += o._pitch;
+            this->_roll += o._roll;
+            return * this;
+        }
+
+        constexpr auto operator -= (VRotor const & o) noexcept -> VRotor & {
+            this->_yaw -= o._yaw;
+            this->_pitch -= o._pitch;
+            this->_roll -= o._roll;
+            return * this ;
         }
     };
 

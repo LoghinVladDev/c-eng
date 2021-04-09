@@ -83,44 +83,32 @@ namespace engine {
 
         }
 
-        [[nodiscard]] const glm::vec3 & getLocation () const noexcept {
+        [[nodiscard]] const glm::vec3 & location () const noexcept {
             return this->_location;
         }
 
-        [[nodiscard]] glm::vec3 & getLocation () noexcept {
+        [[nodiscard]] glm::vec3 & location () noexcept {
             return this->_location;
         }
 
-        [[nodiscard]] const engine::VRotor & getRotation () const noexcept {
+        [[nodiscard]] const engine::VRotor & rotation () const noexcept {
             return this->_rotation;
         }
 
-        [[nodiscard]] engine::VRotor & getRotation () noexcept {
+        [[nodiscard]] engine::VRotor & rotation () noexcept {
             return this->_rotation;
         }
 
-        [[nodiscard]] const glm::vec3 & getScale () const noexcept {
+        [[nodiscard]] const glm::vec3 & scale () const noexcept {
             return this->_scale;
         }
 
-        [[nodiscard]] glm::vec3 & getScale () noexcept {
+        [[nodiscard]] glm::vec3 & scale () noexcept {
             return this->_scale;
         }
 
         void setLocation ( const glm::vec3 & location ) noexcept {
             this->_location = location;
-        }
-
-        void setRotation ( const glm::vec3 & rotation ) noexcept {
-            this->_rotation = rotation;
-        }
-
-        void setRotation ( const engine::VRotor & rotation ) noexcept {
-            this->_rotation = rotation;
-        }
-
-        void setScale ( const glm::vec3 & scale ) noexcept {
-            this->_scale = scale;
         }
 
         [[nodiscard]] auto toString () const noexcept -> String override {

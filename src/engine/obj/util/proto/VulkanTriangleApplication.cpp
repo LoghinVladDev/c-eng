@@ -352,10 +352,10 @@ auto engine::VulkanTriangleApplication::createGameObjects() noexcept -> void {
 
 
     /// Move the star a bit above and to the left
-    star->transformPtr()->getLocation().x += 1.0f;
-    star->transformPtr()->getLocation().z += 1.0f;
+    star->transform()->location().x += 1.0f;
+    star->transform()->location().z += 1.0f;
 
-    cube->transformPtr()->getLocation().y += 1.0f;
+    cube->transform()->location().y += 1.0f;
 
     star->add(cube);
 
@@ -574,7 +574,7 @@ bool down = false; ///s
 #include <chrono>
 #include <glm/gtc/matrix_transform.hpp>
 auto engine::VulkanTriangleApplication::updateUniformBuffer(uint32 uniformBufferIndex) noexcept -> void {
-    static float FOV = 45.0f; /// Field Of View of Camera
+    static float FOV = 90.0f; /// Field Of View of Camera
 
     /**
      * Uniform Buffer =
@@ -641,20 +641,28 @@ auto engine::VulkanTriangleApplication::updateUniformBuffer(uint32 uniformBuffer
         if ( ! pGameObject->isDrawable() )
             continue;
 
+        auto transform = this->_activeScene.transformInScene( pGameObject );
+
         engine::SUniformBufferObject UBO {
             .model = glm::scale( /// scale with scale
                 glm::rotate( /// rotate roll
                     glm::rotate ( /// rotate pitch
                         glm::rotate( /// rotate yaw
-                            glm::translate(baseModel, this->_activeScene.locationInScene(pGameObject)),
+                            glm::translate(baseModel, transform.location()),
+                            glm::radians(transform.rotation().pitch()), glm::vec3(1.0f, 0.0f, 0.0f)
+//                            glm::translate(baseModel, this->_activeScene.locationInScene(pGameObject)),
 //                            glm::translate(baseModel, pGameObject->transformPtr()->getLocation() ), /// translate to location
-                            glm::radians(pGameObject->transformPtr()->getRotation().yaw()), glm::vec3(1.0f, 0.0f, 0.0f)
+//                            glm::radians(pGameObject->transform()->getRotation().yaw()), glm::vec3(1.0f, 0.0f, 0.0f)
+
                         ),
-                        glm::radians(pGameObject->transformPtr()->getRotation().pitch()), glm::vec3(0.0f, 1.0f, 0.0f)
+//                        glm::radians(pGameObject->transform()->getRotation().pitch()), glm::vec3(0.0f, 1.0f, 0.0f)
+                        glm::radians(transform.rotation().yaw()), glm::vec3(0.0f, 1.0f, 0.0f)
                     ),
-                    glm::radians(pGameObject->transformPtr()->getRotation().roll()), glm::vec3(0.0f, 0.0f, 1.0f)
+                    glm::radians(transform.rotation().roll()), glm::vec3(0.0f, 0.0f, 1.0f)
+//                    glm::radians(pGameObject->transform()->getRotation().roll()), glm::vec3(0.0f, 0.0f, 1.0f)
                 ),
-                pGameObject->transformPtr()->getScale()
+//                pGameObject->transform()->getScale()
+                transform.scale()
             ),
             .view       = view,
             .projection = projection
@@ -739,21 +747,21 @@ auto engine::VulkanTriangleApplication::update() noexcept -> void {
     if ( pCube == nullptr ) return;
 
     if ( left )
-        pCube->transformPtr()->getRotation().rotate(VRotor::ROLL, 90.0f * static_cast<float>(this->_deltaTime));
+        pCube->transform()->rotation().rotate(VRotor::ROLL, 90.0f * static_cast<float>(this->_deltaTime));
 
     if ( right )
-        pCube->transformPtr()->getRotation().rotate(VRotor::ROLL, - 90.0f * static_cast<float>(this->_deltaTime));
+        pCube->transform()->rotation().rotate(VRotor::ROLL, - 90.0f * static_cast<float>(this->_deltaTime));
 
 
     if ( up )
-        pCube->transformPtr()->getRotation().rotate(VRotor::PITCH, 90.0f * static_cast<float>(this->_deltaTime));
+        pCube->transform()->rotation().rotate(VRotor::PITCH, 90.0f * static_cast<float>(this->_deltaTime));
 
     if ( down )
-        pCube->transformPtr()->getRotation().rotate(VRotor::PITCH, - 90.0f * static_cast<float>(this->_deltaTime));
+        pCube->transform()->rotation().rotate(VRotor::PITCH, - 90.0f * static_cast<float>(this->_deltaTime));
 
     auto pStar = dynamic_cast<VGameObject *>(this->_activeScene.getGameObjectByName("star"));
 
-    pStar->transformPtr()->getRotation().rotate(VRotor::ROLL, 180.0f * static_cast<float>(this->_deltaTime));
+    pStar->transform()->rotation().rotate(VRotor::ROLL, 180.0f * static_cast<float>(this->_deltaTime));
 
     /// call of update for each GameObject
     for ( auto * pGameObject: this->_activeScene.entitiesOfClass("VGameObject") )
