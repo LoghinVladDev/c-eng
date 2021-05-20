@@ -204,7 +204,7 @@ if(Vulkan_FOUND)
 
     target_link_libraries( vkTriangle Vulkan::Vulkan )
 
-    target_link_libraries( vkTriangle glfw ${GLFW_LIBRARIES} CDS )
+    target_link_libraries( vkTriangle glfw ${GLFW_LIBRARIES} )
 
     add_executable( vkPrecompiler
             ${JSONCpp_SOURCE}

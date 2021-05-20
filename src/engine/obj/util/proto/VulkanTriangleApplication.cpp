@@ -21,6 +21,80 @@ engine::VulkanTriangleApplication::VulkanTriangleApplication(uint32 width, uint3
 }
 
 /**
+ * Vertices of a star, with colors
+ */
+const std::vector < engine::VVertex > starVertices = {
+
+        { { -0.2f, -0.2f, 0.0f }, {0.3f, 0.3f, 0.3f} },
+        { {  0.2f, -0.2f, 0.0f }, {0.3f, 0.3f, 0.3f} },
+        { {  0.3f,  0.1f, 0.0f }, {0.3f, 0.3f, 0.3f} },
+        { {  0.0f,  0.3f, 0.0f }, {0.3f, 0.3f, 0.3f} },
+        { { -0.3f,  0.1f, 0.0f }, {0.3f, 0.3f, 0.3f} },
+
+        { { 0.0f, -0.6f, 0.0f }, {1.0f, 0.0f, 0.0f} },
+        { { 0.6f, -0.2f, 0.0f }, {0.0f, 1.0f, 0.0f} },
+        { { 0.4f,  0.55f, 0.0f }, {0.0f, 0.0f, 1.0f} },
+        { {-0.4f,  0.55f, 0.0f }, {0.0f, 1.0f, 1.0f} },
+        { {-0.6f, -0.2f, 0.0f }, {1.0f, 1.0f, 0.3f} },
+};
+
+/**
+ * Indices of the star object, triangles, in draw order CCW
+ */
+const std::vector < uint16 > starIndices = {
+
+        0, 1, 4,
+        1, 3, 4,
+        1, 2, 3,
+
+        0, 5, 1,
+        1, 6, 2,
+        2, 7, 3,
+        3, 8, 4,
+        4, 9, 0,
+};
+
+/**
+ * Cube Vertices, with color ( 1.0, 1.0, 1.0 = no color modif. ), texture coords
+ */
+const std::vector < engine::VVertex > cubeVertices = {
+
+
+        {{-0.5f, -0.5f,  0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f}},
+        {{ 0.5f, -0.5f,  0.5f}, {1.0f, 1.0f, 1.0f}, {1.0f, 0.0f}},
+        {{ 0.5f,  0.5f,  0.5f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f}},
+        {{-0.5f,  0.5f,  0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f}},
+
+        {{-0.5f, -0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f}},
+        {{ 0.5f, -0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f}},
+        {{ 0.5f,  0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {1.0f, 0.0f}},
+        {{-0.5f,  0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f}},
+
+        {{ 0.5f, -0.5f,  0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f}},
+        {{ 0.5f,  0.5f,  0.5f}, {1.0f, 1.0f, 1.0f}, {1.0f, 0.0f}},
+        {{ 0.5f, -0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f}},
+        {{ 0.5f,  0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f}},
+
+        {{-0.5f, -0.5f,  0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f}},  // 2
+        {{-0.5f,  0.5f,  0.5f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f}}, // 3
+        {{-0.5f, -0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f}}, // 0
+        {{-0.5f,  0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {1.0f, 0.0f}}, // 1
+};
+
+/**
+ * order of drawing, CCW, triangles
+ */
+const std::vector < uint16 > cubeIndices = {
+
+        0,   1,  2,  2,  3,  0,
+        1,   0,  5,  4,  5,  0,
+        9,   8,  10, 10, 11, 9,
+        3,   2,  7,  6,  7,  2,
+        12,  13, 14, 15, 14, 13,
+        4,   6,  5,  7,  6,  4
+};
+
+/**
  * @brief internal tests for queue families, acquiring queues and releasing them
  *
  * @param collection : engine::VQueueFamilyCollection cref = on which collection to test
@@ -334,6 +408,10 @@ auto engine::VulkanTriangleApplication::createSynchronizationElements() noexcept
 #pragma clang diagnostic pop
 #endif
 
+static HashMap < engine::VGameObject *, std::vector < engine::VVertex > const * > objectVertices;
+static HashMap < engine::VGameObject *, std::vector < uint16 > const * > objectIndices;
+static HashMap < engine::VGameObject *, String > objectTextureNames;
+
 auto engine::VulkanTriangleApplication::createGameObjects() noexcept -> void {
     /***
      * Create Two Objects and Add them to the Active Scene
@@ -345,6 +423,11 @@ auto engine::VulkanTriangleApplication::createGameObjects() noexcept -> void {
     cube->add(new VMesh());
     cube->add(new VMeshRenderer());
 
+    auto cube2 = new VGameObject("cube2");
+    cube2->add(new VTransform());
+    cube2->add(new VMesh());
+    cube2->add(new VMeshRenderer());
+
     auto star = new VGameObject("star");
     star->add(new VTransform());
     star->add(new VMesh());
@@ -352,15 +435,31 @@ auto engine::VulkanTriangleApplication::createGameObjects() noexcept -> void {
 
 
     /// Move the star a bit above and to the left
-    star->transform()->location().x += 1.0f;
+    star->transform()->location().x -= 2.0f;
     star->transform()->location().z += 1.0f;
+    star->transform()->location().y += 1.0f;
 
-    cube->transform()->location().y += 1.0f;
+//    cube->transform()->location().y += 1.0f;
+//    cube->transform()->location().z += 0.5;
+
+    objectVertices[cube] = & cubeVertices;
+    objectIndices[cube] = & cubeIndices;
+
+    objectVertices[cube2] = & cubeVertices;
+    objectIndices[cube2] = & cubeIndices;
+
+    objectVertices[star] = & starVertices;
+    objectIndices[star] = & starIndices;
+
+    objectTextureNames[cube] = "container.jpg";
+    objectTextureNames[cube2] = "container2.png";
+    objectTextureNames[star] = "container3.jpg";
 
     star->add(cube);
 
 //    this->_activeScene.add(cube);
     this->_activeScene.add(star); /// Add object to scene
+    this->_activeScene.add(cube2);
     this->_activeScene.setActiveCamera(new VCamera({0.0f, 0.0f, 3.0f}));
 }
 
@@ -490,86 +589,17 @@ auto engine::VulkanTriangleApplication::drawImage () noexcept (false) -> void {
 }
 
 /**
- * Vertices of a star, with colors
- */
-const std::vector < engine::VVertex > starVertices = {
-
-        { { -0.2f, -0.2f, 0.0f }, {0.3f, 0.3f, 0.3f} },
-        { {  0.2f, -0.2f, 0.0f }, {0.3f, 0.3f, 0.3f} },
-        { {  0.3f,  0.1f, 0.0f }, {0.3f, 0.3f, 0.3f} },
-        { {  0.0f,  0.3f, 0.0f }, {0.3f, 0.3f, 0.3f} },
-        { { -0.3f,  0.1f, 0.0f }, {0.3f, 0.3f, 0.3f} },
-
-        { { 0.0f, -0.6f, 0.0f }, {1.0f, 0.0f, 0.0f} },
-        { { 0.6f, -0.2f, 0.0f }, {0.0f, 1.0f, 0.0f} },
-        { { 0.4f,  0.55f, 0.0f }, {0.0f, 0.0f, 1.0f} },
-        { {-0.4f,  0.55f, 0.0f }, {0.0f, 1.0f, 1.0f} },
-        { {-0.6f, -0.2f, 0.0f }, {1.0f, 1.0f, 0.3f} },
-};
-
-/**
- * Indices of the star object, triangles, in draw order CCW
- */
-const std::vector < uint16 > starIndices = {
-
-        0, 1, 4,
-        1, 3, 4,
-        1, 2, 3,
-
-        0, 5, 1,
-        1, 6, 2,
-        2, 7, 3,
-        3, 8, 4,
-        4, 9, 0,
-};
-
-/**
- * Cube Vertices, with color ( 1.0, 1.0, 1.0 = no color modif. ), texture coords
- */
-const std::vector < engine::VVertex > cubeVertices = {
-
-
-        {{-0.5f, -0.5f,  0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f}},
-        {{ 0.5f, -0.5f,  0.5f}, {1.0f, 1.0f, 1.0f}, {1.0f, 0.0f}},
-        {{ 0.5f,  0.5f,  0.5f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f}},
-        {{-0.5f,  0.5f,  0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f}},
-
-        {{-0.5f, -0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f}},
-        {{ 0.5f, -0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f}},
-        {{ 0.5f,  0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {1.0f, 0.0f}},
-        {{-0.5f,  0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f}},
-
-        {{ 0.5f, -0.5f,  0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f}},
-        {{ 0.5f,  0.5f,  0.5f}, {1.0f, 1.0f, 1.0f}, {1.0f, 0.0f}},
-        {{ 0.5f, -0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f}},
-        {{ 0.5f,  0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f}},
-
-        {{-0.5f, -0.5f,  0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f}},  // 2
-        {{-0.5f,  0.5f,  0.5f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f}}, // 3
-        {{-0.5f, -0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f}}, // 0
-        {{-0.5f,  0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {1.0f, 0.0f}}, // 1
-};
-
-/**
- * order of drawing, CCW, triangles
- */
-const std::vector < uint16 > cubeIndices = {
-
-        0,   1,  2,  2,  3,  0,
-        1,   0,  5,  4,  5,  0,
-        9,   8,  10, 10, 11, 9,
-        3,   2,  7,  6,  7,  2,
-        12,  13, 14, 15, 14, 13,
-        4,   6,  5,  7,  6,  4
-};
-
-/**
  * variables used in testing
  */
-bool left = false; ///a
-bool right = false;///d
-bool up = false;   ///w
-bool down = false; ///s
+bool left = false; ///^
+bool right = false;///<
+bool up = false;   ///>
+bool down = false; ///!^
+
+static bool moveUp = false;
+static bool moveDown = false;
+static bool moveLeft = false;
+static bool moveRight = false;
 
 #include <chrono>
 #include <glm/gtc/matrix_transform.hpp>
@@ -649,19 +679,12 @@ auto engine::VulkanTriangleApplication::updateUniformBuffer(uint32 uniformBuffer
                     glm::rotate ( /// rotate pitch
                         glm::rotate( /// rotate yaw
                             glm::translate(baseModel, transform.location()),
-                            glm::radians(transform.rotation().pitch()), glm::vec3(1.0f, 0.0f, 0.0f)
-//                            glm::translate(baseModel, this->_activeScene.locationInScene(pGameObject)),
-//                            glm::translate(baseModel, pGameObject->transformPtr()->getLocation() ), /// translate to location
-//                            glm::radians(pGameObject->transform()->getRotation().yaw()), glm::vec3(1.0f, 0.0f, 0.0f)
-
+                            glm::radians(transform.rotation().roll()), glm::vec3(1.0f, 0.0f, 0.0f)
                         ),
-//                        glm::radians(pGameObject->transform()->getRotation().pitch()), glm::vec3(0.0f, 1.0f, 0.0f)
                         glm::radians(transform.rotation().yaw()), glm::vec3(0.0f, 1.0f, 0.0f)
                     ),
-                    glm::radians(transform.rotation().roll()), glm::vec3(0.0f, 0.0f, 1.0f)
-//                    glm::radians(pGameObject->transform()->getRotation().roll()), glm::vec3(0.0f, 0.0f, 1.0f)
+                    glm::radians(transform.rotation().pitch()), glm::vec3(0.0f, 0.0f, 1.0f)
                 ),
-//                pGameObject->transform()->getScale()
                 transform.scale()
             ),
             .view       = view,
@@ -718,26 +741,41 @@ auto rawMouseInputCallback (
  */
 auto processInputCallback (GLFWwindow* window, int key, int scanCode, int action, int mods) noexcept -> void { /// rudimentary input callback
     if ( action == GLFW_PRESS ) {
-        if ( key == GLFW_KEY_A )
+        if ( key == GLFW_KEY_LEFT )
             left = true;
-        if ( key == GLFW_KEY_D )
+        if ( key == GLFW_KEY_RIGHT )
             right = true;
-
-        if ( key == GLFW_KEY_W )
+        if ( key == GLFW_KEY_UP )
             up = true;
-
-        if ( key == GLFW_KEY_S )
+        if ( key == GLFW_KEY_DOWN )
             down = true;
-    } else if ( action == GLFW_RELEASE ) {
-        if ( key == GLFW_KEY_A )
-            left = false;
-        if ( key == GLFW_KEY_D )
-            right = false;
 
         if ( key == GLFW_KEY_W )
-            up = false;
+            moveUp = true;
         if ( key == GLFW_KEY_S )
+            moveDown = true;
+        if ( key == GLFW_KEY_D )
+            moveRight = true;
+        if ( key == GLFW_KEY_A )
+            moveLeft = true;
+    } else if ( action == GLFW_RELEASE ) {
+        if ( key == GLFW_KEY_LEFT )
+            left = false;
+        if ( key == GLFW_KEY_RIGHT )
+            right = false;
+        if ( key == GLFW_KEY_UP )
+            up = false;
+        if ( key == GLFW_KEY_DOWN )
             down = false;
+
+        if ( key == GLFW_KEY_W )
+            moveUp = false;
+        if ( key == GLFW_KEY_S )
+            moveDown = false;
+        if ( key == GLFW_KEY_D )
+            moveRight = false;
+        if ( key == GLFW_KEY_A )
+            moveLeft = false;
     }
 }
 
@@ -754,18 +792,38 @@ auto engine::VulkanTriangleApplication::update() noexcept -> void {
 
 
     if ( up )
-        pCube->transform()->rotation().rotate(VRotor::PITCH, 90.0f * static_cast<float>(this->_deltaTime));
+        pCube->transform()->rotation().rotate(VRotor::YAW, 90.0f * static_cast<float>(this->_deltaTime));
 
     if ( down )
-        pCube->transform()->rotation().rotate(VRotor::PITCH, - 90.0f * static_cast<float>(this->_deltaTime));
+        pCube->transform()->rotation().rotate(VRotor::YAW, - 90.0f * static_cast<float>(this->_deltaTime));
 
     auto pStar = dynamic_cast<VGameObject *>(this->_activeScene.getGameObjectByName("star"));
 
-    pStar->transform()->rotation().rotate(VRotor::ROLL, 180.0f * static_cast<float>(this->_deltaTime));
+    pStar->transform()->rotation().rotate(VRotor::PITCH, 180.0f * static_cast<float>(this->_deltaTime));
 
     /// call of update for each GameObject
     for ( auto * pGameObject: this->_activeScene.entitiesOfClass("VGameObject") )
         dynamic_cast < VGameObject * > (pGameObject)->update( static_cast <float>(this->_deltaTime)  );
+
+    constexpr static float movementSpeed = 3.0f;
+    float velocity = movementSpeed * this->_deltaTime;
+    float camY = this->_activeScene.activeCamera()->transform()->location().y;
+
+    if ( moveUp && moveDown ) {
+        /// do nothing
+    } else if ( moveUp ) {
+        this->_activeScene.activeCamera()->transform()->location() += this->_activeScene.activeCamera()->worldFront() * velocity;
+    } else if ( moveDown ) {
+        this->_activeScene.activeCamera()->transform()->location() -= this->_activeScene.activeCamera()->worldFront() * velocity;
+    }
+
+    if ( moveLeft && moveRight ) {
+        /// do nothing
+    } else if ( moveLeft ) {
+        this->_activeScene.activeCamera()->transform()->location() -= this->_activeScene.activeCamera()->right() * velocity;
+    } else if ( moveRight ) {
+        this->_activeScene.activeCamera()->transform()->location() += this->_activeScene.activeCamera()->right() * velocity;
+    }
 }
 
 auto engine::VulkanTriangleApplication::mainLoop() noexcept (false) -> void {
@@ -818,30 +876,22 @@ auto engine::VulkanTriangleApplication::createDepthBuffer() noexcept(false) -> v
 }
 
 auto engine::VulkanTriangleApplication::createConcurrentBuffers() noexcept(false) -> void {
-    auto * pCube = this->_activeScene.getGameObjectByName("cube");
-    auto * pStar = this->_activeScene.getGameObjectByName("star");
+    this->_activeScene.entitiesOfClass("VGameObject").forEach([this](VEntity * pEntity){
+        auto pGameObject = dynamic_cast < VGameObject * > (pEntity);
 
-    if ( pCube != nullptr )
-        ENG_THROW_IF_NOT_SUCCESS (
-            pCube->meshPtr()->setup(
-                this->_transferCommandPool, /// mesh will be transfered to the GPU
-                * this->_vulkanQueueFamilyCollection, /// through a queue
-                cubeVertices, /// vertices
-                cubeIndices   /// indices, vertices draw order
-            ),
-            ENG_STD_THROW("Cube Mesh Setup Error")
-      )
+        if ( pGameObject == nullptr || ! pGameObject->isDrawable() )
+            return;
 
-    if ( pStar != nullptr )
         ENG_THROW_IF_NOT_SUCCESS(
-            pStar->meshPtr()->setup(
+            pGameObject->meshPtr()->setup(
                 this->_transferCommandPool,
                 * this->_vulkanQueueFamilyCollection,
-                starVertices,
-                starIndices
+                * objectVertices[pGameObject],
+                * objectIndices[pGameObject]
             ),
-            ENG_STD_THROW ("Star Mesh Setup Error")
+            ENG_STD_THROW("Object Mesh Setup Error")
         )
+    });
 
     this->createUniformBuffers();
 }
@@ -861,34 +911,24 @@ auto engine::VulkanTriangleApplication::createTextureSampler() noexcept(false) -
 }
 
 auto engine::VulkanTriangleApplication::createDescriptorSets() noexcept(false) -> void {
-    auto * pCube = this->_activeScene.getGameObjectByName("cube");
-    auto * pStar = this->_activeScene.getGameObjectByName("star");
+    this->_activeScene.entitiesOfClass("VGameObject").forEach([this](VEntity * pEntity){
+        auto pGameObject = dynamic_cast<VGameObject *>(pEntity);
 
-    if ( pCube != nullptr )
+        if ( pGameObject == nullptr || ! pGameObject->isDrawable() )
+            return;
+
         ENG_THROW_IF_NOT_SUCCESS(
-            pCube->meshRendererPtr()->setup(
-                    this->_transferCommandPool,  /// again, on transfer, we need to load the bindings in memory for the texture
-                    this->_descriptorPool,       /// load on this pool
-                    this->_objectShader,         /// for this pipeline
-                    std::string(__TEXTURES_PATH__).append("container.jpg").c_str(), /// this texture's data
-                    this->_textureSampler,       /// with this sampler
-                    * this->_vulkanQueueFamilyCollection /// get a queue from this collection
+            pGameObject->meshRendererPtr()->setup(
+                this->_transferCommandPool,
+                this->_descriptorPool,
+                this->_objectShader,
+                String(__TEXTURES_PATH__).append(objectTextureNames[pGameObject]).cStr(),
+                this->_textureSampler,
+                * this->_vulkanQueueFamilyCollection
             ),
             ENG_STD_THROW("Mesh Renderer Create Failure")
         )
-
-    if ( pStar != nullptr )
-        ENG_THROW_IF_NOT_SUCCESS(
-            pStar->meshRendererPtr()->setup(
-                    this->_transferCommandPool,
-                    this->_descriptorPool,
-                    this->_objectShader,
-                    std::string(__TEXTURES_PATH__).append("container3.jpg").c_str(),
-                    this->_textureSampler,
-                    * this->_vulkanQueueFamilyCollection
-            ),
-            ENG_STD_THROW("Mesh Renderer Create Failure")
-        )
+    });
 }
 
 auto engine::VulkanTriangleApplication::createDescriptorPool() noexcept(false) -> void {

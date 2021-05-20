@@ -50,12 +50,12 @@ namespace engine {
             //this -> _pTransform -> getScale().y *= 1.0f + deltaTime / 100.0f;
             // this -> _pTransform -> getScale().z *= 1.0f + deltaTime / 100.0f;
 
-            static float angle = 0.0f;
-            if ( this-> _name == "star" ){
-                this-> _pTransform -> location().x = 0.0f + cosf ( angle ) * 1.0f;
-                this-> _pTransform -> location().y = 0.0f + sinf ( angle ) * 1.0f;
-                angle += deltaTime;
-            }
+//            static float angle = 0.0f;
+//            if ( this-> _name == "star" ){
+//                this-> _pTransform -> location().x = 0.0f + cosf ( angle ) * 1.0f;
+//                this-> _pTransform -> location().y = 0.0f + sinf ( angle ) * 1.0f;
+//                angle += deltaTime;
+//            }
         }
 
         [[nodiscard]] auto className () const noexcept -> ClassName override {
