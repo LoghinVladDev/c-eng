@@ -7,6 +7,7 @@
 
 #include <engineVulkanPreproc.hpp>
 #include <vkDefs/types/vulkanExplicitTypes.h>
+#include <CDS/Object>
 
 #if !defined(VROTOR_NO_ADJUST)
 #define ADJUST_YAW()                                            \
@@ -41,7 +42,7 @@
 
 namespace engine {
 
-    class VRotor {
+    class VRotor : public Object {
     private:
         //// private variables
         float _yaw      {0.0f};
@@ -190,6 +191,26 @@ namespace engine {
             this->_pitch -= o._pitch;
             this->_roll -= o._roll;
             return * this ;
+        }
+
+        [[nodiscard]] auto toString () const noexcept -> String override {
+            return String("VRotor { ") +
+                "roll = " + this->_roll +
+                ", yaw = " + this->_yaw +
+                ", pitch = " + this->_pitch + " }";
+        }
+
+        [[nodiscard]] auto hash () const noexcept -> Index override { return
+            static_cast < int > (this->_yaw) % 360 * 360 * 360 +
+            static_cast < int > (this->_roll) % 360 * 360 +
+            static_cast < int > (this->_pitch) % 360;
+        }
+
+        [[nodiscard]] auto copy () const noexcept -> VRotor * override { return new VRotor(* this); }
+
+        template < typename Mapper >
+        auto apply ( Mapper const & m ) const noexcept -> glm::vec3 {
+            return glm::vec3 ( m(this->_roll), m(this->_yaw), m(this->_pitch) );
         }
     };
 

@@ -737,6 +737,8 @@ auto engine::VulkanTriangleApplication::update() noexcept -> void {
     auto pCube = dynamic_cast<VGameObject *>(this->_activeScene.getGameObjectByName("cube"));
     if ( pCube == nullptr ) return;
 
+    bool modifDone = pitchDown || pitchUp || yawDown || yawUp || rollDown || rollUp;
+
     if ( pitchUp )
         pCube->transform()->rotation().rotate(VRotor::PITCH, 90.0f * static_cast<float>(this->_deltaTime));
 
@@ -756,6 +758,12 @@ auto engine::VulkanTriangleApplication::update() noexcept -> void {
 
     if ( rollDown )
         pCube->transform()->rotation().rotate(VRotor::ROLL, - 90.0f * static_cast<float>(this->_deltaTime));
+
+    if ( modifDone ) {
+        std::cout << pCube->transform()->rotation() << "\t cos : ";
+        std::cout << String(pCube->transform()->rotation().apply(cosf)) << "\t sin :";
+        std::cout << String(pCube->transform()->rotation().apply(sinf)) << "\n";
+    }
 
     auto pStar = dynamic_cast<VGameObject *>(this->_activeScene.getGameObjectByName("star"));
 

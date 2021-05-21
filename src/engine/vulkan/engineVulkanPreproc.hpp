@@ -26,4 +26,6 @@
 #include <iostream>
 #include <stb_image.h>
 
+#define CDS_GLM
+
 #endif //ENG1_ENGINEVULKANPREPROC_HPP
