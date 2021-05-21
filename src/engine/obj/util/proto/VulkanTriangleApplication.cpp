@@ -21,80 +21,6 @@ engine::VulkanTriangleApplication::VulkanTriangleApplication(uint32 width, uint3
 }
 
 /**
- * Vertices of a star, with colors
- */
-const std::vector < engine::VVertex > starVertices = {
-
-        { { -0.2f, -0.2f, 0.0f }, {0.3f, 0.3f, 0.3f} },
-        { {  0.2f, -0.2f, 0.0f }, {0.3f, 0.3f, 0.3f} },
-        { {  0.3f,  0.1f, 0.0f }, {0.3f, 0.3f, 0.3f} },
-        { {  0.0f,  0.3f, 0.0f }, {0.3f, 0.3f, 0.3f} },
-        { { -0.3f,  0.1f, 0.0f }, {0.3f, 0.3f, 0.3f} },
-
-        { { 0.0f, -0.6f, 0.0f }, {1.0f, 0.0f, 0.0f} },
-        { { 0.6f, -0.2f, 0.0f }, {0.0f, 1.0f, 0.0f} },
-        { { 0.4f,  0.55f, 0.0f }, {0.0f, 0.0f, 1.0f} },
-        { {-0.4f,  0.55f, 0.0f }, {0.0f, 1.0f, 1.0f} },
-        { {-0.6f, -0.2f, 0.0f }, {1.0f, 1.0f, 0.3f} },
-};
-
-/**
- * Indices of the star object, triangles, in draw order CCW
- */
-const std::vector < uint16 > starIndices = {
-
-        0, 1, 4,
-        1, 3, 4,
-        1, 2, 3,
-
-        0, 5, 1,
-        1, 6, 2,
-        2, 7, 3,
-        3, 8, 4,
-        4, 9, 0,
-};
-
-/**
- * Cube Vertices, with color ( 1.0, 1.0, 1.0 = no color modif. ), texture coords
- */
-const std::vector < engine::VVertex > cubeVertices = {
-
-
-        {{-0.5f, -0.5f,  0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f}},
-        {{ 0.5f, -0.5f,  0.5f}, {1.0f, 1.0f, 1.0f}, {1.0f, 0.0f}},
-        {{ 0.5f,  0.5f,  0.5f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f}},
-        {{-0.5f,  0.5f,  0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f}},
-
-        {{-0.5f, -0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f}},
-        {{ 0.5f, -0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f}},
-        {{ 0.5f,  0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {1.0f, 0.0f}},
-        {{-0.5f,  0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f}},
-
-        {{ 0.5f, -0.5f,  0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f}},
-        {{ 0.5f,  0.5f,  0.5f}, {1.0f, 1.0f, 1.0f}, {1.0f, 0.0f}},
-        {{ 0.5f, -0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f}},
-        {{ 0.5f,  0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f}},
-
-        {{-0.5f, -0.5f,  0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f}},  // 2
-        {{-0.5f,  0.5f,  0.5f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f}}, // 3
-        {{-0.5f, -0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f}}, // 0
-        {{-0.5f,  0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {1.0f, 0.0f}}, // 1
-};
-
-/**
- * order of drawing, CCW, triangles
- */
-const std::vector < uint16 > cubeIndices = {
-
-        0,   1,  2,  2,  3,  0,
-        1,   0,  5,  4,  5,  0,
-        9,   8,  10, 10, 11, 9,
-        3,   2,  7,  6,  7,  2,
-        12,  13, 14, 15, 14, 13,
-        4,   6,  5,  7,  6,  4
-};
-
-/**
  * @brief internal tests for queue families, acquiring queues and releasing them
  *
  * @param collection : engine::VQueueFamilyCollection cref = on which collection to test
@@ -230,14 +156,15 @@ auto engine::VulkanTriangleApplication::initWindow() noexcept (false) -> void {
     glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API); /// No OpenGL API, Vulkan is not self-configurable
 
     this->_window = glfwCreateWindow( /// Create Window from GLFW
-        this->_width, // with width
-        this->_height,// height
+        static_cast < int32 > (this->_width), // with width
+        static_cast < int32 > (this->_height),// height
         VulkanTriangleApplication::DEFAULT_TITLE, // title
         nullptr, // any monitor
         nullptr    // not shared to any other instance / application
     );
 
-    glfwSetInputMode(this->_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    if ( !this->_mouseCursorEnabled )
+        glfwSetInputMode(this->_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     glfwSetWindowUserPointer( this->_window, this ); /// Set "this" as owner of window. Will be used to re-acquire "this" address in callback, since it is static
     glfwSetFramebufferSizeCallback( this->_window, engine::VulkanTriangleApplication::frameBufferResizeCallback ); /// Set Window Resize Callback
     glfwSetKeyCallback( this->_window, processInputCallback ); /// Set Keyboard Callback
@@ -408,59 +335,59 @@ auto engine::VulkanTriangleApplication::createSynchronizationElements() noexcept
 #pragma clang diagnostic pop
 #endif
 
-static HashMap < engine::VGameObject *, std::vector < engine::VVertex > const * > objectVertices;
-static HashMap < engine::VGameObject *, std::vector < uint16 > const * > objectIndices;
-static HashMap < engine::VGameObject *, String > objectTextureNames;
+//static HashMap < engine::VGameObject *, std::vector < engine::VVertex > const * > objectVertices;
+//static HashMap < engine::VGameObject *, std::vector < uint16 > const * > objectIndices;
+//static HashMap < engine::VGameObject *, String > objectTextureNames;
 
 auto engine::VulkanTriangleApplication::createGameObjects() noexcept -> void {
     /***
      * Create Two Objects and Add them to the Active Scene
      * Will be loaded later from configurations - Saved Scenes -> json containing hierarchical data
      */
-
-    auto cube = new VGameObject("cube");
-    cube->add(new VTransform());
-    cube->add(new VMesh());
-    cube->add(new VMeshRenderer());
-
-    auto cube2 = new VGameObject("cube2");
-    cube2->add(new VTransform());
-    cube2->add(new VMesh());
-    cube2->add(new VMeshRenderer());
-
-    auto star = new VGameObject("star");
-    star->add(new VTransform());
-    star->add(new VMesh());
-    star->add(new VMeshRenderer());
-
-
-    /// Move the star a bit above and to the left
-    star->transform()->location().x -= 2.0f;
-    star->transform()->location().z += 1.0f;
-    star->transform()->location().y += 1.0f;
-
-//    cube->transform()->location().y += 1.0f;
-//    cube->transform()->location().z += 0.5;
-
-    objectVertices[cube] = & cubeVertices;
-    objectIndices[cube] = & cubeIndices;
-
-    objectVertices[cube2] = & cubeVertices;
-    objectIndices[cube2] = & cubeIndices;
-
-    objectVertices[star] = & starVertices;
-    objectIndices[star] = & starIndices;
-
-    objectTextureNames[cube] = "container.jpg";
-    objectTextureNames[cube2] = "container2.png";
-    objectTextureNames[star] = "container3.jpg";
-
-    star->add(cube);
-
-//    this->_activeScene.add(cube);
-    this->_activeScene.add(star); /// Add object to scene
-    this->_activeScene.add(cube2);
-    this->_activeScene.setActiveCamera(new VCamera({0.0f, 0.0f, 3.0f}));
+//
+//    auto cube = new VGameObject("cube");
+//    cube->add(new VTransform());
+//    cube->add(new VMesh());
+//    cube->add(new VMeshRenderer());
+//
+//    auto cube2 = new VGameObject("cube2");
+//    cube2->add(new VTransform());
+//    cube2->add(new VMesh());
+//    cube2->add(new VMeshRenderer());
+//
+//    auto star = new VGameObject("star");
+//    star->add(new VTransform());
+//    star->add(new VMesh());
+//    star->add(new VMeshRenderer());
+//
+//
+//    /// Move the star a bit above and to the left
+//    star->transform()->location().x -= 2.0f;
+//    star->transform()->location().z += 1.0f;
+//    star->transform()->location().y += 1.0f;
+//
+////    cube->transform()->location().y += 1.0f;
+////    cube->transform()->location().z += 0.5;
+//
+//    objectVertices[cube] = & cubeVertices;
+//    objectIndices[cube] = & cubeIndices;
+//
+//    objectVertices[cube2] = & cubeVertices;
+//    objectIndices[cube2] = & cubeIndices;
+//
+//    objectVertices[star] = & starVertices;
+//    objectIndices[star] = & starIndices;
+//
+//    objectTextureNames[cube] = "container.jpg";
+//    objectTextureNames[cube2] = "container2.png";
+//    objectTextureNames[star] = "container3.jpg";
+//
+//    star->add(cube);
+//
+////    this->_activeScene.add(cube);
+//    this->_activeScene.add(star); /// Add object to scene
+//    this->_activeScene.add(cube2);
+//    this->_activeScene.setActiveCamera(new VCamera({0.0f, 0.0f, 3.0f}));
 }
 
 auto engine::VulkanTriangleApplication::recreateSwapChain() noexcept(false) -> void {
@@ -645,8 +572,8 @@ auto engine::VulkanTriangleApplication::updateUniformBuffer(uint32 uniformBuffer
 
     auto projection = glm::perspective (
             glm::radians ( FOV ), /// with this FOV in radians
-            this->_vulkanLogicalDevice.getSwapChain()->getImagesInfo().extent.width / /// projected on our width / heigth ( aspect ratio )
-            (float) this->_vulkanLogicalDevice.getSwapChain()->getImagesInfo().extent.height,
+            static_cast < float > (this->_vulkanLogicalDevice.getSwapChain()->getImagesInfo().extent.width) / /// projected on our width / heigth ( aspect ratio )
+            static_cast < float > ( this->_vulkanLogicalDevice.getSwapChain()->getImagesInfo().extent.height ),
             0.1f, /// clip start ( objects behind will not be projected )
             10.0f  /// clip end ( objects far will not be projected )
     );
@@ -679,11 +606,11 @@ auto engine::VulkanTriangleApplication::updateUniformBuffer(uint32 uniformBuffer
                     glm::rotate ( /// rotate pitch
                         glm::rotate( /// rotate yaw
                             glm::translate(baseModel, transform.location()),
-                            glm::radians(transform.rotation().roll()), glm::vec3(1.0f, 0.0f, 0.0f)
+                            glm::radians(transform.rotation().pitch()), glm::vec3(1.0f, 0.0f, 0.0f)
                         ),
                         glm::radians(transform.rotation().yaw()), glm::vec3(0.0f, 1.0f, 0.0f)
                     ),
-                    glm::radians(transform.rotation().pitch()), glm::vec3(0.0f, 0.0f, 1.0f)
+                    glm::radians(transform.rotation().roll()), glm::vec3(0.0f, 0.0f, 1.0f)
                 ),
                 transform.scale()
             ),
@@ -799,14 +726,15 @@ auto engine::VulkanTriangleApplication::update() noexcept -> void {
 
     auto pStar = dynamic_cast<VGameObject *>(this->_activeScene.getGameObjectByName("star"));
 
-    pStar->transform()->rotation().rotate(VRotor::PITCH, 180.0f * static_cast<float>(this->_deltaTime));
-
+    if ( pStar != nullptr ) {
+        pStar->transform()->rotation().rotate(VRotor::PITCH, 180.0f * static_cast<float>(this->_deltaTime));
+    }
     /// call of update for each GameObject
     for ( auto * pGameObject: this->_activeScene.entitiesOfClass("VGameObject") )
         dynamic_cast < VGameObject * > (pGameObject)->update( static_cast <float>(this->_deltaTime)  );
 
     constexpr static float movementSpeed = 3.0f;
-    float velocity = movementSpeed * this->_deltaTime;
+    float velocity = movementSpeed * static_cast < float > (this->_deltaTime);
     float camY = this->_activeScene.activeCamera()->transform()->location().y;
 
     if ( moveUp && moveDown ) {
@@ -826,6 +754,8 @@ auto engine::VulkanTriangleApplication::update() noexcept -> void {
     }
 }
 
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "Simplify"
 auto engine::VulkanTriangleApplication::mainLoop() noexcept (false) -> void {
     while ( ! glfwWindowShouldClose( this->_window ) ) { /// while window is active
         double startFrameTime = glfwGetTime(); /// get current time accurately
@@ -847,6 +777,7 @@ auto engine::VulkanTriangleApplication::mainLoop() noexcept (false) -> void {
     }
     vkDeviceWaitIdle( this->_vulkanLogicalDevice.data() ); /// Wait until GPU draw Task is finished before closing
 }
+#pragma clang diagnostic pop
 
 auto engine::VulkanTriangleApplication::createBuffers() noexcept(false) -> void {
     /**
@@ -886,8 +817,8 @@ auto engine::VulkanTriangleApplication::createConcurrentBuffers() noexcept(false
             pGameObject->meshPtr()->setup(
                 this->_transferCommandPool,
                 * this->_vulkanQueueFamilyCollection,
-                * objectVertices[pGameObject],
-                * objectIndices[pGameObject]
+                * this->objectVertices()[pGameObject],
+                * this->objectIndices()[pGameObject]
             ),
             ENG_STD_THROW("Object Mesh Setup Error")
         )
@@ -922,7 +853,7 @@ auto engine::VulkanTriangleApplication::createDescriptorSets() noexcept(false) -
                 this->_transferCommandPool,
                 this->_descriptorPool,
                 this->_objectShader,
-                String(__TEXTURES_PATH__).append(objectTextureNames[pGameObject]).cStr(),
+                String(__TEXTURES_PATH__).append(this->objectTextureNames()[pGameObject]).cStr(),
                 this->_textureSampler,
                 * this->_vulkanQueueFamilyCollection
             ),

@@ -149,6 +149,13 @@ namespace engine {
         /// Active Scene - Hierarchy of Entities
         VScene                      _activeScene;
 
+
+        HashMap < VGameObject *, std::vector < VVertex > const * >  _objectVertices;
+        HashMap < VGameObject *, std::vector < uint16 > const * >   _objectIndices;
+        HashMap < VGameObject *, String >                           _objectTextureNames;
+
+        bool                        _mouseCursorEnabled = false;
+
         /// Current FPS
         double                      _fpsTimer = 0.0;
         /// Show FPS every .... seconds
@@ -572,6 +579,12 @@ namespace engine {
         auto run() noexcept (false) -> void;
 
         constexpr auto scene() noexcept -> VScene & { return this->_activeScene; }
+
+        constexpr auto objectVertices () noexcept -> HashMap < VGameObject *, std::vector < VVertex > const * > & { return this->_objectVertices; }
+        constexpr auto objectIndices () noexcept -> HashMap < VGameObject *, std::vector < uint16 > const * > & { return this->_objectIndices; }
+        constexpr auto objectTextureNames () noexcept -> HashMap < VGameObject *, String > & { return this->_objectTextureNames; }
+
+        constexpr auto setMouseCursorEnabled (bool toggle) noexcept -> void { this->_mouseCursorEnabled = toggle; }
     };
 
 }
