@@ -571,7 +571,7 @@ auto engine::VScene::transformInScene(VEntity * pEntity) const noexcept -> VTran
 //            std::cos ( glm::radians( pR.yaw() ) ) * cL.x * std::cos ( glm::radians ( pR.roll() ) );
 //
 //    l.y = pL.y +
-//            std::sin ( glm::radians( pR.roll() ) ) * cL.x; // + std::cos ( glm::radians( pR.pitch() ) ) * cL.x;
+//            std::sin ( glm::radians( pR.roll() ) ) * cL.x; // + std::cos ( glm::radians( pR.pitch() ) )  * cL.x;
 //
 //    l.z = pL.z -
 //           std::sin ( glm::radians( pR.yaw() ) ) * cL.x * std::cos ( glm::radians ( pR.roll() ) );
@@ -580,15 +580,23 @@ auto engine::VScene::transformInScene(VEntity * pEntity) const noexcept -> VTran
             std::cos ( glm::radians( pR.yaw() ) ) * cL.x * std::cos ( glm::radians ( pR.roll() ) );
 
     l.y = pL.y +
-            std::sin ( glm::radians(pR.pitch()) ) * cL.x * std::sin ( glm::radians ( pR.yaw() ) );
+            std::sin ( glm::radians(pR.pitch()) ) * cL.x * std::sin ( glm::radians ( pR.yaw() ) ) +
+            std::cos ( glm::radians(pR.pitch())) * cL.x * (std::sin (glm::radians(pR.roll())));
+//            std::sin ( glm::radians(pR.pitch()) ) * cL.x * std::cos ( glm::radians ( pR.roll() ) );// * ( - std::cos (glm::radians(pR.roll()))); // * (-std::sin ( pR.roll() ));
 //    l.y = pL.y -
 //            std::sin ( glm::radians( pR.pitch() ) ) * cL.x;
 //    l.z = pL.z +
 //            std::sin ( glm::radians( pR.pitch() ) ) * cL.x; // + std::cos ( glm::radians( pR.pitch() ) ) * cL.x;
 
-    l.z = pL.z -
-           std::sin ( glm::radians( pR.yaw() ) ) * cL.x * std::cos ( glm::radians ( pR.pitch() ) ) ;// * cL.x * std::cos ( glm::radians ( pR.pitch() ) );
+//    l.z = pL.z -
+//           std::sin ( glm::radians( pR.yaw() ) ) * cL.x * std::cos ( glm::radians ( pR.pitch() ) ) * std::cos(glm::radians(pR.roll())) ;// * cL.x * std::cos ( glm::radians ( pR.pitch() ) );
 
+
+    l.z = pL.z -
+            std::sin ( glm::radians( pR.yaw() ) ) * cL.x * std::cos ( glm::radians(pR.pitch()) ) +
+            std::sin ( glm::radians( pR.yaw() ) ) * cL.x * ( 1 - std::cos ( glm::radians ( pR.roll() ) ));
+//            std::sin ( glm::radians(pR.pitch()) ) * cL.x;
+//            std::cos ( glm::radians ( pR.yaw() ) ) * cL.x * std::cos ( glm::radians ( pR.roll() ) );
 
 //    l.x = pL.x +
 //            std::cos ( glm::radians ( pR.roll() ) ) * l.x * std::cos ( glm::radians( pR.yaw() ) );

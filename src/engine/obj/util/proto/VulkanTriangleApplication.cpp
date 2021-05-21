@@ -518,10 +518,19 @@ auto engine::VulkanTriangleApplication::drawImage () noexcept (false) -> void {
 /**
  * variables used in testing
  */
-bool left = false; ///^
-bool right = false;///<
-bool up = false;   ///>
-bool down = false; ///!^
+//bool left = false; ///^
+//bool right = false;///<
+//bool up = false;   ///>
+//bool down = false; ///!^
+
+bool yawUp = false;
+bool yawDown = false;
+
+bool pitchUp = false;
+bool pitchDown = false;
+
+bool rollUp = false;
+bool rollDown = false;
 
 static bool moveUp = false;
 static bool moveDown = false;
@@ -668,14 +677,27 @@ auto rawMouseInputCallback (
  */
 auto processInputCallback (GLFWwindow* window, int key, int scanCode, int action, int mods) noexcept -> void { /// rudimentary input callback
     if ( action == GLFW_PRESS ) {
-        if ( key == GLFW_KEY_LEFT )
-            left = true;
-        if ( key == GLFW_KEY_RIGHT )
-            right = true;
-        if ( key == GLFW_KEY_UP )
-            up = true;
-        if ( key == GLFW_KEY_DOWN )
-            down = true;
+//        if ( key == GLFW_KEY_LEFT )
+//            left = true;
+//        if ( key == GLFW_KEY_RIGHT )
+//            right = true;
+//        if ( key == GLFW_KEY_UP )
+//            up = true;
+//        if ( key == GLFW_KEY_DOWN )
+//            down = true;
+
+        if ( key == GLFW_KEY_KP_7 )
+            yawUp = true;
+        if ( key == GLFW_KEY_KP_9 )
+            yawDown = true;
+        if ( key == GLFW_KEY_KP_4 )
+            pitchUp = true;
+        if ( key == GLFW_KEY_KP_6 )
+            pitchDown = true;
+        if ( key == GLFW_KEY_KP_1 )
+            rollUp = true;
+        if ( key == GLFW_KEY_KP_3 )
+            rollDown = true;
 
         if ( key == GLFW_KEY_W )
             moveUp = true;
@@ -686,14 +708,18 @@ auto processInputCallback (GLFWwindow* window, int key, int scanCode, int action
         if ( key == GLFW_KEY_A )
             moveLeft = true;
     } else if ( action == GLFW_RELEASE ) {
-        if ( key == GLFW_KEY_LEFT )
-            left = false;
-        if ( key == GLFW_KEY_RIGHT )
-            right = false;
-        if ( key == GLFW_KEY_UP )
-            up = false;
-        if ( key == GLFW_KEY_DOWN )
-            down = false;
+        if ( key == GLFW_KEY_KP_7 )
+            yawUp = false;
+        if ( key == GLFW_KEY_KP_9 )
+            yawDown = false;
+        if ( key == GLFW_KEY_KP_4 )
+            pitchUp = false;
+        if ( key == GLFW_KEY_KP_6 )
+            pitchDown = false;
+        if ( key == GLFW_KEY_KP_1 )
+            rollUp = false;
+        if ( key == GLFW_KEY_KP_3 )
+            rollDown = false;
 
         if ( key == GLFW_KEY_W )
             moveUp = false;
@@ -711,18 +737,25 @@ auto engine::VulkanTriangleApplication::update() noexcept -> void {
     auto pCube = dynamic_cast<VGameObject *>(this->_activeScene.getGameObjectByName("cube"));
     if ( pCube == nullptr ) return;
 
-    if ( left )
+    if ( pitchUp )
         pCube->transform()->rotation().rotate(VRotor::PITCH, 90.0f * static_cast<float>(this->_deltaTime));
 
-    if ( right )
+    if ( pitchDown )
         pCube->transform()->rotation().rotate(VRotor::PITCH, - 90.0f * static_cast<float>(this->_deltaTime));
 
 
-    if ( up )
+    if ( yawUp )
         pCube->transform()->rotation().rotate(VRotor::YAW, 90.0f * static_cast<float>(this->_deltaTime));
 
-    if ( down )
+    if ( yawDown )
         pCube->transform()->rotation().rotate(VRotor::YAW, - 90.0f * static_cast<float>(this->_deltaTime));
+
+
+    if ( rollUp )
+        pCube->transform()->rotation().rotate(VRotor::ROLL, 90.0f * static_cast<float>(this->_deltaTime));
+
+    if ( rollDown )
+        pCube->transform()->rotation().rotate(VRotor::ROLL, - 90.0f * static_cast<float>(this->_deltaTime));
 
     auto pStar = dynamic_cast<VGameObject *>(this->_activeScene.getGameObjectByName("star"));
 
