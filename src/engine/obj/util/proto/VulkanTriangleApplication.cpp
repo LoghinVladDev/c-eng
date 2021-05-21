@@ -712,10 +712,10 @@ auto engine::VulkanTriangleApplication::update() noexcept -> void {
     if ( pCube == nullptr ) return;
 
     if ( left )
-        pCube->transform()->rotation().rotate(VRotor::ROLL, 90.0f * static_cast<float>(this->_deltaTime));
+        pCube->transform()->rotation().rotate(VRotor::PITCH, 90.0f * static_cast<float>(this->_deltaTime));
 
     if ( right )
-        pCube->transform()->rotation().rotate(VRotor::ROLL, - 90.0f * static_cast<float>(this->_deltaTime));
+        pCube->transform()->rotation().rotate(VRotor::PITCH, - 90.0f * static_cast<float>(this->_deltaTime));
 
 
     if ( up )

@@ -567,14 +567,27 @@ auto engine::VScene::transformInScene(VEntity * pEntity) const noexcept -> VTran
 ////    l.z = pL.z -
 ////           std::sin ( glm::radians( pR.yaw() ) ) * cL.x * std::cos ( glm::radians ( pR.roll() ) );
 
+//    l.x = pL.x +
+//            std::cos ( glm::radians( pR.yaw() ) ) * cL.x * std::cos ( glm::radians ( pR.roll() ) );
+//
+//    l.y = pL.y +
+//            std::sin ( glm::radians( pR.roll() ) ) * cL.x; // + std::cos ( glm::radians( pR.pitch() ) ) * cL.x;
+//
+//    l.z = pL.z -
+//           std::sin ( glm::radians( pR.yaw() ) ) * cL.x * std::cos ( glm::radians ( pR.roll() ) );
+
     l.x = pL.x +
             std::cos ( glm::radians( pR.yaw() ) ) * cL.x * std::cos ( glm::radians ( pR.roll() ) );
 
     l.y = pL.y +
-            std::sin ( glm::radians( pR.roll() ) ) * cL.x; // + std::cos ( glm::radians( pR.pitch() ) ) * cL.x;
+            std::sin ( glm::radians(pR.pitch()) ) * cL.x * std::sin ( glm::radians ( pR.yaw() ) );
+//    l.y = pL.y -
+//            std::sin ( glm::radians( pR.pitch() ) ) * cL.x;
+//    l.z = pL.z +
+//            std::sin ( glm::radians( pR.pitch() ) ) * cL.x; // + std::cos ( glm::radians( pR.pitch() ) ) * cL.x;
 
     l.z = pL.z -
-           std::sin ( glm::radians( pR.yaw() ) ) * cL.x * std::cos ( glm::radians ( pR.roll() ) );
+           std::sin ( glm::radians( pR.yaw() ) ) * cL.x * std::cos ( glm::radians ( pR.pitch() ) ) ;// * cL.x * std::cos ( glm::radians ( pR.pitch() ) );
 
 
 //    l.x = pL.x +
