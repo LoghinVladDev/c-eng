@@ -528,183 +528,27 @@ auto engine::VScene::transformInScene(VEntity * pEntity) const noexcept -> VTran
     VTransform result = pTransform == nullptr ? VTransform() : ( * pTransform );
     auto parentTransform = transformInScene(const_cast < VEntity * > (pEntity->parentPtr()));
 
-
-    //    result.location() += parentTransform.location();
-
     result.rotation() += parentTransform.rotation();
 
-//    result.location().x += parentTransform.location().x;
-//    result.location().y += parentTransform.location().y;
-//   result.location().z += parentTransform.location().z;
-
-    float xyDist = std::sqrt ( result.location().x * result.location().x + result.location().y * result.location().y );
-    float zxDist = std::sqrt ( result.location().x * result.location().x + result.location().z * result.location().z );
-    float yzDist = std::sqrt ( result.location().y * result.location().y + result.location().z * result.location().z );
-//
-//    result.location().x
-
-//    result.location().x = parentTransform.location().x +
-//            std::sin ( glm::radians(parentTransform.rotation().yaw()) ) * zxDist * std::cos ( glm::radians(parentTransform.rotation().pitch()) );
-//
-//    result.location().y = parentTransform.location().y +
-//            std::sin ( glm::radians(parentTransform.rotation().pitch()) ) * xyDist * std::cos ( glm::radians(parentTransform.rotation().roll()) );
-
-//    result.location().z = parentTransform.location().z +
-//            std::sin ( glm::radians(parentTransform.rotation().roll()) ) * yzDist * std::cos ( glm::radians(parentTransform.rotation().yaw()) );
-
-//    auto & r = result;
-    auto cL = result.location();
     auto & l = result.location();
-    auto & r = result.rotation();
 
     auto & pL = parentTransform.location();
     auto & pR = parentTransform.rotation();
-
-    auto & c = cosf;
-    auto & s = sinf;
 
     auto u = glm::radians(pR.pitch());
     auto v = glm::radians(pR.yaw());
     auto w = glm::radians(pR.roll());
 
-//    float rm [3] [3] = {
-//            { c(v) * c(w) , s(u) * s(v) * c(w) - c(u) * s(w) , s(u) * s(w) + c(u) * s(v) * c(w) },
-//            { c(v) * s(w) , c(u) * c(w) + s(u) * s(v) * s(w) , c(u) * s(v) * s(w) - s(u) * c(w) },
-//            { - s(v) , s(u) * c(v) , c(u) * c(v) }
-//    };
-//
-//    l.z = cL.z * rm[0][0] + cL.x * rm[0][1] + cL.y * rm[0][2];
-//    l.x = cL.z * rm[1][0] + cL.x * rm[1][1] + cL.y * rm[1][2];
-//    l.y = cL.z * rm[2][0] + cL.x * rm[2][1] + cL.y * rm[2][2];
-
-
     auto m = glm::mat4(1.0f);
-//    m[0][0] = 1.0f;
-//    auto m = glm::mat4(glm::vec4(l.x, l.y, l.z, 1.0f));
-//    m = glm::translate(m, glm::vec3(1.0f, 0.0f, 0.0f));
-
-//    m = glm::translate(m, l);
 
     m = glm::rotate(m, u, glm::vec3(1.0f, 0.0f, 0.0f));
     m = glm::rotate(m, v, glm::vec3(0.0f, 1.0f, 0.0f));
     m = glm::rotate(m, w, glm::vec3(0.0f, 0.0f, 1.0f));
     m = glm::scale(m, l);
 
-//    m = glm::translate(m, )
-
-//    m = glm::translate(m, pL);
-
     l.x = (m[0].x + m[1].x + m[2].x) + pL.x;
     l.y = (m[0].y + m[1].y + m[2].y) + pL.y;
     l.z = (m[0].z + m[1].z + m[2].z) + pL.z;
-//    l.x = m[0][0] * l.x + m[0][3];
-//    l.y = m[1][1] * l.y + m[1][3];
-//    l.z = m[2][2] * l.z + m[2][3];
-
-    
-    ///// DO NOT TOUCH, ONLY COMMENT
-////    l.x = pL.x +
-////            std::cos ( glm::radians( pR.yaw() ) ) * cL.x * std::cos ( glm::radians ( pR.roll() ) );
-////
-////    l.z = pL.z -
-////           std::sin ( glm::radians( pR.yaw() ) ) * cL.x * std::cos ( glm::radians ( pR.roll() ) );
-
-//    l.x = pL.x +
-//            std::cos ( glm::radians( pR.yaw() ) ) * cL.x * std::cos ( glm::radians ( pR.roll() ) );
-//
-//    l.y = pL.y +
-//            std::sin ( glm::radians( pR.roll() ) ) * cL.x; // + std::cos ( glm::radians( pR.pitch() ) )  * cL.x;
-//
-//    l.z = pL.z -
-//           std::sin ( glm::radians( pR.yaw() ) ) * cL.x * std::cos ( glm::radians ( pR.roll() ) );
-
-//    l.x = pL.x +
-//            std::cos ( glm::radians( pR.yaw() ) ) * cL.x * std::cos ( glm::radians ( pR.roll() ) );
-//            std::sin ( glm::radians( pR.pitch() ) ) * cL.x;
-
-//    l.y = pL.y +
-//            std::sin ( glm::radians(pR.pitch()) ) * cL.x * std::sin ( glm::radians ( pR.yaw() ) ) +
-//            std::cos ( glm::radians(pR.pitch())) * cL.x * (std::sin (glm::radians(pR.roll())));
-//            std::sin ( glm::radians(pR.pitch()) ) * cL.x * std::cos ( glm::radians ( pR.roll() ) );// * ( - std::cos (glm::radians(pR.roll()))); // * (-std::sin ( pR.roll() ));
-//    l.y = pL.y -
-//            std::sin ( glm::radians( pR.pitch() ) ) * cL.x;
-//    l.z = pL.z +
-//            std::sin ( glm::radians( pR.pitch() ) ) * cL.x; // + std::cos ( glm::radians( pR.pitch() ) ) * cL.x;
-
-//    l.z = pL.z -
-//           std::sin ( glm::radians( pR.yaw() ) ) * cL.x * std::cos ( glm::radians ( pR.pitch() ) ) * std::cos(glm::radians(pR.roll())) ;// * cL.x * std::cos ( glm::radians ( pR.pitch() ) );
-
-
-//    l.z = pL.z -
-//            std::sin ( glm::radians( pR.yaw() ) ) * cL.x * std::cos ( glm::radians(pR.pitch()) ) +
-//            std::sin ( glm::radians( pR.pitch() ) ) * cL.x * ( std::sin ( glm::radians ( pR.roll() ) )) * std::cos(glm::radians(pR.yaw())) +
-//            std::sin ( glm::radians( pR.pitch() ) ) * cL.x  * std::cos(glm::radians(pR.yaw())) * ( 1 - std::cos ( glm::radians ( pR.roll() ) ) ) +
-//            std::sin ( glm::radians( pR.yaw() ) ) * cL.x * (1-std::cos ( glm::radians ( pR.roll() ) ));
-//            std::sin ( glm::radians( pR.pitch() ) ) * cL.x * std::sin ( glm::radians( pR.roll() ) );
-//            std::sin( glm::radians( pR.yaw() ) ) * cL.x * std::cos ( glm::radians ( pR.roll() ) );
-//            std::sin ( glm::radians(pR.pitch()) ) * cL.x;
-//            std::cos ( glm::radians ( pR.yaw() ) ) * cL.x * std::cos ( glm::radians ( pR.roll() ) );
-
-//    l.x = pL.x +
-//            std::cos ( glm::radians ( pR.roll() ) ) * l.x * std::cos ( glm::radians( pR.yaw() ) );
-
-//    l.z = pL.z +
-//            std::sin ( glm::radians( pR.yaw() ) ) * l.z * std::cos ( glm::radians( pR.pitch() ) );
-//            std::cos( glm::radians ( pR.yaw() ) ) * zxDist * std::sin ( glm::radians(pR.roll()) );
-//            std::cos ( glm::radians ( pR.roll() ) ) * xyDist * std::sin ( glm::radians(pR.roll()) );
-//            std::cos ( glm::radians ( pR.roll() ) );
-//            std::cos ( glm::radians(pR.pitch()) ) * xyDist;// + std::sin ( glm::radians(pR.yaw()) ) * zxDist;
-
-    /// roll = z => xy
-    /// pitch = x => yz
-    /// yaw = y => zx
-//    result.location().z = parentTransform.location().z +
-//            std::sin ( glm::radians() )
-
-//    result.location().x = parentTransform.location().x +
-//            std::sin ( glm::radians() )
-//        std::sin ( glm::radians(parentTransform.rotation().yaw()) ) * std::cos ( glm::radians(parentTransform.rotation().pitch()) ) * zxDist +
-//        std::cos ( glm::radians(parentTransform.rotation().roll()) ) * std::sin ( glm::radians(parentTransform.rotation().pitch()) ) * xyDist;
-
-//    result.location().z = parentTransform.location().z +
-//        std::sin ( glm::radians(parentTransform.rotation().pitch()) ) * std::cos ( glm::radians(parentTransform.rotation().roll()) ) * yzDist +
-//        std::cos ( glm::radians(parentTransform.rotation().yaw()) ) * std::sin ( glm::radians(parentTransform.rotation().roll()) ) * zxDist;
-//
-//    result.location().y = parentTransform.location().y +
-//        std::sin ( glm::radians(parentTransform.rotation().roll()) ) * std::cos ( glm::radians(parentTransform.rotation().yaw()) ) * xyDist +
-//        std::cos ( glm::radians(parentTransform.rotation().pitch()) ) * std::sin ( glm::radians(parentTransform.rotation().yaw()) ) * yzDist;
-//        std::sin ( glm::radians(parentTransform.rotation().yaw()) ) * std::cos ( glm::radians(parentTransform.rotation().roll()) ) * (xzDist + xyDist);
-
-
-//    result.location().y = parentTransform.location().y +
-//        std::sin ( glm::radians(parentTransform.rotation().roll()) ) * std::cos ( glm::radians(parentTransform.rotation().yaw()) ) * xyDist;
-
-//    result.location().z = parentTransform.location().z +
-//        std::sin ( glm::radians(parentTransform.rotation().pitch()) ) * std::cos ( glm::radians(parentTransform.rotation().roll()) ) * xzDist;
-//    result.location().z = parentTransform.location().z +
-//        std::sin ( glm::radians(parentTransform.rotation().pitch()) ) * std::cos ( glm::radians(parentTransform.rotation().yaw()) ) * (xzDist + yzDist);
-
-//        std::sin ( glm::radians(parentTransform.rotation().roll()) ) * xyDist;
-//        std::sin ( glm::radians(parentTransform.rotation().roll()) ) * xyDist;
-//        std::cos ( glm::radians(parentTransform.rotation().roll()) ) * xyDist;
-
-//    result.location().z = parentTransform.location().z +
-//        std::cos ( glm::radians(parentTransform.rotation().yaw()) ) * xzDist +
-//        std::cos ( glm::radians(parentTransform.rotation().pitch()) ) * yzDist;
-
-//    result.location().y = parentTransform.location().y +
-//        std::sin ( glm::radians(parentTransform.rotation().pitch()) ) * yzDist +
-//        std::cos ( glm::radians(parentTransform.rotation().roll()) ) * xyDist;
-
-
-    /// pitch = z => xy
-    /// roll = x => yz
-    /// yaw = y => zx
-//    result.location() = parentTransform.location() + glm::vec3 {
-//        result.location().x * ( std::cos(glm::radians(result.rotation().roll())) + std::sin(glm::radians(result.rotation().yaw())) ),
-//        result.location().y * ( std::cos(glm::radians(result.rotation().pitch())) + std::sin(glm::radians(result.rotation().roll())) ),
-//        result.location().z * ( std::cos(glm::radians(result.rotation().yaw())) + std::sin(glm::radians(result.rotation().pitch())) )
-//    };
 
     return result;
 }

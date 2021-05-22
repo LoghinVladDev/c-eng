@@ -133,7 +133,7 @@ auto addObjects (VulkanTriangleApplication & a) {
 
 //    star->add(cube);
     cube->add(cube2);
-    cube2->add(cube3);
+    //cube2->add(cube3);
     cube3->add(star);
 
     cube->transform()->location().x += 0.5f;
@@ -149,7 +149,7 @@ auto addObjects (VulkanTriangleApplication & a) {
 
 //    a.scene().add(star); /// Add object to scene
     a.scene().add(cube);
-//    a.scene().add(cube2);
+    a.scene().add(cube3);
     a.scene().setActiveCamera(new VCamera({0.0f, 0.0f, 3.0f}));
 }
 
