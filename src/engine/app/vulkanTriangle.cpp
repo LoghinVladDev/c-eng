@@ -125,9 +125,9 @@ auto addObjects (VulkanTriangleApplication & a) {
 //    star->add(cube);
     cube->add(cube2);
 
-    cube->transform()->location().x += 0.5f;
-    cube->transform()->location().y -= 0.5f;
-    cube->transform()->location().z -= 0.5f;
+//    cube->transform()->location().x += 0.5f;
+//    cube->transform()->location().y -= 0.5f;
+//    cube->transform()->location().z -= 0.5f;
 
     cube2->transform()->location().x += 1.0f;
     cube2->transform()->location().y += 0.0f;
@@ -144,7 +144,7 @@ int main() {
 
     addObjects(app);
 
-    app.setMouseCursorEnabled(false);
+    app.setMouseCursorEnabled(true);
 
     try{
         /**
