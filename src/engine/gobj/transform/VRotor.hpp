@@ -40,6 +40,13 @@
 #define ADJUST_ROTOR()
 #endif
 
+#if defined(__cpp_concepts) && !defined(MSC_VER)
+#define _VRotor_constexpr constexpr
+#else
+#define _VRotor_constexpr
+#endif
+
+
 namespace engine {
 
     class VRotor : public Object {
@@ -60,37 +67,37 @@ namespace engine {
         } RotationType;
 
         //// public functions
-        constexpr VRotor() noexcept = default;
-        constexpr explicit VRotor ( float yaw, float pitch, float roll ) noexcept :
+        _VRotor_constexpr inline VRotor() noexcept = default;
+        _VRotor_constexpr inline explicit VRotor ( float yaw, float pitch, float roll ) noexcept :
             _yaw(yaw),
             _pitch(pitch),
             _roll(roll) {
             ADJUST_ROTOR()
         }
 
-        constexpr explicit VRotor ( const glm::vec3 & rotation ) noexcept :
+        _VRotor_constexpr inline explicit VRotor ( const glm::vec3 & rotation ) noexcept :
             _yaw ( rotation.x ),
             _pitch ( rotation.y ),
             _roll ( rotation.z ){
             ADJUST_ROTOR()
         }
 
-        constexpr VRotor (VRotor const &) noexcept = default;
+        _VRotor_constexpr inline VRotor (VRotor const &) noexcept = default;
 
 #if !defined(_MSC_VER)
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "EndlessLoop"
 #endif
-        [[nodiscard]] constexpr auto yaw() const noexcept -> float { return this->_yaw; }
-        [[nodiscard]] constexpr auto pitch() const noexcept -> float { return this->_pitch; }
-        [[nodiscard]] constexpr auto roll() const noexcept -> float { return this->_roll; }
+        [[nodiscard]] constexpr inline auto yaw() const noexcept -> float { return this->_yaw; }
+        [[nodiscard]] constexpr inline auto pitch() const noexcept -> float { return this->_pitch; }
+        [[nodiscard]] constexpr inline auto roll() const noexcept -> float { return this->_roll; }
 #if !defined(_MSC_VER)
 #pragma clang diagnostic pop
 #endif
 
-        constexpr auto yaw () noexcept -> float & { return this->_yaw; }
-        constexpr auto pitch () noexcept -> float & { return this->_pitch; }
-        constexpr auto roll () noexcept -> float & { return this->_roll; }
+        constexpr inline auto yaw () noexcept -> float & { return this->_yaw; }
+        constexpr inline auto pitch () noexcept -> float & { return this->_pitch; }
+        constexpr inline auto roll () noexcept -> float & { return this->_roll; }
 
         constexpr auto rotate ( RotationType type, float angle ) noexcept -> void {
             switch ( type ) {
@@ -171,11 +178,11 @@ namespace engine {
             return *this;
         }
 
-        constexpr auto operator + (VRotor const & o) const noexcept -> VRotor {
+        _VRotor_constexpr auto operator + (VRotor const & o) const noexcept -> VRotor {
             return VRotor(this->_yaw + o._yaw, this->_pitch + o._pitch, this->_roll + o._roll);
         }
 
-        constexpr auto operator - (VRotor const & o) const noexcept -> VRotor {
+        _VRotor_constexpr auto operator - (VRotor const & o) const noexcept -> VRotor {
             return VRotor(this->_yaw - o._yaw, this->_pitch - o._pitch, this->_roll - o._roll);
         }
 
@@ -217,5 +224,6 @@ namespace engine {
 }
 
 #undef ADJUST_ROTORS
+#undef _VRotor_constexpr
 
 #endif //ENG1_VROTOR_H

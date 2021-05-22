@@ -163,8 +163,10 @@ namespace engine {
         /// Time Between start of draw and end of draw for last image
         double                      _deltaTime {0.0f};
 
+        bool                        _showFPS {false};
+
         /// Used to recreate all resources using surface resolution when window is resized
-        bool _framebufferResized {false};
+        bool                        _framebufferResized {false};
 
         /// private_functions
 
@@ -471,7 +473,7 @@ namespace engine {
         //// check extensions toggle
         constexpr static bool   VULKAN_EXT_CHECK    = _VK_CHECK_EXT;
         //// fps show toggle
-        constexpr static bool   SHOW_FPS_CONSOLE    = false;
+//        constexpr static bool   SHOW_FPS_CONSOLE    = false;
 
         //// default window title
         static const char *     DEFAULT_TITLE;
@@ -585,6 +587,11 @@ namespace engine {
         constexpr auto objectTextureNames () noexcept -> HashMap < VGameObject *, String > & { return this->_objectTextureNames; }
 
         constexpr auto setMouseCursorEnabled (bool toggle) noexcept -> void { this->_mouseCursorEnabled = toggle; }
+
+        constexpr auto setShowFPSEnabled (bool toggle) noexcept -> void { this->_showFPS = toggle; }
+        constexpr auto enableShowFPS () noexcept -> void { this->setShowFPSEnabled(true); }
+        constexpr auto disableShowFPS () noexcept -> void { this->setShowFPSEnabled(false); }
+        constexpr auto isFPSShown () const noexcept -> bool { return this->_showFPS; }
     };
 
 }

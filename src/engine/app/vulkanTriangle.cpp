@@ -159,6 +159,7 @@ int main() {
     addObjects(app);
 
     app.setMouseCursorEnabled(false);
+    app.enableShowFPS();
 
     try{
         /**

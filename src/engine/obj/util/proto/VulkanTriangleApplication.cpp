@@ -810,7 +810,7 @@ auto engine::VulkanTriangleApplication::mainLoop() noexcept (false) -> void {
         this->_fpsTimer += this->_deltaTime;
 
         if ( this->_fpsTimer >= this->_fpsRefreshTimer ) {
-            if ( VulkanTriangleApplication::SHOW_FPS_CONSOLE ) {
+            if ( this->_showFPS ) {
                 std::cout << "FPS : " << (1.0 / this->_deltaTime) << '\n';
             }
             this->_fpsTimer = 0.0;
