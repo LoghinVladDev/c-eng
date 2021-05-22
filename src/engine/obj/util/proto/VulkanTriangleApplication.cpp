@@ -760,15 +760,15 @@ auto engine::VulkanTriangleApplication::update() noexcept -> void {
         pCube->transform()->rotation().rotate(VRotor::ROLL, - 90.0f * static_cast<float>(this->_deltaTime));
 
     if ( modifDone ) {
-        std::cout << pCube->transform()->rotation() << "\t cos : ";
-        std::cout << String(pCube->transform()->rotation().apply(cosf)) << "\t sin :";
-        std::cout << String(pCube->transform()->rotation().apply(sinf)) << "\n";
+//        std::cout << pCube->transform()->rotation() << "\t cos : ";
+//        std::cout << String(pCube->transform()->rotation().apply(cosf)) << "\t sin :";
+//        std::cout << String(pCube->transform()->rotation().apply(sinf)) << "\n";
     }
 
     auto pStar = dynamic_cast<VGameObject *>(this->_activeScene.getGameObjectByName("star"));
 
     if ( pStar != nullptr ) {
-        pStar->transform()->rotation().rotate(VRotor::PITCH, 180.0f * static_cast<float>(this->_deltaTime));
+        pStar->transform()->rotation().rotate(VRotor::ROLL, 180.0f * static_cast<float>(this->_deltaTime));
     }
     /// call of update for each GameObject
     for ( auto * pGameObject: this->_activeScene.entitiesOfClass("VGameObject") )

@@ -594,9 +594,9 @@ auto engine::VScene::transformInScene(VEntity * pEntity) const noexcept -> VTran
 
 //    m = glm::translate(m, pL);
 
-    l.x = (m[0].x + m[1].x + m[2].x);
-    l.y = (m[0].y + m[1].y + m[2].y);
-    l.z = (m[0].z + m[1].z + m[2].z);
+    l.x = (m[0].x + m[1].x + m[2].x) + pL.x;
+    l.y = (m[0].y + m[1].y + m[2].y) + pL.y;
+    l.z = (m[0].z + m[1].z + m[2].z) + pL.z;
 //    l.x = m[0][0] * l.x + m[0][3];
 //    l.y = m[1][1] * l.y + m[1][3];
 //    l.z = m[2][2] * l.z + m[2][3];
