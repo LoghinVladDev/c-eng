@@ -5,10 +5,10 @@
 #ifndef ENG1_VSHADERMODULE_HPP
 #define ENG1_VSHADERMODULE_HPP
 
-#include <engineVulkanPreproc.hpp>
+#include <VRenderObject.hpp>
 #include <string>
 #include <vector>
-#include <vkObj/instance/device/VLogicalDevice.hpp>
+#include <VLogicalDevice.hpp>
 
 namespace engine {
 
@@ -16,13 +16,13 @@ namespace engine {
 
     class EngineVShaderModuleNotInitialized : public std::exception {
     public:
-        [[nodiscard]] const char * what () const noexcept override {
+        [[nodiscard]] auto what () const noexcept -> StringLiteral override {
             return "Tried to acquire pipeline create info without valid shader module";
         }
     };
 
 
-    class VShaderModule {
+    class VShaderModule : public VRenderObject {
     public:
         typedef enum {
             VERTEX,
@@ -34,11 +34,11 @@ namespace engine {
         } ShaderType;
     private:
         //// private variables
-        std::vector < int8 >    _byteCode;
+        std::vector < sint8 >   _byteCode;
         VulkanShaderModule      _handle         {nullptr};
         ShaderType              _type           {ShaderType::UNDEFINED};
 
-        const VLogicalDevice *  _pLogicalDevice {nullptr};
+        VLogicalDevice  const * _pLogicalDevice {nullptr};
         //// private functions
 
     public:
@@ -49,11 +49,12 @@ namespace engine {
         VShaderModule () noexcept = default;
         explicit VShaderModule ( const std::string& ) noexcept;
         explicit VShaderModule ( const engine::VShaderCompilerTarget& ) noexcept;
+        ~VShaderModule() noexcept override = default;
 
-        VulkanResult setup ( const engine::VLogicalDevice & ) noexcept;
-        VulkanResult setup ( const std::string&, const engine::VLogicalDevice & ) noexcept;
+        auto setup ( engine::VLogicalDevice const & ) noexcept -> VulkanResult;
+        auto setup ( std::string const &, engine::VLogicalDevice const & ) noexcept -> VulkanResult;
 
-        void cleanup() noexcept;
+        auto clear() noexcept -> void override;
 
         engine::VShaderModule & setType ( ShaderType type ) noexcept {
             this->_type = type;

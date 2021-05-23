@@ -5,11 +5,10 @@
 #ifndef ENG1_VFRAMEBUFFER_HPP
 #define ENG1_VFRAMEBUFFER_HPP
 
-#include <engineVulkanPreproc.hpp>
-#include <vkDefs/types/vulkanExplicitTypes.h>
+#include <VRenderObject.hpp>
 
-#include <vkObj/instance/pipeline/VImageView.hpp>
-#include <vkObj/instance/pipeline/VRenderPass.hpp>
+#include <VImageView.hpp>
+#include <VRenderPass.hpp>
 #include <VDepthBuffer.hpp>
 
 #include <vector>
@@ -18,52 +17,79 @@ namespace engine {
 
     class EngineVFrameBufferInvalidRenderPass : public std::exception {
     public:
-        [[nodiscard]] const char * what() const noexcept override {
+        [[nodiscard]] auto what() const noexcept -> StringLiteral override {
             return "Given pointer to Render Pass is either nullptr or points to invalid object";
         }
     };
 
-    class VFrameBuffer {
+    class VFrameBuffer : public VRenderObject {
     private:
         //// private variables
-        const VImageView    * _pImageView   {nullptr};
-        const VRenderPass   * _pRenderPass  {nullptr};
+        VImageView    const * _pImageView   {nullptr};
+        VRenderPass   const * _pRenderPass  {nullptr};
         VulkanFrameBuffer     _handle       {nullptr};
 
         //// private functions
 
     public:
+
+        //// public variables
+
+        //// public functions
+
         VFrameBuffer () noexcept = default;
-        explicit VFrameBuffer ( const VImageView & imageView, const VRenderPass * pRenderPass ) noexcept :
+        explicit VFrameBuffer ( VImageView const & imageView, VRenderPass const * pRenderPass ) noexcept :
+            VRenderObject(),
             _pImageView     ( & imageView ),
             _pRenderPass    (   pRenderPass ){
 
         }
-        //// public variables
+        ~VFrameBuffer () noexcept override = default;
 
-        //// public functions
-        VulkanResult setup ( const VImageView & imageView, const VRenderPass * pRenderPass, const VDepthBuffer * pDepthBuffer = nullptr ) noexcept {
+        auto setup ( VImageView const & imageView, VRenderPass const * pRenderPass, VDepthBuffer const * pDepthBuffer = nullptr ) noexcept -> VulkanResult {
             this->_pImageView = & imageView;
             this->_pRenderPass = pRenderPass;
             return this->setup( pDepthBuffer );
         }
-        VulkanResult setup ( const VDepthBuffer * = nullptr ) noexcept;
-        void cleanup () noexcept;
 
-        [[nodiscard]] const VImageView * getImageViewPtr () const noexcept {
+        auto setup ( const VDepthBuffer * = nullptr ) noexcept -> VulkanResult;
+        auto clear () noexcept -> void override;
+
+        [[nodiscard]] constexpr auto getImageViewPtr () const noexcept -> VImageView const * {
             return this->_pImageView;
         }
 
-        [[nodiscard]] const VRenderPass * getRenderPassPtr () const noexcept {
+        [[nodiscard]] constexpr auto getRenderPassPtr () const noexcept -> VRenderPass const * {
             return this->_pRenderPass;
         }
 
-        [[nodiscard]] const VulkanFrameBuffer & data () const noexcept {
+        [[nodiscard]] constexpr auto data () const noexcept -> VulkanFrameBuffer const & {
             return this->_handle;
+        }
+
+        [[nodiscard]] auto toString () const noexcept -> String override;
+        [[nodiscard]] auto operator == (Object const & o) const noexcept -> bool override {
+            if ( this == & o ) return true;
+            auto p = dynamic_cast < decltype(this) > (& o);
+            if ( p == nullptr ) return false;
+
+            return this->_handle == p->_handle;
+        }
+
+        [[nodiscard]] auto copy () const noexcept -> VFrameBuffer * override {
+            return new VFrameBuffer(*this);
+        }
+
+        [[nodiscard]] auto hash () const noexcept -> Index override {
+            return dataTypes::hash(
+                reinterpret_cast<AddressValueType> (this->_handle) +
+                reinterpret_cast<AddressValueType> (this->_pRenderPass) +
+                reinterpret_cast<AddressValueType> (this->_pImageView)
+            );
         }
     };
 
-    class VFrameBufferCollection {
+    class VFrameBufferCollection : public VRenderObject {
     private:
         //// private variables
         std::vector < VFrameBuffer > _frameBuffers;
@@ -76,17 +102,38 @@ namespace engine {
         //// public functions
 
         VFrameBufferCollection () noexcept = default;
-        VulkanResult setup ( const VRenderPass *, const VDepthBuffer * = nullptr ) noexcept (false);
+        ~VFrameBufferCollection() noexcept override = default;
 
-        [[nodiscard]] const std::vector < VFrameBuffer > & getFrameBuffers () const noexcept {
+        auto setup ( VRenderPass const *, VDepthBuffer const * = nullptr ) noexcept (false) -> VulkanResult;
+
+        [[nodiscard]] constexpr auto getFrameBuffers () const noexcept -> std::vector < VFrameBuffer > const & {
             return this->_frameBuffers;
         }
 
-        [[nodiscard]] uint32 size () const noexcept {
+        [[nodiscard]] constexpr auto size () const noexcept -> uint32 {
             return static_cast<uint32>(this->_frameBuffers.size());
         }
 
-        void cleanup () noexcept;
+        auto clear () noexcept -> void override;
+
+        [[nodiscard]] auto toString () const noexcept -> String override;
+        [[nodiscard]] auto operator == (Object const & o) const noexcept -> bool override {
+            if ( this == & o ) return true;
+            auto p = dynamic_cast < decltype(this) > (& o);
+            if ( p == nullptr ) return false;
+
+            return this->_frameBuffers == p->_frameBuffers;
+        }
+
+        [[nodiscard]] auto copy () const noexcept -> VFrameBufferCollection * override {
+            return new VFrameBufferCollection(* this);
+        }
+
+        [[nodiscard]] auto hash () const noexcept -> Index override {
+            Index hashSum = 0;
+            std::for_each(this->_frameBuffers.begin(), this->_frameBuffers.end(), [& hashSum](auto const & o){hashSum += o.hash();});
+            return hashSum;
+        }
     };
 
 }

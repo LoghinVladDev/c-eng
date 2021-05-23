@@ -11,11 +11,11 @@
 #include <vector>
 namespace engine {
 
-    class VFence {
+    class VFence : public VRenderObject {
     private:
         //// private variables
         VulkanFence             _handle         {VK_NULL_HANDLE};
-        const VLogicalDevice  * _pLogicalDevice {nullptr};
+        VLogicalDevice  const * _pLogicalDevice {nullptr};
 
         //// private functions
 
@@ -26,24 +26,43 @@ namespace engine {
 
         //// public functions
         VFence () noexcept = default;
+        ~VFence () noexcept override = default;
 
-        [[nodiscard]] const VulkanFence & data () const noexcept {
+        [[nodiscard]] constexpr auto data () const noexcept -> VulkanFence const & {
             return this->_handle;
         }
 
-        [[nodiscard]] bool empty () const noexcept {
+        [[nodiscard]] constexpr auto empty () const noexcept -> bool {
             return this->_handle == VK_NULL_HANDLE;
         }
 
-        VulkanResult setup ( const VLogicalDevice &, VulkanFenceCreateFlags = NO_FLAGS ) noexcept;
-        void cleanup () noexcept;
+        auto setup ( VLogicalDevice const &, VulkanFenceCreateFlags = NO_FLAGS ) noexcept -> VulkanResult;
+        auto clear () noexcept -> void override;
+
+        [[nodiscard]] auto toString () const noexcept -> String override;
+
+        [[nodiscard]] auto operator == (Object const & o) const noexcept -> bool override {
+            if ( this == & o ) return true;
+            auto p = dynamic_cast < decltype(this) > (& o);
+            if ( p == nullptr ) return false;
+
+            return this->_handle == p->_handle;
+        }
+
+        [[nodiscard]] auto copy () const noexcept -> VFence * override {
+            return new VFence(*this);
+        }
+
+        [[nodiscard]] auto hash () const noexcept -> Index override {
+            return dataTypes::hash(reinterpret_cast<AddressValueType >(this->_handle));
+        }
     };
 
-    class VFenceCollection {
+    class VFenceCollection : public VRenderObject {
     private:
         //// private variables
         std::vector < VFence >  _fences;
-        const VLogicalDevice  * _pLogicalDevice {nullptr};
+        VLogicalDevice  const * _pLogicalDevice {nullptr};
 
         //// private functions
 
@@ -52,31 +71,52 @@ namespace engine {
 
         //// public functions
         VFenceCollection () noexcept = default;
+        ~VFenceCollection() noexcept override = default;
 
-        [[nodiscard]] const std::vector < VFence > & getFences () const noexcept {
+        [[nodiscard]] constexpr auto getFences () const noexcept -> std::vector < VFence > const & {
             return this->_fences;
         }
 
-        [[nodiscard]] const VLogicalDevice * getLogicalDevicePtr () const noexcept {
+        [[nodiscard]] constexpr auto getLogicalDevicePtr () const noexcept -> VLogicalDevice const * {
             return this->_pLogicalDevice;
         }
 
-        [[nodiscard]] uint32 size () const noexcept {
+        [[nodiscard]] inline auto size () const noexcept -> uint32 {
             return static_cast<uint32>(this->_fences.size());
         }
 
-        [[nodiscard]] const VFence & operator [] ( uint32 index ) const noexcept {
+        [[nodiscard]] inline auto operator [] ( uint32 index ) const noexcept -> VFence const & {
             return this->_fences[ index ];
         }
 
-        [[nodiscard]] VFence & operator [] ( uint32 index ) noexcept {
+        [[nodiscard]] inline auto operator [] ( uint32 index ) noexcept -> VFence & {
             return this->_fences[ index ];
         }
 
-        VulkanResult setup ( const VLogicalDevice &, uint32, VulkanFenceCreateFlags = VFence::NO_FLAGS ) noexcept;
-        VulkanResult resize ( const VLogicalDevice &, uint32, VulkanFenceCreateFlags = VFence::NO_FLAGS ) noexcept;
-        VulkanResult resize ( uint32 );
-        void cleanup () noexcept;
+        auto setup ( VLogicalDevice const &, uint32, VulkanFenceCreateFlags = VFence::NO_FLAGS ) noexcept -> VulkanResult;
+        auto resize ( VLogicalDevice const &, uint32, VulkanFenceCreateFlags = VFence::NO_FLAGS ) noexcept -> VulkanResult;
+        auto resize ( uint32 ) -> VulkanResult;
+        auto clear () noexcept -> void override;
+
+        [[nodiscard]] auto toString () const noexcept -> String override;
+
+        [[nodiscard]] auto operator == (Object const & o) const noexcept -> bool override {
+            if ( this == & o ) return true;
+            auto p = dynamic_cast < decltype (this) > (& o);
+            if ( p == nullptr ) return false;
+
+            return this->_fences == p->_fences;
+        }
+
+        [[nodiscard]] auto copy () const noexcept -> VFenceCollection * override {
+            return new VFenceCollection(*this);
+        }
+
+        [[nodiscard]] auto hash () const noexcept -> Index override {
+            Index hashSum = 0;
+            std::for_each(this->_fences.begin(), this->_fences.end(), [& hashSum](auto const & f){hashSum += f.hash();});
+            return hashSum;
+        }
     };
 
 }

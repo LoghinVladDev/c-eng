@@ -4,12 +4,12 @@
 
 #include "VFrameBuffer.hpp"
 
-inline static void populateFrameBufferCreateInfo (
+inline static auto populateFrameBufferCreateInfo (
     VulkanFrameBufferCreateInfo * createInfo,
-    const engine::VRenderPass   * pRenderPass,
-    const VulkanImageView       * pAttachments,
+    engine::VRenderPass   const * pRenderPass,
+    VulkanImageView       const * pAttachments,
     uint32                        attachmentCount
-) noexcept {
+) noexcept -> void {
     if ( createInfo == nullptr || pRenderPass == nullptr || pAttachments == nullptr )
         return;
 
@@ -24,7 +24,7 @@ inline static void populateFrameBufferCreateInfo (
     createInfo->layers              = 1U;
 }
 
-VulkanResult engine::VFrameBufferCollection::setup(const engine::VRenderPass * pRenderPass, const engine::VDepthBuffer * pDepthBuffer) noexcept (false) {
+auto engine::VFrameBufferCollection::setup(engine::VRenderPass const * pRenderPass, engine::VDepthBuffer const * pDepthBuffer) noexcept (false) -> VulkanResult {
     if( pRenderPass == nullptr )
         throw engine::EngineVFrameBufferInvalidRenderPass();
 
@@ -39,15 +39,15 @@ VulkanResult engine::VFrameBufferCollection::setup(const engine::VRenderPass * p
     return VulkanResult::VK_SUCCESS;
 }
 
-void engine::VFrameBufferCollection::cleanup() noexcept {
+auto engine::VFrameBufferCollection::clear() noexcept -> void {
     for ( auto & frameBuffer : this->_frameBuffers )
-        frameBuffer.cleanup();
+        frameBuffer.clear();
 
     this->_frameBuffers.clear();
 }
 
 #include <array>
-VulkanResult engine::VFrameBuffer::setup( const engine::VDepthBuffer * pDepthBuffer ) noexcept {
+auto engine::VFrameBuffer::setup( const engine::VDepthBuffer * pDepthBuffer ) noexcept -> VulkanResult {
     if ( this->_pImageView == nullptr || this->_pImageView == nullptr )
         return VulkanResult::VK_ERROR_INITIALIZATION_FAILED;
 
@@ -77,10 +77,33 @@ VulkanResult engine::VFrameBuffer::setup( const engine::VDepthBuffer * pDepthBuf
     return vkCreateFramebuffer( this->_pRenderPass->getLogicalDevicePtr()->data(), & createInfo, nullptr, & this->_handle );
 }
 
-void engine::VFrameBuffer::cleanup() noexcept {
+auto engine::VFrameBuffer::clear() noexcept -> void {
     vkDestroyFramebuffer( this->_pRenderPass->getLogicalDevicePtr()->data(), this->_handle, nullptr );
     this->_handle       = VK_NULL_HANDLE;
     this->_pImageView   = nullptr;
     this->_pRenderPass  = nullptr;
 }
 
+#include <sstream>
+
+auto engine::VFrameBufferCollection::toString() const noexcept -> String {
+    std::stringstream oss;
+
+    oss << "VFrameBufferCollection { frameBuffers = [ ";
+
+    for (auto const & item : this->_frameBuffers)
+        oss << item.toString() << ", ";
+
+    auto s = oss.str();
+    return s.substr(s.size() - 2).append("]}");
+}
+
+auto engine::VFrameBuffer::toString () const noexcept -> String {
+    std::stringstream oss;
+    oss <<"VFrameBuffer { " <<
+        "handle = 0x" << std::hex << reinterpret_cast < AddressValueType > (this->_handle) <<
+        ", pImageView = 0x" << reinterpret_cast < AddressValueType > (this->_pImageView) <<
+        ", pRenderPass = 0x" << reinterpret_cast < AddressValueType > (this->_pRenderPass) << " }";
+
+    return oss.str();
+}

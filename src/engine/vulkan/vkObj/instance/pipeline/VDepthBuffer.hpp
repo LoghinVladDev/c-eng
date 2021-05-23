@@ -5,14 +5,13 @@
 #ifndef ENG1_VDEPTHBUFFER_HPP
 #define ENG1_VDEPTHBUFFER_HPP
 
-#include <engineVulkanPreproc.hpp>
-#include <vkDefs/types/vulkanExplicitTypes.h>
+#include <VRenderObject.hpp>
 #include <VCommandPool.hpp>
 #include <VImageView.hpp>
 
 namespace engine {
 
-    class VDepthBuffer {
+    class VDepthBuffer : public VRenderObject {
     private:
         //// private variables
         VulkanImage             _image          {VK_NULL_HANDLE};
@@ -20,32 +19,55 @@ namespace engine {
         VImageView              _imageView;
         VulkanImageLayout       _currentLayout  {VulkanImageLayout::VK_IMAGE_LAYOUT_UNDEFINED};
 
-        const VCommandPool    * _pCommandPool   {nullptr};
+        VCommandPool    const * _pCommandPool   {nullptr};
 
         VulkanSharingMode       _sharingMode    {VulkanSharingMode::VK_SHARING_MODE_EXCLUSIVE};
         VulkanFormat            _format         {VulkanFormat::VK_FORMAT_D32_SFLOAT};
 
         //// private functions
-        VulkanResult transitionImageLayout ( VulkanImageLayout ) noexcept;
+        auto transitionImageLayout ( VulkanImageLayout ) noexcept -> VulkanResult;
 
     public:
         //// public variables
 
         //// public functions
         VDepthBuffer () noexcept = default;
+        ~VDepthBuffer() noexcept override = default;
 
-        [[nodiscard]] const VImageView & getImageView () const noexcept {
+        [[nodiscard]] constexpr auto getImageView () const noexcept -> VImageView const & {
             return this->_imageView;
         }
 
-        VulkanResult setup (
-                const VCommandPool &,
-                const uint32 * = nullptr,
-                uint32 = 0U,
-                bool = false
-        ) noexcept;
+        auto setup (
+                VCommandPool    const &,
+                uint32          const * = nullptr,
+                uint32                  = 0U,
+                bool                    = false
+        ) noexcept -> VulkanResult;
 
-        void cleanup () noexcept;
+        auto clear () noexcept -> void override;
+
+        [[nodiscard]] auto toString () const noexcept -> String override;
+
+        [[nodiscard]] auto operator == (Object const & o) const noexcept -> bool override {
+            if ( this == & o ) return true;
+            auto p = dynamic_cast < decltype (this) > (& o);
+            if ( p == nullptr ) return false;
+            return this->_image == p->_image;
+        }
+
+        [[nodiscard]] auto copy () const noexcept -> VDepthBuffer * override {
+            return new VDepthBuffer(* this);
+        }
+
+        [[nodiscard]] auto hash () const noexcept -> Index override {
+            return dataTypes::hash(
+                    reinterpret_cast < AddressValueType > (this->_image) / 100000 +
+                    reinterpret_cast < AddressValueType > (this->_imageMemory) / 1000
+            ) + dataTypes::hash (
+                    static_cast < Size > ( this->_currentLayout )
+            ) + this->_imageView.hash();
+        }
     };
 
 }

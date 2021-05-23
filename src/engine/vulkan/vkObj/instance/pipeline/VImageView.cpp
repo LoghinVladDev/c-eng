@@ -4,12 +4,12 @@
 
 #include "VImageView.hpp"
 
-static inline void populateImageViewCreateInfo (
+static inline auto populateImageViewCreateInfo (
     VulkanImageViewCreateInfo * createInfo,
     VulkanImage                 image,
     VulkanFormat                imageFormat,
     VulkanImageAspectFlags      aspectMask
-) noexcept {
+) noexcept -> void {
     if( createInfo == nullptr )
         return;
 
@@ -32,7 +32,7 @@ static inline void populateImageViewCreateInfo (
     createInfo->subresourceRange.layerCount     = 1U;
 }
 
-VulkanResult engine::VImageView::setup(VulkanImage image, VulkanFormat format, const VLogicalDevice & device, VulkanImageAspectFlags aspectFlags) noexcept {
+auto engine::VImageView::setup(VulkanImage image, VulkanFormat format, VLogicalDevice const & device, VulkanImageAspectFlags aspectFlags) noexcept -> VulkanResult {
     this->_pLogicalDevice = & device;
 
     VulkanImageViewCreateInfo createInfo {};
@@ -42,7 +42,7 @@ VulkanResult engine::VImageView::setup(VulkanImage image, VulkanFormat format, c
     return vkCreateImageView ( this->_pLogicalDevice->data(), & createInfo ,nullptr, & this->_handle );
 }
 
-VulkanResult engine::VImageViewCollection::setup(const engine::VSwapChain * swapChain) noexcept {
+auto engine::VImageViewCollection::setup(engine::VSwapChain const * swapChain) noexcept -> VulkanResult {
     this->_imageViews.resize( swapChain->getImages().size() );
     this->_pSwapChain = swapChain;
 
@@ -52,7 +52,7 @@ VulkanResult engine::VImageViewCollection::setup(const engine::VSwapChain * swap
         VulkanResult returnValue = imageView.setup(swapChain->getImages()[index++], swapChain->getImagesInfo().format, * this->_pSwapChain->getDevice());
         if( returnValue != VulkanResult::VK_SUCCESS ) {
             for ( uint32 clearIndex = 0; clearIndex < index - 1; clearIndex++ )
-                this->_imageViews[clearIndex].cleanup();
+                this->_imageViews[clearIndex].clear();
             return returnValue;
         }
     }
@@ -60,14 +60,14 @@ VulkanResult engine::VImageViewCollection::setup(const engine::VSwapChain * swap
     return VulkanResult::VK_SUCCESS;
 }
 
-void engine::VImageViewCollection::cleanup() noexcept {
+auto engine::VImageViewCollection::clear() noexcept -> void {
     for ( auto imageView : this->_imageViews )
-        imageView.cleanup();
+        imageView.clear();
     this->_imageViews.clear();
     this->_pSwapChain = nullptr;
 }
 
-engine::VImageViewCollection::VImageViewCollection(const engine::VImageViewCollection * pObj,const engine::VSwapChain * pSwapChain) noexcept {
+engine::VImageViewCollection::VImageViewCollection(engine::VImageViewCollection const * pObj, engine::VSwapChain const * pSwapChain) noexcept : VRenderObject() {
     this->_imageViews.clear();
     this->_pSwapChain = pSwapChain;
 
@@ -75,17 +75,37 @@ engine::VImageViewCollection::VImageViewCollection(const engine::VImageViewColle
         this->_imageViews.emplace_back ( & imageView, pSwapChain->getDevice() );
 }
 
-void engine::VImageView::cleanup() noexcept {
+auto engine::VImageView::clear () noexcept -> void {
     if ( this->_handle != VK_NULL_HANDLE )
         vkDestroyImageView ( this->_pLogicalDevice->data(), this->_handle, nullptr );
 }
 
-engine::VImageView::VImageView(const engine::VImageView * pObj, const engine::VLogicalDevice * pLogicalDevice) noexcept {
+engine::VImageView::VImageView(engine::VImageView const * pObj, engine::VLogicalDevice const * pLogicalDevice) noexcept : VRenderObject() {
     this->_handle           = pObj->_handle;
     this->_index            = pObj->_index;
     this->_pLogicalDevice   = pLogicalDevice;
 }
 
-[[nodiscard]] const engine::VSwapChain * engine::VImageView::getSwapChain() const noexcept {
+auto engine::VImageView::getSwapChain() const noexcept -> engine::VSwapChain const * {
     return this->_pLogicalDevice->getSwapChain();
+}
+
+#include <sstream>
+
+auto engine::VImageViewCollection::toString() const noexcept -> String {
+    std::stringstream oss;
+    oss << "VImageViewCollection { imageViews = [ ";
+    for (auto const & item : this->_imageViews)
+        oss << item.toString() << ", ";
+    auto s = oss.str();
+    return s.substr(s.size() - 2).append(" ]}");
+}
+
+auto engine::VImageView::toString () const noexcept -> String {
+    std::stringstream oss;
+    oss << "VImageView { " <<
+           "handle = 0x" << std::hex << reinterpret_cast < AddressValueType > (this->_handle) <<
+           ", index = " << std::dec << this->_index <<
+           ", pLogicalDevice = 0x" << std::hex << reinterpret_cast < AddressValueType > (this->_pLogicalDevice) << " }";
+    return oss.str();
 }

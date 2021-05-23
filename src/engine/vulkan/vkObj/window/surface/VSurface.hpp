@@ -5,17 +5,15 @@
 #ifndef ENG1_VSURFACE_HPP
 #define ENG1_VSURFACE_HPP
 
-#include <engineVulkanPreproc.hpp>
-#include <vkDefs/types/vulkanExplicitTypes.h>
-#include <vkObj/instance/VInstance.hpp>
+#include <VInstance.hpp>
 
 namespace engine {
 
-    class VSurface {
+    class VSurface : public VRenderObject {
     private:
         //// private variables
         VulkanSurfaceKhronos    _surface {};
-        const VInstance *       _instance {nullptr};
+        VInstance const *       _instance {nullptr};
 
         //// private functions
 
@@ -24,18 +22,41 @@ namespace engine {
 
         //// public variables
         VSurface( ) noexcept = default;
-        explicit VSurface( GLFWwindow* window, const VInstance & instance) noexcept {
-            this->setup(window, instance);
+        explicit VSurface ( GLFWwindow * pWindow, VInstance const * pInstance = nullptr ) noexcept : VRenderObject() {
+            if (pInstance != nullptr)
+                this->setup(pWindow, *pInstance);
         }
 
-        VulkanResult setup ( GLFWwindow*, const VInstance& ) noexcept;
+        explicit VSurface( GLFWwindow * pWindow, VInstance const & instance) noexcept : VSurface(pWindow, & instance) { }
 
-        [[nodiscard]] const VulkanSurfaceKhronos & data() const noexcept {
+        ~VSurface() noexcept override = default;
+
+        auto setup ( GLFWwindow*, VInstance const & ) noexcept -> VulkanResult;
+
+        [[nodiscard]] constexpr auto data() const noexcept -> VulkanSurfaceKhronos const & {
             return this->_surface;
         }
 
-        void clean () noexcept;
+        auto clear () noexcept -> void override;
 
+        [[nodiscard]] auto toString () const noexcept -> String override;
+        [[nodiscard]] auto operator == (Object const & o) const noexcept -> bool override {
+            if ( this == & o ) return true;
+            auto p = dynamic_cast < decltype ( this ) > (& o);
+            if ( p == nullptr ) return false;
+
+            return this->_surface == p->_surface && this->_instance == p->_instance;
+        }
+
+        [[nodiscard]] auto copy () const noexcept -> VSurface * override {
+            return new VSurface(* this);
+        }
+
+        [[nodiscard]] auto hash () const noexcept -> Index override {
+            return
+                dataTypes::hash(reinterpret_cast<AddressValueType>(this->_surface)) +
+                dataTypes::hash(reinterpret_cast<AddressValueType>(this->_instance));
+        }
     };
 
 }

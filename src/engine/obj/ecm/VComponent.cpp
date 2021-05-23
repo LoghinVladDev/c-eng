@@ -3,7 +3,7 @@
 //
 
 #include "VComponent.hpp"
-#include <gobj/ecm/VEntity.hpp>
+#include <src/engine/obj/ecm/VEntity.hpp>
 
 uint64 engine::VComponent::_IDCounter = 1llu;
 

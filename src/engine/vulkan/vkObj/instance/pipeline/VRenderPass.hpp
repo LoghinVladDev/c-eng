@@ -5,24 +5,22 @@
 #ifndef ENG1_VRENDERPASS_HPP
 #define ENG1_VRENDERPASS_HPP
 
-
-#include <engineVulkanPreproc.hpp>
-#include <vkDefs/types/vulkanExplicitTypes.h>
-#include <vkObj/instance/device/VLogicalDevice.hpp>
+#include <VRenderObject.hpp>
+#include <VLogicalDevice.hpp>
 
 namespace engine {
 
     class EngineVRenderPassDeviceInvalidSwapChain : public std::exception {
     public:
-        [[nodiscard]] const char * what() const noexcept override {
+        [[nodiscard]] auto what() const noexcept -> StringLiteral override {
             return "Passed VLogicalDevice has invalid / non-existent swap chain";
         }
     };
 
-    class VRenderPass {
+    class VRenderPass : public VRenderObject {
     private:
         //// private variables
-        const VLogicalDevice    *   _pLogicalDevice {nullptr};
+        VLogicalDevice    const *   _pLogicalDevice {nullptr};
         VulkanRenderPass            _handle         {nullptr};
 
         //// private functions
@@ -32,22 +30,41 @@ namespace engine {
 
         //// public functions
         VRenderPass () noexcept = default;
+        ~VRenderPass() noexcept override = default;
 
-        [[nodiscard]] const VulkanRenderPass & data () const noexcept {
+        [[nodiscard]] constexpr auto data () const noexcept -> VulkanRenderPass const & {
             return this->_handle;
         }
 
-        [[nodiscard]] const VLogicalDevice * getLogicalDevicePtr () const noexcept {
+        [[nodiscard]] constexpr auto getLogicalDevicePtr () const noexcept -> VLogicalDevice const * {
             return this->_pLogicalDevice;
         }
 
-        VulkanResult setup (
-            const engine::VLogicalDevice & ,
-            const VulkanSubpassDependency * = nullptr,
+        auto setup (
+            engine::VLogicalDevice const & ,
+            VulkanSubpassDependency const * = nullptr,
             uint32 = 0U
-        ) noexcept (false) ;
+        ) noexcept (false) -> VulkanResult;
 
-        void cleanup () noexcept;
+        auto clear () noexcept -> void override;
+
+        [[nodiscard]] auto toString () const noexcept -> String override;
+
+        [[nodiscard]] auto operator == (Object const & o) const noexcept -> bool override {
+            if ( this == & o ) return true;
+            auto p = dynamic_cast < decltype(this) > (& o);
+            if ( p == nullptr ) return false;
+
+            return this->_handle == p->_handle;
+        }
+
+        [[nodiscard]] auto copy () const noexcept -> VRenderPass * override {
+            return new VRenderPass(* this);
+        }
+
+        [[nodiscard]] auto hash () const noexcept -> Index override {
+            return dataTypes::hash(reinterpret_cast<AddressValueType>(this->_handle));
+        }
     };
 
 }

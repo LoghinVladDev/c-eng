@@ -5,7 +5,7 @@
 #ifndef ENG1_VGAMEOBJECT_H
 #define ENG1_VGAMEOBJECT_H
 
-#include <gobj/ecm/VEntity.hpp>
+#include <src/engine/obj/ecm/VEntity.hpp>
 
 #include <transform/VTransform.hpp>
 #include <model/VMeshRenderer.hpp>

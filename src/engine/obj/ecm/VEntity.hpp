@@ -9,7 +9,7 @@
 
 #include <CDS/Object>
 #include <CDS/Array>
-#include <gobj/ecm/VComponent.hpp>
+#include <src/engine/obj/ecm/VComponent.hpp>
 
 namespace engine {
 

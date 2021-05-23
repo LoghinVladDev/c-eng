@@ -5,17 +5,16 @@
 #ifndef ENG1_VTEXTURESAMPLER_HPP
 #define ENG1_VTEXTURESAMPLER_HPP
 
-#include <engineVulkanPreproc.hpp>
-#include <vkDefs/types/vulkanExplicitTypes.h>
+#include <VRenderObject.hpp>
 #include <VLogicalDevice.hpp>
 
 namespace engine {
 
-    class VTextureSampler {
+    class VTextureSampler : public VRenderObject {
     private:
         //// private variables
         VulkanSampler             _handle         {VK_NULL_HANDLE};
-        const VLogicalDevice    * _pLogicalDevice {nullptr};
+        VLogicalDevice    const * _pLogicalDevice {nullptr};
 
         //// private functions
 
@@ -24,15 +23,34 @@ namespace engine {
 
         //// public functions
         VTextureSampler() noexcept = default;
-        VulkanResult setup ( const VLogicalDevice &, bool = true, float = 16.0f ) noexcept;
-        void cleanup () noexcept;
+        ~VTextureSampler() noexcept override = default;
 
-        [[nodiscard]] const VulkanSampler & data () const noexcept {
+        auto setup ( const VLogicalDevice &, bool = true, float = 16.0f ) noexcept -> VulkanResult;
+        auto clear () noexcept -> void override;
+
+        [[nodiscard]] constexpr auto data () const noexcept -> VulkanSampler const & {
             return this->_handle;
         }
 
-        [[nodiscard]] const VLogicalDevice * getLogicalDevicePtr () const noexcept {
+        [[nodiscard]] constexpr auto getLogicalDevicePtr () const noexcept -> VLogicalDevice const * {
             return this->_pLogicalDevice;
+        }
+
+        [[nodiscard]] auto toString() const noexcept -> String override;
+
+        [[nodiscard]] auto operator == (Object const & o) const noexcept -> bool override {
+            if ( this == & o ) return true;
+            auto p = dynamic_cast < decltype(this) > (& o);
+            if ( p == nullptr ) return false;
+            return this->_handle == p->_handle;
+        }
+
+        [[nodiscard]] auto copy () const noexcept -> VTextureSampler * override {
+            return new VTextureSampler(* this);
+        }
+
+        [[nodiscard]] auto hash () const noexcept -> Index override {
+            return dataTypes::hash(reinterpret_cast<AddressValueType >(this->_handle));
         }
     };
 

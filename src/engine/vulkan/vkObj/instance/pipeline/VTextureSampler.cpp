@@ -4,11 +4,11 @@
 
 #include "VTextureSampler.hpp"
 
-inline static void populateSamplerCreateInfo (
+inline static auto populateSamplerCreateInfo (
         VulkanSamplerCreateInfo * pCreateInfo,
         bool enableAnisotropy,
         float maxAnisotropy
-) noexcept {
+) noexcept -> void {
     if ( pCreateInfo == nullptr )
         return;
 
@@ -34,7 +34,7 @@ inline static void populateSamplerCreateInfo (
     };
 }
 
-VulkanResult engine::VTextureSampler::setup(const VLogicalDevice & device, bool anisotropyEnable, float anisotropyValue) noexcept {
+auto engine::VTextureSampler::setup(VLogicalDevice const & device, bool anisotropyEnable, float anisotropyValue) noexcept -> VulkanResult {
     this->_pLogicalDevice = & device;
 
     VulkanSamplerCreateInfo createInfo {};
@@ -47,6 +47,18 @@ VulkanResult engine::VTextureSampler::setup(const VLogicalDevice & device, bool 
     return vkCreateSampler ( this->_pLogicalDevice->data(), & createInfo, nullptr, & this->_handle );
 }
 
-void engine::VTextureSampler::cleanup() noexcept {
+auto engine::VTextureSampler::clear() noexcept -> void {
     vkDestroySampler( this->_pLogicalDevice->data(), this->_handle, nullptr );
+}
+
+
+#include <sstream>
+auto engine::VTextureSampler::toString() const noexcept -> String {
+    std::stringstream oss;
+
+    oss <<"VTextureSampler { " <<
+           "handle = 0x" << std::hex << reinterpret_cast < AddressValueType > (this->_handle) <<
+           ", pLogicalDevice = 0x" << reinterpret_cast < AddressValueType > (this->_pLogicalDevice) << " }";
+
+    return oss.str();
 }

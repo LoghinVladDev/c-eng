@@ -4,12 +4,12 @@
 
 #include "VRenderPass.hpp"
 
-extern VulkanFormat getDepthFormat (const engine::VPhysicalDevice * pPhysicalDevice) noexcept;
+extern VulkanFormat getDepthFormat (engine::VPhysicalDevice const * pPhysicalDevice) noexcept;
 
-static inline void populateAttachmentDescription (
+static inline auto populateAttachmentDescription (
     VulkanAttachmentDescription     * colorAttachment,
-    const engine::VSwapChain        * swapChain
-) noexcept {
+    engine::VSwapChain        const * swapChain
+) noexcept -> void {
     if( colorAttachment == nullptr || swapChain == nullptr )
         return;
 
@@ -26,10 +26,10 @@ static inline void populateAttachmentDescription (
     colorAttachment->finalLayout    = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
 }
 
-static inline void populateDepthBufferAttachmentDescription (
+static inline auto populateDepthBufferAttachmentDescription (
     VulkanAttachmentDescription     * pDepthAttachment,
     VulkanFormat                      format
-) noexcept {
+) noexcept -> void {
     if ( pDepthAttachment == nullptr )
         return;
 
@@ -46,11 +46,11 @@ static inline void populateDepthBufferAttachmentDescription (
     };
 }
 
-static inline void populateAttachmentReference (
+static inline auto populateAttachmentReference (
     VulkanAttachmentReference       * attachmentRef,
     uint32                            attachmentIndex,
     VulkanImageLayout                 imageLayout = VulkanImageLayout::VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL
-) noexcept {
+) noexcept -> void {
     if ( attachmentRef == nullptr )
         return;
 
@@ -60,12 +60,12 @@ static inline void populateAttachmentReference (
     };
 }
 
-static inline void populateSubpassDescription (
+static inline auto populateSubpassDescription (
     VulkanSubpassDescription        * subpass,
-    const VulkanAttachmentReference * pColorAttachmentRefs,
+    VulkanAttachmentReference const * pColorAttachmentRefs,
     uint32                            colorAttachmentCount,
-    const VulkanAttachmentReference * pDepthAttachmentRef = nullptr
-) noexcept {
+    VulkanAttachmentReference const * pDepthAttachmentRef = nullptr
+) noexcept -> void {
     if ( subpass == nullptr )
         return;
 
@@ -83,15 +83,15 @@ static inline void populateSubpassDescription (
     };
 }
 
-static inline void populateRenderPassCreateInfo (
+static inline auto populateRenderPassCreateInfo (
     VulkanRenderPassCreateInfo          * createInfo,
-    const VulkanAttachmentDescription   * pAttachments,
+    VulkanAttachmentDescription   const * pAttachments,
     uint32                                attachmentCount,
-    const VulkanSubpassDescription      * pSubpasses,
+    VulkanSubpassDescription      const * pSubpasses,
     uint32                                subpassCount,
-    const VulkanSubpassDependency       * pSubpassDependencies,
+    VulkanSubpassDependency       const * pSubpassDependencies,
     uint32                                subpassDependencyCount
-) noexcept {
+) noexcept -> void {
     if ( createInfo == nullptr )
         return;
 
@@ -107,11 +107,11 @@ static inline void populateRenderPassCreateInfo (
 }
 
 #include <array>
-VulkanResult engine::VRenderPass::setup(
-    const engine::VLogicalDevice & device,
-    const VulkanSubpassDependency * pSubpassDependencies,
-    uint32 subpassDependencyCount
-) noexcept(false) {
+auto engine::VRenderPass::setup(
+    engine::VLogicalDevice  const & device,
+    VulkanSubpassDependency const * pSubpassDependencies,
+    uint32                          subpassDependencyCount
+) noexcept(false) -> VulkanResult {
     VulkanAttachmentDescription colorAttachmentDescription  { };
     VulkanAttachmentReference   colorAttachmentReference    { };
     VulkanSubpassDescription    subpassDescription          { };
@@ -151,9 +151,20 @@ VulkanResult engine::VRenderPass::setup(
     return vkCreateRenderPass( this->_pLogicalDevice->data(), & createInfo, nullptr, & this->_handle );
 }
 
-void engine::VRenderPass::cleanup () noexcept {
+auto engine::VRenderPass::clear () noexcept -> void {
     if( this->_handle == nullptr )
         return;
     vkDestroyRenderPass( this->_pLogicalDevice->data(), this->_handle, nullptr );
     this->_handle = VK_NULL_HANDLE;
+}
+
+#include <sstream>
+
+auto engine::VRenderPass::toString () const noexcept -> String {
+    std::stringstream oss;
+    oss << "VRenderPass { " <<
+           "handle = 0x" << std::hex << reinterpret_cast< AddressValueType >(this->_handle) <<
+           ", pLogicalDevice = 0x" << reinterpret_cast < AddressValueType > (this->_pLogicalDevice) << " }";
+
+    return oss.str();
 }

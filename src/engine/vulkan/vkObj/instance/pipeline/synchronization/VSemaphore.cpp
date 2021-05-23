@@ -4,9 +4,9 @@
 
 #include "VSemaphore.hpp"
 
-inline static void populateSemaphoreCreateInfo (
+inline static auto populateSemaphoreCreateInfo (
     VulkanSemaphoreCreateInfo * createInfo
-) noexcept {
+) noexcept -> void {
     if ( createInfo == nullptr )
         return;
 
@@ -15,7 +15,7 @@ inline static void populateSemaphoreCreateInfo (
     createInfo->sType =VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
 }
 
-VulkanResult engine::VSemaphore::setup(const VLogicalDevice & logicalDevice) noexcept {
+auto engine::VSemaphore::setup(VLogicalDevice const & logicalDevice) noexcept -> VulkanResult {
     this->_pLogicalDevice = & logicalDevice;
 
     VulkanSemaphoreCreateInfo createInfo { };
@@ -25,11 +25,11 @@ VulkanResult engine::VSemaphore::setup(const VLogicalDevice & logicalDevice) noe
     return vkCreateSemaphore( this->_pLogicalDevice->data(), & createInfo, nullptr, & this->_handle );
 }
 
-void engine::VSemaphore::cleanup() noexcept {
+auto engine::VSemaphore::clear() noexcept -> void {
     vkDestroySemaphore( this->_pLogicalDevice->data(), this->_handle, nullptr );
 }
 
-VulkanResult engine::VSemaphoreCollection::setup(const VLogicalDevice & device, uint32 semaphoreCount) noexcept {
+auto engine::VSemaphoreCollection::setup(VLogicalDevice const & device, uint32 semaphoreCount) noexcept -> VulkanResult {
     this->_semaphores.resize( semaphoreCount );
     this->_pLogicalDevice = & device;
 
@@ -42,12 +42,36 @@ VulkanResult engine::VSemaphoreCollection::setup(const VLogicalDevice & device, 
     return VulkanResult::VK_SUCCESS;
 }
 
-VulkanResult engine::VSemaphoreCollection::resize(const VLogicalDevice & device, uint32 semaphoreCount) noexcept {
+auto engine::VSemaphoreCollection::resize(VLogicalDevice const & device, uint32 semaphoreCount) noexcept -> VulkanResult {
     this->cleanup();
     return this->setup( device, semaphoreCount );
 }
 
-void engine::VSemaphoreCollection::cleanup() noexcept {
+auto engine::VSemaphoreCollection::cleanup() noexcept -> void {
     for ( auto & semaphore : this->_semaphores )
-        semaphore.cleanup();
+        semaphore.clear();
+}
+
+#include <sstream>
+auto engine::VSemaphoreCollection::toString() const noexcept -> String {
+    std::stringstream oss;
+    oss << "VSemaphoreCollection { pLogicalDevice = " << std::hex <<
+            reinterpret_cast < AddressValueType > (this->_pLogicalDevice) <<
+            ", semaphores = [ " << std::dec;
+
+    for (auto const & item : this->_semaphores)
+        oss << item.toString() << ", ";
+
+    auto s = oss.str();
+    return s.substr(s.size() - 2).append(" ]}");
+}
+
+auto engine::VSemaphore::toString () const noexcept -> String {
+    std::stringstream oss;
+    oss <<"VSemaphore { " << "handle = 0x" << std::hex <<
+        reinterpret_cast < AddressValueType > ( this->_handle ) <<
+        ", pLogicalDevice = 0x" <<
+        reinterpret_cast < AddressValueType > ( this->_pLogicalDevice ) << " }";
+
+    return oss.str();
 }

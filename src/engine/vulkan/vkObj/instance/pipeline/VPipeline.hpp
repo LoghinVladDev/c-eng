@@ -5,64 +5,66 @@
 #ifndef ENG1_VPIPELINE_HPP
 #define ENG1_VPIPELINE_HPP
 
-#include <engineVulkanPreproc.hpp>
-#include <vulkanExplicitTypes.h>
+#include <VRenderObject.hpp>
 
 #include <vector>
 #include <VLogicalDevice.hpp>
-#include "VRenderPass.hpp"
+#include <VRenderPass.hpp>
 
 namespace engine {
 
     //// TODO : DEFINITELY IMPLEMENT BUILDER!!
-    class VPipeline {
+    //// maybe later
+    class VPipeline : public VRenderObject {
     private:
         //// private variables
         VulkanPipelineLayout    _layoutHandle   {nullptr};
         VulkanGraphicsPipeline  _handle         {nullptr};
 
-        const VLogicalDevice  * _pLogicalDevice {nullptr};
+        VLogicalDevice  const * _pLogicalDevice {nullptr};
 
         VRenderPass             _renderPass;
 
         //// private functions
 
-        void createRenderPass() noexcept (false);
+        auto createRenderPass() noexcept (false) -> void;
     public:
         //// public variables
 
         //// public functions
         VPipeline() noexcept = default;
+        ~VPipeline() noexcept override = default;
 
-        [[nodiscard]] const VulkanGraphicsPipeline & data () const noexcept {
+        [[nodiscard]] constexpr auto data () const noexcept -> VulkanGraphicsPipeline const & {
             return this->_handle;
         }
 
-        [[nodiscard]] const VulkanPipelineLayout & layout() const noexcept {
+        [[nodiscard]] constexpr auto layout() const noexcept -> VulkanPipelineLayout const & {
             return this->_layoutHandle;
         }
 
-        [[nodiscard]] const VRenderPass * getRenderPassPtr () const noexcept {
+        [[nodiscard]] constexpr auto getRenderPassPtr () const noexcept -> VRenderPass const * {
             return & this->_renderPass;
         }
 
-        VulkanResult setup (
-            const engine::VLogicalDevice&,
-            const VulkanPipelineShaderStageCreateInfo *,
+        auto setup (
+            engine::VLogicalDevice                  const &,
+            VulkanPipelineShaderStageCreateInfo     const *,
             uint32,
-            const VulkanVertexInputBindingDescription *     = nullptr,
+            VulkanVertexInputBindingDescription     const * = nullptr,
             uint32                                          = 0U,
-            const VulkanVertexInputAttributeDescription *   = nullptr,
+            VulkanVertexInputAttributeDescription   const * = nullptr,
             uint32                                          = 0U,
-            const VulkanDescriptorSetLayout *               = nullptr,
+            VulkanDescriptorSetLayout               const * = nullptr,
             uint32                                          = 0U
-        ) noexcept (false);
-        VulkanResult setup (
-            const engine::VLogicalDevice& device,
-            const std::vector < VulkanPipelineShaderStageCreateInfo > & shaderStages,
-            const std::vector < VulkanVertexInputBindingDescription > & bindingDescriptions,
-            const std::vector < VulkanVertexInputAttributeDescription > & attributeDescriptions
-        ) noexcept (false) {
+        ) noexcept (false) -> VulkanResult;
+
+        inline auto setup (
+            engine::VLogicalDevice                                  const & device,
+            std::vector < VulkanPipelineShaderStageCreateInfo >     const & shaderStages,
+            std::vector < VulkanVertexInputBindingDescription >     const & bindingDescriptions,
+            std::vector < VulkanVertexInputAttributeDescription >   const & attributeDescriptions
+        ) noexcept (false) -> VulkanResult {
             return this->setup (
                 device,
                 shaderStages.data(),
@@ -74,7 +76,25 @@ namespace engine {
             );
         }
 
-        void cleanup () noexcept;
+        auto clear () noexcept -> void override;
+
+        [[nodiscard]] auto toString () const noexcept -> String override;
+
+        [[nodiscard]] auto operator == (Object const & o) const noexcept -> bool override {
+            if ( this == & o ) return true;
+            auto p = dynamic_cast < decltype(this) > (& o);
+            if ( p == nullptr ) return false;
+
+            return this->_handle == p->_handle;
+        }
+
+        [[nodiscard]] auto copy () const noexcept -> VPipeline * override {
+            return new VPipeline(* this);
+        }
+
+        [[nodiscard]] auto hash () const noexcept -> Index override {
+            return dataTypes::hash(reinterpret_cast<AddressValueType>(this->_handle));
+        }
     };
 
 }

@@ -10,7 +10,7 @@ bool engine::VValidationLayer::_layersQueried = false;
 
 std::vector < VulkanLayerProperties > engine::VValidationLayer::_availableValidationLayers = std::vector < VulkanLayerProperties > ();
 
-void engine::VValidationLayer::debugPrintAvailableValidationLayers(std::ostream& buffer) noexcept {
+auto engine::VValidationLayer::debugPrintAvailableValidationLayers(std::ostream& buffer) noexcept -> void {
     VValidationLayer::queryAvailableValidationLayers();
     buffer << "Available Validation Layers : \n";
 
@@ -22,7 +22,7 @@ void engine::VValidationLayer::debugPrintAvailableValidationLayers(std::ostream&
     }
 }
 
-static engine::VValidationLayer::VulkanValidationLayerLiteral getValidationLayerLiteral(engine::VValidationLayer::VulkanValidationLayer layer ) noexcept {
+static auto getValidationLayerLiteral(engine::VValidationLayer::VulkanValidationLayer layer ) noexcept -> engine::VValidationLayer::VulkanValidationLayerLiteral {
     switch ( layer ) {
 
         case engine::VValidationLayer::LUNARG_API_DUMP:                      return __VULKAN_LAYER_LUNARG_API_DUMP;
@@ -46,12 +46,12 @@ static engine::VValidationLayer::VulkanValidationLayerLiteral getValidationLayer
     }
 }
 
-engine::VValidationLayer& engine::VValidationLayer::setLayerType(VulkanValidationLayer layer) noexcept {
+auto engine::VValidationLayer::setLayerType(VulkanValidationLayer layer) noexcept -> engine::VValidationLayer &  {
     this->_literal = getValidationLayerLiteral( layer );
     return *this;
 }
 
-engine::VValidationLayerCollection& engine::VValidationLayerCollection::addValidationLayer( const engine::VValidationLayer& layer) noexcept {
+auto engine::VValidationLayerCollection::addValidationLayer( engine::VValidationLayer const & layer) noexcept -> engine::VValidationLayerCollection & {
     for( const auto & existingLayer : this->_validationLayers ) {
         if( std::strcmp( layer.getLiteral(), existingLayer.getLiteral() ) == 0 ) {
             return *this;
@@ -63,7 +63,7 @@ engine::VValidationLayerCollection& engine::VValidationLayerCollection::addValid
     return *this;
 }
 
-void engine::VValidationLayer::queryAvailableValidationLayers() noexcept {
+auto engine::VValidationLayer::queryAvailableValidationLayers() noexcept -> void {
     if( VValidationLayer::_layersQueried )
         return;
 
@@ -77,19 +77,19 @@ void engine::VValidationLayer::queryAvailableValidationLayers() noexcept {
     VValidationLayer::_layersQueried = true;
 }
 
-engine::VValidationLayerCollection::VValidationLayerCollection(const std::initializer_list < engine::VValidationLayer > & list) noexcept {
+engine::VValidationLayerCollection::VValidationLayerCollection(const std::initializer_list < engine::VValidationLayer > & list) noexcept : VRenderObject() {
     for( const auto & layer : list ) {
         this->addValidationLayer( layer );
     }
 }
 
-engine::VValidationLayerCollection::VValidationLayerCollection(const std::initializer_list<VValidationLayer::VulkanValidationLayer> & list) noexcept {
+engine::VValidationLayerCollection::VValidationLayerCollection(const std::initializer_list<VValidationLayer::VulkanValidationLayer> & list) noexcept : VRenderObject() {
     for( const auto & layerType : list ) {
         this->addValidationLayer( engine::VValidationLayer(layerType ) );
     }
 }
 
-[[nodiscard]] std::vector < engine::VValidationLayer::VulkanValidationLayerLiteral > engine::VValidationLayerCollection::getValidationLayerLiterals() const noexcept {
+[[nodiscard]] auto engine::VValidationLayerCollection::getValidationLayerLiterals() const noexcept -> std::vector < engine::VValidationLayer::VulkanValidationLayerLiteral > {
     std::vector < engine::VValidationLayer::VulkanValidationLayerLiteral > layerLiterals;
 
     for ( const auto & layer : this->_validationLayers ) {
@@ -99,7 +99,7 @@ engine::VValidationLayerCollection::VValidationLayerCollection(const std::initia
     return layerLiterals;
 }
 
-[[nodiscard]] bool engine::VValidationLayer::checkValidationLayerSupport(const VValidationLayerCollection & layerCollection) noexcept {
+[[nodiscard]] auto engine::VValidationLayer::checkValidationLayerSupport(const VValidationLayerCollection & layerCollection) noexcept -> bool {
     VValidationLayer::queryAvailableValidationLayers();
 
     for ( const auto & layer : layerCollection.getValidationLayers() ) {
@@ -117,4 +117,17 @@ engine::VValidationLayerCollection::VValidationLayerCollection(const std::initia
     }
 
     return true;
+}
+
+#include <sstream>
+
+auto engine::VValidationLayerCollection::toString() const noexcept -> String {
+    std::stringstream oss;
+    oss << "VValidationLayerCollection = { layers = [ ";
+
+    for (const auto &item : this->_validationLayers)
+        oss << item.toString() << ", ";
+
+    auto s = oss.str();
+    return s.substr(s.size() - 2).append(" ]}");
 }

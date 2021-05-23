@@ -56,7 +56,7 @@ VulkanResult engine::VShaderModule::setup( const engine::VLogicalDevice & device
     return vkCreateShaderModule ( this->_pLogicalDevice->data(), & createInfo, nullptr, & this->_handle );
 }
 
-engine::VShaderModule::VShaderModule(const std::string & path) noexcept {
+engine::VShaderModule::VShaderModule(const std::string & path) noexcept : VRenderObject() {
     try{
         this->_byteCode = readFile ( path );
     } catch ( std::exception const & exception ) {
@@ -65,7 +65,7 @@ engine::VShaderModule::VShaderModule(const std::string & path) noexcept {
     }
 }
 
-engine::VShaderModule::VShaderModule(const engine::VShaderCompilerTarget & target) noexcept {
+engine::VShaderModule::VShaderModule(const engine::VShaderCompilerTarget & target) noexcept : VRenderObject() {
     try {
         this->_byteCode = readFile ( target.getCompiledPath() );
         this->_type     = target.getType();
@@ -88,7 +88,7 @@ VulkanResult engine::VShaderModule::setup(const std::string & path, const engine
     return VulkanResult::VK_ERROR_INITIALIZATION_FAILED;
 }
 
-void engine::VShaderModule::cleanup() noexcept {
+void engine::VShaderModule::clear() noexcept {
     if ( this->_handle == nullptr )
         return;
 

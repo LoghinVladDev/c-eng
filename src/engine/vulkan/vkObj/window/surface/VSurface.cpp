@@ -4,7 +4,7 @@
 
 #include "VSurface.hpp"
 
-static inline void populateSurfaceCreateInfo ( VulkanSurfaceCreateInfoKhronos * createInfo, GLFWwindow* window ) noexcept {
+static inline auto populateSurfaceCreateInfo ( VulkanSurfaceCreateInfoKhronos * createInfo, GLFWwindow* window ) noexcept -> void {
     if( createInfo == nullptr )
         return;
 
@@ -28,7 +28,7 @@ static inline void populateSurfaceCreateInfo ( VulkanSurfaceCreateInfoKhronos * 
 
 }
 
-VulkanResult engine::VSurface::setup(GLFWwindow * window, const VInstance& instance) noexcept {
+auto engine::VSurface::setup(GLFWwindow * window, VInstance const & instance) noexcept -> VulkanResult {
     this->_instance = & instance;
 
 #if defined(ENGINE_OS_WINDOWS_32_64)
@@ -41,6 +41,17 @@ VulkanResult engine::VSurface::setup(GLFWwindow * window, const VInstance& insta
 #endif
 }
 
-void engine::VSurface::clean() noexcept {
+auto engine::VSurface::clear() noexcept -> void {
     vkDestroySurfaceKHR( this->_instance->data(), this->_surface, nullptr );
+}
+
+#include <sstream>
+[[nodiscard]] auto engine::VSurface::toString() const noexcept -> String {
+    std::stringstream oss;
+
+    oss <<"VSurface { " <<
+           "pSurface = 0x" << std::hex << reinterpret_cast < AddressValueType > ( this->_surface ) <<
+           ", pInstance = 0x" << reinterpret_cast < AddressValueType > ( this->_instance ) << " }";
+
+    return oss.str();
 }

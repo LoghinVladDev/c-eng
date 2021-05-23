@@ -4,13 +4,13 @@
 
 #include "VPipeline.hpp"
 
-inline static void populateVertexInputStateCreateInfo (
+inline static auto populateVertexInputStateCreateInfo (
     VulkanPipelineVertexInputStateCreateInfo       * createInfo,
-    const VulkanVertexInputBindingDescription      * pVertexBindingDescriptions       = nullptr,
+    VulkanVertexInputBindingDescription      const * pVertexBindingDescriptions       = nullptr,
     uint32                                           vertexBindingDescriptionCount    = 0U,
-    const VulkanVertexInputAttributeDescription    * pVertexAttributeDescriptions     = nullptr,
+    VulkanVertexInputAttributeDescription    const * pVertexAttributeDescriptions     = nullptr,
     uint32                                           vertexAttributeDescriptionCount  = 0U
-) noexcept {
+) noexcept -> void {
     if ( createInfo == nullptr )
         return;
 
@@ -25,9 +25,9 @@ inline static void populateVertexInputStateCreateInfo (
     };
 }
 
-inline static void populateInputAssemblyStateCreateInfo (
+inline static auto populateInputAssemblyStateCreateInfo (
     VulkanPipelineInputAssemblyStateCreateInfo * createInfo
-) noexcept {
+) noexcept -> void {
     if ( createInfo == nullptr )
         return;
 
@@ -40,13 +40,13 @@ inline static void populateInputAssemblyStateCreateInfo (
     };
 }
 
-inline static void populateViewportStructure (
+inline static auto populateViewportStructure (
     VulkanViewport * viewport,
     float x,
     float y,
     float width,
     float height
-) noexcept {
+) noexcept -> void {
     if ( viewport == nullptr )
         return;
 
@@ -60,12 +60,12 @@ inline static void populateViewportStructure (
     };
 }
 
-inline static void populateScissorStructure (
+inline static auto populateScissorStructure (
     VulkanRectangle2D * scissor,
-    int32 xOffset,
-    int32 yOffset,
-    const VulkanExtent2D & extent
-) noexcept {
+    sint32 xOffset,
+    sint32 yOffset,
+    VulkanExtent2D const & extent
+) noexcept -> void {
     if( scissor == nullptr )
         return;
 
@@ -75,13 +75,13 @@ inline static void populateScissorStructure (
     };
 }
 
-inline static void populateViewportStateCreateInfo (
-    VulkanPipelineViewportStateCreateInfo   * createInfo,
-    VulkanViewport                          * pViewports,
-    uint32                                    viewportCount,
-    VulkanRectangle2D                       * pScissors,
-    uint32                                    scissorCount
-) noexcept {
+inline static auto populateViewportStateCreateInfo (
+    VulkanPipelineViewportStateCreateInfo         * createInfo,
+    VulkanViewport                          const * pViewports,
+    uint32                                          viewportCount,
+    VulkanRectangle2D                       const * pScissors,
+    uint32                                          scissorCount
+) noexcept -> void {
     if ( createInfo == nullptr )
         return;
 
@@ -96,9 +96,9 @@ inline static void populateViewportStateCreateInfo (
     };
 }
 
-inline static void populateRasterizationStateCreateInfo (
+inline static auto populateRasterizationStateCreateInfo (
     VulkanPipelineRasterizationStateCreateInfo * createInfo
-) noexcept {
+) noexcept -> void {
     if ( createInfo == nullptr )
         return;
 
@@ -120,9 +120,9 @@ inline static void populateRasterizationStateCreateInfo (
     };
 }
 
-inline static void populateMultisampleStateCreateInfo (
+inline static auto populateMultisampleStateCreateInfo (
     VulkanPipelineMultisampleStateCreateInfo * createInfo
-) noexcept {
+) noexcept -> void {
     if ( createInfo == nullptr )
         return;
 
@@ -145,9 +145,9 @@ constexpr static VulkanFlags COLOR_WRITE_MASK =
     ( uint32 ) VK_COLOR_COMPONENT_B_BIT |
     ( uint32 ) VK_COLOR_COMPONENT_A_BIT;
 
-inline static void populateColorBlendAttachmentStateDisabled (
+inline static auto populateColorBlendAttachmentStateDisabled (
         VulkanPipelineColorBlendAttachmentState * colorBlendAttachment
-) noexcept {
+) noexcept -> void {
     if ( colorBlendAttachment == nullptr )
         return;
 
@@ -163,9 +163,9 @@ inline static void populateColorBlendAttachmentStateDisabled (
     };
 }
 
-inline static void populateColorBlendAttachmentStateEnabled (
+inline static auto populateColorBlendAttachmentStateEnabled (
     VulkanPipelineColorBlendAttachmentState * colorBlendAttachment
-) noexcept {
+) noexcept -> void {
     if ( colorBlendAttachment == nullptr )
         return;
 
@@ -181,11 +181,11 @@ inline static void populateColorBlendAttachmentStateEnabled (
     };
 }
 
-inline static void populateColorBlendStateCreateInfo (
-    VulkanPipelineColorBlendStateCreateInfo * createInfo,
-    VulkanPipelineColorBlendAttachmentState * pAttachments,
-    uint32                                    attachmentCount
-) noexcept {
+inline static auto populateColorBlendStateCreateInfo (
+    VulkanPipelineColorBlendStateCreateInfo       * createInfo,
+    VulkanPipelineColorBlendAttachmentState const * pAttachments,
+    uint32                                          attachmentCount
+) noexcept -> void {
     if ( createInfo == nullptr || pAttachments == nullptr )
         return;
 
@@ -201,11 +201,11 @@ inline static void populateColorBlendStateCreateInfo (
     };
 }
 
-[[maybe_unused]] inline static void populateDynamicStateCreateInfo (
+[[maybe_unused]] inline static auto populateDynamicStateCreateInfo (
     VulkanPipelineDynamicStateCreateInfo * createInfo,
-    const VulkanDynamicState             * pDynamicStates,
+    VulkanDynamicState             const * pDynamicStates,
     uint32                                 dynamicStateCount
-) noexcept {
+) noexcept -> void {
     if ( createInfo == nullptr )
         return;
 
@@ -222,11 +222,11 @@ inline static void populateColorBlendStateCreateInfo (
 //    createInfo->pDynamicStates      = pDynamicStates;
 }
 
-inline static void populateLayoutCreateInfo (
+inline static auto populateLayoutCreateInfo (
     VulkanPipelineLayoutCreateInfo  * createInfo,
-    const VulkanDescriptorSetLayout * pSetLayouts,
+    VulkanDescriptorSetLayout const * pSetLayouts,
     uint32                            setLayoutCount
-) noexcept {
+) noexcept -> void {
     if ( createInfo == nullptr )
         return;
 
@@ -241,9 +241,9 @@ inline static void populateLayoutCreateInfo (
     };
 }
 
-inline static void populateDepthStencilCreateInfo (
+inline static auto populateDepthStencilCreateInfo (
     VulkanPipelineDepthStencilStateCreateInfo * pCreateInfo
-) noexcept {
+) noexcept -> void {
     if ( pCreateInfo == nullptr )
         return;
 
@@ -279,24 +279,24 @@ inline static void populateDepthStencilCreateInfo (
     };
 }
 
-inline static void populateGraphicsPipelineCreateInfo (
+inline static auto populateGraphicsPipelineCreateInfo (
     VulkanGraphicsPipelineCreateInfo                    * createInfo,
-    const VulkanPipelineShaderStageCreateInfo           * pShaderStages,
+    VulkanPipelineShaderStageCreateInfo           const * pShaderStages,
     uint32                                                shaderStageCount,
-    const VulkanPipelineVertexInputStateCreateInfo      * pVertexInputState,
-    const VulkanPipelineInputAssemblyStateCreateInfo    * pInputAssemblyState,
-    const VulkanPipelineViewportStateCreateInfo         * pViewportState,
-    const VulkanPipelineRasterizationStateCreateInfo    * pRasterizerState,
-    const VulkanPipelineMultisampleStateCreateInfo      * pMultisampleState,
-    const VulkanPipelineDepthStencilStateCreateInfo     * pDepthStencilState,
-    const VulkanPipelineColorBlendStateCreateInfo       * pColorBlendState,
-    const VulkanPipelineDynamicStateCreateInfo          * pDynamicState,
+    VulkanPipelineVertexInputStateCreateInfo      const * pVertexInputState,
+    VulkanPipelineInputAssemblyStateCreateInfo    const * pInputAssemblyState,
+    VulkanPipelineViewportStateCreateInfo         const * pViewportState,
+    VulkanPipelineRasterizationStateCreateInfo    const * pRasterizerState,
+    VulkanPipelineMultisampleStateCreateInfo      const * pMultisampleState,
+    VulkanPipelineDepthStencilStateCreateInfo     const * pDepthStencilState,
+    VulkanPipelineColorBlendStateCreateInfo       const * pColorBlendState,
+    VulkanPipelineDynamicStateCreateInfo          const * pDynamicState,
     VulkanPipelineLayout                                  layout,
-    const engine::VRenderPass                           * pRenderPass,
+    engine::VRenderPass                           const * pRenderPass,
     uint32                                                subpass,
-    const engine::VPipeline                             * pBasePipeline         = nullptr,
-    int32                                                 basePipelineIndex     = -1
-) noexcept {
+    engine::VPipeline                             const * pBasePipeline         = nullptr,
+    sint32                                                basePipelineIndex     = -1
+) noexcept -> void {
     if (
         createInfo          == nullptr ||
         pShaderStages       == nullptr ||
@@ -333,7 +333,7 @@ inline static void populateGraphicsPipelineCreateInfo (
     };
 }
 
-void engine::VPipeline::createRenderPass() noexcept (false) {
+auto engine::VPipeline::createRenderPass() noexcept (false) -> void {
     VulkanSubpassDependency waitForImageSubpassDependency {
         .srcSubpass         = VK_SUBPASS_EXTERNAL,
         .dstSubpass         = VULKAN_NULL_FLAGS,
@@ -348,10 +348,10 @@ void engine::VPipeline::createRenderPass() noexcept (false) {
         throw std::runtime_error ("render pass creation failure");
 }
 
-void engine::VPipeline::cleanup() noexcept {
+auto engine::VPipeline::clear() noexcept -> void {
     if ( this->_handle != nullptr )
         vkDestroyPipeline ( this->_pLogicalDevice->data(), this->_handle, nullptr );
-    this->_renderPass.cleanup();
+    this->_renderPass.clear();
     if ( this->_layoutHandle == nullptr )
         return;
     vkDestroyPipelineLayout( this->_pLogicalDevice->data(), this->_layoutHandle, nullptr );
@@ -361,17 +361,17 @@ void engine::VPipeline::cleanup() noexcept {
     this->_pLogicalDevice = nullptr;
 }
 
-VulkanResult engine::VPipeline::setup(
-    const engine::VLogicalDevice &                device,
-    const VulkanPipelineShaderStageCreateInfo   * pShaderStages,
-    uint32                                        shaderStageCount,
-    const VulkanVertexInputBindingDescription   * pBindingDescriptions,
-    uint32                                        bindingDescriptionCount,
-    const VulkanVertexInputAttributeDescription * pAttributeDescriptions,
-    uint32                                        attributeDescriptionCount,
-    const VulkanDescriptorSetLayout             * pDescriptorSetLayouts,
-    uint32                                        descriptorSetLayoutCount
-) noexcept(false) {
+auto engine::VPipeline::setup(
+    engine::VLogicalDevice                  const & device,
+    VulkanPipelineShaderStageCreateInfo     const * pShaderStages,
+    uint32                                          shaderStageCount,
+    VulkanVertexInputBindingDescription     const * pBindingDescriptions,
+    uint32                                          bindingDescriptionCount,
+    VulkanVertexInputAttributeDescription   const * pAttributeDescriptions,
+    uint32                                          attributeDescriptionCount,
+    VulkanDescriptorSetLayout               const * pDescriptorSetLayouts,
+    uint32                                          descriptorSetLayoutCount
+) noexcept(false) -> VulkanResult {
     this->_pLogicalDevice = & device;
 
     auto extent = this->_pLogicalDevice->getSwapChain()->getImagesInfo().extent;
@@ -438,4 +438,18 @@ VulkanResult engine::VPipeline::setup(
             nullptr,
             & this->_handle
     );
+}
+
+#include <sstream>
+
+auto engine::VPipeline::toString() const noexcept -> String {
+    std::stringstream oss;
+
+    oss << "VPipeline { " <<
+           "handle = 0x" << std::hex << reinterpret_cast < AddressValueType > ( this->_handle ) <<
+           ", layoutHandle = 0x" << reinterpret_cast < AddressValueType > ( this->_layoutHandle ) <<
+           ", pLogicalDevice = 0x" << reinterpret_cast < AddressValueType > ( this->_pLogicalDevice ) <<
+           ", renderPass = " << this->_renderPass.toString() + " }";
+
+    return oss.str();
 }

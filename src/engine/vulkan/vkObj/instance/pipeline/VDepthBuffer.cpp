@@ -5,12 +5,12 @@
 #include "VDepthBuffer.hpp"
 #include <VBuffer.hpp>
 
-static VulkanFormat findSupportedFormat(
-        const std::vector<VulkanFormat> & candidates,
+static auto findSupportedFormat(
+        std::vector<VulkanFormat> const & candidates,
         VulkanImageTiling                 tiling,
         VulkanFormatFeatureFlags          features,
-        const engine::VPhysicalDevice   * pPhysicalDevice
-) noexcept {
+        engine::VPhysicalDevice   const * pPhysicalDevice
+) noexcept -> VulkanFormat {
     for ( VulkanFormat format : candidates ) {
         VulkanFormatProperties properties;
         vkGetPhysicalDeviceFormatProperties( pPhysicalDevice->data(), format, & properties );
@@ -28,7 +28,7 @@ static VulkanFormat findSupportedFormat(
     return VulkanFormat::VK_FORMAT_UNDEFINED;
 }
 
-VulkanFormat getDepthFormat (const engine::VPhysicalDevice * pPhysicalDevice) noexcept {
+auto getDepthFormat (engine::VPhysicalDevice const * pPhysicalDevice) noexcept -> VulkanFormat {
     return findSupportedFormat(
             { VulkanFormat::VK_FORMAT_D32_SFLOAT, VulkanFormat::VK_FORMAT_D32_SFLOAT_S8_UINT, VulkanFormat::VK_FORMAT_D24_UNORM_S8_UINT},
             VulkanImageTiling::VK_IMAGE_TILING_OPTIMAL,
@@ -37,13 +37,13 @@ VulkanFormat getDepthFormat (const engine::VPhysicalDevice * pPhysicalDevice) no
     );
 }
 
-constexpr static bool hasStencilComponent ( VulkanFormat format ) noexcept {
+constexpr static auto hasStencilComponent ( VulkanFormat format ) noexcept -> bool {
     return
         format == VulkanFormat::VK_FORMAT_D32_SFLOAT_S8_UINT ||
         format == VulkanFormat::VK_FORMAT_D24_UNORM_S8_UINT;
 }
 
-inline static void populateCreateImageInfo (
+inline static auto populateCreateImageInfo (
     VulkanImageCreateInfo * pCreateInfo,
     uint32                  width,
     uint32                  height,
@@ -51,9 +51,9 @@ inline static void populateCreateImageInfo (
     VulkanImageTiling       tiling,
     VulkanImageUsageFlags   usage,
     VulkanSharingMode       sharingMode,
-    const uint32          * pQueueFamilyIndices,
+    uint32          const * pQueueFamilyIndices,
     uint32                  queueFamilyIndexCount
-) noexcept {
+) noexcept -> void {
     if ( pCreateInfo == nullptr )
         return;
 
@@ -84,12 +84,12 @@ extern uint32 findMemoryType( uint32, VulkanMemoryPropertyFlags, const engine::V
 extern void populateMemoryAllocateInfo ( VulkanMemoryAllocateInfo *, VulkanDeviceSize, uint32 ) noexcept;
 
 #include <vkUtils/VStdUtilsDefs.h>
-VulkanResult engine::VDepthBuffer::setup(
-        const VCommandPool  & commandPool,
-        const uint32        * pQueueFamilyIndices,
+auto engine::VDepthBuffer::setup(
+        VCommandPool  const & commandPool,
+        uint32        const * pQueueFamilyIndices,
         uint32                queueFamilyIndexCount,
         bool                  forceMemoryExclusivity
-) noexcept {
+) noexcept -> VulkanResult {
     this->_pCommandPool = & commandPool;
     auto * pLogicalDevice = this->_pCommandPool->getLogicalDevicePtr();
     auto * pSwapChain = pLogicalDevice->getSwapChain();
@@ -173,8 +173,8 @@ VulkanResult engine::VDepthBuffer::setup(
     return VulkanResult::VK_SUCCESS;
 }
 
-void engine::VDepthBuffer::cleanup() noexcept {
-    this->_imageView.cleanup();
+auto engine::VDepthBuffer::clear() noexcept -> void {
+    this->_imageView.clear();
     vkDestroyImage( this->_pCommandPool->getLogicalDevicePtr()->data(), this->_image, nullptr );
     vkFreeMemory( this->_pCommandPool->getLogicalDevicePtr()->data(), this->_imageMemory, nullptr );
 
@@ -187,7 +187,7 @@ void engine::VDepthBuffer::cleanup() noexcept {
 }
 
 #include <VCommandBuffer.hpp>
-extern void populateImageMemoryBarrier (
+extern auto populateImageMemoryBarrier (
         VulkanImageMemoryBarrier * pMemoryBarrier,
         VulkanImageLayout          oldLayout,
         VulkanImageLayout          newLayout,
@@ -195,9 +195,9 @@ extern void populateImageMemoryBarrier (
         VulkanAccessFlags          sourceAccessMask = 0U,
         VulkanAccessFlags          destinationAccessMask = 0U,
         VulkanImageAspectFlags     imageAspectMask = VulkanImageAspectFlagBits::VK_IMAGE_ASPECT_COLOR_BIT
-);
+) -> void;
 
-VulkanResult engine::VDepthBuffer::transitionImageLayout(VulkanImageLayout newLayout) noexcept {
+auto engine::VDepthBuffer::transitionImageLayout(VulkanImageLayout newLayout) noexcept -> VulkanResult {
     bool isTransferOptimized =
             this->_pCommandPool->isOptimizedForTransfers() &&
             this->_sharingMode == VulkanSharingMode::VK_SHARING_MODE_CONCURRENT;
@@ -263,4 +263,20 @@ VulkanResult engine::VDepthBuffer::transitionImageLayout(VulkanImageLayout newLa
 
     this->_currentLayout = newLayout;
     return oneTimeUseBuffer.submitOneTimeUse( pQueue );
+}
+
+#include <sstream>
+auto engine::VDepthBuffer::toString () const noexcept -> String {
+    std::stringstream oss;
+
+    oss <<"VDepthBuffer { " <<
+        "handle = 0x" << std::hex << reinterpret_cast < AddressValueType > (this->_image) <<
+        ", memory = 0x" <<  reinterpret_cast < AddressValueType > (this->_imageMemory) <<
+        ", imageView = " << std::dec << this->_imageView.toString() <<
+        ", currentLayout = " << static_cast < Size > (this->_currentLayout) <<
+        ", pCommandPool = 0x" << std::hex << reinterpret_cast < AddressValueType > (this->_pCommandPool) <<
+        ", sharingMode = " << std::dec << static_cast < Size > (this->_sharingMode) <<
+        ", format = " << static_cast < Size > (this->_format) << " }";
+
+    return oss.str();
 }

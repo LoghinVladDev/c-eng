@@ -10,7 +10,7 @@
 
 extern void populateDebugMessengerCreateInfo ( VulkanDebugMessengerCreateInfo * ) noexcept;
 
-inline static void populateApplicationInfoStructure( VulkanApplicationInfo * applicationInfo ) noexcept {
+inline static auto populateApplicationInfoStructure( VulkanApplicationInfo * applicationInfo ) noexcept -> void {
     if(applicationInfo == nullptr)
         return;
 
@@ -35,7 +35,7 @@ inline static void populateApplicationInfoStructure( VulkanApplicationInfo * app
 
 }
 
-VulkanResult engine::VInstance::setup() noexcept {
+auto engine::VInstance::setup() noexcept -> VulkanResult {
     VulkanApplicationInfo       applicationInfo {};
     VulkanInstanceCreateInfo    createInfo      {};
     auto                        extensions      = VStandardUtils::getGLFWRequiredExtensions(false);
@@ -54,7 +54,7 @@ VulkanResult engine::VInstance::setup() noexcept {
     return vkCreateInstance( & createInfo, nullptr, & this->_instance );
 }
 
-VulkanResult engine::VInstance::setup(const VValidationLayerCollection & layerCollection) noexcept {
+auto engine::VInstance::setup(const VValidationLayerCollection & layerCollection) noexcept -> VulkanResult {
     VulkanApplicationInfo           applicationInfo {};
     VulkanInstanceCreateInfo        createInfo      {};
     VulkanDebugMessengerCreateInfo  debugCreateInfo {};
@@ -78,6 +78,18 @@ VulkanResult engine::VInstance::setup(const VValidationLayerCollection & layerCo
     return vkCreateInstance( & createInfo, nullptr, & this->_instance );
 }
 
-void engine::VInstance::clean() noexcept {
+auto engine::VInstance::clear() noexcept -> void {
     vkDestroyInstance( this->_instance, nullptr );
 }
+
+#include <sstream>
+auto engine::VInstance::toString() const noexcept -> String {
+    std::stringstream oss;
+
+    oss << "VInstance { " <<
+        "handle = 0x" << reinterpret_cast < AddressValueType > (this->_instance) <<
+        ", name = " << this->_name << " }";
+
+    return oss.str();
+}
+
