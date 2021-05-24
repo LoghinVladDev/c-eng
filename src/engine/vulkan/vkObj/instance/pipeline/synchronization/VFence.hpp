@@ -95,7 +95,7 @@ namespace engine {
 
         auto setup ( VLogicalDevice const &, uint32, VulkanFenceCreateFlags = VFence::NO_FLAGS ) noexcept -> VulkanResult;
         auto resize ( VLogicalDevice const &, uint32, VulkanFenceCreateFlags = VFence::NO_FLAGS ) noexcept -> VulkanResult;
-        auto resize ( uint32 ) -> VulkanResult;
+        auto resize ( uint32 ) noexcept -> VulkanResult;
         auto clear () noexcept -> void override;
 
         [[nodiscard]] auto toString () const noexcept -> String override;

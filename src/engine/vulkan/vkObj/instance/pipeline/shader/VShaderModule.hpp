@@ -47,8 +47,8 @@ namespace engine {
 
         //// public functions
         VShaderModule () noexcept = default;
-        explicit VShaderModule ( const std::string& ) noexcept;
-        explicit VShaderModule ( const engine::VShaderCompilerTarget& ) noexcept;
+        explicit VShaderModule ( std::string const & ) noexcept;
+        explicit VShaderModule ( engine::VShaderCompilerTarget const & ) noexcept;
         ~VShaderModule() noexcept override = default;
 
         auto setup ( engine::VLogicalDevice const & ) noexcept -> VulkanResult;
@@ -56,15 +56,32 @@ namespace engine {
 
         auto clear() noexcept -> void override;
 
-        engine::VShaderModule & setType ( ShaderType type ) noexcept {
+        constexpr auto setType ( ShaderType type ) noexcept -> engine::VShaderModule & {
             this->_type = type;
             return *this;
         }
 
-        [[nodiscard]] VulkanPipelineShaderStageCreateInfo getShaderStageInfo () const noexcept (false);
+        [[nodiscard]] auto getShaderStageInfo () const noexcept (false) -> VulkanPipelineShaderStageCreateInfo;
 
-        [[nodiscard]] static std::string shaderTypeToString ( ShaderType ) noexcept;
-        [[nodiscard]] static ShaderType stringToShaderType ( const std::string & ) noexcept;
+        [[nodiscard]] static auto shaderTypeToString ( ShaderType ) noexcept -> std::string;
+        [[nodiscard]] static auto stringToShaderType ( std::string const & ) noexcept -> ShaderType;
+
+        [[nodiscard]] auto toString () const noexcept -> String override;
+        [[nodiscard]] auto operator == (Object const & o) const noexcept -> bool override {
+            if ( this == & o ) return true;
+            auto p = dynamic_cast < decltype ( this ) > (& o);
+            if ( p == nullptr ) return false;
+
+            return this->_type == p->_type && this->_handle == p->_handle;
+        }
+
+        [[nodiscard]] auto hash () const noexcept -> Index override {
+            return dataTypes::hash(reinterpret_cast<AddressValueType>(this->_handle));
+        }
+
+        [[nodiscard]] auto copy () const noexcept -> VShaderModule * override {
+            return new VShaderModule(*this);
+        }
     };
 
 }

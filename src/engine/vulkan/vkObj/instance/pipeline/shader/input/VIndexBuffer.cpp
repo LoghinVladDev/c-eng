@@ -27,9 +27,9 @@ auto engine::VIndexBuffer16::free() noexcept -> void {
     engine::VIndexBufferBase::free();
 }
 
-auto engine::VIndexBuffer16::cleanup() noexcept -> void {
-    this->_stagingBuffer.cleanup();
-    engine::VIndexBufferBase::cleanup();
+auto engine::VIndexBuffer16::clear() noexcept -> void {
+    this->_stagingBuffer.clear();
+    engine::VIndexBufferBase::clear();
 }
 
 auto engine::VIndexBuffer32::free() noexcept -> void {
@@ -37,9 +37,9 @@ auto engine::VIndexBuffer32::free() noexcept -> void {
     engine::VIndexBufferBase::free();
 }
 
-auto engine::VIndexBuffer32::cleanup() noexcept -> void {
-    this->_stagingBuffer.cleanup();
-    engine::VIndexBufferBase::cleanup();
+auto engine::VIndexBuffer32::clear() noexcept -> void {
+    this->_stagingBuffer.clear();
+    engine::VIndexBufferBase::clear();
 //    VBuffer::cleanup();
 }
 
@@ -77,8 +77,8 @@ auto engine::VIndexBufferBase::free() noexcept -> void {
     VBuffer::free();
 }
 
-auto engine::VIndexBufferBase::cleanup() noexcept -> void {
-    VBuffer::cleanup();
+auto engine::VIndexBufferBase::clear() noexcept -> void {
+    VBuffer::clear();
 }
 
 auto engine::VIndexBuffer16::setup(
@@ -118,10 +118,10 @@ auto engine::VIndexBuffer16::setup(
 }
 
 auto engine::VIndexBuffer16::setup(
-    const engine::VLogicalDevice    & device,
+    engine::VLogicalDevice    const & device,
     uint32                            indexCount,
-    const engine::VCommandPool      * pCommandPool,
-    const uint32                    * pQueueFamilyIndices,
+    engine::VCommandPool      const * pCommandPool,
+    uint32                    const * pQueueFamilyIndices,
     uint32                            queueFamilyIndexCount,
     bool                              forceMemoryExclusivity
 ) noexcept -> VulkanResult {
@@ -155,10 +155,10 @@ auto engine::VIndexBuffer16::setup(
 }
 
 auto engine::VIndexBuffer32::setup(
-    const engine::VLogicalDevice    & device,
-    const std::vector<uint32>       & indices,
-    const engine::VCommandPool      * pCommandPool,
-    const uint32                    * pQueueFamilyIndices,
+    engine::VLogicalDevice    const & device,
+    std::vector<uint32>       const & indices,
+    engine::VCommandPool      const * pCommandPool,
+    uint32                    const * pQueueFamilyIndices,
     uint32                            queueFamilyIndexCount,
     bool                              forceMemoryExclusivity
 ) noexcept -> VulkanResult {
@@ -188,10 +188,10 @@ auto engine::VIndexBuffer32::setup(
 }
 
 auto engine::VIndexBuffer32::setup(
-    const engine::VLogicalDevice    & device,
+    engine::VLogicalDevice    const & device,
     uint32                            vertexCount,
-    const engine::VCommandPool      * pCommandPool,
-    const uint32                    * pQueueFamilyIndices,
+    engine::VCommandPool      const * pCommandPool,
+    uint32                    const * pQueueFamilyIndices,
     uint32                            queueFamilyIndexCount,
     bool                              forceMemoryExclusivity
 ) noexcept -> VulkanResult {
@@ -260,3 +260,24 @@ auto engine::VIndexBuffer32::load(const std::vector<uint32> & indices) noexcept 
     return this->flush();
 }
 
+#include <sstream>
+
+auto engine::VIndexBuffer16::toString() const noexcept -> String {
+    std::stringstream oss;
+
+    oss << "VIndexBuffer16 { " <<
+        "base = " << VIndexBufferBase::toString() <<
+        ", stagingBuffer = " << this->_stagingBuffer.toString() << " }";
+
+    return oss.str();
+}
+
+auto engine::VIndexBuffer32::toString() const noexcept -> String {
+    std::stringstream oss;
+
+    oss << "VIndexBuffer32 { " <<
+        "base = " << VIndexBufferBase::toString() <<
+        ", stagingBuffer = " << this->_stagingBuffer.toString() << " }";
+
+    return oss.str();
+}

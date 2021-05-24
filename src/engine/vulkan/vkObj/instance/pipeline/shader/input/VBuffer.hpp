@@ -5,10 +5,9 @@
 #ifndef ENG1_VBUFFER_HPP
 #define ENG1_VBUFFER_HPP
 
-#include <engineVulkanPreproc.hpp>
-#include <vkDefs/types/vulkanExplicitTypes.h>
-#include <vkObj/instance/device/VLogicalDevice.hpp>
-#include <vkObj/instance/pipeline/command/VCommandPool.hpp>
+#include <VRenderObject.hpp>
+#include <VLogicalDevice.hpp>
+#include <VCommandPool.hpp>
 
 namespace engine {
 
@@ -17,7 +16,7 @@ namespace engine {
      *
      * @brief Represents a Data Buffer. GPU Local or CPU-GPU shared. Abstract class
      */
-    class VBuffer {
+    class VBuffer : public VRenderObject {
     private:
         //// private variables
 
@@ -59,6 +58,8 @@ namespace engine {
          */
         VBuffer () noexcept = default;
 
+        ~VBuffer() noexcept override = default;
+
         /**
          * @brief Setter for number of elements. Protected, use from Derivates
          *
@@ -66,7 +67,7 @@ namespace engine {
          *
          * @exceptsafe
          */
-        auto setElementCount ( uint32 elementCount ) noexcept -> void {
+        constexpr auto setElementCount ( uint32 elementCount ) noexcept -> void {
             this->_elementCount = elementCount;
         }
 
@@ -255,7 +256,8 @@ namespace engine {
          *
          * @exceptsafe
          */
-        virtual auto cleanup() noexcept -> void;
+         auto clear () noexcept -> void override;
+//        virtual auto cleanup() noexcept -> void;
 
         /**
          * @brief Function will copy from a given buffer a number of bytes onto this buffer
@@ -291,7 +293,7 @@ namespace engine {
          *
          * @return VulkanBuffer cref = Constant Reference to the handle
          */
-        [[nodiscard]] auto data () const noexcept -> VulkanBuffer const & {
+        [[nodiscard]] constexpr auto data () const noexcept -> VulkanBuffer const & {
             return this->_handle;
         }
 
@@ -302,7 +304,7 @@ namespace engine {
          *
          * @return VulkanDeviceSize = size of buffer, in bytes
          */
-        [[nodiscard]] auto size () const noexcept -> VulkanDeviceSize {
+        [[nodiscard]] constexpr auto size () const noexcept -> VulkanDeviceSize {
             return this->_memorySize;
         }
 
@@ -313,7 +315,7 @@ namespace engine {
          *
          * @return VulkanBufferUsageFlags = Flags of Buffer Usage ( Vertex | Index | ... )
          */
-        [[nodiscard]] auto getBufferUsageFlags () const noexcept -> VulkanBufferUsageFlags {
+        [[nodiscard]] constexpr auto getBufferUsageFlags () const noexcept -> VulkanBufferUsageFlags {
             return this->_bufferUsageFlags;
         }
 
@@ -324,7 +326,7 @@ namespace engine {
          *
          * @return uint32 = number of stored elements, 0 if no type of buffer is specified
          */
-        [[nodiscard]] auto getElementCount () const noexcept -> uint32 {
+        [[nodiscard]] constexpr auto getElementCount () const noexcept -> uint32 {
             return this->_elementCount;
         }
 
@@ -335,9 +337,28 @@ namespace engine {
          *
          * @return VulkanSharingMode = Memory Sharing Mode ( Exclusive | Concurrent )
          */
-        [[nodiscard]] auto getBufferSharingMode () const noexcept -> VulkanSharingMode {
+        [[nodiscard]] constexpr auto getBufferSharingMode () const noexcept -> VulkanSharingMode {
             return this->_sharingMode;
         }
+
+        [[nodiscard]] auto toString () const noexcept -> String override;
+        [[nodiscard]] auto operator == (Object const & o) const noexcept -> bool override {
+            if ( this == & o ) return true;
+            auto p = dynamic_cast < decltype (this) > ( & o );
+            if ( p == nullptr ) return false;
+
+            return
+                this->_handle == p->_handle &&
+                this->_memoryHandle == p->_memoryHandle;
+        }
+
+        [[nodiscard]] auto hash () const noexcept -> Index override {
+            return
+                dataTypes::hash(reinterpret_cast<AddressValueType>(this->_handle)) * 10000 +
+                dataTypes::hash(reinterpret_cast<AddressValueType>(this->_memoryHandle)) % 10000;
+        }
+
+        [[nodiscard]] auto copy () const noexcept -> VBuffer * override = 0;
     };
 
 }

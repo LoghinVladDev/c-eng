@@ -5,11 +5,9 @@
 #ifndef ENG1_VUNIFORMBUFFER_HPP
 #define ENG1_VUNIFORMBUFFER_HPP
 
-#include <engineVulkanPreproc.hpp>
-#include <vkDefs/types/vulkanExplicitTypes.h>
-#include <vkObj/instance/device/VLogicalDevice.hpp>
-#include <vkObj/instance/pipeline/shader/input/VBuffer.hpp>
-#include <glm/glm.hpp>
+#include <VLogicalDevice.hpp>
+#include <VBuffer.hpp>
+//#include <glm/glm.hpp>
 
 namespace engine {
 
@@ -18,11 +16,11 @@ namespace engine {
         glm::mat4 view;
         glm::mat4 projection;
     } SUniformBufferObject;
-
-    typedef struct {
-        glm::mat4 view;
-        glm::mat4 projection;
-    } SUniformBufferCamera;
+//
+//    typedef struct {
+//        glm::mat4 view;
+//        glm::mat4 projection;
+//    } SUniformBufferCamera;
 
     template <class T>
     class VUniformBuffer : public VBuffer {
@@ -36,35 +34,52 @@ namespace engine {
 
         //// public functions
         VUniformBuffer () noexcept = default;
+        ~VUniformBuffer() noexcept override = default;
 
-        VulkanResult setup (
-            const VLogicalDevice &,
+        auto setup (
+            VLogicalDevice const &,
             uint32
-        ) noexcept;
+        ) noexcept -> VulkanResult;
 
-        [[nodiscard]] const std::vector <T> & getBufferData () const noexcept {
+        [[nodiscard]] constexpr auto getBufferData () const noexcept -> std::vector <T> const & {
             return this->_data;
         }
 
-        [[nodiscard]] std::vector <T> & getBufferData () noexcept {
+        [[nodiscard]] constexpr auto getBufferData () noexcept -> std::vector <T> & {
             return this->_data;
         }
 
-        VulkanResult allocateMemory () noexcept;
+        auto allocateMemory () noexcept -> VulkanResult;
 
-        VulkanResult load ( const T*, uint32 ) noexcept;
+        auto load ( T const *, uint32 ) noexcept -> VulkanResult;
 
-        void free () noexcept override;
-        void cleanup () noexcept override;
+        auto free () noexcept -> void override;
+        auto clear () noexcept -> void override;
+
+        [[nodiscard]] auto toString () const noexcept -> String override {
+            return VBuffer::toString();
+        }
+
+        [[nodiscard]] auto hash () const noexcept -> Index override {
+            return VBuffer::hash();
+        }
+
+        [[nodiscard]] auto copy () const noexcept -> VUniformBuffer * override {
+            return new VUniformBuffer(* this);
+        }
+
+        [[nodiscard]] auto operator == (Object const & o) const noexcept -> bool override {
+            return VBuffer::operator==(o);
+        }
     };
 
 }
 
 template <class T>
-VulkanResult engine::VUniformBuffer<T>::setup(
-    const VLogicalDevice & device,
+auto engine::VUniformBuffer<T>::setup(
+    VLogicalDevice const & device,
     uint32 size
-) noexcept {
+) noexcept -> VulkanResult {
     this->setElementCount( size );
     return VBuffer::setup(
         device,
@@ -77,26 +92,26 @@ VulkanResult engine::VUniformBuffer<T>::setup(
 }
 
 template <class T>
-VulkanResult engine::VUniformBuffer<T>::allocateMemory() noexcept {
+auto engine::VUniformBuffer<T>::allocateMemory() noexcept -> VulkanResult {
     return VBuffer::allocateMemory( VBuffer::MEMORY_CPU_BUFFER_FLAGS );
 }
 
 template <class T>
-VulkanResult engine::VUniformBuffer<T>::load(const T * pValues, uint32 valueCount) noexcept {
+auto engine::VUniformBuffer<T>::load(T const * pValues, uint32 valueCount) noexcept -> VulkanResult {
     return VBuffer::load(
-        static_cast < const void * > ( pValues ),
+        static_cast < void const * > ( pValues ),
         static_cast < std::size_t >  ( valueCount * sizeof ( T ) )
     );
 }
 
 template <class T>
-void engine::VUniformBuffer<T>::free() noexcept {
+auto engine::VUniformBuffer<T>::free() noexcept -> void {
     return VBuffer::free();
 }
 
 template <class T>
-void engine::VUniformBuffer<T>::cleanup() noexcept {
-    return VBuffer::cleanup();
+auto engine::VUniformBuffer<T>::clear() noexcept -> void {
+    return VBuffer::clear();
 }
 
 

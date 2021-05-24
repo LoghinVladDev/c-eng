@@ -132,7 +132,7 @@ auto engine::VBuffer::setup(
     return vkCreateBuffer( this->_pLogicalDevice->data(), & createInfo, nullptr, & this->_handle );
 }
 
-auto engine::VBuffer::cleanup() noexcept -> void {
+auto engine::VBuffer::clear() noexcept -> void {
     /// cleanup buffer
     vkDestroyBuffer( this->_pLogicalDevice->data(), this->_handle, nullptr );
 }
@@ -312,4 +312,23 @@ auto engine::VBuffer::copyFrom(
     this->setElementCount( sourceBuffer.getElementCount() ); /// set element count to source buffer element count if success
 
     return VulkanResult::VK_SUCCESS;
+}
+
+#include <sstream>
+
+auto engine::VBuffer::toString() const noexcept -> String {
+    std::stringstream oss;
+
+    oss << "VBuffer " <<
+        "{ handle = 0x" << std::hex << reinterpret_cast < AddressValueType > (this->_handle) <<
+        ", memoryHandle = 0x" << reinterpret_cast < AddressValueType > (this->_memoryHandle) <<
+        ", memorySize = " << std::dec << this->_memorySize << " bytes " <<
+        ", pLogicalDevice = 0x" << std::hex << reinterpret_cast < AddressValueType > (this->_pLogicalDevice) <<
+        ", elementCount = " << std::dec << this->_elementCount <<
+        ", bufferUsageFlags = " << static_cast < uint32 > ( this->_bufferUsageFlags ) <<
+        ", sharingMode = " << static_cast < uint32 > ( this->_sharingMode ) <<
+        ", memoryPropertyFlags = " << static_cast < uint32 > ( this->_memoryPropertyFlags ) <<
+        ", memoryAllocated = " << std::boolalpha << this->_memoryAllocated << " }";
+
+    return oss.str();
 }

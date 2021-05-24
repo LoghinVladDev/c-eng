@@ -81,3 +81,15 @@ std::array < VulkanVertexInputAttributeDescription, engine::VVertex::PACK_PROPER
 
     return attributeDescriptions;
 }
+
+#include <sstream>
+
+auto engine::VVertex::toString() const noexcept -> String {
+    std::stringstream oss;
+    oss << "VVertex " <<
+        "{ position = " << String(this->_vertexPack.position) <<
+        ", color = " << String(this->_vertexPack.color) <<
+        ", textureCoordinates = " << String(this->_vertexPack.textureCoordinates) << " }";
+
+    return oss.str();
+}

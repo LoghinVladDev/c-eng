@@ -10,16 +10,16 @@
 #include <vkUtils/VStdUtilsDefs.h>
 
 
-inline static void populateImageCreateInfo (
-        VulkanImageCreateInfo * pCreateInfo,
-        uint32 width,
-        uint32 height,
-        VulkanFormat format,
-        VulkanSharingMode sharingMode,
-        const uint32* pQueueFamilyIndices,
-        uint32 queueFamilyIndexCount,
-        VulkanImageLayout initialLayout = VulkanImageLayout::VK_IMAGE_LAYOUT_UNDEFINED
-) noexcept {
+inline static auto populateImageCreateInfo (
+        VulkanImageCreateInfo         * pCreateInfo,
+        uint32                          width,
+        uint32                          height,
+        VulkanFormat                    format,
+        VulkanSharingMode               sharingMode,
+        uint32                  const * pQueueFamilyIndices,
+        uint32                          queueFamilyIndexCount,
+        VulkanImageLayout               initialLayout = VulkanImageLayout::VK_IMAGE_LAYOUT_UNDEFINED
+) noexcept -> void {
     if ( pCreateInfo == nullptr )
         return;
 
@@ -46,7 +46,7 @@ inline static void populateImageCreateInfo (
     };
 }
 
-void populateImageMemoryBarrier (
+auto populateImageMemoryBarrier (
     VulkanImageMemoryBarrier * pMemoryBarrier,
     VulkanImageLayout          oldLayout,
     VulkanImageLayout          newLayout,
@@ -54,7 +54,7 @@ void populateImageMemoryBarrier (
     VulkanAccessFlags          sourceAccessMask = 0U,
     VulkanAccessFlags          destinationAccessMask = 0U,
     VulkanImageAspectFlags     imageAspectMask = VulkanImageAspectFlagBits::VK_IMAGE_ASPECT_COLOR_BIT
-) noexcept {
+) noexcept -> void {
     if ( pMemoryBarrier == nullptr )
         return;
 
@@ -78,11 +78,11 @@ void populateImageMemoryBarrier (
     };
 }
 
-inline static void populateBufferImageCopy (
+inline static auto populateBufferImageCopy (
     VulkanBufferImageCopy * pBufferImageCopy,
-    uint32 width,
-    uint32 height
-) noexcept {
+    uint32                  width,
+    uint32                  height
+) noexcept -> void {
     if ( pBufferImageCopy == nullptr )
         return;
 
@@ -109,10 +109,10 @@ inline static void populateBufferImageCopy (
     };
 }
 
-void engine::VTexture::load(const char * pImagePath, int32 desiredChannels) noexcept(false) {
-    int32 textureWidth;
-    int32 textureHeight;
-    int32 textureChannels;
+auto engine::VTexture::load(StringLiteral pImagePath, sint32 desiredChannels) noexcept(false) -> void {
+    sint32 textureWidth;
+    sint32 textureHeight;
+    sint32 textureChannels;
 
     stbi_set_flip_vertically_on_load(true);
     this->_stagingBuffer.getBufferData()._pImageData = stbi_load( pImagePath, & textureWidth, & textureHeight, & textureChannels, desiredChannels );
@@ -134,7 +134,7 @@ void engine::VTexture::load(const char * pImagePath, int32 desiredChannels) noex
             : VulkanFormat::VK_FORMAT_R8G8B8_SRGB;
 }
 
-void engine::VTexture::unload() noexcept {
+auto engine::VTexture::unload() noexcept -> void {
     stbi_image_free( this->_stagingBuffer.getBufferData()._pImageData );
     this->_stagingBuffer.getBufferData() = VTexture::STexturePack {
         ._pImageData = nullptr,
@@ -142,13 +142,13 @@ void engine::VTexture::unload() noexcept {
     };
 }
 
-VulkanResult engine::VTexture::setup(
-        const char          * pImagePath,
-        const VCommandPool  & commandPool,
-        const uint32        * pQueueFamilyIndices,
-        uint32                queueFamilyIndexCount,
-        bool                  forceMemoryExclusivity
-) noexcept {
+auto engine::VTexture::setup(
+        StringLiteral           pImagePath,
+        VCommandPool    const & commandPool,
+        uint32          const * pQueueFamilyIndices,
+        uint32                  queueFamilyIndexCount,
+        bool                    forceMemoryExclusivity
+) noexcept -> VulkanResult {
     this->_pCommandPool = & commandPool;
 
     try {
@@ -206,19 +206,19 @@ VulkanResult engine::VTexture::setup(
     return VulkanResult::VK_SUCCESS;
 }
 
-VulkanResult engine::VTexture::flush() noexcept {
+auto engine::VTexture::flush() noexcept -> VulkanResult {
     ENG_RETURN_IF_NOT_SUCCESS(this->transitionImageLayout(VulkanImageLayout::VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL))
     ENG_RETURN_IF_NOT_SUCCESS(this->copy())
     ENG_RETURN_IF_NOT_SUCCESS(this->transitionImageLayout(VulkanImageLayout::VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL))
 
     this->_stagingBuffer.free();
-    this->_stagingBuffer.cleanup();
+    this->_stagingBuffer.clear();
 
     return VulkanResult::VK_SUCCESS;
 }
 
-#include <vkObj/instance/pipeline/command/VCommandBuffer.hpp>
-VulkanResult engine::VTexture::transitionImageLayout(VulkanImageLayout newLayout) noexcept {
+#include <VCommandBuffer.hpp>
+auto engine::VTexture::transitionImageLayout(VulkanImageLayout newLayout) noexcept -> VulkanResult {
     bool isTransferOptimized =
             this->_pCommandPool->isOptimizedForTransfers() &&
             this->_sharingMode == VulkanSharingMode::VK_SHARING_MODE_CONCURRENT; // &&
@@ -266,16 +266,12 @@ VulkanResult engine::VTexture::transitionImageLayout(VulkanImageLayout newLayout
         this->_currentLayout,
         newLayout,
         this->_handle,
-//        0U, // TODO
-//        0U  // TODO,
         sourceAccessMask,
         destinationAccessMask
     );
 
     vkCmdPipelineBarrier(
         oneTimeUseBuffer.data(),
-//        0U, // TODO
-//        0U, // TODO
         sourceStage,
         destinationStage,
         0U,
@@ -292,7 +288,7 @@ VulkanResult engine::VTexture::transitionImageLayout(VulkanImageLayout newLayout
     return oneTimeUseBuffer.submitOneTimeUse( pQueue );
 }
 
-VulkanResult engine::VTexture::copy () noexcept {
+auto engine::VTexture::copy () noexcept -> VulkanResult {
     bool isTransferOptimized =
         this->_pCommandPool->isOptimizedForTransfers() &&
         this->_sharingMode == VulkanSharingMode::VK_SHARING_MODE_CONCURRENT &&
@@ -330,7 +326,7 @@ VulkanResult engine::VTexture::copy () noexcept {
 extern uint32 findMemoryType( uint32, VulkanMemoryPropertyFlags, const engine::VLogicalDevice * ) noexcept;
 extern void populateMemoryAllocateInfo ( VulkanMemoryAllocateInfo *, VulkanDeviceSize, uint32 ) noexcept;
 
-VulkanResult engine::VTexture::allocateMemory() noexcept {
+auto engine::VTexture::allocateMemory() noexcept -> VulkanResult {
     ENG_RETURN_IF_NOT_SUCCESS_2(
         this->_stagingBuffer.allocateMemory(),
         this->unload()
@@ -383,42 +379,42 @@ VulkanResult engine::VTexture::allocateMemory() noexcept {
     return VulkanResult::VK_SUCCESS;
 }
 
-void engine::VTexture::free() noexcept {
+auto engine::VTexture::free() noexcept -> void {
     this->unload();
     vkFreeMemory( this->_pCommandPool->getLogicalDevicePtr()->data(), this->_memoryHandle, nullptr );
 }
 
-void engine::VTexture::cleanup() noexcept {
+auto engine::VTexture::clear() noexcept -> void {
     this->free();
-    this->_imageView.cleanup();
+    this->_imageView.clear();
     vkDestroyImage( this->_pCommandPool->getLogicalDevicePtr()->data(), this->_handle, nullptr );
 }
 
-void engine::VTexture::StagingBuffer::free() noexcept {
+auto engine::VTexture::StagingBuffer::free() noexcept -> void {
     return VBuffer::free();
 }
 
-void engine::VTexture::StagingBuffer::cleanup() noexcept {
-    return VBuffer::cleanup();
+auto engine::VTexture::StagingBuffer::clear() noexcept -> void {
+    return VBuffer::clear();
 }
 
-VulkanResult engine::VTexture::StagingBuffer::allocateMemory() noexcept {
+auto engine::VTexture::StagingBuffer::allocateMemory() noexcept -> VulkanResult {
     return VBuffer::allocateMemory( VBuffer::MEMORY_CPU_BUFFER_FLAGS );
 }
 
-VulkanResult engine::VTexture::StagingBuffer::reload() noexcept {
+auto engine::VTexture::StagingBuffer::reload() noexcept -> VulkanResult {
     return VBuffer::load (
-            static_cast < const void * > ( this->_texturePack._pImageData ),
+            static_cast < void const * > ( this->_texturePack._pImageData ),
             static_cast < std::size_t  > ( this->_texturePack._imageSize )
     );
 }
 
-VulkanResult engine::VTexture::StagingBuffer::setup(
+auto engine::VTexture::StagingBuffer::setup(
         VLogicalDevice      const & device,
         VulkanSharingMode           sharingMode,
         uint32              const * pQueueFamilyIndices,
         uint32                      queueFamilyIndexCount
-) noexcept {
+) noexcept -> VulkanResult {
     this->setElementCount( 1U );
 
     return VBuffer::setup(
@@ -429,4 +425,33 @@ VulkanResult engine::VTexture::StagingBuffer::setup(
         pQueueFamilyIndices,
         queueFamilyIndexCount
     );
+}
+
+#include <sstream>
+auto engine::VTexture::StagingBuffer::toString() const noexcept -> String {
+    std::stringstream oss;
+
+    oss << "VTexture::StagingBuffer { " <<
+        "pTextureData = 0x" << std::hex << reinterpret_cast < AddressValueType > (this->_texturePack._pImageData ) <<
+        ", imageSize = " << std::dec << this->_texturePack._imageSize <<
+        ", bufferBase = " << VBuffer::toString() << " }";
+    return oss.str();
+}
+
+auto engine::VTexture::toString() const noexcept -> String {
+    std::stringstream oss;
+
+    oss << "VTexture " <<
+        "{ handle = 0x" << std::hex << reinterpret_cast<AddressValueType>(this->_handle) <<
+        ", memoryHandle = 0x" << std::hex << reinterpret_cast<AddressValueType>(this->_memoryHandle) <<
+        ", pCommandPool = 0x" << std::hex << reinterpret_cast<AddressValueType>(this->_pCommandPool) <<
+        ", textureWidth = " << std::dec << this->_textureWidth <<
+        ", textureHeight = " << this->_textureHeight <<
+        ", textureChannels = " << this->_textureChannels <<
+        ", textureFormat = " << static_cast < uint32 > (this->_textureFormat) <<
+        ", currentLayout = " << static_cast < uint32 > (this->_currentLayout) <<
+        ", sharingMode = " << static_cast < uint32 > (this->_sharingMode) <<
+        ", stagingBuffer = " << this->_stagingBuffer.toString() << " }";
+
+    return oss.str();
 }

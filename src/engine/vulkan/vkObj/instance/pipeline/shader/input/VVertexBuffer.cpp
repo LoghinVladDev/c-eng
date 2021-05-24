@@ -4,7 +4,7 @@
 
 #include "VVertexBuffer.hpp"
 
-inline static std::vector < engine::VVertex::SVertexPack > getPackedVertices ( const engine::VVertex * vertices, uint32 size ) noexcept {
+inline static auto getPackedVertices ( engine::VVertex const * vertices, uint32 size ) noexcept -> std::vector < engine::VVertex::SVertexPack > {
     std::vector < engine::VVertex::SVertexPack > packedVertices (size) ;
 
     for ( uint32 i = 0; i < size; i++ )
@@ -13,14 +13,14 @@ inline static std::vector < engine::VVertex::SVertexPack > getPackedVertices ( c
     return packedVertices;
 }
 
-VulkanResult engine::VVertexBuffer::setup(
-    const engine::VLogicalDevice    & device,
-    const std::vector< VVertex >    & vertices,
-    const engine::VCommandPool      * pCommandPool,
-    const uint32                    * pQueueFamilyIndices,
+auto engine::VVertexBuffer::setup(
+    engine::VLogicalDevice    const & device,
+    std::vector< VVertex >    const & vertices,
+    engine::VCommandPool      const * pCommandPool,
+    uint32                    const * pQueueFamilyIndices,
     uint32                            queueFamilyIndexCount,
     bool                              forceMemoryExclusivity
-) noexcept {
+) noexcept -> VulkanResult {
     auto packedVertices = getPackedVertices( vertices.data(), static_cast<uint32>(vertices.size()) );
     return this->setup(
         device,
@@ -32,14 +32,14 @@ VulkanResult engine::VVertexBuffer::setup(
     );
 }
 
-VulkanResult engine::VVertexBuffer::setup(
-    const engine::VLogicalDevice                & device,
-    const std::vector< VVertex::SVertexPack >   & vertices,
-    const engine::VCommandPool                  * pCommandPool,
-    const uint32                                * pQueueFamilyIndices,
+auto engine::VVertexBuffer::setup(
+    engine::VLogicalDevice                const & device,
+    std::vector< VVertex::SVertexPack >   const & vertices,
+    engine::VCommandPool                  const * pCommandPool,
+    uint32                                const * pQueueFamilyIndices,
     uint32                                        queueFamilyIndexCount,
     bool                                          forceMemoryExclusivity
-) noexcept {
+) noexcept -> VulkanResult {
     VulkanSharingMode sharingMode   = VBuffer::getOptimalSharingMode( forceMemoryExclusivity, queueFamilyIndexCount, device );
     this->_pCommandPool             = pCommandPool;
 
@@ -65,14 +65,14 @@ VulkanResult engine::VVertexBuffer::setup(
     );
 }
 
-VulkanResult engine::VVertexBuffer::setup(
-    const engine::VLogicalDevice    & device,
+auto engine::VVertexBuffer::setup(
+    engine::VLogicalDevice    const & device,
     uint32                            vertexCount,
-    const engine::VCommandPool      * pCommandPool,
-    const uint32                    * pQueueFamilyIndices,
+    engine::VCommandPool      const * pCommandPool,
+    uint32                    const * pQueueFamilyIndices,
     uint32                            queueFamilyIndexCount,
     bool                              forceMemoryExclusivity
-) noexcept {
+) noexcept -> VulkanResult {
 
     VulkanSharingMode sharingMode   = VBuffer::getOptimalSharingMode( forceMemoryExclusivity, queueFamilyIndexCount, device );
     this->_pCommandPool             = pCommandPool;
@@ -99,12 +99,12 @@ VulkanResult engine::VVertexBuffer::setup(
     );
 }
 
-VulkanResult engine::VVertexBuffer::load(const std::vector<VVertex> & vertices) noexcept {
+auto engine::VVertexBuffer::load(std::vector<VVertex> const & vertices) noexcept -> VulkanResult {
     auto packedVertices = getPackedVertices( vertices.data(), static_cast<uint32>(vertices.size()) );
     return this->load( packedVertices );
 }
 
-VulkanResult engine::VVertexBuffer::load(const std::vector<VVertex::SVertexPack> & packedVertices) noexcept {
+auto engine::VVertexBuffer::load(std::vector<VVertex::SVertexPack> const & packedVertices) noexcept -> VulkanResult {
     auto copyElementCount = std::min (
         static_cast < uint32 > ( this->_stagingBuffer.getElementCount() ),
         static_cast < uint32 > ( packedVertices.size() )
@@ -120,7 +120,7 @@ VulkanResult engine::VVertexBuffer::load(const std::vector<VVertex::SVertexPack>
     return this->flush();
 }
 
-VulkanResult engine::VVertexBuffer::flush() noexcept {
+auto engine::VVertexBuffer::flush() noexcept -> VulkanResult {
     return this->copyFrom(
         this->_stagingBuffer,
         * this->_pCommandPool,
@@ -128,7 +128,7 @@ VulkanResult engine::VVertexBuffer::flush() noexcept {
     );
 }
 
-VulkanResult engine::VVertexBuffer::allocateMemory() noexcept {
+auto engine::VVertexBuffer::allocateMemory() noexcept -> VulkanResult {
     VulkanResult allocateResult = VBuffer::allocateMemory( VBuffer::MEMORY_GPU_BUFFER_FLAGS );
     if ( allocateResult != VulkanResult::VK_SUCCESS )
         return allocateResult;
@@ -140,12 +140,24 @@ VulkanResult engine::VVertexBuffer::allocateMemory() noexcept {
     return this->flush();
 }
 
-void engine::VVertexBuffer::free() noexcept {
+auto engine::VVertexBuffer::free() noexcept -> void {
     this->_stagingBuffer.free();
     VBuffer::free();
 }
 
-void engine::VVertexBuffer::cleanup() noexcept {
-    this->_stagingBuffer.cleanup();
-    VBuffer::cleanup();
+auto engine::VVertexBuffer::clear() noexcept -> void {
+    this->_stagingBuffer.clear();
+    VBuffer::clear();
+}
+
+#include <sstream>
+auto engine::VVertexBuffer::toString() const noexcept -> String {
+    std::stringstream oss;
+
+    oss << "VVertexBuffer { " <<
+        "pCommandPool = 0x" << std::hex << this->_pCommandPool <<
+        ", base = " << VBuffer::toString() <<
+        ", staging = " << this->_stagingBuffer.toString() << " }";
+
+    return oss.str();
 }

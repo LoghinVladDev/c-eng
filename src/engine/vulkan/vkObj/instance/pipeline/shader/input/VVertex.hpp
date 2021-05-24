@@ -14,7 +14,7 @@
 
 namespace engine {
 
-    class VVertex {
+    class VVertex : public VObject {
     public:
 
         typedef struct {
@@ -25,7 +25,11 @@ namespace engine {
 
     private:
         //// private variables
-        SVertexPack _vertexPack;
+        SVertexPack _vertexPack {
+            .position           = {0.0f, 0.0f, 0.0f},
+            .color              = {0.0f, 0.0f, 0.0f},
+            .textureCoordinates = {0.0f, 0.0f}
+        };
 
         constexpr static uint32 PACK_PROPERTIES_COUNT = 3U;
 
@@ -81,10 +85,10 @@ namespace engine {
         constexpr static VulkanFormat getShaderVariableFormat( T ) noexcept {
             __GEN_SHADER_VAR_FORMAT_CASE( T, float, FLOAT )
             else __GEN_SHADER_VAR_FORMAT_CASE( T, uint32, UINT )
-            else __GEN_SHADER_VAR_FORMAT_CASE( T, int32, INT)
+            else __GEN_SHADER_VAR_FORMAT_CASE( T, sint32, INT)
             else __GEN_SHADER_VAR_FORMAT_CASE( T, double, DOUBLE)
             else __GEN_SHADER_VAR_FORMAT_CASE( T, uint64, LUINT)
-            else __GEN_SHADER_VAR_FORMAT_CASE( T, int64, LINT)
+            else __GEN_SHADER_VAR_FORMAT_CASE( T, sint64, LINT)
 
             return VVertex::UNKNOWN_FORMAT;
         }
@@ -92,61 +96,101 @@ namespace engine {
 #undef __GEN_SHADER_VAR_FORMAT_CASE
 
         VVertex() noexcept = default;
-        VVertex( const glm::vec3 & position, const glm::vec3 & color, const glm::vec2 & textureCoordinates ) noexcept :
+        VVertex(
+                glm::vec3 const & position,
+                glm::vec3 const & color,
+                glm::vec2 const & textureCoordinates
+        ) noexcept :
+            VObject(),
             _vertexPack ( { position, color, textureCoordinates } ) {
 
         }
 
-        VVertex( const glm::vec3 & position, const glm::vec3 & color ) noexcept :
+        VVertex(
+                glm::vec3 const & position,
+                glm::vec3 const & color
+        ) noexcept :
+            VObject(),
             _vertexPack ( { position, color, glm::vec2 { 0.0f, 0.0f } } ) {
 
         }
 
-        VVertex( const glm::vec3 & position, const glm::vec2 & textureCoordinates ) noexcept :
+        VVertex(
+                glm::vec3 const & position,
+                glm::vec2 const & textureCoordinates
+        ) noexcept :
+            VObject(),
             _vertexPack ( { position, glm::vec3 {0.0f, 0.0f, 0.0f }, textureCoordinates } ) {
 
         }
 
-        VVertex( const glm::vec3 & position ) noexcept :
+        explicit VVertex( glm::vec3 const & position ) noexcept :
+            VObject(),
             _vertexPack ( { position, glm::vec3 { 0.0f, 0.0f, 0.0f }, glm::vec2 { 0.0f, 0.0f } } ) {
 
         }
 
-        VVertex( const VVertex::SVertexPack & pack ) noexcept :
+        explicit VVertex( VVertex::SVertexPack const & pack ) noexcept :
+            VObject(),
             _vertexPack ( pack ) {
 
         }
 
-        [[nodiscard]] const SVertexPack & getPackedData () const noexcept {
+        ~VVertex () noexcept override = default;
+
+        [[nodiscard]] constexpr auto getPackedData () const noexcept -> SVertexPack const & {
             return this->_vertexPack;
         }
 
-        [[nodiscard]] const glm::vec3 & getPosition () const noexcept {
+        [[nodiscard]] constexpr auto getPosition () const noexcept -> glm::vec3 const & {
             return this->_vertexPack.position;
         }
 
-        [[nodiscard]] const glm::vec2 & getTextureCoordinates () const noexcept {
+        [[nodiscard]] constexpr auto getTextureCoordinates () const noexcept -> glm::vec2 const & {
             return this->_vertexPack.textureCoordinates;
         }
 
-        [[nodiscard]] const glm::vec3 & getColor () const noexcept {
+        [[nodiscard]] constexpr auto getColor () const noexcept -> glm::vec3 const & {
             return this->_vertexPack.color;
         }
 
-        void setPosition ( const glm::vec3 & position ) noexcept {
+        GLM_CONSTEXPR inline auto setPosition ( glm::vec3 const & position ) noexcept -> void {
             this->_vertexPack.position = position;
         }
 
-        void setColor ( const glm::vec3 & color ) noexcept {
+        GLM_CONSTEXPR inline auto setColor ( glm::vec3 const & color ) noexcept -> void {
             this->_vertexPack.color = color;
         }
 
-        void setTextureCoordinates ( const glm::vec2 & textureCoordinates ) noexcept {
+        GLM_CONSTEXPR inline auto setTextureCoordinates ( glm::vec2 const & textureCoordinates ) noexcept -> void {
             this->_vertexPack.textureCoordinates = textureCoordinates;
         }
 
-        static VulkanVertexInputBindingDescription                                                           getBindingDescription ()    noexcept;
-        static std::array < VulkanVertexInputAttributeDescription, engine::VVertex::PACK_PROPERTIES_COUNT >  getAttributeDescriptions () noexcept;
+        static auto getBindingDescription () noexcept -> VulkanVertexInputBindingDescription;
+        static auto getAttributeDescriptions () noexcept -> std::array < VulkanVertexInputAttributeDescription, engine::VVertex::PACK_PROPERTIES_COUNT >;
+
+        [[nodiscard]] auto toString () const noexcept -> String override;
+        [[nodiscard]] auto operator == (Object const & o) const noexcept -> bool override {
+            if ( this == & o ) return true;
+            auto p = dynamic_cast < decltype ( this ) > ( & o );
+            if ( p == nullptr ) return false;
+
+            return
+                this->_vertexPack.position              == p->_vertexPack.position  &&
+                this->_vertexPack.color                 == p->_vertexPack.color     &&
+                this->_vertexPack.textureCoordinates    == p->_vertexPack.textureCoordinates;
+        }
+
+        [[nodiscard]] auto hash () const noexcept -> Index override {
+            return
+                dataTypes::hash(this->_vertexPack.position) * 10000 +
+                dataTypes::hash(this->_vertexPack.color)    * 100   +
+                dataTypes::hash(this->_vertexPack.textureCoordinates);
+        }
+
+        [[nodiscard]] auto copy () const noexcept -> VVertex * override {
+            return new VVertex(*this);
+        }
     };
 
 }

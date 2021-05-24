@@ -5,18 +5,17 @@
 #ifndef ENG1_VSHADERCOMPILER_HPP
 #define ENG1_VSHADERCOMPILER_HPP
 
-#include <engineVulkanPreproc.hpp>
-#include <engineDataPaths.h>
+#include <VObject.hpp>
 #include <vkDefs/vkPlatformDefs.h>
 #include <vector>
 #include <CDS/JSON>
-#include <vkObj/instance/pipeline/shader/VShaderModule.hpp>
+#include <VShaderModule.hpp>
 
 namespace engine {
 
     class VShaderCompiler;
 
-    class VShaderCompilerTarget {
+    class VShaderCompilerTarget : public VObject {
         friend class VShaderCompiler;
     private:
         std::string                         _path;
@@ -26,9 +25,9 @@ namespace engine {
 
         engine::VShaderModule::ShaderType   _shaderType { engine::VShaderModule::UNDEFINED };
 
-        const VShaderCompiler * _pCompiler {nullptr};
+        VShaderCompiler      const mutable * _pCompiler {nullptr};
 
-        void setDefaultTargetName () noexcept {
+        auto setDefaultTargetName () noexcept -> void {
             if( this->_path.find('/') != std::string::npos )
                 this->_targetName = this->_path.substr( this->_path.find_last_of('/'), this->_path.find_last_of('.') ).append(".spv");
             else
@@ -37,11 +36,13 @@ namespace engine {
     public:
         VShaderCompilerTarget() noexcept = default;
 
-        explicit VShaderCompilerTarget ( std::string path ) noexcept (false) : _path(std::move(path)) {
+        explicit VShaderCompilerTarget ( std::string path ) noexcept (false) : VObject(), _path(std::move(path)) {
             this->setDefaultTargetName();
         }
 
-        VShaderCompilerTarget & setPath ( std::string path ) noexcept (false) {
+        ~VShaderCompilerTarget() noexcept override = default;
+
+        auto setPath ( std::string path ) noexcept (false) -> VShaderCompilerTarget & {
             this->_path = std::move ( path );
 
             if( this->_targetName.empty() )
@@ -50,40 +51,54 @@ namespace engine {
             return *this;
         }
 
-        VShaderCompilerTarget & setTargetName ( std::string name ) noexcept (false) {
+        auto setTargetName ( std::string name ) noexcept (false) -> VShaderCompilerTarget & {
             this->_targetName = std::move ( name ).append(".spv");
             return *this;
         }
 
-        VShaderCompilerTarget & setTag ( std::string tag ) noexcept (false) {
+        auto setTag ( std::string tag ) noexcept (false) -> VShaderCompilerTarget & {
             this->_tag = std::move ( tag );
             return *this;
         }
 
-        [[nodiscard]] engine::VShaderModule::ShaderType getType () const noexcept {
+        [[nodiscard]] constexpr auto getType () const noexcept -> engine::VShaderModule::ShaderType {
             return this->_shaderType;
         }
 
-        [[nodiscard]] const std::string & getTag() const noexcept {
+        [[nodiscard]] constexpr auto getTag() const noexcept -> std::string const & {
             return this->_tag;
         }
 
-//        VShaderCompilerTarget & setCompiler ( VShaderCompiler & compiler, bool = false) noexcept;
-
-        [[nodiscard]] const std::string& getCompiledPath () const noexcept {
+        [[nodiscard]] constexpr auto getCompiledPath () const noexcept -> std::string const & {
             return this->_outputPath;
         }
 
-        [[nodiscard]] std::vector < VulkanDescriptorSetLayoutBinding > getLayoutBindings() const noexcept;
+        [[nodiscard]] auto getLayoutBindings() const noexcept -> std::vector < VulkanDescriptorSetLayoutBinding >;
 
-        [[nodiscard]] const std::string& getRelativePath () const noexcept {
+        [[nodiscard]] constexpr auto getRelativePath () const noexcept -> std::string const & {
             return this->_path;
         }
 
-        void compile () noexcept;
+        auto compile () noexcept -> void;
+
+        [[nodiscard]] auto toString() const noexcept -> String override;
+        [[nodiscard]] auto operator == (Object const & o) const noexcept -> bool override {
+            if ( this == & o ) return true;
+            auto p = dynamic_cast < decltype (this) > (& o);
+            if ( p == nullptr ) return false;
+            return this->_tag == p->_tag && this->_shaderType == p->_shaderType;
+        }
+
+        [[nodiscard]] auto hash () const noexcept -> Index override {
+            return String(this->_tag).hash() + dataTypes::hash(static_cast<uint32>(this->_shaderType)) * 64;
+        }
+
+        [[nodiscard]] auto copy () const noexcept -> VShaderCompilerTarget * override {
+            return new VShaderCompilerTarget(*this);
+        }
     };
 
-    class VShaderCompiler {
+    class VShaderCompiler : public VObject {
     private:
         //// private variables
         std::string                             _outputDirectoryPath;
@@ -96,30 +111,50 @@ namespace engine {
         //// public variables
 
         //// public functions
-        VShaderCompiler () noexcept (false);
-        explicit VShaderCompiler ( const std::string &, const std::string& = "" ) noexcept ( false );
+        VShaderCompiler () noexcept;
+        explicit VShaderCompiler ( std::string const &, std::string const & = "" ) noexcept;
 
-        VShaderCompiler & addTarget     ( VShaderCompilerTarget & );
-        VShaderCompiler & addTarget     ( std::string& );
-        VShaderCompiler & addTargets    ( std::vector < VShaderCompilerTarget > & );
-        VShaderCompiler & addTargets    ( std::vector < std::string > & );
+        ~VShaderCompiler() noexcept override = default;
 
-        VShaderCompiler & setConfigurationFile ( const JSON& );
-        VShaderCompiler & setConfigurationFileJSON ( const std::string& );
+        auto addTarget ( VShaderCompilerTarget const & ) noexcept -> VShaderCompiler & ;
+        auto addTarget ( std::string const & ) noexcept -> VShaderCompiler & ;
+        auto addTargets ( std::vector < VShaderCompilerTarget > const & ) noexcept -> VShaderCompiler & ;
+        auto addTargets ( std::vector < std::string > const & ) noexcept -> VShaderCompiler & ;
 
-        [[nodiscard]] const std::string & getOutputDirectoryPath () const noexcept {
+        auto setConfigurationFile ( JSON const & ) noexcept -> VShaderCompiler &;
+        auto setConfigurationFileJSON ( std::string const & ) noexcept -> VShaderCompiler &;
+
+        [[nodiscard]] constexpr auto getOutputDirectoryPath () const noexcept -> std::string const & {
             return this->_outputDirectoryPath;
         }
 
-        [[nodiscard]] const std::string & getInputDirectoryPath () const noexcept {
+        [[nodiscard]] constexpr auto getInputDirectoryPath () const noexcept -> std::string const & {
             return this->_inputDirectoryPath;
         }
 
-        [[nodiscard]] const std::vector < VShaderCompilerTarget > & getTargets () const noexcept {
+        [[nodiscard]] constexpr auto getTargets () const noexcept -> std::vector < VShaderCompilerTarget > const & {
             return this->_targets;
         }
 
-        void build () noexcept;
+        auto build () noexcept -> void;
+
+        [[nodiscard]] auto toString () const noexcept -> String override;
+
+        [[nodiscard]] auto operator == (Object const & o) const noexcept -> bool override {
+            if ( this == & o ) return true;
+            auto p = dynamic_cast < decltype(this) > ( & o );
+            if ( p == nullptr ) return false;
+
+            return this->_inputDirectoryPath == p->_inputDirectoryPath && this->_outputDirectoryPath == p->_outputDirectoryPath && this->_targets == p->_targets;
+        }
+
+        [[nodiscard]] auto hash () const noexcept -> Index override {
+            return dataTypes::hash(this->_targets.size());
+        }
+
+        [[nodiscard]] auto copy () const noexcept -> VShaderCompiler * override {
+            return new VShaderCompiler(*this);
+        }
     };
 
 }

@@ -4,10 +4,10 @@
 
 #include "VFence.hpp"
 
-static inline void populateFenceCreateInfo (
+static inline auto populateFenceCreateInfo (
     VulkanFenceCreateInfo * createInfo,
-    VulkanFenceCreateFlags flags = engine::VFence::NO_FLAGS
-) noexcept {
+    VulkanFenceCreateFlags  flags = engine::VFence::NO_FLAGS
+) noexcept -> void {
     if ( createInfo == nullptr )
         return;
 
@@ -18,7 +18,7 @@ static inline void populateFenceCreateInfo (
     };
 }
 
-VulkanResult engine::VFence::setup(const engine::VLogicalDevice & device, VulkanFenceCreateFlags flags) noexcept {
+auto engine::VFence::setup(engine::VLogicalDevice const & device, VulkanFenceCreateFlags flags) noexcept -> VulkanResult {
     this->_pLogicalDevice = & device;
 
     VulkanFenceCreateInfo createInfo { };
@@ -27,11 +27,11 @@ VulkanResult engine::VFence::setup(const engine::VLogicalDevice & device, Vulkan
     return vkCreateFence( this->_pLogicalDevice->data(), & createInfo, nullptr, & this->_handle );
 }
 
-void engine::VFence::clear() noexcept {
+auto engine::VFence::clear() noexcept -> void {
     vkDestroyFence( this->_pLogicalDevice->data(), this->_handle, nullptr );
 }
 
-VulkanResult engine::VFenceCollection::setup(const VLogicalDevice & device, uint32 fenceCount, VulkanFenceCreateFlags flags) noexcept {
+auto engine::VFenceCollection::setup(VLogicalDevice const & device, uint32 fenceCount, VulkanFenceCreateFlags flags) noexcept -> VulkanResult {
     this->_fences.resize( fenceCount );
     this->_pLogicalDevice = & device;
 
@@ -44,17 +44,17 @@ VulkanResult engine::VFenceCollection::setup(const VLogicalDevice & device, uint
     return VulkanResult::VK_SUCCESS;
 }
 
-void engine::VFenceCollection::clear() noexcept {
+auto engine::VFenceCollection::clear() noexcept -> void {
     for ( auto & fence : this->_fences )
         fence.clear();
 }
 
-VulkanResult engine::VFenceCollection::resize(const VLogicalDevice & device, uint32 fenceCount, VulkanFenceCreateFlags flags) noexcept {
+auto engine::VFenceCollection::resize(VLogicalDevice const & device, uint32 fenceCount, VulkanFenceCreateFlags flags) noexcept -> VulkanResult {
     this->clear();
     return this->setup( device, fenceCount, flags );
 }
 
-VulkanResult engine::VFenceCollection::resize(uint32 fenceCount) {
+auto engine::VFenceCollection::resize(uint32 fenceCount) noexcept -> VulkanResult {
     this->_fences.resize( fenceCount );
     return VulkanResult::VK_SUCCESS;
 }

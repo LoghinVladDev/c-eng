@@ -7,14 +7,14 @@
 #include <fstream>
 #include <vkObj/instance/pipeline/shader/VShaderCompiler.hpp>
 
-static std::vector < int8 > readFile ( const std::string& fileName ) noexcept (false) {
+static inline auto readFile ( std::string const & fileName ) noexcept (false) -> std::vector < sint8 > {
     std::ifstream file ( fileName, std::ios::ate | std::ios::binary );
 
     if ( ! file.is_open() )
         throw std::runtime_error ( "binary file read error" );
 
     std::size_t fileSize = ( std::size_t ) file.tellg();
-    std::vector < int8 > buffer ( fileSize );
+    std::vector < sint8 > buffer ( fileSize );
 
     file.seekg (0);
     file.read( reinterpret_cast<char *> (buffer.data()), fileSize );
@@ -24,11 +24,11 @@ static std::vector < int8 > readFile ( const std::string& fileName ) noexcept (f
     return buffer;
 }
 
-static inline void populateShaderModuleCreateInfo (
-    VulkanShaderModuleCreateInfo * createInfo,
-    const uint32* pCode,
-    uint32 codeSize
-) noexcept {
+static inline auto populateShaderModuleCreateInfo (
+    VulkanShaderModuleCreateInfo          * createInfo,
+    uint32                          const * pCode,
+    uint32                                  codeSize
+) noexcept -> void {
     if ( createInfo == nullptr )
         return;
 
@@ -39,7 +39,7 @@ static inline void populateShaderModuleCreateInfo (
     createInfo->pCode       = pCode;
 }
 
-VulkanResult engine::VShaderModule::setup( const engine::VLogicalDevice & device ) noexcept {
+auto engine::VShaderModule::setup( engine::VLogicalDevice const & device ) noexcept -> VulkanResult {
     if ( this->_byteCode.empty() ||  this->_type == engine::VShaderModule::UNDEFINED )
         return VulkanResult::VK_ERROR_INITIALIZATION_FAILED;
 
@@ -56,7 +56,7 @@ VulkanResult engine::VShaderModule::setup( const engine::VLogicalDevice & device
     return vkCreateShaderModule ( this->_pLogicalDevice->data(), & createInfo, nullptr, & this->_handle );
 }
 
-engine::VShaderModule::VShaderModule(const std::string & path) noexcept : VRenderObject() {
+engine::VShaderModule::VShaderModule(std::string const & path) noexcept : VRenderObject() {
     try{
         this->_byteCode = readFile ( path );
     } catch ( std::exception const & exception ) {
@@ -65,7 +65,7 @@ engine::VShaderModule::VShaderModule(const std::string & path) noexcept : VRende
     }
 }
 
-engine::VShaderModule::VShaderModule(const engine::VShaderCompilerTarget & target) noexcept : VRenderObject() {
+engine::VShaderModule::VShaderModule(engine::VShaderCompilerTarget const & target) noexcept : VRenderObject() {
     try {
         this->_byteCode = readFile ( target.getCompiledPath() );
         this->_type     = target.getType();
@@ -76,7 +76,7 @@ engine::VShaderModule::VShaderModule(const engine::VShaderCompilerTarget & targe
     }
 }
 
-VulkanResult engine::VShaderModule::setup(const std::string & path, const engine::VLogicalDevice& device ) noexcept {
+auto engine::VShaderModule::setup(std::string const & path, engine::VLogicalDevice const & device ) noexcept -> VulkanResult {
     try{
         this->_byteCode = readFile ( path );
         return this->setup( device );
@@ -88,7 +88,7 @@ VulkanResult engine::VShaderModule::setup(const std::string & path, const engine
     return VulkanResult::VK_ERROR_INITIALIZATION_FAILED;
 }
 
-void engine::VShaderModule::clear() noexcept {
+auto engine::VShaderModule::clear() noexcept -> void {
     if ( this->_handle == nullptr )
         return;
 
@@ -96,7 +96,7 @@ void engine::VShaderModule::clear() noexcept {
 
 }
 
-std::string engine::VShaderModule::shaderTypeToString(engine::VShaderModule::ShaderType type) noexcept {
+auto engine::VShaderModule::shaderTypeToString(engine::VShaderModule::ShaderType type) noexcept -> std::string {
     switch ( type ) {
 
         case VERTEX         : return std::string ( ENGINE_VULKAN_SHADER_CONFIG_SHADER_TYPE_VERTEX );
@@ -111,7 +111,7 @@ std::string engine::VShaderModule::shaderTypeToString(engine::VShaderModule::Sha
     }
 }
 
-engine::VShaderModule::ShaderType engine::VShaderModule::stringToShaderType(const std::string & literal) noexcept {
+auto engine::VShaderModule::stringToShaderType(std::string const & literal) noexcept -> engine::VShaderModule::ShaderType {
     if ( std::strcmp ( literal.c_str(), ENGINE_VULKAN_SHADER_CONFIG_SHADER_TYPE_VERTEX ) == 0 )
         return engine::VShaderModule::ShaderType::VERTEX;
     else if ( std::strcmp ( literal.c_str(), ENGINE_VULKAN_SHADER_CONFIG_SHADER_TYPE_GEOMETRY ) == 0 )
@@ -125,7 +125,7 @@ engine::VShaderModule::ShaderType engine::VShaderModule::stringToShaderType(cons
     }
 }
 
-inline VulkanShaderStageFlagBits shaderTypeToShaderStageFlagBits ( engine::VShaderModule::ShaderType type ) noexcept {
+inline auto shaderTypeToShaderStageFlagBits ( engine::VShaderModule::ShaderType type ) noexcept -> VulkanShaderStageFlagBits {
     switch ( type ) {
         case engine::VShaderModule::VERTEX:         return VulkanShaderStageFlagBits::VK_SHADER_STAGE_VERTEX_BIT;
 //        case engine::VShaderModule::TESSELATION:    return VulkanShaderStageFlagBits::VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT;
@@ -136,7 +136,7 @@ inline VulkanShaderStageFlagBits shaderTypeToShaderStageFlagBits ( engine::VShad
     }
 }
 
-VulkanPipelineShaderStageCreateInfo engine::VShaderModule::getShaderStageInfo() const noexcept (false) {
+auto engine::VShaderModule::getShaderStageInfo() const noexcept (false) -> VulkanPipelineShaderStageCreateInfo {
     VkPipelineShaderStageCreateInfo pipelineCreateInfo {};
 
     if ( this->_byteCode.empty() || this->_type == engine::VShaderModule::UNDEFINED || this->_handle == nullptr )
@@ -148,4 +148,15 @@ VulkanPipelineShaderStageCreateInfo engine::VShaderModule::getShaderStageInfo() 
     pipelineCreateInfo.pName    = "main";
 
     return pipelineCreateInfo;
+}
+
+#include <sstream>
+
+auto engine::VShaderModule::toString() const noexcept -> String {
+    std::stringstream oss;
+    oss << "VShaderModule { handle = 0x" << std::hex << this->_handle <<
+        ", type = " << VShaderModule::shaderTypeToString(this->_type) <<
+        ", pLogicalDevice = 0x" << std::hex << this->_pLogicalDevice << " }";
+
+    return oss.str();
 }

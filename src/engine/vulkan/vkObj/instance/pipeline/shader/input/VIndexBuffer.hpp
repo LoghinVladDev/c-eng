@@ -5,12 +5,11 @@
 #ifndef ENG1_VINDEXBUFFER_HPP
 #define ENG1_VINDEXBUFFER_HPP
 
-#include <engineVulkanPreproc.hpp>
-#include <vkDefs/types/vulkanExplicitTypes.h>
-#include <vkObj/instance/device/VLogicalDevice.hpp>
-#include <vkObj/instance/pipeline/shader/input/VVertex.hpp>
-#include <vkObj/instance/pipeline/shader/input/VBuffer.hpp>
-#include <vkObj/instance/pipeline/shader/input/VStagingBuffer.hpp>
+#include <VRenderObject.hpp>
+#include <VLogicalDevice.hpp>
+#include <VVertex.hpp>
+#include <VBuffer.hpp>
+#include <VStagingBuffer.hpp>
 
 namespace engine {
 
@@ -24,7 +23,7 @@ namespace engine {
         //// protected variables
 
         /// Command Pool to Allocate Copy To GPU from
-        const VCommandPool * _pCommandPool {nullptr};
+        VCommandPool const * _pCommandPool {nullptr};
 
         //// protected functions
 
@@ -36,6 +35,8 @@ namespace engine {
          * @exceptsafe
          */
         VIndexBufferBase () noexcept = default;
+
+        ~VIndexBufferBase() noexcept override = default;
 
     public:
         //// public variables
@@ -99,7 +100,21 @@ namespace engine {
          *
          * @exceptsafe
          */
-        auto cleanup () noexcept -> void override;
+        auto clear () noexcept -> void override;
+
+        [[nodiscard]] auto toString () const noexcept -> String override {
+            return String("VIndexBufferBase { base = ").append(VBuffer::toString()).append(" }");
+        }
+
+        [[nodiscard]] auto operator == (Object const & o) const noexcept -> bool override {
+            return VBuffer::operator==(o);
+        }
+
+        [[nodiscard]] auto hash () const noexcept -> Index override {
+            return VBuffer::hash();
+        }
+
+        [[nodiscard]] auto copy () const noexcept -> VIndexBufferBase * override = 0;
     };
 
     /**
@@ -127,6 +142,8 @@ namespace engine {
          * @exceptsafe
          */
         VIndexBuffer16 () noexcept = default;
+
+        ~VIndexBuffer16() noexcept override = default;
 
         /**
          * @brief Function Initialises Index Buffer with given data
@@ -204,7 +221,7 @@ namespace engine {
          *
          * @return std::vector < uint16 > cref = Constant Reference to vector containing indices in buffer
          */
-        [[nodiscard]] auto getBufferData () const noexcept -> std::vector < uint16 > const & {
+        [[nodiscard]] constexpr auto getBufferData () const noexcept -> std::vector < uint16 > const & {
             return this->_stagingBuffer._data;
         }
 
@@ -240,7 +257,7 @@ namespace engine {
          *
          * @exceptsafe
          */
-        auto cleanup() noexcept -> void override;
+        auto clear() noexcept -> void override;
 
         /**
          * @brief Function frees Buffer Allocated Memory
@@ -254,8 +271,21 @@ namespace engine {
          *
          * @return VIndexBufferBase::TYPE_16_BIT
          */
-        [[nodiscard]] auto getIndexType() const noexcept -> VulkanIndexType override {
+        [[nodiscard]] constexpr auto getIndexType() const noexcept -> VulkanIndexType override {
             return VIndexBufferBase::TYPE_16_BIT;
+        }
+
+        [[nodiscard]] auto toString () const noexcept -> String override;
+        [[nodiscard]] auto operator == (Object const & o) const noexcept -> bool override {
+            return VIndexBufferBase::operator==(o);
+        }
+
+        [[nodiscard]] auto hash () const noexcept -> Index override {
+            return VIndexBufferBase::hash();
+        }
+
+        [[nodiscard]] auto copy () const noexcept -> VIndexBuffer16 * override {
+            return new VIndexBuffer16(* this);
         }
     };
 
@@ -284,6 +314,7 @@ namespace engine {
          * @exceptsafe
          */
         VIndexBuffer32 () noexcept = default;
+        ~VIndexBuffer32() noexcept override = default;
 
         /**
          * @brief Function Initialises Index Buffer with given data
@@ -352,7 +383,7 @@ namespace engine {
          * @return VulkanResult returned by VCommandBufferCollection::submit in case of error OR
          * @return VulkanResult returned by vkQueueWaitIdle in case of error
          */
-        auto load ( const std::vector < uint32 > & ) noexcept -> VulkanResult;
+        auto load ( std::vector < uint32 > const & ) noexcept -> VulkanResult;
 
         /**
          * @brief Getter for Buffer Contained Indices ( on CPU, not on GPU )
@@ -361,7 +392,7 @@ namespace engine {
          *
          * @return std::vector < uint32 > cref = Constant Reference to vector containing indices in buffer
          */
-        [[nodiscard]] auto getBufferData () const noexcept -> std::vector < uint32 > const & {
+        [[nodiscard]] constexpr auto getBufferData () const noexcept -> std::vector < uint32 > const & {
             return this->_stagingBuffer._data;
         }
 
@@ -397,7 +428,7 @@ namespace engine {
          *
          * @exceptsafe
          */
-        auto cleanup() noexcept -> void override;
+        auto clear() noexcept -> void override;
 
         /**
          * @brief Function frees Buffer Allocated Memory
@@ -411,8 +442,21 @@ namespace engine {
          *
          * @return VIndexBufferBase::TYPE_32_BIT
          */
-        [[nodiscard]] auto getIndexType() const noexcept -> VulkanIndexType override {
+        [[nodiscard]] constexpr auto getIndexType() const noexcept -> VulkanIndexType override {
             return VIndexBufferBase::TYPE_32_BIT;
+        }
+
+        [[nodiscard]] auto toString () const noexcept -> String override;
+        [[nodiscard]] auto operator == (Object const & o) const noexcept -> bool override {
+            return VIndexBufferBase::operator==(o);
+        }
+
+        [[nodiscard]] auto hash () const noexcept -> Index override {
+            return VIndexBufferBase::hash();
+        }
+
+        [[nodiscard]] auto copy () const noexcept -> VIndexBuffer32 * override {
+            return new VIndexBuffer32(* this);
         }
     };
 

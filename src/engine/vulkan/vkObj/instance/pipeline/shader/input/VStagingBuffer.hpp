@@ -5,11 +5,9 @@
 #ifndef ENG1_VSTAGINGBUFFER_HPP
 #define ENG1_VSTAGINGBUFFER_HPP
 
-#include <engineVulkanPreproc.hpp>
-#include <vkDefs/types/vulkanExplicitTypes.h>
 #include <vkObj/instance/device/VLogicalDevice.hpp>
-#include <vkObj/instance/pipeline/shader/input/VVertex.hpp>
-#include <vkObj/instance/pipeline/shader/input/VBuffer.hpp>
+#include <VVertex.hpp>
+#include <VBuffer.hpp>
 
 namespace engine {
 
@@ -38,12 +36,16 @@ namespace engine {
     public:
         //// public variables
 
+        //// public functions
+
         /**
          * @brief Default Constructor
          *
          * @exceptsafe
          */
         VStagingBuffer () noexcept = default;
+
+        ~VStagingBuffer() noexcept override = default;
 
         /**
          * @brief Function initialises Staging Buffer with given data
@@ -123,7 +125,7 @@ namespace engine {
          *
          * @return std::vector < T > cref = Constant Reference to the Vector containing data of type T
          */
-        [[nodiscard]] auto getBufferData () const noexcept -> std::vector < T > const &  {
+        [[nodiscard]] constexpr auto getBufferData () const noexcept -> std::vector < T > const &  {
             return this->_data;
         }
 
@@ -136,7 +138,7 @@ namespace engine {
          *
          * @return std::vector < T > ref = Constant Reference to the Vector containing data of type T
          */
-        [[nodiscard]] auto getBufferData () noexcept -> std::vector < T > & {
+        [[nodiscard]] constexpr auto getBufferData () noexcept -> std::vector < T > & {
             return this->_data;
         }
 
@@ -152,10 +154,25 @@ namespace engine {
          *
          * @exceptsafe
          */
-        auto cleanup () noexcept -> void override;
+        auto clear () noexcept -> void override;
 
-        //// public functions
+        [[nodiscard]] auto toString() const noexcept -> String override {
+            String r = "VStagingBuffer { ";
+            r += "base = VBuffer::toString(), data = [ <unimplemented> ]";
+            return r;
+        }
 
+        [[nodiscard]] auto copy() const noexcept -> VStagingBuffer * override {
+            return new VStagingBuffer (* this);
+        }
+
+        [[nodiscard]] auto hash() const noexcept -> Index override {
+            return VBuffer::hash() + this->_data.size() * 1000;
+        }
+
+        [[nodiscard]] auto operator == (Object const & o) const noexcept -> bool override {
+            return VBuffer::operator==(o);
+        }
     };
 
 }
@@ -166,8 +183,8 @@ auto engine::VStagingBuffer<T>::free() noexcept -> void {
 }
 
 template <class T>
-auto engine::VStagingBuffer<T>::cleanup() noexcept -> void {
-    return VBuffer::cleanup();
+auto engine::VStagingBuffer<T>::clear() noexcept -> void {
+    return VBuffer::clear();
 }
 
 template <class T>
@@ -184,7 +201,7 @@ auto engine::VStagingBuffer<T>::allocateMemory() noexcept -> VulkanResult {
 template <class T>
 auto engine::VStagingBuffer<T>::reload() noexcept -> VulkanResult {
     return VBuffer::load(
-        static_cast < const void * > ( this->_data.data() ),
+        static_cast < void const * > ( this->_data.data() ),
         static_cast < std::size_t > ( this->_data.size() * sizeof ( T ) )
     );
 }

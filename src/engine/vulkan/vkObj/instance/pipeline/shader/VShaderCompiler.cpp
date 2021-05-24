@@ -13,7 +13,7 @@
 #ifdef ENGINE_OS_WINDOWS_32_64
 #include <windows.h>
 
-static inline void platformDependantCompilation ( const std::string & input, const std::string& output ) noexcept (false) {
+static inline auto platformDependantCompilation ( std::string const & input, std::string const & output ) noexcept (false) -> void {
     std::cout << "\t" << input << '\n';
     std::cout << "\t" << output << '\n';
 
@@ -67,7 +67,7 @@ static inline void platformDependantCompilation ( const std::string & input, con
 #include <unistd.h>
 #include <wait.h>
 
-static inline void platformDependantCompilation ( const std::string & input, const std::string& output ) noexcept (false) {
+static inline auto platformDependantCompilation ( std::string const & input, std::string const & output ) noexcept (false) -> void {
     std::cout << input << '\n';
     std::cout << output << '\n';
 
@@ -98,7 +98,7 @@ static inline void platformDependantCompilation ( const std::string & input, con
 
 #endif
 
-static inline VulkanShaderStageFlagBits getShaderStageFlagBits ( engine::VShaderModule::ShaderType shaderType ) noexcept {
+static inline auto getShaderStageFlagBits ( engine::VShaderModule::ShaderType shaderType ) noexcept -> VulkanShaderStageFlagBits {
     switch ( shaderType ) {
         case engine::VShaderModule::VERTEX:         return VulkanShaderStageFlagBits::VK_SHADER_STAGE_VERTEX_BIT;
         case engine::VShaderModule::GEOMETRY:       return VulkanShaderStageFlagBits::VK_SHADER_STAGE_GEOMETRY_BIT;
@@ -109,7 +109,7 @@ static inline VulkanShaderStageFlagBits getShaderStageFlagBits ( engine::VShader
     }
 }
 
-std::vector < VulkanDescriptorSetLayoutBinding > engine::VShaderCompilerTarget::getLayoutBindings() const noexcept {
+auto engine::VShaderCompilerTarget::getLayoutBindings() const noexcept -> std::vector < VulkanDescriptorSetLayoutBinding > {
     std::string fullPath = this->_pCompiler->getInputDirectoryPath() + "/" + this->_path;
 
     std::ifstream shaderFile;
@@ -148,41 +148,45 @@ std::vector < VulkanDescriptorSetLayoutBinding > engine::VShaderCompilerTarget::
     return bindings;
 }
 
-engine::VShaderCompiler::VShaderCompiler() noexcept (false) {
+#include <engineDataPaths.h>
+engine::VShaderCompiler::VShaderCompiler() noexcept : VObject() {
     this->_inputDirectoryPath     = __VULKAN_SHADERS_PATH__;
     this->_outputDirectoryPath    = std::string( __VULKAN_SHADERS_PATH__ ).append("/out");
 }
 
-engine::VShaderCompiler::VShaderCompiler(const std::string & inputFolderPath, const std::string & outputFolderPath) noexcept(false) {
+engine::VShaderCompiler::VShaderCompiler(
+        std::string const & inputFolderPath,
+        std::string const & outputFolderPath
+) noexcept : VObject() {
     this->_inputDirectoryPath     = inputFolderPath;
     this->_outputDirectoryPath    = ( outputFolderPath.empty() ? std::string(__VULKAN_SHADERS_PATH__).append("/out") : outputFolderPath );
 }
 
-engine::VShaderCompiler &engine::VShaderCompiler::addTarget(engine::VShaderCompilerTarget & target) {
+auto engine::VShaderCompiler::addTarget(engine::VShaderCompilerTarget const & target) noexcept -> engine::VShaderCompiler & {
     target._pCompiler = this;
     this->_targets.push_back( target );
 
     return *this;
 }
 
-engine::VShaderCompiler &engine::VShaderCompiler::addTarget(std::string &) {
+auto engine::VShaderCompiler::addTarget(std::string const &) noexcept -> engine::VShaderCompiler & {
     return *this;
 }
 
-engine::VShaderCompiler &engine::VShaderCompiler::addTargets(std::vector<VShaderCompilerTarget> &) {
+auto engine::VShaderCompiler::addTargets(std::vector < VShaderCompilerTarget > const &) noexcept -> engine::VShaderCompiler & {
     return *this;
 }
 
-engine::VShaderCompiler &engine::VShaderCompiler::addTargets(std::vector<std::string> &) {
+auto engine::VShaderCompiler::addTargets(std::vector < std::string > const &) noexcept -> engine::VShaderCompiler & {
     return *this;
 }
 
-void engine::VShaderCompiler::build() noexcept {
+auto engine::VShaderCompiler::build() noexcept -> void {
     for ( auto & target : this->_targets )
         target.compile();
 }
 
-engine::VShaderCompiler &engine::VShaderCompiler::setConfigurationFile(const JSON & json) {
+auto engine::VShaderCompiler::setConfigurationFile(JSON const & json) noexcept -> engine::VShaderCompiler & {
     JSON configuration = json.getJSON( "compilerConfig" );
 
     this->_targets.clear();
@@ -210,7 +214,7 @@ engine::VShaderCompiler &engine::VShaderCompiler::setConfigurationFile(const JSO
     return *this;
 }
 
-engine::VShaderCompiler &engine::VShaderCompiler::setConfigurationFileJSON(const std::string &path) {
+auto engine::VShaderCompiler::setConfigurationFileJSON(std::string const & path) noexcept -> engine::VShaderCompiler & {
     std::ifstream inputFile;
     std::stringstream fileDataStream;
     inputFile.open( path );
@@ -219,7 +223,6 @@ engine::VShaderCompiler &engine::VShaderCompiler::setConfigurationFileJSON(const
     inputFile.close();
 
     try {
-
         return this->setConfigurationFile(JSON::parse(fileDataStream.str()));
     } catch ( std::exception const & ex ) {
         std::cout.flush();
@@ -229,7 +232,7 @@ engine::VShaderCompiler &engine::VShaderCompiler::setConfigurationFileJSON(const
     return *this;
 }
 
-void engine::VShaderCompilerTarget::compile() noexcept {
+auto engine::VShaderCompilerTarget::compile() noexcept -> void {
     static uint32 targetIndex = 0U;
 
     std::cout << "Target " << (targetIndex++) << '\n';
@@ -255,3 +258,34 @@ void engine::VShaderCompilerTarget::compile() noexcept {
 
 //    return *this;
 //}
+
+#include <sstream>
+
+auto engine::VShaderCompilerTarget::toString() const noexcept -> String {
+    std::stringstream oss;
+
+    oss << "VShaderCompilerTarget { " <<
+        "targetName = " << this->_targetName <<
+        ", tag = " << this->_tag <<
+        ", shaderType = " << VShaderModule::shaderTypeToString(this->_shaderType) <<
+        ", path = " << this->_path <<
+        ", outputPath = " << this->_outputPath <<
+        ", pCompiler = 0x" << std::hex << reinterpret_cast<AddressValueType>(this->_pCompiler) << " }";
+
+    return oss.str();
+}
+
+auto engine::VShaderCompiler::toString() const noexcept -> String {
+    std::stringstream oss;
+
+    oss << "VShaderCompiler { " <<
+        "inputDirectoryPath = " << this->_inputDirectoryPath <<
+        ", outputDirectoryPath = " << this->_outputDirectoryPath <<
+        ", targets = [ ";
+
+    for (auto const & item : this->_targets)
+        oss << item.toString() << ", ";
+    auto s = oss.str();
+
+    return s.substr(s.size() - 2).append(" ]}");
+}

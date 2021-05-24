@@ -5,13 +5,13 @@
 #ifndef ENG1_VDESCRIPTORSET_HPP
 #define ENG1_VDESCRIPTORSET_HPP
 
-#include <engineVulkanPreproc.hpp>
-#include <vkDefs/types/vulkanExplicitTypes.h>
-#include <vkObj/instance/pipeline/shader/input/VDescriptorPool.hpp>
-#include <vkObj/instance/pipeline/shader/input/VUniformBuffer.hpp>
+#include <VRenderObject.hpp>
+#include <VDescriptorPool.hpp>
+#include <VUniformBuffer.hpp>
 #include <VTextureSampler.hpp>
 #include <VTexture.hpp>
 #include <vector>
+#include <sstream>
 
 namespace engine {
 
@@ -29,7 +29,7 @@ namespace engine {
      * @tparam T = Data Type to bind to CPU-GPU pipeline
      */
     template <class T>
-    class VDescriptorSet {
+    class VDescriptorSet : public VRenderObject {
         /// give access to collection class
         friend class VDescriptorSetCollection<T>;
     private:
@@ -55,7 +55,8 @@ namespace engine {
          *
          * @deleted
          */
-        VDescriptorSet ( ) noexcept = delete;
+        VDescriptorSet () noexcept = delete;
+        ~VDescriptorSet() noexcept override = default;
 
         /**
          * @brief Constructor used when allocated from collection
@@ -65,7 +66,11 @@ namespace engine {
          *
          * @exceptsafe
          */
-        explicit VDescriptorSet ( VulkanDescriptorSet handle, VLogicalDevice const * pLogicalDevice ) noexcept :
+        explicit VDescriptorSet (
+                VulkanDescriptorSet handle,
+                VLogicalDevice const * pLogicalDevice
+        ) noexcept :
+            VRenderObject(),
             _handle ( handle ),
             _pLogicalDevice ( pLogicalDevice ) {
 
@@ -78,7 +83,7 @@ namespace engine {
          *
          * @return VulkanDescriptorSet cref = Constant Reference to the Vulkan Handle
          */
-        [[nodiscard]] auto data() const noexcept -> VulkanDescriptorSet const & {
+        [[nodiscard]] constexpr auto data() const noexcept -> VulkanDescriptorSet const & {
             return this->_handle;
         }
 
@@ -102,6 +107,31 @@ namespace engine {
          * @exceptsafe
          */
         auto configure ( VTexture const & , VTextureSampler const &, uint32 ) noexcept -> void;
+
+        [[nodiscard]] auto toString () const noexcept -> String override {
+            std::stringstream  oss;
+            oss << "VDescriptorSet { " <<
+                "handle = 0x" << std::hex << reinterpret_cast < AddressValueType > ( this->_handle ) <<
+                ", pLogicalDevice = 0x" << reinterpret_cast < AddressValueType > ( this->_pLogicalDevice ) << " }";
+
+            return oss.str();
+        }
+
+        [[nodiscard]] auto operator == (Object const & o) const noexcept -> bool override {
+            if ( this == & o ) return true;
+            auto p = dynamic_cast < decltype(this) > ( & o );
+            if ( p == nullptr ) return false;
+
+            return this->_handle == p->_handle;
+        }
+
+        [[nodiscard]] auto hash () const noexcept -> Index override {
+            return dataTypes::hash(reinterpret_cast<AddressValueType>(this->_handle));
+        }
+
+        [[nodiscard]] auto copy () const noexcept -> VDescriptorSet * override {
+            return new VDescriptorSet (* this);
+        }
     };
 
     /**
@@ -112,7 +142,7 @@ namespace engine {
      * @tparam T = Data Type to bind to CPU-GPU pipeline
      */
     template <class T>
-    class VDescriptorSetCollection {
+    class VDescriptorSetCollection : public VRenderObject {
     private:
         //// private variables
 
@@ -137,6 +167,8 @@ namespace engine {
          * @exceptsafe
          */
         VDescriptorSetCollection () noexcept = default;
+
+        ~VDescriptorSetCollection() noexcept override = default;
 
         /**
          * @brief Function Allocates Descriptor Sets from a Descriptor Pool based on a Descriptor Set Layout
@@ -176,7 +208,7 @@ namespace engine {
          *
          * @return std::vector < engine::VDescriptorSet < T > > cref = Constant Reference to Descriptor Set vector
          */
-        [[nodiscard]] auto getDescriptorSets () const noexcept -> std::vector < VDescriptorSet <T> > const & {
+        [[nodiscard]] constexpr auto getDescriptorSets () const noexcept -> std::vector < VDescriptorSet <T> > const & {
             return this->_descriptorSets;
         }
 
@@ -220,6 +252,37 @@ namespace engine {
          * @exceptsafe
          */
         auto configure ( VTexture const &, VTextureSampler const &, uint32 = 0U ) noexcept -> void;
+
+        [[nodiscard]] auto toString () const noexcept -> String override {
+            std::stringstream  oss;
+            oss << "VDescriptorSetCollection { " <<
+                "pLogicalDevice = 0x" << std::hex << reinterpret_cast<AddressValueType>(this->_pLogicalDevice) <<
+                ", descriptorSets = [ ";
+
+            for ( auto const & o : this->_descriptorSets )
+                oss << o.toString() << ", ";
+
+            auto s = oss.str();
+            return s.substr(s.size() - 2).append (" ]}");
+        }
+
+        [[nodiscard]] auto operator == (Object const & o) const noexcept -> bool override {
+            if ( this == & o ) return true;
+            auto p = dynamic_cast < decltype(this) > ( & o );
+            if ( p == nullptr ) return false;
+
+            return this->_descriptorSets == p->_descriptorSets;
+        }
+
+        [[nodiscard]] auto hash () const noexcept -> Index override {
+            Index hashSum = 0;
+            std::for_each(this->_descriptorSets.begin(), this->_descriptorSets.end(), [& hashSum](auto const & d){hashSum += d.hash();});
+            return hashSum;
+        }
+
+        [[nodiscard]] auto copy () const noexcept -> VDescriptorSetCollection * override {
+            return new VDescriptorSetCollection (* this);
+        }
     };
 
     /// maybe unused

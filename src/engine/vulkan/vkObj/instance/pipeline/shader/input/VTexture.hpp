@@ -5,11 +5,10 @@
 #ifndef ENG1_VTEXTURE_HPP
 #define ENG1_VTEXTURE_HPP
 
-#include <engineVulkanPreproc.hpp>
-#include <vkDefs/types/vulkanExplicitTypes.h>
-#include <vkObj/instance/device/VLogicalDevice.hpp>
-#include <vkObj/instance/pipeline/command/VCommandPool.hpp>
-#include <vkObj/instance/pipeline/shader/input/VBuffer.hpp>
+#include <VRenderObject.hpp>
+#include <VLogicalDevice.hpp>
+#include <VCommandPool.hpp>
+#include <VBuffer.hpp>
 namespace engine {
 
     /**
@@ -17,7 +16,7 @@ namespace engine {
      *
      * @brief Represents a Texture to be loaded into the GPU memory for shaders
      */
-    class VTexture {
+    class VTexture : public VRenderObject {
     private:
 
         /**
@@ -62,6 +61,8 @@ namespace engine {
              * @exceptsafe
              */
             StagingBuffer () noexcept = default;
+
+            ~StagingBuffer() noexcept override = default;
 
             /**
              * @brief Function initialises the Texture Staging Buffer
@@ -132,9 +133,21 @@ namespace engine {
             /**
              *
              */
-            void free () noexcept override;
-            void cleanup () noexcept override;
+            auto free () noexcept -> void override;
+            auto clear () noexcept -> void override;
 
+            [[nodiscard]] auto toString () const noexcept -> String override;
+            [[nodiscard]] auto copy () const noexcept -> VTexture::StagingBuffer * override {
+                return new VTexture::StagingBuffer(* this);
+            }
+
+            [[nodiscard]] auto operator == (Object const & o) const noexcept -> bool override {
+                return VBuffer::operator==(o);
+            }
+
+            [[nodiscard]] auto hash () const noexcept -> Index override {
+                return dataTypes::hash(this->_texturePack._imageSize) + VBuffer::hash();
+            }
         };
 
         //// private variables
@@ -145,21 +158,21 @@ namespace engine {
 
         VulkanImageLayout               _currentLayout      {VulkanImageLayout::VK_IMAGE_LAYOUT_UNDEFINED};
         VulkanSharingMode               _sharingMode        {VulkanSharingMode::VK_SHARING_MODE_EXCLUSIVE};
-        StagingBuffer           _stagingBuffer;
+        StagingBuffer                   _stagingBuffer;
         VulkanImage                     _handle             {VK_NULL_HANDLE};
         VulkanDeviceMemory              _memoryHandle       {VK_NULL_HANDLE};
 
         VImageView                      _imageView;
 
-        const VCommandPool            * _pCommandPool       {nullptr};
+        VCommandPool            const * _pCommandPool       {nullptr};
 
         //// private functions
-        void load ( const char*, int32 = STBI_rgb_alpha ) noexcept (false);
-        void unload() noexcept;
-        VulkanResult copy() noexcept;
-        VulkanResult transitionImageLayout ( VulkanImageLayout ) noexcept;
-        VulkanResult flush() noexcept;
-        VulkanResult allocateMemory () noexcept;
+        auto load ( StringLiteral, sint32 = STBI_rgb_alpha ) noexcept (false) -> void;
+        auto unload() noexcept -> void;
+        auto copy() noexcept -> VulkanResult;
+        auto transitionImageLayout ( VulkanImageLayout ) noexcept -> VulkanResult;
+        auto flush() noexcept -> VulkanResult;
+        auto allocateMemory () noexcept -> VulkanResult;
 
     public:
         //// public variables
@@ -176,29 +189,51 @@ namespace engine {
         //// public functions
 
         VTexture() noexcept = default;
+        ~VTexture () noexcept override = default;
 
-        [[nodiscard]] const VulkanImage & data () const noexcept {
+        [[nodiscard]] constexpr auto data () const noexcept -> VulkanImage const & {
             return this->_handle;
         }
 
-        [[nodiscard]] const VImageView & getImageView () const noexcept {
+        [[nodiscard]] constexpr auto getImageView () const noexcept -> VImageView const & {
             return this->_imageView;
         }
 
-        [[nodiscard]] VulkanImageLayout getLayout () const noexcept {
+        [[nodiscard]] constexpr auto getLayout () const noexcept -> VulkanImageLayout {
             return this->_currentLayout;
         }
 
-        VulkanResult setup (
-                const char*,
-                const VCommandPool &,
-                const uint32 * = nullptr,
-                uint32 = 0U,
-                bool = false
-        ) noexcept;
+        auto setup (
+                StringLiteral,
+                VCommandPool    const &,
+                uint32          const * = nullptr,
+                uint32                  = 0U,
+                bool                    = false
+        ) noexcept -> VulkanResult;
 
-        void free() noexcept;
-        void cleanup () noexcept;
+        auto free() noexcept -> void;
+        auto clear() noexcept -> void override;
+
+        [[nodiscard]] auto toString () const noexcept -> String override;
+        [[nodiscard]] auto operator == (Object const & o) const noexcept -> bool override {
+            if ( this == & o ) return true;
+            auto p = dynamic_cast < decltype (this) > (& o);
+            if ( p == nullptr ) return false;
+
+            return
+                this->_handle == p->_handle &&
+                this->_memoryHandle == p->_memoryHandle;
+        }
+
+        [[nodiscard]] auto hash () const noexcept -> Index override {
+            return
+                dataTypes::hash(reinterpret_cast<AddressValueType>(this->_handle)) +
+                dataTypes::hash(reinterpret_cast<AddressValueType>(this->_memoryHandle));
+        }
+
+        [[nodiscard]] auto copy () const noexcept -> VTexture * override {
+            return new VTexture (*this);
+        }
     };
 
 }
