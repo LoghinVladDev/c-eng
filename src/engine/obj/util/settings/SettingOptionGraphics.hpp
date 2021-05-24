@@ -4,12 +4,12 @@
 
 #ifndef ENG1_SETTINGOPTIONGRAPHICS_H
 #define ENG1_SETTINGOPTIONGRAPHICS_H
-#include "SettingOption.hpp"
+#include "VSettingOption.hpp"
 #include <VObject.hpp>
 
 namespace engine {
 
-    class ResolutionSetting : public engine::SettingOption {
+    class ResolutionSetting : public engine::VSettingOption {
         private:
             //// private variables
             uint32 _width;
@@ -37,21 +37,21 @@ namespace engine {
             ResolutionSetting() noexcept = delete;
 
             explicit ResolutionSetting(uint32 width, uint32 height) noexcept :
-                SettingOption( "resolution" ),
-                _height(height),
-                _width(width),
-                _defaultWidth(width),       // TODO : read from cfg file / from process?
+                    VSettingOption("resolution" ),
+                    _height(height),
+                    _width(width),
+                    _defaultWidth(width),       // TODO : read from cfg file / from process?
                 _defaultHeight(height){
-                SettingOption::_settingType = RESOLUTION;
+                VSettingOption::_settingType = RESOLUTION;
             }
 
             ResolutionSetting( const ResolutionSetting& obj ) noexcept :
-                SettingOption( obj._name ),
-                _height( obj._height ),
-                _width( obj._width ),
-                _defaultWidth( obj._defaultWidth ),
-                _defaultHeight( obj._defaultHeight ){
-                SettingOption::_settingType = obj._settingType;
+                    VSettingOption(obj._name ),
+                    _height( obj._height ),
+                    _width( obj._width ),
+                    _defaultWidth( obj._defaultWidth ),
+                    _defaultHeight( obj._defaultHeight ){
+                VSettingOption::_settingType = obj._settingType;
             }
 
             [[nodiscard]] uint32 getWidth () const noexcept {

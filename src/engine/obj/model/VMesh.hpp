@@ -5,21 +5,19 @@
 #ifndef ENG1_VMESH_H
 #define ENG1_VMESH_H
 
-#include <engineVulkanPreproc.hpp>
-#include <vkDefs/types/vulkanExplicitTypes.h>
-#include <vkObj/instance/pipeline/command/VCommandPool.hpp>
-#include <vkObj/instance/pipeline/shader/input/VVertexBuffer.hpp>
-#include <vkObj/instance/pipeline/shader/input/VIndexBuffer.hpp>
-
 #include <ecm/VComponent.hpp>
+
+#include <VCommandPool.hpp>
+#include <VVertexBuffer.hpp>
+#include <VIndexBuffer.hpp>
 
 namespace engine {
 
     class VMesh : public VComponent {
     private:
         //// private variables
-        const VCommandPool            * _pCommandPool           {nullptr};
-        const VQueueFamilyCollection  * _pQueueFamilyCollection {nullptr};
+        VCommandPool            const * _pCommandPool           {nullptr};
+        VQueueFamilyCollection  const * _pQueueFamilyCollection {nullptr};
         VVertexBuffer                   _vertexBuffer;
         VIndexBuffer                    _indexBuffer;
 
@@ -35,8 +33,8 @@ namespace engine {
             return String().append("VMesh {\n")
                 .append("\tcommandPool address = ").append(reinterpret_cast<uint64>(this->_pCommandPool)).append("\n")
                 .append("\tqueueFamilyCollection address = ").append(reinterpret_cast<uint64>(this->_pQueueFamilyCollection)).append("\n")
-                .append("\tvertexBuffer = ").append("<?>").append("\n")
-                .append("\tindexBuffer = ").append("<?>").append("\n")
+                .append("\tvertexBuffer = ").append(this->_vertexBuffer.toString()).append("\n")
+                .append("\tindexBuffer = ").append(this->_indexBuffer.toString()).append("\n")
                 .append("}");
         }
 
@@ -44,7 +42,6 @@ namespace engine {
             return "VMesh";
         }
 
-//        VMesh() noexcept = default;
         explicit VMesh(VEntity * pParent = nullptr) noexcept :
             VComponent(VComponent::Tag::DISTINCT | VComponent::Tag::HAS_DEPENDENCY, pParent) {
 
@@ -52,36 +49,40 @@ namespace engine {
 
         ~VMesh () noexcept override = default;
 
-        [[nodiscard]] VulkanResult setup(
-                const VCommandPool &,
-                const VQueueFamilyCollection &,
-                const std::vector < engine::VVertex > &,
-                const std::vector < uint16 > &
-        ) noexcept;
+        [[nodiscard]] auto setup(
+                VCommandPool                    const &,
+                VQueueFamilyCollection          const &,
+                std::vector < engine::VVertex > const &,
+                std::vector < uint16 >          const &
+        ) noexcept -> VulkanResult;
 
-        void free();
-        void cleanup();
+        auto free() noexcept -> void;
+        auto clear() noexcept -> void;
 
-        [[nodiscard]] const VVertexBuffer & getVertexBuffer () const noexcept {
+        [[nodiscard]] constexpr auto getVertexBuffer () const noexcept -> VVertexBuffer const &  {
             return this->_vertexBuffer;
         }
 
-        [[nodiscard]] VVertexBuffer & getVertexBuffer () noexcept {
+        [[nodiscard]] constexpr auto getVertexBuffer () noexcept -> VVertexBuffer & {
             return this->_vertexBuffer;
         }
 
-        [[nodiscard]] const VIndexBuffer & getIndexBuffer () const noexcept {
+        [[nodiscard]] constexpr auto getIndexBuffer () const noexcept -> VIndexBuffer const & {
             return this->_indexBuffer;
         }
 
-        [[nodiscard]] VIndexBuffer & getIndexBuffer () noexcept {
+        [[nodiscard]] constexpr auto getIndexBuffer () noexcept -> VIndexBuffer & {
             return this->_indexBuffer;
         }
 
-        [[nodiscard]] const VLogicalDevice * getLogicalDevicePtr () const noexcept {
+        [[nodiscard]] constexpr auto getLogicalDevicePtr () const noexcept -> VLogicalDevice const * {
             if ( this->_pCommandPool == nullptr )
                 return nullptr;
             return this->_pCommandPool->getLogicalDevicePtr();
+        }
+
+        [[nodiscard]] auto copy () const noexcept -> VMesh * override {
+            return new VMesh(*this);
         }
     };
 

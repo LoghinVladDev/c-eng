@@ -6,11 +6,11 @@
 #include <vkUtils/VStdUtilsDefs.h>
 #include <VVertex.hpp>
 
-VulkanResult engine::VShader::setup(
-        const engine::VLogicalDevice    & logicalDevice,
-        const engine::VShaderCompiler   & shaderCompiler,
-        const std::string               & shaderTag
-) noexcept {
+auto engine::VShader::setup(
+        engine::VLogicalDevice    const & logicalDevice,
+        engine::VShaderCompiler   const & shaderCompiler,
+        std::string               const & shaderTag
+) noexcept -> VulkanResult {
     this->_pLogicalDevice = & logicalDevice;
 //    std::vector < VulkanPipelineShaderStageCreateInfo > shaderStages;
     auto bindingDescription = VVertex::getBindingDescription();
@@ -86,7 +86,7 @@ VulkanResult engine::VShader::setup(
     return VulkanResult::VK_SUCCESS;
 }
 
-VulkanResult engine::VShader::recreateShader() noexcept {
+auto engine::VShader::recreateShader() noexcept -> VulkanResult {
 
     auto bindingDescription = VVertex::getBindingDescription();
     auto attributeDescriptions = VVertex::getAttributeDescriptions();
@@ -107,7 +107,7 @@ VulkanResult engine::VShader::recreateShader() noexcept {
     );
 }
 
-void engine::VShader::cleanup() noexcept {
+auto engine::VShader::clear() noexcept -> void {
     this->_pipeline.clear();
 
     vkDestroyDescriptorSetLayout( this->_pLogicalDevice->data(), this->_descriptorSetLayout, nullptr );
@@ -117,4 +117,18 @@ void engine::VShader::cleanup() noexcept {
     this->_fragmentShader.clear();
     this->_vertexShader.clear();
     this->_shaderStages.clear();
+}
+
+#include <sstream>
+
+auto engine::VShader::toString() const noexcept -> String {
+    std::stringstream oss;
+
+    oss << "VShader " <<
+        "{ pLogicalDevice = 0x" << std::hex << reinterpret_cast<AddressValueType>(this->_pLogicalDevice) <<
+        ", pipeline = " << this->_pipeline.toString() <<
+        ", vertexShader = " << this->_vertexShader.toString() <<
+        ", fragmentShader = " << this->_fragmentShader.toString() << " }";
+
+    return oss.str();
 }

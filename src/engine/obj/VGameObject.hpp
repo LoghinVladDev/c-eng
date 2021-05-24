@@ -45,18 +45,7 @@ namespace engine {
         explicit VGameObject ( String const & name, VEntity * pParentEntity ) noexcept : VEntity(pParentEntity), _name(name) { }
         explicit VGameObject ( String const & name, VScene * pScene ) noexcept : VEntity(pScene), _name(name) { }
 
-        virtual auto update (float deltaTime = 0.0f) noexcept -> void {
-            //this -> _pTransform -> getScale().x *= 1.0f + deltaTime / 100.0f;
-            //this -> _pTransform -> getScale().y *= 1.0f + deltaTime / 100.0f;
-            // this -> _pTransform -> getScale().z *= 1.0f + deltaTime / 100.0f;
-
-//            static float angle = 0.0f;
-//            if ( this-> _name == "star" ){
-//                this-> _pTransform -> location().x = 0.0f + cosf ( angle ) * 1.0f;
-//                this-> _pTransform -> location().y = 0.0f + sinf ( angle ) * 1.0f;
-//                angle += deltaTime;
-//            }
-        }
+        virtual auto update (float deltaTime = 0.0f) noexcept -> void {}
 
         [[nodiscard]] auto className () const noexcept -> ClassName override {
             return "VGameObject";
@@ -70,6 +59,10 @@ namespace engine {
                 .append("\tmesh address = ").append(reinterpret_cast<uint64>(this->_pMesh)).append("\n")
                 .append("\tmeshRenderer address = ").append(reinterpret_cast<uint64>(this->_pMeshRenderer)).append("\n")
                 .append("}");
+        }
+
+        [[nodiscard]] auto copy () const noexcept -> VGameObject * override {
+            return nullptr;
         }
 
         auto setName ( String const & name ) noexcept -> void {

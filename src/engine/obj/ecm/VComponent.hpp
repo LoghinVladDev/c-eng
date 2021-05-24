@@ -5,12 +5,11 @@
 #ifndef ENG1_VCOMPONENT_H
 #define ENG1_VCOMPONENT_H
 
-#include <engineVulkanPreproc.hpp>
-#include <CDS/Object>
+#include <VObject.hpp>
 
 namespace engine {
     class VEntity;
-    class VComponent : public Object {
+    class VComponent : public VObject {
     public:
         enum Tag: uint8 {
             DISTINCT        = 0x01,
@@ -69,6 +68,9 @@ namespace engine {
         [[nodiscard]] constexpr auto hash () const noexcept -> Index override { return static_cast < Index > (this->_ID); }
         [[nodiscard]] constexpr auto ID () const noexcept -> uint64 { return this->_ID; }
         [[nodiscard]] constexpr auto tags () const noexcept -> Tags { return this->_tags; }
+
+        [[nodiscard]] auto copy () const noexcept -> VComponent * override = 0;
+        [[nodiscard]] auto operator == (Object const &) const noexcept -> bool override;
 
         constexpr auto addTag (Tag t) noexcept -> void {
             this->_tags |= t;

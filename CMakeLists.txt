@@ -349,8 +349,8 @@ if(Vulkan_FOUND)
     set(
             V_ENGINE_OBJECT_UTILITY_SETTINGS_SRC
 
-            src/engine/obj/util/settings/SettingOption.cpp
-            src/engine/obj/util/settings/SettingOption.hpp
+            src/engine/obj/util/settings/VSettingOption.cpp
+            src/engine/obj/util/settings/VSettingOption.hpp
             src/engine/obj/util/settings/SettingOptionGraphics.cpp
             src/engine/obj/util/settings/SettingOptionGraphics.hpp
             src/engine/obj/util/settings/SettingsSharedContainer.cpp
@@ -447,8 +447,8 @@ if(Vulkan_FOUND)
             src/engine/vulkan/vkObj/instance/device/VSwapChainDefs.h
             src/engine/obj/util/settings/SettingsSharedContainer.cpp
             src/engine/obj/util/settings/SettingsSharedContainer.hpp
-            src/engine/obj/util/settings/SettingOption.cpp
-            src/engine/obj/util/settings/SettingOption.hpp
+            src/engine/obj/util/settings/VSettingOption.cpp
+            src/engine/obj/util/settings/VSettingOption.hpp
             src/engine/obj/util/settings/SettingOptionGraphics.cpp
             src/engine/obj/util/settings/SettingOptionGraphics.hpp
             src/engine/vulkan/vkObj/instance/device/VSwapChain.cpp
@@ -523,8 +523,8 @@ if(Vulkan_FOUND)
             src/engine/vulkan/vkObj/instance/device/VSwapChain.cpp
             src/engine/vulkan/vkObj/instance/device/VSwapChain.hpp
 
-            src/engine/obj/util/settings/SettingOption.cpp
-            src/engine/obj/util/settings/SettingOption.hpp
+            src/engine/obj/util/settings/VSettingOption.cpp
+            src/engine/obj/util/settings/VSettingOption.hpp
             src/engine/obj/util/settings/SettingOptionGraphics.cpp
             src/engine/obj/util/settings/SettingOptionGraphics.hpp
             src/engine/obj/util/settings/SettingsSharedContainer.cpp

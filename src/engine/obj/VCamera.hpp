@@ -75,6 +75,10 @@ namespace engine {
                 .append("}");
         }
 
+        [[nodiscard]] auto copy () const noexcept -> VCamera * override {
+            return new VCamera (*this);
+        }
+
         inline auto viewMatrix () const noexcept -> glm::mat4 {
             return glm::lookAt (
                     this->transform()->location(),

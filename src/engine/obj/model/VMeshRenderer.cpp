@@ -7,7 +7,7 @@
 
 const engine::VMeshRenderer engine::VMeshRenderer::EMPTY = VMeshRenderer(UINT64_MAX);
 
-VulkanResult engine::VMeshRenderer::recreateUniformBuffers() noexcept {
+auto engine::VMeshRenderer::recreateUniformBuffers() noexcept -> VulkanResult {
     this->_MVPDescriptorBuffers.resize( this->_pLogicalDevice->getSwapChain()->getImages().size() );
 
     for ( auto & uniformBuffer : this->_MVPDescriptorBuffers ) {
@@ -18,14 +18,14 @@ VulkanResult engine::VMeshRenderer::recreateUniformBuffers() noexcept {
     return VulkanResult::VK_SUCCESS;
 }
 
-VulkanResult engine::VMeshRenderer::recreate() noexcept {
+auto engine::VMeshRenderer::recreate() noexcept -> VulkanResult {
     ENG_RETURN_IF_NOT_SUCCESS( this->recreateUniformBuffers() )
     ENG_RETURN_IF_NOT_SUCCESS( this->recreateDescriptorSets() )
 
     return VulkanResult::VK_SUCCESS;
 }
 
-VulkanResult engine::VMeshRenderer::recreateDescriptorSets() noexcept {
+auto engine::VMeshRenderer::recreateDescriptorSets() noexcept -> VulkanResult {
     ENG_RETURN_IF_NOT_SUCCESS (
             this->_descriptorSets.allocate(
                     * this->_pDescriptorPool,
@@ -51,14 +51,14 @@ VulkanResult engine::VMeshRenderer::recreateDescriptorSets() noexcept {
     return VulkanResult::VK_SUCCESS;
 }
 
-VulkanResult engine::VMeshRenderer::setup(
-        const VCommandPool              & transferCommandPool,
-        const VDescriptorPool           & descriptorPool,
-        const VShader                   & shader,
-        const std::string               & texturePath,
-        const VTextureSampler           & textureSampler,
-        const VQueueFamilyCollection    & queueFamilyCollection
-) noexcept {
+auto engine::VMeshRenderer::setup(
+        VCommandPool           const & transferCommandPool,
+        VDescriptorPool        const & descriptorPool,
+        VShader                const & shader,
+        std::string            const & texturePath,
+        VTextureSampler        const & textureSampler,
+        VQueueFamilyCollection const & queueFamilyCollection
+) noexcept -> VulkanResult {
     this->_pShader          = & shader;
     this->_pDescriptorPool  = & descriptorPool;
     this->_pTextureSampler  = & textureSampler;
@@ -89,14 +89,14 @@ VulkanResult engine::VMeshRenderer::setup(
     return VulkanResult::VK_SUCCESS;
 }
 
-void engine::VMeshRenderer::cleanupUniformBuffers() noexcept {
+auto engine::VMeshRenderer::clearUniformBuffers() noexcept -> void {
     for ( auto & buffer : this->_MVPDescriptorBuffers ) {
         buffer.free();
         buffer.clear();
     }
 }
 
-void engine::VMeshRenderer::cleanup() noexcept {
-    this->cleanupUniformBuffers();
+auto engine::VMeshRenderer::clear() noexcept -> void {
+    this->clearUniformBuffers();
     this->_texture.clear();
 }

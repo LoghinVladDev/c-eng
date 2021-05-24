@@ -129,6 +129,10 @@ namespace engine {
                 .append("}");
         }
 
+        [[nodiscard]] auto copy () const noexcept -> VTransform * override {
+            return new VTransform (*this);
+        }
+
         ~VTransform() noexcept override = default;
     };
 

@@ -5,16 +5,14 @@
 #ifndef ENG1_VENTITY_H
 #define ENG1_VENTITY_H
 
-#include <engineVulkanPreproc.hpp>
-
-#include <CDS/Object>
+#include <VObject.hpp>
 #include <CDS/Array>
-#include <src/engine/obj/ecm/VComponent.hpp>
+#include <ecm/VComponent.hpp>
 
 namespace engine {
 
     class VScene;
-    class VEntity : public Object {
+    class VEntity : public VObject {
     private:
         friend class VScene;
     private:
@@ -112,6 +110,9 @@ namespace engine {
         [[nodiscard]] auto toString() const noexcept -> String override;
         [[nodiscard]] constexpr auto hash () const noexcept -> Index override { return static_cast < Index > (this->_ID); }
         [[nodiscard]] constexpr auto ID () const noexcept -> uint64 { return this->_ID; }
+
+        [[nodiscard]] auto copy () const noexcept -> VEntity * override = 0;
+        [[nodiscard]] auto operator == (Object const &) const noexcept -> bool override;
 
         VEntity & operator = ( VEntity const & o ) noexcept { // NOLINT(bugprone-unhandled-self-assignment)
             return * this;

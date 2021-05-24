@@ -6,7 +6,7 @@
 #define ENG1_SETTINGSSHAREDCONTAINER_H
 
 #include <map>
-#include "SettingOption.hpp"
+#include "VSettingOption.hpp"
 
 namespace engine {
 
@@ -16,8 +16,8 @@ namespace engine {
         //// private variables
         static SettingsSharedContainer _instance;
 
-        std::map < engine::SettingOption::Setting, engine::SettingOption * > _standardSettings;
-        std::map < std::string, engine::SettingOption * > _customSettings;
+        std::map < engine::VSettingOption::Setting, engine::VSettingOption * > _standardSettings;
+        std::map < std::string, engine::VSettingOption * > _customSettings;
 
         //// private functions
         SettingsSharedContainer() noexcept = default;
@@ -30,10 +30,10 @@ namespace engine {
             return SettingsSharedContainer::_instance;
         }
 
-        void put ( const SettingOption * ) noexcept;
+        void put ( const VSettingOption * ) noexcept;
 
-        [[nodiscard]] const SettingOption * get( const std::string& ) const noexcept;
-        [[nodiscard]] const SettingOption * get( engine::SettingOption::Setting ) const noexcept;
+        [[nodiscard]] const VSettingOption * get(const std::string& ) const noexcept;
+        [[nodiscard]] const VSettingOption * get(engine::VSettingOption::Setting ) const noexcept;
 
         ~SettingsSharedContainer() noexcept {
             for ( auto & pair : this->_standardSettings ) {

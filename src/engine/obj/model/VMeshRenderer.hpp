@@ -19,11 +19,11 @@ namespace engine {
     class VMeshRenderer : public VComponent {
     private:
         //// private variables
-        const VLogicalDevice                                          * _pLogicalDevice       {nullptr};
-        const VTextureSampler                                         * _pTextureSampler      {nullptr};
-        const VShader                                                 * _pShader              {nullptr};
-        const VDescriptorPool                                         * _pDescriptorPool      {nullptr};
-        const VCommandPool                                            * _pCommandPool         {nullptr};
+        VLogicalDevice                                          const * _pLogicalDevice       {nullptr};
+        VTextureSampler                                         const * _pTextureSampler      {nullptr};
+        VShader                                                 const * _pShader              {nullptr};
+        VDescriptorPool                                         const * _pDescriptorPool      {nullptr};
+        VCommandPool                                            const * _pCommandPool         {nullptr};
 
         VTexture                                                        _texture;
 
@@ -58,59 +58,63 @@ namespace engine {
                 .append("\tshader address = ").append(reinterpret_cast<uint64>(this->_pShader)).append("\n")
                 .append("\tdescriptorPool address = ").append(reinterpret_cast<uint64>(this->_pDescriptorPool)).append("\n")
                 .append("\tcommandPool address = ").append(reinterpret_cast<uint64>(this->_pCommandPool)).append("\n")
-                .append("\ttexture = ").append("<?>").append("\n")
-                .append("\tdescriptorSets = ").append("<?>").append("\n")
-                .append("\tmodelViewProjectionDescriptorBuffers").append("<?>").append("\n")
+                .append("\ttexture = ").append(this->_texture.toString()).append("\n")
+                .append("\tdescriptorSets = ").append(this->_descriptorSets.toString()).append("\n")
+                .append("\tmodelViewProjectionDescriptorBuffers").append("<?stl_object?>").append("\n")
                 .append("}");
         }
 
-        [[nodiscard]] const VLogicalDevice * getLogicalDevicePtr () const noexcept {
+        [[nodiscard]] constexpr auto getLogicalDevicePtr () const noexcept -> VLogicalDevice const * {
             return this->_pLogicalDevice;
         }
 
-        [[nodiscard]] const VTextureSampler * getTextureSamplerPtr () const noexcept {
+        [[nodiscard]] constexpr auto getTextureSamplerPtr () const noexcept -> VTextureSampler const * {
             return this->_pTextureSampler;
         }
 
-        [[nodiscard]] const VTexture & getTexture () const noexcept {
+        [[nodiscard]] constexpr auto getTexture () const noexcept -> VTexture const & {
             return this->_texture;
         }
 
-        [[nodiscard]] VTexture & getTexture () noexcept {
+        [[nodiscard]] constexpr auto getTexture () noexcept -> VTexture & {
             return this->_texture;
         }
 
-        [[nodiscard]] const VDescriptorSetCollection < engine::SUniformBufferObject > & getDescriptorSets () const noexcept {
+        [[nodiscard]] constexpr auto getDescriptorSets () const noexcept -> VDescriptorSetCollection < engine::SUniformBufferObject > const & {
             return this->_descriptorSets;
         }
 
-        [[nodiscard]] VDescriptorSetCollection < engine::SUniformBufferObject > & getDescriptorSets () noexcept {
+        [[nodiscard]] constexpr auto getDescriptorSets () noexcept -> VDescriptorSetCollection < engine::SUniformBufferObject > & {
             return this->_descriptorSets;
         }
 
-        [[nodiscard]] const std::vector < VUniformBuffer < engine::SUniformBufferObject >> & getMVPDescriptorBuffers () const noexcept {
+        [[nodiscard]] constexpr auto getMVPDescriptorBuffers () const noexcept -> std::vector < VUniformBuffer < engine::SUniformBufferObject >> const & {
             return this->_MVPDescriptorBuffers;
         }
 
-        [[nodiscard]] std::vector < VUniformBuffer < engine::SUniformBufferObject >> & getMVPDescriptorBuffers () noexcept {
+        [[nodiscard]] constexpr auto getMVPDescriptorBuffers () noexcept -> std::vector < VUniformBuffer < engine::SUniformBufferObject >> & {
             return this->_MVPDescriptorBuffers;
         }
 
-        void cleanup() noexcept;
+        auto clear() noexcept -> void;
+        auto clearUniformBuffers () noexcept -> void;
 
-        void cleanupUniformBuffers () noexcept;
-        VulkanResult recreateUniformBuffers () noexcept;
-        VulkanResult recreateDescriptorSets () noexcept;
-        VulkanResult recreate() noexcept;
+        auto recreateUniformBuffers () noexcept -> VulkanResult;
+        auto recreateDescriptorSets () noexcept -> VulkanResult;
+        auto recreate() noexcept -> VulkanResult;
 
-        VulkanResult setup (
-                const VCommandPool &,
-                const VDescriptorPool &,
-                const VShader &,
-                const std::string &,
-                const VTextureSampler &,
-                const VQueueFamilyCollection &
-        ) noexcept;
+        auto setup (
+                VCommandPool            const &,
+                VDescriptorPool         const &,
+                VShader                 const &,
+                std::string             const &,
+                VTextureSampler         const &,
+                VQueueFamilyCollection  const &
+        ) noexcept -> VulkanResult;
+
+        [[nodiscard]] auto copy () const noexcept -> VMeshRenderer * override {
+            return new VMeshRenderer(* this);
+        }
     };
 
 }

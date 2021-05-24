@@ -5,7 +5,6 @@
 #ifndef ENG1_VSCENE_H
 #define ENG1_VSCENE_H
 
-#include <CDS/Object>
 #include <CDS/Array>
 #include <CDS/HashMap>
 #include <ecm/VEntity.hpp>
@@ -14,7 +13,7 @@
 
 namespace engine {
 
-    class VScene : public Object {
+    class VScene : public VObject {
     private:
         auto setEntitySceneRoot ( VEntity *, VScene * ) noexcept -> void;
     private:
@@ -75,6 +74,21 @@ namespace engine {
         [[nodiscard]] auto getGameObjectByName (String const &) noexcept -> VGameObject *;
 
         [[nodiscard]] auto toString () const noexcept -> String override;
+        [[nodiscard]] auto copy () const noexcept -> VScene * override {
+            return new VScene(* this);
+        }
+
+        [[nodiscard]] auto operator == (Object const & o) const noexcept -> bool override {
+            if ( this == & o ) return true;
+            auto p = dynamic_cast < decltype (this) > (& o);
+            if ( p == nullptr ) return false;
+
+            return this->_activeCamera == p->_activeCamera && this->_rootEntities == p->_rootEntities;
+        }
+
+        [[nodiscard]] auto hash () const noexcept -> Index override {
+            return this->_rootEntities.hash();
+        }
 
         [[nodiscard]] auto locationInScene (VEntity *) const noexcept -> glm::vec3;
         [[nodiscard]] auto transformInScene (VEntity *) const noexcept -> VTransform;

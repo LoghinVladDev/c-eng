@@ -65,7 +65,7 @@ static inline auto chooseSwapPresentMode (
  * @return engine::ResolutionSetting cptr = Address to the currently saved Resolution Setting
  */
 static inline auto getSharedResolutionSetting () noexcept -> engine::ResolutionSetting const * {
-    const auto * pSetting = engine::SettingsSharedContainer::getInstance().get( engine::SettingOption::RESOLUTION );
+    const auto * pSetting = engine::SettingsSharedContainer::getInstance().get( engine::VSettingOption::RESOLUTION );
 
     if ( pSetting != nullptr ) {
         const auto * pResolutionSetting = dynamic_cast < engine::ResolutionSetting const * >( pSetting );

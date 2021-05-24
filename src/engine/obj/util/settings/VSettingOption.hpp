@@ -5,12 +5,14 @@
 #ifndef ENG1_SETTINGOPTION_H
 #define ENG1_SETTINGOPTION_H
 
+
+#include <VObject.hpp>
 #include <string>
 #include <utility>
 
 namespace engine {
 
-    class SettingOption {
+    class VSettingOption : public VObject {
     public:
         typedef enum {
             RESOLUTION,
@@ -27,7 +29,7 @@ namespace engine {
 
         //// protected functions
 
-        explicit SettingOption(std::string name) noexcept :
+        explicit VSettingOption(std::string name) noexcept :
             _name (std::move( name )),
             _settingType(CUSTOM) {
 
@@ -38,7 +40,7 @@ namespace engine {
         //// public variables
 
         //// public functions
-        SettingOption() noexcept = delete;
+        VSettingOption() noexcept = delete;
 
         void setName ( const std::string& name ) noexcept {
             this->_name = name;
@@ -56,14 +58,20 @@ namespace engine {
         virtual void resetToSaveValue   () = 0;
 #endif
 
-        [[nodiscard]] virtual SettingOption* clone() const noexcept = 0;
+        [[nodiscard]] virtual VSettingOption* clone() const noexcept = 0;
         virtual void resetToDefaultValue()                          = 0;
-        virtual ~SettingOption();
+        ~VSettingOption() noexcept override = default;
+
+        [[nodiscard]] auto toString () const noexcept -> String override {
+            return String("VSettingOption { ") +
+                "name = " + this->_name + " }";
+        }
     };
 
 }
 
-#include "SettingsSharedContainer.hpp"
 
 
 #endif //ENG1_SETTINGOPTION_H
+
+#include "SettingsSharedContainer.hpp"

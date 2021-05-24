@@ -7,12 +7,12 @@
 
 const engine::VMesh engine::VMesh::EMPTY = VMesh(UINT64_MAX);
 
-VulkanResult engine::VMesh::setup(
-        const engine::VCommandPool              & transferCommandPool,
-        const engine::VQueueFamilyCollection    & queueFamilyCollection,
-        const std::vector<engine::VVertex>      & vertices,
-        const std::vector<uint16>               & indices
-) noexcept {
+auto engine::VMesh::setup(
+        engine::VCommandPool            const & transferCommandPool,
+        engine::VQueueFamilyCollection  const & queueFamilyCollection,
+        std::vector<engine::VVertex>    const & vertices,
+        std::vector<uint16>             const & indices
+) noexcept -> VulkanResult {
     this->_pCommandPool = & transferCommandPool;
     this->_pQueueFamilyCollection = & queueFamilyCollection;
 
@@ -44,12 +44,12 @@ VulkanResult engine::VMesh::setup(
     return VulkanResult::VK_SUCCESS;
 }
 
-void engine::VMesh::free() {
+auto engine::VMesh::free() noexcept -> void {
     this->_vertexBuffer.free();
     this->_indexBuffer.free();
 }
 
-void engine::VMesh::cleanup() {
+auto engine::VMesh::clear() noexcept -> void {
     this->_vertexBuffer.clear();
     this->_indexBuffer.clear();
 }

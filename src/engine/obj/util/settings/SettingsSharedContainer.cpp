@@ -6,18 +6,18 @@
 
 engine::SettingsSharedContainer engine::SettingsSharedContainer::_instance;
 
-void engine::SettingsSharedContainer::put(const engine::SettingOption * settingOption) noexcept {
+void engine::SettingsSharedContainer::put(const engine::VSettingOption * settingOption) noexcept {
     if ( settingOption == nullptr )
         return;
 
-    if( settingOption->getType() != SettingOption::CUSTOM ) {
+    if(settingOption->getType() != VSettingOption::CUSTOM ) {
         this->_standardSettings.insert( std::make_pair( settingOption->getType(), settingOption->clone() ) );
     } else {
         this->_customSettings.insert( std::make_pair( settingOption->getName(), settingOption->clone() ) );
     }
 }
 
-const engine::SettingOption *engine::SettingsSharedContainer::get(const std::string & settingName) const noexcept {
+const engine::VSettingOption *engine::SettingsSharedContainer::get(const std::string & settingName) const noexcept {
     for ( auto & entry : this->_standardSettings ) {
         if ( entry.second->getName() == settingName )
             return entry.second;
@@ -31,7 +31,7 @@ const engine::SettingOption *engine::SettingsSharedContainer::get(const std::str
     return customSetting->second;
 }
 
-const engine::SettingOption *engine::SettingsSharedContainer::get(engine::SettingOption::Setting settingType) const noexcept {
+const engine::VSettingOption *engine::SettingsSharedContainer::get(engine::VSettingOption::Setting settingType) const noexcept {
     auto setting = this->_standardSettings.find( settingType );
 
     if( setting == this->_standardSettings.end() )

@@ -5,19 +5,21 @@
 #ifndef ENG1_VSHADER_H
 #define ENG1_VSHADER_H
 
-#include <engineVulkanPreproc.hpp>
-#include <vkDefs/types/vulkanExplicitTypes.h>
-#include <vkObj/instance/device/VLogicalDevice.hpp>
-#include <vkObj/instance/pipeline/VPipeline.hpp>
-#include <vkObj/instance/pipeline/shader/VShaderModule.hpp>
-#include <vkObj/instance/pipeline/shader/VShaderCompiler.hpp>
+#include <VRenderObject.hpp>
+#include <VLogicalDevice.hpp>
+#include <VPipeline.hpp>
+#include <VShaderModule.hpp>
+#include <VShaderCompiler.hpp>
 
 namespace engine {
 
-    class VShader {
+    /**
+     * todo : make this a VComponent
+     */
+    class VShader : public VRenderObject {
     private:
         //// private variables
-        const VLogicalDevice                              * _pLogicalDevice         {nullptr};
+        VLogicalDevice                              const * _pLogicalDevice         {nullptr};
         VPipeline                                           _pipeline;
 
         VShaderModule                                       _vertexShader;
@@ -35,52 +37,53 @@ namespace engine {
 
         //// public functions
         VShader() noexcept = default;
+        ~VShader() noexcept override = default;
 
-        [[nodiscard]] const VPipeline & getPipeline () const noexcept {
+        [[nodiscard]] constexpr auto getPipeline () const noexcept -> VPipeline const & {
             return this->_pipeline;
         }
 
-        [[nodiscard]] VPipeline & getPipeline () noexcept {
+        [[nodiscard]] constexpr auto getPipeline () noexcept -> VPipeline & {
             return this->_pipeline;
         }
 
-        [[nodiscard]] const VShaderModule & getVertexShaderModule () const noexcept {
+        [[nodiscard]] constexpr auto getVertexShaderModule () const noexcept -> VShaderModule const & {
             return this->_vertexShader;
         }
 
-        [[nodiscard]] VShaderModule & getVertexShaderModule () noexcept {
+        [[nodiscard]] constexpr auto getVertexShaderModule () noexcept -> VShaderModule & {
             return this->_vertexShader;
         }
 
-        [[nodiscard]] const VShaderModule & getFragmentShaderModule () const noexcept {
+        [[nodiscard]] constexpr auto getFragmentShaderModule () const noexcept -> VShaderModule const & {
             return this->_fragmentShader;
         }
 
-        [[nodiscard]] VShaderModule & getFragmentShaderModule () noexcept {
+        [[nodiscard]] constexpr auto getFragmentShaderModule () noexcept -> VShaderModule & {
             return this->_fragmentShader;
         }
 
-        [[nodiscard]] const VRenderPass * getRenderPassPtr () const noexcept {
+        [[nodiscard]] constexpr auto getRenderPassPtr () const noexcept -> VRenderPass const * {
             return this->_pipeline.getRenderPassPtr();
         }
 
-        [[nodiscard]] const VulkanDescriptorSetLayout & getDescriptorSetLayout () const noexcept {
+        [[nodiscard]] constexpr auto getDescriptorSetLayout () const noexcept -> VulkanDescriptorSetLayout const & {
             return this->_descriptorSetLayout;
         }
 
-        [[nodiscard]] VulkanDescriptorSetLayout & getDescriptorSetLayout () noexcept {
+        [[nodiscard]] constexpr auto getDescriptorSetLayout () noexcept -> VulkanDescriptorSetLayout & {
             return this->_descriptorSetLayout;
         }
 
-        [[nodiscard]] const std::vector < VulkanDescriptorSetLayoutBinding > & getDescriptorSetLayoutBindings () const noexcept {
+        [[nodiscard]] constexpr auto getDescriptorSetLayoutBindings () const noexcept -> std::vector < VulkanDescriptorSetLayoutBinding > const & {
             return this->_descriptorSetLayoutBindings;
         }
 
-        [[nodiscard]] std::vector < VulkanDescriptorSetLayoutBinding > & getDescriptorSetLayoutBindings () noexcept {
+        [[nodiscard]] constexpr auto getDescriptorSetLayoutBindings () noexcept -> std::vector < VulkanDescriptorSetLayoutBinding > & {
             return this->_descriptorSetLayoutBindings;
         }
 
-        [[nodiscard]] std::vector < VulkanDescriptorType > getDescriptorTypeLayout () const noexcept {
+        [[nodiscard]] auto getDescriptorTypeLayout () const noexcept -> std::vector < VulkanDescriptorType > {
             std::vector < VulkanDescriptorType > descriptorTypes;
 
             for ( const auto & binding : this->_descriptorSetLayoutBindings ) {
@@ -90,16 +93,32 @@ namespace engine {
             return descriptorTypes;
         }
 
-        VulkanResult setup (
-            const VLogicalDevice &,
-            const VShaderCompiler &,
-            const std::string &
-        ) noexcept;
+        auto setup (
+            VLogicalDevice  const &,
+            VShaderCompiler const &,
+            std::string     const &
+        ) noexcept -> VulkanResult;
 
-        VulkanResult recreateShader () noexcept;
+        auto recreateShader () noexcept -> VulkanResult ;
 
-        void cleanup() noexcept;
+        auto clear() noexcept -> void override;
 
+        [[nodiscard]] auto toString () const noexcept -> String override;
+        [[nodiscard]] auto copy () const noexcept -> VShader * override {
+            return new VShader(*this);
+        }
+
+        [[nodiscard]] auto hash () const noexcept -> Index override {
+            return this->_pipeline.hash() + this->_vertexShader.hash() + this->_fragmentShader.hash();
+        }
+
+        [[nodiscard]] auto operator == (Object const & o) const noexcept -> bool override {
+            if ( this == & o ) return true;
+            auto p = dynamic_cast < decltype ( this ) > ( & o );
+            if ( p == nullptr ) return false;
+
+            return this->_vertexShader == p->_vertexShader && this->_fragmentShader == p->_fragmentShader;
+        }
     };
 
 }

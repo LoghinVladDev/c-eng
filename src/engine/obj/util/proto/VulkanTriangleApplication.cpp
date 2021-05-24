@@ -306,7 +306,7 @@ inline auto engine::VulkanTriangleApplication::initVulkan() noexcept (false) -> 
 
     std::cout << "Logical Device Capable of Swap Chain : " << this->_vulkanLogicalDevice.isSwapChainAdequate() << '\n';
 
-    auto setting = engine::SettingsSharedContainer::getInstance().get(engine::SettingOption::RESOLUTION);
+    auto setting = engine::SettingsSharedContainer::getInstance().get(engine::VSettingOption::RESOLUTION);
 
     if(setting != nullptr ) {
         auto resolution = dynamic_cast < const engine::ResolutionSetting* > ( setting );
@@ -424,7 +424,7 @@ auto engine::VulkanTriangleApplication::cleanupSwapChain() noexcept -> void {
     this->_drawCommandBufferCollection.free(); /// free all draw buffers
 
     for ( auto * pComponent : this->_activeScene.componentsOfClass("VMeshRenderer") )
-        dynamic_cast<VMeshRenderer *>(pComponent)->cleanupUniformBuffers(); /// cleanup all uniform buffers
+        dynamic_cast<VMeshRenderer *>(pComponent)->clearUniformBuffers(); /// cleanup all uniform buffers
 
     this->_descriptorPool.clear(); /// cleanup all descriptors
 
@@ -962,17 +962,17 @@ auto engine::VulkanTriangleApplication::cleanup() noexcept -> void {
     this->_frameBufferCollection.clear();
 
     for ( auto * pComponent : this->_activeScene.componentsOfClass("VMeshRenderer") )
-        dynamic_cast<VMeshRenderer *>(pComponent)->cleanup();
+        dynamic_cast<VMeshRenderer *>(pComponent)->clear();
 
     this->_textureSampler.clear();
     this->_descriptorPool.clear();
-    this->_objectShader.cleanup();
+    this->_objectShader.clear();
 
     for ( auto * pComponent : this->_activeScene.componentsOfClass("VMesh") ) {
         auto * pMesh = dynamic_cast<VMesh *>(pComponent);
 
         pMesh->free();
-        pMesh->cleanup();
+        pMesh->clear();
     }
 
     this->_vulkanLogicalDevice.clear();
