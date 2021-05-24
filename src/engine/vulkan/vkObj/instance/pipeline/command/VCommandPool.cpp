@@ -50,7 +50,18 @@ auto engine::VCommandPool::setup(
     return vkCreateCommandPool ( this->_pLogicalDevice->data(), & createInfo, nullptr, & this->_handle );
 }
 
-auto engine::VCommandPool::cleanup() noexcept -> void {
+auto engine::VCommandPool::clear() noexcept -> void {
     /// cleanup command pool
     vkDestroyCommandPool ( this->_pLogicalDevice->data(), this->_handle, nullptr );
+}
+
+#include <sstream>
+
+auto engine::VCommandPool::toString() const noexcept -> String {
+    std::stringstream oss;
+
+    oss << "VCommandPool " <<
+        "{ handle = 0x" << std::hex << reinterpret_cast<AddressValueType>(this->_handle) <<
+        ", pLogicalDevice = 0x" << reinterpret_cast<AddressValueType>(this->_pLogicalDevice) <<
+        ", optimizedForTransfers = " << std::boolalpha << this->_optimizedForTransfers;
 }

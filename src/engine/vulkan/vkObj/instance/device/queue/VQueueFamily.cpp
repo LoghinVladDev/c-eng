@@ -219,10 +219,36 @@ auto engine::VQueueFamilyCollection::getQueueFamilyIndices() const noexcept -> s
     return queueFamilyIndices;
 }
 
-auto engine::VQueueFamily::getPhysicalDevice() const noexcept -> engine::VPhysicalDevice const & {
-    return this->_parentCollection->getPhysicalDevice();
+auto engine::VQueueFamily::getPhysicalDevicePtr() const noexcept -> engine::VPhysicalDevice const * {
+    return this->_parentCollection->getPhysicalDevicePtr();
 }
 
 auto engine::VQueueFamily::syncWithSurface(engine::VSurface const & surface) noexcept -> void {
-    vkGetPhysicalDeviceSurfaceSupportKHR( this->_parentCollection->getPhysicalDevice().data(), this->getQueueFamilyIndex(), surface.data(), & this->_presentSupport );
+    vkGetPhysicalDeviceSurfaceSupportKHR( this->_parentCollection->getPhysicalDevicePtr()->data(), this->getQueueFamilyIndex(), surface.data(), & this->_presentSupport );
+}
+
+#include <sstream>
+
+auto engine::VQueueFamily::toString() const noexcept -> String {
+    std::stringstream oss;
+
+    oss << "VQueueFamily " <<
+        "{ index = " << this->_familyIndex <<
+        ", hasPresentSupport = " << std::boolalpha << this->_presentSupport <<
+        ", pParentCollection = 0x" << std::hex << reinterpret_cast<AddressValueType>(this->_parentCollection);
+}
+
+auto engine::VQueueFamilyCollection::toString() const noexcept -> String {
+    std::stringstream oss;
+
+    oss << "VQueueFamilyCollection " <<
+        "{ pPhysicalDevice = 0x" << std::hex << reinterpret_cast<AddressValueType>(this->_physicalDevice) <<
+        ", queueFamilies = [ ";
+
+    for (auto const & item : this->_queueFamilies)
+        oss << item.toString() << ", ";
+
+    auto s = oss.str();
+
+    return s.substr(s.size() - 2).append(" ]}");
 }

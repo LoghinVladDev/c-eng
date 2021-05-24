@@ -5,11 +5,10 @@
 #ifndef ENG1_VPHYSICALDEVICE_HPP
 #define ENG1_VPHYSICALDEVICE_HPP
 
-#include <engineVulkanPreproc.hpp>
-#include <vkDefs/types/vulkanExplicitTypes.h>
-#include <vkObj/instance/VInstance.hpp>
-#include <vkObj/instance/extension/VExtension.hpp>
-#include <vkObj/window/surface/VSurface.hpp>
+#include <VRenderObject.hpp>
+#include <VInstance.hpp>
+#include <VExtension.hpp>
+#include <VSurface.hpp>
 #include <vector>
 
 #include <CDS/String>
@@ -21,7 +20,7 @@ namespace engine {
      *
      * @brief Exception thrown when a Physical Device is used without initialisation based on an existing Physical Device ( GPU )
      */
-    class EngineNullVPhysicalDevice : public std::exception{
+    class EngineNullVPhysicalDevice : public std::exception {
     public:
 
         /**
@@ -45,7 +44,7 @@ namespace engine {
      *
      * @brief Object Describes a Physical Device ( a GPU ), it is a wrapper around Vulkan's Physical Device Handling and other Physical Device Related Features
      */
-    class VPhysicalDevice {
+    class VPhysicalDevice : public VRenderObject {
     private:
         //// private variables
 
@@ -117,7 +116,7 @@ namespace engine {
          *
          * @exceptsafe
          */
-        VPhysicalDevice( VPhysicalDevice const & obj ) noexcept {
+        VPhysicalDevice( VPhysicalDevice const & obj ) noexcept : VRenderObject() {
             this->_physicalDeviceHandle     = obj._physicalDeviceHandle;
             this->_physicalDeviceProperties = obj._physicalDeviceProperties;
             this->_physicalDeviceFeatures   = obj._physicalDeviceFeatures;
@@ -133,6 +132,7 @@ namespace engine {
          * @exceptsafe
          */
         explicit VPhysicalDevice ( VulkanPhysicalDevice const & deviceHandle ) noexcept :
+            VRenderObject(),
             _physicalDeviceHandle( deviceHandle ) {
 
             /// acquire properties for device
@@ -142,6 +142,8 @@ namespace engine {
             vkGetPhysicalDeviceFeatures     ( this->_physicalDeviceHandle, & this->_physicalDeviceFeatures );
         }
 
+        ~VPhysicalDevice() noexcept override = default;
+
         /**
          * @brief Getter for Device Properties Structure
          *
@@ -149,7 +151,7 @@ namespace engine {
          *
          * @return VulkanPhysicalDeviceProperties cref = Constant Reference to Physical Device Properties Structure
          */
-        [[nodiscard]] auto getPhysicalDeviceProperties () const noexcept -> VulkanPhysicalDeviceProperties const & {
+        [[nodiscard]] constexpr auto getPhysicalDeviceProperties () const noexcept -> VulkanPhysicalDeviceProperties const & {
             return this->_physicalDeviceProperties;
         }
 
@@ -160,7 +162,7 @@ namespace engine {
          *
          * @return VulkanPhysicalDeviceFeatures cref = Constant Reference to Physical Device Properties
          */
-        [[nodiscard]] auto getPhysicalDeviceFeatures () const noexcept -> VulkanPhysicalDeviceFeatures const & {
+        [[nodiscard]] constexpr auto getPhysicalDeviceFeatures () const noexcept -> VulkanPhysicalDeviceFeatures const & {
             return this->_physicalDeviceFeatures;
         }
 
@@ -193,7 +195,7 @@ namespace engine {
          *
          * @return VulkanPhysicalDevice cref = Constant Reference to Physical Device Handle
          */
-        [[nodiscard]] auto data() const noexcept -> VulkanPhysicalDevice const & {
+        [[nodiscard]] constexpr auto data() const noexcept -> VulkanPhysicalDevice const & {
             return this->_physicalDeviceHandle;
         }
 
@@ -204,7 +206,7 @@ namespace engine {
          *
          * @return VulkanPhysicalDeviceMemoryProperties = Structure of Memory Properties of Physical Device
          */
-        [[nodiscard]] auto getMemoryProperties () const noexcept -> VulkanPhysicalDeviceMemoryProperties {
+        [[nodiscard]] inline auto getMemoryProperties () const noexcept -> VulkanPhysicalDeviceMemoryProperties {
             VulkanPhysicalDeviceMemoryProperties properties;
             vkGetPhysicalDeviceMemoryProperties ( this->_physicalDeviceHandle, & properties );
             return properties;
@@ -233,7 +235,7 @@ namespace engine {
          *
          * @return std::vector < engine::VPhysicalDevice > cref = Constant Reference to the vector containing the detected Physical Devices
          */
-        [[nodiscard]] static auto getAvailablePhysicalDevices ( const VInstance & instance ) noexcept (false) -> std::vector < VPhysicalDevice > const & {
+        [[nodiscard]] inline static auto getAvailablePhysicalDevices ( const VInstance & instance ) noexcept (false) -> std::vector < VPhysicalDevice > const & {
             VPhysicalDevice::queryAvailablePhysicalDevices( instance );
             return VPhysicalDevice::_availablePhysicalDevices;
         }
@@ -250,7 +252,7 @@ namespace engine {
          *
          * @return std::vector < VulkanPhysicalDevice > cref = Constant Reference to the vector containing Physical Device Handles detected by the Instance
          */
-        [[nodiscard]] static auto getAvailablePhysicalDevicesHandles ( const VInstance& instance ) noexcept -> std::vector < VulkanPhysicalDevice > const & {
+        [[nodiscard]] inline static auto getAvailablePhysicalDevicesHandles ( const VInstance& instance ) noexcept -> std::vector < VulkanPhysicalDevice > const & {
             VPhysicalDevice::queryAvailablePhysicalDevices( instance );
             return VPhysicalDevice::_availablePhysicalDeviceHandles;
         }
@@ -390,6 +392,24 @@ namespace engine {
         static auto debugPrintPhysicalDeviceFeaturesStructure           ( VulkanPhysicalDeviceFeatures const &,         std::ostream &, StringLiteral = "" ) noexcept -> void;
 #endif
 
+        auto clear () noexcept -> void override { }
+
+        [[nodiscard]] auto toString () const noexcept -> String override;
+        [[nodiscard]] auto operator == (Object const & o) const noexcept -> bool override {
+            if ( this == & o ) return true;
+            auto p = dynamic_cast < decltype (this) > ( & o );
+            if ( p == nullptr ) return false;
+
+            return this->_physicalDeviceHandle == p->_physicalDeviceHandle;
+        }
+
+        [[nodiscard]] auto hash () const noexcept -> Index override {
+            return dataTypes::hash(reinterpret_cast<AddressValueType>(this->_physicalDeviceHandle));
+        }
+
+        [[nodiscard]] auto copy () const noexcept -> VPhysicalDevice * override {
+            return new VPhysicalDevice(* this);
+        }
     };
 
 

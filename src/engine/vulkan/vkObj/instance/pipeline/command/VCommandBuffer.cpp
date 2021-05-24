@@ -662,3 +662,28 @@ auto engine::VCommandBuffer::submit(
 
     return result;
 }
+
+#include <sstream>
+
+auto engine::VCommandBuffer::toString() const noexcept -> String {
+    std::stringstream oss;
+    oss << "VCommandBuffer " <<
+        "{ handle = 0x" << std::hex << reinterpret_cast<AddressValueType>(this->_handle) <<
+        ", pCommandPool = 0x" << reinterpret_cast<AddressValueType>(this->_pCommandPool) <<
+        ", pFrameBuffer = 0x" << reinterpret_cast<AddressValueType>(this->_pFrameBuffer);
+
+    return oss.str();
+}
+
+auto engine::VCommandBufferCollection::toString() const noexcept -> String {
+    std::stringstream oss;
+    oss << "VCommandBufferCollection " <<
+        "{ pCommandPool = 0x" << std::hex << reinterpret_cast<AddressValueType>(this->_pCommandPool) <<
+        ", buffers = [ ";
+
+    for (auto const & item : this->_commandBuffers)
+        oss << item.toString() << ", ";
+
+    auto s = oss.str();
+    return s.substr(s.size() - 2).append(" ]}");
+}

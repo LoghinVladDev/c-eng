@@ -5,9 +5,8 @@
 #ifndef ENG1_VQUEUE_HPP
 #define ENG1_VQUEUE_HPP
 
-#include <engineVulkanPreproc.hpp>
-#include <vkDefs/types/vulkanExplicitTypes.h>
-#include <vkObj/instance/device/VLogicalDevice.hpp>
+#include <VRenderObject.hpp>
+#include <VLogicalDevice.hpp>
 
 namespace engine {
 
@@ -22,7 +21,7 @@ namespace engine {
      *
      * @brief Representation of a Queue - A bus of communication between the CPU and the GPU
      */
-    class VQueue {
+    class VQueue : public VRenderObject {
     private:
 
         //// private variables
@@ -30,13 +29,13 @@ namespace engine {
         constexpr static float  DEFAULT_MAX_QUEUE_PRIORITY  = 1.0f;
 
         /// Vulkan Handler for queue
-        VulkanQueue             _queueHandler               {};
+        VulkanQueue             _handle                     {};
 
         /// Family of the queue
-        const VQueueFamily    * _parentFamily               {nullptr};
+        VQueueFamily    const * _parentFamily               {nullptr};
 
         /// Owner GPU
-        const VLogicalDevice  * _parentLogicalDevice        {nullptr};
+        VLogicalDevice  const * _parentLogicalDevice        {nullptr};
 
         /// Priority
         float                   _priority                   {engine::VQueue::DEFAULT_QUEUE_PRIORITY};
@@ -66,7 +65,7 @@ namespace engine {
          *
          * @exceptsafe
          */
-        explicit VQueue ( const engine::VQueueFamily&, float = engine::VQueue::DEFAULT_QUEUE_PRIORITY ) noexcept;
+        explicit VQueue ( engine::VQueueFamily const &, float = engine::VQueue::DEFAULT_QUEUE_PRIORITY ) noexcept;
 
         /**
          * @brief setup function initialising the queue
@@ -76,7 +75,7 @@ namespace engine {
          *
          * @exceptsafe
          */
-        auto setup ( const VLogicalDevice&, uint32 ) noexcept -> void;
+        auto setup ( VLogicalDevice const &, uint32 ) noexcept -> void;
 
         /**
          * @brief getter for priority
@@ -85,7 +84,7 @@ namespace engine {
          *
          * @return float = priority of queue
          */
-        [[nodiscard]] constexpr float getPriority () const noexcept {
+        [[nodiscard]] constexpr auto getPriority () const noexcept -> float {
             return this->_priority;
         }
 
@@ -96,7 +95,7 @@ namespace engine {
          *
          * @return engine::VLogicalDevice cptr = Address to the owner GPU Interface object
          */
-        [[nodiscard]] auto getLogicalDevice () const noexcept -> VLogicalDevice const * {
+        [[nodiscard]] constexpr auto getLogicalDevicePtr () const noexcept -> VLogicalDevice const * {
             return this->_parentLogicalDevice;
         }
 
@@ -107,7 +106,7 @@ namespace engine {
          *
          * @return engine::VQueueFamily cptr = Address to the owner queue family object inside the GPU interface
          */
-        [[nodiscard]] auto getQueueFamily () const noexcept -> VQueueFamily const * {
+        [[nodiscard]] constexpr auto getQueueFamilyPtr () const noexcept -> VQueueFamily const * {
             return this->_parentFamily;
         }
 
@@ -115,8 +114,8 @@ namespace engine {
          * @brief getter for the Vulkan Handler associated with the object
          * @return VulkanQueue cref = handler assigned by Vulkan for Vulkan Functions
          */
-        [[nodiscard]] auto data () const noexcept -> VulkanQueue const & {
-            return this->_queueHandler;
+        [[nodiscard]] constexpr auto data () const noexcept -> VulkanQueue const & {
+            return this->_handle;
         }
 
         /**
@@ -126,7 +125,7 @@ namespace engine {
          *
          * @return uint32 = index of the queue in the family
          */
-        [[nodiscard]] auto getIndex () const noexcept -> uint32 {
+        [[nodiscard]] constexpr auto getIndex () const noexcept -> uint32 {
             return this->_queueIndex;
         }
 
@@ -135,7 +134,7 @@ namespace engine {
          *
          * @exceptsafe
          */
-        auto cleanup () noexcept -> void {
+        auto clear () noexcept -> void override {
             this->_parentFamily->freeQueueIndex (this->_queueIndex);
         }
 
@@ -144,7 +143,25 @@ namespace engine {
          *
          * @exceptsafe
          */
-        ~VQueue () noexcept = default;
+        ~VQueue () noexcept override = default;
+
+        [[nodiscard]] auto toString () const noexcept -> String override;
+        [[nodiscard]] auto operator == (Object const & o) const noexcept -> bool override {
+            if ( this == & o ) return true;
+            auto p = dynamic_cast < decltype (this) > (& o);
+
+            return this->_queueIndex == p->_queueIndex && this->_handle == p->_handle;
+        }
+
+        [[nodiscard]] auto hash () const noexcept -> Index override {
+            return
+                dataTypes::hash ( reinterpret_cast < AddressValueType > ( this->_parentFamily ) ) % 256 +
+                dataTypes::hash ( this->_queueIndex );
+        }
+
+        [[nodiscard]] auto copy () const noexcept -> VQueue * override {
+            return new VQueue(* this);
+        }
     };
 
 }

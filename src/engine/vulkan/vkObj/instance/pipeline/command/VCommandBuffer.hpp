@@ -5,9 +5,8 @@
 #ifndef ENG1_VCOMMANDBUFFER_HPP
 #define ENG1_VCOMMANDBUFFER_HPP
 
-#include <engineVulkanPreproc.hpp>
-#include <vulkanExplicitTypes.h>
-#include "VCommandPool.hpp"
+#include <VRenderObject.hpp>
+#include <VCommandPool.hpp>
 #include <VFrameBuffer.hpp>
 #include <VPipeline.hpp>
 #include <VSemaphore.hpp>
@@ -31,7 +30,7 @@ namespace engine {
      *
      * Command Buffers can also be used on other aspects, such as data transfer
      */
-    class VCommandBuffer {
+    class VCommandBuffer : public VRenderObject {
     private:
 
         /// Give access to engine::VCommandBufferCollection to private members
@@ -68,6 +67,8 @@ namespace engine {
          */
         VCommandBuffer() noexcept = delete;
 
+        ~VCommandBuffer() noexcept override = default;
+
         /**
          * @brief Constructor from Buffer Handle, Pool and Frame Buffer to draw on
          *
@@ -82,6 +83,7 @@ namespace engine {
                 VCommandPool        const * pCommandPool = nullptr,
                 VFrameBuffer        const * pFrameBuffer = nullptr
         ) noexcept :
+            VRenderObject (),
             _handle ( handle ),
             _pFrameBuffer ( pFrameBuffer ),
             _pCommandPool ( pCommandPool ){
@@ -228,6 +230,26 @@ namespace engine {
         [[nodiscard]] const VulkanCommandBuffer & data () const noexcept {
             return this->_handle;
         }
+
+        [[nodiscard]] auto toString () const noexcept -> String override;
+        [[nodiscard]] auto operator == (Object const & o) const noexcept -> bool override {
+            if ( this == & o ) return true;
+            auto p = dynamic_cast < decltype (this) > ( & o );
+            if ( p == nullptr ) return false;
+
+            return this->_handle == p->_handle;
+        }
+
+        [[nodiscard]] auto hash () const noexcept -> Index override {
+            return this->_pCommandPool == nullptr ? 0 : this->_pCommandPool->hash() * 100 +
+                dataTypes::hash(reinterpret_cast<AddressValueType>(this->_handle));
+        }
+
+        [[nodiscard]] auto copy () const noexcept -> VCommandBuffer * override {
+            return new VCommandBuffer(* this);
+        }
+
+        auto clear () noexcept -> void override { }
     };
 
     /**
@@ -235,7 +257,7 @@ namespace engine {
      *
      * @brief Represents a collection of Command Buffers, generally used in Drawing as they contain one framebuffer for each command buffer
      */
-    class VCommandBufferCollection {
+    class VCommandBufferCollection : public VRenderObject {
     private:
         //// private variables
 
@@ -258,6 +280,8 @@ namespace engine {
          * @exceptsafe
          */
         VCommandBufferCollection() noexcept = default;
+
+        ~VCommandBufferCollection() noexcept override = default;
 
         /**
          * @brief Function used to allocate several command buffers from a pool, with assignation of Frame Buffers
@@ -362,7 +386,7 @@ namespace engine {
          *
          * @return std::vector < engine::VCommandBuffer > cref = Constant Reference to vector of Command Buffers
          */
-        [[nodiscard]] auto getCommandBuffers () const noexcept -> std::vector < VCommandBuffer > const & {
+        [[nodiscard]] constexpr auto getCommandBuffers () const noexcept -> std::vector < VCommandBuffer > const & {
             return this->_commandBuffers;
         }
 
@@ -372,6 +396,27 @@ namespace engine {
          * @exceptsafe
          */
         auto free () noexcept -> void;
+
+        auto clear () noexcept -> void override  { this->free(); }
+
+        [[nodiscard]] auto toString () const noexcept -> String override;
+        [[nodiscard]] auto operator == (Object const & o) const noexcept -> bool override {
+            if ( this == & o ) return true;
+            auto p = dynamic_cast < decltype (this) > ( & o );
+            if ( p == nullptr ) return false;
+
+            return this->_commandBuffers == p->_commandBuffers;
+        }
+
+        [[nodiscard]] auto hash () const noexcept -> Index override {
+            Index hashSum = 0;
+            std::for_each(this->_commandBuffers.begin(), this->_commandBuffers.end(), [& hashSum] (auto const & b) { hashSum += b.hash(); } );
+            return hashSum;
+        }
+
+        [[nodiscard]] auto copy () const noexcept -> VCommandBufferCollection * override {
+            return new VCommandBufferCollection(* this);
+        }
     };
 
 }

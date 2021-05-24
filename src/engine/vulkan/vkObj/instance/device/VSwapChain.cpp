@@ -143,8 +143,8 @@ static inline auto swapChainLinkQueueFamilies (
 
     static uint32 queueFamilyIndices[2]; /// need to check only two different queue family indices
 
-    int32 graphicsFamilyIndex   = -1; /// starts of invalid
-    int32 presentFamilyIndex    = -1;
+    sint32 graphicsFamilyIndex   = -1; /// starts of invalid
+    sint32 presentFamilyIndex    = -1;
 
     for ( const auto * queueFamily : device->getQueueFamilies() ) {
         if( queueFamily->isPresentCapable() && queueFamily->isGraphicsCapable() ) {

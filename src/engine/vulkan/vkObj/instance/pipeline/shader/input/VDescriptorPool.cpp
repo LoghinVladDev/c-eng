@@ -63,6 +63,18 @@ auto engine::VDescriptorPool::setup(
     return vkCreateDescriptorPool( this->_pLogicalDevice->data(), & createInfo, nullptr, & this->_handle );
 }
 
-auto engine::VDescriptorPool::cleanup() noexcept -> void {
+auto engine::VDescriptorPool::clear() noexcept -> void {
     vkDestroyDescriptorPool( this->_pLogicalDevice->data(), this->_handle, nullptr );
+}
+
+#include <sstream>
+
+auto engine::VDescriptorPool::toString() const noexcept -> String {
+    std::stringstream oss;
+
+    oss << "VDescriptorPool " <<
+        "{ handle = 0x" << std::hex << reinterpret_cast<AddressValueType>(this->_handle) <<
+        ", pLogicalDevice = 0x" << reinterpret_cast<AddressValueType>(this->_pLogicalDevice) << " }";
+
+    return oss.str();
 }

@@ -5,7 +5,7 @@
 #ifndef ENG1_VMESSENGER_HPP
 #define ENG1_VMESSENGER_HPP
 
-
+#include <VRenderObject.hpp>
 #include <VInstance.hpp>
 #include <exception>
 #include <CDS/String>
@@ -36,13 +36,16 @@ namespace engine {
     };
 
     /**
-     * @class engine::VMessenger
+     * @class engine::VMessenger, derived from VRenderObject
+     *
+     * VRenderObject derivation might not seem ideal at first, but remember that VMessenger is primarily
+     *      the ValidationLayer error callback and will be extended to GPU printf
      *
      * @brief Represents the Debug Messenger. Contains the callback ( and callback passthrough ) of Vulkan Errors and Vulkan Validation Layer Errors
      *
      * The Debug Messenger is a Vulkan Core API extension. If Validation Layers exist, Messenger Extension exists
      */
-    class VMessenger {
+    class VMessenger : public VRenderObject {
     private:
         //// private variables
 
@@ -85,7 +88,7 @@ namespace engine {
          *
          * @exceptsafe
          */
-        explicit VMessenger( engine::VInstance * instance ) noexcept {
+        explicit VMessenger( engine::VInstance * instance ) noexcept : VRenderObject() {
             this->_vulkanInstance = instance;
         }
 
@@ -123,7 +126,7 @@ namespace engine {
          *
          * @return VulkanDebugMessenger cref = Constant Reference to Vulkan Handle
          */
-        [[nodiscard]] auto data() const noexcept -> VulkanDebugMessenger const & {
+        [[nodiscard]] constexpr auto data() const noexcept -> VulkanDebugMessenger const & {
             return this->_debugMessenger;
         }
 
@@ -132,7 +135,24 @@ namespace engine {
          *
          * @exceptsafe
          */
-        auto clean() noexcept -> void;
+        auto clear() noexcept -> void override;
+
+        [[nodiscard]] auto toString () const noexcept -> String override;
+        [[nodiscard]] auto operator == (Object const & o) const noexcept -> bool override {
+            if ( this == & o ) return true;
+            auto p = dynamic_cast < decltype ( this ) > ( & o );
+            if ( p == nullptr ) return false;
+
+            return this->_debugMessenger == p->_debugMessenger;
+        }
+
+        [[nodiscard]] auto hash () const noexcept -> Index override {
+            return dataTypes::hash(reinterpret_cast<AddressValueType>(this->_debugMessenger));
+        }
+
+        [[nodiscard]] auto copy () const noexcept -> VMessenger * override {
+            return new VMessenger(* this);
+        }
     };
 
 }

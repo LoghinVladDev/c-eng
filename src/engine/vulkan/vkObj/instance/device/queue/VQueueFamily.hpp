@@ -4,9 +4,8 @@
 
 #ifndef ENG1_VQUEUEFAMILY_HPP
 #define ENG1_VQUEUEFAMILY_HPP
-#include <engineVulkanPreproc.hpp>
-#include <vkDefinitions.h>
-#include <vulkanExplicitTypes.h>
+
+#include <VRenderObject.hpp>
 #include <VPhysicalDevice.hpp>
 #include <map>
 #include <set>
@@ -71,7 +70,7 @@ namespace engine {
      * @brief Family of VQueues - Collection ( internal, GPU ) of Queues (buses), each with same behaviour.
      * A Queue can be "requested" from the Family, Resulting in allocation of said queue to the requester program
      */
-    class VQueueFamily {
+    class VQueueFamily : public VRenderObject {
     private:
         //// private variables
 
@@ -227,7 +226,7 @@ namespace engine {
          *
          * @exceptsafe
          */
-        explicit VQueueFamily (VQueueFamilyCollection * parent, VulkanQueueFamilyProperties const & properties, uint32 family) noexcept {
+        explicit VQueueFamily (VQueueFamilyCollection * parent, VulkanQueueFamilyProperties const & properties, uint32 family) noexcept : VRenderObject() {
             this->_parentCollection = parent;
             this->_queueFamilyProperties = properties;
             this->_familyIndex = family;
@@ -240,7 +239,7 @@ namespace engine {
          *
          * @exceptsafe
          */
-        VQueueFamily(VQueueFamily const & obj) noexcept {
+        VQueueFamily(VQueueFamily const & obj) noexcept : VRenderObject(obj) {
             this->_parentCollection = obj._parentCollection;
             this->_queueFamilyProperties = obj._queueFamilyProperties;
             this->_familyIndex = obj._familyIndex;
@@ -252,7 +251,7 @@ namespace engine {
          *
          * @exceptsafe
          */
-        ~VQueueFamily() noexcept = default;
+        ~VQueueFamily() noexcept override = default;
 
         /**
          * @brief reserve number of queues from the family, to be acquired later
@@ -300,7 +299,7 @@ namespace engine {
          *
          * @return engine::VPhysicalDevice cref = Reference to the Physical Device
          */
-        [[nodiscard]] auto getPhysicalDevice () const noexcept -> VPhysicalDevice const &;
+        [[nodiscard]] auto getPhysicalDevicePtr () const noexcept -> VPhysicalDevice const *;
 
         /**
          * @brief getter for the index of this family in the family collection
@@ -309,7 +308,7 @@ namespace engine {
          *
          * @return uint32 = index of this family in the family collection
          */
-        [[nodiscard]] auto getQueueFamilyIndex ( ) const noexcept -> uint32 {
+        [[nodiscard]] constexpr auto getQueueFamilyIndex ( ) const noexcept -> uint32 {
             return this->_familyIndex;
         }
 
@@ -320,7 +319,7 @@ namespace engine {
          *
          * @return uint32 = number of queues this family controls / owns
          */
-        [[nodiscard]] auto getQueueCount ( ) const noexcept -> uint32 {
+        [[nodiscard]] constexpr auto getQueueCount ( ) const noexcept -> uint32 {
             return this->_queueFamilyProperties.queueCount;
         }
 
@@ -331,7 +330,7 @@ namespace engine {
          *
          * @return VulkanQueueFamilyProperties cref = Reference to structure containing properties
          */
-        [[nodiscard]] auto getQueueFamilyProperties ( ) const noexcept -> VulkanQueueFamilyProperties const & {
+        [[nodiscard]] constexpr auto getQueueFamilyProperties ( ) const noexcept -> VulkanQueueFamilyProperties const & {
             return this->_queueFamilyProperties;
         }
 
@@ -470,6 +469,25 @@ namespace engine {
          */
         static auto debugPrintQueueFamilyPropertiesStructure ( VulkanQueueFamilyProperties const &, std::ostream &, StringLiteral ) noexcept -> void;
 #endif
+
+        auto clear () noexcept -> void override { }
+
+        [[nodiscard]] auto toString () const noexcept -> String override;
+        [[nodiscard]] auto operator == (Object const & o) const noexcept -> bool override {
+            if ( this == & o ) return true;
+            auto p = dynamic_cast < decltype (this) > (& o);
+            if ( p == nullptr ) return false;
+
+            return this->_familyIndex == p->_familyIndex;
+        }
+
+        [[nodiscard]] auto hash () const noexcept -> Index override {
+            return dataTypes::hash(this->_familyIndex);
+        }
+
+        [[nodiscard]] auto copy () const noexcept -> VQueueFamily * override {
+            return new VQueueFamily(* this);
+        }
     };
 
     /**
@@ -477,21 +495,21 @@ namespace engine {
      *
      * @brief A Collection of Queue Families
      */
-    class VQueueFamilyCollection {
+    class VQueueFamilyCollection : public VRenderObject {
     private:
         //// private variables
 
         /// Pointer to the owner Physical Device
-        const VPhysicalDevice         * _physicalDevice { nullptr };
+        VPhysicalDevice                     const * _physicalDevice { nullptr };
 
         /// std::vector of VQueueFamily
-        std::vector < VQueueFamily >    _queueFamilies;
+        std::vector < VQueueFamily >                _queueFamilies;
 
         /// std::map of uint32, uint32 - queue family index -> reserved queue count
-        std::map < uint32, uint32 >     _reservedQueuesForFamilies;
+        std::map < uint32, uint32 >                 _reservedQueuesForFamilies;
 
         /// std::map of uint32, std::set of uint32 - queue family index -> set of indices reserved
-        std::map < uint32, std::set < uint32 > > _reservedQueueIndicesForFamilies;
+        std::map < uint32, std::set < uint32 > >    _reservedQueueIndicesForFamilies;
 
         //// private functions
 
@@ -524,6 +542,7 @@ namespace engine {
          * @deprecated
          */
         VQueueFamilyCollection () noexcept = delete;
+        ~VQueueFamilyCollection() noexcept override = default;
 
         /**
          * @brief Explicit Constructor, acquiring a physical device and, optionally, a surface address
@@ -534,7 +553,7 @@ namespace engine {
          * @throws engine::EngineNullVPhysicalDevice if
          *      queryAvailableQueueFamilies() throws
          */
-        explicit VQueueFamilyCollection ( VPhysicalDevice const & physicalDevice , VSurface const * surfaceToSync = nullptr ) noexcept (false) {
+        explicit VQueueFamilyCollection ( VPhysicalDevice const & physicalDevice , VSurface const * surfaceToSync = nullptr ) noexcept (false) : VRenderObject() {
             this->_physicalDevice = (& physicalDevice);
             this->queryAvailableQueueFamilies();
             this->unReserveAllQueueFamilies();
@@ -592,7 +611,7 @@ namespace engine {
          *
          * @return std::map < uint32, uint32 > cref = Reference to the Map
          */
-        [[nodiscard]] auto getReservedQueueFamiliesMap () const noexcept -> std::map < uint32, uint32 > const & {
+        [[nodiscard]] constexpr auto getReservedQueueFamiliesMap () const noexcept -> std::map < uint32, uint32 > const & {
             return this->_reservedQueuesForFamilies;
         }
 
@@ -603,8 +622,8 @@ namespace engine {
          *
          * @return engine::VPhysicalDevice cref = Reference to the Physical Device
          */
-        [[nodiscard]] auto getPhysicalDevice ( ) const noexcept -> VPhysicalDevice const & {
-            return * this->_physicalDevice;
+        [[nodiscard]] constexpr auto getPhysicalDevicePtr ( ) const noexcept -> VPhysicalDevice const * {
+            return this->_physicalDevice;
         }
 
         /**
@@ -614,7 +633,7 @@ namespace engine {
          *
          * @return std::vector < VQueueFamily > cref = Constant Reference to the queue families vector
          */
-        [[nodiscard]] auto getQueueFamilies () const noexcept -> std::vector < VQueueFamily > const & {
+        [[nodiscard]] constexpr auto getQueueFamilies () const noexcept -> std::vector < VQueueFamily > const & {
             return this->_queueFamilies;
         }
 
@@ -635,7 +654,7 @@ namespace engine {
          *
          * @return std::vector < VQueueFamily cptr > = Vector containing addresses to constant VQueueFamily
          */
-        [[nodiscard]] auto getGraphicsCapableQueueFamilies () const noexcept -> std::vector < VQueueFamily const * > {
+        [[nodiscard]] inline auto getGraphicsCapableQueueFamilies () const noexcept -> std::vector < VQueueFamily const * > {
             return this->getFlagsCapableQueueFamilies( VQueueFamily::GRAPHICS_FLAG );
         }
 
@@ -647,7 +666,7 @@ namespace engine {
          *
          * @return std::vector < VQueueFamily cptr > = Vector containing addresses to constant VQueueFamily
          */
-        [[nodiscard]] auto getComputeCapableQueueFamilies () const noexcept -> std::vector < VQueueFamily const * >  {
+        [[nodiscard]] inline auto getComputeCapableQueueFamilies () const noexcept -> std::vector < VQueueFamily const * >  {
             return this->getFlagsCapableQueueFamilies( VQueueFamily::COMPUTE_FLAG );
         }
 
@@ -659,7 +678,7 @@ namespace engine {
          *
          * @return std::vector < VQueueFamily cptr > = Vector containing addresses to constant VQueueFamily
          */
-        [[nodiscard]] auto getTransferCapableQueueFamilies () const noexcept -> std::vector < VQueueFamily const * > {
+        [[nodiscard]] inline auto getTransferCapableQueueFamilies () const noexcept -> std::vector < VQueueFamily const * > {
             return this->getFlagsCapableQueueFamilies( VQueueFamily::TRANSFER_FLAG );
         }
 
@@ -671,7 +690,7 @@ namespace engine {
          *
          * @return std::vector < VQueueFamily cptr > = Vector containing addresses to constant VQueueFamily
          */
-        [[nodiscard]] auto getProtectedCapableQueueFamilies () const noexcept -> std::vector < VQueueFamily const * > {
+        [[nodiscard]] inline auto getProtectedCapableQueueFamilies () const noexcept -> std::vector < VQueueFamily const * > {
             return this->getFlagsCapableQueueFamilies( VQueueFamily::PROTECTED_FLAG );
         }
 
@@ -683,7 +702,7 @@ namespace engine {
          *
          * @return std::vector < VQueueFamily cptr > = Vector containing addresses to constant VQueueFamily
          */
-        [[nodiscard]] auto getSparseBindingCapableQueueFamilies () const noexcept -> std::vector < VQueueFamily const * > {
+        [[nodiscard]] inline auto getSparseBindingCapableQueueFamilies () const noexcept -> std::vector < VQueueFamily const * > {
             return this->getFlagsCapableQueueFamilies( VQueueFamily::SPARSE_BINDING_FLAG );
         }
 
@@ -695,7 +714,7 @@ namespace engine {
          *
          * @return std::vector < VQueueFamily cptr > = Vector containing addresses to constant VQueueFamily
          */
-        [[nodiscard]] auto getPresentCapableQueueFamilies () const noexcept -> std::vector < VQueueFamily const * > {
+        [[nodiscard]] inline auto getPresentCapableQueueFamilies () const noexcept -> std::vector < VQueueFamily const * > {
             return this->getFlagsCapableQueueFamilies( VQueueFamily::PRESENT_FLAG );
         }
 
@@ -706,7 +725,7 @@ namespace engine {
          *
          * @return std::vector < VQueueFamily cptr > = Vector containing addresses to constant VQueueFamily capable of flags given
          */
-        [[nodiscard]] auto getFlagsCapableQueueFamilies ( VulkanQueueFlags ) const noexcept -> std::vector < VQueueFamily const * >;
+        [[nodiscard]] inline auto getFlagsCapableQueueFamilies ( VulkanQueueFlags ) const noexcept -> std::vector < VQueueFamily const * >;
 
         /**
          * @brief function syncing queue families to a surface, requesting surface to enable features on Surface
@@ -715,7 +734,7 @@ namespace engine {
          *
          * @exceptsafe
          */
-        auto syncWithSurface ( VSurface const & surface ) noexcept -> void {
+        inline auto syncWithSurface ( VSurface const & surface ) noexcept -> void {
             for ( auto & queueFamily : this->_queueFamilies )
                 queueFamily.syncWithSurface( surface );
         }
@@ -740,6 +759,27 @@ namespace engine {
          */
         auto debugPrintQueueFamiliesReservations ( std::ostream &, StringLiteral = "" ) const noexcept -> void;
 #endif
+
+        auto clear () noexcept -> void override { }
+
+        [[nodiscard]] auto toString () const noexcept -> String override;
+        [[nodiscard]] auto operator == (Object const & o) const noexcept -> bool override {
+            if ( this == & o ) return true;
+            auto p = dynamic_cast < decltype ( this ) > (& o);
+            if ( p == nullptr ) return false;
+
+            return this->_queueFamilies == p->_queueFamilies;
+        }
+
+        [[nodiscard]] auto hash () const noexcept -> Index override {
+            Index hashSum = 0;
+            std::for_each(this->_queueFamilies.begin(), this->_queueFamilies.end(), [& hashSum](auto const & i){hashSum += i.hash();});
+            return hashSum;
+        }
+
+        [[nodiscard]] auto copy () const noexcept -> VQueueFamilyCollection * override {
+            return new VQueueFamilyCollection( * this );
+        }
     };
 
 }

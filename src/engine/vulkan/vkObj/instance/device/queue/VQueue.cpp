@@ -4,13 +4,29 @@
 
 #include "VQueue.hpp"
 
-engine::VQueue::VQueue(const engine::VQueueFamily& family, float priority) noexcept :
+engine::VQueue::VQueue(engine::VQueueFamily const & family, float priority) noexcept :
+    VRenderObject(),
     _parentFamily( & family ),
     _priority( priority ){
 }
 
-auto engine::VQueue::setup ( const VLogicalDevice& logicalDevice, uint32 index ) noexcept -> void {
+auto engine::VQueue::setup ( VLogicalDevice const & logicalDevice, uint32 index ) noexcept -> void {
     this->_parentLogicalDevice = ( & logicalDevice );
     this->_queueIndex = index;
-    vkGetDeviceQueue( logicalDevice.data(), this->_parentFamily->getQueueFamilyIndex(), index, & this->_queueHandler );
+    vkGetDeviceQueue( logicalDevice.data(), this->_parentFamily->getQueueFamilyIndex(), index, & this->_handle );
+}
+
+#include <sstream>
+
+auto engine::VQueue::toString() const noexcept -> String {
+    std::stringstream oss;
+
+    oss << "VQueue " <<
+        "{ handle = 0x" << std::hex << reinterpret_cast<AddressValueType>(this->_handle) <<
+        ", pParentFamily = 0x" << reinterpret_cast<AddressValueType>(this->_parentFamily) <<
+        ", pParentLogicalDevice = 0x" << reinterpret_cast<AddressValueType>(this->_parentLogicalDevice) <<
+        ", priority = " << std::dec << this->_priority <<
+        ", index = " << this->_queueIndex << " }";
+
+    return oss.str();
 }

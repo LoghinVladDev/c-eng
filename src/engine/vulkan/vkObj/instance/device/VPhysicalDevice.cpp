@@ -488,3 +488,17 @@ auto engine::VPhysicalDevice::debugPrintPhysicalDeviceFeaturesStructure(
 }
 
 #endif
+
+#include <sstream>
+
+auto engine::VPhysicalDevice::toString() const noexcept -> String {
+    std::stringstream oss;
+
+    oss << "VPhysicalDevice " <<
+        "{ handle = 0x" << std::hex << this->_physicalDeviceHandle <<
+        ", features & properties : use VPhysicalDevice::debugPrintPhysicalDeviceBasicPropertiesStructure, VPhysicalDevice::debugPrintPhysicalDeviceSparsePropertiesStructure, "
+        "VPhysicalDevice::debugPrintPhysicalDeviceLimitsStructure, VPhysicalDevice::debugPrintPhysicalDeviceFeaturesStructure, "
+        "or use VPhysicalDevice::debugPrintPhysicalDeviceProperties with true for param }";
+
+    return oss.str();
+}

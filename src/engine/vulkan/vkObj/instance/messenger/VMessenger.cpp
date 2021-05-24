@@ -126,10 +126,21 @@ auto engine::VMessenger::setup(engine::VInstance * givenInstance) noexcept (fals
     );
 }
 
-void engine::VMessenger::clean() noexcept {
+void engine::VMessenger::clear() noexcept {
     destroyDebugMessengerExtension(
             this->_vulkanInstance->data(),
             this->_debugMessenger,
             nullptr
     );
+}
+
+#include <sstream>
+auto engine::VMessenger::toString() const noexcept -> String {
+    std::stringstream oss;
+
+    oss << "VMessenger " <<
+        "{ handle = " << std::hex << reinterpret_cast<AddressValueType>(this->_debugMessenger) <<
+        ", pInstance = " << reinterpret_cast<AddressValueType>(this->_vulkanInstance) << " }";
+
+    return oss.str();
 }

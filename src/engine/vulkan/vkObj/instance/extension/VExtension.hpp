@@ -5,13 +5,10 @@
 
 #ifndef ENG1_VEXTENSION_HPP
 #define ENG1_VEXTENSION_HPP
-#include <engineVulkanPreproc.hpp>
-#include <vkDefinitions.h>
-#include <vulkanExplicitTypes.h>
-#include <algorithm>
+
+#include <VRenderObject.hpp>
 #include <vector>
 #include <cstring>
-//#include <VPhysicalDevice.h>
 #include <CDS/String>
 
 namespace engine {
@@ -44,7 +41,7 @@ namespace engine {
      *
      * @brief represents an extension to the Vulkan Core API to avoid using literal values
      */
-    class VExtension {
+    class VExtension : public VRenderObject {
     private:
         //// private variables
 
@@ -73,6 +70,8 @@ namespace engine {
          */
         VExtension ( ) noexcept = default;
 
+        ~VExtension() noexcept override = default;
+
         /**
          * @brief Constructor based on properties structure
          *
@@ -80,7 +79,7 @@ namespace engine {
          *
          * @exceptsafe
          */
-        explicit VExtension ( VulkanExtensionProperties const & properties) noexcept {
+        explicit VExtension ( VulkanExtensionProperties const & properties) noexcept : VRenderObject() {
             this->_extensionProperties = properties;
         }
 
@@ -92,7 +91,7 @@ namespace engine {
          * @throws engine::EngineVExtensionUnknownType if
          *      given a type that is not supported
          */
-        explicit VExtension (Type ) noexcept (false);
+        explicit VExtension ( Type ) noexcept (false);
 
         //// public functions
 
@@ -103,7 +102,7 @@ namespace engine {
          *
          * @return VulkanExtensionProperties cref = Constant Reference to Properties Structure
          */
-        [[nodiscard]] auto data() const noexcept -> VulkanExtensionProperties const & {
+        [[nodiscard]] constexpr auto data() const noexcept -> VulkanExtensionProperties const & {
             return this->_extensionProperties;
         }
 
@@ -114,7 +113,7 @@ namespace engine {
          *
          * @return StringLiteral = Name of the Extension
          */
-        [[nodiscard]] auto getName() const noexcept -> StringLiteral {
+        [[nodiscard]] constexpr auto getName() const noexcept -> StringLiteral {
             return this->_extensionProperties.extensionName;
         }
 
@@ -125,7 +124,7 @@ namespace engine {
          *
          * @return uint32 = Spec Version of the Extension
          */
-        [[nodiscard]] auto getSpecVersion () const noexcept -> uint32 {
+        [[nodiscard]] constexpr auto getSpecVersion () const noexcept -> uint32 {
             return this->_extensionProperties.specVersion;
         }
 
@@ -141,6 +140,32 @@ namespace engine {
          */
         auto debugPrint ( std::ostream &, StringLiteral = "" ) const noexcept -> void;
 #endif
+
+        auto clear () noexcept -> void override { }
+
+        [[nodiscard]] auto toString () const noexcept -> String override {
+            return String("VExtension { name = ")
+                .append(this->_extensionProperties.extensionName)
+                .append(", specVersion")
+                .append(this->_extensionProperties.specVersion)
+                .append(" }");
+        }
+
+        [[nodiscard]] auto operator == (Object const & o) const noexcept -> bool override {
+            if ( this == & o ) return true;
+            auto p = dynamic_cast<decltype(this)>(& o);
+            if ( p == nullptr ) return false;
+
+            return std::strcmp ( p->_extensionProperties.extensionName, this->_extensionProperties.extensionName ) == 0;
+        }
+
+        [[nodiscard]] auto hash () const noexcept -> Index override {
+            return String(this->_extensionProperties.extensionName).hash();
+        }
+
+        [[nodiscard]] auto copy () const noexcept -> VExtension * override {
+            return new VExtension(* this);
+        }
     };
 
     /**
@@ -148,7 +173,7 @@ namespace engine {
      *
      * @brief represents a set/collection of Extensions
      */
-    class VExtensionCollection {
+    class VExtensionCollection : public VRenderObject {
     private:
         //// private variables
 
@@ -168,6 +193,8 @@ namespace engine {
          * @exceptsafe
          */
         VExtensionCollection() noexcept = default;
+
+        ~VExtensionCollection() noexcept override = default;
 
         /**
          * @brief Function checking if collection is empty
@@ -335,6 +362,27 @@ namespace engine {
          */
         auto debugPrint ( std::ostream&, StringLiteral = "" ) const noexcept -> void;
 #endif
+
+        auto clear () noexcept -> void override {}
+
+        [[nodiscard]] auto toString() const noexcept -> String override;
+        [[nodiscard]] auto operator == (Object const & o) const noexcept -> bool override {
+            if ( this == & o ) return true;
+            auto p = dynamic_cast < decltype (this) > (& o);
+            if ( p == nullptr ) return false;
+
+            return this->_extensions == p->_extensions;
+        }
+
+        [[nodiscard]] auto hash () const noexcept -> Index override {
+            Index hashSum = 0;
+            std::for_each(this->_extensions.begin(), this->_extensions.end(), [& hashSum](auto const & e){hashSum += e.hash();});
+            return hashSum;
+        }
+
+        [[nodiscard]] auto copy () const noexcept -> VExtensionCollection * override {
+            return new VExtensionCollection ( * this );
+        }
     };
 
 }

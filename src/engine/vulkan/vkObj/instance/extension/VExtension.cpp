@@ -25,7 +25,7 @@
     }
 }  
 
-engine::VExtension::VExtension( engine::VExtension::Type type ) noexcept (false) {
+engine::VExtension::VExtension( engine::VExtension::Type type ) noexcept (false) : VRenderObject() {
 #if !defined(_MSC_VER)
     std::strcpy( this->_extensionProperties.extensionName, getLiteralByType ( type ) );
 #else
@@ -125,10 +125,22 @@ auto engine::VExtensionCollection::debugPrint(
 
 #endif
 
-auto engine::VExtensionCollection::contains(const engine::VExtensionCollection & otherCollection) const noexcept -> bool {
+auto engine::VExtensionCollection::contains(engine::VExtensionCollection const & otherCollection) const noexcept -> bool {
     for ( const auto& otherCollectionExtension : otherCollection._extensions ) { // NOLINT(readability-use-anyofallof)
         if ( this->contains( otherCollectionExtension ) )
             return true;
     }
     return false;
+}
+
+#include <sstream>
+auto engine::VExtensionCollection::toString() const noexcept -> String {
+    std::stringstream oss;
+
+    oss << "VExtensionCollection { extensions = [ ";
+    for (auto const & item : this->_extensions)
+        oss << item.toString() << ", ";
+
+    auto s = oss.str();
+    return s.substr(s.size() - 2).append(" ]}");
 }

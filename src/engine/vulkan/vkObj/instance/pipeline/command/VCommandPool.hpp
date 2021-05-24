@@ -5,9 +5,8 @@
 #ifndef ENG1_VCOMMANDPOOL_HPP
 #define ENG1_VCOMMANDPOOL_HPP
 
-#include <engineVulkanPreproc.hpp>
-#include <vkDefs/types/vulkanExplicitTypes.h>
-#include <vkObj/instance/device/VLogicalDevice.hpp>
+#include <VRenderObject.hpp>
+#include <VLogicalDevice.hpp>
 
 namespace engine {
 
@@ -16,12 +15,12 @@ namespace engine {
      *
      * @brief Represents a Memory Pool for Command Buffers.
      */
-    class VCommandPool {
+    class VCommandPool : public VRenderObject {
     private:
         //// private variables
 
         /// Logical Device from on which the Pool will exist, from which the pool allocates memory
-        const VLogicalDevice    * _pLogicalDevice   {nullptr};
+        VLogicalDevice    const * _pLogicalDevice   {nullptr};
 
         /// Vulkan Handle for Command Pool
         VulkanCommandPool         _handle           {nullptr};
@@ -42,6 +41,7 @@ namespace engine {
          * @exceptsafe
          */
         VCommandPool() noexcept = default;
+        ~VCommandPool() noexcept override = default;
 
         /**
          * @brief Getter function for Logical Device Owner Address
@@ -98,7 +98,24 @@ namespace engine {
          *
          * @exceptsafe
          */
-        auto cleanup () noexcept -> void;
+        auto clear () noexcept -> void override;
+
+        [[nodiscard]] auto toString () const noexcept -> String override;
+        [[nodiscard]] auto operator == (Object const & o) const noexcept -> bool override {
+            if ( this == & o ) return true;
+            auto p = dynamic_cast < decltype ( this ) > ( & o );
+            if ( p == nullptr ) return false;
+
+            return this->_handle == p->_handle;
+        }
+
+        [[nodiscard]] auto hash () const noexcept -> Index override {
+            return dataTypes::hash(reinterpret_cast<AddressValueType>(this->_handle));
+        }
+
+        [[nodiscard]] auto copy () const noexcept -> VCommandPool * override {
+            return new VCommandPool(* this);
+        }
     };
 
 }

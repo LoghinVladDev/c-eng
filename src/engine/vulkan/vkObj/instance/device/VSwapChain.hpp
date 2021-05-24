@@ -5,12 +5,11 @@
 #ifndef ENG1_VSWAPCHAIN_HPP
 #define ENG1_VSWAPCHAIN_HPP
 
-#include <engineVulkanPreproc.hpp>
-#include <vkDefs/types/vulkanExplicitTypes.h>
-#include <vkObj/window/surface/VSurface.hpp>
-#include <vkObj/instance/device/VLogicalDevice.hpp>
-#include <vkObj/instance/pipeline/VImageView.hpp>
-#include <vkObj/instance/pipeline/synchronization/VSemaphore.hpp>
+#include <VRenderObject.hpp>
+#include <VSurface.hpp>
+#include <VLogicalDevice.hpp>
+#include <VImageView.hpp>
+#include <VSemaphore.hpp>
 
 #include <vector>
 
@@ -32,7 +31,7 @@ namespace engine {
      * Not all GPUs have methods of passing data directly to display ( there are GPUs without direct output ports; ex: HDMI, DisplayPort etc. )
      * In such cases, another image passthrough method has to be implemented
      */
-    class VSwapChain {
+    class VSwapChain : public VRenderObject {
     public:
 
         /**

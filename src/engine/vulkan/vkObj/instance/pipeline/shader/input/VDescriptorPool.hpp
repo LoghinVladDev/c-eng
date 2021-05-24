@@ -5,9 +5,8 @@
 #ifndef ENG1_VDESCRIPTORPOOL_HPP
 #define ENG1_VDESCRIPTORPOOL_HPP
 
-#include <engineVulkanPreproc.hpp>
-#include <vkDefs/types/vulkanExplicitTypes.h>
-#include <vkObj/instance/device/VLogicalDevice.hpp>
+#include <VRenderObject.hpp>
+#include <VLogicalDevice.hpp>
 
 namespace engine {
 
@@ -17,7 +16,7 @@ namespace engine {
      * @brief Represents a Pool of Memory for Descriptors <- bindings for CPU-GPU shared memory, assigned in layouts
      * Descriptor Sets will be allocated from a pool
      */
-    class VDescriptorPool {
+    class VDescriptorPool : public VRenderObject {
     private:
         //// private variables
 
@@ -40,6 +39,8 @@ namespace engine {
          * @exceptsafe
          */
         VDescriptorPool() noexcept = default;
+
+        ~VDescriptorPool() noexcept override = default;
 
         /**
          * @brief Function Initialises Descriptor Pool
@@ -68,7 +69,7 @@ namespace engine {
          *
          * @exceptsafe
          */
-        auto cleanup() noexcept -> void;
+        auto clear() noexcept -> void override;
 
         /**
          * @brief Getter for Descriptor Pool Handle
@@ -90,6 +91,22 @@ namespace engine {
          */
         [[nodiscard]] auto getLogicalDevicePtr () const noexcept -> VLogicalDevice const * {
             return this->_pLogicalDevice;
+        }
+
+        [[nodiscard]] auto toString () const noexcept -> String override;
+        [[nodiscard]] auto hash () const noexcept -> Index override {
+            return dataTypes::hash(reinterpret_cast<AddressValueType>(this->_handle));
+        }
+
+        [[nodiscard]] auto operator == (Object const & o) const noexcept -> bool override {
+            if ( this == & o ) return true;
+            auto p = dynamic_cast < decltype (this) > (& o);
+            if ( p == nullptr ) return false;
+            return this->_handle == p->_handle;
+        }
+
+        [[nodiscard]] auto copy () const noexcept -> VDescriptorPool * override {
+            return new VDescriptorPool(* this);
         }
     };
 

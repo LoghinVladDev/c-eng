@@ -84,7 +84,7 @@ static inline auto fArrSet( float * ptr, float val, uint64 len ) noexcept -> voi
  * @return bool = true if the first Queue is ordered compared to the other, false otherwise
  */
 static inline auto queueFamilyComparator ( engine::VQueue const & a, engine::VQueue const & b ) noexcept -> bool {
-    return a.getQueueFamily()->getQueueFamilyIndex() < b.getQueueFamily()->getQueueFamilyIndex();
+    return a.getQueueFamilyPtr()->getQueueFamilyIndex() < b.getQueueFamilyPtr()->getQueueFamilyIndex();
 }
 
 /**
@@ -166,7 +166,7 @@ auto engine::VLogicalDevice::getQueueFamilyIndices () const noexcept -> std::vec
     std::set < uint32 > uniqueQueueFamilyIndices;
 
     for ( const auto& queue : this->_queues )
-        uniqueQueueFamilyIndices.insert( queue.getQueueFamily()->getQueueFamilyIndex() ); /// save non-duplicating queue family indices
+        uniqueQueueFamilyIndices.insert( queue.getQueueFamilyPtr()->getQueueFamilyIndex() ); /// save non-duplicating queue family indices
 
     return { uniqueQueueFamilyIndices.begin(), uniqueQueueFamilyIndices.end() }; /// return vector of set's elements
 }
@@ -175,7 +175,7 @@ auto engine::VLogicalDevice::getQueueFamilies() const noexcept -> std::set < eng
     std::set < const engine::VQueueFamily * > queueFamilies;
 
     for ( const auto& queue : this->_queues )
-        queueFamilies.insert( queue.getQueueFamily() );
+        queueFamilies.insert( queue.getQueueFamilyPtr() );
 
     return queueFamilies;
 }
@@ -188,10 +188,10 @@ auto engine::VLogicalDevice::setup( const engine::VPhysicalDevice& physicalDevic
 
     uint32 queueCreateInfoIndex = 0U;
     for( const auto & queue : this->_queues ) {
-        if (queue.getQueueFamily()->getPhysicalDevice().data() != physicalDevice.data()) /// if queue comes from another device handle
+        if (queue.getQueueFamilyPtr()->getPhysicalDevicePtr()->data() != physicalDevice.data()) /// if queue comes from another device handle
             throw engine::EngineVLogicalDeviceQueuePhysicalDeviceMismatch(); /// throw
 
-        uint32 familyIndex = queue.getQueueFamily()->getQueueFamilyIndex();
+        uint32 familyIndex = queue.getQueueFamilyPtr()->getQueueFamilyIndex();
 
         queueFamiliesIndices.insert( familyIndex ); /// save index of queue family
 
@@ -296,7 +296,7 @@ auto engine::VLogicalDevice::setup( const engine::VPhysicalDevice& physicalDevic
 
 auto engine::VLogicalDevice::setupQueues() noexcept -> void {
     for( auto& queue : this->_queues ) { /// setup each queue individually
-        queue.setup( *this, queue.getQueueFamily()->getAvailableQueueIndex() );
+        queue.setup( *this, queue.getQueueFamilyPtr()->getAvailableQueueIndex() );
     }
 }
 
@@ -395,10 +395,10 @@ auto engine::VLogicalDevice::Factory::build (
 
 void engine::VLogicalDevice::cleanup() noexcept {
     for( auto & queue : this->_queues ) /// cleanup queues
-        queue.cleanup();
+        queue.clear();
 
     if( this->_swapChain != nullptr ) { /// cleanup image views and swapchain
-        this->_imageViewCollection->cleanup();
+        this->_imageViewCollection->clear();
         this->_swapChain->cleanup();
     }
 
@@ -462,14 +462,14 @@ engine::VLogicalDevice &engine::VLogicalDevice::operator=( engine::VLogicalDevic
 
 auto engine::VLogicalDevice::getFirstPresentQueuePtr() const noexcept -> VQueue const * {
     for( const auto & queue : this->_queues )
-        if ( queue.getQueueFamily()->isPresentCapable() )
+        if ( queue.getQueueFamilyPtr()->isPresentCapable() )
             return ( & queue ); /// return address of queue
     return nullptr;
 }
 
 auto engine::VLogicalDevice::getFirstGraphicsQueuePtr() const noexcept -> VQueue const * {
     for( const auto & queue : this->_queues )
-        if ( queue.getQueueFamily()->isGraphicsCapable() )
+        if ( queue.getQueueFamilyPtr()->isGraphicsCapable() )
             return ( & queue );
     return nullptr;
 }
@@ -478,16 +478,16 @@ auto engine::VLogicalDevice::getFirstTransferQueuePtr() const noexcept -> VQueue
     const VQueue * pGraphicsQueue = nullptr;
 
     for ( const auto & queue : this->_queues )
-        if ( queue.getQueueFamily()->isTransferCapable() )
+        if ( queue.getQueueFamilyPtr()->isTransferCapable() )
             return ( & queue );
-        else if ( queue.getQueueFamily()->isGraphicsCapable() )
+        else if ( queue.getQueueFamilyPtr()->isGraphicsCapable() )
             pGraphicsQueue = ( & queue );
 
     return pGraphicsQueue;
 }
 
 auto engine::VLogicalDevice::cleanupSwapChain() noexcept -> void {
-    this->_imageViewCollection->cleanup();
+    this->_imageViewCollection->clear();
     this->_swapChain->cleanup();
 }
 

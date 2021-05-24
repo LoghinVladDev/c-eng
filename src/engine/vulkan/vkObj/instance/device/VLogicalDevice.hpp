@@ -5,12 +5,12 @@
 #ifndef ENG1_VLOGICALDEVICE_HPP
 #define ENG1_VLOGICALDEVICE_HPP
 
-#include <vkObj/instance/device/queue/VQueueFamily.hpp>
+#include <VRenderObject.hpp>
+#include <VQueueFamily.hpp>
 #include <cstring>
-#include <vkObj/instance/validationLayer/VValidationLayer.hpp>
-#include <vkObj/instance/device/queue/VQueue.hpp>
-#include <vkObj/instance/extension/VExtension.hpp>
-#include <vkObj/instance/device/VSwapChain.hpp>
+#include <VValidationLayer.hpp>
+#include <VQueue.hpp>
+#include <VExtension.hpp>
 
 namespace engine {
 
@@ -139,7 +139,7 @@ namespace engine {
      * ImageViews - Image that is Delivered
      * Queues - Transfer Buses of Images and Data
      */
-    class VLogicalDevice {
+    class VLogicalDevice : public VRenderObject {
     private:
         //// private variables
 
@@ -156,22 +156,22 @@ namespace engine {
         bool                                _swapChainAdequate          {false};
 
         /// CPtr to a Validation Layer Collection to get Layers from
-        VValidationLayerCollection const *  _validationLayerCollection  {nullptr};
+        VValidationLayerCollection  const *  _validationLayerCollection  {nullptr};
 
         /// An Extension Collection to get Extensions from
         VExtensionCollection                _enabledExtensions;
 
         /// CPtr to the surface to print on
-        VSurface                  const *  _surfacePtr                 {nullptr};
+        VSurface                    const *  _surfacePtr                 {nullptr};
 
         /// CPtr to the Logical Device ( GPU )
-        VPhysicalDevice           const *  _physicalDevice             {nullptr};
+        VPhysicalDevice             const *  _physicalDevice             {nullptr};
 
         /// Ptr to the created swap chain
-        VSwapChain                       *  _swapChain                  {nullptr};
+        VSwapChain                        *  _swapChain                  {nullptr};
 
         /// Ptr to the Image View Collection
-        VImageViewCollection             *  _imageViewCollection        {nullptr};
+        VImageViewCollection              *  _imageViewCollection        {nullptr};
 
         //// private functions
 
@@ -207,7 +207,7 @@ namespace engine {
          *
          * @brief Factory Pattern Class for Logical Devices, used as they have a lot of parameters to set up
          */
-        class [[maybe_unused]] Factory {
+        class [[maybe_unused]] Factory : public VObject {
         private:
             //// private variables
 
@@ -359,7 +359,7 @@ namespace engine {
              *
              * @exceptsafe
              */
-            ~Factory() noexcept = default;
+            ~Factory() noexcept override = default;
 
         };
 
