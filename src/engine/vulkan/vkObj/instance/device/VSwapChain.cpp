@@ -272,6 +272,7 @@ inline static auto populatePresentInfo (
 }
 
 engine::VSwapChain::VSwapChain( VLogicalDevice const * device ) noexcept(false) :
+    VRenderObject(),
     _device( device ) {
     if( ! device->isSwapChainAdequate() )
         throw engine::EngineVLogicalDeviceSwapChainIncompatible();
@@ -338,7 +339,7 @@ auto engine::VSwapChain::setup( engine::VLogicalDevice const * device) noexcept 
     return this->setup();
 }
 
-auto engine::VSwapChain::cleanup() noexcept -> void {
+auto engine::VSwapChain::clear() noexcept -> void {
     /// de-allocate swap chain
     vkDestroySwapchainKHR( this->_device->data(), this->_handle, nullptr );
     this->_handle = VK_NULL_HANDLE; /// clear everything
@@ -349,7 +350,7 @@ auto engine::VSwapChain::cleanup() noexcept -> void {
 engine::VSwapChain::VSwapChain(
         engine::VSwapChain const & obj,
         engine::VLogicalDevice const * device
-) noexcept {
+) noexcept : VRenderObject(obj) {
     this->_handle       = obj._handle;
     this->_images       = obj._images;
     this->_device       = device;
@@ -403,4 +404,25 @@ auto engine::VSwapChain::present(
 #endif
 
     return result;
+}
+
+#include <sstream>
+
+auto engine::VSwapChain::toString() const noexcept -> String {
+    std::stringstream oss;
+
+    oss << "VSwapChain " <<
+        "{ handle = 0x" << std::hex << reinterpret_cast<AddressValueType>(this->_handle) <<
+        ", pLogicalDevice = 0x" << reinterpret_cast<AddressValueType>(this->_device) <<
+        ", imagesInfo = " <<
+            "{ width = " << std::dec << this->_imagesInfo.extent.width <<
+            ", height = " << this->_imagesInfo.extent.height <<
+            ", format = " << static_cast<uint32>(this->_imagesInfo.format) << " }" <<
+        ", images = [ ";
+
+    for (auto const & item : this->_images)
+        oss << std::hex << "0x" << reinterpret_cast<AddressValueType>(item) << ", ";
+
+    auto s = oss.str();
+    return s.substr(s.size() - 2).append(" ]}");
 }

@@ -108,6 +108,8 @@ namespace engine {
          */
         auto configure ( VTexture const & , VTextureSampler const &, uint32 ) noexcept -> void;
 
+        auto clear () noexcept -> void {}
+
         [[nodiscard]] auto toString () const noexcept -> String override {
             std::stringstream  oss;
             oss << "VDescriptorSet { " <<
@@ -242,6 +244,8 @@ namespace engine {
          */
         auto configure ( std::vector < VUniformBuffer <T> > const &, uint32 = 0U ) noexcept -> void;
 
+        auto clear () noexcept -> void override {}
+
         /**
          * @brief Function configures contained Descriptor Sets for Texture and Texture Sampler Given
          *
@@ -331,6 +335,7 @@ auto engine::VDescriptorSetCollection<T>::getDescriptorSetHandles () const noexc
     return handles;
 }
 
+#include <VSwapChain.hpp>
 template <class T>
 auto engine::VDescriptorSetCollection<T>::allocate(
         VDescriptorPool             const & descriptorPool,

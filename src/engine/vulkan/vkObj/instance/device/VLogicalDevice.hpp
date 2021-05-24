@@ -361,6 +361,10 @@ namespace engine {
              */
             ~Factory() noexcept override = default;
 
+            [[nodiscard]] auto toString () const noexcept -> String override;
+            [[nodiscard]] auto operator == (Object const &) const noexcept -> bool override;
+            [[nodiscard]] auto hash () const noexcept -> Index override;
+            [[nodiscard]] auto copy () const noexcept -> Factory * override;
         };
 
         //// public variables
@@ -544,14 +548,19 @@ namespace engine {
          *
          * @exceptsafe
          */
-        auto cleanup () noexcept -> void;
+        auto clear () noexcept -> void override;
 
         /**
          * @brief destructor of Logical Device
          *
          * @exceptsafe
          */
-        ~VLogicalDevice() noexcept;
+        ~VLogicalDevice() noexcept override;
+
+        [[nodiscard]] auto toString () const noexcept -> String override;
+        [[nodiscard]] auto operator == (Object const &) const noexcept -> bool override;
+        [[nodiscard]] auto hash () const noexcept -> Index override;
+        [[nodiscard]] auto copy () const noexcept -> VLogicalDevice * override;
     };
 
 }

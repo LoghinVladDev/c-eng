@@ -54,6 +54,8 @@ inline static auto populateCommandBufferBeginInfo (
     };
 }
 
+#include <VSwapChain.hpp>
+
 /**
  * @brief internal function used to populate Render Pass Begin Info
  *

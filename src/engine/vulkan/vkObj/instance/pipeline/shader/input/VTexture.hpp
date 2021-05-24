@@ -9,6 +9,7 @@
 #include <VLogicalDevice.hpp>
 #include <VCommandPool.hpp>
 #include <VBuffer.hpp>
+#include <VImageView.hpp>
 namespace engine {
 
     /**

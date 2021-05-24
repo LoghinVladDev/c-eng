@@ -4,8 +4,7 @@
 
 #ifndef ENG1_VSTDUTILS_HPP
 #define ENG1_VSTDUTILS_HPP
-#include <engineVulkanPreproc.hpp>
-#include <vkDefs/types/vulkanExplicitTypes.h>
+#include <VObject.hpp>
 #include <string>
 #include <vector>
 

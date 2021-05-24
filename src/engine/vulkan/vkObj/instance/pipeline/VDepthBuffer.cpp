@@ -84,6 +84,7 @@ extern uint32 findMemoryType( uint32, VulkanMemoryPropertyFlags, const engine::V
 extern void populateMemoryAllocateInfo ( VulkanMemoryAllocateInfo *, VulkanDeviceSize, uint32 ) noexcept;
 
 #include <vkUtils/VStdUtilsDefs.h>
+#include <VSwapChain.hpp>
 auto engine::VDepthBuffer::setup(
         VCommandPool  const & commandPool,
         uint32        const * pQueueFamilyIndices,

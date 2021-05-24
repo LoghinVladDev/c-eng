@@ -4,6 +4,7 @@
 
 #include "VFrameBuffer.hpp"
 
+#include <VSwapChain.hpp>
 inline static auto populateFrameBufferCreateInfo (
     VulkanFrameBufferCreateInfo * createInfo,
     engine::VRenderPass   const * pRenderPass,

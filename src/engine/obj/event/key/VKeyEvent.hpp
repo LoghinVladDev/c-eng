@@ -5,7 +5,7 @@
 #ifndef C_ENG_VKEYEVENT_HPP
 #define C_ENG_VKEYEVENT_HPP
 
-#include <engineVulkanPreproc.hpp>
+#include <VObject.hpp>
 
 namespace engine {
 

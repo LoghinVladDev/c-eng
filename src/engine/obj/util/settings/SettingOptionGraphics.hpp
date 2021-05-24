@@ -5,7 +5,7 @@
 #ifndef ENG1_SETTINGOPTIONGRAPHICS_H
 #define ENG1_SETTINGOPTIONGRAPHICS_H
 #include "SettingOption.hpp"
-#include <dataTypes.h>
+#include <VObject.hpp>
 
 namespace engine {
 

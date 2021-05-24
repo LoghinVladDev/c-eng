@@ -348,6 +348,7 @@ auto engine::VPipeline::createRenderPass() noexcept (false) -> void {
         throw std::runtime_error ("render pass creation failure");
 }
 
+#include <VSwapChain.hpp>
 auto engine::VPipeline::clear() noexcept -> void {
     if ( this->_handle != nullptr )
         vkDestroyPipeline ( this->_pLogicalDevice->data(), this->_handle, nullptr );

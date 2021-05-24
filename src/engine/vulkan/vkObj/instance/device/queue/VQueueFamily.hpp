@@ -725,7 +725,7 @@ namespace engine {
          *
          * @return std::vector < VQueueFamily cptr > = Vector containing addresses to constant VQueueFamily capable of flags given
          */
-        [[nodiscard]] inline auto getFlagsCapableQueueFamilies ( VulkanQueueFlags ) const noexcept -> std::vector < VQueueFamily const * >;
+        [[nodiscard]] auto getFlagsCapableQueueFamilies ( VulkanQueueFlags ) const noexcept -> std::vector < VQueueFamily const * >;
 
         /**
          * @brief function syncing queue families to a surface, requesting surface to enable features on Surface

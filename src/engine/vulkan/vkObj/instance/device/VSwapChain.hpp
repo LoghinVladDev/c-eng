@@ -53,7 +53,7 @@ namespace engine {
         VulkanSwapChainKhronos          _handle         {VK_NULL_HANDLE};
 
         /// Logical Device Address. The Device owns and manages the Swap Chain
-        const VLogicalDevice *          _device         {nullptr};
+        VLogicalDevice          const * _device         {nullptr};
 
         /// Images used in transfer.
         std::vector < VulkanImage >     _images;
@@ -80,6 +80,8 @@ namespace engine {
          * @exceptsafe
          */
         VSwapChain() noexcept = default;
+
+        ~VSwapChain() noexcept override = default;
 
         /**
          * @brief Constructor Based on Logical Device Address
@@ -110,7 +112,7 @@ namespace engine {
          *
          * @return VulkanSwapChainKhronos cref = Constant Reference to Swap Chain Handle
          */
-        [[nodiscard]] auto data () const noexcept -> VulkanSwapChainKhronos const & {
+        [[nodiscard]] constexpr auto data () const noexcept -> VulkanSwapChainKhronos const & {
             return this->_handle;
         }
 
@@ -121,7 +123,7 @@ namespace engine {
          *
          * @return engine::VSwapChain::ImageInfo cref = Constant Reference to Structure Containing Image Info
          */
-        [[nodiscard]] auto getImagesInfo () const noexcept -> ImageInfo const & {
+        [[nodiscard]] constexpr auto getImagesInfo () const noexcept -> ImageInfo const & {
             return this->_imagesInfo;
         }
 
@@ -132,7 +134,7 @@ namespace engine {
          *
          * @return std::vector < VulkanImage > cref = Constant Reference to vector containing image handles of the Swap Chain's images
          */
-        [[nodiscard]] auto getImages () const noexcept -> std::vector < VulkanImage > const & {
+        [[nodiscard]] constexpr auto getImages () const noexcept -> std::vector < VulkanImage > const & {
             return this->_images;
         }
 
@@ -153,7 +155,7 @@ namespace engine {
          * @return VulkanResult::VK_SUCCESS if setup OK    OR
          * @return VulkanResult::VK_ERROR_TOO_MANY_OBJECTS if Swap Chain was already initialised in this object
          */
-        auto setup(  ) noexcept -> VulkanResult;
+        auto setup ( ) noexcept -> VulkanResult;
 
         /**
          * @brief setup function. Initialises Swap Chain on a given Logical Device
@@ -191,7 +193,7 @@ namespace engine {
          *
          * @exceptsafe
          */
-        auto setLogicalDevice ( VLogicalDevice const * device ) noexcept -> void {
+        constexpr auto setLogicalDevice ( VLogicalDevice const * device ) noexcept -> void {
             if( this->_handle != nullptr )
                 return;
 
@@ -203,7 +205,7 @@ namespace engine {
          *
          * @exceptsafe
          */
-        auto cleanup () noexcept -> void;
+        auto clear () noexcept -> void override;
 
         /**
          * @brief getter function for the Logical Device Address ( object owner )
@@ -212,8 +214,25 @@ namespace engine {
          *
          * @return engine::VLogicalDevice cptr = Address of the parent Logical Device
          */
-        [[nodiscard]] auto getDevice () const noexcept -> VLogicalDevice const * {
+        [[nodiscard]] constexpr auto getDevice () const noexcept -> VLogicalDevice const * {
             return this->_device;
+        }
+
+        [[nodiscard]] auto toString () const noexcept -> String override;
+        [[nodiscard]] auto operator == (Object const & o) const noexcept -> bool override {
+            if ( this == &o ) return true;
+            auto p = dynamic_cast < decltype ( this ) > ( & o );
+            if ( p == nullptr ) return false;
+
+            return this->_handle == p->_handle;
+        }
+
+        [[nodiscard]] auto hash () const noexcept -> Index override {
+            return dataTypes::hash(reinterpret_cast<AddressValueType>(this->_handle));
+        }
+
+        [[nodiscard]] auto copy () const noexcept -> VSwapChain * override {
+            return new VSwapChain ( * this );
         }
     };
 

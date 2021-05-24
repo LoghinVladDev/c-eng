@@ -34,8 +34,8 @@ VulkanResult engine::VMeshRenderer::recreateDescriptorSets() noexcept {
     )
 
     auto layoutBindings = this->_pShader->getDescriptorSetLayoutBindings();
-    int32 MVPBufferBinding = -1;
-    int32 textureSamplerBinding = -1;
+    sint32 MVPBufferBinding = -1;
+    sint32 textureSamplerBinding = -1;
 
     for ( const auto & binding : layoutBindings ) {
         if ( binding.descriptorType == VulkanDescriptorType::VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER )
@@ -92,11 +92,11 @@ VulkanResult engine::VMeshRenderer::setup(
 void engine::VMeshRenderer::cleanupUniformBuffers() noexcept {
     for ( auto & buffer : this->_MVPDescriptorBuffers ) {
         buffer.free();
-        buffer.cleanup();
+        buffer.clear();
     }
 }
 
 void engine::VMeshRenderer::cleanup() noexcept {
     this->cleanupUniformBuffers();
-    this->_texture.cleanup();
+    this->_texture.clear();
 }

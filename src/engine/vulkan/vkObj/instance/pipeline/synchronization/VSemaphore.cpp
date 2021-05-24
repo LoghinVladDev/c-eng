@@ -43,11 +43,11 @@ auto engine::VSemaphoreCollection::setup(VLogicalDevice const & device, uint32 s
 }
 
 auto engine::VSemaphoreCollection::resize(VLogicalDevice const & device, uint32 semaphoreCount) noexcept -> VulkanResult {
-    this->cleanup();
+    this->clear();
     return this->setup( device, semaphoreCount );
 }
 
-auto engine::VSemaphoreCollection::cleanup() noexcept -> void {
+auto engine::VSemaphoreCollection::clear() noexcept -> void {
     for ( auto & semaphore : this->_semaphores )
         semaphore.clear();
 }

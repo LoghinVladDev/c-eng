@@ -110,7 +110,7 @@ namespace engine {
             return this->_frameBuffers;
         }
 
-        [[nodiscard]] constexpr auto size () const noexcept -> uint32 {
+        [[nodiscard]] inline auto size () const noexcept -> uint32 {
             return static_cast<uint32>(this->_frameBuffers.size());
         }
 

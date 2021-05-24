@@ -91,7 +91,7 @@ namespace engine {
         auto setup ( VLogicalDevice const &, uint32 ) noexcept -> VulkanResult;
         auto resize ( VLogicalDevice const &, uint32 ) noexcept -> VulkanResult;
 
-        auto cleanup () noexcept -> void override;
+        auto clear () noexcept -> void override;
 
         [[nodiscard]] auto toString () const noexcept -> String override;
         [[nodiscard]] auto operator == (Object const & o) const noexcept -> bool override {
@@ -109,6 +109,7 @@ namespace engine {
         [[nodiscard]] auto hash () const noexcept -> Index override {
             Index hashSum = 0;
             std::for_each(this->_semaphores.begin(), this->_semaphores.end(),[& hashSum](auto const & o){hashSum += o.hash();});
+            return hashSum;
         }
     };
 

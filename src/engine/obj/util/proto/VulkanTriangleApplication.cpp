@@ -156,8 +156,8 @@ auto engine::VulkanTriangleApplication::initWindow() noexcept (false) -> void {
     glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API); /// No OpenGL API, Vulkan is not self-configurable
 
     this->_window = glfwCreateWindow( /// Create Window from GLFW
-        static_cast < int32 > (this->_width), // with width
-        static_cast < int32 > (this->_height),// height
+        static_cast < sint32 > (this->_width), // with width
+        static_cast < sint32 > (this->_height),// height
         VulkanTriangleApplication::DEFAULT_TITLE, // title
         nullptr, // any monitor
         nullptr    // not shared to any other instance / application
@@ -297,7 +297,7 @@ inline auto engine::VulkanTriangleApplication::initVulkan() noexcept (false) -> 
     for(const auto & queue : this->_vulkanLogicalDevice.getQueues()) {
         std::cout << "\tQueue :\n";
         std::cout << "\t\tHandler : " << queue.data() << "\n";
-        std::cout << "\t\tFamily index : " << queue.getQueueFamily()->getQueueFamilyIndex() << '\n';
+        std::cout << "\t\tFamily index : " << queue.getQueueFamilyPtr()->getQueueFamilyIndex() << '\n';
         std::cout << "\t\tIndex in Family : " << queue.getIndex() << '\n';
         std::cout << "\t\tPriority : " << queue.getPriority() << '\n';
     }
@@ -419,21 +419,25 @@ auto engine::VulkanTriangleApplication::recreateSwapChain() noexcept(false) -> v
 }
 
 auto engine::VulkanTriangleApplication::cleanupSwapChain() noexcept -> void {
-    this->_depthBuffer.cleanup(); /// clean depth test buffer
-    this->_frameBufferCollection.cleanup(); /// clean all framebuffers
+    this->_depthBuffer.clear(); /// clean depth test buffer
+    this->_frameBufferCollection.clear(); /// clean all framebuffers
     this->_drawCommandBufferCollection.free(); /// free all draw buffers
 
     for ( auto * pComponent : this->_activeScene.componentsOfClass("VMeshRenderer") )
         dynamic_cast<VMeshRenderer *>(pComponent)->cleanupUniformBuffers(); /// cleanup all uniform buffers
 
-    this->_descriptorPool.cleanup(); /// cleanup all descriptors
+    this->_descriptorPool.clear(); /// cleanup all descriptors
 
-    this->_objectShader.getPipeline().cleanup(); /// cleanup pipeline
+    this->_objectShader.getPipeline().clear(); /// cleanup pipeline
 
     this->_vulkanLogicalDevice.cleanupSwapChain(); /// cleanup swap chain from logical device
 }
 
-auto engine::VulkanTriangleApplication::frameBufferResizeCallback(GLFWwindow * pWindow, [[maybe_unused]] int32 width, [[maybe_unused]] int32 height) noexcept -> void {
+auto engine::VulkanTriangleApplication::frameBufferResizeCallback(
+        GLFWwindow * pWindow,
+        [[maybe_unused]] sint32 width,
+        [[maybe_unused]] sint32 height
+) noexcept -> void {
     auto * baseObj = reinterpret_cast< engine::VulkanTriangleApplication * > ( glfwGetWindowUserPointer( pWindow ) );
     baseObj->_framebufferResized = true;
 
@@ -539,6 +543,8 @@ static bool moveRight = false;
 
 #include <chrono>
 #include <glm/gtc/matrix_transform.hpp>
+#include <engineDataPaths.h>
+
 auto engine::VulkanTriangleApplication::updateUniformBuffer(uint32 uniformBufferIndex) noexcept -> void {
     static float FOV = 90.0f; /// Field Of View of Camera
 
@@ -945,21 +951,21 @@ auto engine::VulkanTriangleApplication::cleanup() noexcept -> void {
      * Free and cleanup objects in reverse allocation + creation order
      */
 
-    this->_imageAvailableSemaphores.cleanup();
-    this->_renderFinishedSemaphores.cleanup();
-    this->_inFlightFences.cleanup();
+    this->_imageAvailableSemaphores.clear();
+    this->_renderFinishedSemaphores.clear();
+    this->_inFlightFences.clear();
 
-    this->_commandPool.cleanup();
-    this->_transferCommandPool.cleanup();
+    this->_commandPool.clear();
+    this->_transferCommandPool.clear();
 
-    this->_depthBuffer.cleanup();
-    this->_frameBufferCollection.cleanup();
+    this->_depthBuffer.clear();
+    this->_frameBufferCollection.clear();
 
     for ( auto * pComponent : this->_activeScene.componentsOfClass("VMeshRenderer") )
         dynamic_cast<VMeshRenderer *>(pComponent)->cleanup();
 
-    this->_textureSampler.cleanup();
-    this->_descriptorPool.cleanup();
+    this->_textureSampler.clear();
+    this->_descriptorPool.clear();
     this->_objectShader.cleanup();
 
     for ( auto * pComponent : this->_activeScene.componentsOfClass("VMesh") ) {
@@ -969,15 +975,15 @@ auto engine::VulkanTriangleApplication::cleanup() noexcept -> void {
         pMesh->cleanup();
     }
 
-    this->_vulkanLogicalDevice.cleanup();
+    this->_vulkanLogicalDevice.clear();
 
     delete this->_vulkanQueueFamilyCollection;
 
     if( enableValidationLayers )
-        this->_vulkanMessenger.clean();
+        this->_vulkanMessenger.clear();
 
-    this->_vulkanSurface.clean();
-    this->_vulkanInstance.clean();
+    this->_vulkanSurface.clear();
+    this->_vulkanInstance.clear();
 
     glfwDestroyWindow(this->_window);
 
@@ -988,7 +994,7 @@ auto engine::VulkanTriangleApplication::createCommandPool() noexcept(false) -> v
     /// Create Two Command Pools. One for Drawing, One for Transfer to Screen
     if ( this->_commandPool.setup( this->_vulkanLogicalDevice ) != VulkanResult::VK_SUCCESS )
         throw std::runtime_error ( "Command Pool Creation Error" );
-    if ( this->_transferCommandPool.setup( this->_vulkanLogicalDevice, this->_vulkanLogicalDevice.getFirstTransferQueuePtr()->getQueueFamily() ) != VulkanResult::VK_SUCCESS )
+    if ( this->_transferCommandPool.setup( this->_vulkanLogicalDevice, this->_vulkanLogicalDevice.getFirstTransferQueuePtr()->getQueueFamilyPtr() ) != VulkanResult::VK_SUCCESS )
         throw std::runtime_error ( "Transfer Command Pool Creation Error" );
 }
 

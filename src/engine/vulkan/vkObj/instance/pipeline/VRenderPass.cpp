@@ -6,6 +6,7 @@
 
 extern VulkanFormat getDepthFormat (engine::VPhysicalDevice const * pPhysicalDevice) noexcept;
 
+#include <VSwapChain.hpp>
 static inline auto populateAttachmentDescription (
     VulkanAttachmentDescription     * colorAttachment,
     engine::VSwapChain        const * swapChain

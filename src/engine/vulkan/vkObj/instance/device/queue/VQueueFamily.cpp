@@ -36,13 +36,13 @@ auto engine::VQueueFamilyCollection::unReserveAllQueueFamilies() noexcept -> voi
 #ifndef NDEBUG
 
 auto engine::VQueueFamily::debugPrintQueueFamily( std::ostream & buffer, StringLiteral prefix ) const noexcept -> void {
-    if ( this->_parentCollection->getPhysicalDevice().data() == VK_NULL_HANDLE ) {
+    if ( this->_parentCollection->getPhysicalDevicePtr()->data() == VK_NULL_HANDLE ) {
         buffer << prefix << "Queue Family is Empty. No Physical Device Attached";
         return;
     }
 
     buffer << prefix << "Queue Family : \n";
-    buffer << prefix << "\t" << "Physical Device Attached :                     " << this->_parentCollection->getPhysicalDevice().getPhysicalDeviceProperties().deviceName    << "\n";
+    buffer << prefix << "\t" << "Physical Device Attached :                     " << this->_parentCollection->getPhysicalDevicePtr()->getPhysicalDeviceProperties().deviceName    << "\n";
     buffer << prefix << "\t" << "Queue Graphics Family (index in collection) :  " << this->_familyIndex                                                 << '\n';
     buffer << prefix << "\t" << "Queue Family Properties : \n";
 
@@ -236,6 +236,8 @@ auto engine::VQueueFamily::toString() const noexcept -> String {
         "{ index = " << this->_familyIndex <<
         ", hasPresentSupport = " << std::boolalpha << this->_presentSupport <<
         ", pParentCollection = 0x" << std::hex << reinterpret_cast<AddressValueType>(this->_parentCollection);
+
+    return oss.str();
 }
 
 auto engine::VQueueFamilyCollection::toString() const noexcept -> String {

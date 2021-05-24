@@ -5,6 +5,7 @@
 #include "VulkanInitTests.hpp"
 #include <engineVulkanPreproc.hpp>
 
+#include <VObject.hpp>
 inline void engine::VulkanInitTests::glfwInitTest() {
     glfwInit();
 

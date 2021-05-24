@@ -42,6 +42,7 @@ auto engine::VImageView::setup(VulkanImage image, VulkanFormat format, VLogicalD
     return vkCreateImageView ( this->_pLogicalDevice->data(), & createInfo ,nullptr, & this->_handle );
 }
 
+#include <VSwapChain.hpp>
 auto engine::VImageViewCollection::setup(engine::VSwapChain const * swapChain) noexcept -> VulkanResult {
     this->_imageViews.resize( swapChain->getImages().size() );
     this->_pSwapChain = swapChain;

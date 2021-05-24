@@ -34,7 +34,7 @@ auto engine::VCommandPool::setup(
     this->_pLogicalDevice = & device; /// save device
 
     if ( pQueueFamily == nullptr ) { /// if no queue family given, acquire graphics queue family from logical device
-        pQueueFamily = this->_pLogicalDevice->getFirstGraphicsQueuePtr()->getQueueFamily();
+        pQueueFamily = this->_pLogicalDevice->getFirstGraphicsQueuePtr()->getQueueFamilyPtr();
 
         if (pQueueFamily == nullptr) /// if no queue family could be acquired, error
             return VulkanResult::VK_ERROR_INITIALIZATION_FAILED;
@@ -64,4 +64,6 @@ auto engine::VCommandPool::toString() const noexcept -> String {
         "{ handle = 0x" << std::hex << reinterpret_cast<AddressValueType>(this->_handle) <<
         ", pLogicalDevice = 0x" << reinterpret_cast<AddressValueType>(this->_pLogicalDevice) <<
         ", optimizedForTransfers = " << std::boolalpha << this->_optimizedForTransfers;
+
+    return oss.str();
 }

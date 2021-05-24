@@ -11,6 +11,9 @@
 #include <cstdint>
 #endif
 
+#include <VSwapChain.hpp>
+#include <VImageView.hpp>
+
 bool engine::VLogicalDevice::Factory::_exceptionsToggle = false;
 float engine::VLogicalDevice::_internal_explicitWrapper_DEFAULT_QUEUE_PRIORITY = engine::VQueue::DEFAULT_QUEUE_PRIORITY;
 
@@ -393,13 +396,13 @@ auto engine::VLogicalDevice::Factory::build (
     return builtObject;
 }
 
-void engine::VLogicalDevice::cleanup() noexcept {
+void engine::VLogicalDevice::clear() noexcept {
     for( auto & queue : this->_queues ) /// cleanup queues
         queue.clear();
 
     if( this->_swapChain != nullptr ) { /// cleanup image views and swapchain
         this->_imageViewCollection->clear();
-        this->_swapChain->cleanup();
+        this->_swapChain->clear();
     }
 
     vkDestroyDevice( this->_vulkanDevice, nullptr ); /// destroy logical device hanldes
@@ -436,7 +439,7 @@ engine::VLogicalDevice &engine::VLogicalDevice::operator=( engine::VLogicalDevic
         return *this;
 
     if ( this->_vulkanDevice != VulkanDevice() ) // if device existed here
-        this->cleanup(); /// cleanup
+        this->clear(); /// cleanup
     delete this->_swapChain;
 
     this->_vulkanDevice                 = obj._vulkanDevice; /// same as copy ctor
@@ -488,7 +491,7 @@ auto engine::VLogicalDevice::getFirstTransferQueuePtr() const noexcept -> VQueue
 
 auto engine::VLogicalDevice::cleanupSwapChain() noexcept -> void {
     this->_imageViewCollection->clear();
-    this->_swapChain->cleanup();
+    this->_swapChain->clear();
 }
 
 auto engine::VLogicalDevice::recreateSwapChain() noexcept -> VulkanResult {
@@ -511,4 +514,80 @@ auto engine::VLogicalDevice::recreateSwapChain() noexcept -> VulkanResult {
     }
 
     return VulkanResult::VK_SUCCESS;
+}
+
+
+auto engine::VLogicalDevice::Factory::operator==(const Object &o) const noexcept -> bool {
+    if ( this == & o ) return true;
+    auto p = dynamic_cast < decltype(this) > (& o);
+    if ( p == nullptr ) return false;
+
+    return
+            this->_surface                      == p->_surface                      &&
+            this->_validationLayerCollection    == p->_validationLayerCollection    &&
+            this->_queues                       == p->_queues                       &&
+            this->_extensions                   == p->_extensions;
+}
+
+auto engine::VLogicalDevice::Factory::hash() const noexcept -> Index {
+    return 0;
+}
+
+auto engine::VLogicalDevice::Factory::copy() const noexcept -> Factory * {
+    return new Factory ( * this );
+}
+
+auto engine::VLogicalDevice::operator==(const Object & o) const noexcept -> bool {
+    if ( this == & o ) return true;
+    auto p = dynamic_cast < decltype(this) > (& o);
+    if ( p == nullptr ) return false;
+
+    return this->_vulkanDevice == p->_vulkanDevice;
+}
+
+auto engine::VLogicalDevice::hash() const noexcept -> Index {
+    return
+        dataTypes::hash(reinterpret_cast<AddressValueType>(this->_vulkanDevice));
+}
+
+auto engine::VLogicalDevice::copy() const noexcept -> VLogicalDevice * {
+    return new VLogicalDevice(* this);
+}
+
+#include <sstream>
+
+auto engine::VLogicalDevice::Factory::toString() const noexcept -> String {
+    std::stringstream oss;
+
+    oss << "VLogicalDevice::Factory " <<
+        "{ pValidationLayerCollection = 0x" << std::hex << reinterpret_cast<AddressValueType>(this->_validationLayerCollection) <<
+        ", pSurface = 0x" << reinterpret_cast<AddressValueType>(this->_surface) <<
+        ", extensions = " << this->_extensions.toString() <<
+        ", queues = [ ";
+
+    for (auto const & item : this->_queues)
+        oss << item.toString() << ", ";
+
+    auto s = oss.str();
+    return s.substr(s.size() - 2).append(" ]}");
+}
+
+auto engine::VLogicalDevice::toString() const noexcept -> String {
+    std::stringstream oss;
+
+    oss << "VLogicalDevice " <<
+        "{ handle = 0x" << std::hex << reinterpret_cast<AddressValueType>(this->_vulkanDevice) <<
+        ", isSwapChainAdequate = " << std::boolalpha << this->_swapChainAdequate <<
+        ", pSurface = 0x" << reinterpret_cast<AddressValueType>(this->_surfacePtr) <<
+        ", pValidationLayerCollection = 0x" << reinterpret_cast<AddressValueType>(this->_validationLayerCollection) <<
+        ", pPhysicalDevice = 0x" << reinterpret_cast<AddressValueType>(this->_physicalDevice) <<
+        ", pSwapChain = 0x" << reinterpret_cast<AddressValueType>(this->_swapChain) <<
+        ", pImageViewCollection = 0x" << reinterpret_cast<AddressValueType>(this->_imageViewCollection) <<
+        ", queues = [ ";
+
+    for (auto const & item : this->_queues)
+        oss << item.toString() << ", ";
+
+    auto s = oss.str();
+    return s.substr(s.size() - 2).append(" ]}");
 }

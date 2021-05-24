@@ -50,6 +50,6 @@ void engine::VMesh::free() {
 }
 
 void engine::VMesh::cleanup() {
-    this->_vertexBuffer.cleanup();
-    this->_indexBuffer.cleanup();
+    this->_vertexBuffer.clear();
+    this->_indexBuffer.clear();
 }

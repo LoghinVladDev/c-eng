@@ -18,8 +18,7 @@
 
 #define __SHOW_FPS_EVERY_S 0.100 // NOLINT(bugprone-reserved-identifier)
 
-#include <engineVulkanPreproc.hpp>
-#include <vulkanExplicitTypes.h>
+#include <VRenderObject.hpp>
 #include <VValidationLayer.hpp>
 #include <VInstance.hpp>
 #include <VMessenger.hpp>
@@ -458,7 +457,7 @@ namespace engine {
          *
          * @exceptsafe
          */
-        static auto frameBufferResizeCallback ( GLFWwindow*, [[maybe_unused]] int32, int32 ) noexcept -> void;
+        static auto frameBufferResizeCallback ( GLFWwindow*, [[maybe_unused]] sint32, sint32 ) noexcept -> void;
 
         /**
          * @brief creation of EC Game Object

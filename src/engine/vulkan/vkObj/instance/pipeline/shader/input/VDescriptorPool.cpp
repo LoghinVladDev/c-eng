@@ -33,6 +33,7 @@ inline static auto populateDescriptorPoolCreateInfo (
     };
 }
 
+#include <VSwapChain.hpp>
 auto engine::VDescriptorPool::setup(
         VLogicalDevice          const & device,
         VulkanDescriptorType    const * pDescriptorTypes,

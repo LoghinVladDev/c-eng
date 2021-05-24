@@ -108,13 +108,13 @@ VulkanResult engine::VShader::recreateShader() noexcept {
 }
 
 void engine::VShader::cleanup() noexcept {
-    this->_pipeline.cleanup();
+    this->_pipeline.clear();
 
     vkDestroyDescriptorSetLayout( this->_pLogicalDevice->data(), this->_descriptorSetLayout, nullptr );
 
     this->_descriptorSetLayoutBindings.clear();
 
-    this->_fragmentShader.cleanup();
-    this->_vertexShader.cleanup();
+    this->_fragmentShader.clear();
+    this->_vertexShader.clear();
     this->_shaderStages.clear();
 }
