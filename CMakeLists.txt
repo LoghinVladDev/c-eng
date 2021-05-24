@@ -79,12 +79,13 @@ if(Vulkan_FOUND)
     include_directories(src/engine/vulkan/vkObj/window/surface)
     include_directories(src/engine/vulkan/vkObj/engine)
     include_directories(src/engine/vulkan/vkObj/engine/obj)
-    include_directories(src/engine/gobj/space)
-    include_directories(src/engine/gobj)
     include_directories(src/engine/vulkan/vkUtils)
     include_directories(src/engine/obj/util/settings)
     include_directories(src/engine/obj/util/proto)
     include_directories(src/engine/app)
+
+    include_directories(src/engine/obj/event)
+    include_directories(src/engine/obj/event/key)
 
     include_directories( ${Vulkan_INCLUDE_DIRS} )
 
@@ -303,6 +304,9 @@ if(Vulkan_FOUND)
             V_ENGINE_OBJECT_EVENT_SRC
 
             ${V_ENGINE_OBJECT_EVENT_KEY_SRC}
+
+            src/engine/obj/event/VEvent.cpp
+            src/engine/obj/event/VEvent.hpp
     )
 
     set(

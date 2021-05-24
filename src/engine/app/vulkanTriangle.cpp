@@ -110,18 +110,27 @@ auto addObjects (VulkanTriangleApplication & a) {
     star->add(new VTransform());
     star->add(new VMesh());
     star->add(new VMeshRenderer());
+
+    auto cube4 = new VGameObject("cube4");
+    cube4->add(new VTransform());
+    cube4->add(new VMesh());
+    cube4->add(new VMeshRenderer());
 //
 //    star->transform()->location().x -= 2.0f;
 //    star->transform()->location().z += 1.0f;
 //    star->transform()->location().y += 1.0f;
 
+    cube4->transform()->location().x += 0.4f;
+
     a.objectVertices()[cube] = & cubeVertices;
     a.objectVertices()[cube2] = & cubeVertices;
     a.objectVertices()[cube3] = & cubeVertices;
+    a.objectVertices()[cube4] = & cubeVertices;
 
     a.objectIndices()[cube] = & cubeIndices;
     a.objectIndices()[cube2] = & cubeIndices;
     a.objectIndices()[cube3] = & cubeIndices;
+    a.objectIndices()[cube4] = & cubeIndices;
 
     a.objectVertices()[star] = & starVertices;
     a.objectIndices()[star] = & starIndices;
@@ -130,11 +139,16 @@ auto addObjects (VulkanTriangleApplication & a) {
     a.objectTextureNames()[cube2] = "container2.png";
     a.objectTextureNames()[cube3] = "container2.png";
     a.objectTextureNames()[star] = "container3.jpg";
+    a.objectTextureNames()[cube4] = "container.jpg";
 
 //    star->add(cube);
     cube->add(cube2);
-    //cube2->add(cube3);
+    cube2->add(cube3);
     cube3->add(star);
+
+    star->add(cube4);
+
+    cube4->transform()->scale() = {0.4f, 0.4f, 0.4f};
 
     cube->transform()->location().x += 0.5f;
     cube->transform()->location().y -= 0.5f;
@@ -149,7 +163,7 @@ auto addObjects (VulkanTriangleApplication & a) {
 
 //    a.scene().add(star); /// Add object to scene
     a.scene().add(cube);
-    a.scene().add(cube3);
+//    a.scene().add(cube3);
     a.scene().setActiveCamera(new VCamera({0.0f, 0.0f, 3.0f}));
 }
 
