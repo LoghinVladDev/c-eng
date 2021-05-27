@@ -151,7 +151,8 @@ auto addObjects (VulkanTriangleApplication & a) {
     a.objectTextureNames()[cube3] = "container3.jpg";
     a.objectTextureNames()[star] = "container3.jpg";
     a.objectTextureNames()[cube4] = "container.jpg";
-//    a.objectTextureNames()[plane] = "container.jpg";
+    plane->transform()->rotation().roll() += 180.0f;
+//    a.objectTextureNames()[plane] = "container2.png";
 
 //    star->add(cube);
     cube->add(cube2);
@@ -160,7 +161,7 @@ auto addObjects (VulkanTriangleApplication & a) {
 
     star->add(cube4);
 
-    cube4->transform()->scale() = {0.4f, 0.4f, 0.4f};
+    cube4->transform()->scale() = {0.15f, 0.15f, 0.15f};
 
     cube->transform()->location().x += 0.5f;
     cube->transform()->location().y -= 0.5f;
@@ -189,7 +190,7 @@ int main() {
     app.scene().setImmediateCachingEnabled(true);
     app.scene().setPeriodicCachingEnabled(true);
     app.scene().setPeriodicCacheReconstructionInterval(2048);
-    app.enableShowFPS();
+//    app.enableShowFPS();
 
     app.setFOV(80.0f);
     app.setDrawDistance(200.0f);

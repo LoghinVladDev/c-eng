@@ -903,12 +903,12 @@ auto engine::VulkanTriangleApplication::createDescriptorSets() noexcept(false) -
             pathToTexture = String(__TEXTURES_PATH__).append(this->objectTextureNames()[pGameObject]);
 
             try {
-                Path(pathToTexture);
+                Path p(pathToTexture);
             } catch ( std::exception const & ) {
-                pathToTexture = String(__TEXTURES_PATH__).append("missingTexture.png");
+                pathToTexture = String(__TEXTURES_PATH__).append("missingTexture2.png");
             }
         } else {
-            pathToTexture = String(__TEXTURES_PATH__).append("missingTexture.png");
+            pathToTexture = String(__TEXTURES_PATH__).append("devtex1.png");
         }
 
         ENG_THROW_IF_NOT_SUCCESS(
