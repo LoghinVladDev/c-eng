@@ -4,7 +4,10 @@
 
 #include "VScene.hpp"
 
-static HashMap < uint64, engine::VTransform * > cachedLocations;
+static HashMap < uint64, engine::VTransform * > periodicallyCachedTransforms;
+static HashMap < uint64, engine::VTransform * > periodicallyCachedRelativeTransforms;
+static HashMap < uint64, engine::VTransform > immediatelyCachedTransforms;
+//static HashMap < uint64, bool > invalidatedEntities;
 
 engine::VScene::~VScene() noexcept {
     for ( auto * p : this->_rootEntities )
@@ -516,12 +519,12 @@ auto engine::VScene::locationInScene(VEntity * pEntity) const noexcept -> glm::v
     return pTransform == nullptr ? glm::vec3(0.0f, 0.0f, 0.0f) : pTransform->location() + this->locationInScene(const_cast<VEntity *>(pEntity->_pParentEntity));
 }
 
-static uint32 reconstructionCounter = 0;
+static uint32 periodicCachingReconstructionCounter = 0;
 
 static auto invalidateCacheBranch (engine::VEntity * pEntity) noexcept -> void {
-    auto & t = cachedLocations[pEntity->ID()];
+    auto & t = periodicallyCachedTransforms[pEntity->ID()];
 
-    if ( cachedLocations.containsKey(pEntity->ID()) && t != nullptr ) {
+    if (periodicallyCachedTransforms.containsKey(pEntity->ID()) && t != nullptr ) {
         delete t;
         t = nullptr;
     }
@@ -531,15 +534,16 @@ static auto invalidateCacheBranch (engine::VEntity * pEntity) noexcept -> void {
 }
 
 auto engine::VScene::transformInScene(VEntity * pEntity) const noexcept -> VTransform {
-    if ( cachedLocations.containsKey(pEntity->ID()) ) {
-        auto t = cachedLocations[pEntity->ID()];
+    if ( this->_periodicCachingEnabled ) {
+        if (periodicallyCachedTransforms.containsKey(pEntity->ID())) {
+            auto t = periodicallyCachedTransforms[pEntity->ID()];
 
-        if ( t != nullptr ) {
-            if (t->rotation() != pEntity->_pTransform->rotation())
-                invalidateCacheBranch(pEntity);
-//            reconstructionCounter = 0;
-            else
-                return *cachedLocations.get(pEntity->ID());
+            if (t != nullptr) {
+                if (*pEntity->_pTransform != *periodicallyCachedRelativeTransforms[pEntity->ID()]) {
+                    invalidateCacheBranch(pEntity);
+                } else
+                    return *t;
+            }
         }
     }
 
@@ -550,11 +554,30 @@ auto engine::VScene::transformInScene(VEntity * pEntity) const noexcept -> VTran
         pEntity->components().forEach([ & pTransform ](VComponent * pComponent) -> void { if ( pComponent->className() == "VTransform" ) pTransform = (VTransform *) pComponent; });
 
     if ( pEntity->parentPtr() == nullptr ) {
-        return pTransform == nullptr ? VTransform() : ( * pTransform );
+        auto t = pTransform == nullptr ? VTransform() : ( * pTransform );
+
+        if ( this->_immediateCachingEnabled )
+            immediatelyCachedTransforms[pEntity->ID()] = t;
+
+        return t;
     }
 
     VTransform result = pTransform == nullptr ? VTransform() : ( * pTransform );
-    auto parentTransform = transformInScene(const_cast < VEntity * > (pEntity->parentPtr()));
+    VTransform parentTransform;
+
+    if ( this->_immediateCachingEnabled ) {
+        auto * pParent = const_cast<VEntity *>(pEntity->parentPtr());
+        while ( pParent != nullptr && !( pParent->_ownedComponentFlags & VComponent::TypeFlag::V_TRANSFORM ) )
+            pParent = const_cast<VEntity *>(pParent->parentPtr());
+
+        if ( pParent != nullptr && immediatelyCachedTransforms.containsKey(pParent->ID()) )
+            parentTransform = immediatelyCachedTransforms[pParent->ID()];
+        else {
+            parentTransform = transformInScene(const_cast < VEntity * > (pEntity->parentPtr()));
+        }
+    } else {
+        parentTransform = transformInScene(const_cast < VEntity * > (pEntity->parentPtr()));
+    }
 
     result.rotation() += parentTransform.rotation();
 
@@ -578,6 +601,8 @@ auto engine::VScene::transformInScene(VEntity * pEntity) const noexcept -> VTran
     l.y = (m[0].y + m[1].y + m[2].y) + pL.y;
     l.z = (m[0].z + m[1].z + m[2].z) + pL.z;
 
+    if ( this->isImmediateCachingEnabled() )
+        return ( immediatelyCachedTransforms[pEntity->ID()] = result );
     return result;
 }
 
@@ -585,8 +610,10 @@ namespace engine {
     auto reconstructCacheBranch(engine::VEntity *pEntity) noexcept -> void {
         if (pEntity->parentPtr() == nullptr) {
             if ( pEntity->_ownedComponentFlags & VComponent::TypeFlag::V_TRANSFORM ) {
-                auto t = cachedLocations.emplace(pEntity->ID(), new VTransform(*pEntity->_pTransform));
+                auto t = periodicallyCachedTransforms.emplace(pEntity->ID(), new VTransform(* pEntity->_pTransform));
                 t->_pParentEntity = nullptr;
+
+                periodicallyCachedRelativeTransforms.emplace(pEntity->ID(), new VTransform(*t));
             }
 
             for ( auto * p : pEntity->children() )
@@ -599,8 +626,10 @@ namespace engine {
                 }
 
                 if (pParent == nullptr) {
-                    auto t = cachedLocations.emplace(pEntity->ID(), new VTransform( *pEntity->_pTransform));
+                    auto t = periodicallyCachedTransforms.emplace(pEntity->ID(), new VTransform(*pEntity->_pTransform));
                     t->_pParentEntity = nullptr;
+
+                    periodicallyCachedRelativeTransforms.emplace(pEntity->ID(), new VTransform(*t));
 
                     for ( auto * p : pEntity->children() )
                         reconstructCacheBranch(p);
@@ -608,10 +637,10 @@ namespace engine {
                     return;
                 }
 
-                auto l = cachedLocations.find(pParent->ID());
+                auto l = periodicallyCachedTransforms.find(pParent->ID());
                 if (l.hasValue()) {
                     auto *pT = l.value().get();
-                    auto *nT = cachedLocations.emplace(pEntity->ID(), new VTransform(* pEntity->_pTransform));
+                    auto *nT = periodicallyCachedTransforms.emplace(pEntity->ID(), new VTransform(* pEntity->_pTransform));
 
                     nT->rotation() += pT->rotation();
                     nT->_pParentEntity = nullptr;
@@ -635,9 +664,14 @@ namespace engine {
                     nL.x = (m[0].x + m[1].x + m[2].x) + pL.x;
                     nL.y = (m[0].y + m[1].y + m[2].y) + pL.y;
                     nL.z = (m[0].z + m[1].z + m[2].z) + pL.z;
+
+                    auto rT = periodicallyCachedRelativeTransforms.emplace(pEntity->ID(), new VTransform(*pEntity->_pTransform));
+                    rT->_pParentEntity = nullptr;
                 } else {
-                    auto t = cachedLocations.emplace(pEntity->ID(), new VTransform( *pEntity->_pTransform));
+                    auto t = periodicallyCachedTransforms.emplace(pEntity->ID(), new VTransform(*pEntity->_pTransform));
                     t->_pParentEntity = nullptr;
+
+                    periodicallyCachedRelativeTransforms.emplace(pEntity->ID(), new VTransform(* t));
                 }
 
                 for ( auto * p : pEntity->children() )
@@ -648,27 +682,34 @@ namespace engine {
 }
 
 auto engine::VScene::clearCaches() noexcept -> void {
-    for ( auto & e : cachedLocations )
-        delete e.getSecond();
+    if ( this->_periodicCachingEnabled ) {
+        for (auto &e : periodicallyCachedTransforms)
+            delete e.getSecond();
 
-    cachedLocations.clear();
+        for (auto &e : periodicallyCachedRelativeTransforms)
+            delete e.getSecond();
+
+        periodicallyCachedTransforms.clear();
+        periodicallyCachedRelativeTransforms.clear();
+    }
 }
 
 auto engine::VScene::reconstructCaches() noexcept -> void {
-    if ( reconstructionCounter > 0 ) {
-        std::cout << cachedLocations << '\n';
-//        std::cout << cachedLocations..toString() << '\n';
-        reconstructionCounter --;
-        return;
+    if ( this->isPeriodicCachingEnabled() ) {
+
+        if (periodicCachingReconstructionCounter > 0) {
+            periodicCachingReconstructionCounter--;
+        } else {
+            periodicCachingReconstructionCounter = this->_cacheReconstructionInterval;
+
+            this->clearCaches();
+
+            for (auto *pObj : this->_rootEntities)
+                reconstructCacheBranch(pObj);
+        }
     }
 
-    reconstructionCounter = this->_cacheReconstructionInterval;
-
-    this->clearCaches();
-
-    for ( auto * pObj : this->_rootEntities )
-        reconstructCacheBranch (pObj);
-//        if ( pObj->_ownedComponentFlags & VComponent::TypeFlag::V_TRANSFORM )
-//            cachedLocations.
-
+    if ( this->isImmediateCachingEnabled() ) {
+        immediatelyCachedTransforms.clear();
+    }
 }

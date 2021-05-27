@@ -25,6 +25,9 @@ namespace engine {
 
         VCamera                                   * _activeCamera {nullptr};
 
+        bool                                        _periodicCachingEnabled      = false;
+        bool                                        _immediateCachingEnabled     = false;
+
         uint32                                      _cacheReconstructionInterval = 512;
 
         //TODO : name indexing
@@ -99,8 +102,24 @@ namespace engine {
         auto clearCaches () noexcept -> void;
         auto reconstructCaches () noexcept -> void;
 
-        constexpr auto setCacheReconstructionInterval (uint32 value) noexcept -> void {
+        constexpr auto setPeriodicCacheReconstructionInterval (uint32 value) noexcept -> void {
             this->_cacheReconstructionInterval = value;
+        }
+
+        constexpr auto setPeriodicCachingEnabled (bool toggle) noexcept -> void {
+            this->_periodicCachingEnabled = toggle;
+        }
+
+        constexpr auto isPeriodicCachingEnabled () const noexcept -> bool {
+            return this->_periodicCachingEnabled;
+        }
+
+        constexpr auto setImmediateCachingEnabled (bool toggle) noexcept -> void {
+            this->_immediateCachingEnabled = toggle;
+        }
+
+        constexpr auto isImmediateCachingEnabled () const noexcept -> bool {
+            return this->_immediateCachingEnabled;
         }
     };
 }

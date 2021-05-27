@@ -153,6 +153,9 @@ namespace engine {
         HashMap < VGameObject *, std::vector < uint16 > const * >   _objectIndices;
         HashMap < VGameObject *, String >                           _objectTextureNames;
 
+        float                       _fieldOfView                = 75.0f;
+        float                       _drawDistance               = 100.0f;
+
         bool                        _mouseCursorEnabled = false;
 
         /// Current FPS
@@ -591,6 +594,10 @@ namespace engine {
         constexpr auto enableShowFPS () noexcept -> void { this->setShowFPSEnabled(true); }
         constexpr auto disableShowFPS () noexcept -> void { this->setShowFPSEnabled(false); }
         constexpr auto isFPSShown () const noexcept -> bool { return this->_showFPS; }
+        constexpr auto setFOV (float value) noexcept -> void { this->_fieldOfView = value; }
+        constexpr auto getFOV () const noexcept -> float { return this->_fieldOfView; }
+        constexpr auto getDrawDistance () const noexcept -> float { return this->_drawDistance; }
+        constexpr auto setDrawDistance (float value) noexcept -> void { this->_drawDistance = value; }
     };
 
 }

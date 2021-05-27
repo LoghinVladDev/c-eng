@@ -115,6 +115,15 @@ auto addObjects (VulkanTriangleApplication & a) {
     cube4->add(new VTransform());
     cube4->add(new VMesh());
     cube4->add(new VMeshRenderer());
+
+    auto plane = new VGameObject("plane");
+    plane->add(new VTransform);
+    plane->add(new VMesh);
+    plane->add(new VMeshRenderer);
+
+    plane->transform()->location().y -= 2.1f;
+
+    plane->transform()->scale() = { 50.0f, 0.2f, 50.0f };
 //
 //    star->transform()->location().x -= 2.0f;
 //    star->transform()->location().z += 1.0f;
@@ -126,20 +135,23 @@ auto addObjects (VulkanTriangleApplication & a) {
     a.objectVertices()[cube2] = & cubeVertices;
     a.objectVertices()[cube3] = & cubeVertices;
     a.objectVertices()[cube4] = & cubeVertices;
+    a.objectVertices()[plane] = & cubeVertices;
 
     a.objectIndices()[cube] = & cubeIndices;
     a.objectIndices()[cube2] = & cubeIndices;
     a.objectIndices()[cube3] = & cubeIndices;
     a.objectIndices()[cube4] = & cubeIndices;
+    a.objectIndices()[plane] = & cubeIndices;
 
     a.objectVertices()[star] = & starVertices;
     a.objectIndices()[star] = & starIndices;
 
     a.objectTextureNames()[cube] = "container.jpg";
     a.objectTextureNames()[cube2] = "container2.png";
-    a.objectTextureNames()[cube3] = "container2.png";
+    a.objectTextureNames()[cube3] = "container3.jpg";
     a.objectTextureNames()[star] = "container3.jpg";
     a.objectTextureNames()[cube4] = "container.jpg";
+//    a.objectTextureNames()[plane] = "container.jpg";
 
 //    star->add(cube);
     cube->add(cube2);
@@ -164,6 +176,7 @@ auto addObjects (VulkanTriangleApplication & a) {
 //    a.scene().add(star); /// Add object to scene
     a.scene().add(cube);
     a.scene().add(cube3);
+    a.scene().add(plane);
     a.scene().setActiveCamera(new VCamera({0.0f, 0.0f, 3.0f}));
 }
 
@@ -173,7 +186,13 @@ int main() {
     addObjects(app);
 
     app.setMouseCursorEnabled(false);
-//    app.enableShowFPS();
+    app.scene().setImmediateCachingEnabled(true);
+    app.scene().setPeriodicCachingEnabled(true);
+    app.scene().setPeriodicCacheReconstructionInterval(2048);
+    app.enableShowFPS();
+
+    app.setFOV(80.0f);
+    app.setDrawDistance(200.0f);
 
     try{
         /**

@@ -546,7 +546,7 @@ static bool moveRight = false;
 #include <engineDataPaths.h>
 
 auto engine::VulkanTriangleApplication::updateUniformBuffer(uint32 uniformBufferIndex) noexcept -> void {
-    static float FOV = 90.0f; /// Field Of View of Camera
+//    static float FOV = 90.0f; /// Field Of View of Camera
 
     /**
      * Uniform Buffer =
@@ -586,11 +586,11 @@ auto engine::VulkanTriangleApplication::updateUniformBuffer(uint32 uniformBuffer
         ); /// view matrix = 4x4 matrix
 
     auto projection = glm::perspective (
-            glm::radians ( FOV ), /// with this FOV in radians
+            glm::radians ( this->_fieldOfView ), /// with this FOV in radians
             static_cast < float > (this->_vulkanLogicalDevice.getSwapChain()->getImagesInfo().extent.width) / /// projected on our width / heigth ( aspect ratio )
             static_cast < float > ( this->_vulkanLogicalDevice.getSwapChain()->getImagesInfo().extent.height ),
             0.1f, /// clip start ( objects behind will not be projected )
-            10.0f  /// clip end ( objects far will not be projected )
+            this->_drawDistance  /// clip end ( objects far will not be projected )
     );
 
     projection[1][1] *= -1; /// reverse y component of projection, as GLM library was designed for OpenGL, and we use Vulkan
@@ -890,6 +890,7 @@ auto engine::VulkanTriangleApplication::createTextureSampler() noexcept(false) -
     )
 }
 
+#include <CDS/Path>
 auto engine::VulkanTriangleApplication::createDescriptorSets() noexcept(false) -> void {
     this->_activeScene.entitiesOfClass("VGameObject").forEach([this](VEntity * pEntity){
         auto pGameObject = dynamic_cast<VGameObject *>(pEntity);
@@ -897,16 +898,29 @@ auto engine::VulkanTriangleApplication::createDescriptorSets() noexcept(false) -
         if ( pGameObject == nullptr || ! pGameObject->isDrawable() )
             return;
 
+        String pathToTexture;
+        if ( this->objectTextureNames().containsKey(pGameObject) ) {
+            pathToTexture = String(__TEXTURES_PATH__).append(this->objectTextureNames()[pGameObject]);
+
+            try {
+                Path(pathToTexture);
+            } catch ( std::exception const & ) {
+                pathToTexture = String(__TEXTURES_PATH__).append("missingTexture.png");
+            }
+        } else {
+            pathToTexture = String(__TEXTURES_PATH__).append("missingTexture.png");
+        }
+
         ENG_THROW_IF_NOT_SUCCESS(
-            pGameObject->meshRendererPtr()->setup(
-                this->_transferCommandPool,
-                this->_descriptorPool,
-                this->_objectShader,
-                String(__TEXTURES_PATH__).append(this->objectTextureNames()[pGameObject]).cStr(),
-                this->_textureSampler,
-                * this->_vulkanQueueFamilyCollection
-            ),
-            ENG_STD_THROW("Mesh Renderer Create Failure")
+                pGameObject->meshRendererPtr()->setup(
+                        this->_transferCommandPool,
+                        this->_descriptorPool,
+                        this->_objectShader,
+                        pathToTexture.cStr(),
+                        this->_textureSampler,
+                        *this->_vulkanQueueFamilyCollection
+                ),
+                ENG_STD_THROW("Mesh Renderer Create Failure")
         )
     });
 }

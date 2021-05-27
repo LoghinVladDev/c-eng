@@ -31,4 +31,8 @@
 
 #define CDS_GLM
 
+#ifndef NDEBUG
+#define CDS_EASY_HASH_DEBUG
+#endif
+
 #endif //ENG1_ENGINEVULKANPREPROC_HPP

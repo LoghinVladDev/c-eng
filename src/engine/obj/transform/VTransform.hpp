@@ -117,7 +117,7 @@ namespace engine {
             this->_location = location;
         }
 
-        [[nodiscard]] auto toString () const noexcept -> String override {
+        [[nodiscard]] auto toStringFormatted () const noexcept -> String {
             return String().append("VTransform { \n")
                 .append("\tbase = ").append(VComponent::toString()).append(",\n")
                 .append("\tlocation = (")
@@ -135,9 +135,43 @@ namespace engine {
                 .append("}");
         }
 
+        [[nodiscard]] auto toString () const noexcept -> String override {
+            return String().append("VTransform { ")
+                .append("base = ").append(VComponent::toString()).append(", ")
+                .append("location = (")
+                    .append("x = ").append(this->_location.x).append(", ")
+                    .append("y = ").append(this->_location.y).append(", ")
+                    .append("z = ").append(this->_location.z).append("),")
+                .append("rotation = VRotor { ")
+                    .append("yaw = ").append(this->_rotation.yaw()).append(", ")
+                    .append("pitch = ").append(this->_rotation.pitch()).append(", ")
+                    .append("roll = ").append(this->_rotation.roll()).append("},")
+                .append("scale = (")
+                    .append("x = ").append(this->_scale.x).append(", ")
+                    .append("y = ").append(this->_scale.y).append(", ")
+                    .append("z = ").append(this->_scale.z).append(")")
+                .append("}");
+        }
+
+        [[nodiscard]] auto operator == (Object const & o) const noexcept -> bool override {
+            if ( & o == this ) return true;
+            auto p = dynamic_cast < decltype ( this ) > ( & o );
+            if ( p == nullptr ) return false;
+            return this->operator==(* p);
+        }
+
+        [[nodiscard]] auto operator == (VTransform const & o) const noexcept -> bool {
+            return
+                    this->_location == o._location &&
+                    this->_rotation == o._rotation &&
+                    this->_scale == o._scale;
+        }
+
         [[nodiscard]] auto copy () const noexcept -> VTransform * override {
             return new VTransform (*this);
         }
+
+
 
         ~VTransform() noexcept override = default;
     };
