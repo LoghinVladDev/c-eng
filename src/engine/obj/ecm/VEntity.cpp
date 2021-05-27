@@ -40,6 +40,11 @@ auto engine::VEntity::add(VComponent * pComponent) noexcept -> bool {
     this->_components.pushBack(pComponent);
     pComponent->_pParentEntity = this;
 
+    this->_ownedComponentFlags |= pComponent->typeFlag();
+
+    if ( pComponent->typeFlag() == VComponent::V_TRANSFORM )
+        this->_pTransform = reinterpret_cast < VTransform * > (pComponent);
+
     if ( this->_pScene != nullptr )
         this->_pScene->index(pComponent);
 

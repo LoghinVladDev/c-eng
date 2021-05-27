@@ -25,8 +25,26 @@ namespace engine {
 
         using ClassName = String;
 
+    protected:
+        enum TypeFlag : uint8 {
+            NONE            = 0x00,
+            V_TRANSFORM     = 0x01,
+            V_MESH          = 0x02,
+            V_MESH_RENDERER = 0x04
+        };
+
+        using TypeFlags = uint8;
+
+#if __cpp_constexpr >= 201907
+        [[nodiscard]] virtual constexpr auto typeFlag () const noexcept -> TypeFlag = 0;
+#else
+        [[nodiscard]] virtual inline auto typeFlag () const noexcept -> TypeFlag = 0;
+#endif
+        friend auto reconstructCacheBranch (VEntity *) noexcept -> void;
+
     private:
         friend class VEntity;
+        friend class VScene;
         //// private variables
         uint64          _ID             { VComponent::nextID() }; // NOLINT(bugprone-reserved-identifier)
         static uint64   _IDCounter;                               // NOLINT(bugprone-reserved-identifier)

@@ -24,6 +24,15 @@ namespace engine {
         //// private functions
 
         explicit VMesh ( uint64 ignoredIDConstructor ) noexcept : VComponent( VComponent::DISTINCT | VComponent::HAS_DEPENDENCY, ignoredIDConstructor ) { }
+
+#if __cpp_constexpr >= 201907
+        [[nodiscard]] constexpr auto typeFlag () const noexcept -> TypeFlag override { return VComponent::TypeFlag::V_MESH; }
+#else
+        [[nodiscard]] inline auto typeFlag () const noexcept -> TypeFlag override { return VComponent::TypeFlag::V_MESH; }
+#endif
+
+        friend auto reconstructCacheBranch (VEntity *) noexcept -> void;
+
     public:
         //// public variables
         const static VMesh EMPTY;

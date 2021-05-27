@@ -799,6 +799,8 @@ auto engine::VulkanTriangleApplication::update() noexcept -> void {
     } else if ( moveRight ) {
         this->_activeScene.activeCamera()->transform()->location() += this->_activeScene.activeCamera()->right() * velocity;
     }
+
+    this->scene().reconstructCaches();
 }
 
 #pragma clang diagnostic push

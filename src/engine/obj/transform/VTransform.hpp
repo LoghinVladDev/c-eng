@@ -23,6 +23,12 @@ namespace engine {
         //// private functions
 
         explicit VTransform ( uint64 ignoredIncrementConstructor ) noexcept : VComponent( VComponent::DISTINCT, ignoredIncrementConstructor) { }
+
+#if __cpp_constexpr >= 201907
+        [[nodiscard]] constexpr auto typeFlag () const noexcept -> TypeFlag override { return VComponent::TypeFlag::V_TRANSFORM; }
+#else
+        [[nodiscard]] inline auto typeFlag () const noexcept -> TypeFlag override { return VComponent::TypeFlag::V_TRANSFORM; }
+#endif
     public:
         //// public variables
         const static VTransform EMPTY;

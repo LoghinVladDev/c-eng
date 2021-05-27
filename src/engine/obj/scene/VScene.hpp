@@ -5,6 +5,7 @@
 #ifndef ENG1_VSCENE_H
 #define ENG1_VSCENE_H
 
+#include <VObject.hpp>
 #include <CDS/Array>
 #include <CDS/HashMap>
 #include <ecm/VEntity.hpp>
@@ -23,6 +24,8 @@ namespace engine {
         HashMap < uint64, VComponent * > mutable    _indexedComponents;
 
         VCamera                                   * _activeCamera {nullptr};
+
+        uint32                                      _cacheReconstructionInterval = 512;
 
         //TODO : name indexing
 
@@ -92,6 +95,13 @@ namespace engine {
 
         [[nodiscard]] auto locationInScene (VEntity *) const noexcept -> glm::vec3;
         [[nodiscard]] auto transformInScene (VEntity *) const noexcept -> VTransform;
+
+        auto clearCaches () noexcept -> void;
+        auto reconstructCaches () noexcept -> void;
+
+        constexpr auto setCacheReconstructionInterval (uint32 value) noexcept -> void {
+            this->_cacheReconstructionInterval = value;
+        }
     };
 }
 

@@ -10,9 +10,9 @@ const engine::VGameObject engine::VGameObject::EMPTY = engine::VGameObject(UINT6
 
 auto engine::VGameObject::add ( VComponent * pComponent ) noexcept -> bool {
     if ( VEntity::add(pComponent) ) {
-        if ( pComponent->className() == VTransform::EMPTY.className() )
-            this->_pTransform = dynamic_cast < VTransform * > (pComponent);
-        else if ( pComponent->className() == VMesh::EMPTY.className() )
+//        if ( pComponent->className() == VTransform::EMPTY.className() )
+//            this->_pTransform = dynamic_cast < VTransform * > (pComponent);
+        if ( pComponent->className() == VMesh::EMPTY.className() )
             this->_pMesh = dynamic_cast < VMesh * > (pComponent);
         else if ( pComponent->className() == VMeshRenderer::EMPTY.className() )
             this->_pMeshRenderer = dynamic_cast < VMeshRenderer * > (pComponent);

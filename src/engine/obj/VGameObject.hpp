@@ -17,7 +17,6 @@ namespace engine {
     class VGameObject: public VEntity {
     private:
         //// private variables
-        VTransform      * _pTransform     {nullptr};
         VMesh           * _pMesh          {nullptr};
         VMeshRenderer   * _pMeshRenderer  {nullptr};
 

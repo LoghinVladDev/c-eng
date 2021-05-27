@@ -8,6 +8,7 @@
 #include <VObject.hpp>
 #include <CDS/Array>
 #include <ecm/VComponent.hpp>
+#include <transform/VTransform.hpp>
 
 namespace engine {
 
@@ -57,6 +58,10 @@ namespace engine {
         //// private
         static auto nextID() noexcept -> uint64 { return VEntity::_IDCounter++; }
 
+        VComponent::TypeFlags _ownedComponentFlags = VComponent::TypeFlag::NONE;
+
+        friend auto reconstructCacheBranch (VEntity *) noexcept -> void;
+
     protected:
         explicit VEntity ( std::nullptr_t = nullptr ) noexcept : _pScene(nullptr), _pParentEntity(nullptr) {}
 
@@ -64,6 +69,8 @@ namespace engine {
         explicit VEntity ( VScene * ) noexcept;
 
         explicit VEntity ( uint64 ) noexcept;
+
+        VTransform      * _pTransform     {nullptr};
 
     public:
         using ClassName = String;

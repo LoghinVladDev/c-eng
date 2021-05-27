@@ -4,6 +4,8 @@
 
 #include "VScene.hpp"
 
+static HashMap < uint64, engine::VTransform * > cachedLocations;
+
 engine::VScene::~VScene() noexcept {
     for ( auto * p : this->_rootEntities )
         delete p;
@@ -514,7 +516,33 @@ auto engine::VScene::locationInScene(VEntity * pEntity) const noexcept -> glm::v
     return pTransform == nullptr ? glm::vec3(0.0f, 0.0f, 0.0f) : pTransform->location() + this->locationInScene(const_cast<VEntity *>(pEntity->_pParentEntity));
 }
 
+static uint32 reconstructionCounter = 0;
+
+static auto invalidateCacheBranch (engine::VEntity * pEntity) noexcept -> void {
+    auto & t = cachedLocations[pEntity->ID()];
+
+    if ( cachedLocations.containsKey(pEntity->ID()) && t != nullptr ) {
+        delete t;
+        t = nullptr;
+    }
+
+    for ( auto * p : pEntity->children() )
+        invalidateCacheBranch(p);
+}
+
 auto engine::VScene::transformInScene(VEntity * pEntity) const noexcept -> VTransform {
+    if ( cachedLocations.containsKey(pEntity->ID()) ) {
+        auto t = cachedLocations[pEntity->ID()];
+
+        if ( t != nullptr ) {
+            if (t->rotation() != pEntity->_pTransform->rotation())
+                invalidateCacheBranch(pEntity);
+//            reconstructionCounter = 0;
+            else
+                return *cachedLocations.get(pEntity->ID());
+        }
+    }
+
     VTransform * pTransform = nullptr;
     if ( pEntity->className() == "VGameObject" )
         pTransform = ((VGameObject *)pEntity)->transform();
@@ -551,4 +579,96 @@ auto engine::VScene::transformInScene(VEntity * pEntity) const noexcept -> VTran
     l.z = (m[0].z + m[1].z + m[2].z) + pL.z;
 
     return result;
+}
+
+namespace engine {
+    auto reconstructCacheBranch(engine::VEntity *pEntity) noexcept -> void {
+        if (pEntity->parentPtr() == nullptr) {
+            if ( pEntity->_ownedComponentFlags & VComponent::TypeFlag::V_TRANSFORM ) {
+                auto t = cachedLocations.emplace(pEntity->ID(), new VTransform(*pEntity->_pTransform));
+                t->_pParentEntity = nullptr;
+            }
+
+            for ( auto * p : pEntity->children() )
+                reconstructCacheBranch(p);
+        } else {
+            if ( pEntity->_ownedComponentFlags & VComponent::TypeFlag::V_TRANSFORM ) {
+                auto pParent = pEntity->parentPtr();
+                while (!(pParent->_ownedComponentFlags & VComponent::TypeFlag::V_TRANSFORM) && pParent != nullptr) {
+                    pParent = pParent->parentPtr();
+                }
+
+                if (pParent == nullptr) {
+                    auto t = cachedLocations.emplace(pEntity->ID(), new VTransform( *pEntity->_pTransform));
+                    t->_pParentEntity = nullptr;
+
+                    for ( auto * p : pEntity->children() )
+                        reconstructCacheBranch(p);
+
+                    return;
+                }
+
+                auto l = cachedLocations.find(pParent->ID());
+                if (l.hasValue()) {
+                    auto *pT = l.value().get();
+                    auto *nT = cachedLocations.emplace(pEntity->ID(), new VTransform(* pEntity->_pTransform));
+
+                    nT->rotation() += pT->rotation();
+                    nT->_pParentEntity = nullptr;
+
+                    auto & nL = nT->location();
+
+                    auto & pL = pT->location();
+                    auto & pR = pT->rotation();
+
+                    auto u = glm::radians(pR.pitch());
+                    auto v = glm::radians(pR.yaw());
+                    auto w = glm::radians(pR.roll());
+
+                    auto m = glm::mat4(1.0f);
+
+                    m = glm::rotate(m, u, glm::vec3(1.0f, 0.0f, 0.0f));
+                    m = glm::rotate(m, v, glm::vec3(0.0f, 1.0f, 0.0f));
+                    m = glm::rotate(m, w, glm::vec3(0.0f, 0.0f, 1.0f));
+                    m = glm::scale(m, nL);
+
+                    nL.x = (m[0].x + m[1].x + m[2].x) + pL.x;
+                    nL.y = (m[0].y + m[1].y + m[2].y) + pL.y;
+                    nL.z = (m[0].z + m[1].z + m[2].z) + pL.z;
+                } else {
+                    auto t = cachedLocations.emplace(pEntity->ID(), new VTransform( *pEntity->_pTransform));
+                    t->_pParentEntity = nullptr;
+                }
+
+                for ( auto * p : pEntity->children() )
+                    reconstructCacheBranch(p);
+            }
+        }
+    }
+}
+
+auto engine::VScene::clearCaches() noexcept -> void {
+    for ( auto & e : cachedLocations )
+        delete e.getSecond();
+
+    cachedLocations.clear();
+}
+
+auto engine::VScene::reconstructCaches() noexcept -> void {
+    if ( reconstructionCounter > 0 ) {
+        std::cout << cachedLocations << '\n';
+//        std::cout << cachedLocations..toString() << '\n';
+        reconstructionCounter --;
+        return;
+    }
+
+    reconstructionCounter = this->_cacheReconstructionInterval;
+
+    this->clearCaches();
+
+    for ( auto * pObj : this->_rootEntities )
+        reconstructCacheBranch (pObj);
+//        if ( pObj->_ownedComponentFlags & VComponent::TypeFlag::V_TRANSFORM )
+//            cachedLocations.
+
 }
