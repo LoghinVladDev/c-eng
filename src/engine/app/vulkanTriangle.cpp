@@ -9,6 +9,7 @@
 #include <iostream>
 
 #include <src/engine/obj/util/proto/VulkanTriangleApplication.hpp>
+#include <tools/loader/VMeshLoader.hpp>
 
 /**
  * Base Prototype Application
@@ -90,7 +91,56 @@ const std::vector < uint16 > cubeIndices = {
 };
 
 auto addObjects (VulkanTriangleApplication & a) {
+    auto teapot = new VGameObject("teapot");
+    teapot->add(new VTransform);
+    teapot->add(new VMesh);
+    teapot->add(new VMeshRenderer);
+
+    teapot->transform()->location().x -= 5.0f;
+
+    auto pumpkin = new VGameObject("pumpkin");
+    pumpkin->add(new VTransform);
+    pumpkin->add(new VMesh);
+    pumpkin->add(new VMeshRenderer);
+
+
+    teapot->add(pumpkin);
+    teapot->transform()->scale() = {0.2f, 0.2f, 0.2f};
+    pumpkin->transform()->scale() = {0.02f, 0.02f, 0.02f};
+    pumpkin->transform()->location().x += 4.0f;
+
+    auto cow = new VGameObject ("cow");
+    cow->add(new VTransform);
+    cow->add(new VMesh);
+    cow->add(new VMeshRenderer);
+
+    cow->transform()->location().z += 5.0f;
+
     auto cube = new VGameObject("cube");
+    VMeshLoader loader;
+    loader.requestModelLoad("../data/models/teapot.obj", [& a, & teapot, &cube](VMeshLoader::RawMesh const & mesh){
+        a.objectVertices()[teapot] = & mesh.demoVertices();
+        a.objectIndices()[teapot] = & mesh.demoIndices();
+        a.objectTextureNames()[teapot] = "none.png";
+//        a.scene().add(teapot);
+        cube->add(teapot);
+    });
+
+    loader.requestModelLoad("../data/models/pumpkin.obj", [&a, &pumpkin](VMeshLoader::RawMesh const & rm) {
+        a.objectVertices()[pumpkin] = & rm.demoVertices();
+        a.objectIndices()[pumpkin] = & rm.demoIndices();
+        a.objectTextureNames()[pumpkin] = "none.png";
+
+    });
+
+    loader.requestModelLoad("../data/models/cow.obj", [& a, & cow](VMeshLoader::RawMesh const & rm){
+        a.objectVertices()[cow] = & rm.demoVertices();
+        a.objectIndices()[cow] = & rm.demoIndices();
+        a.objectTextureNames()[cow] = "none.png";
+        a.scene().add(cow);
+    });
+
+    /// region hardcoded obj
     cube->add(new VTransform());
     cube->add(new VMesh());
     cube->add(new VMeshRenderer());
@@ -130,6 +180,8 @@ auto addObjects (VulkanTriangleApplication & a) {
 //    star->transform()->location().y += 1.0f;
 
     cube4->transform()->location().x += 0.4f;
+
+    /// endregion
 
     a.objectVertices()[cube] = & cubeVertices;
     a.objectVertices()[cube2] = & cubeVertices;
@@ -186,7 +238,7 @@ int main() {
 
     addObjects(app);
 
-    app.setMouseCursorEnabled(true);
+    app.setMouseCursorEnabled(false);
     app.scene().setImmediateCachingEnabled(true);
     app.scene().setPeriodicCachingEnabled(true);
     app.scene().setPeriodicCacheReconstructionInterval(2048);

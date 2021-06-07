@@ -369,6 +369,19 @@ if(Vulkan_FOUND)
     )
 
     set(
+            V_ENGINE_OBJECT_LOADER_SRC
+
+            src/engine/obj/tools/loader/VMeshLoader.cpp
+            src/engine/obj/tools/loader/VMeshLoader.hpp
+    )
+
+    set(
+            V_ENGINE_OBJECT_TOOLS_SRC
+
+            ${V_ENGINE_OBJECT_LOADER_SRC}
+    )
+
+    set(
             V_ENGINE_OBJECT_SRC
 
             ${V_ENGINE_OBJECT_ENTITY_COMPONENT_MODEL_SRC}
@@ -378,6 +391,7 @@ if(Vulkan_FOUND)
             ${V_ENGINE_OBJECT_SHADER_SRC}
             ${V_ENGINE_OBJECT_TRANSFORM_SRC}
             ${V_ENGINE_OBJECT_UTILITY_SRC}
+            ${V_ENGINE_OBJECT_TOOLS_SRC}
 
             src/engine/obj/VCamera.cpp
             src/engine/obj/VCamera.hpp
