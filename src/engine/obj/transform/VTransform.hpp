@@ -153,14 +153,8 @@ namespace engine {
                 .append("}");
         }
 
-        [[nodiscard]] auto operator == (Object const & o) const noexcept -> bool override {
-            if ( & o == this ) return true;
-            auto p = dynamic_cast < decltype ( this ) > ( & o );
-            if ( p == nullptr ) return false;
-            return this->operator==(* p);
-        }
-
-        [[nodiscard]] auto operator == (VTransform const & o) const noexcept -> bool {
+        [[nodiscard]] inline auto operator == (VTransform const & o) const noexcept -> bool {
+            if ( this == & o ) return true;
             return
                     this->_location == o._location &&
                     this->_rotation == o._rotation &&

@@ -66,6 +66,24 @@ namespace engine {
             return String("VSettingOption { ") +
                 "name = " + this->_name + " }";
         }
+
+        [[nodiscard]] auto copy () const noexcept -> VSettingOption * override = 0;
+
+        [[nodiscard]] inline auto operator == (VSettingOption const & o) const noexcept -> bool {
+            if ( this == & o ) return true;
+            return this->_name == o._name && this->_settingType == o._settingType;
+        }
+
+        [[nodiscard]] auto hash () const noexcept -> Index override {
+            return String(this->_name).hash();
+        }
+
+        [[nodiscard]] auto equals (Object const & o) const noexcept -> bool override {
+            if ( this == & o ) return true;
+            auto p = dynamic_cast < decltype ( this ) > (& o);
+            if ( p == nullptr ) return false;
+            return this->operator==(*p);
+        }
     };
 
 }

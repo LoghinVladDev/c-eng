@@ -49,11 +49,16 @@ namespace engine {
 
         [[nodiscard]] auto toString () const noexcept -> String override;
 
-        [[nodiscard]] auto operator == (Object const & o) const noexcept -> bool override {
+        [[nodiscard]] auto operator == (VDepthBuffer const & o) const noexcept -> bool {
+            if ( this == & o ) return true;
+            return this->_image == o._image;
+        }
+
+        [[nodiscard]] auto equals (Object const & o) const noexcept -> bool override {
             if ( this == & o ) return true;
             auto p = dynamic_cast < decltype (this) > (& o);
             if ( p == nullptr ) return false;
-            return this->_image == p->_image;
+            return this->operator==(*p);
         }
 
         [[nodiscard]] auto copy () const noexcept -> VDepthBuffer * override {

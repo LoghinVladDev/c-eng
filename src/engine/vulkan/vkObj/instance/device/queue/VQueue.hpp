@@ -146,11 +146,19 @@ namespace engine {
         ~VQueue () noexcept override = default;
 
         [[nodiscard]] auto toString () const noexcept -> String override;
-        [[nodiscard]] auto operator == (Object const & o) const noexcept -> bool override {
+
+        [[nodiscard]] auto operator == (VQueue const & o) const noexcept -> bool {
+            if ( this == & o ) return true;
+
+            return this->_queueIndex == o._queueIndex && this->_handle == o._handle;
+        }
+
+        [[nodiscard]] auto equals (Object const & o) const noexcept -> bool override {
             if ( this == & o ) return true;
             auto p = dynamic_cast < decltype (this) > (& o);
+            if ( p == nullptr ) return false;
 
-            return this->_queueIndex == p->_queueIndex && this->_handle == p->_handle;
+            return this->operator == (*p);
         }
 
         [[nodiscard]] auto hash () const noexcept -> Index override {

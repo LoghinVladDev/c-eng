@@ -50,12 +50,18 @@ namespace engine {
 
         [[nodiscard]] auto toString () const noexcept -> String override;
 
-        [[nodiscard]] auto operator == (Object const & o) const noexcept -> bool override {
+        [[nodiscard]] auto operator == (VRenderPass const & o) const noexcept -> bool {
+            if ( this == & o ) return true;
+
+            return this->_handle == o._handle;
+        }
+
+        [[nodiscard]] auto equals (Object const & o) const noexcept -> bool override {
             if ( this == & o ) return true;
             auto p = dynamic_cast < decltype(this) > (& o);
             if ( p == nullptr ) return false;
 
-            return this->_handle == p->_handle;
+            return this->operator==(*p);
         }
 
         [[nodiscard]] auto copy () const noexcept -> VRenderPass * override {

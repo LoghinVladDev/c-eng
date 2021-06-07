@@ -37,11 +37,16 @@ namespace engine {
 
         [[nodiscard]] auto toString () const noexcept -> String override;
 
-        [[nodiscard]] auto operator == (Object const & o) const noexcept -> bool override {
+        [[nodiscard]] auto operator == (VSemaphore const & o) const noexcept -> bool {
+            if ( this == & o ) return true;
+            return this->_handle == o._handle;
+        }
+
+        [[nodiscard]] auto equals (Object const & o) const noexcept -> bool override {
             if ( this == & o ) return true;
             auto p = dynamic_cast < decltype ( this ) > ( & o );
             if ( p == nullptr ) return false;
-            return this->_handle == p->_handle;
+            return this->operator==(*p);
         }
 
         [[nodiscard]] auto copy () const noexcept -> VSemaphore * override {
@@ -94,12 +99,19 @@ namespace engine {
         auto clear () noexcept -> void override;
 
         [[nodiscard]] auto toString () const noexcept -> String override;
-        [[nodiscard]] auto operator == (Object const & o) const noexcept -> bool override {
+
+        [[nodiscard]] auto operator == (VSemaphoreCollection const & o) const noexcept -> bool {
+            if ( this == & o ) return true;
+
+            return this->_semaphores == o._semaphores;
+        }
+
+        [[nodiscard]] auto equals (Object const & o) const noexcept -> bool override {
             if ( this == & o ) return true;
             auto p = reinterpret_cast < decltype (this) > (& o);
             if ( p == nullptr ) return false;
 
-            return this->_semaphores == p->_semaphores;
+            return this->operator==(*p);
         }
 
         [[nodiscard]] auto copy () const noexcept -> VSemaphoreCollection * override {

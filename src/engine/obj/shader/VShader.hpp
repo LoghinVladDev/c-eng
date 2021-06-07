@@ -112,12 +112,18 @@ namespace engine {
             return this->_pipeline.hash() + this->_vertexShader.hash() + this->_fragmentShader.hash();
         }
 
-        [[nodiscard]] auto operator == (Object const & o) const noexcept -> bool override {
+        [[nodiscard]] auto operator == (VShader const & o) const noexcept -> bool {
+            if ( this == & o ) return true;
+
+            return this->_vertexShader == o._vertexShader && this->_fragmentShader == o._fragmentShader;
+        }
+
+        [[nodiscard]] auto equals (Object const & o) const noexcept -> bool override {
             if ( this == & o ) return true;
             auto p = dynamic_cast < decltype ( this ) > ( & o );
             if ( p == nullptr ) return false;
 
-            return this->_vertexShader == p->_vertexShader && this->_fragmentShader == p->_fragmentShader;
+            return this->operator==(*p);
         }
     };
 

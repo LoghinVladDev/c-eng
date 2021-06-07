@@ -151,12 +151,18 @@ namespace engine {
                 .append(" }");
         }
 
-        [[nodiscard]] auto operator == (Object const & o) const noexcept -> bool override {
+        [[nodiscard]] auto operator == (VExtension const & o) const noexcept -> bool {
+            if ( this == & o ) return true;
+
+            return std::strcmp ( o._extensionProperties.extensionName, this->_extensionProperties.extensionName ) == 0;
+        }
+
+        [[nodiscard]] auto equals (Object const & o) const noexcept -> bool override {
             if ( this == & o ) return true;
             auto p = dynamic_cast<decltype(this)>(& o);
             if ( p == nullptr ) return false;
 
-            return std::strcmp ( p->_extensionProperties.extensionName, this->_extensionProperties.extensionName ) == 0;
+            return this->operator==(*p);
         }
 
         [[nodiscard]] auto hash () const noexcept -> Index override {
@@ -366,12 +372,19 @@ namespace engine {
         auto clear () noexcept -> void override {}
 
         [[nodiscard]] auto toString() const noexcept -> String override;
-        [[nodiscard]] auto operator == (Object const & o) const noexcept -> bool override {
+
+        [[nodiscard]] auto operator == (VExtensionCollection const & o) const noexcept -> bool {
+            if ( this == & o ) return true;
+
+            return this->_extensions == o._extensions;
+        }
+
+        [[nodiscard]] auto equals (Object const & o) const noexcept -> bool override {
             if ( this == & o ) return true;
             auto p = dynamic_cast < decltype (this) > (& o);
             if ( p == nullptr ) return false;
 
-            return this->_extensions == p->_extensions;
+            return this->operator==(*p);
         }
 
         [[nodiscard]] auto hash () const noexcept -> Index override {

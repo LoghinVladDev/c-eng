@@ -106,8 +106,8 @@ namespace engine {
             return String("VIndexBufferBase { base = ").append(VBuffer::toString()).append(" }");
         }
 
-        [[nodiscard]] auto operator == (Object const & o) const noexcept -> bool override {
-            return VBuffer::operator==(o);
+        [[nodiscard]] auto equals (Object const & o) const noexcept -> bool override {
+            return VBuffer::equals(o);
         }
 
         [[nodiscard]] auto hash () const noexcept -> Index override {
@@ -276,8 +276,8 @@ namespace engine {
         }
 
         [[nodiscard]] auto toString () const noexcept -> String override;
-        [[nodiscard]] auto operator == (Object const & o) const noexcept -> bool override {
-            return VIndexBufferBase::operator==(o);
+        [[nodiscard]] auto equals (Object const & o) const noexcept -> bool override {
+            return VIndexBufferBase::equals(o);
         }
 
         [[nodiscard]] auto hash () const noexcept -> Index override {
@@ -447,8 +447,8 @@ namespace engine {
         }
 
         [[nodiscard]] auto toString () const noexcept -> String override;
-        [[nodiscard]] auto operator == (Object const & o) const noexcept -> bool override {
-            return VIndexBufferBase::operator==(o);
+        [[nodiscard]] auto equals(Object const & o) const noexcept -> bool override {
+            return VIndexBufferBase::equals(o);
         }
 
         [[nodiscard]] auto hash () const noexcept -> Index override {

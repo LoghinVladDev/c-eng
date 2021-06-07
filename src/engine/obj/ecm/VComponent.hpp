@@ -88,7 +88,8 @@ namespace engine {
         [[nodiscard]] constexpr auto tags () const noexcept -> Tags { return this->_tags; }
 
         [[nodiscard]] auto copy () const noexcept -> VComponent * override = 0;
-        [[nodiscard]] auto operator == (Object const &) const noexcept -> bool override;
+        [[nodiscard]] auto equals (Object const &) const noexcept -> bool override;
+        [[nodiscard]] auto operator == (VComponent const &) const noexcept -> bool;
 
         constexpr auto addTag (Tag t) noexcept -> void {
             this->_tags |= t;

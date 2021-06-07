@@ -33,12 +33,19 @@ namespace engine {
         [[nodiscard]] auto toString() const noexcept -> String override { return String("VEvent { type = ") + toString(this->_type) + " }"; }
         [[nodiscard]] auto hash () const noexcept -> Index override { return dataTypes::hash(static_cast<uint8>(this->_type)); }
         [[nodiscard]] auto copy () const noexcept -> VEvent * override = 0;
-        [[nodiscard]] auto operator == (Object const & o) const noexcept -> bool override {
+
+        [[nodiscard]] auto operator == (VEvent const & o) const noexcept -> bool {
+            if ( this == & o ) return true;
+
+            return this->_type == o._type;
+        }
+
+        [[nodiscard]] auto equals (Object const & o) const noexcept -> bool override {
             if ( this == & o ) return true;
             auto p = dynamic_cast < decltype (this) > ( & o );
             if ( p == nullptr ) return false;
 
-            return this->_type == p->_type;
+            return this->operator==(*p);
         }
 
         VEvent () noexcept = delete;

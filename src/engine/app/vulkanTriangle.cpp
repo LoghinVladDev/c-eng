@@ -20,11 +20,11 @@ using namespace engine;
  */
 const std::vector < engine::VVertex > starVertices = {
 
-        { { -0.2f, -0.2f, 0.0f }, {0.3f, 0.3f, 0.3f} },
-        { {  0.2f, -0.2f, 0.0f }, {0.3f, 0.3f, 0.3f} },
-        { {  0.3f,  0.1f, 0.0f }, {0.3f, 0.3f, 0.3f} },
-        { {  0.0f,  0.3f, 0.0f }, {0.3f, 0.3f, 0.3f} },
-        { { -0.3f,  0.1f, 0.0f }, {0.3f, 0.3f, 0.3f} },
+        { { -0.2f, -0.2f, 0.0f }, {0.0f, 0.0f, 0.0f} },
+        { {  0.2f, -0.2f, 0.0f }, {0.0f, 0.0f, 0.0f} },
+        { {  0.3f,  0.1f, 0.0f }, {0.0f, 0.0f, 0.0f} },
+        { {  0.0f,  0.3f, 0.0f }, {0.0f, 0.0f, 0.0f} },
+        { { -0.3f,  0.1f, 0.0f }, {0.0f, 0.0f, 0.0f} },
 
         { { 0.0f, -0.6f, 0.0f }, {1.0f, 0.0f, 0.0f} },
         { { 0.6f, -0.2f, 0.0f }, {0.0f, 1.0f, 0.0f} },
@@ -149,7 +149,7 @@ auto addObjects (VulkanTriangleApplication & a) {
     a.objectTextureNames()[cube] = "container.jpg";
     a.objectTextureNames()[cube2] = "container2.png";
     a.objectTextureNames()[cube3] = "container3.jpg";
-    a.objectTextureNames()[star] = "container3.jpg";
+    a.objectTextureNames()[star] = "none.png";
     a.objectTextureNames()[cube4] = "container.jpg";
     plane->transform()->rotation().roll() += 180.0f;
 //    a.objectTextureNames()[plane] = "container2.png";
@@ -186,7 +186,7 @@ int main() {
 
     addObjects(app);
 
-    app.setMouseCursorEnabled(false);
+    app.setMouseCursorEnabled(true);
     app.scene().setImmediateCachingEnabled(true);
     app.scene().setPeriodicCachingEnabled(true);
     app.scene().setPeriodicCacheReconstructionInterval(2048);

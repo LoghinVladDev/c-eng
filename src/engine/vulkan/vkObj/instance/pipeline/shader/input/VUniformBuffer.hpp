@@ -68,8 +68,8 @@ namespace engine {
             return new VUniformBuffer(* this);
         }
 
-        [[nodiscard]] auto operator == (Object const & o) const noexcept -> bool override {
-            return VBuffer::operator==(o);
+        [[nodiscard]] auto equals (Object const & o) const noexcept -> bool override {
+            return VBuffer::equals(o);
         }
     };
 

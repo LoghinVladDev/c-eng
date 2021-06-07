@@ -93,6 +93,23 @@ namespace engine {
         [[nodiscard]] auto copy () const noexcept -> VMesh * override {
             return new VMesh(*this);
         }
+
+        [[nodiscard]] auto hash () const noexcept -> Index override {
+            return this->_indexBuffer.hash() + this->_vertexBuffer.hash();
+        }
+
+        [[nodiscard]] inline auto operator == (VMesh const & o) const noexcept -> bool {
+            if ( this == & o ) return true;
+            return this->_vertexBuffer == o._vertexBuffer && this->_indexBuffer == o._indexBuffer;
+        }
+
+        [[nodiscard]] auto equals (Object const & o) const noexcept -> bool override {
+            if ( this == & o ) return true;
+            auto p = dynamic_cast < decltype ( this ) > ( & o );
+            if ( p == nullptr ) return false;
+
+            return this->operator== (*p);
+        }
     };
 
 }

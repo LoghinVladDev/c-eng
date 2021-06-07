@@ -67,12 +67,19 @@ namespace engine {
         [[nodiscard]] static auto stringToShaderType ( std::string const & ) noexcept -> ShaderType;
 
         [[nodiscard]] auto toString () const noexcept -> String override;
-        [[nodiscard]] auto operator == (Object const & o) const noexcept -> bool override {
+
+        [[nodiscard]] auto operator == (VShaderModule const & o) const noexcept -> bool {
+            if ( this == & o ) return true;
+
+            return this->_type == o._type && this->_handle == o._handle;
+        }
+
+        [[nodiscard]] auto equals (Object const & o) const noexcept -> bool override {
             if ( this == & o ) return true;
             auto p = dynamic_cast < decltype ( this ) > (& o);
             if ( p == nullptr ) return false;
 
-            return this->_type == p->_type && this->_handle == p->_handle;
+            return this->operator==(*p);
         }
 
         [[nodiscard]] auto hash () const noexcept -> Index override {

@@ -37,10 +37,15 @@ void engine::VComponent::operator delete(void * pToDelete) noexcept(false) {
     ::operator delete(pToDelete);
 }
 
-auto engine::VComponent::operator==(Object const & o) const noexcept -> bool {
+auto engine::VComponent::operator==(VComponent const & o) const noexcept -> bool {
+    if (this == & o) return true;
+    return this->_ID == o._ID;
+}
+
+auto engine::VComponent::equals(Object const & o) const noexcept -> bool {
     if (this == & o) return true;
     auto p = dynamic_cast < decltype (this) > (& o);
     if ( p == nullptr ) return false;
 
-    return this->_ID == p->_ID;
+    return this->operator==(*p);
 }

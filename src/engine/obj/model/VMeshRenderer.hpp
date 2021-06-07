@@ -121,6 +121,24 @@ namespace engine {
         [[nodiscard]] auto copy () const noexcept -> VMeshRenderer * override {
             return new VMeshRenderer(* this);
         }
+
+        [[nodiscard]] auto hash () const noexcept -> Index override {
+            return this->_descriptorSets.hash() + this->_texture.hash();
+        }
+
+        [[nodiscard]] auto operator == (VMeshRenderer const & o) const noexcept -> bool {
+            if ( this == & o ) return true;
+
+            return this->_texture == o._texture && this->_descriptorSets == o._descriptorSets;
+        }
+
+        [[nodiscard]] auto equals (Object const & o) const noexcept -> bool override {
+            if ( this == & o ) return true;
+            auto p = dynamic_cast < decltype (this) > ( & o );
+            if ( p == nullptr ) return false;
+
+            return this->operator==(* p);
+        }
     };
 
 }

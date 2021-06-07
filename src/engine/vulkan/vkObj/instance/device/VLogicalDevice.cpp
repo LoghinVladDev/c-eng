@@ -358,7 +358,7 @@ auto engine::VLogicalDevice::Factory::addExtensions (
         engine::VExtensionCollection const & collection
 ) noexcept -> Factory & {
     this->_extensions.add ( collection ); /// add all extensions to enabled extensions
-    return *this; 
+    return *this;
 }
 
 auto engine::VLogicalDevice::Factory::build (
@@ -516,17 +516,22 @@ auto engine::VLogicalDevice::recreateSwapChain() noexcept -> VulkanResult {
     return VulkanResult::VK_SUCCESS;
 }
 
+auto engine::VLogicalDevice::Factory::operator==(Factory const &o) const noexcept -> bool {
+    if ( this == & o ) return true;
 
-auto engine::VLogicalDevice::Factory::operator==(const Object &o) const noexcept -> bool {
+    return
+            this->_surface                      == o._surface                      &&
+            this->_validationLayerCollection    == o._validationLayerCollection    &&
+            this->_queues                       == o._queues                       &&
+            this->_extensions                   == o._extensions;
+}
+
+auto engine::VLogicalDevice::Factory::equals(Object const &o) const noexcept -> bool {
     if ( this == & o ) return true;
     auto p = dynamic_cast < decltype(this) > (& o);
     if ( p == nullptr ) return false;
 
-    return
-            this->_surface                      == p->_surface                      &&
-            this->_validationLayerCollection    == p->_validationLayerCollection    &&
-            this->_queues                       == p->_queues                       &&
-            this->_extensions                   == p->_extensions;
+    return this->operator==(* p);
 }
 
 auto engine::VLogicalDevice::Factory::hash() const noexcept -> Index {
@@ -537,12 +542,18 @@ auto engine::VLogicalDevice::Factory::copy() const noexcept -> Factory * {
     return new Factory ( * this );
 }
 
-auto engine::VLogicalDevice::operator==(const Object & o) const noexcept -> bool {
+auto engine::VLogicalDevice::operator==(VLogicalDevice const & o) const noexcept -> bool {
+    if ( this == & o ) return true;
+
+    return this->_vulkanDevice == o._vulkanDevice;
+}
+
+auto engine::VLogicalDevice::equals(Object const & o) const noexcept -> bool {
     if ( this == & o ) return true;
     auto p = dynamic_cast < decltype(this) > (& o);
     if ( p == nullptr ) return false;
 
-    return this->_vulkanDevice == p->_vulkanDevice;
+    return this->operator==(*p);
 }
 
 auto engine::VLogicalDevice::hash() const noexcept -> Index {

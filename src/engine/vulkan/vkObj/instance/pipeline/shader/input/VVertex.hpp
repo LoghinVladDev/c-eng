@@ -170,15 +170,22 @@ namespace engine {
         static auto getAttributeDescriptions () noexcept -> std::array < VulkanVertexInputAttributeDescription, engine::VVertex::PACK_PROPERTIES_COUNT >;
 
         [[nodiscard]] auto toString () const noexcept -> String override;
-        [[nodiscard]] auto operator == (Object const & o) const noexcept -> bool override {
+
+        [[nodiscard]] auto operator == (VVertex const & o) const noexcept -> bool {
+            if ( this == & o ) return true;
+
+            return
+                this->_vertexPack.position              == o._vertexPack.position  &&
+                this->_vertexPack.color                 == o._vertexPack.color     &&
+                this->_vertexPack.textureCoordinates    == o._vertexPack.textureCoordinates;
+        }
+
+        [[nodiscard]] auto equals (Object const & o) const noexcept -> bool override {
             if ( this == & o ) return true;
             auto p = dynamic_cast < decltype ( this ) > ( & o );
             if ( p == nullptr ) return false;
 
-            return
-                this->_vertexPack.position              == p->_vertexPack.position  &&
-                this->_vertexPack.color                 == p->_vertexPack.color     &&
-                this->_vertexPack.textureCoordinates    == p->_vertexPack.textureCoordinates;
+            return this->operator==( *p );
         }
 
         [[nodiscard]] auto hash () const noexcept -> Index override {

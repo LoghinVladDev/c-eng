@@ -119,7 +119,8 @@ namespace engine {
         [[nodiscard]] constexpr auto ID () const noexcept -> uint64 { return this->_ID; }
 
         [[nodiscard]] auto copy () const noexcept -> VEntity * override = 0;
-        [[nodiscard]] auto operator == (Object const &) const noexcept -> bool override;
+        [[nodiscard]] auto equals (Object const &) const noexcept -> bool override;
+        [[nodiscard]] auto operator == (VEntity const &) const noexcept -> bool;
 
         VEntity & operator = ( VEntity const & o ) noexcept { // NOLINT(bugprone-unhandled-self-assignment)
             return * this;

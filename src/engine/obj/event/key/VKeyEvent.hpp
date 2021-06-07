@@ -361,15 +361,20 @@ namespace engine {
             return new VKeyEvent (* this);
         }
 
-        [[nodiscard]] auto operator == (Object const & o) const noexcept -> bool override {
+        [[nodiscard]] inline auto operator == (VKeyEvent const & o) const noexcept -> bool {
+            if ( this == & o ) return true;
+
+            return
+                    VEvent::operator==(o) &&
+                    this->_key == o._key &&
+                    this->_modifiers == o._modifiers;
+        }
+
+        [[nodiscard]] auto equals (Object const & o) const noexcept -> bool override {
             if ( this == & o ) return true;
             auto p = dynamic_cast < decltype (this) > (& o);
             if ( p == nullptr ) return false;
-
-            return
-                VEvent::operator==(o) &&
-                this->_key == p->_key &&
-                this->_modifiers == p->_modifiers;
+            return this->operator==(*p);
         }
 
         VKeyEvent () noexcept : VEvent (VEvent::Type::VEVENT_KEY) { }

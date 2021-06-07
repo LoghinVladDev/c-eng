@@ -89,6 +89,28 @@ namespace engine {
                 this->_height = this->_defaultHeight;
                 this->_width = this->_defaultWidth;
             }
+
+            [[nodiscard]] auto copy () const noexcept -> ResolutionSetting * override {
+                return new ResolutionSetting(*this);
+            }
+
+            [[nodiscard]] auto operator == (ResolutionSetting const & o) const noexcept -> bool {
+                if ( this == & o ) return true;
+
+                return
+                    this->_width == o._width &&
+                    this->_height == o._height &&
+                    this->_defaultWidth == o._defaultWidth &&
+                    this->_defaultHeight == o._defaultHeight;
+            }
+
+            [[nodiscard]] auto equals (Object const & o) const noexcept -> bool override {
+                if ( this == & o ) return true;
+                auto p = dynamic_cast < decltype (this) > ( & o );
+                if ( p == nullptr ) return false;
+
+                return this->VSettingOption::operator==(*p) && this->operator==(*p);
+            }
         };
 
     }

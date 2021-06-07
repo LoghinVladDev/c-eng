@@ -98,11 +98,16 @@ namespace engine {
             return dataTypes::hash(reinterpret_cast<AddressValueType>(this->_handle));
         }
 
-        [[nodiscard]] auto operator == (Object const & o) const noexcept -> bool override {
+        [[nodiscard]] auto operator == (VDescriptorPool const & o) const noexcept -> bool {
+            if ( this == & o ) return true;
+            return this->_handle == o._handle;
+        }
+
+        [[nodiscard]] auto equals (Object const & o) const noexcept -> bool override {
             if ( this == & o ) return true;
             auto p = dynamic_cast < decltype (this) > (& o);
             if ( p == nullptr ) return false;
-            return this->_handle == p->_handle;
+            return this->operator==(*p);
         }
 
         [[nodiscard]] auto copy () const noexcept -> VDescriptorPool * override {

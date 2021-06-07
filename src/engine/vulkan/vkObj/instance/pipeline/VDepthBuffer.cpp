@@ -16,10 +16,10 @@ static auto findSupportedFormat(
         vkGetPhysicalDeviceFormatProperties( pPhysicalDevice->data(), format, & properties );
 
         if (
-                tiling == VulkanImageTiling::VK_IMAGE_TILING_LINEAR &&
+                tiling == VulkanImageTiling::VK_IMAGE_TILING_LINEAR         &&
                 (properties.linearTilingFeatures & features) == features
-                ||
-                tiling == VulkanImageTiling::VK_IMAGE_TILING_OPTIMAL &&
+                                                                            ||
+                tiling == VulkanImageTiling::VK_IMAGE_TILING_OPTIMAL        &&
                 (properties.optimalTilingFeatures & features) == features
         )
             return format;

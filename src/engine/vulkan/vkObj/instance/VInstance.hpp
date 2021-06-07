@@ -44,13 +44,19 @@ namespace engine {
         }
 
         [[nodiscard]] auto toString () const noexcept -> String override;
-        [[nodiscard]] auto operator == (Object const & o) const noexcept -> bool override {
+
+        [[nodiscard]] auto operator == (VInstance const & o) const noexcept -> bool {
+            if ( this == & o ) return true;
+
+            if ( o._instance == this->_instance ) return true;
+            return o._name == this->_name;
+        }
+
+        [[nodiscard]] auto equals (Object const & o) const noexcept -> bool override {
             if ( this == & o ) return true;
             auto p = dynamic_cast < decltype(this) > (& o);
             if ( p == nullptr ) return false;
-            if ( p->_instance == this->_instance ) return true;
-
-            return p->_name == this->_name;
+            return this->operator==(*p);
         }
 
         [[nodiscard]] auto copy () const noexcept -> VInstance * override {

@@ -82,11 +82,18 @@ namespace engine {
         auto compile () noexcept -> void;
 
         [[nodiscard]] auto toString() const noexcept -> String override;
-        [[nodiscard]] auto operator == (Object const & o) const noexcept -> bool override {
+
+        [[nodiscard]] auto operator == (VShaderCompilerTarget const & o) const noexcept -> bool {
+            if ( this == & o ) return true;
+
+            return this->_tag == o._tag && this->_shaderType == o._shaderType;
+        }
+
+        [[nodiscard]] auto equals (Object const & o) const noexcept -> bool override {
             if ( this == & o ) return true;
             auto p = dynamic_cast < decltype (this) > (& o);
             if ( p == nullptr ) return false;
-            return this->_tag == p->_tag && this->_shaderType == p->_shaderType;
+            return this->operator==(*p);
         }
 
         [[nodiscard]] auto hash () const noexcept -> Index override {
@@ -140,12 +147,18 @@ namespace engine {
 
         [[nodiscard]] auto toString () const noexcept -> String override;
 
-        [[nodiscard]] auto operator == (Object const & o) const noexcept -> bool override {
+        [[nodiscard]] auto operator == (VShaderCompiler const & o) const noexcept -> bool {
+            if ( this == & o ) return true;
+
+            return this->_inputDirectoryPath == o._inputDirectoryPath && this->_outputDirectoryPath == o._outputDirectoryPath && this->_targets == o._targets;
+        }
+
+        [[nodiscard]] auto equals (Object const & o) const noexcept -> bool override {
             if ( this == & o ) return true;
             auto p = dynamic_cast < decltype(this) > ( & o );
             if ( p == nullptr ) return false;
 
-            return this->_inputDirectoryPath == p->_inputDirectoryPath && this->_outputDirectoryPath == p->_outputDirectoryPath && this->_targets == p->_targets;
+            return this->operator==(*p);
         }
 
         [[nodiscard]] auto hash () const noexcept -> Index override {

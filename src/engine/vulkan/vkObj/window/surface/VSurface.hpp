@@ -40,12 +40,18 @@ namespace engine {
         auto clear () noexcept -> void override;
 
         [[nodiscard]] auto toString () const noexcept -> String override;
-        [[nodiscard]] auto operator == (Object const & o) const noexcept -> bool override {
+
+        [[nodiscard]] auto operator == (VSurface const & o) const noexcept -> bool {
+            if ( this == & o ) return true;
+            return this->_surface == o._surface && this->_instance == o._instance;
+        }
+
+        [[nodiscard]] auto equals (Object const & o) const noexcept -> bool override {
             if ( this == & o ) return true;
             auto p = dynamic_cast < decltype ( this ) > (& o);
             if ( p == nullptr ) return false;
 
-            return this->_surface == p->_surface && this->_instance == p->_instance;
+            return this->operator==(*p);
         }
 
         [[nodiscard]] auto copy () const noexcept -> VSurface * override {

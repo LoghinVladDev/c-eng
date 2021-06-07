@@ -48,12 +48,19 @@ namespace engine {
         auto clear () noexcept -> void override;
 
         [[nodiscard]] auto toString () const noexcept -> String override;
-        [[nodiscard]] auto operator == (Object const & o) const noexcept -> bool override {
+
+        [[nodiscard]] auto operator == (VImageView const & o) const noexcept -> bool {
+            if ( this == & o ) return true;
+
+            return this->_index == o._index && this->_handle == o._handle;
+        }
+
+        [[nodiscard]] auto equals (Object const & o) const noexcept -> bool override {
             if ( this == & o ) return true;
             auto p = dynamic_cast < decltype(this) > ( & o );
             if ( p == nullptr ) return false;
 
-            return this->_index == p->_index && this->_handle == p->_handle;
+            return this->operator==(*p);
         }
 
         [[nodiscard]] auto copy () const noexcept -> VImageView * override {
@@ -99,12 +106,19 @@ namespace engine {
         auto clear () noexcept -> void override;
 
         [[nodiscard]] auto toString () const noexcept -> String override;
-        [[nodiscard]] auto operator == (Object const & o) const noexcept -> bool override {
+
+        [[nodiscard]] auto operator == (VImageViewCollection const & o) const noexcept -> bool {
+            if ( this == & o ) return true;
+
+            return this->_imageViews == o._imageViews;
+        }
+
+        [[nodiscard]] auto equals (Object const & o) const noexcept -> bool override {
             if ( this == & o ) return true;
             auto p = dynamic_cast < decltype(this) > (& o);
             if ( p == nullptr ) return false;
 
-            return this->_imageViews == p->_imageViews;
+            return this->operator==(*p);
         }
 
         [[nodiscard]] auto copy () const noexcept -> VImageViewCollection * override {

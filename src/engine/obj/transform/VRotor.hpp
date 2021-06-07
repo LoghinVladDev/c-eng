@@ -226,15 +226,21 @@ namespace engine {
             return glm::vec3(m(this->_roll), m(this->_yaw), m(this->_pitch));
         }
 
-        [[nodiscard]] auto operator == (Object const & o) const noexcept -> bool override {
+        [[nodiscard]] inline auto operator == (VRotor const & o) const noexcept -> bool {
+            if (this == & o) return true;
+
+            return
+                this->_yaw == o._yaw &&
+                this->_pitch == o._pitch &&
+                this->_roll == o._roll ;
+        }
+
+        [[nodiscard]] auto equals (Object const & o) const noexcept -> bool override {
             if (this == & o) return true;
             auto p = dynamic_cast < decltype(this) > (& o);
             if (p == nullptr) return false;
 
-            return
-                this->_yaw == p->_yaw &&
-                this->_pitch == p->_pitch &&
-                this->_roll == p->_roll ;
+            return this->operator==(*p);
         }
     };
 

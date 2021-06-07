@@ -101,12 +101,17 @@ namespace engine {
             return new VValidationLayer(*this);
         }
 
-        [[nodiscard]] auto operator == (Object const & o) const noexcept -> bool override {
+        [[nodiscard]] auto operator == (VValidationLayer const & o) const noexcept -> bool {
+            if ( this == & o ) return true;
+            return std::strcmp ( this->_literal, o._literal ) == 0;
+        }
+
+        [[nodiscard]] auto equals (Object const & o) const noexcept -> bool override {
             if ( this == & o ) return true;
             auto p = dynamic_cast < decltype(this) > (& o);
             if ( p == nullptr ) return false;
 
-            return std::strcmp ( this->_literal, p->_literal ) == 0;
+            return this->operator==(*p);
         }
 
         [[nodiscard]] auto hash () const noexcept -> Index override {
@@ -144,12 +149,18 @@ namespace engine {
         }
 
         [[nodiscard]] auto toString () const noexcept -> String override;
-        [[nodiscard]] auto operator == (Object const & o) const noexcept -> bool override {
+
+        [[nodiscard]] auto operator == (VValidationLayerCollection const & o) const noexcept -> bool {
+            if ( this == & o ) return true;
+            return o._validationLayers == this->_validationLayers;
+        }
+
+        [[nodiscard]] auto equals (Object const & o) const noexcept -> bool override {
             if ( this == & o ) return true;
             auto p = dynamic_cast<decltype(this)>(&o);
             if ( p == nullptr ) return false;
 
-            return p->_validationLayers == this->_validationLayers;
+            return this->operator==(*p);
         }
 
         [[nodiscard]] auto copy () const noexcept -> VValidationLayerCollection * override {

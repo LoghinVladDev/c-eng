@@ -77,8 +77,8 @@ namespace engine {
         auto clear () noexcept -> void override;
 
         [[nodiscard]] auto toString () const noexcept -> String override;
-        [[nodiscard]] auto operator == (Object const & o) const noexcept -> bool override {
-            return VBuffer::operator==(o);
+        [[nodiscard]] auto equals (Object const & o) const noexcept -> bool override {
+            return VBuffer::equals(o);
         }
 
         [[nodiscard]] auto hash () const noexcept -> Index override {

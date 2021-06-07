@@ -362,7 +362,8 @@ namespace engine {
             ~Factory() noexcept override = default;
 
             [[nodiscard]] auto toString () const noexcept -> String override;
-            [[nodiscard]] auto operator == (Object const &) const noexcept -> bool override;
+            [[nodiscard]] auto operator == (Factory const &) const noexcept -> bool;
+            [[nodiscard]] auto equals (Object const &) const noexcept -> bool override;
             [[nodiscard]] auto hash () const noexcept -> Index override;
             [[nodiscard]] auto copy () const noexcept -> Factory * override;
         };
@@ -558,7 +559,8 @@ namespace engine {
         ~VLogicalDevice() noexcept override;
 
         [[nodiscard]] auto toString () const noexcept -> String override;
-        [[nodiscard]] auto operator == (Object const &) const noexcept -> bool override;
+        [[nodiscard]] auto operator == (VLogicalDevice const &) const noexcept -> bool;
+        [[nodiscard]] auto equals (Object const &) const noexcept -> bool override;
         [[nodiscard]] auto hash () const noexcept -> Index override;
         [[nodiscard]] auto copy () const noexcept -> VLogicalDevice * override;
     };

@@ -41,12 +41,17 @@ namespace engine {
 
         [[nodiscard]] auto toString () const noexcept -> String override;
 
-        [[nodiscard]] auto operator == (Object const & o) const noexcept -> bool override {
+        [[nodiscard]] auto operator == (VFence const & o) const noexcept -> bool {
+            if ( this == & o ) return true;
+            return this->_handle == o._handle;
+        }
+
+        [[nodiscard]] auto equals (Object const & o) const noexcept -> bool override {
             if ( this == & o ) return true;
             auto p = dynamic_cast < decltype(this) > (& o);
             if ( p == nullptr ) return false;
 
-            return this->_handle == p->_handle;
+            return this->operator==(*p);
         }
 
         [[nodiscard]] auto copy () const noexcept -> VFence * override {
@@ -100,12 +105,18 @@ namespace engine {
 
         [[nodiscard]] auto toString () const noexcept -> String override;
 
-        [[nodiscard]] auto operator == (Object const & o) const noexcept -> bool override {
+        [[nodiscard]] auto operator == (VFenceCollection const & o) const noexcept -> bool {
+            if ( this == & o ) return true;
+
+            return this->_fences == o._fences;
+        }
+
+        [[nodiscard]] auto equals (Object const & o) const noexcept -> bool override {
             if ( this == & o ) return true;
             auto p = dynamic_cast < decltype (this) > (& o);
             if ( p == nullptr ) return false;
 
-            return this->_fences == p->_fences;
+            return this->operator==(*p);
         }
 
         [[nodiscard]] auto copy () const noexcept -> VFenceCollection * override {

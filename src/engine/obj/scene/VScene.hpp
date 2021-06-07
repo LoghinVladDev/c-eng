@@ -84,12 +84,18 @@ namespace engine {
             return new VScene(* this);
         }
 
-        [[nodiscard]] auto operator == (Object const & o) const noexcept -> bool override {
+        [[nodiscard]] auto operator == (VScene const & o) const noexcept -> bool {
+            if ( this == & o ) return true;
+
+            return this->_activeCamera == o._activeCamera && this->_rootEntities == o._rootEntities;
+        }
+
+        [[nodiscard]] auto equals (Object const & o) const noexcept -> bool override {
             if ( this == & o ) return true;
             auto p = dynamic_cast < decltype (this) > (& o);
             if ( p == nullptr ) return false;
 
-            return this->_activeCamera == p->_activeCamera && this->_rootEntities == p->_rootEntities;
+            return this->operator==(* p);
         }
 
         [[nodiscard]] auto hash () const noexcept -> Index override {

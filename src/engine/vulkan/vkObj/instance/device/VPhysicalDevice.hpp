@@ -395,12 +395,19 @@ namespace engine {
         auto clear () noexcept -> void override { }
 
         [[nodiscard]] auto toString () const noexcept -> String override;
-        [[nodiscard]] auto operator == (Object const & o) const noexcept -> bool override {
+
+        [[nodiscard]] auto operator == (VPhysicalDevice const & o) const noexcept -> bool {
+            if (this == &o) return true;
+
+            return this->_physicalDeviceHandle == o._physicalDeviceHandle;
+        }
+
+        [[nodiscard]] auto equals (Object const & o) const noexcept -> bool override {
             if ( this == & o ) return true;
             auto p = dynamic_cast < decltype (this) > ( & o );
             if ( p == nullptr ) return false;
 
-            return this->_physicalDeviceHandle == p->_physicalDeviceHandle;
+            return this->operator==(*p);
         }
 
         [[nodiscard]] auto hash () const noexcept -> Index override {

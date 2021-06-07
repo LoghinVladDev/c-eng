@@ -232,12 +232,19 @@ namespace engine {
         }
 
         [[nodiscard]] auto toString () const noexcept -> String override;
-        [[nodiscard]] auto operator == (Object const & o) const noexcept -> bool override {
+
+        [[nodiscard]] auto operator == (VCommandBuffer const & o) const noexcept -> bool {
+            if ( this == & o ) return true;
+
+            return this->_handle == o._handle;
+        }
+
+        [[nodiscard]] auto equals (Object const & o) const noexcept -> bool override {
             if ( this == & o ) return true;
             auto p = dynamic_cast < decltype (this) > ( & o );
             if ( p == nullptr ) return false;
 
-            return this->_handle == p->_handle;
+            return this->operator==(*p);
         }
 
         [[nodiscard]] auto hash () const noexcept -> Index override {
@@ -400,12 +407,19 @@ namespace engine {
         auto clear () noexcept -> void override  { this->free(); }
 
         [[nodiscard]] auto toString () const noexcept -> String override;
-        [[nodiscard]] auto operator == (Object const & o) const noexcept -> bool override {
+
+        [[nodiscard]] auto operator == (VCommandBufferCollection const & o) const noexcept -> bool {
+            if ( this == & o ) return true;
+
+            return this->_commandBuffers == o._commandBuffers;
+        }
+
+        [[nodiscard]] auto equals (Object const & o) const noexcept -> bool override {
             if ( this == & o ) return true;
             auto p = dynamic_cast < decltype (this) > ( & o );
             if ( p == nullptr ) return false;
 
-            return this->_commandBuffers == p->_commandBuffers;
+            return this->operator==(*p);
         }
 
         [[nodiscard]] auto hash () const noexcept -> Index override {
