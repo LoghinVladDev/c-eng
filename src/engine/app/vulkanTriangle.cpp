@@ -239,8 +239,8 @@ int main() {
     addObjects(app);
 
     app.setMouseCursorEnabled(false);
-    app.scene().setImmediateCachingEnabled(true);
-    app.scene().setPeriodicCachingEnabled(true);
+//    app.scene().setImmediateCachingEnabled(true);
+//    app.scene().setPeriodicCachingEnabled(true);
     app.scene().setPeriodicCacheReconstructionInterval(2048);
 //    app.enableShowFPS();
 
