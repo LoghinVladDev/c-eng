@@ -6,26 +6,39 @@
 #include <vkDefs/VInstanceDefinitions.h>
 #include <vkUtils/VStdUtils.hpp>
 
-[[maybe_unused]] const char* engine::VInstance::DEFAULT_VULKAN_INSTANCE_TITLE = __VULKAN_INSTANCE_DEFAULT_TITLE;
+using namespace cds; // NOLINT(clion-misra-cpp2008-7-3-4)
+using namespace engine; // NOLINT(clion-misra-cpp2008-7-3-4)
 
-extern void populateDebugMessengerCreateInfo ( VulkanDebugMessengerCreateInfo * ) noexcept;
+__CDS_MaybeUnused StringLiteral VInstance :: defaultVulkanInstanceTitle = __VULKAN_INSTANCE_DEFAULT_TITLE; // NOLINT(clion-misra-cpp2008-8-0-1)
 
-inline static auto populateApplicationInfoStructure( VulkanApplicationInfo * applicationInfo ) noexcept -> void {
-    if(applicationInfo == nullptr)
+extern auto populateDebugMessengerCreateInfo (
+        VulkanDebugMessengerCreateInfo *
+) noexcept -> void;
+
+inline static auto populateApplicationInfoStructure(
+        VulkanApplicationInfo * applicationInfo,
+        cds :: StringLiteral    applicationName
+) noexcept -> void {
+
+    if(applicationInfo == nullptr) {
         return;
+    }
 
 #if !defined(_MSC_VER)
-    *applicationInfo = (VulkanApplicationInfo){
-        .sType              = VK_STRUCTURE_TYPE_APPLICATION_INFO,
-        .pApplicationName   = engine::VInstance::DEFAULT_VULKAN_INSTANCE_TITLE,
-        .applicationVersion = VK_MAKE_VERSION(1U, 2U, 0U),  // NOLINT(hicpp-signed-bitwise)
+
+    * applicationInfo = (VulkanApplicationInfo) {
+        .sType              = VulkanStructureType :: VK_STRUCTURE_TYPE_APPLICATION_INFO,
+        .pApplicationName   = applicationName,
+        .applicationVersion = VInstance :: defaultVulkanApplicationVersion,
         .pEngineName        = __VULKAN_INSTANCE_APP_INFO_ENGINE_NO_ENGINE,
-        .engineVersion      = VK_MAKE_VERSION(1U, 2U, 0U),  // NOLINT(hicpp-signed-bitwise)
-        .apiVersion         = VK_API_VERSION_1_2                               // NOLINT(hicpp-signed-bitwise)
+        .engineVersion      = VInstance :: defaultVulkanEngineVersion,
+        .apiVersion         = VInstance :: defaultVulkanAPIVersion,
     };
+
 #else
-    applicationInfo->sType              = VK_STRUCTURE_TYPE_APPLICATION_INFO;
-    applicationInfo->pApplicationName   = engine::VInstance::DEFAULT_VULKAN_INSTANCE_TITLE;
+
+    applicationInfo->sType              = VulkanStructureType :: VK_STRUCTURE_TYPE_APPLICATION_INFO;
+    applicationInfo->pApplicationName   = VInstance :: DEFAULT_VULKAN_INSTANCE_TITLE;
     applicationInfo->applicationVersion = VK_MAKE_VERSION(1U, 2U, 0U);  // NOLINT(hicpp-signed-bitwise)
     applicationInfo->pEngineName        = __VULKAN_INSTANCE_APP_INFO_ENGINE_NO_ENGINE;
     applicationInfo->engineVersion      = VK_MAKE_VERSION(1U, 2U, 0U);  // NOLINT(hicpp-signed-bitwise)
@@ -35,26 +48,55 @@ inline static auto populateApplicationInfoStructure( VulkanApplicationInfo * app
 
 }
 
-auto engine::VInstance::setup() noexcept -> VulkanResult {
+inline static auto populateInstanceCreateInfo (
+        VulkanInstanceCreateInfo                                  * pCreateInfo,
+        VulkanApplicationInfo                               const * pApplicationInfo,
+        uint32                                                      enabledExtensionCount,
+        GLFWExtensionLiteral                                const * pEnabledExtensions,
+        uint32                                                      enabledValidationLayerCount     = 0U,
+        VValidationLayer :: VulkanValidationLayerLiteral    const * pValidationLayers               = nullptr,
+        void                                                const * pNext                           = nullptr
+) noexcept -> void {
+    if ( pCreateInfo == nullptr ) {
+        return;
+    }
+
+    * pCreateInfo = ( VulkanInstanceCreateInfo ) {
+        .sType                      = VulkanStructureType  :: VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO,
+        .pNext                      = pNext,
+        .flags                      = VULKAN_NULL_FLAGS,
+        .pApplicationInfo           = pApplicationInfo,
+        .enabledLayerCount          = enabledValidationLayerCount,
+        .ppEnabledLayerNames        = pValidationLayers,
+        .enabledExtensionCount      = enabledExtensionCount,
+        .ppEnabledExtensionNames    = pEnabledExtensions
+    };
+}
+
+auto VInstance :: setup() noexcept -> VulkanResult {
     VulkanApplicationInfo       applicationInfo {};
     VulkanInstanceCreateInfo    createInfo      {};
     auto                        extensions      = VStandardUtils::getGLFWRequiredExtensions(false);
 
-    populateApplicationInfoStructure( & applicationInfo );
+    populateApplicationInfoStructure (
+            & applicationInfo,
+            this->_name.c_str()
+    );
 
-    applicationInfo.pApplicationName    = this->_name.c_str();
-
-    createInfo.sType                    = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
-    createInfo.pApplicationInfo         = ( & applicationInfo );
-    createInfo.enabledExtensionCount    = VULKAN_LAYERS_NONE;
-    createInfo.pNext                    = nullptr;
-    createInfo.enabledExtensionCount    = static_cast < uint32 > ( extensions.size() );
-    createInfo.ppEnabledExtensionNames  = extensions.data();
+    populateInstanceCreateInfo (
+            & createInfo,
+            & applicationInfo,
+            static_cast < uint32 > ( extensions.size() ),
+            extensions.data()
+    );
 
     return vkCreateInstance( & createInfo, nullptr, & this->_instance );
 }
 
-auto engine::VInstance::setup(const VValidationLayerCollection & layerCollection) noexcept -> VulkanResult {
+auto VInstance :: setup (
+        VValidationLayerCollection const & layerCollection
+) noexcept -> VulkanResult {
+
     VulkanApplicationInfo           applicationInfo {};
     VulkanInstanceCreateInfo        createInfo      {};
     VulkanDebugMessengerCreateInfo  debugCreateInfo {};
@@ -62,28 +104,30 @@ auto engine::VInstance::setup(const VValidationLayerCollection & layerCollection
     auto                        extensions                          = VStandardUtils::getGLFWRequiredExtensions(true);
     static auto                 _persistent_validationLayerLiterals = layerCollection.getValidationLayerLiterals();
 
-    populateApplicationInfoStructure( & applicationInfo );
+    populateApplicationInfoStructure( & applicationInfo, this->_name.c_str() );
     populateDebugMessengerCreateInfo( & debugCreateInfo );
 
-    applicationInfo.pApplicationName    = this->_name.c_str();
-
-    createInfo.sType                    = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
-    createInfo.pApplicationInfo         = ( & applicationInfo );
-    createInfo.enabledLayerCount        = static_cast < uint32 > ( _persistent_validationLayerLiterals.size() );
-    createInfo.ppEnabledLayerNames      = _persistent_validationLayerLiterals.data();
-    createInfo.pNext                    = ( VulkanDebugMessengerCreateInfo * ) & debugCreateInfo;
-    createInfo.enabledExtensionCount    = static_cast < uint32 > ( extensions.size() );
-    createInfo.ppEnabledExtensionNames  = extensions.data();
+    populateInstanceCreateInfo(
+            & createInfo,
+            & applicationInfo,
+            static_cast < uint32 > ( extensions.size() ),
+            extensions.data(),
+            static_cast < uint32 > ( _persistent_validationLayerLiterals.size() ),
+            _persistent_validationLayerLiterals.data(),
+            reinterpret_cast < void const * > ( & debugCreateInfo )
+    );
 
     return vkCreateInstance( & createInfo, nullptr, & this->_instance );
 }
 
-auto engine::VInstance::clear() noexcept -> void {
+auto VInstance :: clear() noexcept -> void {
+
     vkDestroyInstance( this->_instance, nullptr );
 }
 
 #include <sstream>
-auto engine::VInstance::toString() const noexcept -> String {
+auto VInstance :: toString() const noexcept -> String {
+
     std::stringstream oss;
 
     oss << "VInstance { " <<

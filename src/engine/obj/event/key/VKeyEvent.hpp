@@ -10,7 +10,7 @@
 
 namespace engine {
 
-    class VKeyEvent : public VEvent {
+    class __CDS_MaybeUnused VKeyEvent : public VEvent {
     private:
         //// private variables
 

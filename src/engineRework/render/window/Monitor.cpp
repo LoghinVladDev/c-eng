@@ -1,0 +1,392 @@
+//
+// Created by loghin on 21.12.2021.
+//
+
+#include "Monitor.hpp"
+
+using namespace cds; // NOLINT(clion-misra-cpp2008-7-3-4)
+using namespace engine; // NOLINT(clion-misra-cpp2008-7-3-4)
+
+extern bool __GLFWActive; // NOLINT(bugprone-reserved-identifier)
+extern auto __initializeGLFW () noexcept (false) -> void; // NOLINT(bugprone-reserved-identifier)
+
+#include <Logger.hpp>
+
+static auto monitorChangeDetectedCallback (
+        C_ENG_CLASS ( Monitor ) :: Handle,
+        sint32
+) noexcept -> void;
+
+namespace engine {
+
+    struct MonitorContainer {
+        bool                                        monitorsQueried {false}; // NOLINT(clion-misra-cpp2008-11-0-1)
+        Array < C_ENG_TYPE ( Monitor ) const * >    monitors; // NOLINT(clion-misra-cpp2008-11-0-1)
+        C_ENG_TYPE ( Monitor ) const *              primaryMonitor {nullptr}; // NOLINT(clion-misra-cpp2008-11-0-1)
+
+        MonitorContainer () noexcept = default;
+
+        static auto queryProperties ( C_ENG_TYPE ( Monitor ) * pMonitor ) noexcept -> void {
+            pMonitor->_availableVideoModes.clear();
+
+            sint32 count;
+            GLFWvidmode const * pModes = glfwGetVideoModes (
+                    pMonitor->handle(),
+                    & count
+            );
+
+            sint32 physicalWidthMM;
+            sint32 physicalHeightMM;
+            glfwGetMonitorPhysicalSize (
+                    pMonitor->handle(),
+                    & physicalWidthMM,
+                    & physicalHeightMM
+            );
+
+            float contentScaleX;
+            float contentScaleY;
+            glfwGetMonitorContentScale (
+                    pMonitor->handle(),
+                    & contentScaleX,
+                    & contentScaleY
+            );
+
+            sint32 workAreaXPos;
+            sint32 workAreaYPos;
+            sint32 workAreaWidth;
+            sint32 workAreaHeight;
+            glfwGetMonitorWorkarea (
+                    pMonitor->handle(),
+                    & workAreaXPos,
+                    & workAreaYPos,
+                    & workAreaWidth,
+                    & workAreaHeight
+            );
+
+            GLFWgammaramp const * pGammaRamp = glfwGetGammaRamp ( pMonitor->handle() );
+
+            for ( sint32 i = 0; i < count; ++ i ) {
+                (void) pMonitor->_availableVideoModes.pushBack ( (MonitorVideoModeProperties) {
+                    .size   = ( RectangleSize ) {
+                        .width  = static_cast < uint32 > ( pModes[i].width ),
+                        .height = static_cast < uint32 > ( pModes[i].height )
+                    },
+                    .colorChannelsDepth = ( ColorChannelsDepth ) {
+                        .red    = static_cast < uint32 > ( pModes[i].redBits ),
+                        .green  = static_cast < uint32 > ( pModes[i].greenBits ),
+                        .blue   = static_cast < uint32 > ( pModes[i].blueBits ),
+                    },
+                    .refreshRate    = static_cast < uint32 > ( pModes[i].refreshRate )
+                });
+            }
+
+            GLFWvidmode const * pActiveMode = glfwGetVideoMode ( pMonitor->handle() );
+            pMonitor->_properties = ( MonitorProperties ) {
+                .name               = glfwGetMonitorName ( pMonitor->handle() ),
+                .physicalSizeMM     = ( RectangleSize ) {
+                    .width              = static_cast < uint32 > ( physicalWidthMM ),
+                    .height             = static_cast < uint32 > ( physicalHeightMM )
+                },
+                .contentScale       = ( MonitorContentScale ) {
+                    .x                  = contentScaleX,
+                    .y                  = contentScaleY
+                },
+                .workArea           = ( MonitorWorkArea ) {
+                    .position           = ( Position ) {
+                        .x                  = static_cast < uint32 > ( workAreaXPos ),
+                        .y                  = static_cast < uint32 > ( workAreaYPos )
+                    },
+                    .size               = ( RectangleSize ) {
+                        .width              = static_cast < uint32 > ( workAreaWidth ),
+                        .height             = static_cast < uint32 > ( workAreaHeight )
+                    }
+                },
+                .gammaRamp          = ( MonitorGammaRamp ) {
+                    .size               = static_cast < uint32 > ( pGammaRamp->size ),
+                    .red                = pGammaRamp->red,
+                    .green              = pGammaRamp->green,
+                    .blue               = pGammaRamp->blue
+                },
+                .activeVideoMode    = ( MonitorVideoModeProperties ) {
+                    .size               = ( RectangleSize ) {
+                        .width              = static_cast < uint32 > ( pActiveMode->width ),
+                        .height             = static_cast < uint32 > ( pActiveMode->height )
+                    },
+                    .colorChannelsDepth = ( ColorChannelsDepth ) {
+                        .red                = static_cast < uint32 > ( pActiveMode->redBits ),
+                        .green              = static_cast < uint32 > ( pActiveMode->greenBits ),
+                        .blue               = static_cast < uint32 > ( pActiveMode->blueBits )
+                    },
+                    .refreshRate        = static_cast < uint32 > ( pActiveMode->refreshRate )
+                }
+            };
+        }
+
+        auto query () noexcept -> void {
+            if ( ! __GLFWActive ) {
+                try {
+                    __initializeGLFW();
+                } catch ( Exception const & e ) {
+                    (void) C_ENG_CLASS ( Logger ) :: instance().fatal ( "Could not acquire monitors, GLFW could not initialize" );
+                    return;
+                }
+            }
+
+            sint32 monitorCount;
+            GLFWmonitor ** _monitors = glfwGetMonitors ( & monitorCount );
+            GLFWmonitor * _primary = glfwGetPrimaryMonitor();
+
+            monitors.resize(static_cast < Size > ( monitorCount ));
+
+            for ( sint32 i = 0; i < monitorCount; ++ i ) {
+                auto pMonitor = new C_ENG_TYPE ( Monitor );
+                pMonitor->_handle = _monitors[i];
+                queryProperties ( pMonitor );
+
+                if ( pMonitor->_handle == _primary ) {
+                    primaryMonitor = pMonitor;
+                }
+
+                monitors[i] = pMonitor;
+            }
+
+            (void) glfwSetMonitorCallback ( & monitorChangeDetectedCallback );
+
+            logMonitorQueryResult ();
+            monitorsQueried = true;
+        }
+
+        auto logMonitorQueryResult () noexcept -> void;
+
+        auto addMonitor (
+                C_ENG_CLASS ( Monitor ) :: Handle handle
+        ) noexcept -> void {
+
+            auto pMonitor = new C_ENG_TYPE ( Monitor );
+            pMonitor->_handle = handle;
+            queryProperties( pMonitor );
+
+            (void) monitors.pushBack ( pMonitor );
+
+            if ( glfwGetPrimaryMonitor() == handle ) {
+                primaryMonitor = pMonitor;
+            }
+
+        }
+
+        ~MonitorContainer() noexcept {
+            for ( auto * e : monitors ) {
+                delete e;
+            }
+
+            primaryMonitor = nullptr;
+            monitors.clear();
+        }
+    };
+
+    static MonitorContainer monitorContainer;
+
+}
+
+auto C_ENG_CLASS ( Monitor ) :: monitors () noexcept -> Array < C_ENG_TYPE ( Monitor ) const * > const & {
+    if ( ! monitorContainer.monitorsQueried || ! __GLFWActive ) {
+        monitorContainer.query();
+    }
+
+    return monitorContainer.monitors;
+}
+
+auto C_ENG_CLASS ( Monitor ) :: primaryMonitor () noexcept -> C_ENG_TYPE ( Monitor ) const * {
+    if ( ! monitorContainer.monitorsQueried || ! __GLFWActive ) {
+        monitorContainer.query();
+    }
+
+    return monitorContainer.primaryMonitor;
+}
+
+#include <Window.hpp>
+
+static auto monitorChangeDetectedCallback (
+        C_ENG_CLASS ( Monitor ) :: Handle   handle,
+        sint32                              event
+) noexcept -> void {
+
+    if ( event == GLFW_CONNECTED ) {
+
+        monitorContainer.addMonitor( handle );
+
+    } else if ( event == GLFW_DISCONNECTED ) {
+
+        (void) C_ENG_CLASS ( Logger ) :: instance().info (
+                "Monitor with handle 0x" +
+                Long ( reinterpret_cast < AddressValueType const > ( handle ) ).toString(16) +
+                " disconnected"
+        );
+
+        C_ENG_TYPE ( Monitor ) const * pMonitor = nullptr;
+        for ( auto * pActiveMonitor : monitorContainer.monitors ) {
+            if ( pActiveMonitor->handle() == handle ) {
+                pMonitor = pActiveMonitor;
+            }
+        }
+
+        if ( pMonitor == nullptr ) {
+            (void) C_ENG_CLASS ( Logger ) :: instance().warning (
+                    "Monitor change detected, handle 0x" +
+                    Long ( reinterpret_cast < AddressValueType const > ( handle ) ).toString(16) +
+                    " disconnected, but did not previously exist"
+            );
+        } else {
+            (void) monitorContainer.monitors.removeAll ( pMonitor );
+            if ( monitorContainer.primaryMonitor == pMonitor ) {
+
+                C_ENG_TYPE ( Monitor ) :: Handle newPrimaryMonitorHandle = glfwGetPrimaryMonitor();
+                C_ENG_TYPE ( Monitor ) const * newPrimaryMonitor = nullptr;
+
+                for ( auto const * pActiveMonitor : monitorContainer.monitors ) {
+                    if ( pActiveMonitor->handle() == newPrimaryMonitorHandle ) {
+                        newPrimaryMonitor = pActiveMonitor;
+                    }
+                }
+
+                if ( newPrimaryMonitor == nullptr ) {
+
+                    (void) C_ENG_CLASS ( Logger ) :: instance().warning (
+                            "Monitor change successful, could not acquire new primary monitor"
+                    );
+
+                } else {
+                    monitorContainer.primaryMonitor = newPrimaryMonitor;
+                }
+
+            }
+
+            if ( pMonitor->windowOnMonitor() != nullptr ) {
+                (void) pMonitor->windowOnMonitor()->monitorDisconnectedEvent();
+            }
+
+            delete pMonitor;
+        }
+
+    } else {
+        // do nothing
+    }
+
+}
+
+C_ENG_MAYBE_UNUSED auto C_ENG_CLASS ( Monitor ) :: setGamma ( float gammaValue ) noexcept -> C_ENG_TYPE ( Monitor ) & {
+    glfwSetGamma ( this->handle(), gammaValue );
+    return * this;
+}
+
+auto MonitorContainer :: logMonitorQueryResult () noexcept -> void {
+    (void) C_ENG_CLASS ( Logger ) :: instance().info (
+            "Found "_s + monitors.size() + " monitors"
+    );
+
+    Index i = 0;
+    for ( auto & monitor : monitors ) {
+        (void) C_ENG_CLASS ( Logger ) :: instance().info (
+                "\tMonitor "_s + i
+        );
+
+        (void) C_ENG_CLASS ( Logger ) :: instance().info (
+                "\t\thandle = "_s + Long ( reinterpret_cast < AddressValueType const > ( monitor->_handle ) ).toString(16)
+        );
+
+        (void) C_ENG_CLASS ( Logger ) :: instance().info (
+                "\t\tname = "_s + monitor->properties().name
+        );
+
+        (void) C_ENG_CLASS ( Logger ) :: instance().info (
+                "\t\tphysicalSize = "_s + monitor->properties().physicalSizeMM.width + "x" +
+                monitor->properties().physicalSizeMM.height + " mm (millimeters)"
+        );
+
+        (void) C_ENG_CLASS ( Logger ) :: instance().info (
+                "\t\tcontentScale = x: "_s + monitor->properties().contentScale.x +
+                ", y: " + monitor->properties().contentScale.y
+        );
+
+        (void) C_ENG_CLASS ( Logger ) :: instance().info (
+                "\t\tworkArea = x: "_s + monitor->properties().workArea.position.x +
+                ", y: " + monitor->properties().workArea.position.y +
+                ", width: " + monitor->properties().workArea.size.width +
+                ", height: " + monitor->properties().workArea.size.height
+        );
+
+        (void) C_ENG_CLASS ( Logger ) :: instance().info (
+                "\t\tgammaRamp:"
+        );
+
+        (void) C_ENG_CLASS ( Logger ) :: instance().info (
+                "\t\t\tsize = "_s + monitor->properties().gammaRamp.size
+        );
+
+        static auto gammaRampAsString = [](uint16 const * pRamp, uint32 size) noexcept -> String {
+            String rampAsStr = "";
+
+            for ( uint32 i = 0U; i < size; ++ i ) {
+                rampAsStr += String ( pRamp[i] ) + ", ";
+            }
+
+            return rampAsStr.removeSuffix(", ");
+        };
+
+        (void) C_ENG_CLASS ( Logger ) :: instance().info (
+                "\t\t\tredGammaRamp = "_s + gammaRampAsString ( monitor->properties().gammaRamp.red, monitor->properties().gammaRamp.size )
+        );
+
+        (void) C_ENG_CLASS ( Logger ) :: instance().info (
+                "\t\t\tgreenGammaRamp = "_s + gammaRampAsString ( monitor->properties().gammaRamp.green, monitor->properties().gammaRamp.size )
+        );
+
+        (void) C_ENG_CLASS ( Logger ) :: instance().info (
+                "\t\t\tblueGammaRamp = "_s + gammaRampAsString ( monitor->properties().gammaRamp.blue, monitor->properties().gammaRamp.size )
+        );
+
+        (void) C_ENG_CLASS ( Logger ) :: instance().info (
+                "\t\tactiveVideoMode:"
+        );
+
+        (void) C_ENG_CLASS ( Logger ) :: instance().info (
+                "\t\t\twidth = "_s + monitor->properties().activeVideoMode.size.width
+        );
+
+        (void) C_ENG_CLASS ( Logger ) :: instance().info (
+                "\t\t\theight = "_s + monitor->properties().activeVideoMode.size.height
+        );
+
+        (void) C_ENG_CLASS ( Logger ) :: instance().info (
+                "\t\t\tredChannelBitDepth = "_s + monitor->properties().activeVideoMode.colorChannelsDepth.red
+        );
+
+        (void) C_ENG_CLASS ( Logger ) :: instance().info (
+                "\t\t\tgreenChannelBitDepth = "_s + monitor->properties().activeVideoMode.colorChannelsDepth.green
+        );
+
+        (void) C_ENG_CLASS ( Logger ) :: instance().info (
+                "\t\t\tblueChannelBitDepth = "_s + monitor->properties().activeVideoMode.colorChannelsDepth.blue
+        );
+
+        (void) C_ENG_CLASS ( Logger ) :: instance().info (
+                "\t\t\trefreshRate = "_s + monitor->properties().activeVideoMode.refreshRate
+        );
+
+        (void) C_ENG_CLASS ( Logger ) :: instance().info (
+                "\t\tavailableVideoModes: "
+        );
+
+        for ( auto & vm : monitor->availableVideoModes() ) {
+            (void) C_ENG_CLASS ( Logger ) :: instance().info (
+                    "\t\t\t"_s +
+                    "width: " + vm.size.width +
+                    ", height: " + vm.size.height +
+                    ", red: " + vm.colorChannelsDepth.red +
+                    ", green: " + vm.colorChannelsDepth.green +
+                    ", blue: " + vm.colorChannelsDepth.blue +
+                    ", refreshRate: " + vm.refreshRate
+            );
+        }
+    }
+}

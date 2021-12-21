@@ -4,9 +4,17 @@
 
 #include "VSurface.hpp"
 
-static inline auto populateSurfaceCreateInfo ( VulkanSurfaceCreateInfoKhronos * createInfo, GLFWwindow* window ) noexcept -> void {
-    if( createInfo == nullptr )
+using namespace cds; // NOLINT(clion-misra-cpp2008-7-3-4)
+using namespace engine; // NOLINT(clion-misra-cpp2008-7-3-4)
+
+static inline auto populateSurfaceCreateInfo (
+        VulkanSurfaceCreateInfoKhronos  * createInfo,
+        GLFWwindow                      * window
+) noexcept -> void {
+
+    if( createInfo == nullptr ) {
         return;
+    }
 
     * createInfo = {};
 
@@ -28,7 +36,11 @@ static inline auto populateSurfaceCreateInfo ( VulkanSurfaceCreateInfoKhronos * 
 
 }
 
-auto engine::VSurface::setup(GLFWwindow * window, VInstance const & instance) noexcept -> VulkanResult {
+auto VSurface :: setup (
+        GLFWwindow        * window,
+        VInstance   const & instance
+) noexcept -> VulkanResult {
+
     this->_instance = & instance;
 
 #if defined(ENGINE_OS_WINDOWS_32_64)
@@ -41,17 +53,19 @@ auto engine::VSurface::setup(GLFWwindow * window, VInstance const & instance) no
 #endif
 }
 
-auto engine::VSurface::clear() noexcept -> void {
+auto VSurface::clear() noexcept -> void {
+
     vkDestroySurfaceKHR( this->_instance->data(), this->_surface, nullptr );
 }
 
 #include <sstream>
-[[nodiscard]] auto engine::VSurface::toString() const noexcept -> String {
+auto VSurface::toString() const noexcept -> String {
+
     std::stringstream oss;
 
     oss <<"VSurface { " <<
            "pSurface = 0x" << std::hex << reinterpret_cast < AddressValueType > ( this->_surface ) <<
-           ", pInstance = 0x" << reinterpret_cast < AddressValueType > ( this->_instance ) << " }";
+           ", pInstance = 0x" << reinterpret_cast < AddressValueType const > ( this->_instance ) << " }";
 
     return oss.str();
 }

@@ -59,30 +59,30 @@
 #define __VK_PHYSICAL_DEVICE_TYPE_RANGE_SIZE                    "Vulkan Physical Device Range Size"
 #define __VK_PHYSICAL_DEVICE_TYPE_MAX_ENUM                      "Vulkan Physical Device Max Enum Value"
 #define __VK_PHYSICAL_DEVICE_UNKNOWN                            "Vulkan Physical Device Unknown"
-
-#define ENG_RETURN_IF_NOT_SUCCESS(_fCall) \
-{ \
-    VulkanResult result = _fCall; \
-    if ( result != VulkanResult::VK_SUCCESS ) \
-        return result;                  \
-}
-
-#define ENG_RETURN_IF_NOT_SUCCESS_2(_fCall, _beforeReturn) \
-{ \
-    VulkanResult result = _fCall; \
-    if ( result != VulkanResult::VK_SUCCESS ) { \
-        _beforeReturn;                                   \
-        return result;                                   \
-    }\
-}
-
-#define ENG_THROW_IF_NOT_SUCCESS(_fCall, _throw) \
-{                                                   \
-    if ( _fCall != VulkanResult::VK_SUCCESS )      \
-        throw _throw;                              \
-}
-
-#define ENG_STD_THROW(_str) std::runtime_error ( std::string().append("File : ").append(__FILE__).append("\n\tAt line ").append(std::to_string(__LINE__)).append(" : ").append(_str) )
+//
+//#define ENG_RETURN_IF_NOT_SUCCESS(_fCall) \
+//{ \
+//    VulkanResult result = _fCall; \
+//    if ( result != VulkanResult::VK_SUCCESS ) \
+//        return result;                  \
+//}
+//
+//#define ENG_RETURN_IF_NOT_SUCCESS_2(_fCall, _beforeReturn) \
+//{ \
+//    VulkanResult result = _fCall; \
+//    if ( result != VulkanResult::VK_SUCCESS ) { \
+//        _beforeReturn;                                   \
+//        return result;                                   \
+//    }\
+//}
+//
+//#define ENG_THROW_IF_NOT_SUCCESS(_fCall, _throw) \
+//{                                                   \
+//    if ( _fCall != VulkanResult::VK_SUCCESS )      \
+//        throw _throw;                              \
+//}
+//
+//#define ENG_STD_THROW(_str) std::runtime_error ( std::string().append("File : ").append(__FILE__).append("\n\tAt line ").append(std::to_string(__LINE__)).append(" : ").append(_str) )
 
 #endif //ENG1_VSTDUTILSDEFS_H
 #if !defined(_MSC_VER)

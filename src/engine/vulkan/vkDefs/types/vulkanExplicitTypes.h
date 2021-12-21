@@ -6,230 +6,263 @@
 #define ENG1_VULKANEXPLICITTYPES_H
 
 #include <engineVulkanPreproc.hpp>
+#include <CDS/Types>
 
 /**
  * Header used to Label Vulkan Data Types Explicitly to avoid confusion with internal naming of objects
  */
 
-typedef VkStructureType                             VulkanStructureType;
+namespace engine {
 
-typedef VkSurfaceKHR                                VulkanSurfaceKhronos;
+    using VulkanStructureType                                       = VkStructureType;
 
-typedef VkFlags                                     VulkanFlags;
-typedef VkQueueFlags                                VulkanQueueFlags;
+    using VulkanSurfaceKhronos                                      = VkSurfaceKHR;
 
-typedef VkPhysicalDevice                            VulkanPhysicalDevice;
-typedef VkPhysicalDeviceType                        VulkanPhysicalDeviceType;
-typedef VkPhysicalDeviceProperties                  VulkanPhysicalDeviceProperties;
-typedef VkPhysicalDeviceFeatures                    VulkanPhysicalDeviceFeatures;
-typedef VkPhysicalDeviceSparseProperties            VulkanPhysicalDeviceSparseProperties;
-typedef VkPhysicalDeviceLimits                      VulkanPhysicalDeviceLimits;
-typedef VkPhysicalDeviceFeatures                    VulkanPhysicalDeviceFeatures;
-typedef VkQueueFamilyProperties                     VulkanQueueFamilyProperties;
-typedef VkDevice                                    VulkanDevice;
-typedef VkQueue                                     VulkanQueue;
+    using VulkanFlags                                               = VkFlags;
+    using VulkanQueueFlags                                          = VkQueueFlags;
 
-typedef VkDeviceQueueCreateInfo                     VulkanDeviceQueueCreateInfo;
-typedef VkDeviceCreateInfo                          VulkanDeviceCreateInfo;
+    using VulkanPhysicalDevice                                      = VkPhysicalDevice;
+    using VulkanPhysicalDeviceType                                  = VkPhysicalDeviceType;
+    using VulkanPhysicalDeviceProperties                            = VkPhysicalDeviceProperties;
+    using VulkanPhysicalDeviceFeatures                              = VkPhysicalDeviceFeatures;
+    using VulkanPhysicalDeviceSparseProperties                      = VkPhysicalDeviceSparseProperties;
+    using VulkanPhysicalDeviceLimits                                = VkPhysicalDeviceLimits;
+    using VulkanPhysicalDeviceFeatures                              = VkPhysicalDeviceFeatures;
+    using VulkanQueueFamilyProperties                               = VkQueueFamilyProperties;
+    using VulkanDevice                                              = VkDevice;
+    using VulkanQueue                                               = VkQueue;
 
-typedef VkBool32                                    VulkanBool32;
+    using VulkanDeviceQueueCreateInfo                               = VkDeviceQueueCreateInfo;
+    using VulkanDeviceCreateInfo                                    = VkDeviceCreateInfo;
 
-typedef VkInstance                                  VulkanInstance;
-typedef VkApplicationInfo                           VulkanApplicationInfo;
-typedef VkInstanceCreateInfo                        VulkanInstanceCreateInfo;
+    using VulkanBool32                                              = VkBool32;
 
-typedef VkResult                                    VulkanResult;
+    using VulkanInstance                                            = VkInstance;
+    using VulkanApplicationInfo                                     = VkApplicationInfo;
+    using VulkanInstanceCreateInfo                                  = VkInstanceCreateInfo;
 
-typedef VkExtensionProperties                       VulkanExtensionProperties;
+    using VulkanResult                                              = VkResult;
 
-typedef VkLayerProperties                           VulkanLayerProperties;
+    using VulkanExtensionProperties                                 = VkExtensionProperties;
 
-
-typedef char const *                                GLFWExtensionLiteral;
-typedef GLFWExtensionLiteral const *                GLFWExtensionLiteralArray;
+    using VulkanLayerProperties                                     = VkLayerProperties;
 
 
-typedef VkDebugUtilsMessengerCreateInfoEXT          VulkanDebugMessengerCreateInfo;
-typedef VkAllocationCallbacks                       VulkanAllocationCallbacks;
-typedef VkDebugUtilsMessengerEXT                    VulkanDebugMessenger;
+    using GLFWExtensionLiteral                                      = cds :: StringLiteral;
+    using GLFWExtensionLiteralArray                                 = GLFWExtensionLiteral const *;
 
-typedef VkDebugUtilsMessageSeverityFlagBitsEXT      VulkanDebugMessageSeverityFlagBits;
-typedef VkDebugUtilsMessageSeverityFlagsEXT         VulkanDebugMessageSeverityFlags;
 
-typedef VkDebugUtilsMessageTypeFlagBitsEXT          VulkanDebugMessageTypeFlagBits;
-typedef VkDebugUtilsMessageTypeFlagsEXT             VulkanDebugMessageTypeFlags;
+    using VulkanDebugMessengerCreateInfo                            = VkDebugUtilsMessengerCreateInfoEXT;
+    using VulkanAllocationCallbacks                                 = VkAllocationCallbacks;
+    using VulkanDebugMessenger                                      = VkDebugUtilsMessengerEXT;
 
-typedef VkDebugUtilsMessengerCallbackDataEXT        VulkanDebugMessengerCallbackData;
-typedef VkDebugUtilsMessengerCallbackDataFlagsEXT   VulkanDebugMessengerCallbackDataFlags;
+    using VulkanDebugMessageSeverityFlagBits                        = VkDebugUtilsMessageSeverityFlagBitsEXT;
+    using VulkanDebugMessageSeverityFlags         __CDS_MaybeUnused = VkDebugUtilsMessageSeverityFlagsEXT;
 
-typedef VkFlags                                     VulkanFlags;
+    using VulkanDebugMessageTypeFlagBits          __CDS_MaybeUnused = VkDebugUtilsMessageTypeFlagBitsEXT;
+    using VulkanDebugMessageTypeFlags                               = VkDebugUtilsMessageTypeFlagsEXT;
 
-typedef VkSurfaceCapabilitiesKHR                    VulkanSurfaceCapabilitiesKhronos;
-typedef VkSurfaceFormatKHR                          VulkanSurfaceFormatKhronos;
-typedef VkPresentModeKHR                            VulkanPresentModeKhronos;
-typedef VkExtent2D                                  VulkanExtent2D;
-typedef VkExtent3D                                  VulkanExtent3D;
-typedef VkOffset2D                                  VulkanOffset2D;
-typedef VkOffset3D                                  VulkanOffset3D;
-typedef VkSwapchainKHR                              VulkanSwapChainKhronos;
-typedef VkSwapchainCreateInfoKHR                    VulkanSwapChainCreateInfoKhronos;
-typedef VkImage                                     VulkanImage;
-typedef VkFormat                                    VulkanFormat;
+    using VulkanDebugMessengerCallbackData                          = VkDebugUtilsMessengerCallbackDataEXT;
+    using VulkanDebugMessengerCallbackDataFlags   __CDS_MaybeUnused = VkDebugUtilsMessengerCallbackDataFlagsEXT;
 
-typedef VkImageViewCreateInfo                       VulkanImageViewCreateInfo;
+    using VulkanFlags                                               = VkFlags;
 
-typedef VkImageView                                 VulkanImageView;
+    using VulkanSurfaceCapabilitiesKhronos                          = VkSurfaceCapabilitiesKHR;
+    using VulkanSurfaceFormatKhronos                                = VkSurfaceFormatKHR;
+    using VulkanPresentModeKhronos                                  = VkPresentModeKHR;
+    using VulkanExtent2D                                            = VkExtent2D;
+    using VulkanExtent3D                                            = VkExtent3D;
+    using VulkanOffset2D                          __CDS_MaybeUnused = VkOffset2D;
+    using VulkanOffset3D                                            = VkOffset3D;
+    using VulkanSwapChainKhronos                                    = VkSwapchainKHR;
+    using VulkanSwapChainCreateInfoKhronos                          = VkSwapchainCreateInfoKHR;
+    using VulkanImage                                               = VkImage;
+    using VulkanFormat                                              = VkFormat;
 
-typedef VkShaderModule                              VulkanShaderModule;
-typedef VkShaderModuleCreateInfo                    VulkanShaderModuleCreateInfo;
+    using VulkanPrimitiveTopology                                   = VkPrimitiveTopology;
+    using VulkanPolygonMode                                         = VkPolygonMode;
+    using VulkanCullModeFlagBits                                    = VkCullModeFlagBits;
+    using VulkanFrontFace                                           = VkFrontFace;
+    using VulkanLogicOperation                                      = VkLogicOp;
 
-typedef VkPipelineShaderStageCreateInfo             VulkanPipelineShaderStageCreateInfo;
-typedef VkShaderStageFlagBits                       VulkanShaderStageFlagBits;
+    using VulkanComponentMapping                                    = VkComponentMapping;
 
-typedef VkPipelineVertexInputStateCreateInfo        VulkanPipelineVertexInputStateCreateInfo;
-typedef VkPipelineInputAssemblyStateCreateInfo      VulkanPipelineInputAssemblyStateCreateInfo;
-typedef VkViewport                                  VulkanViewport;
-typedef VkRect2D                                    VulkanRectangle2D;
-typedef VkPipelineViewportStateCreateInfo           VulkanPipelineViewportStateCreateInfo;
-typedef VkPipelineRasterizationStateCreateInfo      VulkanPipelineRasterizationStateCreateInfo;
-typedef VkPipelineMultisampleStateCreateInfo        VulkanPipelineMultisampleStateCreateInfo;
-typedef VkPipelineColorBlendAttachmentState         VulkanPipelineColorBlendAttachmentState;
-typedef VkPipelineColorBlendStateCreateInfo         VulkanPipelineColorBlendStateCreateInfo;
-typedef VkDynamicState                              VulkanDynamicState;
-typedef VkPipelineDynamicStateCreateInfo            VulkanPipelineDynamicStateCreateInfo;
-typedef VkPipelineLayout                            VulkanPipelineLayout;
-typedef VkPipelineLayoutCreateInfo                  VulkanPipelineLayoutCreateInfo;
-typedef VkPipelineDepthStencilStateCreateInfo       VulkanPipelineDepthStencilStateCreateInfo;
-typedef VkPipelineDepthStencilStateCreateFlags      VulkanPipelineDepthStencilStateCreateFlags;
+    using VulkanImageViewCreateInfo                                 = VkImageViewCreateInfo;
 
-typedef VkAttachmentDescription                     VulkanAttachmentDescription;
-typedef VkAttachmentReference                       VulkanAttachmentReference;
-typedef VkSubpassDescription                        VulkanSubpassDescription;
-typedef VkRenderPass                                VulkanRenderPass;
-typedef VkRenderPassCreateInfo                      VulkanRenderPassCreateInfo;
+    using VulkanImageView                                           = VkImageView;
+    using VulkanImageViewType                                       = VkImageViewType;
+    using VulkanComponentSwizzle                                    = VkComponentSwizzle;
 
-typedef VkGraphicsPipelineCreateInfo                VulkanGraphicsPipelineCreateInfo;
-typedef VkPipeline                                  VulkanGraphicsPipeline;
+    using VulkanShaderModule                                        = VkShaderModule;
+    using VulkanShaderModuleCreateInfo                              = VkShaderModuleCreateInfo;
 
-typedef VkFramebufferCreateInfo                     VulkanFrameBufferCreateInfo;
-typedef VkFramebuffer                               VulkanFrameBuffer;
+    using VulkanPipelineShaderStageCreateInfo                       = VkPipelineShaderStageCreateInfo;
+    using VulkanShaderStageFlagBits                                 = VkShaderStageFlagBits;
 
-typedef VkCommandPool                               VulkanCommandPool;
-typedef VkCommandPoolCreateInfo                     VulkanCommandPoolCreateInfo;
-typedef VkCommandBuffer                             VulkanCommandBuffer;
-typedef VkCommandBufferAllocateInfo                 VulkanCommandBufferAllocateInfo;
-typedef VkCommandBufferBeginInfo                    VulkanCommandBufferBeginInfo;
-typedef VkRenderPassBeginInfo                       VulkanRenderPassBeginInfo;
-typedef VkClearValue                                VulkanClearValue;
-typedef VkCommandBufferLevel                        VulkanCommandBufferLevel;
+    using VulkanPipelineVertexInputStateCreateInfo                  = VkPipelineVertexInputStateCreateInfo;
+    using VulkanPipelineInputAssemblyStateCreateInfo                = VkPipelineInputAssemblyStateCreateInfo;
+    using VulkanViewport                                            = VkViewport;
+    using VulkanRectangle2D                                         = VkRect2D;
+    using VulkanPipelineViewportStateCreateInfo                     = VkPipelineViewportStateCreateInfo;
+    using VulkanPipelineRasterizationStateCreateInfo                = VkPipelineRasterizationStateCreateInfo;
+    using VulkanPipelineMultisampleStateCreateInfo                  = VkPipelineMultisampleStateCreateInfo;
+    using VulkanPipelineColorBlendAttachmentState                   = VkPipelineColorBlendAttachmentState;
+    using VulkanPipelineColorBlendStateCreateInfo                   = VkPipelineColorBlendStateCreateInfo;
+    using VulkanDynamicState                                        = VkDynamicState;
+    using VulkanPipelineDynamicStateCreateInfo                      = VkPipelineDynamicStateCreateInfo;
+    using VulkanPipelineLayout                                      = VkPipelineLayout;
+    using VulkanPipelineLayoutCreateInfo                            = VkPipelineLayoutCreateInfo;
+    using VulkanPipelineDepthStencilStateCreateInfo                 = VkPipelineDepthStencilStateCreateInfo;
+    using VulkanPipelineDepthStencilStateCreateFlags                = VkPipelineDepthStencilStateCreateFlags;
 
-typedef VkSemaphore                                 VulkanSemaphore;
-typedef VkSemaphoreCreateInfo                       VulkanSemaphoreCreateInfo;
-typedef VkFence                                     VulkanFence;
-typedef VkFenceCreateInfo                           VulkanFenceCreateInfo;
-typedef VkFenceCreateFlags                          VulkanFenceCreateFlags;
-typedef VkFenceCreateFlagBits                       VulkanFenceCreateFlagBits;
-typedef VkPipelineStageFlags                        VulkanPipelineStageFlags;
-typedef VkPipelineStageFlagBits                     VulkanPipelineStageFlagBits;
-typedef VkSubmitInfo                                VulkanSubmitInfo;
+    using VulkanAttachmentDescription                               = VkAttachmentDescription;
+    using VulkanAttachmentReference                                 = VkAttachmentReference;
+    using VulkanSubpassDescription                                  = VkSubpassDescription;
+    using VulkanRenderPass                                          = VkRenderPass;
+    using VulkanRenderPassCreateInfo                                = VkRenderPassCreateInfo;
 
-typedef VkSubpassDependency                         VulkanSubpassDependency;
-typedef VkPresentInfoKHR                            VulkanPresentInfoKhronos;
+    using VulkanGraphicsPipelineCreateInfo                          = VkGraphicsPipelineCreateInfo;
+    using VulkanGraphicsPipeline                                    = VkPipeline;
 
-typedef VkVertexInputBindingDescription             VulkanVertexInputBindingDescription;
-typedef VkVertexInputAttributeDescription           VulkanVertexInputAttributeDescription;
-typedef VkVertexInputRate                           VulkanVertexInputRate;
-typedef VkBufferCreateInfo                          VulkanBufferCreateInfo;
-typedef VkBuffer                                    VulkanBuffer;
-typedef VkSharingMode                               VulkanSharingMode;
-typedef VkBufferUsageFlags                          VulkanBufferUsageFlags;
-typedef VkBufferUsageFlagBits                       VulkanBufferUsageFlagBits;
+    using VulkanFrameBufferCreateInfo                               = VkFramebufferCreateInfo;
+    using VulkanFrameBuffer                                         = VkFramebuffer;
 
-typedef VkMemoryRequirements                        VulkanMemoryRequirements;
-typedef VkPhysicalDeviceMemoryProperties            VulkanPhysicalDeviceMemoryProperties;
-typedef VkMemoryAllocateInfo                        VulkanMemoryAllocateInfo;
-typedef VkDeviceMemory                              VulkanDeviceMemory;
-typedef VkMemoryPropertyFlags                       VulkanMemoryPropertyFlags;
-typedef VkMemoryPropertyFlagBits                    VulkanMemoryPropertyFlagBits;
-typedef VkDeviceSize                                VulkanDeviceSize;
+    using VulkanCommandPool                                         = VkCommandPool;
+    using VulkanCommandPoolCreateInfo                               = VkCommandPoolCreateInfo;
+    using VulkanCommandBuffer                                       = VkCommandBuffer;
+    using VulkanCommandBufferAllocateInfo                           = VkCommandBufferAllocateInfo;
+    using VulkanCommandBufferBeginInfo                              = VkCommandBufferBeginInfo;
+    using VulkanRenderPassBeginInfo                                 = VkRenderPassBeginInfo;
+    using VulkanClearValue                                          = VkClearValue;
+    using VulkanCommandBufferLevel                                  = VkCommandBufferLevel;
 
-typedef VkBlendOp                                   VulkanBlendOperation;
-typedef VkBlendFactor                               VulkanBlendFactor;
-typedef VkAccessFlagBits                            VulkanAccessFlagBits;
-typedef VkAccessFlags                               VulkanAccessFlags;
-typedef VkCommandBufferUsageFlagBits                VulkanCommandBufferUsageFlagBits;
-typedef VkBufferCopy                                VulkanBufferCopy;
-typedef VkIndexType                                 VulkanIndexType;
+    using VulkanSemaphore                                           = VkSemaphore;
+    using VulkanSemaphoreCreateInfo                                 = VkSemaphoreCreateInfo;
+    using VulkanFence                                               = VkFence;
+    using VulkanFenceCreateInfo                                     = VkFenceCreateInfo;
+    using VulkanFenceCreateFlags                                    = VkFenceCreateFlags;
+    using VulkanFenceCreateFlagBits                                 = VkFenceCreateFlagBits;
+    using VulkanPipelineStageFlags                                  = VkPipelineStageFlags;
+    using VulkanPipelineStageFlagBits                               = VkPipelineStageFlagBits;
+    using VulkanSubmitInfo                                          = VkSubmitInfo;
 
-typedef VkDescriptorSetLayoutBinding                VulkanDescriptorSetLayoutBinding;
-typedef VkDescriptorSetLayout                       VulkanDescriptorSetLayout;
-typedef VkDescriptorSetLayoutCreateInfo             VulkanDescriptorSetLayoutCreateInfo;
-typedef VkDescriptorType                            VulkanDescriptorType;
+    using VulkanSubpassDependency                                   = VkSubpassDependency;
+    using VulkanPresentInfoKhronos                                  = VkPresentInfoKHR;
 
-typedef VkDescriptorPool                            VulkanDescriptorPool;
-typedef VkDescriptorPoolCreateInfo                  VulkanDescriptorPoolCreateInfo;
-typedef VkDescriptorPoolCreateFlags                 VulkanDescriptorPoolCreateFlags;
-typedef VkDescriptorPoolCreateFlagBits              VulkanDescriptorPoolCreateFlagBits;
-typedef VkDescriptorPoolSize                        VulkanDescriptorPoolSize;
+    using VulkanVertexInputBindingDescription                       = VkVertexInputBindingDescription;
+    using VulkanVertexInputAttributeDescription                     = VkVertexInputAttributeDescription;
+    using VulkanVertexInputRate                                     = VkVertexInputRate;
+    using VulkanBufferCreateInfo                                    = VkBufferCreateInfo;
+    using VulkanBuffer                                              = VkBuffer;
+    using VulkanSharingMode                                         = VkSharingMode;
+    using VulkanBufferUsageFlags                                    = VkBufferUsageFlags;
+    using VulkanBufferUsageFlagBits                                 = VkBufferUsageFlagBits;
 
-typedef VkDescriptorSetAllocateInfo                 VulkanDescriptorSetAllocateInfo;
-typedef VkDescriptorSet                             VulkanDescriptorSet;
-typedef VkDescriptorBufferInfo                      VulkanDescriptorBufferInfo;
-typedef VkCopyDescriptorSet                         VulkanCopyDescriptorSet;
-typedef VkWriteDescriptorSet                        VulkanWriteDescriptorSet;
+    using VulkanMemoryRequirements                                  = VkMemoryRequirements;
+    using VulkanPhysicalDeviceMemoryProperties                      = VkPhysicalDeviceMemoryProperties;
+    using VulkanMemoryAllocateInfo                                  = VkMemoryAllocateInfo;
+    using VulkanDeviceMemory                                        = VkDeviceMemory;
+    using VulkanMemoryPropertyFlags                                 = VkMemoryPropertyFlags;
+    using VulkanMemoryPropertyFlagBits                              = VkMemoryPropertyFlagBits;
+    using VulkanDeviceSize                                          = VkDeviceSize;
 
-typedef VkImageCreateInfo                           VulkanImageCreateInfo;
-typedef VkImageType                                 VulkanImageType;
-typedef VkImageLayout                               VulkanImageLayout;
-typedef VkImageUsageFlagBits                        VulkanImageUsageFlagBits;
-typedef VkImageUsageFlags                           VulkanImageUsageFlags;
-typedef VkSampleCountFlagBits                       VulkanSampleCountFlagBits;
-typedef VkSampleCountFlags                          VulkanSampleCountFlags;
+    using VulkanBlendOperation                                      = VkBlendOp;
+    using VulkanBlendFactor                                         = VkBlendFactor;
+    using VulkanAccessFlagBits                                      = VkAccessFlagBits;
+    using VulkanAccessFlags                                         = VkAccessFlags;
+    using VulkanCommandBufferUsageFlagBits                          = VkCommandBufferUsageFlagBits;
+    using VulkanBufferCopy                                          = VkBufferCopy;
+    using VulkanIndexType                                           = VkIndexType;
 
-typedef VkImageMemoryBarrier                        VulkanImageMemoryBarrier;
-typedef VkImageSubresourceRange                     VulkanImageSubresourceRange;
-typedef VkImageAspectFlags                          VulkanImageAspectFlags;
-typedef VkImageAspectFlagBits                       VulkanImageAspectFlagBits;
-typedef VkBufferImageCopy                           VulkanBufferImageCopy;
-typedef VkImageSubresourceLayers                    VulkanImageSubresourceLayers;
+    using VulkanDescriptorSetLayoutBinding                          = VkDescriptorSetLayoutBinding;
+    using VulkanDescriptorSetLayout                                 = VkDescriptorSetLayout;
+    using VulkanDescriptorSetLayoutCreateInfo                       = VkDescriptorSetLayoutCreateInfo;
+    using VulkanDescriptorType                                      = VkDescriptorType;
 
-typedef VkImageTiling                               VulkanImageTiling;
+    using VulkanDescriptorPool                                      = VkDescriptorPool;
+    using VulkanDescriptorPoolCreateInfo                            = VkDescriptorPoolCreateInfo;
+    using VulkanDescriptorPoolCreateFlags         __CDS_MaybeUnused = VkDescriptorPoolCreateFlags;
+    using VulkanDescriptorPoolCreateFlagBits      __CDS_MaybeUnused = VkDescriptorPoolCreateFlagBits;
+    using VulkanDescriptorPoolSize                                  = VkDescriptorPoolSize;
 
-typedef VkSamplerCreateInfo                         VulkanSamplerCreateInfo;
-typedef VkSampler                                   VulkanSampler;
-typedef VkFilter                                    VulkanFilter;
-typedef VkSamplerMipmapMode                         VulkanSamplerMipmapMode;
-typedef VkSamplerAddressMode                        VulkanSamplerAddressMode;
-typedef VkCompareOp                                 VulkanCompareOp;
-typedef VkBorderColor                               VulkanBorderColor;
-typedef VkDescriptorImageInfo                       VulkanDescriptorImageInfo;
+    using VulkanDescriptorSetAllocateInfo                           = VkDescriptorSetAllocateInfo;
+    using VulkanDescriptorSet                                       = VkDescriptorSet;
+    using VulkanDescriptorBufferInfo                                = VkDescriptorBufferInfo;
+    using VulkanCopyDescriptorSet                 __CDS_MaybeUnused = VkCopyDescriptorSet;
+    using VulkanWriteDescriptorSet                                  = VkWriteDescriptorSet;
 
-typedef VkFormatFeatureFlags                        VulkanFormatFeatureFlags;
-typedef VkFormatFeatureFlagBits                     VulkanFormatFeatureFlagBits;
-typedef VkFormatProperties                          VulkanFormatProperties;
-typedef VkAttachmentDescriptionFlags                VulkanAttachmentDescriptionFlags;
-typedef VkAttachmentLoadOp                          VulkanAttachmentLoadOp;
-typedef VkAttachmentStoreOp                         VulkanAttachmentStoreOp;
+    using VulkanImageCreateInfo                                     = VkImageCreateInfo;
+    using VulkanImageType                                           = VkImageType;
+    using VulkanImageLayout                                         = VkImageLayout;
+    using VulkanImageUsageFlagBits                                  = VkImageUsageFlagBits;
+    using VulkanImageUsageFlags                                     = VkImageUsageFlags;
+    using VulkanSampleCountFlagBits                                 = VkSampleCountFlagBits;
+    using VulkanSampleCountFlags                  __CDS_MaybeUnused = VkSampleCountFlags;
 
-typedef VkSubpassDescriptionFlags                   VulkanSubpassDescriptionFlags;
-typedef VkSubpassDescriptionFlagBits                VulkanSubpassDescriptionFlagBits;
-typedef VkPipelineBindPoint                         VulkanPipelineBindPoint;
-typedef VkStencilOpState                            VulkanStencilOpState;
-typedef VkStencilOp                                 VulkanStencilOp;
+    using VulkanImageMemoryBarrier                                  = VkImageMemoryBarrier;
+    using VulkanImageSubresourceRange                               = VkImageSubresourceRange;
+    using VulkanImageAspectFlags                                    = VkImageAspectFlags;
+    using VulkanImageAspectFlagBits                                 = VkImageAspectFlagBits;
+    using VulkanBufferImageCopy                                     = VkBufferImageCopy;
+    using VulkanImageSubresourceLayers                              = VkImageSubresourceLayers;
 
-constexpr VulkanFlags VULKAN_NULL_FLAGS = 0;
+    using VulkanImageTiling                                         = VkImageTiling;
+
+    using VulkanSamplerCreateInfo                                   = VkSamplerCreateInfo;
+    using VulkanSampler                                             = VkSampler;
+    using VulkanFilter                                              = VkFilter;
+    using VulkanSamplerMipmapMode                                   = VkSamplerMipmapMode;
+    using VulkanSamplerAddressMode                                  = VkSamplerAddressMode;
+    using VulkanCompareOp                                           = VkCompareOp;
+    using VulkanBorderColor                                         = VkBorderColor;
+    using VulkanDescriptorImageInfo                                 = VkDescriptorImageInfo;
+
+    using VulkanFormatFeatureFlags                                  = VkFormatFeatureFlags;
+    using VulkanFormatFeatureFlagBits                               = VkFormatFeatureFlagBits;
+    using VulkanFormatProperties                                    = VkFormatProperties;
+    using VulkanAttachmentDescriptionFlags                          = VkAttachmentDescriptionFlags;
+    using VulkanAttachmentLoadOp                                    = VkAttachmentLoadOp;
+    using VulkanAttachmentStoreOp                                   = VkAttachmentStoreOp;
+
+    using VulkanSubpassDescriptionFlags                             = VkSubpassDescriptionFlags;
+    using VulkanSubpassDescriptionFlagBits        __CDS_MaybeUnused = VkSubpassDescriptionFlagBits;
+    using VulkanPipelineBindPoint                                   = VkPipelineBindPoint;
+    using VulkanStencilOpState                                      = VkStencilOpState;
+    using VulkanStencilOp                                           = VkStencilOp;
+
+    constexpr VulkanFlags VULKAN_NULL_FLAGS = 0U;
+
+}
 
 #if defined(ENGINE_OS_WINDOWS_32_64)
 
-typedef VkWin32SurfaceCreateInfoKHR                 VulkanSurfaceCreateInfoKhronos;
+namespace engine {
 
-extern VulkanResult (* vkCreateSurfaceKhronos) (VulkanInstance, const VulkanSurfaceCreateInfoKhronos *, const VkAllocationCallbacks *, VulkanSurfaceKhronos *);
+    using VulkanSurfaceCreateInfoKhronos                            = VkWin32SurfaceCreateInfoKHR;
+
+}
+
+extern engine :: VulkanResult ( * vkCreateSurfaceKhronos) (
+        engine :: VulkanInstance,
+        engine :: VulkanSurfaceCreateInfoKhronos const *,
+        engine :: VulkanAllocationCallbacks const *,
+        engine :: VulkanSurfaceKhronos *
+);
 
 #elif defined(ENGINE_OS_LINUX)
 
-typedef VkXcbSurfaceCreateInfoKHR                   VulkanSurfaceCreateInfoKhronos;
+namespace engine {
 
-extern VulkanResult (* vkCreateSurfaceKhronos ) (VulkanInstance, const VulkanSurfaceCreateInfoKhronos *, const VkAllocationCallbacks *, VulkanSurfaceKhronos *);
+    using VulkanSurfaceCreateInfoKhronos                            = VkXcbSurfaceCreateInfoKHR;
+
+}
+
+extern engine :: VulkanResult ( * vkCreateSurfaceKhronos ) (
+        engine :: VulkanInstance,
+        engine :: VulkanSurfaceCreateInfoKhronos const *,
+        engine :: VulkanAllocationCallbacks const *,
+        engine :: VulkanSurfaceKhronos *
+);
 
 #elif defined(ENGINE_OS_MAC_OS_X)
 

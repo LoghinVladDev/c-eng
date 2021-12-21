@@ -15,79 +15,81 @@
  * Base Prototype Application
  */
 
-using namespace engine;
+using namespace engine; // NOLINT(clion-misra-cpp2008-7-3-4)
+using namespace cds; // NOLINT(clion-misra-cpp2008-7-3-4)
+
 /**
  * Vertices of a star, with colors
  */
-const std::vector < engine::VVertex > starVertices = {
+const std::vector < engine::VVertex > starVertices = { // NOLINT(cert-err58-cpp)
 
-        { { -0.2f, -0.2f, 0.0f }, {0.0f, 0.0f, 0.0f} },
-        { {  0.2f, -0.2f, 0.0f }, {0.0f, 0.0f, 0.0f} },
-        { {  0.3f,  0.1f, 0.0f }, {0.0f, 0.0f, 0.0f} },
-        { {  0.0f,  0.3f, 0.0f }, {0.0f, 0.0f, 0.0f} },
-        { { -0.3f,  0.1f, 0.0f }, {0.0f, 0.0f, 0.0f} },
+        { { -0.2F, -0.2F, 0.0F }, {0.0F, 0.0F, 0.0F} },
+        { {  0.2F, -0.2F, 0.0F }, {0.0F, 0.0F, 0.0F} },
+        { {  0.3F,  0.1F, 0.0F }, {0.0F, 0.0F, 0.0F} },
+        { {  0.0F,  0.3F, 0.0F }, {0.0F, 0.0F, 0.0F} },
+        { { -0.3F,  0.1F, 0.0F }, {0.0F, 0.0F, 0.0F} },
 
-        { { 0.0f, -0.6f, 0.0f }, {1.0f, 0.0f, 0.0f} },
-        { { 0.6f, -0.2f, 0.0f }, {0.0f, 1.0f, 0.0f} },
-        { { 0.4f,  0.55f, 0.0f }, {0.0f, 0.0f, 1.0f} },
-        { {-0.4f,  0.55f, 0.0f }, {0.0f, 1.0f, 1.0f} },
-        { {-0.6f, -0.2f, 0.0f }, {1.0f, 1.0f, 0.3f} },
+        { { 0.0F, -0.6F, 0.0F }, {1.0F, 0.0F, 0.0F} },
+        { { 0.6F, -0.2F, 0.0F }, {0.0F, 1.0F, 0.0F} },
+        { { 0.4F,  0.55F, 0.0F }, {0.0F, 0.0F, 1.0F} },
+        { {-0.4F,  0.55F, 0.0F }, {0.0F, 1.0F, 1.0F} },
+        { {-0.6F, -0.2F, 0.0F }, {1.0F, 1.0F, 0.3F} },
 };
 
 /**
  * Indices of the star object, triangles, in draw order CCW
  */
-const std::vector < uint16 > starIndices = {
+const std::vector < uint16 > starIndices = { // NOLINT(cert-err58-cpp)
 
-        0, 1, 4,
-        1, 3, 4,
-        1, 2, 3,
+        0U, 1U, 4U,
+        1U, 3U, 4U,
+        1U, 2U, 3U,
 
-        0, 5, 1,
-        1, 6, 2,
-        2, 7, 3,
-        3, 8, 4,
-        4, 9, 0,
+        0U, 5U, 1U,
+        1U, 6U, 2U,
+        2U, 7U, 3U,
+        3U, 8U, 4U,
+        4U, 9U, 0U,
 };
 
 /**
  * Cube Vertices, with color ( 1.0, 1.0, 1.0 = no color modif. ), texture coords
  */
-const std::vector < engine::VVertex > cubeVertices = {
+const std::vector < engine::VVertex > cubeVertices = { // NOLINT(cert-err58-cpp)
 
 
-        {{-0.5f, -0.5f,  0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f}},
-        {{ 0.5f, -0.5f,  0.5f}, {1.0f, 1.0f, 1.0f}, {1.0f, 0.0f}},
-        {{ 0.5f,  0.5f,  0.5f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f}},
-        {{-0.5f,  0.5f,  0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f}},
+        {{-0.5F, -0.5F,  0.5F}, {1.0F, 1.0F, 1.0F}, {0.0F, 0.0F}},
+        {{ 0.5F, -0.5F,  0.5F}, {1.0F, 1.0F, 1.0F}, {1.0F, 0.0F}},
+        {{ 0.5F,  0.5F,  0.5F}, {1.0F, 1.0F, 1.0F}, {1.0F, 1.0F}},
+        {{-0.5F,  0.5F,  0.5F}, {1.0F, 1.0F, 1.0F}, {0.0F, 1.0F}},
 
-        {{-0.5f, -0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f}},
-        {{ 0.5f, -0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f}},
-        {{ 0.5f,  0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {1.0f, 0.0f}},
-        {{-0.5f,  0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f}},
+        {{-0.5F, -0.5F, -0.5F}, {1.0F, 1.0F, 1.0F}, {0.0F, 1.0F}},
+        {{ 0.5F, -0.5F, -0.5F}, {1.0F, 1.0F, 1.0F}, {1.0F, 1.0F}},
+        {{ 0.5F,  0.5F, -0.5F}, {1.0F, 1.0F, 1.0F}, {1.0F, 0.0F}},
+        {{-0.5F,  0.5F, -0.5F}, {1.0F, 1.0F, 1.0F}, {0.0F, 0.0F}},
 
-        {{ 0.5f, -0.5f,  0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f}},
-        {{ 0.5f,  0.5f,  0.5f}, {1.0f, 1.0f, 1.0f}, {1.0f, 0.0f}},
-        {{ 0.5f, -0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f}},
-        {{ 0.5f,  0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f}},
+        {{ 0.5F, -0.5F,  0.5F}, {1.0F, 1.0F, 1.0F}, {0.0F, 0.0F}},
+        {{ 0.5F,  0.5F,  0.5F}, {1.0F, 1.0F, 1.0F}, {1.0F, 0.0F}},
+        {{ 0.5F, -0.5F, -0.5F}, {1.0F, 1.0F, 1.0F}, {0.0F, 1.0F}},
+        {{ 0.5F,  0.5F, -0.5F}, {1.0F, 1.0F, 1.0F}, {1.0F, 1.0F}},
 
-        {{-0.5f, -0.5f,  0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f}},  // 2
-        {{-0.5f,  0.5f,  0.5f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f}}, // 3
-        {{-0.5f, -0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f}}, // 0
-        {{-0.5f,  0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {1.0f, 0.0f}}, // 1
+        {{-0.5F, -0.5F,  0.5F}, {1.0F, 1.0F, 1.0F}, {0.0F, 1.0F}},  // 2
+        {{-0.5F,  0.5F,  0.5F}, {1.0F, 1.0F, 1.0F}, {1.0F, 1.0F}}, // 3
+        {{-0.5F, -0.5F, -0.5F}, {1.0F, 1.0F, 1.0F}, {0.0F, 0.0F}}, // 0
+        {{-0.5F,  0.5F, -0.5F}, {1.0F, 1.0F, 1.0F}, {1.0F, 0.0F}}, // 1
 };
 
 /**
  * order of drawing, CCW, triangles
  */
-const std::vector < uint16 > cubeIndices = {
+const std::vector < uint16 > cubeIndices = { // NOLINT(cert-err58-cpp)
 
-        0,   1,  2,  2,  3,  0,
-        1,   0,  5,  4,  5,  0,
-        9,   8,  10, 10, 11, 9,
-        3,   2,  7,  6,  7,  2,
-        12,  13, 14, 15, 14, 13,
-        4,   6,  5,  7,  6,  4
+        0U,   1U,  2U,  2U,  3U,  0U,
+        1U,   0U,  5U,  4U,  5U,  0U,
+        9U,   8U,  10U, 10U, 11U, 9U,
+        3U,   2U,  7U,  6U,  7U,  2U,
+        12U,  13U, 14U, 15U, 14U, 13U,
+        4U,   6U,  5U,  7U,  6U,  4U
 };
 
 auto addObjects (VulkanTriangleApplication & a) {
@@ -230,7 +232,7 @@ auto addObjects (VulkanTriangleApplication & a) {
     a.scene().add(cube);
     a.scene().add(cube3);
     a.scene().add(plane);
-    a.scene().setActiveCamera(new VCamera({0.0f, 0.0f, 3.0f}));
+    (void) a.scene().setActiveCamera(new VCamera({0.0F, 0.0F, 3.0F}));
 }
 
 int main() {
@@ -244,15 +246,15 @@ int main() {
     app.scene().setPeriodicCacheReconstructionInterval(2048);
 //    app.enableShowFPS();
 
-    app.setFOV(80.0f);
-    app.setDrawDistance(200.0f);
+    app.setFOV(80.0F);
+    app.setDrawDistance(200.0F);
 
     try{
         /**
          * Enable validation layers if in debug
          */
 #ifndef NDEBUG
-        app.addValidationLayer( VValidationLayer::KHRONOS_VALIDATION );
+        (void) app.addValidationLayer( VValidationLayer::KHRONOS_VALIDATION );
 #endif
         app.run();
     } catch (std::exception const & e) {

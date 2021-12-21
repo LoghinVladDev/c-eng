@@ -10,26 +10,28 @@
 #include <VMessenger.hpp>
 
 namespace engine {
-    typedef VQueue                                  VQ;
-    typedef VQueueFamily                            VQF;
-    typedef VQueueFamilyCollection                  VQFC;
 
-    typedef VLogicalDevice                          VLD;
-    typedef VLogicalDevice::Factory   VLDF;
+    using VQ   __CDS_MaybeUnused = VQueue;
+    using VQF  __CDS_MaybeUnused = VQueueFamily;
+    using VQFC __CDS_MaybeUnused = VQueueFamilyCollection;
 
-    typedef VPhysicalDevice                         VPD;
+    using VLD  __CDS_MaybeUnused = VLogicalDevice;
+    using VLDF __CDS_MaybeUnused = VLogicalDevice::Factory;
 
-    typedef VExtension                              VE;
-    typedef VExtensionCollection                    VEC;
+    using VPD  __CDS_MaybeUnused = VPhysicalDevice;
 
-    typedef VMessenger                              VM;
+    using VE   __CDS_MaybeUnused = VExtension;
+    using VEC  __CDS_MaybeUnused = VExtensionCollection;
 
-    typedef VValidationLayer                        VVL;
-    typedef VValidationLayerCollection              VVLC;
+    using VM   __CDS_MaybeUnused = VMessenger;
 
-    typedef VInstance                               VI;
+    using VVL  __CDS_MaybeUnused = VValidationLayer;
+    using VVLC __CDS_MaybeUnused = VValidationLayerCollection;
 
-    typedef VSurface                                VS;
+    using VI   __CDS_MaybeUnused = VInstance;
+
+    using VS   __CDS_MaybeUnused = VSurface;
+
 }
 
 #endif //ENG1_VULKANSHORTHANDTYPES_HPP

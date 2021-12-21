@@ -75,9 +75,9 @@ namespace engine {
     public:
         using ClassName = String;
 
-        class RootEntityDeleteException : public std::exception {
+        class __CDS_MaybeUnused RootEntityDeleteException : public std::exception {
         public:
-            [[nodiscard]] auto what() const noexcept -> StringLiteral override {
+            __CDS_NoDiscard auto what() const noexcept -> StringLiteral override {
                 return "Invalid delete operation. Cannot delete Entity placed at top-most level in Scene";
             }
         };
@@ -87,7 +87,7 @@ namespace engine {
         //// public functions
         ~VEntity() noexcept override;
 
-        [[nodiscard]] virtual auto className () const noexcept -> ClassName = 0;
+        __CDS_NoDiscard virtual auto className () const noexcept -> ClassName = 0;
 
         static void * operator new(std::size_t) noexcept (false);
         static void operator delete(void *) noexcept (false);
@@ -101,26 +101,26 @@ namespace engine {
         virtual auto remove ( std::nullptr_t ) const noexcept -> bool { return false; } // NOLINT(readability-convert-member-functions-to-static)
 
         constexpr auto parentPtr() const noexcept -> VEntity const * { return this->_pParentEntity; }
-        constexpr auto scenePtr() const noexcept -> VScene const * { return this->_pScene; }
+        __CDS_MaybeUnused constexpr auto scenePtr() const noexcept -> VScene const * { return this->_pScene; }
 
         auto children () const noexcept -> Array < VEntity * > & { return this->_children; }
         auto siblings () const noexcept -> Array < VEntity * >;
         auto components () noexcept -> Array < VComponent * > & { return this->_components; }
         auto components () const noexcept -> Array < VComponent * > const & { return this->_components; }
 
-        auto getComponentByClassName (String const &) noexcept -> VComponent *;
-        auto getComponentByClassName (String const &) const noexcept -> VComponent const *;
+        __CDS_MaybeUnused auto getComponentByClassName (String const &) noexcept -> VComponent *;
+        __CDS_MaybeUnused auto getComponentByClassName (String const &) const noexcept -> VComponent const *;
 
-        auto getComponentsByClassName (String const &) noexcept -> Array < VComponent * >;
-        auto getComponentsByClassName (String const &) const noexcept -> Array < VComponent const * >;
+        __CDS_MaybeUnused auto getComponentsByClassName (String const &) noexcept -> Array < VComponent * >;
+        __CDS_MaybeUnused auto getComponentsByClassName (String const &) const noexcept -> Array < VComponent const * >;
 
-        [[nodiscard]] auto toString() const noexcept -> String override;
-        [[nodiscard]] constexpr auto hash () const noexcept -> Index override { return static_cast < Index > (this->_ID); }
-        [[nodiscard]] constexpr auto ID () const noexcept -> uint64 { return this->_ID; }
+        __CDS_NoDiscard auto toString() const noexcept -> String override;
+        __CDS_NoDiscard constexpr auto hash () const noexcept -> Index override { return static_cast < Index > (this->_ID); }
+        __CDS_NoDiscard constexpr auto ID () const noexcept -> uint64 { return this->_ID; }
 
-        [[nodiscard]] auto copy () const noexcept -> VEntity * override = 0;
-        [[nodiscard]] auto equals (Object const &) const noexcept -> bool override;
-        [[nodiscard]] auto operator == (VEntity const &) const noexcept -> bool;
+        __CDS_NoDiscard auto copy () const noexcept -> VEntity * override = 0;
+        __CDS_NoDiscard auto equals (Object const &) const noexcept -> bool override;
+        __CDS_NoDiscard auto operator == (VEntity const &) const noexcept -> bool;
 
         VEntity & operator = ( VEntity const & o ) noexcept { // NOLINT(bugprone-unhandled-self-assignment)
             return * this;

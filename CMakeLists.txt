@@ -13,24 +13,17 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 add_subdirectory(dependencies/glfw)
-#add_subdirectory(dependencies/glad)
 add_subdirectory(dependencies/glm)
-#add_subdirectory(dependencies/assimp-5.0.1)
 add_subdirectory(dependencies/cds)
 
-#include_directories(dependencies/sqlite-autoconf-3320300)
 include_directories(dependencies/glm)
 include_directories(dependencies/glfw/include)
-#include_directories(dependencies/glad1/include)
 include_directories(dependencies/stb)
-#include_directories(dependencies/JSONCpp/include)
-#include_directories(${PROJECT_BINARY_DIR}/dependencies/glad/include)
 include_directories(dependencies/cds/include)
 
 set ( CDS_LIB CDS )
 
 find_package(OpenGL REQUIRED)
-#find_package(ASSIMP)
 
 if(SQLite3_FOUND)
     include_directories(${SQLite3_INCLUDE_DIRS})
@@ -40,14 +33,6 @@ if(ASSIMP_FOUND)
     include_directories(${ASSIMP_INCLUDE_DIR})
 endif()
 
-
-#if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-#    add_compile_options(-fprofile-instr-generate -fcoverage-mapping)
-#    add_link_options(-fprofile-instr-generate)
-#elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-#    add_compile_options(--coverage)
-#    link_libraries(gcov)
-#endif()
 
 
 # VULKAN extension
@@ -558,4 +543,165 @@ if(Vulkan_FOUND)
     target_link_libraries( vk-eng-sandbox1 Vulkan::Vulkan )
 
     target_link_libraries( vk-eng-sandbox1 glfw ${GLFW_LIBRARIES} )
+
+
+    ### ENGINE REWORK
+
+    set (
+            ENGINE_REWORK_ENGINE_EVENT_KEY_SOURCES
+
+            src/engineRework/engine/event/key/KeyEvent.cpp
+            src/engineRework/engine/event/key/KeyEvent.hpp
+
+            src/engineRework/engine/event/key/KeyPressEvent.cpp
+            src/engineRework/engine/event/key/KeyPressEvent.hpp
+
+            src/engineRework/engine/event/key/KeyReleaseEvent.cpp
+            src/engineRework/engine/event/key/KeyReleaseEvent.hpp
+    )
+
+    set (
+            ENGINE_REWORK_ENGINE_EVENT_MOUSE_SOURCES
+
+            src/engineRework/engine/event/mouse/MouseEvent.cpp
+            src/engineRework/engine/event/mouse/MouseEvent.hpp
+
+            src/engineRework/engine/event/mouse/MouseMoveEvent.cpp
+            src/engineRework/engine/event/mouse/MouseMoveEvent.hpp
+
+            src/engineRework/engine/event/mouse/MouseEnterEvent.cpp
+            src/engineRework/engine/event/mouse/MouseEnterEvent.hpp
+
+            src/engineRework/engine/event/mouse/MouseLeaveEvent.cpp
+            src/engineRework/engine/event/mouse/MouseLeaveEvent.hpp
+
+            src/engineRework/engine/event/mouse/MouseScrollEvent.cpp
+            src/engineRework/engine/event/mouse/MouseScrollEvent.hpp
+
+            src/engineRework/engine/event/mouse/MousePressEvent.cpp
+            src/engineRework/engine/event/mouse/MousePressEvent.hpp
+
+            src/engineRework/engine/event/mouse/MouseReleaseEvent.cpp
+            src/engineRework/engine/event/mouse/MouseReleaseEvent.hpp
+    )
+
+    set (
+            ENGINE_REWORK_ENGINE_EVENT_WINDOW_SOURCES
+
+            src/engineRework/engine/event/window/ResizeEvent.cpp
+            src/engineRework/engine/event/window/ResizeEvent.hpp
+    )
+
+    set (
+            ENGINE_REWORK_ENGINE_EVENT_SOURCES
+
+            ${ENGINE_REWORK_ENGINE_EVENT_KEY_SOURCES}
+            ${ENGINE_REWORK_ENGINE_EVENT_MOUSE_SOURCES}
+            ${ENGINE_REWORK_ENGINE_EVENT_WINDOW_SOURCES}
+
+            src/engineRework/engine/event/Event.hpp
+            src/engineRework/engine/event/Event.cpp
+    )
+
+    set (
+            ENGINE_REWORK_ENGINE_SOURCES
+
+            ${ENGINE_REWORK_ENGINE_EVENT_SOURCES}
+
+            src/engineRework/engine/Engine.cpp
+            src/engineRework/engine/Engine.hpp
+    )
+
+    set (
+            ENGINE_REWORK_UTILITY_LOGGER_SOURCES
+
+            src/engineRework/utility/logger/Logger.cpp
+            src/engineRework/utility/logger/Logger.hpp
+    )
+
+    set (
+            ENGINE_REWORK_UTILITY_PREPROCESS_SOURCES
+
+            src/engineRework/utility/preprocess/Naming.hpp
+            src/engineRework/utility/preprocess/Preprocess.hpp
+            src/engineRework/utility/preprocess/Compiler.hpp
+    )
+
+    set (
+            ENGINE_REWORK_UTILITY_SETTINGS_SOURCES
+
+            src/engineRework/utility/settings/Settings.cpp
+            src/engineRework/utility/settings/Settings.hpp
+    )
+
+    set (
+            ENGINE_REWORK_UTILITY_SOURCES
+
+            ${ENGINE_REWORK_UTILITY_LOGGER_SOURCES}
+            ${ENGINE_REWORK_UTILITY_PREPROCESS_SOURCES}
+            ${ENGINE_REWORK_UTILITY_SETTINGS_SOURCES}
+    )
+
+    set (
+            ENGINE_REWORK_RENDER_WINDOW_SOURCES
+
+            src/engineRework/render/window/Window.cpp
+            src/engineRework/render/window/Window.hpp
+
+            src/engineRework/render/window/Monitor.cpp
+            src/engineRework/render/window/Monitor.hpp
+    )
+
+    set (
+            ENGINE_REWORK_RENDER_SOURCES
+
+            ${ENGINE_REWORK_RENDER_WINDOW_SOURCES}
+    )
+
+    set (
+            ENGINE_REWORK_SOURCES
+
+            ${ENGINE_REWORK_ENGINE_SOURCES}
+            ${ENGINE_REWORK_UTILITY_SOURCES}
+            ${ENGINE_REWORK_RENDER_SOURCES}
+
+            src/engineRework/runnables/engineMainTestApplication.cpp
+    )
+
+    add_executable (
+            engine_main_test_application
+
+            ${ENGINE_REWORK_SOURCES}
+    )
+
+    target_link_libraries(
+            engine_main_test_application
+
+            Vulkan::Vulkan
+            glfw
+            ${GLFW_LIBRARIES}
+    )
+
+    target_include_directories(
+            engine_main_test_application
+
+            PRIVATE
+
+            src/engineRework
+
+            src/engineRework/engine
+            src/engineRework/engine/event
+            src/engineRework/engine/event/key
+            src/engineRework/engine/event/mouse
+            src/engineRework/engine/event/window
+
+            src/engineRework/utility
+            src/engineRework/utility/logger
+            src/engineRework/utility/preprocess
+            src/engineRework/utility/settings
+
+            src/engineRework/render
+            src/engineRework/render/window
+    )
+
 endif()

@@ -34,43 +34,52 @@ namespace engine {
         VDepthBuffer () noexcept = default;
         ~VDepthBuffer() noexcept override = default;
 
-        [[nodiscard]] constexpr auto getImageView () const noexcept -> VImageView const & {
+        __CDS_NoDiscard constexpr auto getImageView () const noexcept -> VImageView const & {
             return this->_imageView;
         }
 
         auto setup (
                 VCommandPool    const &,
-                uint32          const * = nullptr,
-                uint32                  = 0U,
+                cds :: uint32   const * = nullptr,
+                cds :: uint32           = 0U,
                 bool                    = false
         ) noexcept -> VulkanResult;
 
         auto clear () noexcept -> void override;
 
-        [[nodiscard]] auto toString () const noexcept -> String override;
+        __CDS_NoDiscard auto toString () const noexcept -> cds :: String override;
 
-        [[nodiscard]] auto operator == (VDepthBuffer const & o) const noexcept -> bool {
-            if ( this == & o ) return true;
+        __CDS_NoDiscard auto operator == (VDepthBuffer const & o) const noexcept -> bool {
+            if ( this == & o ) {
+                return true;
+            }
+
             return this->_image == o._image;
         }
 
-        [[nodiscard]] auto equals (Object const & o) const noexcept -> bool override {
-            if ( this == & o ) return true;
+        __CDS_NoDiscard auto equals (Object const & o) const noexcept -> bool override {
+            if ( this == & o ) {
+                return true;
+            }
+
             auto p = dynamic_cast < decltype (this) > (& o);
-            if ( p == nullptr ) return false;
+            if ( p == nullptr ) {
+                return false;
+            }
+
             return this->operator==(*p);
         }
 
-        [[nodiscard]] auto copy () const noexcept -> VDepthBuffer * override {
+        __CDS_NoDiscard auto copy () const noexcept -> VDepthBuffer * override {
             return new VDepthBuffer(* this);
         }
 
-        [[nodiscard]] auto hash () const noexcept -> Index override {
-            return dataTypes::hash(
-                    reinterpret_cast < AddressValueType > (this->_image) / 100000 +
-                    reinterpret_cast < AddressValueType > (this->_imageMemory) / 1000
-            ) + dataTypes::hash (
-                    static_cast < Size > ( this->_currentLayout )
+        __CDS_NoDiscard auto hash () const noexcept -> cds :: Index override {
+            return cds :: hash(
+                    reinterpret_cast < cds :: AddressValueType const > (this->_image) / 100000U +
+                    reinterpret_cast < cds :: AddressValueType const > (this->_imageMemory) / 1000U
+            ) + cds :: hash (
+                    static_cast < cds :: Size > ( this->_currentLayout )
             ) + this->_imageView.hash();
         }
     };

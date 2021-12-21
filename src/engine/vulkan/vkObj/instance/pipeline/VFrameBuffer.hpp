@@ -15,10 +15,11 @@
 
 namespace engine {
 
-    class EngineVFrameBufferInvalidRenderPass : public std::exception {
+    class EngineVFrameBufferInvalidRenderPass : public cds :: Exception {
     public:
-        [[nodiscard]] auto what() const noexcept -> StringLiteral override {
-            return "Given pointer to Render Pass is either nullptr or points to invalid object";
+        inline EngineVFrameBufferInvalidRenderPass () :
+                cds :: Exception ( "Given pointer to Render Pass is either nullptr or points to invalid object" ) {
+
         }
     };
 
@@ -55,43 +56,50 @@ namespace engine {
         auto setup ( const VDepthBuffer * = nullptr ) noexcept -> VulkanResult;
         auto clear () noexcept -> void override;
 
-        [[nodiscard]] constexpr auto getImageViewPtr () const noexcept -> VImageView const * {
+        __CDS_NoDiscard __CDS_MaybeUnused constexpr auto getImageViewPtr () const noexcept -> VImageView const * {
             return this->_pImageView;
         }
 
-        [[nodiscard]] constexpr auto getRenderPassPtr () const noexcept -> VRenderPass const * {
+        __CDS_NoDiscard constexpr auto getRenderPassPtr () const noexcept -> VRenderPass const * {
             return this->_pRenderPass;
         }
 
-        [[nodiscard]] constexpr auto data () const noexcept -> VulkanFrameBuffer const & {
+        __CDS_NoDiscard constexpr auto data () const noexcept -> VulkanFrameBuffer const & {
             return this->_handle;
         }
 
-        [[nodiscard]] auto toString () const noexcept -> String override;
+        __CDS_NoDiscard auto toString () const noexcept -> cds :: String override;
 
-        [[nodiscard]] auto operator == (VFrameBuffer const & o) const noexcept -> bool {
-            if ( this == & o ) return true;
+        __CDS_NoDiscard auto operator == (VFrameBuffer const & o) const noexcept -> bool {
+            if ( this == & o ) {
+                return true;
+            }
 
             return this->_handle == o._handle;
         }
 
-        [[nodiscard]] auto equals (Object const & o) const noexcept -> bool override {
-            if ( this == & o ) return true;
+        __CDS_NoDiscard auto equals (Object const & o) const noexcept -> bool override {
+            if ( this == & o ) {
+                return true;
+            }
+
             auto p = dynamic_cast < decltype(this) > (& o);
-            if ( p == nullptr ) return false;
+            if ( p == nullptr ) {
+                return false;
+            }
 
             return this->operator==(*p);
         }
 
-        [[nodiscard]] auto copy () const noexcept -> VFrameBuffer * override {
+        __CDS_NoDiscard auto copy () const noexcept -> VFrameBuffer * override {
             return new VFrameBuffer(*this);
         }
 
-        [[nodiscard]] auto hash () const noexcept -> Index override {
-            return dataTypes::hash(
-                reinterpret_cast<AddressValueType> (this->_handle) +
-                reinterpret_cast<AddressValueType> (this->_pRenderPass) +
-                reinterpret_cast<AddressValueType> (this->_pImageView)
+        __CDS_NoDiscard auto hash () const noexcept -> cds :: Index override {
+            return cds :: hash(
+                reinterpret_cast < cds :: AddressValueType const > (this->_handle) +
+                reinterpret_cast < cds :: AddressValueType const > (this->_pRenderPass) +
+                reinterpret_cast < cds :: AddressValueType const > (this->_pImageView)
             );
         }
     };
@@ -113,38 +121,46 @@ namespace engine {
 
         auto setup ( VRenderPass const *, VDepthBuffer const * = nullptr ) noexcept (false) -> VulkanResult;
 
-        [[nodiscard]] constexpr auto getFrameBuffers () const noexcept -> std::vector < VFrameBuffer > const & {
+        __CDS_NoDiscard constexpr auto getFrameBuffers () const noexcept -> std::vector < VFrameBuffer > const & {
             return this->_frameBuffers;
         }
 
-        [[nodiscard]] inline auto size () const noexcept -> uint32 {
-            return static_cast<uint32>(this->_frameBuffers.size());
+        __CDS_NoDiscard inline auto size () const noexcept -> cds :: uint32 {
+            return static_cast < cds :: uint32 > (this->_frameBuffers.size());
         }
 
         auto clear () noexcept -> void override;
 
-        [[nodiscard]] auto toString () const noexcept -> String override;
+        __CDS_NoDiscard auto toString () const noexcept -> cds :: String override;
 
-        [[nodiscard]] auto operator == (VFrameBufferCollection const & o) const noexcept -> bool {
-            if ( this == & o ) return true;
+        __CDS_NoDiscard auto operator == (VFrameBufferCollection const & o) const noexcept -> bool {
+            if ( this == & o ) {
+                return true;
+            }
+
             return this->_frameBuffers == o._frameBuffers;
         }
 
-        [[nodiscard]] auto equals (Object const & o) const noexcept -> bool override {
-            if ( this == & o ) return true;
+        __CDS_NoDiscard auto equals (Object const & o) const noexcept -> bool override {
+            if ( this == & o ) {
+                return true;
+            }
+
             auto p = dynamic_cast < decltype(this) > (& o);
-            if ( p == nullptr ) return false;
+            if ( p == nullptr ) {
+                return false;
+            }
 
             return this->operator==(*p);
         }
 
-        [[nodiscard]] auto copy () const noexcept -> VFrameBufferCollection * override {
+        __CDS_NoDiscard auto copy () const noexcept -> VFrameBufferCollection * override {
             return new VFrameBufferCollection(* this);
         }
 
-        [[nodiscard]] auto hash () const noexcept -> Index override {
-            Index hashSum = 0;
-            std::for_each(this->_frameBuffers.begin(), this->_frameBuffers.end(), [& hashSum](auto const & o){hashSum += o.hash();});
+        __CDS_NoDiscard auto hash () const noexcept -> cds :: Index override {
+            cds :: Index hashSum = 0;
+            (void) std::for_each(this->_frameBuffers.begin(), this->_frameBuffers.end(), [& hashSum](auto const & o){hashSum += o.hash();});
             return hashSum;
         }
     };

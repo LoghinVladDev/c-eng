@@ -70,52 +70,64 @@ namespace engine {
         //// public vars
 
         //// public functions
-        VValidationLayer() noexcept : VRenderObject() {
-            VValidationLayer::queryAvailableValidationLayers();
+        VValidationLayer() noexcept :
+                VRenderObject() {
+
+            VValidationLayer :: queryAvailableValidationLayers();
         }
 
-        explicit VValidationLayer(VulkanValidationLayer layerType) noexcept : VRenderObject() {
+        explicit VValidationLayer(VulkanValidationLayer layerType) noexcept :
+                VRenderObject() {
+
             VValidationLayer::queryAvailableValidationLayers();
-            this->setLayerType(layerType);
+            (void) this->setLayerType(layerType);
         }
 
         ~VValidationLayer() noexcept override = default;
 
-        [[nodiscard]] constexpr auto getLiteral() const noexcept -> VulkanValidationLayerLiteral {
+        __CDS_NoDiscard constexpr auto getLiteral() const noexcept -> VulkanValidationLayerLiteral {
             return this->_literal;
         }
 
         auto setLayerType (VulkanValidationLayer layer ) noexcept -> VValidationLayer &;
 
-        [[nodiscard]] static auto checkValidationLayerSupport( VValidationLayerCollection const & ) noexcept -> bool;
+        __CDS_NoDiscard static auto checkValidationLayerSupport( VValidationLayerCollection const & ) noexcept -> bool;
         static auto debugPrintAvailableValidationLayers(std::ostream &) noexcept -> void;
 
         auto clear () noexcept -> void override {}
 
-        [[nodiscard]] auto toString () const noexcept -> String override {
-            return String("VValidationLayer { ") +
+        __CDS_NoDiscard auto toString () const noexcept -> cds :: String override {
+            return "VValidationLayer { "_s +
                 "literal = " + this->_literal + " }";
         }
 
-        [[nodiscard]] auto copy () const noexcept -> VValidationLayer * override {
+        __CDS_NoDiscard auto copy () const noexcept -> VValidationLayer * override {
             return new VValidationLayer(*this);
         }
 
-        [[nodiscard]] auto operator == (VValidationLayer const & o) const noexcept -> bool {
-            if ( this == & o ) return true;
+        __CDS_NoDiscard auto operator == (VValidationLayer const & o) const noexcept -> bool {
+            if ( this == & o ) {
+                return true;
+            }
+
             return std::strcmp ( this->_literal, o._literal ) == 0;
         }
 
-        [[nodiscard]] auto equals (Object const & o) const noexcept -> bool override {
-            if ( this == & o ) return true;
+        __CDS_NoDiscard auto equals (Object const & o) const noexcept -> bool override {
+            if ( this == & o ) {
+                return true;
+            }
+
             auto p = dynamic_cast < decltype(this) > (& o);
-            if ( p == nullptr ) return false;
+            if ( p == nullptr ) {
+                return false;
+            }
 
             return this->operator==(*p);
         }
 
-        [[nodiscard]] auto hash () const noexcept -> Index override {
-            return String(this->_literal).hash();
+        __CDS_NoDiscard auto hash () const noexcept -> cds :: Index override {
+            return cds :: String(this->_literal).hash();
         }
     };
 
@@ -131,45 +143,53 @@ namespace engine {
 
         //// public functions
         VValidationLayerCollection() noexcept = default;
-        VValidationLayerCollection( std::initializer_list < VValidationLayer > const & ) noexcept;
-        VValidationLayerCollection( std::initializer_list < VValidationLayer::VulkanValidationLayer > const & ) noexcept;
+        __CDS_MaybeUnused VValidationLayerCollection( std::initializer_list < VValidationLayer > const & ) noexcept;
+        __CDS_MaybeUnused VValidationLayerCollection( std::initializer_list < VValidationLayer::VulkanValidationLayer > const & ) noexcept;
 
         ~VValidationLayerCollection() noexcept override = default;
 
         auto addValidationLayer( VValidationLayer const & ) noexcept -> VValidationLayerCollection &;
 
-        [[nodiscard]] constexpr auto getValidationLayers() const noexcept -> std::vector < VValidationLayer > const & {
+        __CDS_NoDiscard constexpr auto getValidationLayers() const noexcept -> std::vector < VValidationLayer > const & {
             return this->_validationLayers;
         }
 
-        [[nodiscard]] auto getValidationLayerLiterals() const noexcept -> std::vector < VValidationLayer::VulkanValidationLayerLiteral >;
+        __CDS_NoDiscard auto getValidationLayerLiterals() const noexcept -> std::vector < VValidationLayer::VulkanValidationLayerLiteral >;
 
         auto clear() noexcept -> void override {
             this->_validationLayers.clear();
         }
 
-        [[nodiscard]] auto toString () const noexcept -> String override;
+        __CDS_NoDiscard auto toString () const noexcept -> cds :: String override;
 
-        [[nodiscard]] auto operator == (VValidationLayerCollection const & o) const noexcept -> bool {
-            if ( this == & o ) return true;
+        __CDS_NoDiscard auto operator == (VValidationLayerCollection const & o) const noexcept -> bool {
+            if ( this == & o ) {
+                return true;
+            }
+
             return o._validationLayers == this->_validationLayers;
         }
 
-        [[nodiscard]] auto equals (Object const & o) const noexcept -> bool override {
-            if ( this == & o ) return true;
+        __CDS_NoDiscard auto equals (Object const & o) const noexcept -> bool override {
+            if ( this == & o ) {
+                return true;
+            }
+
             auto p = dynamic_cast<decltype(this)>(&o);
-            if ( p == nullptr ) return false;
+            if ( p == nullptr ) {
+                return false;
+            }
 
             return this->operator==(*p);
         }
 
-        [[nodiscard]] auto copy () const noexcept -> VValidationLayerCollection * override {
+        __CDS_NoDiscard auto copy () const noexcept -> VValidationLayerCollection * override {
             return new VValidationLayerCollection(*this);
         }
 
-        [[nodiscard]] auto hash () const noexcept -> Index override {
-            Index hashSum = 0;
-            std::for_each(this->_validationLayers.begin(), this->_validationLayers.end(), [&hashSum](auto const & e){hashSum += e.hash();});
+        __CDS_NoDiscard auto hash () const noexcept -> cds :: Index override {
+            cds :: Index hashSum = 0;
+            (void) std::for_each(this->_validationLayers.begin(), this->_validationLayers.end(), [&hashSum](auto const & e){hashSum += e.hash();});
             return hashSum;
         }
     };

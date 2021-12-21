@@ -1026,7 +1026,7 @@ auto engine::VulkanTriangleApplication::createCommandBuffers() noexcept(false) -
 
     VulkanDeviceSize offsets [] = { 0 };
 
-    auto drawableGameObjects = this->_activeScene.entitiesOfClass("VGameObject").view()
+    auto drawableGameObjects = this->_activeScene.entitiesOfClass("VGameObject").sequence()
             .filter([](VEntity * pEntity) -> bool { return ((VGameObject * )pEntity)->isDrawable(); })
             .toArray();
 

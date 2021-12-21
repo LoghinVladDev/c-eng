@@ -10,7 +10,7 @@
 
 namespace engine {
 
-    class VObject : public Object {
+class VObject : public cds :: Object {
     private:
         //// private variables
 
@@ -21,7 +21,7 @@ namespace engine {
 
         //// public functions
 
-        [[nodiscard]] auto toString () const noexcept -> String override;
+        __CDS_NoDiscard auto toString () const noexcept -> cds :: String override;
 
         ~VObject() noexcept override = default;
     };

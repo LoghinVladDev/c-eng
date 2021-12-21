@@ -16,7 +16,7 @@ engine::VComponent::VComponent(Tags tags, VEntity * pParentEntity) noexcept : _p
         pParentEntity->add(this);
 }
 
-engine::VComponent::VComponent(Tags tags, uint64 ignoredIDConstructor) noexcept : _pParentEntity(nullptr), _tags(tags), _ID(UINT64_MAX) {
+engine::VComponent::VComponent(Tags tags, uint64 ignoredIDConstructor __CDS_MaybeUnused) noexcept : _pParentEntity(nullptr), _tags(tags), _ID(UINT64_MAX) {
 
 }
 

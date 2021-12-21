@@ -19,7 +19,7 @@ namespace engine {
     private:
         //// private variables
         VulkanImageView         _handle     {};
-        uint32                  _index      {0U};
+        cds :: uint32           _index      {0U};
         VLogicalDevice  const * _pLogicalDevice {nullptr};
 
         //// private functions
@@ -33,43 +33,50 @@ namespace engine {
 
         ~VImageView() noexcept override = default;
 
-        auto setup( VulkanImage, VulkanFormat, VLogicalDevice const &, VulkanImageAspectFlags = VulkanImageAspectFlagBits::VK_IMAGE_ASPECT_COLOR_BIT ) noexcept -> VulkanResult;
+        auto setup ( VulkanImage, VulkanFormat, VLogicalDevice const &, VulkanImageAspectFlags = VulkanImageAspectFlagBits :: VK_IMAGE_ASPECT_COLOR_BIT ) noexcept -> VulkanResult;
 
-        [[nodiscard]] auto getSwapChain () const noexcept -> engine::VSwapChain const *;
+        __CDS_NoDiscard auto getSwapChain () const noexcept -> engine::VSwapChain const *;
 
-        [[nodiscard]] constexpr auto getLogicalDevicePtr() const noexcept -> engine::VLogicalDevice const * {
+        __CDS_NoDiscard constexpr auto getLogicalDevicePtr() const noexcept -> engine::VLogicalDevice const * {
             return this->_pLogicalDevice;
         }
 
-        [[nodiscard]] constexpr auto data () const noexcept -> VulkanImageView const & {
+        __CDS_NoDiscard constexpr auto data () const noexcept -> VulkanImageView const & {
             return this->_handle;
         }
 
         auto clear () noexcept -> void override;
 
-        [[nodiscard]] auto toString () const noexcept -> String override;
+        __CDS_NoDiscard auto toString () const noexcept -> cds :: String override;
 
-        [[nodiscard]] auto operator == (VImageView const & o) const noexcept -> bool {
-            if ( this == & o ) return true;
+        __CDS_NoDiscard auto operator == (VImageView const & o) const noexcept -> bool {
+            if ( this == & o ) {
+                return true;
+            }
 
             return this->_index == o._index && this->_handle == o._handle;
         }
 
-        [[nodiscard]] auto equals (Object const & o) const noexcept -> bool override {
-            if ( this == & o ) return true;
+        __CDS_NoDiscard auto equals (Object const & o) const noexcept -> bool override {
+            if ( this == & o ) {
+                return true;
+            }
+
             auto p = dynamic_cast < decltype(this) > ( & o );
-            if ( p == nullptr ) return false;
+            if ( p == nullptr ) {
+                return false;
+            }
 
             return this->operator==(*p);
         }
 
-        [[nodiscard]] auto copy () const noexcept -> VImageView * override {
+        __CDS_NoDiscard auto copy () const noexcept -> VImageView * override {
             return new VImageView(*this);
         }
 
-        [[nodiscard]] auto hash () const noexcept -> Index override {
-            return dataTypes::hash(this->_index) * 10000 +
-                dataTypes::hash(reinterpret_cast<AddressValueType>(this->_handle) % 10000);
+        __CDS_NoDiscard auto hash () const noexcept -> cds :: Index override {
+            return cds :: hash(this->_index) * 10000 +
+                cds :: hash ( reinterpret_cast < cds :: AddressValueType const > ( this->_handle ) % 10000U );
         }
     };
 
@@ -95,39 +102,46 @@ namespace engine {
 
         auto setup ( engine::VSwapChain const * ) noexcept -> VulkanResult;
 
-        [[nodiscard]] constexpr auto getSwapChainPtr () const noexcept -> engine::VSwapChain const * {
+        __CDS_NoDiscard __CDS_MaybeUnused constexpr auto getSwapChainPtr () const noexcept -> engine::VSwapChain const * {
             return this->_pSwapChain;
         }
 
-        [[nodiscard]] constexpr auto getImageViews () const noexcept -> std::vector < VImageView > const & {
+        __CDS_NoDiscard constexpr auto getImageViews () const noexcept -> std::vector < VImageView > const & {
             return this->_imageViews;
         }
 
         auto clear () noexcept -> void override;
 
-        [[nodiscard]] auto toString () const noexcept -> String override;
+        __CDS_NoDiscard auto toString () const noexcept -> cds :: String override;
 
-        [[nodiscard]] auto operator == (VImageViewCollection const & o) const noexcept -> bool {
-            if ( this == & o ) return true;
+        __CDS_NoDiscard auto operator == (VImageViewCollection const & o) const noexcept -> bool {
+            if ( this == & o ) {
+                return true;
+            }
 
             return this->_imageViews == o._imageViews;
         }
 
-        [[nodiscard]] auto equals (Object const & o) const noexcept -> bool override {
-            if ( this == & o ) return true;
+        __CDS_NoDiscard auto equals (Object const & o) const noexcept -> bool override {
+            if ( this == & o ) {
+                return true;
+            }
+
             auto p = dynamic_cast < decltype(this) > (& o);
-            if ( p == nullptr ) return false;
+            if ( p == nullptr ) {
+                return false;
+            }
 
             return this->operator==(*p);
         }
 
-        [[nodiscard]] auto copy () const noexcept -> VImageViewCollection * override {
+        __CDS_NoDiscard auto copy () const noexcept -> VImageViewCollection * override {
             return new VImageViewCollection (*this);
         }
 
-        [[nodiscard]] auto hash () const noexcept -> Index override {
-            Index hashSum = 0;
-            std::for_each(this->_imageViews.begin(), this->_imageViews.end(), [& hashSum](auto const & o){hashSum += o.hash();});
+        __CDS_NoDiscard auto hash () const noexcept -> cds :: Index override {
+            cds :: Index hashSum = 0;
+            (void) std :: for_each(this->_imageViews.begin(), this->_imageViews.end(), [& hashSum](auto const & o){hashSum += o.hash();});
             return hashSum;
         }
     };

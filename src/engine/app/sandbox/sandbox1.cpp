@@ -32,6 +32,7 @@ int main () {
 
     ordon123(6, v);
 
-    for ( int i = 0; i < 6; i++ )
+    for ( int i = 0; i < 6; i++ ) {
         cout << v[i] << ' ';
+    }
 }

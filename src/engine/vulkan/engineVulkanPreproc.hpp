@@ -5,6 +5,7 @@
 #ifndef ENG1_ENGINEVULKANPREPROC_HPP
 #define ENG1_ENGINEVULKANPREPROC_HPP
 
+#include <vkDefs/vkDefinitions.h>
 #include <vkDefs/vkPlatformDefs.h>
 
 #define GLFW_INCLUDE_VULKAN
@@ -22,7 +23,7 @@
 #include <glm/mat4x4.hpp>
 
 //#include <types.h>
-#include <dataTypes.h>
+//#include <dataTypes.h>
 
 #include <vkDefs/types/vulkanExplicitTypes.h>
 

@@ -22,14 +22,14 @@ namespace engine {
         //// public functions
         VStandardUtils() = delete;
 
-        static std::string to_string ( VulkanResult ) noexcept;
-        static std::string to_string ( VulkanPhysicalDeviceType ) noexcept;
+        __CDS_NoDiscard static auto toString ( VulkanResult ) noexcept -> cds :: String;
+        __CDS_NoDiscard static auto toString ( VulkanPhysicalDeviceType ) noexcept -> cds :: String;
 
-        constexpr static const char * boolAlpha (bool value ) noexcept {
+        __CDS_NoDiscard constexpr static auto boolAlpha ( bool value ) noexcept -> cds :: StringLiteral {
             return value ? "true" : "false";
         }
 
-        static std::vector < GLFWExtensionLiteral > getGLFWRequiredExtensions (bool = false) noexcept;
+        __CDS_NoDiscard static auto getGLFWRequiredExtensions ( bool = false ) noexcept -> std :: vector < GLFWExtensionLiteral >;
     };
 
 }

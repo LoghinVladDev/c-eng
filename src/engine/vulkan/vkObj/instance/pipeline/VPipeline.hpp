@@ -27,7 +27,7 @@ namespace engine {
 
         //// private functions
 
-        auto createRenderPass() noexcept (false) -> void;
+        auto createRenderPass () noexcept (false) -> void;
     public:
         //// public variables
 
@@ -35,71 +35,78 @@ namespace engine {
         VPipeline() noexcept = default;
         ~VPipeline() noexcept override = default;
 
-        [[nodiscard]] constexpr auto data () const noexcept -> VulkanGraphicsPipeline const & {
+        __CDS_NoDiscard constexpr auto data () const noexcept -> VulkanGraphicsPipeline const & {
             return this->_handle;
         }
 
-        [[nodiscard]] constexpr auto layout() const noexcept -> VulkanPipelineLayout const & {
+        __CDS_NoDiscard constexpr auto layout() const noexcept -> VulkanPipelineLayout const & {
             return this->_layoutHandle;
         }
 
-        [[nodiscard]] constexpr auto getRenderPassPtr () const noexcept -> VRenderPass const * {
+        __CDS_NoDiscard constexpr auto getRenderPassPtr () const noexcept -> VRenderPass const * {
             return & this->_renderPass;
         }
 
         auto setup (
-            engine::VLogicalDevice                  const &,
+            VLogicalDevice                          const &,
             VulkanPipelineShaderStageCreateInfo     const *,
-            uint32,
+            cds :: uint32,
             VulkanVertexInputBindingDescription     const * = nullptr,
-            uint32                                          = 0U,
+            cds :: uint32                                   = 0U,
             VulkanVertexInputAttributeDescription   const * = nullptr,
-            uint32                                          = 0U,
+            cds :: uint32                                   = 0U,
             VulkanDescriptorSetLayout               const * = nullptr,
-            uint32                                          = 0U
+            cds :: uint32                                   = 0U
         ) noexcept (false) -> VulkanResult;
 
         inline auto setup (
-            engine::VLogicalDevice                                  const & device,
-            std::vector < VulkanPipelineShaderStageCreateInfo >     const & shaderStages,
-            std::vector < VulkanVertexInputBindingDescription >     const & bindingDescriptions,
-            std::vector < VulkanVertexInputAttributeDescription >   const & attributeDescriptions
+            VLogicalDevice                                          const & device,
+            std :: vector < VulkanPipelineShaderStageCreateInfo >   const & shaderStages,
+            std :: vector < VulkanVertexInputBindingDescription >   const & bindingDescriptions,
+            std :: vector < VulkanVertexInputAttributeDescription > const & attributeDescriptions
         ) noexcept (false) -> VulkanResult {
             return this->setup (
                 device,
                 shaderStages.data(),
-                static_cast < uint32 > ( shaderStages.size() ),
+                static_cast < cds :: uint32 > ( shaderStages.size() ),
                 bindingDescriptions.data(),
-                static_cast < uint32 > ( bindingDescriptions.size() ),
+                static_cast < cds :: uint32 > ( bindingDescriptions.size() ),
                 attributeDescriptions.data(),
-                static_cast < uint32 > ( attributeDescriptions.size() )
+                static_cast < cds :: uint32 > ( attributeDescriptions.size() )
             );
         }
 
         auto clear () noexcept -> void override;
 
-        [[nodiscard]] auto toString () const noexcept -> String override;
+        __CDS_NoDiscard auto toString () const noexcept -> cds :: String override;
 
-        [[nodiscard]] auto operator == (VPipeline const & o) const noexcept -> bool {
-            if ( this == & o ) return true;
+        __CDS_NoDiscard auto operator == (VPipeline const & o) const noexcept -> bool {
+            if ( this == & o ) {
+                return true;
+            }
 
             return this->_handle == o._handle;
         }
 
-        [[nodiscard]] auto equals (Object const & o) const noexcept -> bool override {
-            if ( this == & o ) return true;
+        __CDS_NoDiscard auto equals (Object const & o) const noexcept -> bool override {
+            if ( this == & o ) {
+                return true;
+            }
+
             auto p = dynamic_cast < decltype(this) > (& o);
-            if ( p == nullptr ) return false;
+            if ( p == nullptr ) {
+                return false;
+            }
 
             return this->operator==(*p);
         }
 
-        [[nodiscard]] auto copy () const noexcept -> VPipeline * override {
+        __CDS_NoDiscard auto copy () const noexcept -> VPipeline * override {
             return new VPipeline(* this);
         }
 
-        [[nodiscard]] auto hash () const noexcept -> Index override {
-            return dataTypes::hash(reinterpret_cast<AddressValueType>(this->_handle));
+        __CDS_NoDiscard auto hash () const noexcept -> cds :: Index override {
+            return cds :: hash ( reinterpret_cast < cds :: AddressValueType const > (this->_handle) );
         }
     };
 

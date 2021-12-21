@@ -14,7 +14,7 @@
 #pragma ide diagnostic ignored "bugprone-reserved-identifier"
 #endif
 
-#define VULKAN_LAYERS_NONE 0
+#define VULKAN_LAYERS_NONE 0U
 
 #define __VULKAN_LAYER_NVIDIA_OPTIMUS             "VK_LAYER_NV_optimus"
 #define __VULKAN_LAYER_OBS_HOOK                   "VK_LAYER_OBS_HOOK"

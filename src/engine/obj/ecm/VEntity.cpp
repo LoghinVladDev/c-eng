@@ -16,7 +16,7 @@ engine::VEntity::VEntity(VScene * pScene) noexcept : _pScene(pScene), _pParentEn
     pScene->add(this);
 }
 
-engine::VEntity::VEntity(uint64 ignoredIDConstructor) noexcept : _pParentEntity(nullptr), _pScene(nullptr), _ID(UINT64_MAX) {}
+engine::VEntity::VEntity(uint64 ignoredIDConstructor __CDS_MaybeUnused) noexcept : _pParentEntity(nullptr), _pScene(nullptr), _ID(UINT64_MAX) {}
 
 auto engine::VEntity::siblings() const noexcept -> Array< VEntity * > {
     if ( this->_pParentEntity == nullptr )
@@ -138,7 +138,7 @@ auto engine::VEntity::remove(VEntity * pChild) const noexcept -> bool {
     return false;
 }
 
-auto engine::VEntity::getComponentByClassName(const VComponent::ClassName & className) noexcept -> VComponent * {
+__CDS_MaybeUnused auto engine::VEntity::getComponentByClassName(const VComponent::ClassName & className) noexcept -> VComponent * {
     VComponent * pComponent = nullptr;
 
     for ( auto * p : this->_components )
@@ -152,7 +152,7 @@ auto engine::VEntity::getComponentByClassName(const VComponent::ClassName & clas
     return pComponent;
 }
 
-auto engine::VEntity::getComponentByClassName(const VComponent::ClassName & className) const noexcept -> VComponent const * {
+__CDS_MaybeUnused auto engine::VEntity::getComponentByClassName(const VComponent::ClassName & className) const noexcept -> VComponent const * {
     VComponent const * pComponent = nullptr;
 
     for ( auto * p : this->_components )
@@ -166,7 +166,7 @@ auto engine::VEntity::getComponentByClassName(const VComponent::ClassName & clas
     return pComponent;
 }
 
-auto engine::VEntity::getComponentsByClassName(const VComponent::ClassName & className) noexcept -> Array < VComponent * > {
+__CDS_MaybeUnused auto engine::VEntity::getComponentsByClassName(const VComponent::ClassName & className) noexcept -> Array < VComponent * > {
     Array < VComponent * > componentAddresses;
 
     for ( auto * p : this->_components )
@@ -176,7 +176,7 @@ auto engine::VEntity::getComponentsByClassName(const VComponent::ClassName & cla
     return componentAddresses;
 }
 
-auto engine::VEntity::getComponentsByClassName(const VComponent::ClassName & className) const noexcept -> Array< VComponent const * > {
+__CDS_MaybeUnused auto engine::VEntity::getComponentsByClassName(const VComponent::ClassName & className) const noexcept -> Array< VComponent const * > {
     Array < VComponent const * > componentAddresses;
 
     for ( auto * p : this->_components )

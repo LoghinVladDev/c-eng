@@ -21,7 +21,7 @@ namespace engine {
 
         //// public functions
 
-        [[nodiscard]] auto toString () const noexcept -> String override;
+        __CDS_NoDiscard auto toString () const noexcept -> cds :: String override;
 
         virtual auto clear () noexcept -> void = 0;
 

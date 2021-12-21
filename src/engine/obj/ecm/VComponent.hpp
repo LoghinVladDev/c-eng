@@ -36,9 +36,9 @@ namespace engine {
         using TypeFlags = uint8;
 
 #if __cpp_constexpr >= 201907
-        [[nodiscard]] virtual constexpr auto typeFlag () const noexcept -> TypeFlag = 0;
+        __CDS_NoDiscard virtual constexpr auto typeFlag () const noexcept -> TypeFlag = 0;
 #else
-        [[nodiscard]] virtual inline auto typeFlag () const noexcept -> TypeFlag = 0;
+        __CDS_NoDiscard virtual inline auto typeFlag () const noexcept -> TypeFlag = 0;
 #endif
         friend auto reconstructCacheBranch (VEntity *) noexcept -> void;
 
@@ -65,7 +65,7 @@ namespace engine {
     public:
         class RootComponentDeleteException : public std::exception {
         public:
-            [[nodiscard]] auto what() const noexcept -> StringLiteral override {
+            __CDS_NoDiscard auto what() const noexcept -> StringLiteral override {
                 return "Invalid delete operation. Cannot delete Component of Entity placed at top-most level in scene";
             }
         };
@@ -75,31 +75,31 @@ namespace engine {
         //// public functions
         ~VComponent() noexcept override = default;
 
-        [[nodiscard]] virtual auto className () const noexcept -> ClassName = 0;
+        __CDS_NoDiscard virtual auto className () const noexcept -> ClassName = 0;
 
-        [[nodiscard]] constexpr auto parent () const noexcept -> VEntity const * { return this->_pParentEntity; }
+        __CDS_NoDiscard constexpr auto parent () const noexcept -> VEntity const * { return this->_pParentEntity; }
 
         static void * operator new(std::size_t) noexcept (false);
         static void operator delete(void *) noexcept(false);
 
-        [[nodiscard]] auto toString() const noexcept -> String override;
-        [[nodiscard]] constexpr auto hash () const noexcept -> Index override { return static_cast < Index > (this->_ID); }
-        [[nodiscard]] constexpr auto ID () const noexcept -> uint64 { return this->_ID; }
-        [[nodiscard]] constexpr auto tags () const noexcept -> Tags { return this->_tags; }
+        __CDS_NoDiscard auto toString() const noexcept -> String override;
+        __CDS_NoDiscard constexpr auto hash () const noexcept -> Index override { return static_cast < Index > (this->_ID); }
+        __CDS_NoDiscard constexpr auto ID () const noexcept -> uint64 { return this->_ID; }
+        __CDS_NoDiscard constexpr auto tags () const noexcept -> Tags { return this->_tags; }
 
-        [[nodiscard]] auto copy () const noexcept -> VComponent * override = 0;
-        [[nodiscard]] auto equals (Object const &) const noexcept -> bool override;
-        [[nodiscard]] auto operator == (VComponent const &) const noexcept -> bool;
+        __CDS_NoDiscard auto copy () const noexcept -> VComponent * override = 0;
+        __CDS_NoDiscard auto equals (Object const &) const noexcept -> bool override;
+        __CDS_NoDiscard auto operator == (VComponent const &) const noexcept -> bool;
 
-        constexpr auto addTag (Tag t) noexcept -> void {
+        __CDS_MaybeUnused constexpr auto addTag (Tag t) noexcept -> void {
             this->_tags |= t;
         }
 
-        constexpr auto removeTag (Tag t) noexcept -> void {
+        __CDS_MaybeUnused constexpr auto removeTag (Tag t) noexcept -> void {
             this->_tags &= ~(t & ALL_TAGS);
         }
 
-        [[nodiscard]] constexpr auto hasTag (Tag t) const noexcept -> bool {
+        __CDS_NoDiscard constexpr auto hasTag (Tag t) const noexcept -> bool {
             return (this->_tags & t) == t;
         }
 
