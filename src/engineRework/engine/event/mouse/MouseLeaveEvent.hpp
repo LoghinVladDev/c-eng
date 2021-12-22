@@ -15,14 +15,12 @@ namespace engine {
         C_ENG_DESTRUCTOR ( MouseLeaveEvent ) () noexcept override = default;
 
         C_ENG_CONSTRUCTOR ( MouseLeaveEvent ) (
-                cds :: uint32           x,
-                cds :: uint32           y,
-                C_ENG_TYPE ( Window ) * window
+                C_ENG_TYPE ( Window ) * window,
+                Position        const & position
         ) noexcept :
                 C_ENG_CONSTRUCTOR ( MouseEvent ) (
-                        x,
-                        y,
-                        window
+                        window,
+                        position
                 ) {
 
         }

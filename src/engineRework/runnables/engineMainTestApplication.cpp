@@ -26,6 +26,7 @@ int main (
     (void) C_ENG_CLASS ( Logger ) :: instance().system ( "Engine Main Test Application Start" );
 
     C_ENG_CLASS ( Window ) window;
+    window.resize(1366, 768);
     (void) window.init();
 
     (void) C_ENG_CLASS ( Engine ) :: instance().setWindow ( & window );

@@ -10,22 +10,23 @@
 namespace engine {
 
     class C_ENG_CLASS ( MouseScrollEvent ) : public C_ENG_CLASS ( MouseEvent ) {
+        C_ENG_CLASS_IMMUTABLE_PRIMITIVE_FIELD ( double, xOffset, 0.0 )
         C_ENG_CLASS_IMMUTABLE_PRIMITIVE_FIELD ( double, yOffset, 0.0 )
 
     public:
         C_ENG_DESTRUCTOR ( MouseScrollEvent ) () noexcept override = default;
 
         C_ENG_CONSTRUCTOR ( MouseScrollEvent ) (
-                cds :: uint32           x,
-                cds :: uint32           y,
-                double                  yOffset,
-                C_ENG_TYPE ( Window ) * window
+                C_ENG_TYPE ( Window ) * window,
+                Position        const & position,
+                double                  xOffset,
+                double                  yOffset
         ) noexcept :
                 C_ENG_CONSTRUCTOR ( MouseEvent ) (
-                        x,
-                        y,
-                        window
+                        window,
+                        position
                 ),
+                _xOffset ( xOffset ),
                 _yOffset ( yOffset ) {
 
         }

@@ -25,5 +25,6 @@
 
 #include <Naming.hpp>
 #include <Compiler.hpp>
+#include <ClassGenerators.hpp>
 
 #endif //C_ENG_PREPROCESS_H

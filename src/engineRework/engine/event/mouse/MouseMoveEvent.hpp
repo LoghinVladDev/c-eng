@@ -10,25 +10,19 @@
 namespace engine {
 
     class C_ENG_CLASS ( MouseMoveEvent ) : public C_ENG_CLASS ( MouseEvent ) {
-        C_ENG_CLASS_IMMUTABLE_PRIMITIVE_FIELD ( cds :: uint32, oldX, 0U )
-        C_ENG_CLASS_IMMUTABLE_PRIMITIVE_FIELD ( cds :: uint32, oldY, 0U )
+        C_ENG_CLASS_IMMUTABLE_FIELD ( Position, oldPosition, 0u, 0u )
 
     public:
         C_ENG_CONSTRUCTOR ( MouseMoveEvent ) (
-                cds :: uint32           x,
-                cds :: uint32           y,
-                cds :: uint32           oldX,
-                cds :: uint32           oldY,
-
-                C_ENG_TYPE ( Window ) * window
+                C_ENG_TYPE ( Window ) * window,
+                Position        const & position,
+                Position        const & oldPosition
         ) noexcept :
                 C_ENG_CONSTRUCTOR ( MouseEvent ) (
-                        x,
-                        y,
-                        window
+                        window,
+                        position
                 ),
-                _oldX ( oldX ),
-                _oldY ( oldY ) {
+                _oldPosition ( oldPosition ) {
 
 
         }

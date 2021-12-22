@@ -18,16 +18,14 @@ namespace engine {
         C_ENG_DESTRUCTOR ( MouseReleaseEvent ) () noexcept override = default;
 
         C_ENG_CONSTRUCTOR ( MouseReleaseEvent ) (
-                cds :: uint32           x,
-                cds :: uint32           y,
+                C_ENG_TYPE ( Window ) * window,
+                Position        const & position,
                 MouseButton             button,
-                KeyModifiers            modifiers,
-                C_ENG_TYPE ( Window ) * window
+                KeyModifiers            modifiers
         ) noexcept :
                 C_ENG_CONSTRUCTOR ( MouseEvent ) (
-                        x,
-                        y,
-                        window
+                        window,
+                        position
                 ),
                 _button ( button ),
                 _modifiers ( modifiers ) {

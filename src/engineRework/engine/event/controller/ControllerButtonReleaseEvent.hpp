@@ -1,0 +1,14 @@
+//
+// Created by loghin on 22.12.2021.
+//
+
+#ifndef C_ENG_CONTROLLERBUTTONRAISEEVENT_HPP
+#define C_ENG_CONTROLLERBUTTONRAISEEVENT_HPP
+
+
+class ControllerButtonRaiseEvent {
+
+};
+
+
+#endif //C_ENG_CONTROLLERBUTTONRAISEEVENT_HPP

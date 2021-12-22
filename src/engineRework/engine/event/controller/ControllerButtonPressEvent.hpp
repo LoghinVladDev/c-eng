@@ -1,0 +1,14 @@
+//
+// Created by loghin on 22.12.2021.
+//
+
+#ifndef C_ENG_CONTROLLERBUTTONPRESSEVENT_HPP
+#define C_ENG_CONTROLLERBUTTONPRESSEVENT_HPP
+
+
+class ControllerButtonPressEvent {
+
+};
+
+
+#endif //C_ENG_CONTROLLERBUTTONPRESSEVENT_HPP

@@ -64,42 +64,80 @@ namespace engine {
 
 
     enum EventType : cds :: uint8 {
-        EventTypeCustom             = 0x00U,
+        EventTypeCustom                         = 0x00U,
 
-        EventTypeCustomKeyEvent     = 0x01U,
-        EventTypeKeyPressEvent      = 0x02U,
-        EventTypeKeyReleaseEvent    = 0x03U,
+        EventTypeCustomKeyEvent                 = 0x01U,
+        EventTypeKeyPressEvent                  = 0x02U,
+        EventTypeKeyReleaseEvent                = 0x03U,
 
-        EventTypeCustomMouseEvent   = 0x04U,
-        EventTypeMouseMoveEvent     = 0x05U,
-        EventTypeMouseEnterEvent    = 0x06U,
-        EventTypeMouseLeaveEvent    = 0x07U,
-        EventTypeMouseScrollEvent   = 0x08U,
-        EventTypeMousePressEvent    = 0x09U,
-        EventTypeMouseReleaseEvent  = 0x0aU,
+        EventTypeCustomMouseEvent               = 0x04U,
+        EventTypeMouseMoveEvent                 = 0x05U,
+        EventTypeMouseEnterEvent                = 0x06U,
+        EventTypeMouseLeaveEvent                = 0x07U,
+        EventTypeMouseScrollEvent               = 0x08U,
+        EventTypeMousePressEvent                = 0x09U,
+        EventTypeMouseReleaseEvent              = 0x0aU,
 
-        EventTypeResizeEvent        = 0x0bU
+        EventTypeCustomWindowEvent              = 0x0bU,
+        EventTypeWindowResizeEvent              = 0x0cU,
+        EventTypeWindowFrameBufferResizeEvent   = 0x0dU,
+        EventTypeWindowCloseEvent               = 0x0eU,
+        EventTypeWindowContentScaleEvent        = 0x0fU,
+        EventTypeWindowMoveEvent                = 0x10U,
+        EventTypeWindowRestoreEvent             = 0x11U,
+        EventTypeWindowMinimizeEvent            = 0x12U,
+        EventTypeWindowMaximizeEvent            = 0x13U,
+        EventTypeWindowGainFocusEvent           = 0x14U,
+        EventTypeWindowLoseFocusEvent           = 0x15U,
+        EventTypeWindowRefreshRequestEvent      = 0x16U,
+
+        EventTypeCustomControllerEvent          = 0x17U,
+        EventTypeControllerConnectEvent         = 0x18U,
+        EventTypeControllerDisconnectEvent      = 0x19U,
+        EventTypeControllerAxisChangeEvent      = 0x1aU,
+        EventTypeControllerButtonPressEvent     = 0x1bU,
+        EventTypeControllerButtonReleaseEvent   = 0x1cU,
+        EventTypeControllerHatChangeEvent       = 0x1dU
     };
 
     C_ENG_NO_DISCARD constexpr auto toString ( EventType type ) noexcept -> cds :: StringLiteral {
         cds :: StringLiteral asString = "";
 
         switch ( type ) {
-            case EventTypeCustom:               { asString = "CustomEvent";         break; }
+            case EventTypeCustom:                       { asString = "CustomEvent";                     break; }
 
-            case EventTypeCustomKeyEvent:       { asString = "CustomKeyEvent";      break; }
-            case EventTypeKeyPressEvent:        { asString = "KeyPressEvent";       break; }
-            case EventTypeKeyReleaseEvent:      { asString = "KeyReleaseEvent";     break; }
+            case EventTypeCustomKeyEvent:               { asString = "CustomKeyEvent";                  break; }
+            case EventTypeKeyPressEvent:                { asString = "KeyPressEvent";                   break; }
+            case EventTypeKeyReleaseEvent:              { asString = "KeyReleaseEvent";                 break; }
 
-            case EventTypeCustomMouseEvent:     { asString = "CustomMouseEvent";    break; }
-            case EventTypeMouseMoveEvent:       { asString = "MouseMoveEvent";      break; }
-            case EventTypeMouseEnterEvent:      { asString = "MouseEnterEvent";     break; }
-            case EventTypeMouseLeaveEvent:      { asString = "MouseLeaveEvent";     break; }
-            case EventTypeMouseScrollEvent:     { asString = "MouseScrollEvent";    break; }
-            case EventTypeMousePressEvent:      { asString = "MousePressEvent";     break; }
-            case EventTypeMouseReleaseEvent:    { asString = "MouseReleaseEvent";   break; }
+            case EventTypeCustomMouseEvent:             { asString = "CustomMouseEvent";                break; }
+            case EventTypeMouseMoveEvent:               { asString = "MouseMoveEvent";                  break; }
+            case EventTypeMouseEnterEvent:              { asString = "MouseEnterEvent";                 break; }
+            case EventTypeMouseLeaveEvent:              { asString = "MouseLeaveEvent";                 break; }
+            case EventTypeMouseScrollEvent:             { asString = "MouseScrollEvent";                break; }
+            case EventTypeMousePressEvent:              { asString = "MousePressEvent";                 break; }
+            case EventTypeMouseReleaseEvent:            { asString = "MouseReleaseEvent";               break; }
 
-            case EventTypeResizeEvent:          { asString = "ResizeEvent";         break; }
+            case EventTypeCustomWindowEvent:            { asString = "CustomWindowEvent";               break; }
+            case EventTypeWindowResizeEvent:            { asString = "WindowResizeEvent";               break; }
+            case EventTypeWindowFrameBufferResizeEvent: { asString = "WindowFrameBufferResizeEvent";    break; }
+            case EventTypeWindowCloseEvent:             { asString = "WindowCloseEvent";                break; }
+            case EventTypeWindowContentScaleEvent:      { asString = "WindowContentScaleEvent";         break; }
+            case EventTypeWindowMoveEvent:              { asString = "WindowMoveEvent";                 break; }
+            case EventTypeWindowRestoreEvent:           { asString = "WindowRestoreEvent";              break; }
+            case EventTypeWindowMinimizeEvent:          { asString = "WindowMinimizeEvent";             break; }
+            case EventTypeWindowMaximizeEvent:          { asString = "WindowMaximizeEvent";             break; }
+            case EventTypeWindowGainFocusEvent:         { asString = "WindowGainFocusEvent";            break; }
+            case EventTypeWindowLoseFocusEvent:         { asString = "WindowLoseFocusEvent";            break; }
+            case EventTypeWindowRefreshRequestEvent:    { asString = "WindowRefreshRequestEvent";       break; }
+
+            case EventTypeCustomControllerEvent:        { asString = "CustomControllerEvent";           break; }
+            case EventTypeControllerConnectEvent:       { asString = "ControllerConnectEvent";          break; }
+            case EventTypeControllerDisconnectEvent:    { asString = "ControllerDisconnectEvent";       break; }
+            case EventTypeControllerAxisChangeEvent:    { asString = "ControllerAxisChangeEvent";       break; }
+            case EventTypeControllerHatChangeEvent:     { asString = "ControllerHatChangeEvent";        break; }
+            case EventTypeControllerButtonPressEvent:   { asString = "ControllerButtonPressEvent";      break; }
+            case EventTypeControllerButtonReleaseEvent: { asString = "ControllerButtonReleaseEvent";    break; }
         }
 
         return asString;
@@ -404,7 +442,7 @@ namespace engine {
         MouseButtonRight    C_ENG_MAYBE_UNUSED  = MouseButton2,
         MouseButtonMiddle   C_ENG_MAYBE_UNUSED  = MouseButton3,
 
-        MouseButtonUndefined    = 0xffU
+        MouseButtonUndefined                    = 0xffU
     };
 
     C_ENG_NO_DISCARD constexpr auto toString ( MouseButton mouseButton ) noexcept -> cds :: StringLiteral {
@@ -471,6 +509,11 @@ namespace engine {
         float y;
     };
 
+    struct WindowContentScale {
+        float x;
+        float y;
+    };
+
     struct MonitorWorkArea {
         Position        position;
         RectangleSize   size;
@@ -495,6 +538,47 @@ namespace engine {
         MonitorGammaRamp            gammaRamp;
         MonitorVideoModeProperties  activeVideoMode;
     };
+
+
+    enum WindowFlag : cds :: uint16 {
+        WindowFlagNone                      = 0x0000U,
+        WindowFlagResizable                 = 0x0001U,
+        WindowFlagBorderless                = 0x0002U,
+        WindowFlagStartMinimized            = 0x0004U,
+        WindowFlagGrabFocusOnOpen           = 0x0008U,
+        WindowFlagRestorePreviousMode       = 0x0010U,
+        WindowFlagStayOnTop                 = 0x0020U,
+        WindowFlagStartMaximized            = 0x0040U,
+        WindowFlagCenterCursorOnCreate      = 0x0080U,
+        WindowFlagTransparentFramebuffer    = 0x0100U,
+        WindowFlagGrabFocusOnRaise          = 0x0200U,
+        WindowFlagScaleToMonitor            = 0x0400U,
+
+        WindowFlagMaxValue                  = WindowFlagScaleToMonitor
+    };
+
+    using WindowFlags = Flags;
+
+    C_ENG_NO_DISCARD constexpr auto toString ( WindowFlag flag ) noexcept -> cds :: StringLiteral {
+        cds :: StringLiteral asString = "";
+
+        switch ( flag ) {
+            case WindowFlagNone:                    { asString = "No Flag";                                 break; }
+            case WindowFlagResizable:               { asString = "Is Resizable";                            break; }
+            case WindowFlagBorderless:              { asString = "Borderless Window, Undecorated";          break; }
+            case WindowFlagStartMinimized:          { asString = "Start Minimized";                         break; }
+            case WindowFlagGrabFocusOnOpen:         { asString = "Grab Input Focus on Open";                break; }
+            case WindowFlagRestorePreviousMode:     { asString = "Fullscreen Restore Video Mode on Focus";  break; }
+            case WindowFlagStayOnTop:               { asString = "Force On Top";                            break; }
+            case WindowFlagStartMaximized:          { asString = "Start Window Maximized";                  break; }
+            case WindowFlagCenterCursorOnCreate:    { asString = "Center Mouse Cursor on Create";           break; }
+            case WindowFlagTransparentFramebuffer:  { asString = "Transparent Framebuffer";                 break; }
+            case WindowFlagGrabFocusOnRaise:        { asString = "Grab Input Focus On Raise";               break; }
+            case WindowFlagScaleToMonitor:          { asString = "Scale Content to Monitor Content Scale";  break; }
+        }
+
+        return asString;
+    }
 
 }
 

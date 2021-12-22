@@ -16,9 +16,9 @@ namespace engine {
 
     protected:
         C_ENG_CONSTRUCTOR ( KeyEvent ) (
+                C_ENG_TYPE ( Window ) * window,
                 Key                     key,
-                KeyModifiers            modifiers,
-                C_ENG_TYPE ( Window ) * window
+                KeyModifiers            modifiers
         ) noexcept :
                 C_ENG_CONSTRUCTOR ( Event ) ( window ),
                 _key ( key ),

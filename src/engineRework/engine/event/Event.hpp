@@ -23,9 +23,9 @@ namespace engine {
 
         }
 
+    public:
         C_ENG_DESTRUCTOR ( Event ) () noexcept override = default;
 
-    public:
         C_ENG_NO_DISCARD constexpr virtual auto type () const noexcept -> EventType {
             return EventType :: EventTypeCustom;
         }

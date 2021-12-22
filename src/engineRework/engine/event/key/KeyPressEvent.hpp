@@ -14,14 +14,14 @@ namespace engine {
         C_ENG_DESTRUCTOR ( KeyPressEvent ) () noexcept override = default;
 
         C_ENG_CONSTRUCTOR ( KeyPressEvent ) (
+                C_ENG_TYPE ( Window ) * window,
                 Key                     key,
-                KeyModifiers            modifiers,
-                C_ENG_TYPE ( Window ) * window
+                KeyModifiers            modifiers
         ) noexcept :
                 C_ENG_CONSTRUCTOR ( KeyEvent ) (
+                        window,
                         key,
-                        modifiers,
-                        window
+                        modifiers
                 ) {
 
         }

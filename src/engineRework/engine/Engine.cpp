@@ -26,8 +26,11 @@ auto C_ENG_CLASS ( Engine ) :: start () noexcept -> C_ENG_TYPE ( Engine ) & {
     return this->startup().run().shutdown();
 }
 
+#include <Controller.hpp>
 auto C_ENG_CLASS ( Engine ) :: startup () noexcept -> C_ENG_TYPE ( Engine ) & {
     this->setState ( EngineState :: EngineStateStartup );
+
+    C_ENG_TYPE ( Controller ) :: setEngine ( this );
 
     return this->initializeSettings();
 }
@@ -38,13 +41,37 @@ auto C_ENG_CLASS ( Engine ) :: initializeSettings () noexcept -> C_ENG_TYPE ( En
     return * this;
 }
 
+#include <Window.hpp>
+
 auto C_ENG_CLASS ( Engine ) :: run () noexcept -> C_ENG_TYPE ( Engine ) & {
     this->setState ( EngineState :: EngineStateRunning );
+
+    double startTime = glfwGetTime();
+    double lastFPSUpdateTime = 0.0;
 
     while ( ! this->shutdownRequested() ) {
 
         if ( this->window() != nullptr ) {
-            glfwPollEvents();
+            double frameStartTime = glfwGetTime();
+
+            C_ENG_CLASS ( Controller ) :: updateEvents();
+            (void) this->window()->pollEvents();
+            C_ENG_CLASS ( Controller ) :: pollEvents();
+
+            double frameEndTime = glfwGetTime();
+
+            this->_frameDeltaTime = frameEndTime - frameStartTime;
+
+            if ( (this->frameCount() + 1ULL) % this->_fpsUpdateFrameTime == 0ULL ) {
+                this->_fps = 1000.0 / ( ( frameEndTime - lastFPSUpdateTime ) / static_cast < double > (this->_fpsUpdateFrameTime) );
+                lastFPSUpdateTime = frameEndTime;
+            }
+
+            if ( this->logFPSToConsole() && ( this->frameCount() + 1ULL) % this->_showFpsEveryTick == 0ULL ) {
+                std :: cout << "FPS : " << this->_fps << '\n';
+            }
+
+            this->_frameCount ++;
         }
 
     }
@@ -52,7 +79,6 @@ auto C_ENG_CLASS ( Engine ) :: run () noexcept -> C_ENG_TYPE ( Engine ) & {
     return * this;
 }
 
-#include <Window.hpp>
 auto C_ENG_CLASS ( Engine ) :: shutdownRequested() noexcept -> bool {
     if ( this->window() != nullptr && this->window()->shouldClose() ) {
         return true;
@@ -85,8 +111,8 @@ auto C_ENG_CLASS ( Engine ) :: setWindow ( C_ENG_TYPE ( Window ) * window ) noex
     return * this;
 }
 
-auto C_ENG_CLASS ( Engine ) :: resizeEvent (
-        C_ENG_TYPE ( ResizeEvent ) * pEvent
+auto C_ENG_CLASS ( Engine ) :: windowResizeEvent (
+        C_ENG_TYPE ( WindowResizeEvent ) * pEvent
 ) noexcept -> C_ENG_TYPE ( Engine ) & {
     std :: cout << "re\n";
 

@@ -548,6 +548,31 @@ if(Vulkan_FOUND)
     ### ENGINE REWORK
 
     set (
+            ENGINE_REWORK_ENGINE_EVENT_CONTROLLER_SOURCES
+
+            src/engineRework/engine/event/controller/ControllerEvent.cpp
+            src/engineRework/engine/event/controller/ControllerEvent.hpp
+
+            src/engineRework/engine/event/controller/ControllerAxisChangeEvent.cpp
+            src/engineRework/engine/event/controller/ControllerAxisChangeEvent.hpp
+
+            src/engineRework/engine/event/controller/ControllerButtonPressEvent.cpp
+            src/engineRework/engine/event/controller/ControllerButtonPressEvent.hpp
+
+            src/engineRework/engine/event/controller/ControllerButtonReleaseEvent.cpp
+            src/engineRework/engine/event/controller/ControllerButtonReleaseEvent.hpp
+
+            src/engineRework/engine/event/controller/ControllerConnectEvent.cpp
+            src/engineRework/engine/event/controller/ControllerConnectEvent.hpp
+
+            src/engineRework/engine/event/controller/ControllerDisconnectEvent.cpp
+            src/engineRework/engine/event/controller/ControllerDisconnectEvent.hpp
+
+            src/engineRework/engine/event/controller/ControllerHatChangeEvent.cpp
+            src/engineRework/engine/event/controller/ControllerHatChangeEvent.hpp
+    )
+
+    set (
             ENGINE_REWORK_ENGINE_EVENT_KEY_SOURCES
 
             src/engineRework/engine/event/key/KeyEvent.cpp
@@ -588,13 +613,47 @@ if(Vulkan_FOUND)
     set (
             ENGINE_REWORK_ENGINE_EVENT_WINDOW_SOURCES
 
-            src/engineRework/engine/event/window/ResizeEvent.cpp
-            src/engineRework/engine/event/window/ResizeEvent.hpp
+            src/engineRework/engine/event/window/WindowEvent.cpp
+            src/engineRework/engine/event/window/WindowEvent.hpp
+
+            src/engineRework/engine/event/window/WindowCloseEvent.cpp
+            src/engineRework/engine/event/window/WindowCloseEvent.hpp
+
+            src/engineRework/engine/event/window/WindowContentScaleEvent.cpp
+            src/engineRework/engine/event/window/WindowContentScaleEvent.hpp
+
+            src/engineRework/engine/event/window/WindowFrameBufferResizeEvent.cpp
+            src/engineRework/engine/event/window/WindowFrameBufferResizeEvent.hpp
+
+            src/engineRework/engine/event/window/WindowGainFocusEvent.cpp
+            src/engineRework/engine/event/window/WindowGainFocusEvent.hpp
+
+            src/engineRework/engine/event/window/WindowLoseFocusEvent.cpp
+            src/engineRework/engine/event/window/WindowLoseFocusEvent.hpp
+
+            src/engineRework/engine/event/window/WindowMaximizeEvent.cpp
+            src/engineRework/engine/event/window/WindowMaximizeEvent.cpp
+
+            src/engineRework/engine/event/window/WindowMinimizeEvent.cpp
+            src/engineRework/engine/event/window/WindowMinimizeEvent.hpp
+
+            src/engineRework/engine/event/window/WindowMoveEvent.cpp
+            src/engineRework/engine/event/window/WindowMoveEvent.hpp
+
+            src/engineRework/engine/event/window/WindowRefreshRequestEvent.cpp
+            src/engineRework/engine/event/window/WindowRefreshRequestEvent.hpp
+
+            src/engineRework/engine/event/window/WindowRestoreEvent.cpp
+            src/engineRework/engine/event/window/WindowRestoreEvent.hpp
+
+            src/engineRework/engine/event/window/WindowResizeEvent.cpp
+            src/engineRework/engine/event/window/WindowResizeEvent.hpp
     )
 
     set (
             ENGINE_REWORK_ENGINE_EVENT_SOURCES
 
+            ${ENGINE_REWORK_ENGINE_EVENT_CONTROLLER_SOURCES}
             ${ENGINE_REWORK_ENGINE_EVENT_KEY_SOURCES}
             ${ENGINE_REWORK_ENGINE_EVENT_MOUSE_SOURCES}
             ${ENGINE_REWORK_ENGINE_EVENT_WINDOW_SOURCES}
@@ -604,9 +663,29 @@ if(Vulkan_FOUND)
     )
 
     set (
+            ENGINE_REWORK_ENGINE_INPUT_CONTROLLER_SOURCES
+
+            src/engineRework/engine/input/controller/Controller.cpp
+            src/engineRework/engine/input/controller/Controller.hpp
+
+            src/engineRework/engine/input/controller/Gamepad.cpp
+            src/engineRework/engine/input/controller/Gamepad.hpp
+
+            src/engineRework/engine/input/controller/Joystick.cpp
+            src/engineRework/engine/input/controller/Joystick.hpp
+    )
+
+    set (
+            ENGINE_REWORK_ENGINE_INPUT_SOURCES
+
+            ${ENGINE_REWORK_ENGINE_INPUT_CONTROLLER_SOURCES}
+    )
+
+    set (
             ENGINE_REWORK_ENGINE_SOURCES
 
             ${ENGINE_REWORK_ENGINE_EVENT_SOURCES}
+            ${ENGINE_REWORK_ENGINE_INPUT_SOURCES}
 
             src/engineRework/engine/Engine.cpp
             src/engineRework/engine/Engine.hpp
@@ -625,6 +704,7 @@ if(Vulkan_FOUND)
             src/engineRework/utility/preprocess/Naming.hpp
             src/engineRework/utility/preprocess/Preprocess.hpp
             src/engineRework/utility/preprocess/Compiler.hpp
+            src/engineRework/utility/preprocess/ClassGenerators.hpp
     )
 
     set (
@@ -690,10 +770,15 @@ if(Vulkan_FOUND)
             src/engineRework
 
             src/engineRework/engine
+
+            src/engineRework/engine/input
+            src/engineRework/engine/input/controller
+
             src/engineRework/engine/event
             src/engineRework/engine/event/key
             src/engineRework/engine/event/mouse
             src/engineRework/engine/event/window
+            src/engineRework/engine/event/controller
 
             src/engineRework/utility
             src/engineRework/utility/logger
