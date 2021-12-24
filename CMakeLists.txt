@@ -739,9 +739,29 @@ if(Vulkan_FOUND)
     )
 
     set (
+            ENGINE_REWORK_RENDER_API_VULKAN_EXTENSION_SOURCES
+
+            src/engineRework/render/API/vulkan/extension/VulkanExtension.cpp
+            src/engineRework/render/API/vulkan/extension/VulkanExtension.hpp
+    )
+
+    set (
+            ENGINE_REWORK_RENDER_API_VULKAN_SOURCES
+
+            ${ENGINE_REWORK_RENDER_API_VULKAN_EXTENSION_SOURCES}
+    )
+
+    set (
+            ENGINE_REWORK_RENDER_API_SOURCES
+
+            ${ENGINE_REWORK_RENDER_API_VULKAN_SOURCES}
+    )
+
+    set (
             ENGINE_REWORK_RENDER_SOURCES
 
             ${ENGINE_REWORK_RENDER_WINDOW_SOURCES}
+            ${ENGINE_REWORK_RENDER_API_SOURCES}
     )
 
     set (
@@ -760,7 +780,7 @@ if(Vulkan_FOUND)
             ${ENGINE_REWORK_SOURCES}
     )
 
-    target_link_libraries(
+    target_link_libraries (
             engine_main_test_application
 
             Vulkan::Vulkan
@@ -768,7 +788,7 @@ if(Vulkan_FOUND)
             ${GLFW_LIBRARIES}
     )
 
-    target_include_directories(
+    target_include_directories (
             engine_main_test_application
 
             PRIVATE
@@ -793,6 +813,9 @@ if(Vulkan_FOUND)
 
             src/engineRework/render
             src/engineRework/render/window
+            src/engineRework/render/API
+            src/engineRework/render/API/vulkan
+            src/engineRework/render/API/vulkan/extension
     )
 
 endif()

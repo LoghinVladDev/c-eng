@@ -1,0 +1,91 @@
+Execution Model
+    - Physical Device [1..n]
+        - QueueFamily [1..n]
+            - Queue [1..n] ( sync/async to each other )
+        - Work ( Tasks ) for Queue Families
+            - Queues in QueueFamily can execute Work designed for Family
+            - Work is defined as
+                - Video Encode
+                - Video Decode
+                - Graphics
+                - Compute
+                - Transfer
+                - Sparse Memory Management
+
+        - Memory Managed by Host
+        - One or more Heaps
+        - Different Areas
+        - Heap is Device / Host Local
+        - Device Sees all Memory
+
+    - Work submitted to queues
+        - can take list of semaphores to wait for until start of command
+        - can take list of semaphores to signal once command finished
+        - no order constraints for commands on different queues, queues & host
+        - command buffer work on single queue respects submission order, but may overlap execution
+        - other type of work on single queue / batches have no ordering constraints
+        - additional constraints expressed with semaphores & fences
+        - explicit commands available
+
+    - Commands recorder in buffers
+        - Actions:
+            - Draw
+            - Dispatch
+            - Clear
+            - Copy
+            - Query/Timestamp
+            - Begin/End subpass operations
+        - Set States:
+            - Bind Pipelines
+            - Bind Descriptor Sets
+            - Bind Buffers
+            - Set Dynamic State
+            - Set Push Constants
+            - Set Render Pass / Subpass State
+        - Perform Sync:
+            - Set / Wait Events
+            - Pipeline Barrier
+            - Render Pass / Subpass Dependencies
+        - Some commands perform more than one task
+            - State commands update state of buffer
+            - Some Action commands ( draw/dispatch ) perform based on state
+                - set cumulatively since start of buffer
+            - Action commands can overlap, or be reordered, but this must not alter the current state used by actions
+            - Actions commands alter framebuffer attachments, r/w buffer or image memory / write to query pools
+            - Sync commands - explicit execution & memory dependencies between two sets of action commands
+            - In a sync command, the second set depends on the first
+
+    Objects obtained from vkDevice are private to device
+
+    Creation
+        - Low frequency, large time consumption
+    Allocation
+        - High frequency, low time consumption
+
+    Pools -> created, Buffers -> allocated
+
+    Create -> destroy
+    Allocate -> free
+
+    3 exceptions :
+           - VkShaderModule
+           - VkPipelineCache
+           - VkValidationCacheEXT
+      - not to be destroyed / freed
+
+    While in pending, do not destroy
+        Event, QueryPool, Buffer, BufferView, Image, ImageView, Pipeline, Sampler, SamplerYcbcrConversion, Framebuffer
+        RenderPass, CommandBuffer, CommandPool, DeviceMemory, DescriptorSet, IndirectCommandsLayoutNV, AccelerationStructureNV
+        AccelerationStructureKHR
+
+    While queue executes commands, if used in execution, do not destroy
+        Fence, Semaphore, CommandBuffer, CommandPool
+
+    Parents not to be destroyed before children
+        CommandPool - parentOf -> CommandBuffer
+        DescriptorPool - parentOf -> DescriptorSet
+        Device - parentOf -> * objects that use device at creation
+
+    Restrictions
+        Queue cannot be explicitly Destroyed. Implicitly Destroyed when Device is Destroyed
+        Pool destruction deletes obects allocated in said pool
