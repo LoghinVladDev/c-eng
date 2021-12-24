@@ -70,8 +70,10 @@ namespace engine {
             return this->log ( message, LogLevel :: LogLevelInfo );
         }
 
+        C_ENG_NO_DISCARD auto toString () const noexcept -> cds :: String override;
     };
 
 }
+
 
 #endif //C_ENG_LOGGER_HPP

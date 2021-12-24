@@ -33,6 +33,13 @@ namespace engine {
         C_ENG_NO_DISCARD constexpr auto type () const noexcept -> EventType override {
             return EventType :: EventTypeWindowResizeEvent;
         }
+
+        C_ENG_NO_DISCARD inline auto copy () const noexcept -> C_ENG_TYPE ( WindowResizeEvent ) * override {
+            return new C_ENG_TYPE ( WindowResizeEvent ) ( * this );
+        }
+
+        C_ENG_NO_DISCARD auto toString () const noexcept -> cds :: String override;
+        C_ENG_NO_DISCARD auto equals ( cds :: Object const & ) const noexcept -> bool override;
     };
 
 }

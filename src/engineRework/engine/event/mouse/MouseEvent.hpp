@@ -30,6 +30,11 @@ namespace engine {
         C_ENG_NO_DISCARD constexpr auto type () const noexcept -> EventType override {
             return EventType :: EventTypeCustomMouseEvent;
         }
+
+        C_ENG_NO_DISCARD auto copy () const noexcept -> C_ENG_TYPE ( MouseEvent ) * override = 0;
+
+        C_ENG_NO_DISCARD auto toString () const noexcept -> cds :: String override;
+        C_ENG_NO_DISCARD auto equals ( cds :: Object const & ) const noexcept -> bool override;
     };
 
 }

@@ -29,6 +29,8 @@ namespace engine {
         };
 
         C_ENG_DESTRUCTOR ( Joystick ) () noexcept override;
+
+        C_ENG_NO_DISCARD auto toString () const noexcept -> cds :: String override;
     };
 
 }

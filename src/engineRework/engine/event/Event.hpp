@@ -29,6 +29,12 @@ namespace engine {
         C_ENG_NO_DISCARD constexpr virtual auto type () const noexcept -> EventType {
             return EventType :: EventTypeCustom;
         }
+
+        C_ENG_NO_DISCARD auto copy () const noexcept -> C_ENG_TYPE ( Event ) * override = 0;
+
+        C_ENG_NO_DISCARD auto toString () const noexcept -> cds :: String override;
+
+        C_ENG_NO_DISCARD auto equals ( cds :: Object const & ) const noexcept -> bool override;
     };
 
 }

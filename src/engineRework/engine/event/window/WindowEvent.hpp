@@ -25,6 +25,10 @@ namespace engine {
         C_ENG_NO_DISCARD constexpr auto type () const noexcept -> EventType override {
             return EventType :: EventTypeCustomWindowEvent;
         }
+
+        C_ENG_NO_DISCARD auto copy () const noexcept -> C_ENG_TYPE ( WindowEvent ) * override = 0;
+
+        C_ENG_NO_DISCARD auto toString () const noexcept -> cds :: String override;
     };
 
 }

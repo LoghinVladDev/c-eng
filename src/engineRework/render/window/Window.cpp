@@ -301,7 +301,7 @@ auto C_ENG_CLASS ( Window ) :: clear () noexcept -> C_ENG_TYPE ( Window ) & {
     return * this;
 }
 
-auto C_ENG_CLASS ( Window ) :: setTitle (
+C_ENG_MAYBE_UNUSED auto C_ENG_CLASS ( Window ) :: setTitle (
         String const & title
 ) noexcept -> C_ENG_TYPE ( Window ) & {
 
@@ -314,7 +314,7 @@ auto C_ENG_CLASS ( Window ) :: setTitle (
     return * this;
 }
 
-auto C_ENG_CLASS ( Window ) :: setWindowType (
+C_ENG_MAYBE_UNUSED auto C_ENG_CLASS ( Window ) :: setWindowType (
         WindowType                      windowType,
         C_ENG_TYPE ( Monitor )  const * pMonitor
 ) noexcept -> C_ENG_TYPE ( Window ) & {
@@ -533,7 +533,7 @@ namespace engine {
 
 #include <WindowFrameBufferResizeEvent.hpp>
 
-auto windowFrameBufferResizeEventRootCallback (
+static auto windowFrameBufferResizeEventRootCallback (
         C_ENG_CLASS ( Window ) :: Handle    handle,
         sint32                              width,
         sint32                              height
@@ -549,13 +549,13 @@ auto windowFrameBufferResizeEventRootCallback (
                 pObject->size()
         );
 
-        (void) pObject->engine()->windowFrameBufferResizeEvent ( & event );
+        (void) pObject->engine()->eventHandler().windowFrameBufferResizeEvent ( & event );
     }
 }
 
 #include <WindowResizeEvent.hpp>
 
-auto windowResizeEventRootCallback (
+static auto windowResizeEventRootCallback (
         C_ENG_CLASS ( Window ) :: Handle    handle,
         sint32                              width,
         sint32                              height
@@ -571,7 +571,7 @@ auto windowResizeEventRootCallback (
                 pObject->size()
         );
 
-        (void) pObject->engine()->windowResizeEvent ( & event );
+        (void) pObject->engine()->eventHandler().windowResizeEvent ( & event );
     }
 
     __updateWindowSize (
@@ -583,14 +583,14 @@ auto windowResizeEventRootCallback (
 
 #include <WindowCloseEvent.hpp>
 
-auto windowCloseEventRootCallback (
+static auto windowCloseEventRootCallback (
         C_ENG_TYPE ( Window ) :: Handle handle
 ) noexcept -> void {
     auto pObject = reinterpret_cast < C_ENG_CLASS ( Window ) * > ( glfwGetWindowUserPointer ( handle ) );
     if ( pObject->engine() != nullptr ) {
 
         C_ENG_TYPE ( WindowCloseEvent ) event ( pObject );
-        (void) pObject->engine()->windowCloseEvent ( & event );
+        (void) pObject->engine()->eventHandler().windowCloseEvent ( & event );
 
         if ( event.cancelClose() ) {
             glfwSetWindowShouldClose ( handle, GLFW_FALSE );
@@ -601,7 +601,7 @@ auto windowCloseEventRootCallback (
 
 #include <WindowContentScaleEvent.hpp>
 
-auto windowContentScaleEventRootCallback (
+static auto windowContentScaleEventRootCallback (
         C_ENG_CLASS ( Window ) :: Handle    handle,
         float                               xScale,
         float                               yScale
@@ -617,14 +617,14 @@ auto windowContentScaleEventRootCallback (
                 }
         );
 
-        (void) pObject->engine()->windowContentScaleEvent ( & event );
+        (void) pObject->engine()->eventHandler().windowContentScaleEvent ( & event );
 
     }
 }
 
 #include <WindowMoveEvent.hpp>
 
-auto windowMoveEventRootCallback (
+static auto windowMoveEventRootCallback (
         C_ENG_CLASS ( Window ) :: Handle    handle,
         sint32                              xPos,
         sint32                              yPos
@@ -641,7 +641,7 @@ auto windowMoveEventRootCallback (
                 pObject->position()
         );
 
-        (void) pObject->engine()->windowMoveEvent ( & event );
+        (void) pObject->engine()->eventHandler().windowMoveEvent ( & event );
 
     }
 }
@@ -649,7 +649,7 @@ auto windowMoveEventRootCallback (
 #include <WindowMinimizeEvent.hpp>
 #include <WindowRestoreEvent.hpp>
 
-auto windowMinimizeEventRootCallback (
+static auto windowMinimizeEventRootCallback (
         C_ENG_CLASS ( Window ) :: Handle    handle,
         sint32                              minimized
 ) noexcept -> void {
@@ -662,7 +662,7 @@ auto windowMinimizeEventRootCallback (
                     pObject
             );
 
-            (void) pObject->engine()->windowMinimizeEvent ( & event );
+            (void) pObject->engine()->eventHandler().windowMinimizeEvent ( & event );
 
         } else {
 
@@ -670,7 +670,7 @@ auto windowMinimizeEventRootCallback (
                     pObject
             );
 
-            (void) pObject->engine()->windowRestoreEvent ( & event );
+            (void) pObject->engine()->eventHandler().windowRestoreEvent ( & event );
 
         }
     }
@@ -678,7 +678,7 @@ auto windowMinimizeEventRootCallback (
 
 #include <WindowMaximizeEvent.hpp>
 
-auto windowMaximizeEventRootCallback (
+static auto windowMaximizeEventRootCallback (
         C_ENG_CLASS ( Window ) :: Handle    handle,
         sint32                              maximized
 ) noexcept -> void {
@@ -691,7 +691,7 @@ auto windowMaximizeEventRootCallback (
                     pObject
             );
 
-            (void) pObject->engine()->windowMaximizeEvent ( & event );
+            (void) pObject->engine()->eventHandler().windowMaximizeEvent ( & event );
 
         } else {
 
@@ -699,7 +699,7 @@ auto windowMaximizeEventRootCallback (
                     pObject
             );
 
-            (void) pObject->engine()->windowRestoreEvent ( & event );
+            (void) pObject->engine()->eventHandler().windowRestoreEvent ( & event );
 
         }
     }
@@ -708,7 +708,7 @@ auto windowMaximizeEventRootCallback (
 #include <WindowGainFocusEvent.hpp>
 #include <WindowLoseFocusEvent.hpp>
 
-auto windowFocusEventRootCallback (
+static auto windowFocusEventRootCallback (
         C_ENG_CLASS ( Window ) :: Handle    handle,
         sint32                              focusGained
 ) noexcept -> void {
@@ -721,7 +721,7 @@ auto windowFocusEventRootCallback (
                     pObject
             );
 
-            (void) pObject->engine()->windowGainFocusEvent ( & event );
+            (void) pObject->engine()->eventHandler().windowGainFocusEvent ( & event );
 
         } else {
 
@@ -729,7 +729,7 @@ auto windowFocusEventRootCallback (
                     pObject
             );
 
-            (void) pObject->engine()->windowLoseFocusEvent ( & event );
+            (void) pObject->engine()->eventHandler().windowLoseFocusEvent ( & event );
 
         }
     }
@@ -747,7 +747,7 @@ static auto windowRefreshRequestEventRootCallback (
                 pObject
         );
 
-        (void) pObject->engine()->windowRefreshRequestEvent ( & event );
+        (void) pObject->engine()->eventHandler().windowRefreshRequestEvent ( & event );
 
     }
 }
@@ -755,7 +755,7 @@ static auto windowRefreshRequestEventRootCallback (
 #include <KeyPressEvent.hpp>
 #include <KeyReleaseEvent.hpp>
 
-auto keyEventRootCallback (
+static auto keyEventRootCallback (
         C_ENG_CLASS ( Window ) :: Handle    handle,
         sint32                              key,
         sint32                              scanCode C_ENG_MAYBE_UNUSED,
@@ -763,7 +763,7 @@ auto keyEventRootCallback (
         sint32                              modifiers
 ) noexcept -> void {
     auto pObject = reinterpret_cast < C_ENG_TYPE ( Window ) * > ( glfwGetWindowUserPointer ( handle ) );
-    if ( pObject != nullptr ) {
+    if ( pObject->engine() != nullptr ) {
 
         if ( action == GLFW_PRESS ) {
             C_ENG_TYPE ( KeyPressEvent ) event (
@@ -772,7 +772,7 @@ auto keyEventRootCallback (
                     static_cast < KeyModifiers > ( modifiers )
             );
 
-            (void) pObject->engine()->keyPressEvent ( & event );
+            (void) pObject->engine()->eventHandler().keyPressEvent ( & event );
 
         } else if ( action == GLFW_RELEASE ) {
 
@@ -782,7 +782,7 @@ auto keyEventRootCallback (
                     static_cast < KeyModifiers > ( modifiers )
             );
 
-            (void) pObject->engine()->keyReleaseEvent ( & event );
+            (void) pObject->engine()->eventHandler().keyReleaseEvent ( & event );
 
         } else {
             /// do nothing
@@ -808,7 +808,7 @@ namespace engine {
 
 #include <MouseMoveEvent.hpp>
 
-auto mouseMoveEventRootCallback (
+static auto mouseMoveEventRootCallback (
         C_ENG_CLASS ( Window ) :: Handle    handle,
         double                              xPos,
         double                              yPos
@@ -827,7 +827,7 @@ auto mouseMoveEventRootCallback (
                 pObject->mousePosition()
         );
 
-        (void) pObject->engine()->mouseMoveEvent( & event );
+        (void) pObject->engine()->eventHandler().mouseMoveEvent( & event );
 
         __updateCursorPos (
                 pObject,
@@ -840,7 +840,7 @@ auto mouseMoveEventRootCallback (
 #include <MouseEnterEvent.hpp>
 #include <MouseLeaveEvent.hpp>
 
-auto mouseEnterEventRootCallback (
+static auto mouseEnterEventRootCallback (
         C_ENG_CLASS ( Window ) :: Handle    handle,
         sint32                              entered
 ) noexcept -> void {
@@ -853,7 +853,7 @@ auto mouseEnterEventRootCallback (
                     pObject->mousePosition()
             );
 
-            (void) pObject->engine()->mouseEnterEvent ( & event );
+            (void) pObject->engine()->eventHandler().mouseEnterEvent ( & event );
 
         } else {
 
@@ -862,7 +862,7 @@ auto mouseEnterEventRootCallback (
                     pObject->mousePosition()
             );
 
-            (void) pObject->engine()->mouseLeaveEvent ( & event );
+            (void) pObject->engine()->eventHandler().mouseLeaveEvent ( & event );
 
         }
     }
@@ -871,7 +871,7 @@ auto mouseEnterEventRootCallback (
 #include <MousePressEvent.hpp>
 #include <MouseReleaseEvent.hpp>
 
-auto mousePressEventRootCallback (
+static auto mousePressEventRootCallback (
         C_ENG_CLASS ( Window ) :: Handle    handle,
         sint32                              button,
         sint32                              action,
@@ -888,7 +888,7 @@ auto mousePressEventRootCallback (
                     static_cast < KeyModifiers > ( modifiers )
             );
 
-            (void) pObject->engine()->mousePressEvent ( & event );
+            (void) pObject->engine()->eventHandler().mousePressEvent ( & event );
 
         } else if ( action == GLFW_RELEASE ) {
 
@@ -899,7 +899,7 @@ auto mousePressEventRootCallback (
                     static_cast < KeyModifiers > ( modifiers )
             );
 
-            (void) pObject->engine()->mouseReleaseEvent ( & event );
+            (void) pObject->engine()->eventHandler().mouseReleaseEvent ( & event );
 
         } else {
             /// do nothing
@@ -909,7 +909,7 @@ auto mousePressEventRootCallback (
 
 #include <MouseScrollEvent.hpp>
 
-auto mouseScrollEventRootCallback (
+static auto mouseScrollEventRootCallback (
         C_ENG_CLASS ( Window ) :: Handle    handle,
         double                              xOffset,
         double                              yOffset
@@ -924,7 +924,7 @@ auto mouseScrollEventRootCallback (
                 yOffset
         );
 
-        (void) pObject->engine()->mouseScrollEvent ( & event );
+        (void) pObject->engine()->eventHandler().mouseScrollEvent ( & event );
 
     }
 }
@@ -1069,7 +1069,7 @@ auto C_ENG_CLASS ( Window ) :: hide () noexcept -> C_ENG_TYPE ( Window ) & {
     return * this;
 }
 
-auto C_ENG_CLASS ( Window ) :: show () noexcept -> C_ENG_TYPE ( Window ) & {
+C_ENG_MAYBE_UNUSED auto C_ENG_CLASS ( Window ) :: show () noexcept -> C_ENG_TYPE ( Window ) & {
     if ( this->handle() == nullptr ) {
         return * this;
     }
@@ -1079,7 +1079,7 @@ auto C_ENG_CLASS ( Window ) :: show () noexcept -> C_ENG_TYPE ( Window ) & {
     return * this;
 }
 
-auto C_ENG_CLASS ( Window ) :: grabInputFocus () noexcept -> C_ENG_TYPE ( Window ) & {
+C_ENG_MAYBE_UNUSED auto C_ENG_CLASS ( Window ) :: grabInputFocus () noexcept -> C_ENG_TYPE ( Window ) & {
     if ( this->handle() == nullptr ) {
         return * this;
     }
@@ -1089,7 +1089,7 @@ auto C_ENG_CLASS ( Window ) :: grabInputFocus () noexcept -> C_ENG_TYPE ( Window
     return * this;
 }
 
-auto C_ENG_CLASS ( Window ) :: requestAttention () noexcept -> C_ENG_TYPE ( Window ) & {
+C_ENG_MAYBE_UNUSED auto C_ENG_CLASS ( Window ) :: requestAttention () noexcept -> C_ENG_TYPE ( Window ) & {
     if ( this->handle() == nullptr ) {
         return * this;
     }
@@ -1106,26 +1106,44 @@ auto C_ENG_CLASS ( Window ) :: pollEvents () noexcept -> C_ENG_TYPE ( Window ) &
 
         while ( ! this->_customWindowEvents.empty() ) {
             auto pEvent = this->_customWindowEvents.pop();
-            (void) this->engine()->windowCustomEvent ( pEvent );
+            (void) this->engine()->eventHandler().windowCustomEvent ( pEvent );
             delete pEvent;
         }
 
         while ( ! this->_customMouseEvents.empty() ) {
             auto pEvent = this->_customMouseEvents.pop();
-            (void) this->engine()->mouseCustomEvent ( pEvent );
+            (void) this->engine()->eventHandler().mouseCustomEvent ( pEvent );
             delete pEvent;
         }
 
         while ( ! this->_customKeyEvents.empty() ) {
             auto pEvent = this->_customKeyEvents.pop();
-            (void) this->engine()->keyCustomEvent ( pEvent );
+            (void) this->engine()->eventHandler().keyCustomEvent ( pEvent );
             delete pEvent;
         }
 
         while ( ! this->_customEvents.empty() ) {
             auto pEvent = this->_customEvents.pop();
-            (void) this->engine()->customEvent ( pEvent );
+            (void) this->engine()->eventHandler().customEvent ( pEvent );
             delete pEvent;
+        }
+
+    } else {
+
+        while ( ! this->_customWindowEvents.empty() ) {
+            delete this->_customWindowEvents.pop();
+        }
+
+        while ( ! this->_customMouseEvents.empty() ) {
+            delete this->_customMouseEvents.pop();
+        }
+
+        while ( ! this->_customKeyEvents.empty() ) {
+            delete this->_customKeyEvents.pop();
+        }
+
+        while ( ! this->_customEvents.empty() ) {
+            delete this->_customEvents.pop();
         }
 
     }
@@ -1133,30 +1151,67 @@ auto C_ENG_CLASS ( Window ) :: pollEvents () noexcept -> C_ENG_TYPE ( Window ) &
     return * this;
 }
 
-auto C_ENG_CLASS ( Window ) :: handleEvent (
-        C_ENG_TYPE ( WindowEvent ) * pEvent
+C_ENG_MAYBE_UNUSED auto C_ENG_CLASS ( Window ) :: handleEvent (
+        C_ENG_TYPE ( WindowEvent ) const & event
 ) noexcept -> C_ENG_TYPE ( Window ) & {
-    (void) this->_customWindowEvents.push ( pEvent );
+    (void) this->_customWindowEvents.push ( event.copy() );
     return * this;
 }
 
-auto C_ENG_CLASS ( Window ) :: handleEvent (
-        C_ENG_TYPE ( MouseEvent ) * pEvent
+C_ENG_MAYBE_UNUSED auto C_ENG_CLASS ( Window ) :: handleEvent (
+        C_ENG_TYPE ( MouseEvent ) const & event
 ) noexcept -> C_ENG_TYPE ( Window ) & {
-    (void) this->_customMouseEvents.push ( pEvent );
+    (void) this->_customMouseEvents.push ( event.copy() );
     return * this;
 }
 
-auto C_ENG_CLASS ( Window ) :: handleEvent (
-        C_ENG_TYPE ( KeyEvent ) * pEvent
+C_ENG_MAYBE_UNUSED auto C_ENG_CLASS ( Window ) :: handleEvent (
+        C_ENG_TYPE ( KeyEvent ) const & event
 ) noexcept -> C_ENG_TYPE ( Window ) & {
-    (void) this->_customKeyEvents.push ( pEvent );
+    (void) this->_customKeyEvents.push ( event.copy() );
     return * this;
 }
 
-auto C_ENG_CLASS ( Window ) :: handleEvent (
-        C_ENG_TYPE ( Event ) * pEvent
+C_ENG_MAYBE_UNUSED auto C_ENG_CLASS ( Window ) :: handleEvent (
+        C_ENG_TYPE ( Event ) const & event
 ) noexcept -> C_ENG_TYPE ( Window ) & {
-    (void) this->_customEvents.push ( pEvent );
+    (void) this->_customEvents.push ( event.copy() );
     return * this;
+}
+
+auto C_ENG_CLASS ( Window ) :: toString () const noexcept -> String {
+    return "Window "
+           "{ handle = "_s              + :: toString ( this->handle() ) +
+           ", title = "                 + this->_title +
+           ", position = "              + :: toString ( this->position() ) +
+           ", size = "                  + :: toString ( this->size() ) +
+           ", mousePosition = "         + :: toString ( this->mousePosition() ) +
+           ", refreshRate = "           + this->refreshRate() +
+           ", engine = "                + :: toString ( this->engine() ) +
+           ", monitor = "               + :: toString ( this->monitor() ) +
+           ", type = "                  + :: toString ( this->type() ) +
+           ", flags = "                 + :: windowFlagsToString ( this->flags() ) +
+           ", minimumSize = "           + :: toString ( this->minimumSize() ) +
+           ", maximumSize = "           + :: toString ( this->maximumSize() ) +
+           ", customEvents = "          + this->_customEvents.toString () +
+           ", customWindowEvents = "    + this->_customWindowEvents.toString () +
+           ", customMouseEvents = "     + this->_customMouseEvents.toString () +
+           ", customKeyEvents = "       + this->_customKeyEvents.toString () +
+           " }";
+}
+
+auto C_ENG_CLASS ( Window ) :: equals (
+        Object const & object
+) const noexcept -> bool {
+
+    if ( this == & object ) {
+        return true;
+    }
+
+    auto pWindow = dynamic_cast < decltype ( this ) > ( & object );
+    if ( pWindow == nullptr ) {
+        return false;
+    }
+
+    return this->handle() == pWindow->handle();
 }

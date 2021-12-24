@@ -96,3 +96,9 @@ auto C_ENG_CLASS ( Settings ) :: save () noexcept -> C_ENG_TYPE ( Settings ) & {
 
     return * this;
 }
+
+auto C_ENG_CLASS ( Settings ) :: toString () const noexcept -> String {
+    return "Settings "
+           "{ initialized = "_s + :: toString ( this->initialized() ) +
+           ", settings = "      + this->_settings.toString();
+}

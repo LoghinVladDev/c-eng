@@ -30,6 +30,12 @@ namespace engine {
             return EventType :: EventTypeWindowContentScaleEvent;
         }
 
+        C_ENG_NO_DISCARD inline auto copy () const noexcept -> C_ENG_TYPE ( WindowContentScaleEvent ) * override {
+            return new C_ENG_TYPE ( WindowContentScaleEvent ) ( * this );
+        }
+
+        C_ENG_NO_DISCARD auto toString () const noexcept -> cds :: String override;
+        C_ENG_NO_DISCARD auto equals ( cds :: Object const & ) const noexcept -> bool override;
     };
 
 }

@@ -9,8 +9,6 @@
 
 namespace engine {
 
-    using Flags = cds :: uint32;
-
     enum EngineState : cds :: uint8 {
         EngineStateInactive                 = 0x00U,
         EngineStateStartup                  = 0x01U,
@@ -18,21 +16,6 @@ namespace engine {
         EngineStateRunning                  = 0x03U,
         EngineStateShutdown                 = 0x04U
     };
-
-    C_ENG_NO_DISCARD constexpr auto toString ( EngineState state ) noexcept -> cds :: StringLiteral {
-        cds :: StringLiteral asString;
-
-        switch ( state ) {
-            case EngineStateInactive:                   { asString = "Inactive";                    break; }
-            case EngineStateStartupAcquiringSettings:   { asString = "Acquiring Settings";          break; }
-            case EngineStateStartup:                    { asString = "Starting Up";                 break; }
-            case EngineStateRunning:                    { asString = "Running";                     break; }
-            case EngineStateShutdown:                   { asString = "Shutdown";                    break; }
-        }
-
-        return asString;
-    }
-
 
     enum LogLevel : cds :: uint8 {
         LogLevelForced      = 0x00U,
@@ -44,24 +27,6 @@ namespace engine {
         LogLevelDebug       = 0x06U,
         LogLevelInfo        = 0x07U
     };
-
-    C_ENG_NO_DISCARD constexpr auto toString ( LogLevel level ) noexcept -> cds :: StringLiteral {
-        cds :: StringLiteral asString = "";
-
-        switch ( level ) {
-            case LogLevelForced:    { asString = "Forced";      break; }
-            case LogLevelSystem:    { asString = "System";      break; }
-            case LogLevelFatal:     { asString = "Fatal";       break; }
-            case LogLevelCritical:  { asString = "Critical";    break; }
-            case LogLevelError:     { asString = "Error";       break; }
-            case LogLevelWarning:   { asString = "Warning";     break; }
-            case LogLevelDebug:     { asString = "Debug";       break; }
-            case LogLevelInfo:      { asString = "Info";        break; }
-        }
-
-        return asString;
-    }
-
 
     enum EventType : cds :: uint8 {
         EventTypeCustom                         = 0x00U,
@@ -94,55 +59,11 @@ namespace engine {
         EventTypeCustomControllerEvent          = 0x17U,
         EventTypeControllerConnectEvent         = 0x18U,
         EventTypeControllerDisconnectEvent      = 0x19U,
-        EventTypeControllerAxisChangeEvent      = 0x1aU,
+        EventTypeControllerAxisEvent            = 0x1aU,
         EventTypeControllerButtonPressEvent     = 0x1bU,
         EventTypeControllerButtonReleaseEvent   = 0x1cU,
-        EventTypeControllerHatChangeEvent       = 0x1dU
+        EventTypeControllerHatEvent             = 0x1dU
     };
-
-    C_ENG_NO_DISCARD constexpr auto toString ( EventType type ) noexcept -> cds :: StringLiteral {
-        cds :: StringLiteral asString = "";
-
-        switch ( type ) {
-            case EventTypeCustom:                       { asString = "CustomEvent";                     break; }
-
-            case EventTypeCustomKeyEvent:               { asString = "CustomKeyEvent";                  break; }
-            case EventTypeKeyPressEvent:                { asString = "KeyPressEvent";                   break; }
-            case EventTypeKeyReleaseEvent:              { asString = "KeyReleaseEvent";                 break; }
-
-            case EventTypeCustomMouseEvent:             { asString = "CustomMouseEvent";                break; }
-            case EventTypeMouseMoveEvent:               { asString = "MouseMoveEvent";                  break; }
-            case EventTypeMouseEnterEvent:              { asString = "MouseEnterEvent";                 break; }
-            case EventTypeMouseLeaveEvent:              { asString = "MouseLeaveEvent";                 break; }
-            case EventTypeMouseScrollEvent:             { asString = "MouseScrollEvent";                break; }
-            case EventTypeMousePressEvent:              { asString = "MousePressEvent";                 break; }
-            case EventTypeMouseReleaseEvent:            { asString = "MouseReleaseEvent";               break; }
-
-            case EventTypeCustomWindowEvent:            { asString = "CustomWindowEvent";               break; }
-            case EventTypeWindowResizeEvent:            { asString = "WindowResizeEvent";               break; }
-            case EventTypeWindowFrameBufferResizeEvent: { asString = "WindowFrameBufferResizeEvent";    break; }
-            case EventTypeWindowCloseEvent:             { asString = "WindowCloseEvent";                break; }
-            case EventTypeWindowContentScaleEvent:      { asString = "WindowContentScaleEvent";         break; }
-            case EventTypeWindowMoveEvent:              { asString = "WindowMoveEvent";                 break; }
-            case EventTypeWindowRestoreEvent:           { asString = "WindowRestoreEvent";              break; }
-            case EventTypeWindowMinimizeEvent:          { asString = "WindowMinimizeEvent";             break; }
-            case EventTypeWindowMaximizeEvent:          { asString = "WindowMaximizeEvent";             break; }
-            case EventTypeWindowGainFocusEvent:         { asString = "WindowGainFocusEvent";            break; }
-            case EventTypeWindowLoseFocusEvent:         { asString = "WindowLoseFocusEvent";            break; }
-            case EventTypeWindowRefreshRequestEvent:    { asString = "WindowRefreshRequestEvent";       break; }
-
-            case EventTypeCustomControllerEvent:        { asString = "CustomControllerEvent";           break; }
-            case EventTypeControllerConnectEvent:       { asString = "ControllerConnectEvent";          break; }
-            case EventTypeControllerDisconnectEvent:    { asString = "ControllerDisconnectEvent";       break; }
-            case EventTypeControllerAxisChangeEvent:    { asString = "ControllerAxisChangeEvent";       break; }
-            case EventTypeControllerHatChangeEvent:     { asString = "ControllerHatChangeEvent";        break; }
-            case EventTypeControllerButtonPressEvent:   { asString = "ControllerButtonPressEvent";      break; }
-            case EventTypeControllerButtonReleaseEvent: { asString = "ControllerButtonReleaseEvent";    break; }
-        }
-
-        return asString;
-    }
-
 
     enum KeyModifier : cds :: uint16 {
         KeyModifierNone     = 0x0000U,
@@ -151,27 +72,10 @@ namespace engine {
         KeyModifierAlt      = static_cast < cds :: uint16 > ( GLFW_MOD_ALT ),
         KeyModifierSuper    = static_cast < cds :: uint16 > ( GLFW_MOD_SUPER ),
         KeyModifierCapsLock = static_cast < cds :: uint16 > ( GLFW_MOD_CAPS_LOCK ),
-        KeyModifierNumLock  = static_cast < cds :: uint16 > ( GLFW_MOD_NUM_LOCK )
+        KeyModifierNumLock  = static_cast < cds :: uint16 > ( GLFW_MOD_NUM_LOCK ),
+
+        KeyModifierMaxValue = KeyModifierNumLock
     };
-
-    using KeyModifiers = Flags;
-
-    C_ENG_NO_DISCARD constexpr auto toString ( KeyModifier modifier ) noexcept -> cds :: StringLiteral {
-        cds :: StringLiteral asString = "";
-
-        switch ( modifier ) {
-            case KeyModifierNone:       { asString = "None";        break; }
-            case KeyModifierShift:      { asString = "Shift";       break; }
-            case KeyModifierControl:    { asString = "Control";     break; }
-            case KeyModifierAlt:        { asString = "Alt";         break; }
-            case KeyModifierSuper:      { asString = "Super";       break; }
-            case KeyModifierCapsLock:   { asString = "Caps Lock";   break; }
-            case KeyModifierNumLock:    { asString = "Num Lock";    break; }
-        }
-
-        return asString;
-    }
-
 
     enum Key : cds :: sint16 {
         KeyUnknown              = static_cast < cds :: sint16 > ( GLFW_KEY_UNKNOWN ),
@@ -297,137 +201,6 @@ namespace engine {
         KeyMenu                 = static_cast < cds :: sint16 > ( GLFW_KEY_MENU ),
     };
 
-    C_ENG_NO_DISCARD constexpr auto toString ( Key key ) noexcept -> cds :: StringLiteral {
-        cds :: StringLiteral asString = "";
-
-        switch ( key ) {
-            case KeyUnknown:        { asString = "Unknown Key";             break; }
-            case KeySpace:          { asString = "Space ( )";               break; }
-            case KeyApostrophe:     { asString = "Apostrophe (')";          break; }
-            case KeyComma:          { asString = "Comma (,)";               break; }
-            case KeyMinus:          { asString = "Minus (-)";               break; }
-            case KeyPeriod:         { asString = "Period (.)";              break; }
-            case KeySlash:          { asString = "Slash (/)";               break; }
-            case Key0:              { asString = "Zero (0)";                break; }
-            case Key1:              { asString = "One (1)";                 break; }
-            case Key2:              { asString = "Two (2)";                 break; }
-            case Key3:              { asString = "Three (3)";               break; }
-            case Key4:              { asString = "Four (4)";                break; }
-            case Key5:              { asString = "Five (5)";                break; }
-            case Key6:              { asString = "Six (6)";                 break; }
-            case Key7:              { asString = "Seven (7)";               break; }
-            case Key8:              { asString = "Eight (8)";               break; }
-            case Key9:              { asString = "Nine (9)";                break; }
-            case KeySemicolon:      { asString = "Semicolon (;)";           break; }
-            case KeyEqual:          { asString = "Equal (=)";               break; }
-            case KeyA:              { asString = "Letter A (A)";            break; }
-            case KeyB:              { asString = "Letter B (B)";            break; }
-            case KeyC:              { asString = "Letter C (C)";            break; }
-            case KeyD:              { asString = "Letter D (D)";            break; }
-            case KeyE:              { asString = "Letter E (E)";            break; }
-            case KeyF:              { asString = "Letter F (F)";            break; }
-            case KeyG:              { asString = "Letter G (G)";            break; }
-            case KeyH:              { asString = "Letter H (H)";            break; }
-            case KeyI:              { asString = "Letter I (I)";            break; }
-            case KeyJ:              { asString = "Letter J (J)";            break; }
-            case KeyK:              { asString = "Letter K (K)";            break; }
-            case KeyL:              { asString = "Letter L (L)";            break; }
-            case KeyM:              { asString = "Letter M (M)";            break; }
-            case KeyN:              { asString = "Letter N (N)";            break; }
-            case KeyO:              { asString = "Letter O (O)";            break; }
-            case KeyP:              { asString = "Letter P (P)";            break; }
-            case KeyQ:              { asString = "Letter Q (Q)";            break; }
-            case KeyR:              { asString = "Letter R (R)";            break; }
-            case KeyS:              { asString = "Letter S (S)";            break; }
-            case KeyT:              { asString = "Letter T (T)";            break; }
-            case KeyU:              { asString = "Letter U (U)";            break; }
-            case KeyV:              { asString = "Letter V (V)";            break; }
-            case KeyW:              { asString = "Letter W (W)";            break; }
-            case KeyX:              { asString = "Letter X (X)";            break; }
-            case KeyY:              { asString = "Letter Y (Y)";            break; }
-            case KeyZ:              { asString = "Letter Z (Z)";            break; }
-            case KeyLeftBracket:    { asString = "Left Bracket ([)";        break; }
-            case KeyBackslash:      { asString = "Backslash (\\)";          break; } // NOLINT(clion-misra-cpp2008-2-13-1)
-            case KeyRightBracket:   { asString = "Right Bracket (])";       break; }
-            case KeyGraveAccent:    { asString = "Grave Accent (`)";        break; }
-            case KeyWorld1:         { asString = "World 1 (Non-US #)";      break; }
-            case KeyWorld2:         { asString = "World 2 (Non-US #)";      break; }
-            case KeyEscape:         { asString = "Escape";                  break; }
-            case KeyEnter:          { asString = "Enter";                   break; }
-            case KeyTab:            { asString = "Tab";                     break; }
-            case KeyBackspace:      { asString = "Backspace";               break; }
-            case KeyInsert:         { asString = "Insert";                  break; }
-            case KeyDelete:         { asString = "Delete";                  break; }
-            case KeyRight:          { asString = "Right Arrow";             break; }
-            case KeyLeft:           { asString = "Left Arrow";              break; }
-            case KeyDown:           { asString = "Down Arrow";              break; }
-            case KeyUp:             { asString = "Up Arrow";                break; }
-            case KeyPageUp:         { asString = "Page Up";                 break; }
-            case KeyPageDown:       { asString = "Page Down";               break; }
-            case KeyHome:           { asString = "Home";                    break; }
-            case KeyEnd:            { asString = "End";                     break; }
-            case KeyCapsLock:       { asString = "Caps Lock";               break; }
-            case KeyScrollLock:     { asString = "Scroll Lock";             break; }
-            case KeyNumLock:        { asString = "Num Lock";                break; }
-            case KeyPrintScreen:    { asString = "Print Screen";            break; }
-            case KeyPause:          { asString = "Pause";                   break; }
-            case KeyF1:             { asString = "Function Key 1 (F1)";     break; }
-            case KeyF2:             { asString = "Function Key 2 (F2)";     break; }
-            case KeyF3:             { asString = "Function Key 3 (F3)";     break; }
-            case KeyF4:             { asString = "Function Key 4 (F4)";     break; }
-            case KeyF5:             { asString = "Function Key 5 (F5)";     break; }
-            case KeyF6:             { asString = "Function Key 6 (F6)";     break; }
-            case KeyF7:             { asString = "Function Key 7 (F7)";     break; }
-            case KeyF8:             { asString = "Function Key 8 (F8)";     break; }
-            case KeyF9:             { asString = "Function Key 9 (F9)";     break; }
-            case KeyF10:            { asString = "Function Key 10 (F10)";   break; }
-            case KeyF11:            { asString = "Function Key 11 (F11)";   break; }
-            case KeyF12:            { asString = "Function Key 12 (F12)";   break; }
-            case KeyF13:            { asString = "Function Key 13 (F13)";   break; }
-            case KeyF14:            { asString = "Function Key 14 (F14)";   break; }
-            case KeyF15:            { asString = "Function Key 15 (F15)";   break; }
-            case KeyF16:            { asString = "Function Key 16 (F16)";   break; }
-            case KeyF17:            { asString = "Function Key 17 (F17)";   break; }
-            case KeyF18:            { asString = "Function Key 18 (F18)";   break; }
-            case KeyF19:            { asString = "Function Key 19 (F19)";   break; }
-            case KeyF20:            { asString = "Function Key 20 (F20)";   break; }
-            case KeyF21:            { asString = "Function Key 21 (F21)";   break; }
-            case KeyF22:            { asString = "Function Key 22 (F22)";   break; }
-            case KeyF23:            { asString = "Function Key 23 (F23)";   break; }
-            case KeyF24:            { asString = "Function Key 24 (F24)";   break; }
-            case KeyF25:            { asString = "Function Key 25 (F25)";   break; }
-            case KeyKeypad0:        { asString = "Keypad Zero (0)";         break; }
-            case KeyKeypad1:        { asString = "Keypad One (1)";          break; }
-            case KeyKeypad2:        { asString = "Keypad Two (2)";          break; }
-            case KeyKeypad3:        { asString = "Keypad Three (3)";        break; }
-            case KeyKeypad4:        { asString = "Keypad Four (4)";         break; }
-            case KeyKeypad5:        { asString = "Keypad Five (5)";         break; }
-            case KeyKeypad6:        { asString = "Keypad Six (6)";          break; }
-            case KeyKeypad7:        { asString = "Keypad Seven (7)";        break; }
-            case KeyKeypad8:        { asString = "Keypad Eight (8)";        break; }
-            case KeyKeypad9:        { asString = "Keypad Nine (9)";         break; }
-            case KeyKeypadDecimal:  { asString = "Keypad Decimal (.)";      break; }
-            case KeyKeypadDivide:   { asString = "Keypad Divide (/)";       break; }
-            case KeyKeypadMultiply: { asString = "Keypad Multiply (*)";     break; }
-            case KeyKeypadSubtract: { asString = "Keypad Subtract (-)";     break; }
-            case KeyKeypadAdd:      { asString = "Keypad Add (+)";          break; }
-            case KeyKeypadEnter:    { asString = "Keypad Enter";            break; }
-            case KeyKeypadEqual:    { asString = "Keypad Equal (=)";        break; }
-            case KeyLeftShift:      { asString = "Left Shift";              break; }
-            case KeyLeftControl:    { asString = "Left Control";            break; }
-            case KeyLeftAlt:        { asString = "Left Alt";                break; }
-            case KeyLeftSuper:      { asString = "Left Super";              break; }
-            case KeyRightShift:     { asString = "Right Shift";             break; }
-            case KeyRightControl:   { asString = "Right Control";           break; }
-            case KeyRightAlt:       { asString = "Right Alt";               break; }
-            case KeyRightSuper:     { asString = "Right Super";             break; }
-            case KeyMenu:           { asString = "Menu";                    break; }
-        }
-
-        return asString;
-    }
-
-
     enum MouseButton : cds :: uint8 {
         MouseButton1                            = static_cast < cds :: uint8 > ( GLFW_MOUSE_BUTTON_1 ),
         MouseButton2                            = static_cast < cds :: uint8 > ( GLFW_MOUSE_BUTTON_2 ),
@@ -438,49 +211,48 @@ namespace engine {
         MouseButton7                            = static_cast < cds :: uint8 > ( GLFW_MOUSE_BUTTON_7 ),
         MouseButton8                            = static_cast < cds :: uint8 > ( GLFW_MOUSE_BUTTON_8 ),
 
-        MouseButtonLeft     C_ENG_MAYBE_UNUSED  = MouseButton1,
-        MouseButtonRight    C_ENG_MAYBE_UNUSED  = MouseButton2,
-        MouseButtonMiddle   C_ENG_MAYBE_UNUSED  = MouseButton3,
+        MouseButtonLeft      C_ENG_MAYBE_UNUSED = MouseButton1,
+        MouseButtonRight     C_ENG_MAYBE_UNUSED = MouseButton2,
+        MouseButtonMiddle    C_ENG_MAYBE_UNUSED = MouseButton3,
 
         MouseButtonUndefined                    = 0xffU
     };
 
-    C_ENG_NO_DISCARD constexpr auto toString ( MouseButton mouseButton ) noexcept -> cds :: StringLiteral {
-        cds :: StringLiteral asString = "";
+    enum WindowFlag : cds :: uint16 {
+        WindowFlagNone                      = 0x0000U,
+        WindowFlagResizable                 = 0x0001U,
+        WindowFlagBorderless                = 0x0002U,
+        WindowFlagStartMinimized            = 0x0004U,
+        WindowFlagGrabFocusOnOpen           = 0x0008U,
+        WindowFlagRestorePreviousMode       = 0x0010U,
+        WindowFlagStayOnTop                 = 0x0020U,
+        WindowFlagStartMaximized            = 0x0040U,
+        WindowFlagCenterCursorOnCreate      = 0x0080U,
+        WindowFlagTransparentFramebuffer    = 0x0100U,
+        WindowFlagGrabFocusOnRaise          = 0x0200U,
+        WindowFlagScaleToMonitor            = 0x0400U,
 
-        switch ( mouseButton ) {
-            case MouseButton1:          { asString = "Mouse Button 1 ( Left Click )";   break; }
-            case MouseButton2:          { asString = "Mouse Button 2 ( Right Click )";  break; }
-            case MouseButton3:          { asString = "Mouse Button 3 ( Middle Click )"; break; }
-            case MouseButton4:          { asString = "Mouse Button 4";                  break; }
-            case MouseButton5:          { asString = "Mouse Button 5";                  break; }
-            case MouseButton6:          { asString = "Mouse Button 6";                  break; }
-            case MouseButton7:          { asString = "Mouse Button 7";                  break; }
-            case MouseButton8:          { asString = "Mouse Button 8";                  break; }
-            case MouseButtonUndefined:  { asString = "Undefined Mouse Button";          break; }
-        }
-
-        return asString;
-    }
-
-
-    enum WindowType {
-        WindowTypeWindowed = 0x00U,
-        WindowTypeFullscreen = 0x01U,
-        WindowTypeWindowedFullscreen = 0x02U
+        WindowFlagMaxValue                  = WindowFlagScaleToMonitor
     };
 
-    C_ENG_NO_DISCARD constexpr auto toString ( WindowType type ) noexcept -> cds :: StringLiteral {
-        cds :: StringLiteral asString = "";
+    enum WindowType {
+        WindowTypeWindowed              = 0x00U,
+        WindowTypeFullscreen            = 0x01U,
+        WindowTypeWindowedFullscreen    = 0x02U
+    };
 
-        switch ( type ) {
-            case WindowTypeWindowed:            { asString = "Windowed";            break; }
-            case WindowTypeFullscreen:          { asString = "Fullscreen";          break; }
-            case WindowTypeWindowedFullscreen:  { asString = "Windowed Fullscreen"; break; }
-        }
+    enum ControllerHatState : cds :: uint8 {
+        ControllerHatStateCentered  = static_cast < cds :: uint8 > ( GLFW_HAT_CENTERED ),
+        ControllerHatStateUp        = static_cast < cds :: uint8 > ( GLFW_HAT_UP ),
+        ControllerHatStateLeft      = static_cast < cds :: uint8 > ( GLFW_HAT_LEFT ),
+        ControllerHatStateRight     = static_cast < cds :: uint8 > ( GLFW_HAT_RIGHT ),
+        ControllerHatStateDown      = static_cast < cds :: uint8 > ( GLFW_HAT_DOWN ),
+        ControllerHatStateLeftUp    = static_cast < cds :: uint8 > ( GLFW_HAT_LEFT_UP ),
+        ControllerHatStateLeftDown  = static_cast < cds :: uint8 > ( GLFW_HAT_LEFT_DOWN ),
+        ControllerHatStateRightUp   = static_cast < cds :: uint8 > ( GLFW_HAT_RIGHT_UP ),
+        ControllerHatStateRightDown = static_cast < cds :: uint8 > ( GLFW_HAT_RIGHT_DOWN )
+    };
 
-        return asString;
-    }
 
     struct Position {
         cds :: uint32 x;
@@ -504,12 +276,7 @@ namespace engine {
         cds :: uint32       refreshRate;
     };
 
-    struct MonitorContentScale {
-        float x;
-        float y;
-    };
-
-    struct WindowContentScale {
+    struct ContentScale {
         float x;
         float y;
     };
@@ -520,8 +287,12 @@ namespace engine {
     };
 
     using MonitorName = cds :: StringLiteral;
-
     using MonitorGammaRampValue = cds :: uint16 *;
+    using Flags                 = cds :: uint32;
+    using KeyModifiers          = Flags;
+    using MonitorContentScale   = ContentScale;
+    using WindowContentScale    = ContentScale;
+    using WindowFlags           = Flags;
 
     struct MonitorGammaRamp {
         cds :: uint32           size;
@@ -540,44 +311,118 @@ namespace engine {
     };
 
 
-    enum WindowFlag : cds :: uint16 {
-        WindowFlagNone                      = 0x0000U,
-        WindowFlagResizable                 = 0x0001U,
-        WindowFlagBorderless                = 0x0002U,
-        WindowFlagStartMinimized            = 0x0004U,
-        WindowFlagGrabFocusOnOpen           = 0x0008U,
-        WindowFlagRestorePreviousMode       = 0x0010U,
-        WindowFlagStayOnTop                 = 0x0020U,
-        WindowFlagStartMaximized            = 0x0040U,
-        WindowFlagCenterCursorOnCreate      = 0x0080U,
-        WindowFlagTransparentFramebuffer    = 0x0100U,
-        WindowFlagGrabFocusOnRaise          = 0x0200U,
-        WindowFlagScaleToMonitor            = 0x0400U,
+    C_ENG_NO_DISCARD auto toString ( bool ) noexcept -> cds :: StringLiteral;
+    C_ENG_NO_DISCARD auto toString ( void const * ) noexcept -> cds :: String;
 
-        WindowFlagMaxValue                  = WindowFlagScaleToMonitor
-    };
+    C_ENG_NO_DISCARD auto toString ( EngineState ) noexcept -> cds :: StringLiteral;
+    C_ENG_NO_DISCARD auto toString ( LogLevel ) noexcept -> cds :: StringLiteral;
+    C_ENG_NO_DISCARD auto toString ( EventType ) noexcept -> cds :: StringLiteral;
+    C_ENG_NO_DISCARD auto toString ( KeyModifier ) noexcept -> cds :: StringLiteral;
+    C_ENG_NO_DISCARD auto toString ( Key ) noexcept -> cds :: StringLiteral;
+    C_ENG_NO_DISCARD auto toString ( MouseButton ) noexcept -> cds :: StringLiteral;
+    C_ENG_NO_DISCARD auto toString ( WindowType ) noexcept -> cds :: StringLiteral;
+    C_ENG_NO_DISCARD auto toString ( WindowFlag ) noexcept -> cds :: StringLiteral;
+    C_ENG_NO_DISCARD auto toString ( ControllerHatState ) noexcept -> cds :: StringLiteral;
 
-    using WindowFlags = Flags;
+    C_ENG_NO_DISCARD auto toString ( Position const & ) noexcept -> cds :: String;
+    C_ENG_NO_DISCARD auto toString ( RectangleSize const & ) noexcept -> cds :: String;
+    C_ENG_NO_DISCARD auto toString ( ColorChannelsDepth const & ) noexcept -> cds :: String;
+    C_ENG_NO_DISCARD auto toString ( MonitorVideoModeProperties const & ) noexcept -> cds :: String;
+    C_ENG_NO_DISCARD auto toString ( ContentScale const & ) noexcept -> cds :: String;
+    C_ENG_NO_DISCARD auto toString ( MonitorWorkArea const & ) noexcept -> cds :: String;
+    C_ENG_NO_DISCARD auto toString ( MonitorGammaRamp const & ) noexcept -> cds :: String;
+    C_ENG_NO_DISCARD auto toString ( MonitorProperties const & ) noexcept -> cds :: String;
 
-    C_ENG_NO_DISCARD constexpr auto toString ( WindowFlag flag ) noexcept -> cds :: StringLiteral {
-        cds :: StringLiteral asString = "";
+    C_ENG_NO_DISCARD auto keyModifiersToString ( KeyModifiers ) noexcept -> cds :: String;
+    C_ENG_NO_DISCARD auto windowFlagsToString ( WindowFlags ) noexcept -> cds :: String;
 
-        switch ( flag ) {
-            case WindowFlagNone:                    { asString = "No Flag";                                 break; }
-            case WindowFlagResizable:               { asString = "Is Resizable";                            break; }
-            case WindowFlagBorderless:              { asString = "Borderless Window, Undecorated";          break; }
-            case WindowFlagStartMinimized:          { asString = "Start Minimized";                         break; }
-            case WindowFlagGrabFocusOnOpen:         { asString = "Grab Input Focus on Open";                break; }
-            case WindowFlagRestorePreviousMode:     { asString = "Fullscreen Restore Video Mode on Focus";  break; }
-            case WindowFlagStayOnTop:               { asString = "Force On Top";                            break; }
-            case WindowFlagStartMaximized:          { asString = "Start Window Maximized";                  break; }
-            case WindowFlagCenterCursorOnCreate:    { asString = "Center Mouse Cursor on Create";           break; }
-            case WindowFlagTransparentFramebuffer:  { asString = "Transparent Framebuffer";                 break; }
-            case WindowFlagGrabFocusOnRaise:        { asString = "Grab Input Focus On Raise";               break; }
-            case WindowFlagScaleToMonitor:          { asString = "Scale Content to Monitor Content Scale";  break; }
-        }
 
-        return asString;
+    C_ENG_NO_DISCARD constexpr auto equals (
+            Position const & left,
+            Position const & right
+    ) noexcept -> bool {
+
+        return
+            left.x == right.x &&
+            left.y == right.y;
+    }
+
+    C_ENG_NO_DISCARD constexpr auto equals (
+            RectangleSize const & left,
+            RectangleSize const & right
+    ) noexcept -> bool {
+
+        return
+            left.width == right.width &&
+            left.height == right.height;
+    }
+
+    C_ENG_NO_DISCARD constexpr auto equals (
+            ColorChannelsDepth const & left,
+            ColorChannelsDepth const & right
+    ) noexcept -> bool {
+
+        return
+            left.red == right.red &&
+            left.green == right.green &&
+            left.blue == right.blue;
+    }
+
+    C_ENG_NO_DISCARD constexpr auto equals (
+            MonitorVideoModeProperties const & left,
+            MonitorVideoModeProperties const & right
+    ) noexcept -> bool {
+
+        return
+            equals ( left.size, right.size ) &&
+            equals ( left.colorChannelsDepth, right.colorChannelsDepth ) &&
+            left.refreshRate == right.refreshRate;
+    }
+
+    C_ENG_NO_DISCARD constexpr auto equals (
+            ContentScale const & left,
+            ContentScale const & right
+    ) noexcept -> bool {
+
+        return
+            left.x == right.x &&
+            left.y == right.y;
+    }
+
+    C_ENG_NO_DISCARD constexpr auto equals (
+            MonitorWorkArea const & left,
+            MonitorWorkArea const & right
+    ) noexcept -> bool {
+
+        return
+            equals ( left.position, right.position ) &&
+            equals ( left.size, right.size );
+    }
+
+    C_ENG_NO_DISCARD constexpr auto equals (
+            MonitorGammaRamp const & left,
+            MonitorGammaRamp const & right
+    ) noexcept -> bool {
+
+        return
+            left.size == right.size &&
+            std :: char_traits < cds :: uint16 > :: compare ( left.red, right.red, left.size ) == 0 &&
+            std :: char_traits < cds :: uint16 > :: compare ( left.green, right.green, left.size ) == 0 &&
+            std :: char_traits < cds :: uint16 > :: compare ( left.blue, right.blue, left.size ) == 0;
+    }
+
+    C_ENG_NO_DISCARD constexpr auto equals (
+            MonitorProperties const & left,
+            MonitorProperties const & right
+    ) noexcept -> bool {
+
+        return
+            left.name == right.name &&
+            equals ( left.physicalSizeMM, right.physicalSizeMM ) &&
+            equals ( left.contentScale, right.contentScale ) &&
+            equals ( left.workArea, right.workArea ) &&
+            equals ( left.gammaRamp, right.gammaRamp ) &&
+            equals ( left.activeVideoMode, right.activeVideoMode );
     }
 
 }

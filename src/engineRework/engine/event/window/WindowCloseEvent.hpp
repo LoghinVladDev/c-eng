@@ -26,6 +26,12 @@ namespace engine {
         C_ENG_NO_DISCARD constexpr auto type () const noexcept -> EventType override {
             return EventType :: EventTypeWindowCloseEvent;
         }
+
+        C_ENG_NO_DISCARD inline auto copy () const noexcept -> C_ENG_TYPE ( WindowCloseEvent ) * override {
+            return new C_ENG_TYPE ( WindowCloseEvent ) ( * this );
+        }
+
+        C_ENG_NO_DISCARD auto toString () const noexcept -> cds :: String override;
     };
 
 }

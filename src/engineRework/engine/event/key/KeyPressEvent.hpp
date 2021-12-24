@@ -29,6 +29,12 @@ namespace engine {
         C_ENG_NO_DISCARD constexpr auto type () const noexcept -> EventType override {
             return EventType :: EventTypeKeyPressEvent;
         }
+
+        C_ENG_NO_DISCARD inline auto copy () const noexcept -> C_ENG_TYPE ( KeyPressEvent ) * override {
+            return new C_ENG_TYPE ( KeyPressEvent ) ( * this );
+        }
+
+        C_ENG_NO_DISCARD auto toString () const noexcept -> cds :: String override;
     };
 
 }

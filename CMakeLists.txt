@@ -553,8 +553,8 @@ if(Vulkan_FOUND)
             src/engineRework/engine/event/controller/ControllerEvent.cpp
             src/engineRework/engine/event/controller/ControllerEvent.hpp
 
-            src/engineRework/engine/event/controller/ControllerAxisChangeEvent.cpp
-            src/engineRework/engine/event/controller/ControllerAxisChangeEvent.hpp
+            src/engineRework/engine/event/controller/ControllerAxisEvent.cpp
+            src/engineRework/engine/event/controller/ControllerAxisEvent.hpp
 
             src/engineRework/engine/event/controller/ControllerButtonPressEvent.cpp
             src/engineRework/engine/event/controller/ControllerButtonPressEvent.hpp
@@ -568,8 +568,8 @@ if(Vulkan_FOUND)
             src/engineRework/engine/event/controller/ControllerDisconnectEvent.cpp
             src/engineRework/engine/event/controller/ControllerDisconnectEvent.hpp
 
-            src/engineRework/engine/event/controller/ControllerHatChangeEvent.cpp
-            src/engineRework/engine/event/controller/ControllerHatChangeEvent.hpp
+            src/engineRework/engine/event/controller/ControllerHatEvent.cpp
+            src/engineRework/engine/event/controller/ControllerHatEvent.hpp
     )
 
     set (
@@ -658,6 +658,9 @@ if(Vulkan_FOUND)
             ${ENGINE_REWORK_ENGINE_EVENT_MOUSE_SOURCES}
             ${ENGINE_REWORK_ENGINE_EVENT_WINDOW_SOURCES}
 
+            src/engineRework/engine/event/EventHandler.cpp
+            src/engineRework/engine/event/EventHandler.hpp
+
             src/engineRework/engine/event/Event.hpp
             src/engineRework/engine/event/Event.cpp
     )
@@ -686,6 +689,9 @@ if(Vulkan_FOUND)
 
             ${ENGINE_REWORK_ENGINE_EVENT_SOURCES}
             ${ENGINE_REWORK_ENGINE_INPUT_SOURCES}
+
+            src/engineRework/engine/Core.cpp
+            src/engineRework/engine/Core.hpp
 
             src/engineRework/engine/Engine.cpp
             src/engineRework/engine/Engine.hpp

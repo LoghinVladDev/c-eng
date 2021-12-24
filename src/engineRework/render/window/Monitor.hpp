@@ -22,6 +22,8 @@ namespace engine {
         using Handle = GLFWmonitor *;
 
         C_ENG_CLASS_IMMUTABLE_PRIMITIVE_FIELD ( Handle, handle, nullptr )
+        C_ENG_CLASS_IMMUTABLE_FIELD ( cds :: Array < MonitorVideoModeProperties const >, availableVideoModes )
+        C_ENG_CLASS_IMMUTABLE_FIELD ( MonitorProperties, properties )
 
     private:
         C_ENG_TYPE ( Window ) mutable * _windowOnMonitor { nullptr };
@@ -29,28 +31,19 @@ namespace engine {
         friend struct MonitorContainer;
         friend class C_ENG_CLASS ( Window );
 
-    private:
-        cds :: Array < MonitorVideoModeProperties const >   _availableVideoModes;
-        MonitorProperties                                   _properties;
-
     public:
         C_ENG_NO_DISCARD constexpr auto windowOnMonitor () const noexcept -> C_ENG_TYPE ( Window ) * {
             return this->_windowOnMonitor;
         }
 
-        C_ENG_NO_DISCARD constexpr auto availableVideoModes () const noexcept -> cds :: Array < MonitorVideoModeProperties const > const & {
-            return this->_availableVideoModes;
-        }
-
-        C_ENG_NO_DISCARD constexpr auto properties () const noexcept -> MonitorProperties const & {
-            return this->_properties;
-        }
-
         auto static monitors () noexcept -> cds :: Array < C_ENG_TYPE ( Monitor ) const * > const &;
         auto static primaryMonitor () noexcept -> C_ENG_TYPE ( Monitor ) const *;
+        auto static initMonitorHandler () noexcept -> void;
 
         C_ENG_MAYBE_UNUSED auto setGamma ( float ) noexcept -> C_ENG_TYPE ( Monitor ) &;
 
+        C_ENG_NO_DISCARD auto toString () const noexcept -> cds :: String override;
+        C_ENG_NO_DISCARD auto equals ( cds :: Object const & ) const noexcept -> bool override;
     };
 
 }

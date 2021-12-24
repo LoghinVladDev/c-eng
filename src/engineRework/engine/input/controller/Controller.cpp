@@ -18,7 +18,8 @@ static auto controllerConnectEventRootCallback (
 namespace engine {
 
     struct ControllerHandler {
-        Array < C_ENG_TYPE ( Controller ) * > connectedControllers; // NOLINT(clion-misra-cpp2008-11-0-1)
+        C_ENG_TYPE ( Controller ) * connectedControllers [C_ENG_CLASS(Controller) :: controllerCapacity] { nullptr }; // NOLINT(clion-misra-cpp2008-11-0-1)
+        uint32 connectedControllerCount {0U}; // NOLINT(clion-misra-cpp2008-11-0-1)
 
         inline auto connectController ( sint32 ) noexcept -> void;
         inline auto disconnectController ( sint32 ) noexcept -> void;
@@ -28,28 +29,34 @@ namespace engine {
 
             for ( sint32 joystickID = 0; joystickID <= GLFW_JOYSTICK_LAST; ++ joystickID ) {
                 if ( static_cast < bool > ( glfwJoystickPresent ( joystickID ) ) ) { // NOLINT(clion-misra-cpp2008-5-0-13)
+
+                    C_ENG_TYPE ( Controller ) * pNewController = nullptr;
+
                     if ( static_cast < bool > ( glfwJoystickIsGamepad ( joystickID ) ) ) { // NOLINT(clion-misra-cpp2008-5-0-13)
 
-                        (void) connectedControllers.pushBack ( new C_ENG_TYPE ( Gamepad ) );
-                        reinterpret_cast < C_ENG_TYPE ( Gamepad ) * > ( connectedControllers.back() )->_gamepadName =
+                        pNewController = new C_ENG_TYPE ( Gamepad );
+                        reinterpret_cast < C_ENG_TYPE ( Gamepad ) * > ( pNewController )->_gamepadName =
                                 glfwGetGamepadName ( joystickID );
 
                     } else {
 
-                        (void) connectedControllers.pushBack ( new C_ENG_TYPE ( Joystick ) );
+                        pNewController = new C_ENG_TYPE ( Joystick );
 
                     }
 
-                    connectedControllers.back()->_handle = joystickID;
-                    connectedControllers.back()->_name = glfwGetJoystickName ( joystickID );
+                    pNewController->_handle = joystickID;
+                    pNewController->_name = glfwGetJoystickName ( joystickID );
+
+                    glfwSetJoystickUserPointer ( joystickID, reinterpret_cast < void * > ( pNewController ) );
+                    connectedControllers[connectedControllerCount ++] = pNewController;
 
                 }
             }
         }
 
         ~ControllerHandler() noexcept {
-            for ( auto * pController : connectedControllers ) {
-                delete pController;
+            for ( uint32 i = 0U; i < connectedControllerCount; ++ i ) {
+                delete connectedControllers[ static_cast < sint32 > ( i ) ];
             }
         }
     };
@@ -67,7 +74,7 @@ auto C_ENG_CLASS ( Controller ) :: setEngine (
 
 #include <Engine.hpp>
 
-auto controllerConnectEventRootCallback (
+static auto controllerConnectEventRootCallback (
         sint32  controllerID,
         sint32  connectEvent
 ) noexcept -> void {
@@ -84,7 +91,16 @@ auto controllerConnectEventRootCallback (
     }
 }
 
+C_ENG_MAYBE_UNUSED auto C_ENG_CLASS ( Controller ) :: connectedControllerCount () noexcept -> uint32 {
+    return handler.connectedControllerCount;
+}
+
+C_ENG_MAYBE_UNUSED auto C_ENG_CLASS ( Controller ) :: connectedControllers () noexcept -> C_ENG_TYPE ( Controller ) ** {
+    return handler.connectedControllers;
+}
+
 #include <ControllerConnectEvent.hpp>
+#include <Logger.hpp>
 
 auto ControllerHandler :: connectController (
         sint32 controllerID
@@ -105,14 +121,18 @@ auto ControllerHandler :: connectController (
     pNewController->_handle = controllerID;
     pNewController->_name = glfwGetJoystickName ( controllerID );
 
-    (void) connectedControllers.pushBack ( pNewController );
+    connectedControllers [ connectedControllerCount ++ ] = pNewController;
+
+    glfwSetJoystickUserPointer ( controllerID, reinterpret_cast < void * > ( pNewController ) );
 
     if ( pGlobalEngine != nullptr ) {
 
         C_ENG_TYPE ( ControllerConnectEvent ) event ( pNewController );
-        (void) pGlobalEngine->controllerConnectEvent ( & event );
+        (void) pGlobalEngine->eventHandler().controllerConnectEvent ( & event );
 
     }
+
+    (void) C_ENG_TYPE ( Logger ) :: instance ().info ( "Controller "_s + controllerID + " Connected" );
 }
 
 #include <ControllerDisconnectEvent.hpp>
@@ -122,30 +142,39 @@ auto ControllerHandler :: disconnectController (
 ) noexcept -> void {
 
     C_ENG_TYPE ( Controller ) * pController = nullptr;
-    for ( auto * pConnectedController : connectedControllers ) {
-        if ( controllerID == pConnectedController->handle() ) {
-            pController = pConnectedController;
-            break;
+    C_ENG_TYPE ( Controller ) * pTempBuffer [ C_ENG_TYPE ( Controller ) :: controllerCapacity ] { nullptr };
+    uint32 tempBufferLength = 0U;
+
+    for ( uint32 i = 0U; i < connectedControllerCount; ++ i ) {
+        if ( controllerID == connectedControllers[i]->handle() ) {
+            pController = connectedControllers[i];
+        } else {
+            pTempBuffer[tempBufferLength ++] = connectedControllers[i];
         }
     }
 
     if ( pController == nullptr ) {
         return;
+    } else {
+        (void) std :: memcpy ( connectedControllers, pTempBuffer, sizeof ( C_ENG_TYPE ( Controller ) * ) * C_ENG_TYPE ( Controller ) :: controllerCapacity ); // NOLINT(clion-misra-cpp2008-5-2-12,bugprone-sizeof-expression)
+        -- connectedControllerCount;
     }
 
     if ( pGlobalEngine != nullptr ) {
 
         C_ENG_TYPE ( ControllerDisconnectEvent ) event ( pController );
-        (void) pGlobalEngine->controllerDisconnectEvent ( & event );
+        (void) pGlobalEngine->eventHandler().controllerDisconnectEvent ( & event );
 
     }
+
+    (void) C_ENG_TYPE ( Logger ) :: instance ().info ( "Controller "_s + controllerID + " Disconnected" );
 
 }
 
 auto C_ENG_CLASS ( Controller ) :: updateEvents () noexcept -> void {
 
-    for ( auto * pController : handler.connectedControllers ) {
-        pController->update();
+    for ( uint32 i = 0U; i < handler.connectedControllerCount; ++ i ) {
+        handler.connectedControllers[i]->update();
     }
 
 }
@@ -178,8 +207,8 @@ struct ControllerEvent { // NOLINT(clion-misra-cpp2008-0-1-7)
 
     union { // NOLINT(clion-misra-cpp2008-9-5-1)
         ButtonEvent buttonEvent;
-        AxisEvent axisEvent;
-        HatEvent hatEvent;
+        AxisEvent   axisEvent;
+        HatEvent    hatEvent;
     };
 };
 
@@ -351,29 +380,91 @@ auto C_ENG_CLASS ( Joystick ) :: update () noexcept -> void {
     }
 }
 
+#include <ControllerAxisEvent.hpp>
+
 static inline auto controllerAxisEventRootCallback (
         C_ENG_TYPE ( Controller ) :: Handle handle,
         uint16                              axis,
         float                               newValue,
         float                               oldValue
 ) noexcept -> void {
+    auto pObject = reinterpret_cast < C_ENG_TYPE ( Controller ) * > ( glfwGetJoystickUserPointer ( handle ) );
+    if ( pGlobalEngine != nullptr ) {
 
+        C_ENG_TYPE ( ControllerAxisEvent ) event (
+                pObject,
+                axis,
+                newValue,
+                oldValue
+        );
+
+        (void) pGlobalEngine->eventHandler().controllerAxisEvent ( & event );
+
+    }
 }
+
+#include <ControllerButtonPressEvent.hpp>
+#include <ControllerButtonReleaseEvent.hpp>
 
 static inline auto controllerButtonEventRootCallback (
         C_ENG_TYPE ( Controller ) :: Handle handle,
         uint16                              button,
         bool                                pressed
 ) noexcept -> void {
+    auto pObject = reinterpret_cast < C_ENG_TYPE ( Controller ) * > ( glfwGetJoystickUserPointer ( handle ) );
+    if ( pGlobalEngine != nullptr ) {
 
+        if ( pressed ) {
+
+            C_ENG_TYPE ( ControllerButtonPressEvent ) event (
+                    pObject,
+                    button
+            );
+
+            (void) pGlobalEngine->eventHandler().controllerButtonPressEvent ( & event );
+
+        } else {
+
+            C_ENG_TYPE ( ControllerButtonReleaseEvent ) event (
+                    pObject,
+                    button
+            );
+
+            (void) pGlobalEngine->eventHandler().controllerButtonReleaseEvent ( & event );
+
+        }
+
+    }
 }
+
+#include <ControllerHatEvent.hpp>
 
 static inline auto controllerHatEventRootCallback (
         C_ENG_TYPE ( Controller ) :: Handle handle,
         uint16                              hat,
         uint8                               state
 ) noexcept -> void {
+    auto pObject = reinterpret_cast < C_ENG_TYPE ( Controller ) * > ( glfwGetJoystickUserPointer ( handle ) );
+    if ( pGlobalEngine != nullptr ) {
 
+        C_ENG_TYPE ( ControllerHatEvent ) event (
+                pObject,
+                hat,
+                static_cast < ControllerHatState > ( state )
+        );
+
+        (void) pGlobalEngine->eventHandler().controllerHatEvent ( & event );
+
+    }
+}
+
+#include <SimpleEventQueue.hpp>
+static engine :: utility :: SimpleEventQueue < C_ENG_TYPE ( ControllerEvent ) * > customEvents;
+
+C_ENG_MAYBE_UNUSED auto C_ENG_CLASS ( Controller ) :: handleEvent (
+        C_ENG_TYPE ( ControllerEvent ) const & event
+) noexcept -> void {
+    (void) customEvents.push( event.copy() );
 }
 
 auto C_ENG_CLASS ( Controller ) :: pollEvents() noexcept -> void {
@@ -409,5 +500,35 @@ auto C_ENG_CLASS ( Controller ) :: pollEvents() noexcept -> void {
         }
     }
 
+    while ( ! customEvents.empty() ) {
+        auto currentEvent = customEvents.pop();
+        
+        if ( pGlobalEngine != nullptr ) {
+            (void) pGlobalEngine->eventHandler().controllerCustomEvent ( currentEvent );
+        }
+
+        delete currentEvent;
+    }
+
     activeEventCount = 0U;
+}
+
+auto C_ENG_TYPE ( Controller ) :: toString () const noexcept -> String {
+    return "Controller "
+           "{ handle = "_s      + this->handle() +
+           ", name = "          + this->name() +
+           " }";
+}
+
+auto C_ENG_TYPE ( Controller ) :: equals (
+        Object const & object
+) const noexcept -> bool {
+
+    if ( this == & object ) {
+        return true;
+    }
+
+    auto pController = dynamic_cast < decltype ( this ) > ( & object );
+
+    return this->handle() == pController->handle();
 }

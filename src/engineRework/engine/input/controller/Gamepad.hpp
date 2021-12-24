@@ -11,8 +11,8 @@
 namespace engine {
 
     class C_ENG_CLASS ( Gamepad ) : public C_ENG_CLASS ( Controller ) {
-        C_ENG_CLASS_PRIMITIVE_CONSTANT ( cds :: uint8, axesCount, 6u )
-        C_ENG_CLASS_PRIMITIVE_CONSTANT ( cds :: uint8, buttonCount, 15u )
+        C_ENG_CLASS_PRIMITIVE_CONSTANT ( cds :: uint8, axesCount, 6U ) // NOLINT(clion-misra-cpp2008-5-0-4,clion-misra-cpp2008-5-0-6)
+        C_ENG_CLASS_PRIMITIVE_CONSTANT ( cds :: uint8, buttonCount, 15U ) // NOLINT(clion-misra-cpp2008-5-0-4,clion-misra-cpp2008-5-0-6)
 
     private:
         friend struct ControllerHandler;
@@ -32,7 +32,9 @@ namespace engine {
             return true;
         };
 
-        C_ENG_DESTRUCTOR ( Gamepad ) () noexcept override;
+        C_ENG_DESTRUCTOR ( Gamepad ) () noexcept override = default;
+
+        C_ENG_NO_DISCARD auto toString () const noexcept -> cds :: String override;
     };
 
 }

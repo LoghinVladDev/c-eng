@@ -79,3 +79,7 @@ auto C_ENG_CLASS ( Logger ) :: log (
 
     return * this;
 }
+
+auto C_ENG_CLASS ( Logger ) :: toString () const noexcept -> String {
+    return "Logger {}";
+}

@@ -64,6 +64,8 @@ namespace engine {
         auto set ( Key, Value ) noexcept -> C_ENG_TYPE ( Settings ) &;
 
         static auto defaultForKey ( Key ) noexcept -> Value;
+
+        C_ENG_NO_DISCARD auto toString () const noexcept -> cds :: String override;
     };
 
 }

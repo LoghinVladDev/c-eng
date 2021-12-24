@@ -10,7 +10,7 @@
 
 #include <Core.hpp>
 
-#include <CDS/Queue>
+#include <SimpleEventQueue.hpp>
 
 namespace engine {
 
@@ -27,7 +27,7 @@ namespace engine {
         using Handle = GLFWwindow *;
 
         C_ENG_CLASS_PRIMITIVE_CONSTANT ( cds :: StringLiteral, defaultWindowTitle, "VEngineTest" ); // NOLINT(clion-misra-cpp2008-8-0-1)
-        C_ENG_CLASS_PRIMITIVE_CONSTANT (
+        C_ENG_CLASS_PRIMITIVE_CONSTANT (                            // NOLINT(clion-misra-cpp2008-4-5-2)
                 WindowFlags,
                 defaultFlags,
                     WindowFlag :: WindowFlagResizable           |
@@ -38,11 +38,12 @@ namespace engine {
     private:
         cds :: String _title { defaultWindowTitle };
 
-        cds :: Queue < C_ENG_TYPE ( WindowEvent ) * >   _customWindowEvents;
-        cds :: Queue < C_ENG_TYPE ( MouseEvent ) * >    _customMouseEvents;
-        cds :: Queue < C_ENG_TYPE ( KeyEvent ) * >      _customKeyEvents;
-        cds :: Queue < C_ENG_TYPE ( Event ) * >         _customEvents;
+        utility :: SimpleEventQueue < C_ENG_TYPE ( WindowEvent ) * >   _customWindowEvents;
+        utility :: SimpleEventQueue < C_ENG_TYPE ( MouseEvent ) * >    _customMouseEvents;
+        utility :: SimpleEventQueue < C_ENG_TYPE ( KeyEvent ) * >      _customKeyEvents;
+        utility :: SimpleEventQueue < C_ENG_TYPE ( Event ) * >         _customEvents;
 
+        C_ENG_CLASS_IMMUTABLE_PRIMITIVE_FIELD ( Handle, handle, nullptr )
         C_ENG_CLASS_IMMUTABLE_PRIMITIVE_FIELD ( WindowFlags, flags, defaultFlags )
 
         C_ENG_CLASS_IMMUTABLE_FIELD ( Position, position, 0U, 0U )
@@ -61,8 +62,6 @@ namespace engine {
 
         friend auto __updateWindowSize ( C_ENG_TYPE ( Window ) *, cds :: uint32, cds :: uint32 ) noexcept -> void; // NOLINT(bugprone-reserved-identifier)
         friend auto __updateCursorPos ( C_ENG_TYPE ( Window ) *, cds :: uint32, cds :: uint32 ) noexcept -> void; // NOLINT(bugprone-reserved-identifier)
-
-        C_ENG_CLASS_IMMUTABLE_PRIMITIVE_FIELD ( Handle, handle, nullptr )
 
         auto applyFlagHints () const noexcept -> void;
         auto updateWindowLimits () noexcept -> void;
@@ -102,15 +101,15 @@ namespace engine {
         auto minimize () noexcept -> C_ENG_TYPE ( Window ) &;
         auto hide () noexcept -> C_ENG_TYPE ( Window ) &;
         auto show () noexcept -> C_ENG_TYPE ( Window ) &;
-        auto grabInputFocus () noexcept -> C_ENG_TYPE ( Window ) &;
-        auto requestAttention () noexcept -> C_ENG_TYPE ( Window ) &;
+        C_ENG_MAYBE_UNUSED auto grabInputFocus () noexcept -> C_ENG_TYPE ( Window ) &;
+        C_ENG_MAYBE_UNUSED auto requestAttention () noexcept -> C_ENG_TYPE ( Window ) &;
 
         auto pollEvents () noexcept -> C_ENG_TYPE ( Window ) &;
 
-        auto handleEvent ( C_ENG_TYPE ( WindowEvent ) * ) noexcept -> C_ENG_TYPE ( Window ) &;
-        auto handleEvent ( C_ENG_TYPE ( MouseEvent ) * ) noexcept -> C_ENG_TYPE ( Window ) &;
-        auto handleEvent ( C_ENG_TYPE ( KeyEvent ) * ) noexcept -> C_ENG_TYPE ( Window ) &;
-        auto handleEvent ( C_ENG_TYPE ( Event ) * ) noexcept -> C_ENG_TYPE ( Window ) &;
+        C_ENG_MAYBE_UNUSED auto handleEvent ( C_ENG_TYPE ( WindowEvent ) const & ) noexcept -> C_ENG_TYPE ( Window ) &;
+        C_ENG_MAYBE_UNUSED auto handleEvent ( C_ENG_TYPE ( MouseEvent ) const & ) noexcept -> C_ENG_TYPE ( Window ) &;
+        C_ENG_MAYBE_UNUSED auto handleEvent ( C_ENG_TYPE ( KeyEvent ) const & ) noexcept -> C_ENG_TYPE ( Window ) &;
+        C_ENG_MAYBE_UNUSED auto handleEvent ( C_ENG_TYPE ( Event ) const & ) noexcept -> C_ENG_TYPE ( Window ) &;
 
         inline auto move ( cds :: uint32 x, cds :: uint32 y ) noexcept -> C_ENG_TYPE ( Window ) & {
             return this->move ( { x, y } );
@@ -120,11 +119,11 @@ namespace engine {
             return this->resize ( { width, height } );
         }
 
-        inline auto setMinimumSize ( cds :: uint32 width, cds :: uint32 height ) noexcept -> C_ENG_TYPE ( Window ) & {
+        C_ENG_MAYBE_UNUSED inline auto setMinimumSize ( cds :: uint32 width, cds :: uint32 height ) noexcept -> C_ENG_TYPE ( Window ) & {
             return this->setMinimumSize ( { width, height } );
         }
 
-        inline auto setMaximumSize ( cds :: uint32 width, cds :: uint32 height ) noexcept -> C_ENG_TYPE ( Window ) & {
+        C_ENG_MAYBE_UNUSED inline auto setMaximumSize ( cds :: uint32 width, cds :: uint32 height ) noexcept -> C_ENG_TYPE ( Window ) & {
             return this->setMaximumSize ( { width, height } );
         }
 
@@ -134,6 +133,9 @@ namespace engine {
         auto releaseMouseCursor () noexcept -> C_ENG_TYPE ( Window ) &;
 
         auto monitorDisconnectedEvent () noexcept -> C_ENG_TYPE ( Window ) &;
+
+        C_ENG_NO_DISCARD auto toString () const noexcept -> cds :: String override;
+        C_ENG_NO_DISCARD auto equals ( cds :: Object const & ) const noexcept -> bool override;
     };
 
 }

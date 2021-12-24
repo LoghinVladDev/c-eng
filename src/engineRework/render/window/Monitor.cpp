@@ -204,6 +204,12 @@ auto C_ENG_CLASS ( Monitor ) :: primaryMonitor () noexcept -> C_ENG_TYPE ( Monit
     return monitorContainer.primaryMonitor;
 }
 
+auto C_ENG_CLASS ( Monitor ) :: initMonitorHandler () noexcept -> void {
+    if ( ! monitorContainer.monitorsQueried || ! __GLFWActive ) {
+        monitorContainer.query();
+    }
+}
+
 #include <Window.hpp>
 
 static auto monitorChangeDetectedCallback (
@@ -215,11 +221,17 @@ static auto monitorChangeDetectedCallback (
 
         monitorContainer.addMonitor( handle );
 
+        (void) C_ENG_CLASS ( Logger ) :: instance().info (
+                "Monitor with handle " +
+                :: toString ( handle ) +
+                " connected"
+        );
+
     } else if ( event == GLFW_DISCONNECTED ) {
 
         (void) C_ENG_CLASS ( Logger ) :: instance().info (
-                "Monitor with handle 0x" +
-                Long ( reinterpret_cast < AddressValueType const > ( handle ) ).toString(16) +
+                "Monitor with handle " +
+                :: toString ( handle ) +
                 " disconnected"
         );
 
@@ -232,8 +244,8 @@ static auto monitorChangeDetectedCallback (
 
         if ( pMonitor == nullptr ) {
             (void) C_ENG_CLASS ( Logger ) :: instance().warning (
-                    "Monitor change detected, handle 0x" +
-                    Long ( reinterpret_cast < AddressValueType const > ( handle ) ).toString(16) +
+                    "Monitor change detected, handle " +
+                    :: toString ( handle ) +
                     " disconnected, but did not previously exist"
             );
         } else {
@@ -291,7 +303,7 @@ auto MonitorContainer :: logMonitorQueryResult () noexcept -> void {
         );
 
         (void) C_ENG_CLASS ( Logger ) :: instance().info (
-                "\t\thandle = "_s + Long ( reinterpret_cast < AddressValueType const > ( monitor->_handle ) ).toString(16)
+                "\t\thandle = "_s + :: toString ( monitor->handle() )
         );
 
         (void) C_ENG_CLASS ( Logger ) :: instance().info (
@@ -380,13 +392,38 @@ auto MonitorContainer :: logMonitorQueryResult () noexcept -> void {
         for ( auto & vm : monitor->availableVideoModes() ) {
             (void) C_ENG_CLASS ( Logger ) :: instance().info (
                     "\t\t\t"_s +
-                    "width: " + vm.size.width +
-                    ", height: " + vm.size.height +
-                    ", red: " + vm.colorChannelsDepth.red +
-                    ", green: " + vm.colorChannelsDepth.green +
-                    ", blue: " + vm.colorChannelsDepth.blue +
-                    ", refreshRate: " + vm.refreshRate
+                    "width: "           + vm.size.width +
+                    ", height: "        + vm.size.height +
+                    ", red: "           + vm.colorChannelsDepth.red +
+                    ", green: "         + vm.colorChannelsDepth.green +
+                    ", blue: "          + vm.colorChannelsDepth.blue +
+                    ", refreshRate: "   + vm.refreshRate
             );
         }
     }
+}
+
+auto C_ENG_CLASS ( Monitor ) :: toString () const noexcept -> String {
+    return "Monitor "
+           "{ handle = "_s              + :: toString ( this->handle() ) +
+           "{ windowOnMonitor = "_s     + :: toString ( this->windowOnMonitor() ) +
+           ", properties = "            + :: toString ( this->properties() ) +
+           ", availableVideoModes = "   + this->availableVideoModes().toString() +
+           " }";
+}
+
+auto C_ENG_CLASS ( Monitor ) :: equals (
+        Object const & object
+) const noexcept -> bool {
+
+    if ( this == & object ) {
+        return true;
+    }
+
+    auto pMonitor = dynamic_cast < decltype ( this ) > ( & object );
+    if ( pMonitor == nullptr ) {
+        return false;
+    }
+
+    return this->handle() == pMonitor->handle();
 }

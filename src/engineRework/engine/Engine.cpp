@@ -20,17 +20,19 @@ auto C_ENG_CLASS ( Engine ) :: instance () noexcept -> C_ENG_TYPE ( Engine ) & {
 auto C_ENG_CLASS ( Engine ) :: start () noexcept -> C_ENG_TYPE ( Engine ) & {
     (void) C_ENG_CLASS ( Logger ) :: instance().debug(
             "Engine Created at 0x" +
-            Long ( reinterpret_cast < AddressValueType const > ( this ) ).toString(16) + " and booting up"
+            :: toString ( this ) + " and booting up" // NOLINT(clion-misra-cpp2008-5-2-9)
     );
 
     return this->startup().run().shutdown();
 }
 
 #include <Controller.hpp>
+#include <Monitor.hpp>
 auto C_ENG_CLASS ( Engine ) :: startup () noexcept -> C_ENG_TYPE ( Engine ) & {
     this->setState ( EngineState :: EngineStateStartup );
 
     C_ENG_TYPE ( Controller ) :: setEngine ( this );
+    C_ENG_TYPE ( Monitor ) :: initMonitorHandler ();
 
     return this->initializeSettings();
 }
@@ -93,7 +95,10 @@ auto C_ENG_CLASS ( Engine ) :: shutdown () noexcept -> C_ENG_TYPE ( Engine ) & {
     return * this;
 }
 
-auto C_ENG_CLASS ( Engine ) :: setWindow ( C_ENG_TYPE ( Window ) * window ) noexcept -> C_ENG_TYPE ( Engine ) & {
+auto C_ENG_CLASS ( Engine ) :: setWindow (
+        C_ENG_TYPE ( Window ) * window
+) noexcept -> C_ENG_TYPE ( Engine ) & {
+
     if ( this->_window != nullptr ) {
         (void) this->_window->setEngine ( nullptr );
         /// if setting different window, maybe res change, or fullscreen / windowed ...
@@ -104,81 +109,22 @@ auto C_ENG_CLASS ( Engine ) :: setWindow ( C_ENG_TYPE ( Window ) * window ) noex
 
     (void) C_ENG_CLASS ( Logger ) :: instance().info (
             "Window " +
-            Long ( reinterpret_cast < AddressValueType const > ( window ) ).toString(16) +
+            :: toString ( this->window() ) +
             " bound to engine"
     );
 
     return * this;
 }
 
-auto C_ENG_CLASS ( Engine ) :: windowResizeEvent (
-        C_ENG_TYPE ( WindowResizeEvent ) * pEvent
-) noexcept -> C_ENG_TYPE ( Engine ) & {
-    std :: cout << "re\n";
-
-    return * this;
-}
-
-auto C_ENG_CLASS ( Engine ) :: keyPressEvent (
-        C_ENG_TYPE ( KeyPressEvent ) * pEvent
-) noexcept -> C_ENG_TYPE ( Engine ) & {
-    std :: cout << "kpe\n";
-
-    return * this;
-}
-
-auto C_ENG_CLASS ( Engine ) :: keyReleaseEvent (
-        C_ENG_TYPE ( KeyReleaseEvent ) * pEvent
-) noexcept -> C_ENG_TYPE ( Engine ) & {
-    std :: cout << "kre\n";
-
-    return * this;
-}
-
-auto C_ENG_CLASS ( Engine ) :: mouseMoveEvent (
-        C_ENG_TYPE ( MouseMoveEvent ) * pEvent
-) noexcept -> C_ENG_TYPE ( Engine ) & {
-    std :: cout << "mme\n";
-
-    return * this;
-}
-
-auto C_ENG_CLASS ( Engine ) :: mousePressEvent (
-        C_ENG_TYPE ( MousePressEvent ) * pEvent
-) noexcept -> C_ENG_TYPE ( Engine ) & {
-    std :: cout << "mpe\n";
-
-    return * this;
-}
-
-auto C_ENG_CLASS ( Engine ) :: mouseReleaseEvent (
-        C_ENG_TYPE ( MouseReleaseEvent ) * pEvent
-) noexcept -> C_ENG_TYPE ( Engine ) & {
-    std :: cout << "mre\n";
-
-    return * this;
-}
-
-auto C_ENG_CLASS ( Engine ) :: mouseEnterEvent (
-        C_ENG_TYPE ( MouseEnterEvent ) * pEvent
-) noexcept -> C_ENG_TYPE ( Engine ) & {
-    std :: cout << "mee\n";
-
-    return * this;
-}
-
-auto C_ENG_CLASS ( Engine ) :: mouseLeaveEvent (
-        C_ENG_TYPE ( MouseLeaveEvent ) * pEvent
-) noexcept -> C_ENG_TYPE ( Engine ) & {
-    std :: cout << "mle\n";
-
-    return * this;
-}
-
-auto C_ENG_CLASS ( Engine ) :: mouseScrollEvent (
-        C_ENG_TYPE ( MouseScrollEvent ) * pEvent
-) noexcept -> C_ENG_TYPE ( Engine ) & {
-    std :: cout << "mse\n";
-
-    return * this;
+auto C_ENG_CLASS ( Engine ) :: toString () const noexcept -> String {
+    return "Engine "
+           "{ state = "_s           + :: toString ( this->state() ) +
+           ", lastFrameDelta = "    + this->frameDeltaTime() +
+           ", frameCount = "        + this->frameCount() +
+           ", fpsUpdateEvery = "    + this->fpsUpdateFrameTime() + " ticks" +
+           ", showFpsEvery = "      + this->showFpsEveryTick() + " ticks" +
+           ", logFpsToConsole = "   + :: toString ( this->logFPSToConsole() ) +
+           ", fps = "               + this->fps() +
+           ", attachedWindow = "    + :: toString ( this->window() ) +
+           " }";
 }

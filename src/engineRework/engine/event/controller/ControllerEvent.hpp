@@ -26,6 +26,17 @@ namespace engine {
         }
 
         C_ENG_DESTRUCTOR ( ControllerEvent ) () noexcept override = default;
+
+        C_ENG_NO_DISCARD constexpr auto type () const noexcept -> EventType override {
+            return EventType :: EventTypeCustomControllerEvent;
+        }
+
+        C_ENG_NO_DISCARD auto copy () const noexcept -> C_ENG_TYPE ( ControllerEvent ) * override = 0;
+
+        C_ENG_NO_DISCARD auto hash () const noexcept -> cds :: Index override;
+        C_ENG_NO_DISCARD auto toString () const noexcept -> cds :: String override;
+
+        C_ENG_NO_DISCARD auto equals ( cds :: Object const & ) const noexcept -> bool override;
     };
 
 }
