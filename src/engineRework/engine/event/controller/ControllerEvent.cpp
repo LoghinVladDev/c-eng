@@ -9,26 +9,26 @@ using namespace engine; // NOLINT(clion-misra-cpp2008-7-3-4)
 
 #include <Controller.hpp>
 
-auto C_ENG_CLASS ( ControllerEvent ) :: hash () const noexcept -> Index {
+auto __C_ENG_TYPE ( ControllerEvent ) :: hash () const noexcept -> Index {
     return this->controller()->handle();
 }
 
-auto C_ENG_CLASS ( ControllerEvent ) :: toString () const noexcept -> String {
-    return "ControllerEvent "
-           "{ event = "             + this->C_ENG_CLASS(Event)::toString() +
+auto __C_ENG_TYPE ( ControllerEvent ) :: toString () const noexcept -> String {
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( ControllerEvent ) ) " "
+           "{ base = "              + this->__C_ENG_TYPE(Event)::toString() +
            ", controllerHandle = "  + Int ( this->controller()->handle() ).toString() +
            " }";
 }
 
-auto C_ENG_CLASS ( ControllerEvent ) :: equals (
+auto __C_ENG_TYPE ( ControllerEvent ) :: equals (
         Object const & object
 ) const noexcept -> bool {
 
-    if ( ! this->C_ENG_CLASS(Event)::equals(object) ) {
+    if ( ! this->__C_ENG_TYPE(Event)::equals(object) ) {
         return false;
     }
 
-    auto pEvent = reinterpret_cast < C_ENG_TYPE ( ControllerEvent ) const * > ( & object );
+    auto pEvent = reinterpret_cast < __C_ENG_TYPE ( ControllerEvent ) const * > ( & object );
 
     return this->controller() == pEvent->controller();
 }

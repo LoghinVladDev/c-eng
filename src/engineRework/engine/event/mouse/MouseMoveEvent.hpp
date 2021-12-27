@@ -2,23 +2,23 @@
 // Created by loghin on 20.12.2021.
 //
 
-#ifndef C_ENG_MOUSEMOVEEVENT_HPP
-#define C_ENG_MOUSEMOVEEVENT_HPP
+#ifndef __C_ENG_MOUSEMOVEEVENT_HPP
+#define __C_ENG_MOUSEMOVEEVENT_HPP
 
 #include <MouseEvent.hpp>
 
 namespace engine {
 
-    class C_ENG_CLASS ( MouseMoveEvent ) : public C_ENG_CLASS ( MouseEvent ) {
-        C_ENG_CLASS_IMMUTABLE_FIELD ( Position, oldPosition, 0u, 0u )
+    __C_ENG_CLASS ( MouseMoveEvent ) : public __C_ENG_TYPE ( MouseEvent ) {
+        __C_ENG_CLASS_IMMUTABLE_FIELD ( __C_ENG_TYPE ( Position ), oldPosition, 0u, 0u )
 
     public:
-        C_ENG_CONSTRUCTOR ( MouseMoveEvent ) (
-                C_ENG_TYPE ( Window ) * window,
-                Position        const & position,
-                Position        const & oldPosition
+        __C_ENG_CONSTRUCTOR ( MouseMoveEvent ) (
+                __C_ENG_TYPE ( Window )           * window,
+                __C_ENG_TYPE ( Position )   const & position,
+                __C_ENG_TYPE ( Position )   const & oldPosition
         ) noexcept :
-                C_ENG_CONSTRUCTOR ( MouseEvent ) (
+                __C_ENG_CONSTRUCTOR ( MouseEvent ) (
                         window,
                         position
                 ),
@@ -27,20 +27,20 @@ namespace engine {
 
         }
 
-        C_ENG_DESTRUCTOR ( MouseMoveEvent ) () noexcept override = default;
+        __C_ENG_DESTRUCTOR ( MouseMoveEvent ) () noexcept override = default;
 
-        C_ENG_NO_DISCARD constexpr auto type () const noexcept -> EventType override {
-            return EventType :: EventTypeMousePressEvent;
+        __C_ENG_NO_DISCARD constexpr auto type () const noexcept -> __C_ENG_TYPE ( EventType ) override {
+            return __C_ENG_TYPE ( EventType ) :: EventTypeMousePressEvent;
         }
 
-        C_ENG_NO_DISCARD inline auto copy () const noexcept -> C_ENG_TYPE ( MouseMoveEvent ) * override {
-            return new C_ENG_TYPE ( MouseMoveEvent ) ( * this );
+        __C_ENG_NO_DISCARD inline auto copy () const noexcept -> __C_ENG_TYPE ( MouseMoveEvent ) * override {
+            return new __C_ENG_TYPE ( MouseMoveEvent ) ( * this );
         }
 
-        C_ENG_NO_DISCARD auto toString () const noexcept -> cds :: String override;
-        C_ENG_NO_DISCARD auto equals ( cds :: Object const & ) const noexcept -> bool override;
+        __C_ENG_NO_DISCARD auto toString () const noexcept -> cds :: String override;
+        __C_ENG_NO_DISCARD auto equals ( cds :: Object const & ) const noexcept -> bool override;
     };
 
 }
 
-#endif //C_ENG_MOUSEMOVEEVENT_HPP
+#endif //__C_ENG_MOUSEMOVEEVENT_HPP

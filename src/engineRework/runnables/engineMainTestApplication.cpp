@@ -14,25 +14,26 @@ int main (
         int argumentCount,
         char ** arguments
 ) {
+
     /**
      * Leave this here due to order of static allocations
      */
     auto _ = "leave this line here"_s;
 
-    if ( static_cast < bool > ( C_ENG_CLASS ( Settings ) :: instance().get( C_ENG_CLASS ( Settings ) :: keyLogToConsole ) ) ) { // NOLINT(clion-misra-cpp2008-5-0-13)
-        C_ENG_CLASS ( Logger ) :: instance ().mirrorToConsole() = true;
+    if ( static_cast < bool > ( __C_ENG_TYPE ( Settings ) :: instance().get( __C_ENG_TYPE ( Settings ) :: keyLogToConsole ) ) ) { // NOLINT(clion-misra-cpp2008-5-0-13)
+        __C_ENG_TYPE ( Logger ) :: instance ().mirrorToConsole() = true;
     }
 
-    (void) C_ENG_CLASS ( Logger ) :: instance().system ( "Engine Main Test Application Start" );
+    (void) __C_ENG_TYPE ( Logger ) :: instance().system ( "Engine Main Test Application Start" );
 
-    C_ENG_CLASS ( Window ) window;
+    __C_ENG_TYPE ( Window ) window;
     window.resize(1366, 768);
     (void) window.init();
 
-    (void) C_ENG_CLASS ( Engine ) :: instance().setWindow ( & window );
-    (void) C_ENG_CLASS ( Engine ) :: instance().start ();
+    (void) __C_ENG_TYPE ( Engine ) :: instance().setWindow ( & window );
+    (void) __C_ENG_TYPE ( Engine ) :: instance().start ();
 
-    (void) C_ENG_CLASS ( Logger ) :: instance().system ( "Engine Main Test Application End" );
+    (void) __C_ENG_TYPE ( Logger ) :: instance().system ( "Engine Main Test Application End" );
 
     return 0;
 }

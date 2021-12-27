@@ -89,3 +89,8 @@ Execution Model
     Restrictions
         Queue cannot be explicitly Destroyed. Implicitly Destroyed when Device is Destroyed
         Pool destruction deletes obects allocated in said pool
+
+
+VkInstance
+    -> VkDevice
+        -> VkQueues for commands

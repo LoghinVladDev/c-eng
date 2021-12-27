@@ -740,15 +740,15 @@ if(Vulkan_FOUND)
 
     set (
             ENGINE_REWORK_RENDER_API_VULKAN_EXTENSION_SOURCES
-
-            src/engineRework/render/API/vulkan/extension/VulkanExtension.cpp
-            src/engineRework/render/API/vulkan/extension/VulkanExtension.hpp
     )
 
     set (
             ENGINE_REWORK_RENDER_API_VULKAN_SOURCES
 
             ${ENGINE_REWORK_RENDER_API_VULKAN_EXTENSION_SOURCES}
+
+            src/engineRework/render/API/vulkan/VulkanCore.cpp
+            src/engineRework/render/API/vulkan/VulkanCore.hpp
     )
 
     set (

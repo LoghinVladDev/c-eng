@@ -2,36 +2,36 @@
 // Created by loghin on 22.12.2021.
 //
 
-#ifndef C_ENG_CONTROLLERCONNECTEVENT_HPP
-#define C_ENG_CONTROLLERCONNECTEVENT_HPP
+#ifndef __C_ENG_CONTROLLERCONNECTEVENT_HPP
+#define __C_ENG_CONTROLLERCONNECTEVENT_HPP
 
 #include <ControllerEvent.hpp>
 
 namespace engine {
 
-    class C_ENG_CLASS ( ControllerConnectEvent ) : public C_ENG_CLASS ( ControllerEvent ) {
+    __C_ENG_CLASS ( ControllerConnectEvent ) : public __C_ENG_TYPE ( ControllerEvent ) {
     public:
-        explicit C_ENG_CONSTRUCTOR ( ControllerConnectEvent ) (
-                C_ENG_TYPE ( Controller ) * controller
+        explicit __C_ENG_CONSTRUCTOR ( ControllerConnectEvent ) (
+                __C_ENG_TYPE ( Controller ) * controller
         ) noexcept :
-                C_ENG_CONSTRUCTOR ( ControllerEvent ) ( nullptr ) {
+                __C_ENG_CONSTRUCTOR ( ControllerEvent ) ( nullptr ) {
 
         }
 
-        C_ENG_DESTRUCTOR ( ControllerConnectEvent ) () noexcept override = default;
+        __C_ENG_DESTRUCTOR ( ControllerConnectEvent ) () noexcept override = default;
 
-        C_ENG_NO_DISCARD constexpr auto type () const noexcept -> EventType override {
-            return EventType :: EventTypeControllerConnectEvent;
+        __C_ENG_NO_DISCARD constexpr auto type () const noexcept -> __C_ENG_TYPE ( EventType ) override {
+            return __C_ENG_TYPE ( EventType ) :: EventTypeControllerConnectEvent;
         }
 
-        C_ENG_NO_DISCARD inline auto copy () const noexcept -> C_ENG_TYPE ( ControllerConnectEvent ) * override {
-            return new C_ENG_TYPE ( ControllerConnectEvent ) ( * this );
+        __C_ENG_NO_DISCARD inline auto copy () const noexcept -> __C_ENG_TYPE ( ControllerConnectEvent ) * override {
+            return new __C_ENG_TYPE ( ControllerConnectEvent ) ( * this );
         }
 
-        C_ENG_NO_DISCARD auto toString () const noexcept -> cds :: String override;
+        __C_ENG_NO_DISCARD auto toString () const noexcept -> cds :: String override;
     };
 
 }
 
 
-#endif //C_ENG_CONTROLLERCONNECTEVENT_HPP
+#endif //__C_ENG_CONTROLLERCONNECTEVENT_HPP

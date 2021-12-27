@@ -7,9 +7,9 @@
 using namespace cds; // NOLINT(clion-misra-cpp2008-7-3-4)
 using namespace engine; // NOLINT(clion-misra-cpp2008-7-3-4)
 
-auto C_ENG_CLASS ( WindowCloseEvent ) :: toString () const noexcept -> String {
-    return "WindowCloseEvent "
-           "{ WindowEvent = "   + this->C_ENG_CLASS(WindowEvent)::toString() +
+auto __C_ENG_TYPE ( WindowCloseEvent ) :: toString () const noexcept -> String {
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( WindowCloseEvent ) ) " "
+           "{ base = "          + this->__C_ENG_TYPE(WindowEvent)::toString() +
            ", cancelClose = "   + :: toString ( this->cancelClose() ) +
            " }";
 }

@@ -7,8 +7,8 @@
 using namespace cds; // NOLINT(clion-misra-cpp2008-7-3-4)
 using namespace engine; // NOLINT(clion-misra-cpp2008-7-3-4)
 
-auto C_ENG_CLASS ( MouseEnterEvent ) :: toString () const noexcept -> String {
-    return "MouseEnterEvent "
-           "{ MouseEvent = "    + this->C_ENG_CLASS(MouseEvent)::toString() +
+auto __C_ENG_TYPE ( MouseEnterEvent ) :: toString () const noexcept -> String {
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( MouseEnterEvent ) ) " "
+           "{ base = "    + this->__C_ENG_TYPE(MouseEvent)::toString() +
            " }";
 }

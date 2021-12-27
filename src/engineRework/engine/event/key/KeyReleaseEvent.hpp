@@ -2,24 +2,24 @@
 // Created by loghin on 20.12.2021.
 //
 
-#ifndef C_ENG_KEYRELEASEEVENT_HPP
-#define C_ENG_KEYRELEASEEVENT_HPP
+#ifndef __C_ENG_KEYRELEASEEVENT_HPP
+#define __C_ENG_KEYRELEASEEVENT_HPP
 
 
 #include <KeyEvent.hpp>
 
 namespace engine {
 
-    class C_ENG_CLASS ( KeyReleaseEvent ) : public C_ENG_CLASS ( KeyEvent ) {
+    __C_ENG_CLASS ( KeyReleaseEvent ) : public __C_ENG_TYPE ( KeyEvent ) {
     public:
-        C_ENG_DESTRUCTOR ( KeyReleaseEvent ) () noexcept override = default;
+        __C_ENG_DESTRUCTOR ( KeyReleaseEvent ) () noexcept override = default;
 
-        C_ENG_CONSTRUCTOR ( KeyReleaseEvent ) (
-                C_ENG_TYPE ( Window ) * window,
-                Key                     key,
-                KeyModifiers            modifiers
+        __C_ENG_CONSTRUCTOR ( KeyReleaseEvent ) (
+                __C_ENG_TYPE ( Window )       * window,
+                __C_ENG_TYPE ( Key )            key,
+                __C_ENG_TYPE ( KeyModifiers )   modifiers
         ) noexcept :
-                C_ENG_CONSTRUCTOR ( KeyEvent ) (
+                __C_ENG_CONSTRUCTOR ( KeyEvent ) (
                         window,
                         key,
                         modifiers
@@ -27,18 +27,18 @@ namespace engine {
 
         }
 
-        C_ENG_NO_DISCARD constexpr auto type () const noexcept -> EventType override {
-            return EventType :: EventTypeKeyReleaseEvent;
+        __C_ENG_NO_DISCARD constexpr auto type () const noexcept -> __C_ENG_TYPE ( EventType ) override {
+            return __C_ENG_TYPE ( EventType ) :: EventTypeKeyReleaseEvent;
         }
 
-        C_ENG_NO_DISCARD inline auto copy () const noexcept -> C_ENG_TYPE ( KeyReleaseEvent ) * override {
-            return new C_ENG_TYPE ( KeyReleaseEvent ) ( * this );
+        __C_ENG_NO_DISCARD inline auto copy () const noexcept -> __C_ENG_TYPE ( KeyReleaseEvent ) * override {
+            return new __C_ENG_TYPE ( KeyReleaseEvent ) ( * this );
         }
 
-        C_ENG_NO_DISCARD auto toString () const noexcept -> cds :: String override;
+        __C_ENG_NO_DISCARD auto toString () const noexcept -> cds :: String override;
     };
 
 }
 
 
-#endif //C_ENG_KEYRELEASEEVENT_HPP
+#endif //__C_ENG_KEYRELEASEEVENT_HPP

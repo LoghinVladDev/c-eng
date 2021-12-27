@@ -2,35 +2,35 @@
 // Created by loghin on 21.12.2021.
 //
 
-#ifndef C_ENG_WINDOWEVENT_HPP
-#define C_ENG_WINDOWEVENT_HPP
+#ifndef __C_ENG_WINDOWEVENT_HPP
+#define __C_ENG_WINDOWEVENT_HPP
 
 
 #include <Event.hpp>
 
 namespace engine {
 
-    class C_ENG_CLASS ( WindowEvent ) : public C_ENG_CLASS ( Event ) {
+    __C_ENG_CLASS ( WindowEvent ) : public __C_ENG_TYPE ( Event ) {
     protected:
-        explicit C_ENG_CONSTRUCTOR ( WindowEvent ) (
-                C_ENG_TYPE ( Window ) * window
+        explicit __C_ENG_CONSTRUCTOR ( WindowEvent ) (
+                __C_ENG_TYPE ( Window ) * window
         ) noexcept :
-                C_ENG_CONSTRUCTOR ( Event ) ( window ) {
+                __C_ENG_CONSTRUCTOR ( Event ) ( window ) {
 
         }
 
     public:
-        C_ENG_DESTRUCTOR ( WindowEvent ) () noexcept override = default;
+        __C_ENG_DESTRUCTOR ( WindowEvent ) () noexcept override = default;
 
-        C_ENG_NO_DISCARD constexpr auto type () const noexcept -> EventType override {
-            return EventType :: EventTypeCustomWindowEvent;
+        __C_ENG_NO_DISCARD constexpr auto type () const noexcept -> __C_ENG_TYPE ( EventType ) override {
+            return __C_ENG_TYPE ( EventType ) :: EventTypeCustomWindowEvent;
         }
 
-        C_ENG_NO_DISCARD auto copy () const noexcept -> C_ENG_TYPE ( WindowEvent ) * override = 0;
+        __C_ENG_NO_DISCARD auto copy () const noexcept -> __C_ENG_TYPE ( WindowEvent ) * override = 0;
 
-        C_ENG_NO_DISCARD auto toString () const noexcept -> cds :: String override;
+        __C_ENG_NO_DISCARD auto toString () const noexcept -> cds :: String override;
     };
 
 }
 
-#endif //C_ENG_WINDOWEVENT_HPP
+#endif //__C_ENG_WINDOWEVENT_HPP

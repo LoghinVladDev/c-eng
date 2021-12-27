@@ -2,43 +2,43 @@
 // Created by loghin on 21.12.2021.
 //
 
-#ifndef C_ENG_WINDOWCONTENTSCALEEVENT_HPP
-#define C_ENG_WINDOWCONTENTSCALEEVENT_HPP
+#ifndef __C_ENG_WINDOWCONTENTSCALEEVENT_HPP
+#define __C_ENG_WINDOWCONTENTSCALEEVENT_HPP
 
 
 #include <WindowEvent.hpp>
 
 namespace engine {
 
-    class C_ENG_CLASS ( WindowContentScaleEvent ) : public C_ENG_CLASS ( WindowEvent ) {
+    __C_ENG_CLASS ( WindowContentScaleEvent ) : public __C_ENG_TYPE ( WindowEvent ) {
 
-        C_ENG_CLASS_IMMUTABLE_FIELD ( WindowContentScale, scale, 0.0f, 0.0f )
+        __C_ENG_CLASS_IMMUTABLE_FIELD ( __C_ENG_TYPE ( WindowContentScale ), scale, 0.0f, 0.0f )
 
     public:
-        C_ENG_DESTRUCTOR ( WindowContentScaleEvent ) () noexcept override = default;
+        __C_ENG_DESTRUCTOR ( WindowContentScaleEvent ) () noexcept override = default;
 
-        C_ENG_CONSTRUCTOR ( WindowContentScaleEvent ) (
-                C_ENG_TYPE ( Window )       * window,
-                WindowContentScale    const & scale
+        __C_ENG_CONSTRUCTOR ( WindowContentScaleEvent ) (
+                __C_ENG_TYPE ( Window )                   * window,
+                __C_ENG_TYPE ( WindowContentScale ) const & scale
         ) noexcept :
-                C_ENG_CONSTRUCTOR ( WindowEvent ) ( window ),
+                __C_ENG_CONSTRUCTOR ( WindowEvent ) ( window ),
                 _scale ( scale ) {
 
         }
 
-        C_ENG_NO_DISCARD constexpr auto type () const noexcept -> EventType override {
-            return EventType :: EventTypeWindowContentScaleEvent;
+        __C_ENG_NO_DISCARD constexpr auto type () const noexcept -> __C_ENG_TYPE ( EventType ) override {
+            return __C_ENG_TYPE ( EventType ) :: EventTypeWindowContentScaleEvent;
         }
 
-        C_ENG_NO_DISCARD inline auto copy () const noexcept -> C_ENG_TYPE ( WindowContentScaleEvent ) * override {
-            return new C_ENG_TYPE ( WindowContentScaleEvent ) ( * this );
+        __C_ENG_NO_DISCARD inline auto copy () const noexcept -> __C_ENG_TYPE ( WindowContentScaleEvent ) * override {
+            return new __C_ENG_TYPE ( WindowContentScaleEvent ) ( * this );
         }
 
-        C_ENG_NO_DISCARD auto toString () const noexcept -> cds :: String override;
-        C_ENG_NO_DISCARD auto equals ( cds :: Object const & ) const noexcept -> bool override;
+        __C_ENG_NO_DISCARD auto toString () const noexcept -> cds :: String override;
+        __C_ENG_NO_DISCARD auto equals ( cds :: Object const & ) const noexcept -> bool override;
     };
 
 }
 
 
-#endif //C_ENG_WINDOWCONTENTSCALEEVENT_HPP
+#endif //__C_ENG_WINDOWCONTENTSCALEEVENT_HPP

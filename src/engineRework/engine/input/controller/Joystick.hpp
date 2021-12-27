@@ -2,24 +2,24 @@
 // Created by loghin on 22.12.2021.
 //
 
-#ifndef C_ENG_JOYSTICK_HPP
-#define C_ENG_JOYSTICK_HPP
+#ifndef __C_ENG_JOYSTICK_HPP
+#define __C_ENG_JOYSTICK_HPP
 
 
 #include <Controller.hpp>
 
 namespace engine {
 
-    class C_ENG_CLASS ( Joystick ) : public C_ENG_CLASS ( Controller ) {
+    __C_ENG_CLASS ( Joystick ) : public __C_ENG_TYPE ( Controller ) {
     private:
-        C_ENG_CLASS_IMMUTABLE_PRIMITIVE_FIELD ( cds :: uint32, axisCount, 0u )
-        C_ENG_CLASS_IMMUTABLE_PRIMITIVE_FIELD ( float *, axes, nullptr )
+        __C_ENG_CLASS_IMMUTABLE_PRIMITIVE_FIELD ( cds :: uint32, axisCount, 0u )
+        __C_ENG_CLASS_IMMUTABLE_PRIMITIVE_FIELD ( float *, axes, nullptr )
 
-        C_ENG_CLASS_IMMUTABLE_PRIMITIVE_FIELD ( cds :: uint32, buttonCount, 0u )
-        C_ENG_CLASS_IMMUTABLE_PRIMITIVE_FIELD ( bool *, buttons, nullptr )
+        __C_ENG_CLASS_IMMUTABLE_PRIMITIVE_FIELD ( cds :: uint32, buttonCount, 0u )
+        __C_ENG_CLASS_IMMUTABLE_PRIMITIVE_FIELD ( bool *, buttons, nullptr )
 
-        C_ENG_CLASS_IMMUTABLE_PRIMITIVE_FIELD ( cds :: uint32, hatCount, 0u )
-        C_ENG_CLASS_IMMUTABLE_PRIMITIVE_FIELD ( cds :: uint8 *, hats, nullptr )
+        __C_ENG_CLASS_IMMUTABLE_PRIMITIVE_FIELD ( cds :: uint32, hatCount, 0u )
+        __C_ENG_CLASS_IMMUTABLE_PRIMITIVE_FIELD ( cds :: uint8 *, hats, nullptr )
 
         auto update () noexcept -> void override;
 
@@ -28,12 +28,12 @@ namespace engine {
             return false;
         };
 
-        C_ENG_DESTRUCTOR ( Joystick ) () noexcept override;
+        __C_ENG_DESTRUCTOR ( Joystick ) () noexcept override;
 
-        C_ENG_NO_DISCARD auto toString () const noexcept -> cds :: String override;
+        __C_ENG_NO_DISCARD auto toString () const noexcept -> cds :: String override;
     };
 
 }
 
 
-#endif //C_ENG_JOYSTICK_HPP
+#endif //__C_ENG_JOYSTICK_HPP

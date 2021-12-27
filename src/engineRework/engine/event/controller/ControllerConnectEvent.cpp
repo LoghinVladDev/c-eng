@@ -7,8 +7,8 @@
 using namespace cds; // NOLINT(clion-misra-cpp2008-7-3-4)
 using namespace engine; // NOLINT(clion-misra-cpp2008-7-3-4)
 
-auto C_ENG_CLASS ( ControllerConnectEvent ) :: toString () const noexcept -> String {
-    return "ControllerConnectEvent "
-           "{ ControllerEvent = "   + this->C_ENG_CLASS(ControllerEvent)::toString() +
+auto __C_ENG_TYPE ( ControllerConnectEvent ) :: toString () const noexcept -> String {
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( ControllerConnectEvent ) ) " "
+           "{ base = "   + this->__C_ENG_TYPE(ControllerEvent)::toString() +
            " }";
 }

@@ -10,14 +10,14 @@ using namespace engine; // NOLINT(clion-misra-cpp2008-7-3-4)
 #include <CDS/Long>
 #include <Window.hpp>
 
-auto C_ENG_CLASS ( Event ) :: toString () const noexcept -> String {
-    return "Event "
-           "{ windowHandle = "      + :: toString ( this->window() ) +
-           ", type = "              + :: toString ( this->type() ) +
-           "}";
+auto __C_ENG_TYPE ( Event ) :: toString () const noexcept -> String {
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( Event ) ) " "
+           "{ type = "_s            + :: toString ( this->type() ) +
+           ", windowHandle = "      + :: toString ( this->window() ) +
+           " }";
 }
 
-auto C_ENG_CLASS ( Event ) :: equals (
+auto __C_ENG_TYPE ( Event ) :: equals (
         Object const & object
 ) const noexcept -> bool {
 
@@ -25,7 +25,7 @@ auto C_ENG_CLASS ( Event ) :: equals (
         return true;
     }
 
-    auto pEvent = dynamic_cast < C_ENG_TYPE ( Event ) const * > ( & object );
+    auto pEvent = dynamic_cast < __C_ENG_TYPE ( Event ) const * > ( & object );
     if ( pEvent == nullptr ) {
         return false;
     }

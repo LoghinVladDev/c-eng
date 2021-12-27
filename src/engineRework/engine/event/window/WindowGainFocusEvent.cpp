@@ -7,8 +7,8 @@
 using namespace cds; // NOLINT(clion-misra-cpp2008-7-3-4)
 using namespace engine; // NOLINT(clion-misra-cpp2008-7-3-4)
 
-auto C_ENG_CLASS ( WindowGainFocusEvent ) :: toString () const noexcept -> String {
-    return "WindowGainFocusEvent "
-           "{ WindowEvent = "   + this->C_ENG_CLASS(WindowEvent)::toString() +
+auto __C_ENG_TYPE ( WindowGainFocusEvent ) :: toString () const noexcept -> String {
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( WindowGainFocusEvent ) ) " "
+           "{ base = "   + this->__C_ENG_TYPE(WindowEvent)::toString() +
            " }";
 }

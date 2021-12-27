@@ -2,39 +2,39 @@
 // Created by loghin on 21.12.2021.
 //
 
-#ifndef C_ENG_WINDOWREFRESHREQUESTEVENT_HPP
-#define C_ENG_WINDOWREFRESHREQUESTEVENT_HPP
+#ifndef __C_ENG_WINDOWREFRESHREQUESTEVENT_HPP
+#define __C_ENG_WINDOWREFRESHREQUESTEVENT_HPP
 
 
 #include <WindowEvent.hpp>
 
 namespace engine {
 
-    class C_ENG_CLASS ( WindowRefreshRequestEvent ) : public C_ENG_CLASS ( WindowEvent ) {
+    __C_ENG_CLASS ( WindowRefreshRequestEvent ) : public __C_ENG_TYPE ( WindowEvent ) {
 
     public:
-        C_ENG_DESTRUCTOR ( WindowRefreshRequestEvent ) () noexcept override = default;
+        __C_ENG_DESTRUCTOR ( WindowRefreshRequestEvent ) () noexcept override = default;
 
-        explicit C_ENG_CONSTRUCTOR ( WindowRefreshRequestEvent ) (
-                C_ENG_TYPE ( Window ) * window
+        explicit __C_ENG_CONSTRUCTOR ( WindowRefreshRequestEvent ) (
+                __C_ENG_TYPE ( Window ) * window
         ) noexcept :
-                C_ENG_CONSTRUCTOR ( WindowEvent ) ( window ) {
+                __C_ENG_CONSTRUCTOR ( WindowEvent ) ( window ) {
 
         }
 
     public:
-        C_ENG_NO_DISCARD constexpr auto type () const noexcept -> EventType override {
-            return EventType :: EventTypeWindowRefreshRequestEvent;
+        __C_ENG_NO_DISCARD constexpr auto type () const noexcept -> __C_ENG_TYPE ( EventType ) override {
+            return __C_ENG_TYPE ( EventType ) :: EventTypeWindowRefreshRequestEvent;
         }
 
-        C_ENG_NO_DISCARD inline auto copy () const noexcept -> C_ENG_TYPE ( WindowRefreshRequestEvent ) * override {
-            return new C_ENG_TYPE ( WindowRefreshRequestEvent ) ( * this );
+        __C_ENG_NO_DISCARD inline auto copy () const noexcept -> __C_ENG_TYPE ( WindowRefreshRequestEvent ) * override {
+            return new __C_ENG_TYPE ( WindowRefreshRequestEvent ) ( * this );
         }
 
-        C_ENG_NO_DISCARD auto toString () const noexcept -> cds :: String override;
+        __C_ENG_NO_DISCARD auto toString () const noexcept -> cds :: String override;
     };
 
 }
 
 
-#endif //C_ENG_WINDOWREFRESHREQUESTEVENT_HPP
+#endif //__C_ENG_WINDOWREFRESHREQUESTEVENT_HPP

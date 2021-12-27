@@ -2,8 +2,8 @@
 // Created by loghin on 23.12.2021.
 //
 
-#ifndef C_ENG_SIMPLEEVENTQUEUE_HPP
-#define C_ENG_SIMPLEEVENTQUEUE_HPP
+#ifndef __C_ENG_SIMPLEEVENTQUEUE_HPP
+#define __C_ENG_SIMPLEEVENTQUEUE_HPP
 
 #include <Preprocess.hpp>
 #include <CDS/Utility>
@@ -11,7 +11,7 @@
 
 namespace engine :: utility {
 
-    template<typename T>
+    template < typename T >
     class SimpleEventQueue {
     private:
         struct Node {
@@ -19,17 +19,17 @@ namespace engine :: utility {
             Node *pNext; // NOLINT(clion-misra-cpp2008-11-0-1)
         };
 
-        Node *pHead{nullptr};
-        Node *pBack{nullptr};
+        Node * pHead { nullptr };
+        Node * pBack { nullptr };
 
     public:
         ~SimpleEventQueue() noexcept {
-            while (!this->empty()) { // NOLINT(clion-misra-cpp2008-5-3-1)
+            while ( ! this->empty() ) { // NOLINT(clion-misra-cpp2008-5-3-1)
                 (void) this->pop();
             }
         }
 
-        C_ENG_NO_DISCARD constexpr auto empty() const noexcept -> bool {
+        __C_ENG_NO_DISCARD constexpr auto empty() const noexcept -> bool {
             return this->pHead == nullptr;
         }
 
@@ -43,8 +43,8 @@ namespace engine :: utility {
             }
         }
 
-        C_ENG_NO_DISCARD auto pop() noexcept(false) -> T {
-            if (this->empty()) {
+        __C_ENG_NO_DISCARD auto pop() noexcept(false) -> T {
+            if ( this->empty() ) {
                 throw cds::OutOfBoundsException();
             }
 
@@ -57,7 +57,7 @@ namespace engine :: utility {
             return value;
         }
 
-        C_ENG_NO_DISCARD auto toString () const noexcept -> cds :: String {
+        __C_ENG_NO_DISCARD auto toString () const noexcept -> cds :: String {
             std :: stringstream oss;
             auto pFront = this->pHead;
 
@@ -76,4 +76,4 @@ namespace engine :: utility {
 
 }
 
-#endif //C_ENG_SIMPLEEVENTQUEUE_HPP
+#endif //__C_ENG_SIMPLEEVENTQUEUE_HPP

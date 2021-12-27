@@ -2,39 +2,39 @@
 // Created by loghin on 20.12.2021.
 //
 
-#ifndef C_ENG_MOUSEENTEREVENT_HPP
-#define C_ENG_MOUSEENTEREVENT_HPP
+#ifndef __C_ENG_MOUSEENTEREVENT_HPP
+#define __C_ENG_MOUSEENTEREVENT_HPP
 
 #include <MouseEvent.hpp>
 
 namespace engine {
 
-    class C_ENG_CLASS ( MouseEnterEvent ) : public C_ENG_CLASS ( MouseEvent ) {
+    __C_ENG_CLASS ( MouseEnterEvent ) : public __C_ENG_TYPE ( MouseEvent ) {
     public:
-        C_ENG_DESTRUCTOR ( MouseEnterEvent ) () noexcept override = default;
+        __C_ENG_DESTRUCTOR ( MouseEnterEvent ) () noexcept override = default;
 
-        C_ENG_CONSTRUCTOR ( MouseEnterEvent ) (
-                C_ENG_TYPE ( Window ) * window,
-                Position        const & position
+        __C_ENG_CONSTRUCTOR ( MouseEnterEvent ) (
+                __C_ENG_TYPE ( Window )           * window,
+                __C_ENG_TYPE ( Position )   const & position
         ) noexcept :
-                C_ENG_CONSTRUCTOR ( MouseEvent ) (
+                __C_ENG_CONSTRUCTOR ( MouseEvent ) (
                         window,
                         position
                 ) {
 
         }
 
-        C_ENG_NO_DISCARD constexpr auto type () const noexcept -> EventType override {
-            return EventType :: EventTypeMouseEnterEvent;
+        __C_ENG_NO_DISCARD constexpr auto type () const noexcept -> __C_ENG_TYPE ( EventType ) override {
+            return __C_ENG_TYPE ( EventType ) :: EventTypeMouseEnterEvent;
         }
 
-        C_ENG_NO_DISCARD inline auto copy () const noexcept -> C_ENG_TYPE ( MouseEnterEvent ) * override {
-            return new C_ENG_TYPE ( MouseEnterEvent ) ( * this );
+        __C_ENG_NO_DISCARD inline auto copy () const noexcept -> __C_ENG_TYPE ( MouseEnterEvent ) * override {
+            return new __C_ENG_TYPE ( MouseEnterEvent ) ( * this );
         }
 
-        C_ENG_NO_DISCARD auto toString () const noexcept -> cds :: String override;
+        __C_ENG_NO_DISCARD auto toString () const noexcept -> cds :: String override;
     };
 
 }
 
-#endif //C_ENG_MOUSEENTEREVENT_HPP
+#endif //__C_ENG_MOUSEENTEREVENT_HPP

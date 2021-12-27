@@ -9,8 +9,8 @@ using namespace engine; // NOLINT(clion-misra-cpp2008-7-3-4)
 
 #include <Logger.hpp>
 
-auto C_ENG_CLASS ( Settings ) :: instance () noexcept -> C_ENG_TYPE ( Settings ) & {
-    static C_ENG_TYPE ( Settings ) settings;
+auto __C_ENG_TYPE ( Settings ) :: instance () noexcept -> __C_ENG_TYPE ( Settings ) & {
+    static __C_ENG_TYPE ( Settings ) settings;
 
     if ( ! settings.initialized() ) {
         (void) settings.load();
@@ -21,9 +21,9 @@ auto C_ENG_CLASS ( Settings ) :: instance () noexcept -> C_ENG_TYPE ( Settings )
 
 #include <CDS/Path>
 
-auto C_ENG_CLASS ( Settings ) :: load () noexcept -> C_ENG_TYPE ( Settings ) & {
+auto __C_ENG_TYPE ( Settings ) :: load () noexcept -> __C_ENG_TYPE ( Settings ) & {
 
-    (void) C_ENG_CLASS ( Logger ) :: instance().info ( "Initializing Settings" );
+    (void) __C_ENG_TYPE ( Logger ) :: instance().info ( "Initializing Settings" );
 
     try {
         Path path ( defaultPath );
@@ -37,11 +37,11 @@ auto C_ENG_CLASS ( Settings ) :: load () noexcept -> C_ENG_TYPE ( Settings ) & {
             this->_settings [ pair[0] ] = static_cast < uint64 > ( Long :: parse ( pair[1] ) );
         }
 
-        (void) C_ENG_CLASS ( Logger ) :: instance ().debug ( "Settings initialized from file at " + path.toString() );
+        (void) __C_ENG_TYPE ( Logger ) :: instance ().debug ( "Settings initialized from file at " + path.toString() );
 
     } catch ( Exception const & ) {
 
-        (void) C_ENG_CLASS ( Logger ) :: instance ().debug ( "Settings initialization failed, no file present. Commencing with defaults" );
+        (void) __C_ENG_TYPE ( Logger ) :: instance ().debug ( "Settings initialization failed, no file present. Commencing with defaults" );
 
     }
 
@@ -50,32 +50,32 @@ auto C_ENG_CLASS ( Settings ) :: load () noexcept -> C_ENG_TYPE ( Settings ) & {
     return * this;
 }
 
-auto C_ENG_CLASS ( Settings ) :: get ( Key key ) noexcept -> Value {
+auto __C_ENG_TYPE ( Settings ) :: get ( Key key ) noexcept -> Value {
     if ( ! this->_settings.containsKey ( key ) ) {
-        this->_settings [ String ( key ) ] = C_ENG_CLASS ( Settings ) :: defaultForKey ( key );
+        this->_settings [ String ( key ) ] = __C_ENG_TYPE ( Settings ) :: defaultForKey ( key );
     }
 
     return this->_settings [ String ( key ) ];
 }
 
-auto C_ENG_CLASS ( Settings ) :: set ( Key key, Value value ) noexcept -> C_ENG_TYPE ( Settings ) & {
+auto __C_ENG_TYPE ( Settings ) :: set ( Key key, Value value ) noexcept -> __C_ENG_TYPE ( Settings ) & {
     this->_settings [ String (key) ] = value;
 
     return * this;
 }
 
-static HashMap < String, C_ENG_CLASS ( Settings ) :: Value > defaults = {
-        { C_ENG_CLASS ( Settings ) :: keyUseValidationLayers,                   C_ENG_CLASS ( Settings ) :: defaultUseValidationLayers },
-        { C_ENG_CLASS ( Settings ) :: keyLogToConsole,                          C_ENG_CLASS ( Settings ) :: defaultLogToConsole },
-        { C_ENG_CLASS ( Settings ) :: keyPeriodicCacheReconstructionInterval,   C_ENG_CLASS ( Settings ) :: defaultPeriodicCacheReconstructionInterval },
-        { C_ENG_CLASS ( Settings ) :: keyMouseCursorEnabled,                    C_ENG_CLASS ( Settings ) :: defaultMouseCursorEnabled },
-        { C_ENG_CLASS ( Settings ) :: keyShowFramesPerSecond,                   C_ENG_CLASS ( Settings ) :: defaultShowFramesPerSecond },
-        { C_ENG_CLASS ( Settings ) :: keyResolution,                            C_ENG_CLASS ( Settings ) :: defaultResolution },
-        { C_ENG_CLASS ( Settings ) :: keyFieldOfView,                           C_ENG_CLASS ( Settings ) :: defaultFieldOfView },
-        { C_ENG_CLASS ( Settings ) :: keyDrawDistance,                          C_ENG_CLASS ( Settings ) :: defaultDrawDistance }
+static HashMap < String, __C_ENG_TYPE ( Settings ) :: Value > defaults = {
+        { __C_ENG_TYPE ( Settings ) :: keyUseValidationLayers,                   __C_ENG_TYPE ( Settings ) :: defaultUseValidationLayers },
+        { __C_ENG_TYPE ( Settings ) :: keyLogToConsole,                          __C_ENG_TYPE ( Settings ) :: defaultLogToConsole },
+        { __C_ENG_TYPE ( Settings ) :: keyPeriodicCacheReconstructionInterval,   __C_ENG_TYPE ( Settings ) :: defaultPeriodicCacheReconstructionInterval },
+        { __C_ENG_TYPE ( Settings ) :: keyMouseCursorEnabled,                    __C_ENG_TYPE ( Settings ) :: defaultMouseCursorEnabled },
+        { __C_ENG_TYPE ( Settings ) :: keyShowFramesPerSecond,                   __C_ENG_TYPE ( Settings ) :: defaultShowFramesPerSecond },
+        { __C_ENG_TYPE ( Settings ) :: keyResolution,                            __C_ENG_TYPE ( Settings ) :: defaultResolution },
+        { __C_ENG_TYPE ( Settings ) :: keyFieldOfView,                           __C_ENG_TYPE ( Settings ) :: defaultFieldOfView },
+        { __C_ENG_TYPE ( Settings ) :: keyDrawDistance,                          __C_ENG_TYPE ( Settings ) :: defaultDrawDistance }
 };
 
-auto C_ENG_CLASS ( Settings ) :: defaultForKey ( Key key ) noexcept -> Value {
+auto __C_ENG_TYPE ( Settings ) :: defaultForKey ( Key key ) noexcept -> Value {
     if ( defaults.containsKey ( String ( key ) ) ) {
         return defaults [ String ( key ) ];
     }
@@ -83,11 +83,11 @@ auto C_ENG_CLASS ( Settings ) :: defaultForKey ( Key key ) noexcept -> Value {
     return 0ULL;
 }
 
-C_ENG_CLASS ( Settings ) :: C_ENG_DESTRUCTOR ( Settings ) () noexcept {
+__C_ENG_TYPE ( Settings ) :: __C_ENG_DESTRUCTOR ( Settings ) () noexcept {
     (void) this->save();
 }
 
-auto C_ENG_CLASS ( Settings ) :: save () noexcept -> C_ENG_TYPE ( Settings ) & {
+auto __C_ENG_TYPE ( Settings ) :: save () noexcept -> __C_ENG_TYPE ( Settings ) & {
     std :: fstream file ( defaultPath, std :: ios :: out | std :: ios :: trunc );
 
     for ( auto & pair : this->_settings ) {
@@ -97,8 +97,8 @@ auto C_ENG_CLASS ( Settings ) :: save () noexcept -> C_ENG_TYPE ( Settings ) & {
     return * this;
 }
 
-auto C_ENG_CLASS ( Settings ) :: toString () const noexcept -> String {
-    return "Settings "
+auto __C_ENG_TYPE ( Settings ) :: toString () const noexcept -> String {
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( Settings ) ) " "
            "{ initialized = "_s + :: toString ( this->initialized() ) +
            ", settings = "      + this->_settings.toString();
 }

@@ -2,27 +2,27 @@
 // Created by loghin on 20.12.2021.
 //
 
-#ifndef C_ENG_MOUSEPRESSEVENT_HPP
-#define C_ENG_MOUSEPRESSEVENT_HPP
+#ifndef __C_ENG_MOUSEPRESSEVENT_HPP
+#define __C_ENG_MOUSEPRESSEVENT_HPP
 
 #include <MouseEvent.hpp>
 
 namespace engine {
 
-    class C_ENG_CLASS ( MousePressEvent ) : public C_ENG_CLASS ( MouseEvent ) {
-        C_ENG_CLASS_IMMUTABLE_PRIMITIVE_FIELD ( MouseButton, button, MouseButton :: MouseButtonUndefined )
-        C_ENG_CLASS_IMMUTABLE_PRIMITIVE_FIELD ( KeyModifiers, modifiers, KeyModifier :: KeyModifierNone )
+    __C_ENG_CLASS ( MousePressEvent ) : public __C_ENG_TYPE ( MouseEvent ) {
+        __C_ENG_CLASS_IMMUTABLE_PRIMITIVE_FIELD ( __C_ENG_TYPE ( MouseButton ), button, __C_ENG_TYPE ( MouseButton ) :: MouseButtonUndefined )
+        __C_ENG_CLASS_IMMUTABLE_PRIMITIVE_FIELD ( __C_ENG_TYPE ( KeyModifiers ), modifiers, __C_ENG_TYPE ( KeyModifier ) :: KeyModifierNone )
 
     public:
-        C_ENG_DESTRUCTOR ( MousePressEvent ) () noexcept override = default;
+        __C_ENG_DESTRUCTOR ( MousePressEvent ) () noexcept override = default;
 
-        C_ENG_CONSTRUCTOR ( MousePressEvent ) (
-                C_ENG_TYPE ( Window ) * window,
-                Position        const & position,
-                MouseButton             button,
-                KeyModifiers            modifiers
+        __C_ENG_CONSTRUCTOR ( MousePressEvent ) (
+                __C_ENG_TYPE ( Window )               * window,
+                __C_ENG_TYPE ( Position )       const & position,
+                __C_ENG_TYPE ( MouseButton )            button,
+                __C_ENG_TYPE ( KeyModifiers )           modifiers
         ) noexcept :
-                C_ENG_CONSTRUCTOR ( MouseEvent ) (
+                __C_ENG_CONSTRUCTOR ( MouseEvent ) (
                         window,
                         position
                 ),
@@ -31,23 +31,23 @@ namespace engine {
 
         }
 
-        C_ENG_NO_DISCARD constexpr auto type () const noexcept -> EventType override {
-            return EventType :: EventTypeMousePressEvent;
+        __C_ENG_NO_DISCARD constexpr auto type () const noexcept -> __C_ENG_TYPE ( EventType ) override {
+            return __C_ENG_TYPE ( EventType ) :: EventTypeMousePressEvent;
         }
 
-        C_ENG_NO_DISCARD inline auto copy () const noexcept -> C_ENG_TYPE ( MousePressEvent ) * override {
-            return new C_ENG_TYPE ( MousePressEvent ) ( * this );
+        __C_ENG_NO_DISCARD inline auto copy () const noexcept -> __C_ENG_TYPE ( MousePressEvent ) * override {
+            return new __C_ENG_TYPE ( MousePressEvent ) ( * this );
         }
 
-        C_ENG_NO_DISCARD inline auto hash () const noexcept -> cds :: Index override {
+        __C_ENG_NO_DISCARD inline auto hash () const noexcept -> cds :: Index override {
             return
                 ( static_cast < cds :: Index > ( this->button() ) );
         }
 
-        C_ENG_NO_DISCARD auto toString () const noexcept -> cds :: String override;
-        C_ENG_NO_DISCARD auto equals ( cds :: Object const & ) const noexcept -> bool override;
+        __C_ENG_NO_DISCARD auto toString () const noexcept -> cds :: String override;
+        __C_ENG_NO_DISCARD auto equals ( cds :: Object const & ) const noexcept -> bool override;
     };
 
 }
 
-#endif //C_ENG_MOUSEPRESSEVENT_HPP
+#endif //__C_ENG_MOUSEPRESSEVENT_HPP

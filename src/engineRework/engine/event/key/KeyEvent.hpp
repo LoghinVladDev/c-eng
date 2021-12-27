@@ -2,49 +2,49 @@
 // Created by loghin on 20.12.2021.
 //
 
-#ifndef C_ENG_KEYEVENT_HPP
-#define C_ENG_KEYEVENT_HPP
+#ifndef __C_ENG_KEYEVENT_HPP
+#define __C_ENG_KEYEVENT_HPP
 
 #include <Event.hpp>
 
 namespace engine {
 
-    class C_ENG_CLASS ( KeyEvent ) : public C_ENG_CLASS ( Event ) {
+    __C_ENG_CLASS ( KeyEvent ) : public __C_ENG_TYPE ( Event ) {
 
-        C_ENG_CLASS_IMMUTABLE_PRIMITIVE_FIELD ( Key, key, Key :: KeyUnknown )
-        C_ENG_CLASS_IMMUTABLE_PRIMITIVE_FIELD ( KeyModifiers, modifiers, KeyModifier :: KeyModifierNone )
+        __C_ENG_CLASS_IMMUTABLE_PRIMITIVE_FIELD ( __C_ENG_TYPE ( Key ), key, __C_ENG_TYPE ( Key ) :: KeyUnknown )
+        __C_ENG_CLASS_IMMUTABLE_PRIMITIVE_FIELD ( __C_ENG_TYPE ( KeyModifiers ), modifiers, __C_ENG_TYPE ( KeyModifier ) :: KeyModifierNone )
 
     protected:
-        C_ENG_CONSTRUCTOR ( KeyEvent ) (
-                C_ENG_TYPE ( Window ) * window,
-                Key                     key,
-                KeyModifiers            modifiers
+        __C_ENG_CONSTRUCTOR ( KeyEvent ) (
+                __C_ENG_TYPE ( Window )       * window,
+                __C_ENG_TYPE ( Key )            key,
+                __C_ENG_TYPE ( KeyModifiers )   modifiers
         ) noexcept :
-                C_ENG_CONSTRUCTOR ( Event ) ( window ),
+                __C_ENG_CONSTRUCTOR ( Event ) ( window ),
                 _key ( key ),
                 _modifiers ( modifiers ) {
 
         }
 
     public:
-        C_ENG_DESTRUCTOR ( KeyEvent ) () noexcept override = default;
+        __C_ENG_DESTRUCTOR ( KeyEvent ) () noexcept override = default;
 
-        C_ENG_NO_DISCARD constexpr auto type () const noexcept -> EventType override {
-            return EventType :: EventTypeCustomKeyEvent;
+        __C_ENG_NO_DISCARD constexpr auto type () const noexcept -> __C_ENG_TYPE ( EventType ) override {
+            return __C_ENG_TYPE ( EventType ) :: EventTypeCustomKeyEvent;
         }
 
-        C_ENG_NO_DISCARD auto copy () const noexcept -> C_ENG_TYPE ( KeyEvent ) * override = 0;
+        __C_ENG_NO_DISCARD auto copy () const noexcept -> __C_ENG_TYPE ( KeyEvent ) * override = 0;
 
-        C_ENG_NO_DISCARD inline auto hash () const noexcept -> cds :: Index override {
+        __C_ENG_NO_DISCARD inline auto hash () const noexcept -> cds :: Index override {
             return
                 ( static_cast < cds :: Index > ( this->key() ) );
         }
 
-        C_ENG_NO_DISCARD auto toString () const noexcept -> cds :: String override;
-        C_ENG_NO_DISCARD auto equals ( cds :: Object const & ) const noexcept -> bool override;
+        __C_ENG_NO_DISCARD auto toString () const noexcept -> cds :: String override;
+        __C_ENG_NO_DISCARD auto equals ( cds :: Object const & ) const noexcept -> bool override;
     };
 
 }
 
 
-#endif //C_ENG_KEYEVENT_HPP
+#endif //__C_ENG_KEYEVENT_HPP

@@ -2,42 +2,42 @@
 // Created by loghin on 20.12.2021.
 //
 
-#ifndef C_ENG_MOUSEEVENT_HPP
-#define C_ENG_MOUSEEVENT_HPP
+#ifndef __C_ENG_MOUSEEVENT_HPP
+#define __C_ENG_MOUSEEVENT_HPP
 
 
 #include <Event.hpp>
 
 namespace engine {
 
-    class C_ENG_CLASS ( MouseEvent ) : public C_ENG_CLASS ( Event ) {
+    __C_ENG_CLASS ( MouseEvent ) : public __C_ENG_TYPE ( Event ) {
 
-        C_ENG_CLASS_IMMUTABLE_FIELD ( Position, position, 0u, 0u )
+        __C_ENG_CLASS_IMMUTABLE_FIELD ( __C_ENG_TYPE ( Position ), position, 0u, 0u )
 
     protected:
-        C_ENG_CONSTRUCTOR ( MouseEvent ) (
-                C_ENG_TYPE ( Window ) * window,
-                Position        const & position
+        __C_ENG_CONSTRUCTOR ( MouseEvent ) (
+                __C_ENG_TYPE ( Window )           * window,
+                __C_ENG_TYPE ( Position )   const & position
         ) noexcept :
-                C_ENG_CONSTRUCTOR ( Event ) ( window ),
+                __C_ENG_CONSTRUCTOR ( Event ) ( window ),
                 _position ( position ) {
 
         }
 
     public:
-        C_ENG_DESTRUCTOR ( MouseEvent ) () noexcept override = default;
+        __C_ENG_DESTRUCTOR ( MouseEvent ) () noexcept override = default;
 
-        C_ENG_NO_DISCARD constexpr auto type () const noexcept -> EventType override {
-            return EventType :: EventTypeCustomMouseEvent;
+        __C_ENG_NO_DISCARD constexpr auto type () const noexcept -> __C_ENG_TYPE ( EventType ) override {
+            return __C_ENG_TYPE ( EventType ) :: EventTypeCustomMouseEvent;
         }
 
-        C_ENG_NO_DISCARD auto copy () const noexcept -> C_ENG_TYPE ( MouseEvent ) * override = 0;
+        __C_ENG_NO_DISCARD auto copy () const noexcept -> __C_ENG_TYPE ( MouseEvent ) * override = 0;
 
-        C_ENG_NO_DISCARD auto toString () const noexcept -> cds :: String override;
-        C_ENG_NO_DISCARD auto equals ( cds :: Object const & ) const noexcept -> bool override;
+        __C_ENG_NO_DISCARD auto toString () const noexcept -> cds :: String override;
+        __C_ENG_NO_DISCARD auto equals ( cds :: Object const & ) const noexcept -> bool override;
     };
 
 }
 
 
-#endif //C_ENG_MOUSEEVENT_HPP
+#endif //__C_ENG_MOUSEEVENT_HPP

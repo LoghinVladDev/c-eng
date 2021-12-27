@@ -13,13 +13,13 @@ using namespace engine; // NOLINT(clion-misra-cpp2008-7-3-4)
 
 namespace engine {
 
-    C_ENG_NO_DISCARD auto toString (
+    __C_ENG_NO_DISCARD auto toString (
             bool value
     ) noexcept -> StringLiteral {
         return value ? "true" : "false";
     }
 
-    C_ENG_NO_DISCARD auto toString (
+    __C_ENG_NO_DISCARD auto toString (
             void const * address
     ) noexcept -> String {
         return
@@ -29,380 +29,380 @@ namespace engine {
             ).cStr();
     }
 
-    C_ENG_NO_DISCARD auto toString (
-            EngineState state
+    __C_ENG_NO_DISCARD auto toString (
+            __C_ENG_TYPE ( EngineState ) state
     ) noexcept -> StringLiteral {
 
         StringLiteral asString;
 
         switch ( state ) {
-            case EngineStateInactive:                   { asString = "Inactive";                    break; }
-            case EngineStateStartupAcquiringSettings:   { asString = "Acquiring Settings";          break; }
-            case EngineStateStartup:                    { asString = "Starting Up";                 break; }
-            case EngineStateRunning:                    { asString = "Running";                     break; }
-            case EngineStateShutdown:                   { asString = "Shutdown";                    break; }
+            case __C_ENG_TYPE ( EngineState ) :: EngineStateInactive:                   { asString = "Inactive";                    break; }
+            case __C_ENG_TYPE ( EngineState ) :: EngineStateStartupAcquiringSettings:   { asString = "Acquiring Settings";          break; }
+            case __C_ENG_TYPE ( EngineState ) :: EngineStateStartup:                    { asString = "Starting Up";                 break; }
+            case __C_ENG_TYPE ( EngineState ) :: EngineStateRunning:                    { asString = "Running";                     break; }
+            case __C_ENG_TYPE ( EngineState ) :: EngineStateShutdown:                   { asString = "Shutdown";                    break; }
         }
 
         return asString;
     }
 
-    C_ENG_NO_DISCARD auto toString (
-            LogLevel level
+    __C_ENG_NO_DISCARD auto toString (
+            __C_ENG_TYPE ( LogLevel ) level
     ) noexcept -> StringLiteral {
 
         StringLiteral asString = "";
 
         switch ( level ) {
-            case LogLevelForced:    { asString = "Forced";      break; }
-            case LogLevelSystem:    { asString = "System";      break; }
-            case LogLevelFatal:     { asString = "Fatal";       break; }
-            case LogLevelCritical:  { asString = "Critical";    break; }
-            case LogLevelError:     { asString = "Error";       break; }
-            case LogLevelWarning:   { asString = "Warning";     break; }
-            case LogLevelDebug:     { asString = "Debug";       break; }
-            case LogLevelInfo:      { asString = "Info";        break; }
+            case __C_ENG_TYPE ( LogLevel ) :: LogLevelForced:    { asString = "Forced";      break; }
+            case __C_ENG_TYPE ( LogLevel ) :: LogLevelSystem:    { asString = "System";      break; }
+            case __C_ENG_TYPE ( LogLevel ) :: LogLevelFatal:     { asString = "Fatal";       break; }
+            case __C_ENG_TYPE ( LogLevel ) :: LogLevelCritical:  { asString = "Critical";    break; }
+            case __C_ENG_TYPE ( LogLevel ) :: LogLevelError:     { asString = "Error";       break; }
+            case __C_ENG_TYPE ( LogLevel ) :: LogLevelWarning:   { asString = "Warning";     break; }
+            case __C_ENG_TYPE ( LogLevel ) :: LogLevelDebug:     { asString = "Debug";       break; }
+            case __C_ENG_TYPE ( LogLevel ) :: LogLevelInfo:      { asString = "Info";        break; }
         }
 
         return asString;
     }
 
-    C_ENG_NO_DISCARD auto toString (
-            EventType type
+    __C_ENG_NO_DISCARD auto toString (
+            __C_ENG_TYPE ( EventType ) type
     ) noexcept -> StringLiteral {
 
         StringLiteral asString = "";
 
         switch ( type ) {
-            case EventTypeCustom:                       { asString = "CustomEvent";                     break; }
+            case __C_ENG_TYPE ( EventType ) :: EventTypeCustom:                       { asString = "CustomEvent";                     break; }
 
-            case EventTypeCustomKeyEvent:               { asString = "CustomKeyEvent";                  break; }
-            case EventTypeKeyPressEvent:                { asString = "KeyPressEvent";                   break; }
-            case EventTypeKeyReleaseEvent:              { asString = "KeyReleaseEvent";                 break; }
+            case __C_ENG_TYPE ( EventType ) :: EventTypeCustomKeyEvent:               { asString = "CustomKeyEvent";                  break; }
+            case __C_ENG_TYPE ( EventType ) :: EventTypeKeyPressEvent:                { asString = "KeyPressEvent";                   break; }
+            case __C_ENG_TYPE ( EventType ) :: EventTypeKeyReleaseEvent:              { asString = "KeyReleaseEvent";                 break; }
 
-            case EventTypeCustomMouseEvent:             { asString = "CustomMouseEvent";                break; }
-            case EventTypeMouseMoveEvent:               { asString = "MouseMoveEvent";                  break; }
-            case EventTypeMouseEnterEvent:              { asString = "MouseEnterEvent";                 break; }
-            case EventTypeMouseLeaveEvent:              { asString = "MouseLeaveEvent";                 break; }
-            case EventTypeMouseScrollEvent:             { asString = "MouseScrollEvent";                break; }
-            case EventTypeMousePressEvent:              { asString = "MousePressEvent";                 break; }
-            case EventTypeMouseReleaseEvent:            { asString = "MouseReleaseEvent";               break; }
+            case __C_ENG_TYPE ( EventType ) :: EventTypeCustomMouseEvent:             { asString = "CustomMouseEvent";                break; }
+            case __C_ENG_TYPE ( EventType ) :: EventTypeMouseMoveEvent:               { asString = "MouseMoveEvent";                  break; }
+            case __C_ENG_TYPE ( EventType ) :: EventTypeMouseEnterEvent:              { asString = "MouseEnterEvent";                 break; }
+            case __C_ENG_TYPE ( EventType ) :: EventTypeMouseLeaveEvent:              { asString = "MouseLeaveEvent";                 break; }
+            case __C_ENG_TYPE ( EventType ) :: EventTypeMouseScrollEvent:             { asString = "MouseScrollEvent";                break; }
+            case __C_ENG_TYPE ( EventType ) :: EventTypeMousePressEvent:              { asString = "MousePressEvent";                 break; }
+            case __C_ENG_TYPE ( EventType ) :: EventTypeMouseReleaseEvent:            { asString = "MouseReleaseEvent";               break; }
 
-            case EventTypeCustomWindowEvent:            { asString = "CustomWindowEvent";               break; }
-            case EventTypeWindowResizeEvent:            { asString = "WindowResizeEvent";               break; }
-            case EventTypeWindowFrameBufferResizeEvent: { asString = "WindowFrameBufferResizeEvent";    break; }
-            case EventTypeWindowCloseEvent:             { asString = "WindowCloseEvent";                break; }
-            case EventTypeWindowContentScaleEvent:      { asString = "WindowContentScaleEvent";         break; }
-            case EventTypeWindowMoveEvent:              { asString = "WindowMoveEvent";                 break; }
-            case EventTypeWindowRestoreEvent:           { asString = "WindowRestoreEvent";              break; }
-            case EventTypeWindowMinimizeEvent:          { asString = "WindowMinimizeEvent";             break; }
-            case EventTypeWindowMaximizeEvent:          { asString = "WindowMaximizeEvent";             break; }
-            case EventTypeWindowGainFocusEvent:         { asString = "WindowGainFocusEvent";            break; }
-            case EventTypeWindowLoseFocusEvent:         { asString = "WindowLoseFocusEvent";            break; }
-            case EventTypeWindowRefreshRequestEvent:    { asString = "WindowRefreshRequestEvent";       break; }
+            case __C_ENG_TYPE ( EventType ) :: EventTypeCustomWindowEvent:            { asString = "CustomWindowEvent";               break; }
+            case __C_ENG_TYPE ( EventType ) :: EventTypeWindowResizeEvent:            { asString = "WindowResizeEvent";               break; }
+            case __C_ENG_TYPE ( EventType ) :: EventTypeWindowFrameBufferResizeEvent: { asString = "WindowFrameBufferResizeEvent";    break; }
+            case __C_ENG_TYPE ( EventType ) :: EventTypeWindowCloseEvent:             { asString = "WindowCloseEvent";                break; }
+            case __C_ENG_TYPE ( EventType ) :: EventTypeWindowContentScaleEvent:      { asString = "WindowContentScaleEvent";         break; }
+            case __C_ENG_TYPE ( EventType ) :: EventTypeWindowMoveEvent:              { asString = "WindowMoveEvent";                 break; }
+            case __C_ENG_TYPE ( EventType ) :: EventTypeWindowRestoreEvent:           { asString = "WindowRestoreEvent";              break; }
+            case __C_ENG_TYPE ( EventType ) :: EventTypeWindowMinimizeEvent:          { asString = "WindowMinimizeEvent";             break; }
+            case __C_ENG_TYPE ( EventType ) :: EventTypeWindowMaximizeEvent:          { asString = "WindowMaximizeEvent";             break; }
+            case __C_ENG_TYPE ( EventType ) :: EventTypeWindowGainFocusEvent:         { asString = "WindowGainFocusEvent";            break; }
+            case __C_ENG_TYPE ( EventType ) :: EventTypeWindowLoseFocusEvent:         { asString = "WindowLoseFocusEvent";            break; }
+            case __C_ENG_TYPE ( EventType ) :: EventTypeWindowRefreshRequestEvent:    { asString = "WindowRefreshRequestEvent";       break; }
 
-            case EventTypeCustomControllerEvent:        { asString = "CustomControllerEvent";           break; }
-            case EventTypeControllerConnectEvent:       { asString = "ControllerConnectEvent";          break; }
-            case EventTypeControllerDisconnectEvent:    { asString = "ControllerDisconnectEvent";       break; }
-            case EventTypeControllerAxisEvent:          { asString = "ControllerAxisEvent";             break; }
-            case EventTypeControllerHatEvent:           { asString = "ControllerHatEvent";              break; }
-            case EventTypeControllerButtonPressEvent:   { asString = "ControllerButtonPressEvent";      break; }
-            case EventTypeControllerButtonReleaseEvent: { asString = "ControllerButtonReleaseEvent";    break; }
+            case __C_ENG_TYPE ( EventType ) :: EventTypeCustomControllerEvent:        { asString = "CustomControllerEvent";           break; }
+            case __C_ENG_TYPE ( EventType ) :: EventTypeControllerConnectEvent:       { asString = "ControllerConnectEvent";          break; }
+            case __C_ENG_TYPE ( EventType ) :: EventTypeControllerDisconnectEvent:    { asString = "ControllerDisconnectEvent";       break; }
+            case __C_ENG_TYPE ( EventType ) :: EventTypeControllerAxisEvent:          { asString = "ControllerAxisEvent";             break; }
+            case __C_ENG_TYPE ( EventType ) :: EventTypeControllerHatEvent:           { asString = "ControllerHatEvent";              break; }
+            case __C_ENG_TYPE ( EventType ) :: EventTypeControllerButtonPressEvent:   { asString = "ControllerButtonPressEvent";      break; }
+            case __C_ENG_TYPE ( EventType ) :: EventTypeControllerButtonReleaseEvent: { asString = "ControllerButtonReleaseEvent";    break; }
         }
 
         return asString;
     }
 
-    C_ENG_NO_DISCARD auto toString (
-            KeyModifier modifier
+    __C_ENG_NO_DISCARD auto toString (
+            __C_ENG_TYPE ( KeyModifier ) modifier
     ) noexcept -> StringLiteral {
 
         StringLiteral asString = "";
 
         switch ( modifier ) {
-            case KeyModifierNone:       { asString = "None";        break; }
-            case KeyModifierShift:      { asString = "Shift";       break; }
-            case KeyModifierControl:    { asString = "Control";     break; }
-            case KeyModifierAlt:        { asString = "Alt";         break; }
-            case KeyModifierSuper:      { asString = "Super";       break; }
-            case KeyModifierCapsLock:   { asString = "Caps Lock";   break; }
-            case KeyModifierNumLock:    { asString = "Num Lock";    break; }
+            case __C_ENG_TYPE ( KeyModifier ) :: KeyModifierNone:       { asString = "None";        break; }
+            case __C_ENG_TYPE ( KeyModifier ) :: KeyModifierShift:      { asString = "Shift";       break; }
+            case __C_ENG_TYPE ( KeyModifier ) :: KeyModifierControl:    { asString = "Control";     break; }
+            case __C_ENG_TYPE ( KeyModifier ) :: KeyModifierAlt:        { asString = "Alt";         break; }
+            case __C_ENG_TYPE ( KeyModifier ) :: KeyModifierSuper:      { asString = "Super";       break; }
+            case __C_ENG_TYPE ( KeyModifier ) :: KeyModifierCapsLock:   { asString = "Caps Lock";   break; }
+            case __C_ENG_TYPE ( KeyModifier ) :: KeyModifierNumLock:    { asString = "Num Lock";    break; }
         }
 
         return asString;
     }
 
-    C_ENG_NO_DISCARD auto toString (
-            Key key
+    __C_ENG_NO_DISCARD auto toString (
+            __C_ENG_TYPE ( Key ) key
     ) noexcept -> StringLiteral {
 
         StringLiteral asString = "";
 
         switch ( key ) {
-            case KeyUnknown:        { asString = "Unknown Key";             break; }
-            case KeySpace:          { asString = "Space ( )";               break; }
-            case KeyApostrophe:     { asString = "Apostrophe (')";          break; }
-            case KeyComma:          { asString = "Comma (,)";               break; }
-            case KeyMinus:          { asString = "Minus (-)";               break; }
-            case KeyPeriod:         { asString = "Period (.)";              break; }
-            case KeySlash:          { asString = "Slash (/)";               break; }
-            case Key0:              { asString = "Zero (0)";                break; }
-            case Key1:              { asString = "One (1)";                 break; }
-            case Key2:              { asString = "Two (2)";                 break; }
-            case Key3:              { asString = "Three (3)";               break; }
-            case Key4:              { asString = "Four (4)";                break; }
-            case Key5:              { asString = "Five (5)";                break; }
-            case Key6:              { asString = "Six (6)";                 break; }
-            case Key7:              { asString = "Seven (7)";               break; }
-            case Key8:              { asString = "Eight (8)";               break; }
-            case Key9:              { asString = "Nine (9)";                break; }
-            case KeySemicolon:      { asString = "Semicolon (;)";           break; }
-            case KeyEqual:          { asString = "Equal (=)";               break; }
-            case KeyA:              { asString = "Letter A (A)";            break; }
-            case KeyB:              { asString = "Letter B (B)";            break; }
-            case KeyC:              { asString = "Letter C (C)";            break; }
-            case KeyD:              { asString = "Letter D (D)";            break; }
-            case KeyE:              { asString = "Letter E (E)";            break; }
-            case KeyF:              { asString = "Letter F (F)";            break; }
-            case KeyG:              { asString = "Letter G (G)";            break; }
-            case KeyH:              { asString = "Letter H (H)";            break; }
-            case KeyI:              { asString = "Letter I (I)";            break; }
-            case KeyJ:              { asString = "Letter J (J)";            break; }
-            case KeyK:              { asString = "Letter K (K)";            break; }
-            case KeyL:              { asString = "Letter L (L)";            break; }
-            case KeyM:              { asString = "Letter M (M)";            break; }
-            case KeyN:              { asString = "Letter N (N)";            break; }
-            case KeyO:              { asString = "Letter O (O)";            break; }
-            case KeyP:              { asString = "Letter P (P)";            break; }
-            case KeyQ:              { asString = "Letter Q (Q)";            break; }
-            case KeyR:              { asString = "Letter R (R)";            break; }
-            case KeyS:              { asString = "Letter S (S)";            break; }
-            case KeyT:              { asString = "Letter T (T)";            break; }
-            case KeyU:              { asString = "Letter U (U)";            break; }
-            case KeyV:              { asString = "Letter V (V)";            break; }
-            case KeyW:              { asString = "Letter W (W)";            break; }
-            case KeyX:              { asString = "Letter X (X)";            break; }
-            case KeyY:              { asString = "Letter Y (Y)";            break; }
-            case KeyZ:              { asString = "Letter Z (Z)";            break; }
-            case KeyLeftBracket:    { asString = "Left Bracket ([)";        break; }
-            case KeyBackslash:      { asString = "Backslash (\\)";          break; } // NOLINT(clion-misra-cpp2008-2-13-1)
-            case KeyRightBracket:   { asString = "Right Bracket (])";       break; }
-            case KeyGraveAccent:    { asString = "Grave Accent (`)";        break; }
-            case KeyWorld1:         { asString = "World 1 (Non-US #)";      break; }
-            case KeyWorld2:         { asString = "World 2 (Non-US #)";      break; }
-            case KeyEscape:         { asString = "Escape";                  break; }
-            case KeyEnter:          { asString = "Enter";                   break; }
-            case KeyTab:            { asString = "Tab";                     break; }
-            case KeyBackspace:      { asString = "Backspace";               break; }
-            case KeyInsert:         { asString = "Insert";                  break; }
-            case KeyDelete:         { asString = "Delete";                  break; }
-            case KeyRight:          { asString = "Right Arrow";             break; }
-            case KeyLeft:           { asString = "Left Arrow";              break; }
-            case KeyDown:           { asString = "Down Arrow";              break; }
-            case KeyUp:             { asString = "Up Arrow";                break; }
-            case KeyPageUp:         { asString = "Page Up";                 break; }
-            case KeyPageDown:       { asString = "Page Down";               break; }
-            case KeyHome:           { asString = "Home";                    break; }
-            case KeyEnd:            { asString = "End";                     break; }
-            case KeyCapsLock:       { asString = "Caps Lock";               break; }
-            case KeyScrollLock:     { asString = "Scroll Lock";             break; }
-            case KeyNumLock:        { asString = "Num Lock";                break; }
-            case KeyPrintScreen:    { asString = "Print Screen";            break; }
-            case KeyPause:          { asString = "Pause";                   break; }
-            case KeyF1:             { asString = "Function Key 1 (F1)";     break; }
-            case KeyF2:             { asString = "Function Key 2 (F2)";     break; }
-            case KeyF3:             { asString = "Function Key 3 (F3)";     break; }
-            case KeyF4:             { asString = "Function Key 4 (F4)";     break; }
-            case KeyF5:             { asString = "Function Key 5 (F5)";     break; }
-            case KeyF6:             { asString = "Function Key 6 (F6)";     break; }
-            case KeyF7:             { asString = "Function Key 7 (F7)";     break; }
-            case KeyF8:             { asString = "Function Key 8 (F8)";     break; }
-            case KeyF9:             { asString = "Function Key 9 (F9)";     break; }
-            case KeyF10:            { asString = "Function Key 10 (F10)";   break; }
-            case KeyF11:            { asString = "Function Key 11 (F11)";   break; }
-            case KeyF12:            { asString = "Function Key 12 (F12)";   break; }
-            case KeyF13:            { asString = "Function Key 13 (F13)";   break; }
-            case KeyF14:            { asString = "Function Key 14 (F14)";   break; }
-            case KeyF15:            { asString = "Function Key 15 (F15)";   break; }
-            case KeyF16:            { asString = "Function Key 16 (F16)";   break; }
-            case KeyF17:            { asString = "Function Key 17 (F17)";   break; }
-            case KeyF18:            { asString = "Function Key 18 (F18)";   break; }
-            case KeyF19:            { asString = "Function Key 19 (F19)";   break; }
-            case KeyF20:            { asString = "Function Key 20 (F20)";   break; }
-            case KeyF21:            { asString = "Function Key 21 (F21)";   break; }
-            case KeyF22:            { asString = "Function Key 22 (F22)";   break; }
-            case KeyF23:            { asString = "Function Key 23 (F23)";   break; }
-            case KeyF24:            { asString = "Function Key 24 (F24)";   break; }
-            case KeyF25:            { asString = "Function Key 25 (F25)";   break; }
-            case KeyKeypad0:        { asString = "Keypad Zero (0)";         break; }
-            case KeyKeypad1:        { asString = "Keypad One (1)";          break; }
-            case KeyKeypad2:        { asString = "Keypad Two (2)";          break; }
-            case KeyKeypad3:        { asString = "Keypad Three (3)";        break; }
-            case KeyKeypad4:        { asString = "Keypad Four (4)";         break; }
-            case KeyKeypad5:        { asString = "Keypad Five (5)";         break; }
-            case KeyKeypad6:        { asString = "Keypad Six (6)";          break; }
-            case KeyKeypad7:        { asString = "Keypad Seven (7)";        break; }
-            case KeyKeypad8:        { asString = "Keypad Eight (8)";        break; }
-            case KeyKeypad9:        { asString = "Keypad Nine (9)";         break; }
-            case KeyKeypadDecimal:  { asString = "Keypad Decimal (.)";      break; }
-            case KeyKeypadDivide:   { asString = "Keypad Divide (/)";       break; }
-            case KeyKeypadMultiply: { asString = "Keypad Multiply (*)";     break; }
-            case KeyKeypadSubtract: { asString = "Keypad Subtract (-)";     break; }
-            case KeyKeypadAdd:      { asString = "Keypad Add (+)";          break; }
-            case KeyKeypadEnter:    { asString = "Keypad Enter";            break; }
-            case KeyKeypadEqual:    { asString = "Keypad Equal (=)";        break; }
-            case KeyLeftShift:      { asString = "Left Shift";              break; }
-            case KeyLeftControl:    { asString = "Left Control";            break; }
-            case KeyLeftAlt:        { asString = "Left Alt";                break; }
-            case KeyLeftSuper:      { asString = "Left Super";              break; }
-            case KeyRightShift:     { asString = "Right Shift";             break; }
-            case KeyRightControl:   { asString = "Right Control";           break; }
-            case KeyRightAlt:       { asString = "Right Alt";               break; }
-            case KeyRightSuper:     { asString = "Right Super";             break; }
-            case KeyMenu:           { asString = "Menu";                    break; }
+            case __C_ENG_TYPE ( Key ) :: KeyUnknown:        { asString = "Unknown Key";             break; }
+            case __C_ENG_TYPE ( Key ) :: KeySpace:          { asString = "Space ( )";               break; }
+            case __C_ENG_TYPE ( Key ) :: KeyApostrophe:     { asString = "Apostrophe (')";          break; }
+            case __C_ENG_TYPE ( Key ) :: KeyComma:          { asString = "Comma (,)";               break; }
+            case __C_ENG_TYPE ( Key ) :: KeyMinus:          { asString = "Minus (-)";               break; }
+            case __C_ENG_TYPE ( Key ) :: KeyPeriod:         { asString = "Period (.)";              break; }
+            case __C_ENG_TYPE ( Key ) :: KeySlash:          { asString = "Slash (/)";               break; }
+            case __C_ENG_TYPE ( Key ) :: Key0:              { asString = "Zero (0)";                break; }
+            case __C_ENG_TYPE ( Key ) :: Key1:              { asString = "One (1)";                 break; }
+            case __C_ENG_TYPE ( Key ) :: Key2:              { asString = "Two (2)";                 break; }
+            case __C_ENG_TYPE ( Key ) :: Key3:              { asString = "Three (3)";               break; }
+            case __C_ENG_TYPE ( Key ) :: Key4:              { asString = "Four (4)";                break; }
+            case __C_ENG_TYPE ( Key ) :: Key5:              { asString = "Five (5)";                break; }
+            case __C_ENG_TYPE ( Key ) :: Key6:              { asString = "Six (6)";                 break; }
+            case __C_ENG_TYPE ( Key ) :: Key7:              { asString = "Seven (7)";               break; }
+            case __C_ENG_TYPE ( Key ) :: Key8:              { asString = "Eight (8)";               break; }
+            case __C_ENG_TYPE ( Key ) :: Key9:              { asString = "Nine (9)";                break; }
+            case __C_ENG_TYPE ( Key ) :: KeySemicolon:      { asString = "Semicolon (;)";           break; }
+            case __C_ENG_TYPE ( Key ) :: KeyEqual:          { asString = "Equal (=)";               break; }
+            case __C_ENG_TYPE ( Key ) :: KeyA:              { asString = "Letter A (A)";            break; }
+            case __C_ENG_TYPE ( Key ) :: KeyB:              { asString = "Letter B (B)";            break; }
+            case __C_ENG_TYPE ( Key ) :: KeyC:              { asString = "Letter C (C)";            break; }
+            case __C_ENG_TYPE ( Key ) :: KeyD:              { asString = "Letter D (D)";            break; }
+            case __C_ENG_TYPE ( Key ) :: KeyE:              { asString = "Letter E (E)";            break; }
+            case __C_ENG_TYPE ( Key ) :: KeyF:              { asString = "Letter F (F)";            break; }
+            case __C_ENG_TYPE ( Key ) :: KeyG:              { asString = "Letter G (G)";            break; }
+            case __C_ENG_TYPE ( Key ) :: KeyH:              { asString = "Letter H (H)";            break; }
+            case __C_ENG_TYPE ( Key ) :: KeyI:              { asString = "Letter I (I)";            break; }
+            case __C_ENG_TYPE ( Key ) :: KeyJ:              { asString = "Letter J (J)";            break; }
+            case __C_ENG_TYPE ( Key ) :: KeyK:              { asString = "Letter K (K)";            break; }
+            case __C_ENG_TYPE ( Key ) :: KeyL:              { asString = "Letter L (L)";            break; }
+            case __C_ENG_TYPE ( Key ) :: KeyM:              { asString = "Letter M (M)";            break; }
+            case __C_ENG_TYPE ( Key ) :: KeyN:              { asString = "Letter N (N)";            break; }
+            case __C_ENG_TYPE ( Key ) :: KeyO:              { asString = "Letter O (O)";            break; }
+            case __C_ENG_TYPE ( Key ) :: KeyP:              { asString = "Letter P (P)";            break; }
+            case __C_ENG_TYPE ( Key ) :: KeyQ:              { asString = "Letter Q (Q)";            break; }
+            case __C_ENG_TYPE ( Key ) :: KeyR:              { asString = "Letter R (R)";            break; }
+            case __C_ENG_TYPE ( Key ) :: KeyS:              { asString = "Letter S (S)";            break; }
+            case __C_ENG_TYPE ( Key ) :: KeyT:              { asString = "Letter T (T)";            break; }
+            case __C_ENG_TYPE ( Key ) :: KeyU:              { asString = "Letter U (U)";            break; }
+            case __C_ENG_TYPE ( Key ) :: KeyV:              { asString = "Letter V (V)";            break; }
+            case __C_ENG_TYPE ( Key ) :: KeyW:              { asString = "Letter W (W)";            break; }
+            case __C_ENG_TYPE ( Key ) :: KeyX:              { asString = "Letter X (X)";            break; }
+            case __C_ENG_TYPE ( Key ) :: KeyY:              { asString = "Letter Y (Y)";            break; }
+            case __C_ENG_TYPE ( Key ) :: KeyZ:              { asString = "Letter Z (Z)";            break; }
+            case __C_ENG_TYPE ( Key ) :: KeyLeftBracket:    { asString = "Left Bracket ([)";        break; }
+            case __C_ENG_TYPE ( Key ) :: KeyBackslash:      { asString = "Backslash (\\)";          break; } // NOLINT(clion-misra-cpp2008-2-13-1)
+            case __C_ENG_TYPE ( Key ) :: KeyRightBracket:   { asString = "Right Bracket (])";       break; }
+            case __C_ENG_TYPE ( Key ) :: KeyGraveAccent:    { asString = "Grave Accent (`)";        break; }
+            case __C_ENG_TYPE ( Key ) :: KeyWorld1:         { asString = "World 1 (Non-US #)";      break; }
+            case __C_ENG_TYPE ( Key ) :: KeyWorld2:         { asString = "World 2 (Non-US #)";      break; }
+            case __C_ENG_TYPE ( Key ) :: KeyEscape:         { asString = "Escape";                  break; }
+            case __C_ENG_TYPE ( Key ) :: KeyEnter:          { asString = "Enter";                   break; }
+            case __C_ENG_TYPE ( Key ) :: KeyTab:            { asString = "Tab";                     break; }
+            case __C_ENG_TYPE ( Key ) :: KeyBackspace:      { asString = "Backspace";               break; }
+            case __C_ENG_TYPE ( Key ) :: KeyInsert:         { asString = "Insert";                  break; }
+            case __C_ENG_TYPE ( Key ) :: KeyDelete:         { asString = "Delete";                  break; }
+            case __C_ENG_TYPE ( Key ) :: KeyRight:          { asString = "Right Arrow";             break; }
+            case __C_ENG_TYPE ( Key ) :: KeyLeft:           { asString = "Left Arrow";              break; }
+            case __C_ENG_TYPE ( Key ) :: KeyDown:           { asString = "Down Arrow";              break; }
+            case __C_ENG_TYPE ( Key ) :: KeyUp:             { asString = "Up Arrow";                break; }
+            case __C_ENG_TYPE ( Key ) :: KeyPageUp:         { asString = "Page Up";                 break; }
+            case __C_ENG_TYPE ( Key ) :: KeyPageDown:       { asString = "Page Down";               break; }
+            case __C_ENG_TYPE ( Key ) :: KeyHome:           { asString = "Home";                    break; }
+            case __C_ENG_TYPE ( Key ) :: KeyEnd:            { asString = "End";                     break; }
+            case __C_ENG_TYPE ( Key ) :: KeyCapsLock:       { asString = "Caps Lock";               break; }
+            case __C_ENG_TYPE ( Key ) :: KeyScrollLock:     { asString = "Scroll Lock";             break; }
+            case __C_ENG_TYPE ( Key ) :: KeyNumLock:        { asString = "Num Lock";                break; }
+            case __C_ENG_TYPE ( Key ) :: KeyPrintScreen:    { asString = "Print Screen";            break; }
+            case __C_ENG_TYPE ( Key ) :: KeyPause:          { asString = "Pause";                   break; }
+            case __C_ENG_TYPE ( Key ) :: KeyF1:             { asString = "Function Key 1 (F1)";     break; }
+            case __C_ENG_TYPE ( Key ) :: KeyF2:             { asString = "Function Key 2 (F2)";     break; }
+            case __C_ENG_TYPE ( Key ) :: KeyF3:             { asString = "Function Key 3 (F3)";     break; }
+            case __C_ENG_TYPE ( Key ) :: KeyF4:             { asString = "Function Key 4 (F4)";     break; }
+            case __C_ENG_TYPE ( Key ) :: KeyF5:             { asString = "Function Key 5 (F5)";     break; }
+            case __C_ENG_TYPE ( Key ) :: KeyF6:             { asString = "Function Key 6 (F6)";     break; }
+            case __C_ENG_TYPE ( Key ) :: KeyF7:             { asString = "Function Key 7 (F7)";     break; }
+            case __C_ENG_TYPE ( Key ) :: KeyF8:             { asString = "Function Key 8 (F8)";     break; }
+            case __C_ENG_TYPE ( Key ) :: KeyF9:             { asString = "Function Key 9 (F9)";     break; }
+            case __C_ENG_TYPE ( Key ) :: KeyF10:            { asString = "Function Key 10 (F10)";   break; }
+            case __C_ENG_TYPE ( Key ) :: KeyF11:            { asString = "Function Key 11 (F11)";   break; }
+            case __C_ENG_TYPE ( Key ) :: KeyF12:            { asString = "Function Key 12 (F12)";   break; }
+            case __C_ENG_TYPE ( Key ) :: KeyF13:            { asString = "Function Key 13 (F13)";   break; }
+            case __C_ENG_TYPE ( Key ) :: KeyF14:            { asString = "Function Key 14 (F14)";   break; }
+            case __C_ENG_TYPE ( Key ) :: KeyF15:            { asString = "Function Key 15 (F15)";   break; }
+            case __C_ENG_TYPE ( Key ) :: KeyF16:            { asString = "Function Key 16 (F16)";   break; }
+            case __C_ENG_TYPE ( Key ) :: KeyF17:            { asString = "Function Key 17 (F17)";   break; }
+            case __C_ENG_TYPE ( Key ) :: KeyF18:            { asString = "Function Key 18 (F18)";   break; }
+            case __C_ENG_TYPE ( Key ) :: KeyF19:            { asString = "Function Key 19 (F19)";   break; }
+            case __C_ENG_TYPE ( Key ) :: KeyF20:            { asString = "Function Key 20 (F20)";   break; }
+            case __C_ENG_TYPE ( Key ) :: KeyF21:            { asString = "Function Key 21 (F21)";   break; }
+            case __C_ENG_TYPE ( Key ) :: KeyF22:            { asString = "Function Key 22 (F22)";   break; }
+            case __C_ENG_TYPE ( Key ) :: KeyF23:            { asString = "Function Key 23 (F23)";   break; }
+            case __C_ENG_TYPE ( Key ) :: KeyF24:            { asString = "Function Key 24 (F24)";   break; }
+            case __C_ENG_TYPE ( Key ) :: KeyF25:            { asString = "Function Key 25 (F25)";   break; }
+            case __C_ENG_TYPE ( Key ) :: KeyKeypad0:        { asString = "Keypad Zero (0)";         break; }
+            case __C_ENG_TYPE ( Key ) :: KeyKeypad1:        { asString = "Keypad One (1)";          break; }
+            case __C_ENG_TYPE ( Key ) :: KeyKeypad2:        { asString = "Keypad Two (2)";          break; }
+            case __C_ENG_TYPE ( Key ) :: KeyKeypad3:        { asString = "Keypad Three (3)";        break; }
+            case __C_ENG_TYPE ( Key ) :: KeyKeypad4:        { asString = "Keypad Four (4)";         break; }
+            case __C_ENG_TYPE ( Key ) :: KeyKeypad5:        { asString = "Keypad Five (5)";         break; }
+            case __C_ENG_TYPE ( Key ) :: KeyKeypad6:        { asString = "Keypad Six (6)";          break; }
+            case __C_ENG_TYPE ( Key ) :: KeyKeypad7:        { asString = "Keypad Seven (7)";        break; }
+            case __C_ENG_TYPE ( Key ) :: KeyKeypad8:        { asString = "Keypad Eight (8)";        break; }
+            case __C_ENG_TYPE ( Key ) :: KeyKeypad9:        { asString = "Keypad Nine (9)";         break; }
+            case __C_ENG_TYPE ( Key ) :: KeyKeypadDecimal:  { asString = "Keypad Decimal (.)";      break; }
+            case __C_ENG_TYPE ( Key ) :: KeyKeypadDivide:   { asString = "Keypad Divide (/)";       break; }
+            case __C_ENG_TYPE ( Key ) :: KeyKeypadMultiply: { asString = "Keypad Multiply (*)";     break; }
+            case __C_ENG_TYPE ( Key ) :: KeyKeypadSubtract: { asString = "Keypad Subtract (-)";     break; }
+            case __C_ENG_TYPE ( Key ) :: KeyKeypadAdd:      { asString = "Keypad Add (+)";          break; }
+            case __C_ENG_TYPE ( Key ) :: KeyKeypadEnter:    { asString = "Keypad Enter";            break; }
+            case __C_ENG_TYPE ( Key ) :: KeyKeypadEqual:    { asString = "Keypad Equal (=)";        break; }
+            case __C_ENG_TYPE ( Key ) :: KeyLeftShift:      { asString = "Left Shift";              break; }
+            case __C_ENG_TYPE ( Key ) :: KeyLeftControl:    { asString = "Left Control";            break; }
+            case __C_ENG_TYPE ( Key ) :: KeyLeftAlt:        { asString = "Left Alt";                break; }
+            case __C_ENG_TYPE ( Key ) :: KeyLeftSuper:      { asString = "Left Super";              break; }
+            case __C_ENG_TYPE ( Key ) :: KeyRightShift:     { asString = "Right Shift";             break; }
+            case __C_ENG_TYPE ( Key ) :: KeyRightControl:   { asString = "Right Control";           break; }
+            case __C_ENG_TYPE ( Key ) :: KeyRightAlt:       { asString = "Right Alt";               break; }
+            case __C_ENG_TYPE ( Key ) :: KeyRightSuper:     { asString = "Right Super";             break; }
+            case __C_ENG_TYPE ( Key ) :: KeyMenu:           { asString = "Menu";                    break; }
         }
 
         return asString;
     }
 
-    C_ENG_NO_DISCARD auto toString (
-            MouseButton mouseButton
+    __C_ENG_NO_DISCARD auto toString (
+            __C_ENG_TYPE ( MouseButton ) mouseButton
     ) noexcept -> StringLiteral {
 
         StringLiteral asString = "";
 
         switch ( mouseButton ) {
-            case MouseButton1:          { asString = "Mouse Button 1 ( Left Click )";   break; }
-            case MouseButton2:          { asString = "Mouse Button 2 ( Right Click )";  break; }
-            case MouseButton3:          { asString = "Mouse Button 3 ( Middle Click )"; break; }
-            case MouseButton4:          { asString = "Mouse Button 4";                  break; }
-            case MouseButton5:          { asString = "Mouse Button 5";                  break; }
-            case MouseButton6:          { asString = "Mouse Button 6";                  break; }
-            case MouseButton7:          { asString = "Mouse Button 7";                  break; }
-            case MouseButton8:          { asString = "Mouse Button 8";                  break; }
-            case MouseButtonUndefined:  { asString = "Undefined Mouse Button";          break; }
+            case __C_ENG_TYPE ( MouseButton ) :: MouseButton1:          { asString = "Mouse Button 1 ( Left Click )";   break; }
+            case __C_ENG_TYPE ( MouseButton ) :: MouseButton2:          { asString = "Mouse Button 2 ( Right Click )";  break; }
+            case __C_ENG_TYPE ( MouseButton ) :: MouseButton3:          { asString = "Mouse Button 3 ( Middle Click )"; break; }
+            case __C_ENG_TYPE ( MouseButton ) :: MouseButton4:          { asString = "Mouse Button 4";                  break; }
+            case __C_ENG_TYPE ( MouseButton ) :: MouseButton5:          { asString = "Mouse Button 5";                  break; }
+            case __C_ENG_TYPE ( MouseButton ) :: MouseButton6:          { asString = "Mouse Button 6";                  break; }
+            case __C_ENG_TYPE ( MouseButton ) :: MouseButton7:          { asString = "Mouse Button 7";                  break; }
+            case __C_ENG_TYPE ( MouseButton ) :: MouseButton8:          { asString = "Mouse Button 8";                  break; }
+            case __C_ENG_TYPE ( MouseButton ) :: MouseButtonUndefined:  { asString = "Undefined Mouse Button";          break; }
         }
 
         return asString;
     }
 
-    C_ENG_NO_DISCARD auto toString (
-            WindowType type
+    __C_ENG_NO_DISCARD auto toString (
+            __C_ENG_TYPE ( WindowType ) type
     ) noexcept -> StringLiteral {
 
         StringLiteral asString = "";
 
         switch ( type ) {
-            case WindowTypeWindowed:            { asString = "Windowed";            break; }
-            case WindowTypeFullscreen:          { asString = "Fullscreen";          break; }
-            case WindowTypeWindowedFullscreen:  { asString = "Windowed Fullscreen"; break; }
+            case __C_ENG_TYPE ( WindowType ) :: WindowTypeWindowed:            { asString = "Windowed";            break; }
+            case __C_ENG_TYPE ( WindowType ) :: WindowTypeFullscreen:          { asString = "Fullscreen";          break; }
+            case __C_ENG_TYPE ( WindowType ) :: WindowTypeWindowedFullscreen:  { asString = "Windowed Fullscreen"; break; }
         }
 
         return asString;
     }
 
-    C_ENG_NO_DISCARD auto toString (
-            WindowFlag flag
+    __C_ENG_NO_DISCARD auto toString (
+            __C_ENG_TYPE ( WindowFlag ) flag
     ) noexcept -> StringLiteral {
 
         StringLiteral asString = "";
 
         switch ( flag ) {
-            case WindowFlagNone:                    { asString = "No Flag";                                 break; }
-            case WindowFlagResizable:               { asString = "Is Resizable";                            break; }
-            case WindowFlagBorderless:              { asString = "Borderless Window, Undecorated";          break; }
-            case WindowFlagStartMinimized:          { asString = "Start Minimized";                         break; }
-            case WindowFlagGrabFocusOnOpen:         { asString = "Grab Input Focus on Open";                break; }
-            case WindowFlagRestorePreviousMode:     { asString = "Fullscreen Restore Video Mode on Focus";  break; }
-            case WindowFlagStayOnTop:               { asString = "Force On Top";                            break; }
-            case WindowFlagStartMaximized:          { asString = "Start Window Maximized";                  break; }
-            case WindowFlagCenterCursorOnCreate:    { asString = "Center Mouse Cursor on Create";           break; }
-            case WindowFlagTransparentFramebuffer:  { asString = "Transparent Framebuffer";                 break; }
-            case WindowFlagGrabFocusOnRaise:        { asString = "Grab Input Focus On Raise";               break; }
-            case WindowFlagScaleToMonitor:          { asString = "Scale Content to Monitor Content Scale";  break; }
+            case __C_ENG_TYPE ( WindowFlag ) :: WindowFlagNone:                    { asString = "No Flag";                                 break; }
+            case __C_ENG_TYPE ( WindowFlag ) :: WindowFlagResizable:               { asString = "Is Resizable";                            break; }
+            case __C_ENG_TYPE ( WindowFlag ) :: WindowFlagBorderless:              { asString = "Borderless Window, Undecorated";          break; }
+            case __C_ENG_TYPE ( WindowFlag ) :: WindowFlagStartMinimized:          { asString = "Start Minimized";                         break; }
+            case __C_ENG_TYPE ( WindowFlag ) :: WindowFlagGrabFocusOnOpen:         { asString = "Grab Input Focus on Open";                break; }
+            case __C_ENG_TYPE ( WindowFlag ) :: WindowFlagRestorePreviousMode:     { asString = "Fullscreen Restore Video Mode on Focus";  break; }
+            case __C_ENG_TYPE ( WindowFlag ) :: WindowFlagStayOnTop:               { asString = "Force On Top";                            break; }
+            case __C_ENG_TYPE ( WindowFlag ) :: WindowFlagStartMaximized:          { asString = "Start Window Maximized";                  break; }
+            case __C_ENG_TYPE ( WindowFlag ) :: WindowFlagCenterCursorOnCreate:    { asString = "Center Mouse Cursor on Create";           break; }
+            case __C_ENG_TYPE ( WindowFlag ) :: WindowFlagTransparentFramebuffer:  { asString = "Transparent Framebuffer";                 break; }
+            case __C_ENG_TYPE ( WindowFlag ) :: WindowFlagGrabFocusOnRaise:        { asString = "Grab Input Focus On Raise";               break; }
+            case __C_ENG_TYPE ( WindowFlag ) :: WindowFlagScaleToMonitor:          { asString = "Scale Content to Monitor Content Scale";  break; }
         }
 
         return asString;
     }
 
-    C_ENG_NO_DISCARD auto toString (
-            ControllerHatState state
+    __C_ENG_NO_DISCARD auto toString (
+            __C_ENG_TYPE ( ControllerHatState ) state
     ) noexcept -> StringLiteral {
 
         StringLiteral asString = "";
 
         switch ( state ) {
-            case ControllerHatStateCentered:    { asString = "ControllerHatCentered";   break; }
-            case ControllerHatStateUp:          { asString = "ControllerHatUp";         break; }
-            case ControllerHatStateLeft:        { asString = "ControllerHatLeft";       break; }
-            case ControllerHatStateRight:       { asString = "ControllerHatRight";      break; }
-            case ControllerHatStateDown:        { asString = "ControllerHatDown";       break; }
-            case ControllerHatStateLeftUp:      { asString = "ControllerHatLeftUp";     break; }
-            case ControllerHatStateLeftDown:    { asString = "ControllerHatLeftDown";   break; }
-            case ControllerHatStateRightUp:     { asString = "ControllerHatRightUp";    break; }
-            case ControllerHatStateRightDown:   { asString = "ControllerHatRightDown";  break; }
+            case __C_ENG_TYPE ( ControllerHatState ) :: ControllerHatStateCentered:    { asString = "ControllerHatCentered";   break; }
+            case __C_ENG_TYPE ( ControllerHatState ) :: ControllerHatStateUp:          { asString = "ControllerHatUp";         break; }
+            case __C_ENG_TYPE ( ControllerHatState ) :: ControllerHatStateLeft:        { asString = "ControllerHatLeft";       break; }
+            case __C_ENG_TYPE ( ControllerHatState ) :: ControllerHatStateRight:       { asString = "ControllerHatRight";      break; }
+            case __C_ENG_TYPE ( ControllerHatState ) :: ControllerHatStateDown:        { asString = "ControllerHatDown";       break; }
+            case __C_ENG_TYPE ( ControllerHatState ) :: ControllerHatStateLeftUp:      { asString = "ControllerHatLeftUp";     break; }
+            case __C_ENG_TYPE ( ControllerHatState ) :: ControllerHatStateLeftDown:    { asString = "ControllerHatLeftDown";   break; }
+            case __C_ENG_TYPE ( ControllerHatState ) :: ControllerHatStateRightUp:     { asString = "ControllerHatRightUp";    break; }
+            case __C_ENG_TYPE ( ControllerHatState ) :: ControllerHatStateRightDown:   { asString = "ControllerHatRightDown";  break; }
         }
 
         return asString;
     }
 
 
-    C_ENG_NO_DISCARD auto toString (
-            Position const & position
+    __C_ENG_NO_DISCARD auto toString (
+            __C_ENG_TYPE ( Position ) const & position
     ) noexcept -> String {
 
-        return "Position "
+        return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( Position ) ) " "
                "{ x = "_s   + position.x +
                ", y = "     + position.y +
                " }";
     }
 
-    C_ENG_NO_DISCARD auto toString (
-            RectangleSize const & size
+    __C_ENG_NO_DISCARD auto toString (
+            __C_ENG_TYPE ( Size ) const & size
     ) noexcept -> String {
 
-        return "RectangleSize "
+        return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( Size ) ) " "
                "{ width = "_s   + size.width +
                ", height = "    + size.height +
                " }";
     }
 
-    C_ENG_NO_DISCARD auto toString (
-            ColorChannelsDepth const & depth
+    __C_ENG_NO_DISCARD auto toString (
+            __C_ENG_TYPE ( ColorChannelsDepth ) const & depth
     ) noexcept -> String {
 
-        return "ColorChannelsDepth "
+        return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( ColorChannelsDepth ) ) " "
                "{ red = "_s + depth.red +
                ", green = " + depth.green +
                ", blue = "  + depth.blue +
                " }";
     }
 
-    C_ENG_NO_DISCARD auto toString (
-            MonitorVideoModeProperties const & properties
+    __C_ENG_NO_DISCARD auto toString (
+            __C_ENG_TYPE ( MonitorVideoModeProperties ) const & properties
     ) noexcept -> String {
 
-        return "MonitorVideoModeProperties "
+        return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( MonitorVideoModeProperties ) ) " "
                "{ size = "                  + toString ( properties.size ) +
                ", colorChannelsDepth = "    + toString ( properties.colorChannelsDepth ) +
                ", refreshRate = "           + properties.refreshRate + "Hz"
                                                                        " }";
     }
 
-    C_ENG_NO_DISCARD auto toString (
-            ContentScale const & scale
+    __C_ENG_NO_DISCARD auto toString (
+            __C_ENG_TYPE ( ContentScale ) const & scale
     ) noexcept -> String {
 
-        return "ContentScale "
+        return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( ContentScale ) ) " "
                "{ x = "_s   + scale.x +
                ", y = "     + scale.y +
                " }";
     }
 
-    C_ENG_NO_DISCARD auto toString (
-            MonitorGammaRamp const & ramp
+    __C_ENG_NO_DISCARD auto toString (
+            __C_ENG_TYPE ( MonitorGammaRamp ) const & ramp
     ) noexcept -> String {
 
-        auto rampToString = [ size = ramp.size ]( MonitorGammaRampValue ramp ) noexcept -> String {
+        auto rampToString = [ size = ramp.size ]( __C_ENG_TYPE ( MonitorGammaRampValue ) ramp ) noexcept -> String {
             String asString;
             for ( uint32 i = 0U; i < size; ++ i ) {
                 asString += ramp [ i ] + ", "_s;
@@ -411,7 +411,7 @@ namespace engine {
             return asString.removeSuffix(", ");
         };
 
-        return "MonitorGammaRamp "
+        return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( MonitorGammaRamp ) ) " "
                "{ size = "_s    + ramp.size +
                ", red = "       + rampToString ( ramp.red ) +
                ", green = "     + rampToString ( ramp.green ) +
@@ -419,21 +419,21 @@ namespace engine {
                " }";
     }
 
-    C_ENG_NO_DISCARD auto toString (
-            MonitorWorkArea const & area
+    __C_ENG_NO_DISCARD auto toString (
+            __C_ENG_TYPE ( MonitorWorkArea ) const & area
     ) noexcept -> String {
 
-        return "MonitorWorkArea "
+        return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( MonitorWorkArea ) ) " "
                "{ position = "  + toString ( area.position ) +
                ", size = "      + toString ( area.size ) +
                " }";
     }
 
-    C_ENG_NO_DISCARD auto toString (
-            MonitorProperties const & properties
+    __C_ENG_NO_DISCARD auto toString (
+            __C_ENG_TYPE ( MonitorProperties ) const & properties
     ) noexcept -> String {
 
-        return "MonitorProperties "
+        return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( MonitorProperties ) ) " "
                "{ name = "_s            + properties.name +
                ", physicalSize = "      + toString ( properties.physicalSizeMM ) +
                ", contentScale = "      + toString ( properties.contentScale ) +
@@ -444,18 +444,18 @@ namespace engine {
     }
 
 
-    C_ENG_NO_DISCARD auto keyModifiersToString (
-            KeyModifiers modifiers
+    __C_ENG_NO_DISCARD auto keyModifiersToString (
+            __C_ENG_TYPE ( KeyModifiers ) modifiers
     ) noexcept -> String {
 
         String asString = "";
 
         for ( uint32 f = 0x01U; true; f <<= 1 ) { // NOLINT(clion-misra-cpp2008-6-5-1)
             if ( ( f & modifiers ) != 0U ) {
-                asString += toString ( static_cast < KeyModifier > ( f ) ) + ", "_s;
+                asString += toString ( static_cast < __C_ENG_TYPE ( KeyModifier ) > ( f ) ) + ", "_s;
             }
 
-            if ( f == KeyModifier :: KeyModifierMaxValue ) {
+            if ( f == __C_ENG_TYPE ( KeyModifier ) :: KeyModifierMaxValue ) {
                 break;
             }
         }
@@ -463,18 +463,18 @@ namespace engine {
         return asString.removeSuffix(", ");
     }
 
-    C_ENG_NO_DISCARD auto windowFlagsToString (
-            WindowFlags modifiers
+    __C_ENG_NO_DISCARD auto windowFlagsToString (
+            __C_ENG_TYPE ( WindowFlags ) modifiers
     ) noexcept -> String {
 
         String asString = "";
 
         for ( uint32 f = 0x01U; true; f <<= 1 ) { // NOLINT(clion-misra-cpp2008-6-5-1)
             if ( ( f & modifiers ) != 0U ) {
-                asString += toString ( static_cast < KeyModifier > ( f ) ) + ", "_s;
+                asString += toString ( static_cast < __C_ENG_TYPE ( KeyModifier ) > ( f ) ) + ", "_s;
             }
 
-            if ( f == WindowFlag :: WindowFlagMaxValue ) {
+            if ( f == __C_ENG_TYPE ( WindowFlag ) :: WindowFlagMaxValue ) {
                 break;
             }
         }
