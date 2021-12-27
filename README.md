@@ -76,11 +76,11 @@ Extract it to /your/desired/path/vulkan/1.2.xxx.y
 * Vulkan SDK Config (A or B):
 * A: export variables to current session
 <pre>
-source /your/desired/path/vulkan/1.2.xxx.y/setup-env.sh
+source /your/desired/path/vulkan/1.x.yyy.z/setup-env.sh
 </pre>
 OR 
 <pre>
-export VULKAN_SDK=your/desired/path/vulkan/1.1.xx.y/x86_64
+export VULKAN_SDK=your/desired/path/vulkan/1.x.yyy.z/x86_64
 export PATH=$VULKAN_SDK/bin:$PATH
 export LD_LIBRARY_PATH=$VULKAN_SDK/lib:$LD_LIBRARY_PATH
 export VK_LAYER_PATH=$VULKAN_SDK/etc/vulkan/explicit_layer.d
