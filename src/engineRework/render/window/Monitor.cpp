@@ -4,27 +4,36 @@
 
 #include "Monitor.hpp"
 
+#include <Logger.hpp>
+#include <Window.hpp>
+
+
 using namespace cds; // NOLINT(clion-misra-cpp2008-7-3-4)
 using namespace engine; // NOLINT(clion-misra-cpp2008-7-3-4)
+
 
 extern bool __GLFWActive; // NOLINT(bugprone-reserved-identifier)
 extern auto __initializeGLFW () noexcept (false) -> void; // NOLINT(bugprone-reserved-identifier)
 
-#include <Logger.hpp>
 
 static auto monitorChangeDetectedCallback (
         __C_ENG_TYPE ( Monitor ) :: Handle,
         sint32
 ) noexcept -> void;
 
+
+#undef __C_ENG_OBJECT_NAME
+#define __C_ENG_OBJECT_NAME MonitorContainer /* NOLINT(bugprone-reserved-identifier) */
+
+
 namespace engine {
 
-    __C_ENG_STRUCT ( MonitorContainer ) {
+    __C_ENG_STRUCT {
         bool                                          monitorsQueried {false}; // NOLINT(clion-misra-cpp2008-11-0-1)
         Array < __C_ENG_TYPE ( Monitor ) const * >    monitors; // NOLINT(clion-misra-cpp2008-11-0-1)
         __C_ENG_TYPE ( Monitor ) const *              primaryMonitor {nullptr}; // NOLINT(clion-misra-cpp2008-11-0-1)
 
-        __C_ENG_CONSTRUCTOR ( MonitorContainer ) () noexcept = default;
+        __C_ENG_CONSTRUCTOR () noexcept = default;
 
         static auto queryProperties ( __C_ENG_TYPE ( Monitor ) * pMonitor ) noexcept -> void {
             pMonitor->_availableVideoModes.clear();
@@ -174,7 +183,7 @@ namespace engine {
 
         }
 
-        __C_ENG_DESTRUCTOR ( MonitorContainer ) () noexcept {
+        __C_ENG_DESTRUCTOR () noexcept {
             for ( auto * e : monitors ) {
                 delete e;
             }
@@ -184,117 +193,11 @@ namespace engine {
         }
     };
 
-    static __C_ENG_TYPE ( MonitorContainer ) monitorContainer;
+    static __C_ENG_SELF monitorContainer;
 
 }
 
-auto __C_ENG_TYPE ( Monitor ) :: monitors () noexcept -> Array < __C_ENG_TYPE ( Monitor ) const * > const & {
-    if ( ! monitorContainer.monitorsQueried || ! __GLFWActive ) {
-        monitorContainer.query();
-    }
-
-    return monitorContainer.monitors;
-}
-
-auto __C_ENG_TYPE ( Monitor ) :: primaryMonitor () noexcept -> __C_ENG_TYPE ( Monitor ) const * {
-    if ( ! monitorContainer.monitorsQueried || ! __GLFWActive ) {
-        monitorContainer.query();
-    }
-
-    return monitorContainer.primaryMonitor;
-}
-
-auto __C_ENG_TYPE ( Monitor ) :: initMonitorHandler () noexcept -> void {
-    if ( ! monitorContainer.monitorsQueried || ! __GLFWActive ) {
-        monitorContainer.query();
-    }
-}
-
-#include <Window.hpp>
-
-static auto monitorChangeDetectedCallback (
-        __C_ENG_TYPE ( Monitor ) :: Handle  handle,
-        sint32                              event
-) noexcept -> void {
-
-    if ( event == GLFW_CONNECTED ) {
-
-        monitorContainer.addMonitor( handle );
-
-        (void) __C_ENG_TYPE ( Logger ) :: instance().info (
-                "Monitor with handle " +
-                :: toString ( handle ) +
-                " connected"
-        );
-
-    } else if ( event == GLFW_DISCONNECTED ) {
-
-        (void) __C_ENG_TYPE ( Logger ) :: instance().info (
-                "Monitor with handle " +
-                :: toString ( handle ) +
-                " disconnected"
-        );
-
-        __C_ENG_TYPE ( Monitor ) const * pMonitor = nullptr;
-        for ( auto * pActiveMonitor : monitorContainer.monitors ) {
-            if ( pActiveMonitor->handle() == handle ) {
-                pMonitor = pActiveMonitor;
-            }
-        }
-
-        if ( pMonitor == nullptr ) {
-            (void) __C_ENG_TYPE ( Logger ) :: instance().warning (
-                    "Monitor change detected, handle " +
-                    :: toString ( handle ) +
-                    " disconnected, but did not previously exist"
-            );
-        } else {
-            (void) monitorContainer.monitors.removeAll ( pMonitor );
-            if ( monitorContainer.primaryMonitor == pMonitor ) {
-
-                __C_ENG_TYPE ( Monitor ) :: Handle newPrimaryMonitorHandle = glfwGetPrimaryMonitor();
-                __C_ENG_TYPE ( Monitor ) const * newPrimaryMonitor = nullptr;
-
-                for ( auto const * pActiveMonitor : monitorContainer.monitors ) {
-                    if ( pActiveMonitor->handle() == newPrimaryMonitorHandle ) {
-                        newPrimaryMonitor = pActiveMonitor;
-                    }
-                }
-
-                if ( newPrimaryMonitor == nullptr ) {
-
-                    (void) __C_ENG_TYPE ( Logger ) :: instance().warning (
-                            "Monitor change successful, could not acquire new primary monitor"
-                    );
-
-                } else {
-                    monitorContainer.primaryMonitor = newPrimaryMonitor;
-                }
-
-            }
-
-            if ( pMonitor->windowOnMonitor() != nullptr ) {
-                (void) pMonitor->windowOnMonitor()->monitorDisconnectedEvent();
-            }
-
-            delete pMonitor;
-        }
-
-    } else {
-        // do nothing
-    }
-
-}
-
-__C_ENG_MAYBE_UNUSED auto __C_ENG_TYPE ( Monitor ) :: setGamma (
-        float gammaValue
-) noexcept -> __C_ENG_TYPE ( Monitor ) & {
-
-    glfwSetGamma ( this->handle(), gammaValue );
-    return * this;
-}
-
-auto __C_ENG_TYPE ( MonitorContainer ) :: logMonitorQueryResult () noexcept -> void {
+auto __C_ENG_SELF :: logMonitorQueryResult () noexcept -> void {
     (void) __C_ENG_TYPE ( Logger ) :: instance().info (
             "Found "_s + monitors.size() + " monitors"
     );
@@ -406,8 +309,117 @@ auto __C_ENG_TYPE ( MonitorContainer ) :: logMonitorQueryResult () noexcept -> v
     }
 }
 
-auto __C_ENG_TYPE ( Monitor ) :: toString () const noexcept -> String {
-    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( Monitor ) ) " "
+
+#undef __C_ENG_OBJECT_NAME
+#define __C_ENG_OBJECT_NAME Monitor /* NOLINT(bugprone-reserved-identifier) */
+
+
+auto __C_ENG_SELF :: monitors () noexcept -> Array < __C_ENG_SELF const * > const & {
+    if ( ! monitorContainer.monitorsQueried || ! __GLFWActive ) {
+        monitorContainer.query();
+    }
+
+    return monitorContainer.monitors;
+}
+
+auto __C_ENG_SELF :: primaryMonitor () noexcept -> __C_ENG_SELF const * {
+    if ( ! monitorContainer.monitorsQueried || ! __GLFWActive ) {
+        monitorContainer.query();
+    }
+
+    return monitorContainer.primaryMonitor;
+}
+
+auto __C_ENG_SELF :: initMonitorHandler () noexcept -> void {
+    if ( ! monitorContainer.monitorsQueried || ! __GLFWActive ) {
+        monitorContainer.query();
+    }
+}
+
+static auto monitorChangeDetectedCallback (
+        __C_ENG_SELF :: Handle  handle,
+        sint32                  event
+) noexcept -> void {
+
+    if ( event == GLFW_CONNECTED ) {
+
+        monitorContainer.addMonitor( handle );
+
+        (void) __C_ENG_TYPE ( Logger ) :: instance().info (
+                "Monitor with handle " +
+                :: toString ( handle ) +
+                " connected"
+        );
+
+    } else if ( event == GLFW_DISCONNECTED ) {
+
+        (void) __C_ENG_TYPE ( Logger ) :: instance().info (
+                "Monitor with handle " +
+                :: toString ( handle ) +
+                " disconnected"
+        );
+
+        __C_ENG_SELF const * pMonitor = nullptr;
+        for ( auto * pActiveMonitor : monitorContainer.monitors ) {
+            if ( pActiveMonitor->handle() == handle ) {
+                pMonitor = pActiveMonitor;
+            }
+        }
+
+        if ( pMonitor == nullptr ) {
+            (void) __C_ENG_TYPE ( Logger ) :: instance().warning (
+                    "Monitor change detected, handle " +
+                    :: toString ( handle ) +
+                    " disconnected, but did not previously exist"
+            );
+        } else {
+            (void) monitorContainer.monitors.removeAll ( pMonitor );
+            if ( monitorContainer.primaryMonitor == pMonitor ) {
+
+                __C_ENG_SELF :: Handle newPrimaryMonitorHandle = glfwGetPrimaryMonitor();
+                __C_ENG_SELF const * newPrimaryMonitor = nullptr;
+
+                for ( auto const * pActiveMonitor : monitorContainer.monitors ) {
+                    if ( pActiveMonitor->handle() == newPrimaryMonitorHandle ) {
+                        newPrimaryMonitor = pActiveMonitor;
+                    }
+                }
+
+                if ( newPrimaryMonitor == nullptr ) {
+
+                    (void) __C_ENG_TYPE ( Logger ) :: instance().warning (
+                            "Monitor change successful, could not acquire new primary monitor"
+                    );
+
+                } else {
+                    monitorContainer.primaryMonitor = newPrimaryMonitor;
+                }
+
+            }
+
+            if ( pMonitor->windowOnMonitor() != nullptr ) {
+                (void) pMonitor->windowOnMonitor()->monitorDisconnectedEvent();
+            }
+
+            delete pMonitor;
+        }
+
+    } else {
+        // do nothing
+    }
+
+}
+
+__C_ENG_MAYBE_UNUSED auto __C_ENG_SELF :: setGamma (
+        float gammaValue
+) noexcept -> __C_ENG_SELF & {
+
+    glfwSetGamma ( this->handle(), gammaValue );
+    return * this;
+}
+
+auto __C_ENG_SELF :: toString () const noexcept -> String {
+    return __C_ENG_STRINGIFY ( __C_ENG_SELF ) " "
            "{ handle = "_s              + :: toString ( this->handle() ) +
            "{ windowOnMonitor = "_s     + :: toString ( this->windowOnMonitor() ) +
            ", properties = "            + :: toString ( this->properties() ) +
@@ -415,7 +427,7 @@ auto __C_ENG_TYPE ( Monitor ) :: toString () const noexcept -> String {
            " }";
 }
 
-auto __C_ENG_TYPE ( Monitor ) :: equals (
+auto __C_ENG_SELF :: equals (
         Object const & object
 ) const noexcept -> bool {
 

@@ -9,15 +9,23 @@ using namespace engine; // NOLINT(clion-misra-cpp2008-7-3-4)
 
 #include <Logger.hpp>
 #include <CDS/Long>
+#include <Controller.hpp>
+#include <Monitor.hpp>
+#include <Window.hpp>
 
-__C_ENG_TYPE ( Engine ) :: __C_ENG_CONSTRUCTOR ( Engine ) () noexcept = default;
 
-auto __C_ENG_TYPE ( Engine ) :: instance () noexcept -> __C_ENG_TYPE ( Engine ) & {
+#undef __C_ENG_OBJECT_NAME
+#define __C_ENG_OBJECT_NAME Engine /* NOLINT(bugprone-reserved-identifier) */
+
+
+__C_ENG_SELF :: __C_ENG_CONSTRUCTOR () noexcept = default;
+
+auto __C_ENG_SELF :: instance () noexcept -> __C_ENG_SELF & {
     static __C_ENG_TYPE ( Engine ) instance;
     return instance;
 }
 
-auto __C_ENG_TYPE ( Engine ) :: start () noexcept -> __C_ENG_TYPE ( Engine ) & {
+auto __C_ENG_SELF :: start () noexcept -> __C_ENG_SELF & {
     (void) __C_ENG_TYPE ( Logger ) :: instance().debug(
             "Engine Created at 0x" +
             :: toString ( this ) + " and booting up" // NOLINT(clion-misra-cpp2008-5-2-9)
@@ -25,10 +33,7 @@ auto __C_ENG_TYPE ( Engine ) :: start () noexcept -> __C_ENG_TYPE ( Engine ) & {
 
     return this->startup().run().shutdown();
 }
-
-#include <Controller.hpp>
-#include <Monitor.hpp>
-auto __C_ENG_TYPE ( Engine ) :: startup () noexcept -> __C_ENG_TYPE ( Engine ) & {
+auto __C_ENG_SELF :: startup () noexcept -> __C_ENG_SELF & {
     this->setState ( __C_ENG_TYPE ( EngineState ) :: EngineStateStartup );
 
     __C_ENG_TYPE ( Controller ) :: setEngine ( this );
@@ -37,15 +42,13 @@ auto __C_ENG_TYPE ( Engine ) :: startup () noexcept -> __C_ENG_TYPE ( Engine ) &
     return this->initializeSettings();
 }
 
-auto __C_ENG_TYPE ( Engine ) :: initializeSettings () noexcept -> __C_ENG_TYPE ( Engine ) & {
+auto __C_ENG_SELF :: initializeSettings () noexcept -> __C_ENG_SELF & {
     this->setState ( __C_ENG_TYPE ( EngineState ) :: EngineStateStartupAcquiringSettings );
 
     return * this;
 }
 
-#include <Window.hpp>
-
-auto __C_ENG_TYPE ( Engine ) :: run () noexcept -> __C_ENG_TYPE ( Engine ) & {
+auto __C_ENG_SELF :: run () noexcept -> __C_ENG_SELF & {
     this->setState ( __C_ENG_TYPE ( EngineState ) :: EngineStateRunning );
 
     double startTime = glfwGetTime();
@@ -81,7 +84,7 @@ auto __C_ENG_TYPE ( Engine ) :: run () noexcept -> __C_ENG_TYPE ( Engine ) & {
     return * this;
 }
 
-auto __C_ENG_TYPE ( Engine ) :: shutdownRequested() noexcept -> bool {
+auto __C_ENG_SELF :: shutdownRequested() noexcept -> bool {
     if ( this->window() != nullptr && this->window()->shouldClose() ) {
         return true;
     }
@@ -89,15 +92,15 @@ auto __C_ENG_TYPE ( Engine ) :: shutdownRequested() noexcept -> bool {
     return false;
 }
 
-auto __C_ENG_TYPE ( Engine ) :: shutdown () noexcept -> __C_ENG_TYPE ( Engine ) & {
+auto __C_ENG_SELF :: shutdown () noexcept -> __C_ENG_SELF & {
     this->setState ( __C_ENG_TYPE ( EngineState ) :: EngineStateShutdown );
 
     return * this;
 }
 
-auto __C_ENG_TYPE ( Engine ) :: setWindow (
+auto __C_ENG_SELF :: setWindow (
         __C_ENG_TYPE ( Window ) * window
-) noexcept -> __C_ENG_TYPE ( Engine ) & {
+) noexcept -> __C_ENG_SELF & {
 
     if ( this->_window != nullptr ) {
         (void) this->_window->setEngine ( nullptr );
@@ -116,8 +119,8 @@ auto __C_ENG_TYPE ( Engine ) :: setWindow (
     return * this;
 }
 
-auto __C_ENG_TYPE ( Engine ) :: toString () const noexcept -> String {
-    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( Engine ) ) " "
+auto __C_ENG_SELF :: toString () const noexcept -> String {
+    return __C_ENG_STRINGIFY ( __C_ENG_SELF ) " "
            "{ state = "_s           + :: toString ( this->state() ) +
            ", lastFrameDelta = "    + this->frameDeltaTime() +
            ", frameCount = "        + this->frameCount() +

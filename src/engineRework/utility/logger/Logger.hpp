@@ -15,7 +15,13 @@
 
 namespace engine {
 
-    __C_ENG_CLASS ( Logger ) : public cds :: Object {
+
+#pragma push_macro ("__C_ENG_OBJECT_NAME")
+
+#undef __C_ENG_OBJECT_NAME
+#define __C_ENG_OBJECT_NAME Logger /* NOLINT(bugprone-reserved-identifier) */
+
+    __C_ENG_CLASS : public cds :: Object {
     public:
         
         __C_ENG_CLASS_PRIMITIVE_CONSTANT ( bool, defaultMirrorToConsole, false )                                                    // NOLINT(clion-misra-cpp2008-8-0-1)
@@ -31,47 +37,50 @@ namespace engine {
 
     public:
 
-        __C_ENG_CONSTRUCTOR ( Logger ) () noexcept;
+        __C_ENG_CONSTRUCTOR () noexcept;
 
-        static auto instance () noexcept -> __C_ENG_TYPE ( Logger ) &;
+        static auto instance () noexcept -> __C_ENG_SELF &;
         static auto currentTime () noexcept -> cds :: StringLiteral;
 
-        auto log ( cds :: String const &, __C_ENG_TYPE ( LogLevel ) ) noexcept -> __C_ENG_TYPE ( Logger ) &;
+        auto log ( cds :: String const &, __C_ENG_TYPE ( LogLevel ) ) noexcept -> __C_ENG_SELF &;
 
-        inline auto forced ( cds :: String const & message ) noexcept -> __C_ENG_TYPE ( Logger ) & {
+        inline auto forced ( cds :: String const & message ) noexcept -> __C_ENG_SELF & {
             return this->log ( message, __C_ENG_TYPE ( LogLevel ) :: LogLevelForced );
         }
 
-        inline auto system ( cds :: String const & message ) noexcept -> __C_ENG_TYPE ( Logger ) & {
+        inline auto system ( cds :: String const & message ) noexcept -> __C_ENG_SELF & {
             return this->log ( message, __C_ENG_TYPE ( LogLevel ) :: LogLevelSystem );
         }
 
-        inline auto fatal ( cds :: String const & message ) noexcept -> __C_ENG_TYPE ( Logger ) & {
+        inline auto fatal ( cds :: String const & message ) noexcept -> __C_ENG_SELF & {
             return this->log ( message, __C_ENG_TYPE ( LogLevel ) :: LogLevelFatal );
         }
 
-        inline auto critical ( cds :: String const & message ) noexcept -> __C_ENG_TYPE ( Logger ) & {
+        inline auto critical ( cds :: String const & message ) noexcept -> __C_ENG_SELF & {
             return this->log ( message, __C_ENG_TYPE ( LogLevel ) :: LogLevelCritical );
         }
 
-        inline auto error ( cds :: String const & message ) noexcept -> __C_ENG_TYPE ( Logger ) & {
+        inline auto error ( cds :: String const & message ) noexcept -> __C_ENG_SELF & {
             return this->log ( message, __C_ENG_TYPE ( LogLevel ) :: LogLevelError );
         }
 
-        inline auto warning ( cds :: String const & message ) noexcept -> __C_ENG_TYPE ( Logger ) & {
+        inline auto warning ( cds :: String const & message ) noexcept -> __C_ENG_SELF & {
             return this->log ( message, __C_ENG_TYPE ( LogLevel ) :: LogLevelWarning );
         }
 
-        inline auto debug ( cds :: String const & message ) noexcept -> __C_ENG_TYPE ( Logger ) & {
+        inline auto debug ( cds :: String const & message ) noexcept -> __C_ENG_SELF & {
             return this->log ( message, __C_ENG_TYPE ( LogLevel ) :: LogLevelDebug );
         }
 
-        inline auto info ( cds :: String const & message ) noexcept -> __C_ENG_TYPE ( Logger ) & {
+        inline auto info ( cds :: String const & message ) noexcept -> __C_ENG_SELF & {
             return this->log ( message, __C_ENG_TYPE ( LogLevel ) :: LogLevelInfo );
         }
 
         __C_ENG_NO_DISCARD auto toString () const noexcept -> cds :: String override;
     };
+
+#pragma pop_macro ("__C_ENG_OBJECT_NAME")
+
 
 }
 

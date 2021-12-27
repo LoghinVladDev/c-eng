@@ -4,23 +4,29 @@
 
 #include "ControllerEvent.hpp"
 
+#include <Controller.hpp>
+
+
 using namespace cds; // NOLINT(clion-misra-cpp2008-7-3-4)
 using namespace engine; // NOLINT(clion-misra-cpp2008-7-3-4)
 
-#include <Controller.hpp>
 
-auto __C_ENG_TYPE ( ControllerEvent ) :: hash () const noexcept -> Index {
+#undef __C_ENG_OBJECT_NAME
+#define __C_ENG_OBJECT_NAME ControllerEvent /* NOLINT(bugprone-reserved-identifier) */
+
+
+auto __C_ENG_SELF :: hash () const noexcept -> Index {
     return this->controller()->handle();
 }
 
-auto __C_ENG_TYPE ( ControllerEvent ) :: toString () const noexcept -> String {
-    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( ControllerEvent ) ) " "
+auto __C_ENG_SELF :: toString () const noexcept -> String {
+    return __C_ENG_STRINGIFY ( __C_ENG_SELF ) " "
            "{ base = "              + this->__C_ENG_TYPE(Event)::toString() +
            ", controllerHandle = "  + Int ( this->controller()->handle() ).toString() +
            " }";
 }
 
-auto __C_ENG_TYPE ( ControllerEvent ) :: equals (
+auto __C_ENG_SELF :: equals (
         Object const & object
 ) const noexcept -> bool {
 
@@ -28,7 +34,7 @@ auto __C_ENG_TYPE ( ControllerEvent ) :: equals (
         return false;
     }
 
-    auto pEvent = reinterpret_cast < __C_ENG_TYPE ( ControllerEvent ) const * > ( & object );
+    auto pEvent = reinterpret_cast < __C_ENG_SELF const * > ( & object );
 
     return this->controller() == pEvent->controller();
 }

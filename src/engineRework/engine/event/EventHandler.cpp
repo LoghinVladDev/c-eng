@@ -4,279 +4,290 @@
 
 #include "EventHandler.hpp"
 
+#include <Event.hpp>
+
+#include <ControllerEvent.hpp>
+#include <ControllerAxisEvent.hpp>
+#include <ControllerButtonPressEvent.hpp>
+#include <ControllerButtonReleaseEvent.hpp>
+#include <ControllerConnectEvent.hpp>
+#include <ControllerDisconnectEvent.hpp>
+#include <ControllerHatEvent.hpp>
+
+#include <WindowEvent.hpp>
+#include <WindowResizeEvent.hpp>
+#include <WindowCloseEvent.hpp>
+#include <WindowFrameBufferResizeEvent.hpp>
+#include <WindowContentScaleEvent.hpp>
+#include <WindowMoveEvent.hpp>
+#include <WindowRestoreEvent.hpp>
+#include <WindowMinimizeEvent.hpp>
+#include <WindowMaximizeEvent.hpp>
+#include <WindowGainFocusEvent.hpp>
+#include <WindowLoseFocusEvent.hpp>
+#include <WindowRefreshRequestEvent.hpp>
+
+#include <KeyEvent.hpp>
+#include <KeyPressEvent.hpp>
+#include <KeyReleaseEvent.hpp>
+
+#include <MouseEvent.hpp>
+#include <MouseMoveEvent.hpp>
+#include <MousePressEvent.hpp>
+#include <MouseReleaseEvent.hpp>
+#include <MouseEnterEvent.hpp>
+#include <MouseLeaveEvent.hpp>
+#include <MouseScrollEvent.hpp>
+
+
 using namespace cds; // NOLINT(clion-misra-cpp2008-7-3-4)
 using namespace engine; // NOLINT(clion-misra-cpp2008-7-3-4)
 
-#include <Event.hpp>
-auto __C_ENG_TYPE ( EventHandler ) :: customEvent (
+
+#undef __C_ENG_OBJECT_NAME
+#define __C_ENG_OBJECT_NAME EventHandler /* NOLINT(bugprone-reserved-identifier) */
+
+
+auto __C_ENG_SELF :: customEvent (
         __C_ENG_TYPE ( Event ) * pEvent
-) const noexcept -> __C_ENG_TYPE ( EventHandler ) const & {
+) const noexcept -> __C_ENG_SELF const & {
     std :: cout << pEvent->toString() << '\n';
 
     return * this;
 }
 
-#include <ControllerEvent.hpp>
-auto __C_ENG_TYPE ( EventHandler ) :: controllerCustomEvent (
+auto __C_ENG_SELF :: controllerCustomEvent (
         __C_ENG_TYPE ( ControllerEvent ) * pEvent
-) const noexcept -> __C_ENG_TYPE ( EventHandler ) const & {
+) const noexcept -> __C_ENG_SELF const & {
     std :: cout << pEvent->toString() << '\n';
 
     return * this;
 }
 
-#include <ControllerAxisEvent.hpp>
-auto __C_ENG_TYPE ( EventHandler ) :: controllerAxisEvent (
+auto __C_ENG_SELF :: controllerAxisEvent (
         __C_ENG_TYPE ( ControllerAxisEvent ) * pEvent
-) const noexcept -> __C_ENG_TYPE ( EventHandler ) const & {
+) const noexcept -> __C_ENG_SELF const & {
     std :: cout << pEvent->toString() << '\n';
 
     return * this;
 }
 
-#include <ControllerButtonPressEvent.hpp>
-auto __C_ENG_TYPE ( EventHandler ) :: controllerButtonPressEvent (
+auto __C_ENG_SELF :: controllerButtonPressEvent (
         __C_ENG_TYPE ( ControllerButtonPressEvent ) * pEvent
-) const noexcept -> __C_ENG_TYPE ( EventHandler ) const & {
+) const noexcept -> __C_ENG_SELF const & {
     std :: cout << pEvent->toString() << '\n';
 
     return * this;
 }
 
-#include <ControllerButtonReleaseEvent.hpp>
-auto __C_ENG_TYPE ( EventHandler ) :: controllerButtonReleaseEvent (
+auto __C_ENG_SELF :: controllerButtonReleaseEvent (
         __C_ENG_TYPE ( ControllerButtonReleaseEvent ) * pEvent
-) const noexcept -> __C_ENG_TYPE ( EventHandler ) const & {
+) const noexcept -> __C_ENG_SELF const & {
     std :: cout << pEvent->toString() << '\n';
 
     return * this;
 }
 
-#include <ControllerConnectEvent.hpp>
-auto __C_ENG_TYPE ( EventHandler ) :: controllerConnectEvent (
+auto __C_ENG_SELF :: controllerConnectEvent (
         __C_ENG_TYPE ( ControllerConnectEvent ) * pEvent
-) const noexcept -> __C_ENG_TYPE ( EventHandler ) const & {
+) const noexcept -> __C_ENG_SELF const & {
     std :: cout << pEvent->toString() << '\n';
 
     return * this;
 }
 
-#include <ControllerDisconnectEvent.hpp>
-auto __C_ENG_TYPE ( EventHandler ) :: controllerDisconnectEvent (
+auto __C_ENG_SELF :: controllerDisconnectEvent (
         __C_ENG_TYPE ( ControllerDisconnectEvent ) * pEvent
-) const noexcept -> __C_ENG_TYPE ( EventHandler ) const & {
+) const noexcept -> __C_ENG_SELF const & {
     std :: cout << pEvent->toString() << '\n';
 
     return * this;
 }
 
-#include <ControllerHatEvent.hpp>
-auto __C_ENG_TYPE ( EventHandler ) :: controllerHatEvent (
+auto __C_ENG_SELF :: controllerHatEvent (
         __C_ENG_TYPE ( ControllerHatEvent ) * pEvent
-) const noexcept -> __C_ENG_TYPE ( EventHandler ) const & {
+) const noexcept -> __C_ENG_SELF const & {
     std :: cout << pEvent->toString() << '\n';
 
     return * this;
 }
 
-#include <WindowEvent.hpp>
-auto __C_ENG_TYPE ( EventHandler ) :: windowCustomEvent (
+auto __C_ENG_SELF :: windowCustomEvent (
         __C_ENG_TYPE ( WindowEvent ) * pEvent
-) const noexcept -> __C_ENG_TYPE ( EventHandler ) const & {
+) const noexcept -> __C_ENG_SELF const & {
     std :: cout << pEvent->toString() << '\n';
 
     return * this;
 }
 
-#include <WindowResizeEvent.hpp>
-auto __C_ENG_TYPE ( EventHandler ) :: windowResizeEvent (
+auto __C_ENG_SELF :: windowResizeEvent (
         __C_ENG_TYPE ( WindowResizeEvent ) * pEvent
-) const noexcept -> __C_ENG_TYPE ( EventHandler ) const & {
+) const noexcept -> __C_ENG_SELF const & {
     std :: cout << pEvent->toString() << '\n';
 
     return * this;
 }
 
-#include <WindowCloseEvent.hpp>
-auto __C_ENG_TYPE ( EventHandler ) :: windowCloseEvent (
+auto __C_ENG_SELF :: windowCloseEvent (
         __C_ENG_TYPE ( WindowCloseEvent ) * pEvent
-) const noexcept -> __C_ENG_TYPE ( EventHandler ) const & {
+) const noexcept -> __C_ENG_SELF const & {
     std :: cout << pEvent->toString() << '\n';
 
     return * this;
 }
 
-#include <WindowFrameBufferResizeEvent.hpp>
-auto __C_ENG_TYPE ( EventHandler ) :: windowFrameBufferResizeEvent (
+auto __C_ENG_SELF :: windowFrameBufferResizeEvent (
         __C_ENG_TYPE ( WindowFrameBufferResizeEvent ) * pEvent
-) const noexcept -> __C_ENG_TYPE ( EventHandler ) const & {
+) const noexcept -> __C_ENG_SELF const & {
     std :: cout << pEvent->toString() << '\n';
 
     return * this;
 }
 
-#include <WindowContentScaleEvent.hpp>
-auto __C_ENG_TYPE ( EventHandler ) :: windowContentScaleEvent (
+auto __C_ENG_SELF :: windowContentScaleEvent (
         __C_ENG_TYPE ( WindowContentScaleEvent ) * pEvent
-) const noexcept -> __C_ENG_TYPE ( EventHandler ) const & {
+) const noexcept -> __C_ENG_SELF const & {
     std :: cout << pEvent->toString() << '\n';
 
     return * this;
 }
 
-#include <WindowMoveEvent.hpp>
-auto __C_ENG_TYPE ( EventHandler ) :: windowMoveEvent (
+auto __C_ENG_SELF :: windowMoveEvent (
         __C_ENG_TYPE ( WindowMoveEvent ) * pEvent
-) const noexcept -> __C_ENG_TYPE ( EventHandler ) const & {
+) const noexcept -> __C_ENG_SELF const & {
     std :: cout << pEvent->toString() << '\n';
 
     return * this;
 }
 
-#include <WindowRestoreEvent.hpp>
-auto __C_ENG_TYPE ( EventHandler ) :: windowRestoreEvent (
+auto __C_ENG_SELF :: windowRestoreEvent (
         __C_ENG_TYPE ( WindowRestoreEvent ) * pEvent
-) const noexcept -> __C_ENG_TYPE ( EventHandler ) const & {
+) const noexcept -> __C_ENG_SELF const & {
     std :: cout << pEvent->toString() << '\n';
 
     return * this;
 }
 
-#include <WindowMinimizeEvent.hpp>
-auto __C_ENG_TYPE ( EventHandler ) :: windowMinimizeEvent (
+auto __C_ENG_SELF :: windowMinimizeEvent (
         __C_ENG_TYPE ( WindowMinimizeEvent ) * pEvent
-) const noexcept -> __C_ENG_TYPE ( EventHandler ) const & {
+) const noexcept -> __C_ENG_SELF const & {
     std :: cout << pEvent->toString() << '\n';
 
     return * this;
 }
 
-#include <WindowMaximizeEvent.hpp>
-auto __C_ENG_TYPE ( EventHandler ) :: windowMaximizeEvent (
+auto __C_ENG_SELF :: windowMaximizeEvent (
         __C_ENG_TYPE ( WindowMaximizeEvent ) * pEvent
-) const noexcept -> __C_ENG_TYPE ( EventHandler ) const & {
+) const noexcept -> __C_ENG_SELF const & {
     std :: cout << pEvent->toString() << '\n';
 
     return * this;
 }
 
-#include <WindowGainFocusEvent.hpp>
-auto __C_ENG_TYPE ( EventHandler ) :: windowGainFocusEvent (
+auto __C_ENG_SELF :: windowGainFocusEvent (
         __C_ENG_TYPE ( WindowGainFocusEvent ) * pEvent
-) const noexcept -> __C_ENG_TYPE ( EventHandler ) const & {
+) const noexcept -> __C_ENG_SELF const & {
     std :: cout << pEvent->toString() << '\n';
 
     return * this;
 }
 
-#include <WindowLoseFocusEvent.hpp>
-auto __C_ENG_TYPE ( EventHandler ) :: windowLoseFocusEvent (
+auto __C_ENG_SELF :: windowLoseFocusEvent (
         __C_ENG_TYPE ( WindowLoseFocusEvent ) * pEvent
-) const noexcept -> __C_ENG_TYPE ( EventHandler ) const & {
+) const noexcept -> __C_ENG_SELF const & {
     std :: cout << pEvent->toString() << '\n';
 
     return * this;
 }
 
-#include <WindowRefreshRequestEvent.hpp>
-auto __C_ENG_TYPE ( EventHandler ) :: windowRefreshRequestEvent (
+auto __C_ENG_SELF :: windowRefreshRequestEvent (
         __C_ENG_TYPE ( WindowRefreshRequestEvent ) * pEvent
-) const noexcept -> __C_ENG_TYPE ( EventHandler ) const & {
+) const noexcept -> __C_ENG_SELF const & {
     std :: cout << pEvent->toString() << '\n';
 
     return * this;
 }
 
-#include <KeyEvent.hpp>
-auto __C_ENG_TYPE ( EventHandler ) :: keyCustomEvent (
+auto __C_ENG_SELF :: keyCustomEvent (
         __C_ENG_TYPE ( KeyEvent ) * pEvent
-) const noexcept -> __C_ENG_TYPE ( EventHandler ) const & {
+) const noexcept -> __C_ENG_SELF const & {
     std :: cout << pEvent->toString() << '\n';
 
     return * this;
 }
 
-#include <KeyPressEvent.hpp>
-auto __C_ENG_TYPE ( EventHandler ) :: keyPressEvent (
+auto __C_ENG_SELF :: keyPressEvent (
         __C_ENG_TYPE ( KeyPressEvent ) * pEvent
-) const noexcept -> __C_ENG_TYPE ( EventHandler ) const & {
+) const noexcept -> __C_ENG_SELF const & {
     std :: cout << pEvent->toString() << '\n';
 
     return * this;
 }
 
-#include <KeyReleaseEvent.hpp>
-auto __C_ENG_TYPE ( EventHandler ) :: keyReleaseEvent (
+auto __C_ENG_SELF :: keyReleaseEvent (
         __C_ENG_TYPE ( KeyReleaseEvent ) * pEvent
-) const noexcept -> __C_ENG_TYPE ( EventHandler ) const & {
+) const noexcept -> __C_ENG_SELF const & {
     std :: cout << pEvent->toString() << '\n';
 
     return * this;
 }
 
-#include <MouseEvent.hpp>
-auto __C_ENG_TYPE ( EventHandler ) :: mouseCustomEvent (
+auto __C_ENG_SELF :: mouseCustomEvent (
         __C_ENG_TYPE ( MouseEvent ) * pEvent
-) const noexcept -> __C_ENG_TYPE ( EventHandler ) const & {
+) const noexcept -> __C_ENG_SELF const & {
     std :: cout << pEvent->toString() << '\n';
 
     return * this;
 }
 
-#include <MouseMoveEvent.hpp>
-auto __C_ENG_TYPE ( EventHandler ) :: mouseMoveEvent (
+auto __C_ENG_SELF :: mouseMoveEvent (
         __C_ENG_TYPE ( MouseMoveEvent ) * pEvent
-) const noexcept -> __C_ENG_TYPE ( EventHandler ) const & {
+) const noexcept -> __C_ENG_SELF const & {
     std :: cout << pEvent->toString() << '\n';
 
     return * this;
 }
 
-#include <MousePressEvent.hpp>
-auto __C_ENG_TYPE ( EventHandler ) :: mousePressEvent (
+auto __C_ENG_SELF :: mousePressEvent (
         __C_ENG_TYPE ( MousePressEvent ) * pEvent
-) const noexcept -> __C_ENG_TYPE ( EventHandler ) const & {
+) const noexcept -> __C_ENG_SELF const & {
     std :: cout << pEvent->toString() << '\n';
 
     return * this;
 }
 
-#include <MouseReleaseEvent.hpp>
-auto __C_ENG_TYPE ( EventHandler ) :: mouseReleaseEvent (
+auto __C_ENG_SELF :: mouseReleaseEvent (
         __C_ENG_TYPE ( MouseReleaseEvent ) * pEvent
-) const noexcept -> __C_ENG_TYPE ( EventHandler ) const & {
+) const noexcept -> __C_ENG_SELF const & {
     std :: cout << pEvent->toString() << '\n';
 
     return * this;
 }
 
-#include <MouseEnterEvent.hpp>
-auto __C_ENG_TYPE ( EventHandler ) :: mouseEnterEvent (
+auto __C_ENG_SELF :: mouseEnterEvent (
         __C_ENG_TYPE ( MouseEnterEvent ) * pEvent
-) const noexcept -> __C_ENG_TYPE ( EventHandler ) const & {
+) const noexcept -> __C_ENG_SELF const & {
     std :: cout << pEvent->toString() << '\n';
 
     return * this;
 }
 
-#include <MouseLeaveEvent.hpp>
-auto __C_ENG_TYPE ( EventHandler ) :: mouseLeaveEvent (
+auto __C_ENG_SELF :: mouseLeaveEvent (
         __C_ENG_TYPE ( MouseLeaveEvent ) * pEvent
-) const noexcept -> __C_ENG_TYPE ( EventHandler ) const & {
+) const noexcept -> __C_ENG_SELF const & {
     std :: cout << pEvent->toString() << '\n';
 
     return * this;
 }
 
-#include <MouseScrollEvent.hpp>
-auto __C_ENG_TYPE ( EventHandler ) :: mouseScrollEvent (
+auto __C_ENG_SELF :: mouseScrollEvent (
         __C_ENG_TYPE ( MouseScrollEvent ) * pEvent
-) const noexcept -> __C_ENG_TYPE ( EventHandler ) const & {
+) const noexcept -> __C_ENG_SELF const & {
     std :: cout << pEvent->toString() << '\n';
 
     return * this;
 }
 
-auto __C_ENG_TYPE ( EventHandler ) :: toString () const noexcept -> String {
-    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( EventHandler ) ) " {}";
+auto __C_ENG_SELF :: toString () const noexcept -> String {
+    return __C_ENG_STRINGIFY ( __C_ENG_SELF ) " {}";
 }

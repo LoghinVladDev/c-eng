@@ -4,18 +4,24 @@
 
 #include "KeyEvent.hpp"
 
-using namespace cds; // NOLINT(clion-misra-cpp2008-7-3-4)
+
+using namespace cds; // NOLINT (clion-misra-cpp2008-7-3-4)
 using namespace engine; // NOLINT(clion-misra-cpp2008-7-3-4)
 
-auto __C_ENG_TYPE ( KeyEvent ) :: toString () const noexcept -> String {
-    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( KeyEvent ) ) " "
+
+#undef __C_ENG_OBJECT_NAME
+#define __C_ENG_OBJECT_NAME KeyEvent /* NOLINT(bugprone-reserved-identifier) */
+
+
+auto __C_ENG_SELF :: toString () const noexcept -> String {
+    return __C_ENG_STRINGIFY ( __C_ENG_SELF ) " "
            "{ base = "      + this->__C_ENG_TYPE(Event)::toString() +
            ", key = "       + :: toString ( this->key() ) +
            ", modifiers = " + keyModifiersToString ( this->modifiers() ) +
            " }";
 }
 
-auto __C_ENG_TYPE ( KeyEvent ) :: equals (
+auto __C_ENG_SELF :: equals (
         Object const & object
 ) const noexcept -> bool {
 
@@ -23,7 +29,7 @@ auto __C_ENG_TYPE ( KeyEvent ) :: equals (
         return false;
     }
 
-    auto pEvent = reinterpret_cast < __C_ENG_TYPE ( KeyEvent ) const * > ( & object );
+    auto pEvent = reinterpret_cast < __C_ENG_SELF const * > ( & object );
 
     return this->key() == pEvent->key() && this->modifiers() == pEvent->modifiers();
 }

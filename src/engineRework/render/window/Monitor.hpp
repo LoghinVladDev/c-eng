@@ -15,9 +15,15 @@
 
 namespace engine {
 
-    __C_ENG_CLASS ( Window );
+    __C_ENG_PRE_DECLARE_CLASS ( Window );
 
-    __C_ENG_CLASS ( Monitor ) : public cds :: Object {
+
+#pragma push_macro ("__C_ENG_OBJECT_NAME")
+
+#undef __C_ENG_OBJECT_NAME
+#define __C_ENG_OBJECT_NAME Monitor /* NOLINT(bugprone-reserved-identifier) */
+
+    __C_ENG_CLASS : public cds :: Object {
     public:
         using Handle = GLFWmonitor *;
 
@@ -28,23 +34,26 @@ namespace engine {
     private:
         __C_ENG_TYPE ( Window ) mutable * _windowOnMonitor { nullptr };
 
-        friend __C_ENG_STRUCT ( MonitorContainer );
-        friend __C_ENG_CLASS ( Window );
+        __C_ENG_FRIEND_STRUCT ( MonitorContainer );
+        __C_ENG_FRIEND_CLASS ( Window );
 
     public:
         __C_ENG_NO_DISCARD constexpr auto windowOnMonitor () const noexcept -> __C_ENG_TYPE ( Window ) * {
             return this->_windowOnMonitor;
         }
 
-        auto static monitors () noexcept -> cds :: Array < __C_ENG_TYPE ( Monitor ) const * > const &;
-        auto static primaryMonitor () noexcept -> __C_ENG_TYPE ( Monitor ) const *;
+        auto static monitors () noexcept -> cds :: Array < __C_ENG_SELF const * > const &;
+        auto static primaryMonitor () noexcept -> __C_ENG_SELF const *;
         auto static initMonitorHandler () noexcept -> void;
 
-        __C_ENG_MAYBE_UNUSED auto setGamma ( float ) noexcept -> __C_ENG_TYPE ( Monitor ) &;
+        __C_ENG_MAYBE_UNUSED auto setGamma ( float ) noexcept -> __C_ENG_SELF &;
 
         __C_ENG_NO_DISCARD auto toString () const noexcept -> cds :: String override;
         __C_ENG_NO_DISCARD auto equals ( cds :: Object const & ) const noexcept -> bool override;
     };
+
+#pragma pop_macro ("__C_ENG_OBJECT_NAME")
+
 
 }
 

@@ -4,17 +4,23 @@
 
 #include "MouseMoveEvent.hpp"
 
+
 using namespace cds; // NOLINT(clion-misra-cpp2008-7-3-4)
 using namespace engine; // NOLINT(clion-misra-cpp2008-7-3-4)
 
-auto __C_ENG_TYPE ( MouseMoveEvent ) :: toString () const noexcept -> String {
-    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( MouseMoveEvent ) ) " "
+
+#undef __C_ENG_OBJECT_NAME
+#define __C_ENG_OBJECT_NAME MouseMoveEvent /* NOLINT(bugprone-reserved-identifier) */
+
+
+auto __C_ENG_SELF :: toString () const noexcept -> String {
+    return __C_ENG_STRINGIFY ( __C_ENG_SELF ) " "
            "{ base = "          + this->__C_ENG_TYPE(MouseEvent)::toString() +
            ", oldPosition = "   + :: toString ( this->oldPosition() ) +
            " }";
 }
 
-auto __C_ENG_TYPE ( MouseMoveEvent ) :: equals (
+auto __C_ENG_SELF :: equals (
         Object const & object
 ) const noexcept -> bool {
 
@@ -22,7 +28,7 @@ auto __C_ENG_TYPE ( MouseMoveEvent ) :: equals (
         return false;
     }
 
-    auto pEvent = reinterpret_cast < __C_ENG_TYPE ( MouseMoveEvent ) const * > ( & object );
+    auto pEvent = reinterpret_cast < __C_ENG_SELF const * > ( & object );
 
     return :: equals ( this->oldPosition(), pEvent->oldPosition() );
 }

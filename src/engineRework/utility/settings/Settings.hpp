@@ -10,7 +10,13 @@
 
 namespace engine {
 
-    __C_ENG_CLASS ( Settings ) : public cds :: Object {
+
+#pragma push_macro ("__C_ENG_OBJECT_NAME")
+
+#undef __C_ENG_OBJECT_NAME
+#define __C_ENG_OBJECT_NAME Settings /* NOLINT(bugprone-reserved-identifier) */
+
+    __C_ENG_CLASS : public cds :: Object {
     public:
         __C_ENG_CLASS_PRIMITIVE_CONSTANT ( cds :: StringLiteral, defaultPath, "./settings.cfg" ); // NOLINT(clion-misra-cpp2008-8-0-1)
 
@@ -48,25 +54,28 @@ namespace engine {
     private:
         cds :: HashMap < cds :: String, Value >       _settings;
 
-        __C_ENG_CONSTRUCTOR ( Settings ) () noexcept = default;
+        __C_ENG_CONSTRUCTOR () noexcept = default;
 
         __C_ENG_CLASS_IMMUTABLE_PRIMITIVE_FIELD ( bool, initialized, false )
 
-        auto load () noexcept -> __C_ENG_TYPE ( Settings ) &;
-        auto save () noexcept -> __C_ENG_TYPE ( Settings ) &;
+        auto load () noexcept -> __C_ENG_SELF &;
+        auto save () noexcept -> __C_ENG_SELF &;
 
     public:
-        __C_ENG_DESTRUCTOR ( Settings ) () noexcept;
+        __C_ENG_DESTRUCTOR () noexcept;
 
-        static auto instance () noexcept -> __C_ENG_TYPE ( Settings ) &;
+        static auto instance () noexcept -> __C_ENG_SELF &;
 
         auto get ( Key ) noexcept -> Value;
-        auto set ( Key, Value ) noexcept -> __C_ENG_TYPE ( Settings ) &;
+        auto set ( Key, Value ) noexcept -> __C_ENG_SELF &;
 
         static auto defaultForKey ( Key ) noexcept -> Value;
 
         __C_ENG_NO_DISCARD auto toString () const noexcept -> cds :: String override;
     };
+
+#pragma pop_macro ("__C_ENG_OBJECT_NAME")
+
 
 }
 
