@@ -23,6 +23,9 @@
 #include <VulkanAPIHuaweiExtensionDetails.hpp>
 #include <VulkanAPIBlackberryExtensionDetails.hpp>
 
+namespace cds {
+    class String;
+}
 
 namespace engine { // NOLINT(modernize-concat-nested-namespaces)
     namespace vulkan {
@@ -1195,12 +1198,12 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #if __C_ENG_VULKAN_API_EXTENSION_INTEL_PERFORMANCE_QUERY_AVAILABLE
 
-            __C_ENG_ENUM_FIELD ( QueryPoolPerformanceQueryCreateInfoIntel,                              VkStructureType :: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INTEGER_FUNCTIONS_2_FEATURES_INTEL ),
-            __C_ENG_ENUM_FIELD ( InitializePerformanceAPIInfoIntel,                                     VkStructureType :: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INTEGER_FUNCTIONS_2_FEATURES_INTEL ),
-            __C_ENG_ENUM_FIELD ( PerformanceMarkerInfoIntel,                                            VkStructureType :: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INTEGER_FUNCTIONS_2_FEATURES_INTEL ),
-            __C_ENG_ENUM_FIELD ( PerformanceStreamMarkerInfoIntel,                                      VkStructureType :: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INTEGER_FUNCTIONS_2_FEATURES_INTEL ),
-            __C_ENG_ENUM_FIELD ( PerformanceOverrideInfoIntel,                                          VkStructureType :: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INTEGER_FUNCTIONS_2_FEATURES_INTEL ),
-            __C_ENG_ENUM_FIELD ( PerformanceConfigurationAcquireInfoIntel,                              VkStructureType :: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INTEGER_FUNCTIONS_2_FEATURES_INTEL ),
+            __C_ENG_ENUM_FIELD ( QueryPoolPerformanceQueryCreateInfoIntel,                              VkStructureType :: VK_STRUCTURE_TYPE_QUERY_POOL_PERFORMANCE_QUERY_CREATE_INFO_INTEL ),
+            __C_ENG_ENUM_FIELD ( InitializePerformanceAPIInfoIntel,                                     VkStructureType :: VK_STRUCTURE_TYPE_INITIALIZE_PERFORMANCE_API_INFO_INTEL ),
+            __C_ENG_ENUM_FIELD ( PerformanceMarkerInfoIntel,                                            VkStructureType :: VK_STRUCTURE_TYPE_PERFORMANCE_MARKER_INFO_INTEL ),
+            __C_ENG_ENUM_FIELD ( PerformanceStreamMarkerInfoIntel,                                      VkStructureType :: VK_STRUCTURE_TYPE_PERFORMANCE_STREAM_MARKER_INFO_INTEL ),
+            __C_ENG_ENUM_FIELD ( PerformanceOverrideInfoIntel,                                          VkStructureType :: VK_STRUCTURE_TYPE_PERFORMANCE_OVERRIDE_INFO_INTEL ),
+            __C_ENG_ENUM_FIELD ( PerformanceConfigurationAcquireInfoIntel,                              VkStructureType :: VK_STRUCTURE_TYPE_PERFORMANCE_CONFIGURATION_ACQUIRE_INFO_INTEL ),
 
 #endif
 
@@ -1264,12 +1267,6 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #if __C_ENG_VULKAN_API_EXTENSION_AMD_DEVICE_COHERENT_MEMORY_AVAILABLE
 
             __C_ENG_ENUM_FIELD ( PhysicalDeviceCoherentMemoryFeaturesAMD,                               VkStructureType :: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COHERENT_MEMORY_FEATURES_AMD ),
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_SHADER_IMAGE_ATOMIC_INT64_AVAILABLE
-
-            __C_ENG_ENUM_FIELD ( PhysicalDeviceShaderImageAtomicInt64Features,                          VkStructureType :: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_INT64_FEATURES_KHR ),
 
 #endif
 
@@ -1828,6 +1825,14 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( Result ) ) noexcept -> cds :: StringLiteral;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( StructureType ) ) noexcept -> cds :: StringLiteral;
+
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( Offset2D ) const & ) noexcept -> cds :: String;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( Offset3D ) const & ) noexcept -> cds :: String;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( Extent2D ) const & ) noexcept -> cds :: String;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( Extent3D ) const & ) noexcept -> cds :: String;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( Rect ) const & ) noexcept -> cds :: String;
 
     }
 }
