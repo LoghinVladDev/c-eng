@@ -743,12 +743,31 @@ if(Vulkan_FOUND)
     )
 
     set (
+            ENGINE_REWORK_RENDER_API_VULKAN_CORE_SOURCES
+
+            src/engineRework/render/API/core/VulkanCore.cpp
+            src/engineRework/render/API/core/VulkanCore.hpp
+
+            src/engineRework/render/API/core/VulkanAPIDetails.hpp
+            src/engineRework/render/API/core/VulkanAPIExtensionDetails.hpp
+            src/engineRework/render/API/core/VulkanAPIKhronosExtensionDetails.hpp
+            src/engineRework/render/API/core/VulkanAPIAMDExtensionDetails.hpp
+            src/engineRework/render/API/core/VulkanAPINVidiaExtensionDetails.hpp
+            src/engineRework/render/API/core/VulkanAPIGoogleExtensionDetails.hpp
+            src/engineRework/render/API/core/VulkanAPIAppleExtensionDetails.hpp
+            src/engineRework/render/API/core/VulkanAPIIntelExtensionDetails.hpp
+            src/engineRework/render/API/core/VulkanAPIQualcommExtensionDetails.hpp
+            src/engineRework/render/API/core/VulkanAPIARMExtensionDetails.hpp
+            src/engineRework/render/API/core/VulkanAPIValveExtensionDetails.hpp
+            src/engineRework/render/API/core/VulkanAPIHuaweiExtensionDetails.hpp
+            src/engineRework/render/API/core/VulkanAPIBlackberryExtensionDetails.hpp
+    )
+
+    set (
             ENGINE_REWORK_RENDER_API_VULKAN_SOURCES
 
             ${ENGINE_REWORK_RENDER_API_VULKAN_EXTENSION_SOURCES}
-
-            src/engineRework/render/API/vulkan/VulkanCore.cpp
-            src/engineRework/render/API/vulkan/VulkanCore.hpp
+            ${ENGINE_REWORK_RENDER_API_VULKAN_CORE_SOURCES}
     )
 
     set (
@@ -816,6 +835,7 @@ if(Vulkan_FOUND)
             src/engineRework/render/API
             src/engineRework/render/API/vulkan
             src/engineRework/render/API/vulkan/extension
+            src/engineRework/render/API/core
     )
 
 endif()
