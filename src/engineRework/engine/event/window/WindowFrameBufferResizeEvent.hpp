@@ -15,8 +15,8 @@
 namespace engine {
 
     Class {
-        __C_ENG_CLASS_IMMUTABLE_FIELD ( __C_ENG_TYPE ( Size ), size, 0u, 0u )
-        __C_ENG_CLASS_IMMUTABLE_FIELD ( __C_ENG_TYPE ( Size ), oldSize, 0u, 0u )
+        Field ( ENGINE_TYPE ( Size ),   size,       DEFAULT_VALUE ( 0u, 0u ), GET_DEFAULT, SET_NONE )
+        Field ( ENGINE_TYPE ( Size ),   oldSize,    DEFAULT_VALUE ( 0u, 0u ), GET_DEFAULT, SET_NONE )
 
     public:
         Destructor () noexcept override = default;

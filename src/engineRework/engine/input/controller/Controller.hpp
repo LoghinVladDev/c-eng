@@ -9,7 +9,7 @@
 #include <CDS/Array>
 
 
-#define C_ENG_MAP_START     CLASS ( Controller, EXTERNAL_PARENT ( cds :: Object ) )
+#define C_ENG_MAP_START     CLASS ( Controller, PARENT ( cds :: Object ) )
 #include <ObjectMapping.hpp>
 
 namespace engine {
@@ -20,13 +20,13 @@ namespace engine {
     Class {
     public:
         using Handle = cds :: sint32;
-        __C_ENG_CLASS_PRIMITIVE_CONSTANT ( cds :: uint32, controllerCapacity, 16u )
+        Const ( PRIMITIVE_TYPE ( cds :: uint32 ),   controllerCapacity, VALUE ( 16 ) )
 
     private:
         __C_ENG_FRIEND_STRUCT ( ControllerHandler );
 
-        __C_ENG_CLASS_IMMUTABLE_PRIMITIVE_FIELD ( Handle, handle, 0 )
-        __C_ENG_CLASS_IMMUTABLE_PRIMITIVE_FIELD ( cds :: StringLiteral, name, nullptr )
+        Field ( PRIMITIVE_TYPE ( Handle ),                  handle, DEFAULT_VALUE ( 0 ),        GET_DEFAULT, SET_NONE )
+        Field ( PRIMITIVE_TYPE ( cds :: StringLiteral ),    name,   DEFAULT_VALUE ( nullptr ),  GET_DEFAULT, SET_NONE )
 
     protected:
         virtual auto update () noexcept -> void = 0;

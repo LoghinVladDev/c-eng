@@ -15,9 +15,8 @@
 namespace engine {
 
     Class {
-    private:
-        __C_ENG_CLASS_IMMUTABLE_PRIMITIVE_FIELD ( cds :: uint16, hat, 0u )
-        __C_ENG_CLASS_IMMUTABLE_PRIMITIVE_FIELD ( __C_ENG_TYPE ( ControllerHatState ), state, __C_ENG_TYPE ( ControllerHatState ) :: ControllerHatStateCentered )
+        Field ( PRIMITIVE_TYPE ( cds :: uint16 ),               hat,    DEFAULT_VALUE ( 0u ),                           GET_DEFAULT, SET_NONE )
+        Field ( ENGINE_PRIMITIVE_TYPE ( ControllerHatState ),   state,  DEFAULT_VALUE ( ControllerHatStateCentered ),   GET_DEFAULT, SET_NONE )
 
     public:
         explicit Constructor (

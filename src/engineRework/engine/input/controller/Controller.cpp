@@ -33,8 +33,8 @@ static auto controllerConnectEventRootCallback (
 namespace engine {
 
     Struct {
-        __C_ENG_TYPE ( Controller ) * connectedControllers [ __C_ENG_TYPE(Controller) :: controllerCapacity ] { nullptr }; // NOLINT(clion-misra-cpp2008-11-0-1)
-        uint32 connectedControllerCount {0U}; // NOLINT(clion-misra-cpp2008-11-0-1)
+        __C_ENG_TYPE ( Controller ) *   connectedControllers [ __C_ENG_TYPE(Controller) :: controllerCapacity ]     { nullptr };    // NOLINT(clion-misra-cpp2008-11-0-1)
+        uint32                          connectedControllerCount                                                    { 0U };         // NOLINT(clion-misra-cpp2008-11-0-1)
 
         inline auto connectController ( sint32 ) noexcept -> void;
         inline auto disconnectController ( sint32 ) noexcept -> void;
@@ -153,9 +153,8 @@ auto Self :: disconnectController (
 #include <ObjectMapping.hpp>
 
 
-#define C_ENG_MAP_START     CLASS ( Controller, EXTERNAL_PARENT ( Object ) )
+#define C_ENG_MAP_START     CLASS ( Controller, PARENT ( Object ) )
 #include <ObjectMapping.hpp>
-
 
 auto Self :: setEngine (
         __C_ENG_TYPE ( Engine ) * pEngine

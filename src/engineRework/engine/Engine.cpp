@@ -16,7 +16,7 @@ using namespace engine; // NOLINT(clion-misra-cpp2008-7-3-4)
 #include <VulkanRenderEngine.hpp>
 
 
-#define C_ENG_MAP_START     CLASS ( Engine, EXTERNAL_PARENT ( cds :: Object ) )
+#define C_ENG_MAP_START     CLASS ( Engine, PARENT ( Object ) )
 #include <ObjectMapping.hpp>
 
 Self :: Constructor () noexcept = default;

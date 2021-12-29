@@ -9,7 +9,7 @@
 #include <CDS/Utility>
 
 
-#define C_ENG_MAP_START     CLASS ( EventHandler, EXTERNAL_PARENT ( cds :: Object ) )
+#define C_ENG_MAP_START     CLASS ( EventHandler, PARENT ( cds :: Object ) )
 #include <ObjectMapping.hpp>
 
 namespace engine {

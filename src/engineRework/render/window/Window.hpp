@@ -13,7 +13,7 @@
 #include <SimpleEventQueue.hpp>
 
 
-#define C_ENG_MAP_START     CLASS ( Window, EXTERNAL_PARENT ( cds :: Object ) )
+#define C_ENG_MAP_START     CLASS ( Window, PARENT ( cds :: Object ) )
 #include <ObjectMapping.hpp>
 
 namespace engine {
@@ -30,39 +30,33 @@ namespace engine {
     public:
         using Handle = GLFWwindow *;
 
-        __C_ENG_CLASS_PRIMITIVE_CONSTANT ( cds :: StringLiteral, defaultWindowTitle, "VEngineTest" ); // NOLINT(clion-misra-cpp2008-8-0-1)
-        __C_ENG_CLASS_PRIMITIVE_CONSTANT (                            // NOLINT(clion-misra-cpp2008-4-5-2)
-                __C_ENG_TYPE ( WindowFlags ),
-                defaultFlags,
-                    __C_ENG_TYPE ( WindowFlag ) :: WindowFlagResizable           |
-                    __C_ENG_TYPE ( WindowFlag ) :: WindowFlagGrabFocusOnOpen     |
-                    __C_ENG_TYPE ( WindowFlag ) :: WindowFlagGrabFocusOnRaise
-        )
+        Const ( PRIMITIVE_TYPE ( cds :: StringLiteral ),    defaultWindowTitle, VALUE ( "VEngineTest" ) )
+        Const ( ENGINE_PRIMITIVE_TYPE ( WindowFlags ),      defaultFlags,       VALUE ( WindowFlagResizable | WindowFlagGrabFocusOnOpen | WindowFlagGrabFocusOnRaise ) ) // NOLINT(clion-misra-cpp2008-4-5-2)
 
     private:
-        cds :: String _title { defaultWindowTitle };
+        Field ( TYPE ( cds :: String ),                                                     title,              DEFAULT_VALUE ( defaultWindowTitle ),                                   GET_DEFAULT,    SET_NONE )
 
-        utility :: SimpleEventQueue < __C_ENG_TYPE ( WindowEvent ) * >   _customWindowEvents;
-        utility :: SimpleEventQueue < __C_ENG_TYPE ( MouseEvent ) * >    _customMouseEvents;
-        utility :: SimpleEventQueue < __C_ENG_TYPE ( KeyEvent ) * >      _customKeyEvents;
-        utility :: SimpleEventQueue < __C_ENG_TYPE ( Event ) * >         _customEvents;
+        Field ( TYPE ( utility :: SimpleEventQueue < __C_ENG_TYPE ( WindowEvent ) * > ),    customWindowEvents, NO_INIT,                                                                GET_NONE,       SET_NONE )
+        Field ( TYPE ( utility :: SimpleEventQueue < __C_ENG_TYPE ( MouseEvent ) * > ),     customMouseEvents,  NO_INIT,                                                                GET_NONE,       SET_NONE )
+        Field ( TYPE ( utility :: SimpleEventQueue < __C_ENG_TYPE ( KeyEvent ) * > ),       customKeyEvents,    NO_INIT,                                                                GET_NONE,       SET_NONE )
+        Field ( TYPE ( utility :: SimpleEventQueue < __C_ENG_TYPE ( Event ) * > ),          customEvents,       NO_INIT,                                                                GET_NONE,       SET_NONE )
 
-        __C_ENG_CLASS_IMMUTABLE_PRIMITIVE_FIELD ( Handle, handle, nullptr )
-        __C_ENG_CLASS_IMMUTABLE_PRIMITIVE_FIELD ( __C_ENG_TYPE ( WindowFlags ), flags, defaultFlags )
+        Field ( PRIMITIVE_TYPE ( Handle ),                                                  handle,             DEFAULT_VALUE ( nullptr ),                                              GET_DEFAULT,    SET_NONE )
+        Field ( ENGINE_PRIMITIVE_TYPE ( WindowFlags ),                                      flags,              DEFAULT_VALUE ( defaultFlags ),                                         GET_DEFAULT,    SET_NONE )
 
-        __C_ENG_CLASS_IMMUTABLE_FIELD ( __C_ENG_TYPE ( Position ), position, 0U, 0U )
-        __C_ENG_CLASS_IMMUTABLE_FIELD ( __C_ENG_TYPE ( Size ), size, 0U, 0U )
-        __C_ENG_CLASS_IMMUTABLE_FIELD ( __C_ENG_TYPE ( Position ), mousePosition, 0U, 0U )
+        Field ( ENGINE_TYPE ( Position ),                                                   position,           DEFAULT_VALUE ( 0u, 0u ),                                               GET_DEFAULT,    SET_NONE )
+        Field ( ENGINE_TYPE ( Size ),                                                       size,               DEFAULT_VALUE ( 0u, 0u ),                                               GET_DEFAULT,    SET_NONE )
+        Field ( ENGINE_TYPE ( Position ),                                                   mousePosition,      DEFAULT_VALUE ( 0u, 0u ),                                               GET_DEFAULT,    SET_NONE )
 
-        __C_ENG_CLASS_IMMUTABLE_FIELD ( __C_ENG_TYPE ( Size ), minimumSize, cds :: limits :: U32_MIN, cds :: limits :: U32_MIN )
-        __C_ENG_CLASS_IMMUTABLE_FIELD ( __C_ENG_TYPE ( Size ), maximumSize, cds :: limits :: U32_MAX, cds :: limits :: U32_MAX )
+        Field ( ENGINE_TYPE ( Size ),                                                       minimumSize,        DEFAULT_VALUE ( cds :: limits :: U32_MIN, cds :: limits :: U32_MIN ),   GET_DEFAULT,    SET ( setMinimumSize ) )
+        Field ( ENGINE_TYPE ( Size ),                                                       maximumSize,        DEFAULT_VALUE ( cds :: limits :: U32_MAX, cds :: limits :: U32_MAX ),   GET_DEFAULT,    SET ( setMaximumSize ) )
 
-        __C_ENG_CLASS_IMMUTABLE_PRIMITIVE_FIELD ( cds :: uint32, refreshRate, 60u )
+        Field ( PRIMITIVE_TYPE ( cds :: uint32 ),                                           refreshRate,        DEFAULT_VALUE ( 60u ),                                                  GET_DEFAULT,    SET_NONE )
 
-        __C_ENG_CLASS_IMMUTABLE_PRIMITIVE_FIELD ( __C_ENG_TYPE ( Engine ) *, engine, nullptr )
-        __C_ENG_CLASS_IMMUTABLE_PRIMITIVE_FIELD ( __C_ENG_TYPE ( Monitor ) const *, monitor, nullptr )
+        Field ( ENGINE_PRIMITIVE_TYPE ( Engine * ),                                         engine,             DEFAULT_VALUE ( nullptr ),                                              GET_DEFAULT,    SET ( setEngine ) )
+        Field ( ENGINE_PRIMITIVE_TYPE ( Monitor const * ),                                  monitor,            DEFAULT_VALUE ( nullptr ),                                              GET_DEFAULT,    SET_NONE )
 
-        __C_ENG_CLASS_IMMUTABLE_PRIMITIVE_FIELD ( __C_ENG_TYPE ( WindowType ), type, __C_ENG_TYPE ( WindowType ) :: WindowTypeWindowed );
+        Field ( ENGINE_PRIMITIVE_TYPE ( WindowType ),                                       type,               DEFAULT_VALUE ( WindowTypeWindowed ),                                   GET_DEFAULT,    SET_NONE )
 
         friend auto __updateWindowSize ( Self *, cds :: uint32, cds :: uint32 ) noexcept -> void; // NOLINT(bugprone-reserved-identifier)
         friend auto __updateCursorPos ( Self *, cds :: uint32, cds :: uint32 ) noexcept -> void; // NOLINT(bugprone-reserved-identifier)
@@ -73,8 +67,6 @@ namespace engine {
     public:
         auto init () noexcept (false) -> Self &;
         auto clear () noexcept -> Self &;
-
-        auto setEngine ( __C_ENG_TYPE ( Engine ) * ) noexcept -> Self &;
 
         explicit Constructor (
                 __C_ENG_TYPE ( WindowFlags ) flags = defaultFlags
@@ -99,9 +91,6 @@ namespace engine {
 
         auto move ( __C_ENG_TYPE ( Position ) const & ) noexcept -> Self &;
         auto resize ( __C_ENG_TYPE ( Size ) const & ) noexcept -> Self &;
-
-        auto setMinimumSize ( __C_ENG_TYPE ( Size ) const & ) noexcept -> Self &;
-        auto setMaximumSize ( __C_ENG_TYPE ( Size ) const & ) noexcept -> Self &;
 
         auto maximize () noexcept -> Self &;
         auto minimize () noexcept -> Self &;

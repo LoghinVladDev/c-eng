@@ -20,7 +20,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
     namespace vulkan {
 
 
-#define C_ENG_MAP_START     ENUM ( Result, EXTERNAL_TYPE ( cds :: sint32 ) )
+#define C_ENG_MAP_START     ENUM ( Result, TYPE ( cds :: sint32 ) )
 #include <ObjectMapping.hpp>
 
         Enum {
@@ -129,7 +129,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #include <ObjectMapping.hpp>
 
 
-#define C_ENG_MAP_START     ENUM ( StructureType, EXTERNAL_TYPE ( cds :: sint32 ) )
+#define C_ENG_MAP_START     ENUM ( StructureType, TYPE ( cds :: sint32 ) )
 #include <ObjectMapping.hpp>
 
         Enum {

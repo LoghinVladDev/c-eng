@@ -11,7 +11,7 @@
 #include <Core.hpp>
 
 
-#define C_ENG_MAP_START     CLASS ( Event, EXTERNAL_PARENT ( cds :: Object ) )
+#define C_ENG_MAP_START     CLASS ( Event, PARENT ( cds :: Object ) )
 #include <ObjectMapping.hpp>
 
 namespace engine {
@@ -19,7 +19,7 @@ namespace engine {
     __C_ENG_PRE_DECLARE_CLASS ( Window );
 
     Class {
-        __C_ENG_CLASS_IMMUTABLE_PRIMITIVE_FIELD ( __C_ENG_TYPE ( Window ) *, window, nullptr );
+        Field ( ENGINE_PRIMITIVE_TYPE ( Window * ), window, DEFAULT_VALUE ( nullptr ), GET_DEFAULT, SET_NONE )
 
     protected:
         explicit Constructor (

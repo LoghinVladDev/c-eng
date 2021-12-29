@@ -9,52 +9,51 @@
 #include <CDS/HashMap>
 
 
-#define C_ENG_MAP_START     CLASS ( Settings, EXTERNAL_PARENT ( cds :: Object ) )
+#define C_ENG_MAP_START     CLASS ( Settings, PARENT ( cds :: Object ) )
 #include <ObjectMapping.hpp>
 
 namespace engine {
 
     Class {
     public:
-        __C_ENG_CLASS_PRIMITIVE_CONSTANT ( cds :: StringLiteral, defaultPath, "./settings.cfg" ); // NOLINT(clion-misra-cpp2008-8-0-1)
-
         using Key = cds :: StringLiteral;
         using Value = cds :: uint64;
 
-        /// engine settings
-        __C_ENG_CLASS_PRIMITIVE_CONSTANT ( Key, keyUseValidationLayers, "validationLayersEnabled" ) // NOLINT(clion-misra-cpp2008-8-0-1)
-        __C_ENG_CLASS_PRIMITIVE_CONSTANT ( Value, defaultUseValidationLayers, 1ull ) // NOLINT(clion-misra-cpp2008-8-0-1)
+        Const ( PRIMITIVE_TYPE ( cds :: StringLiteral ),    defaultPath,                                VALUE ( "./settings.cfg" ) )
 
-        __C_ENG_CLASS_PRIMITIVE_CONSTANT ( Key, keyLogToConsole, "logToConsole" ) // NOLINT(clion-misra-cpp2008-8-0-1)
-        __C_ENG_CLASS_PRIMITIVE_CONSTANT ( Value, defaultLogToConsole, 1ull ) // NOLINT(clion-misra-cpp2008-8-0-1)
+        /// engine settings
+        Const ( PRIMITIVE_TYPE ( Key ),                     keyUseValidationLayers,                     VALUE ( "validationLayersEnabled" ) )
+        Const ( PRIMITIVE_TYPE ( Value ),                   defaultUseValidationLayers,                 VALUE ( 1ull ) )
+
+        Const ( PRIMITIVE_TYPE ( Key ),                     keyLogToConsole,                            VALUE ( "logToConsole" ) )
+        Const ( PRIMITIVE_TYPE ( Value ),                   defaultLogToConsole,                        VALUE ( 1ull ) )
 
         /// engine game object settings
-        __C_ENG_CLASS_PRIMITIVE_CONSTANT ( Key, keyPeriodicCacheReconstructionInterval, "periodicCacheReconstructionInterval" ) // NOLINT(clion-misra-cpp2008-8-0-1)
-        __C_ENG_CLASS_PRIMITIVE_CONSTANT ( Value, defaultPeriodicCacheReconstructionInterval, 2048ull ) // NOLINT(clion-misra-cpp2008-8-0-1)
+        Const ( PRIMITIVE_TYPE ( Key ),                     keyPeriodicCacheReconstructionInterval,     VALUE ( "periodicCacheReconstructionInterval" ) )
+        Const ( PRIMITIVE_TYPE ( Value ),                   defaultPeriodicCacheReconstructionInterval, VALUE ( 2048ull ) )
 
         /// window settings
-        __C_ENG_CLASS_PRIMITIVE_CONSTANT ( Key, keyMouseCursorEnabled, "mouseCursorEnabled" ) // NOLINT(clion-misra-cpp2008-8-0-1)
-        __C_ENG_CLASS_PRIMITIVE_CONSTANT ( Value, defaultMouseCursorEnabled, 1ull ) // NOLINT(clion-misra-cpp2008-8-0-1)
+        Const ( PRIMITIVE_TYPE ( Key ),                     keyMouseCursorEnabled,                      VALUE ( "mouseCursorEnabled" ) )
+        Const ( PRIMITIVE_TYPE ( Value ),                   defaultMouseCursorEnabled,                  VALUE ( 1ull ) )
 
-        __C_ENG_CLASS_PRIMITIVE_CONSTANT ( Key, keyShowFramesPerSecond, "showFPS" ) // NOLINT(clion-misra-cpp2008-8-0-1)
-        __C_ENG_CLASS_PRIMITIVE_CONSTANT ( Value, defaultShowFramesPerSecond, 0ull ) // NOLINT(clion-misra-cpp2008-8-0-1)
+        Const ( PRIMITIVE_TYPE ( Key ),                     keyShowFramesPerSecond,                     VALUE ( "showFPS" ) )
+        Const ( PRIMITIVE_TYPE ( Value ),                   defaultShowFramesPerSecond,                 VALUE ( 0ull ) )
 
-        __C_ENG_CLASS_PRIMITIVE_CONSTANT ( Key, keyResolution, "resolution" ) // NOLINT(clion-misra-cpp2008-8-0-1)
-        __C_ENG_CLASS_PRIMITIVE_CONSTANT ( Value, defaultResolution, ( 1366ull << 32 ) | ( 768ull ) ) // NOLINT(clion-misra-cpp2008-8-0-1)
+        Const ( PRIMITIVE_TYPE ( Key ),                     keyResolution,                              VALUE ( "resolution" ) )
+        Const ( PRIMITIVE_TYPE ( Value ),                   defaultResolution,                          VALUE ( ( 1366ull << 32 ) | ( 768ull ) ) )  // NOLINT(clion-misra-cpp2008-5-8-1)
 
         /// render settings
-        __C_ENG_CLASS_PRIMITIVE_CONSTANT ( Key, keyFieldOfView, "fieldOfView" ) // NOLINT(clion-misra-cpp2008-8-0-1)
-        __C_ENG_CLASS_PRIMITIVE_CONSTANT ( Value, defaultFieldOfView, 90ull ) // NOLINT(clion-misra-cpp2008-8-0-1)
+        Const ( PRIMITIVE_TYPE ( Key ),                     keyFieldOfView,                             VALUE ( "fieldOfView" ) )
+        Const ( PRIMITIVE_TYPE ( Value ),                   defaultFieldOfView,                         VALUE ( 90ull ) )
 
-        __C_ENG_CLASS_PRIMITIVE_CONSTANT ( Key, keyDrawDistance, "drawDistance" ) // NOLINT(clion-misra-cpp2008-8-0-1)
-        __C_ENG_CLASS_PRIMITIVE_CONSTANT ( Value, defaultDrawDistance, 200ull ) // NOLINT(clion-misra-cpp2008-8-0-1)
+        Const ( PRIMITIVE_TYPE ( Key ),                     keyDrawDistance,                            VALUE ( "drawDistance" ) )
+        Const ( PRIMITIVE_TYPE ( Value ),                   defaultDrawDistance,                        VALUE ( 200ull ) )
 
     private:
-        cds :: HashMap < cds :: String, Value >       _settings;
+        Field ( TYPE ( cds :: HashMap < cds :: String, Value > ),   settings,       NO_INIT,                    GET_NONE,       SET_NONE )
+        Field ( PRIMITIVE_TYPE ( bool ),                            initialized,    DEFAULT_VALUE ( false ),    GET_DEFAULT,    SET_NONE )
 
         Constructor () noexcept = default;
-
-        __C_ENG_CLASS_IMMUTABLE_PRIMITIVE_FIELD ( bool, initialized, false )
 
         auto load () noexcept -> Self &;
         auto save () noexcept -> Self &;

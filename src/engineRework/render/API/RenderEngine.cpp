@@ -5,5 +5,5 @@
 #include "RenderEngine.hpp"
 
 
-#define C_ENG_MAP_START     CLASS ( RenderEngine, EXTERNAL_PARENT ( cds :: Object ) )
+#define C_ENG_MAP_START     CLASS ( RenderEngine, EXTERNAL_PARENT ( Object ) )
 #include <ObjectMapping.hpp>

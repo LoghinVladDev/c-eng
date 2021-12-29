@@ -11,7 +11,7 @@
 #include <VulkanCore.hpp>
 
 
-#define C_ENG_MAP_START     CLASS ( Instance, EXTERNAL_PARENT ( cds :: Object ) )
+#define C_ENG_MAP_START     CLASS ( Instance, PARENT ( cds :: Object ) )
 #include <ObjectMapping.hpp>
 
 namespace engine { // NOLINT(modernize-concat-nested-namespaces)

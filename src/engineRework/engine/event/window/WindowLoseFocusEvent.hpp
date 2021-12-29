@@ -15,7 +15,6 @@
 namespace engine {
     
     Class {
-
     public:
         Destructor () noexcept override = default;
 

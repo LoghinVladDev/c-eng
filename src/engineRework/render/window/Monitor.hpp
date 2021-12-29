@@ -14,7 +14,7 @@
 #include <Core.hpp>
 
 
-#define C_ENG_MAP_START     CLASS ( Monitor, EXTERNAL_PARENT ( cds :: Object ) )
+#define C_ENG_MAP_START     CLASS ( Monitor, PARENT ( cds :: Object ) )
 #include <ObjectMapping.hpp>
 
 namespace engine {
@@ -25,9 +25,9 @@ namespace engine {
     public:
         using Handle = GLFWmonitor *;
 
-        __C_ENG_CLASS_IMMUTABLE_PRIMITIVE_FIELD ( Handle, handle, nullptr )
-        __C_ENG_CLASS_IMMUTABLE_FIELD ( cds :: Array < __C_ENG_TYPE ( MonitorVideoModeProperties ) const >, availableVideoModes )
-        __C_ENG_CLASS_IMMUTABLE_FIELD ( __C_ENG_TYPE ( MonitorProperties ), properties )
+        Field ( PRIMITIVE_TYPE ( Handle ),                                                      handle,                 DEFAULT_VALUE ( nullptr ),  GET_DEFAULT, SET_NONE )
+        Field ( TYPE ( cds :: Array < __C_ENG_TYPE ( MonitorVideoModeProperties ) const > ),    availableVideoModes,    NO_INIT,                    GET_DEFAULT, SET_NONE )
+        Field ( ENGINE_TYPE ( MonitorProperties ),                                              properties,             NO_INIT,                    GET_DEFAULT, SET_NONE )
 
     private:
         __C_ENG_TYPE ( Window ) mutable * _windowOnMonitor { nullptr };

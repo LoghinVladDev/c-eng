@@ -9,7 +9,7 @@
 #include <CDS/Object>
 
 
-#define C_ENG_MAP_START     CLASS ( RenderEngine, EXTERNAL_PARENT ( cds :: Object ) )
+#define C_ENG_MAP_START     CLASS ( RenderEngine, PARENT ( cds :: Object ) )
 #include <ObjectMapping.hpp>
 
 namespace engine {

@@ -14,8 +14,8 @@
 namespace engine {
 
     Class {
-        __C_ENG_CLASS_IMMUTABLE_PRIMITIVE_FIELD ( double, xOffset, 0.0 )
-        __C_ENG_CLASS_IMMUTABLE_PRIMITIVE_FIELD ( double, yOffset, 0.0 )
+        Field ( PRIMITIVE_TYPE ( double ), xOffset, DEFAULT_VALUE ( 0.0 ), GET_DEFAULT, SET_NONE )
+        Field ( PRIMITIVE_TYPE ( double ), yOffset, DEFAULT_VALUE ( 0.0 ), GET_DEFAULT, SET_NONE )
 
     public:
         Destructor () noexcept override = default;

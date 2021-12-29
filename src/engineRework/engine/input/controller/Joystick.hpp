@@ -15,15 +15,12 @@
 namespace engine {
 
     Class {
-    private:
-        __C_ENG_CLASS_IMMUTABLE_PRIMITIVE_FIELD ( cds :: uint32, axisCount, 0u )
-        __C_ENG_CLASS_IMMUTABLE_PRIMITIVE_FIELD ( float *, axes, nullptr )
-
-        __C_ENG_CLASS_IMMUTABLE_PRIMITIVE_FIELD ( cds :: uint32, buttonCount, 0u )
-        __C_ENG_CLASS_IMMUTABLE_PRIMITIVE_FIELD ( bool *, buttons, nullptr )
-
-        __C_ENG_CLASS_IMMUTABLE_PRIMITIVE_FIELD ( cds :: uint32, hatCount, 0u )
-        __C_ENG_CLASS_IMMUTABLE_PRIMITIVE_FIELD ( cds :: uint8 *, hats, nullptr )
+        Field ( PRIMITIVE_TYPE ( cds :: uint32 ),   axisCount,      DEFAULT_VALUE ( 0 ),        GET_DEFAULT, SET_NONE )
+        Field ( PRIMITIVE_TYPE ( float * ),         axes,           DEFAULT_VALUE ( nullptr ),  GET_DEFAULT, SET_NONE )
+        Field ( PRIMITIVE_TYPE ( cds :: uint32 ),   buttonCount,    DEFAULT_VALUE ( 0 ),        GET_DEFAULT, SET_NONE )
+        Field ( PRIMITIVE_TYPE ( bool * ),          buttons,        DEFAULT_VALUE ( nullptr ),  GET_DEFAULT, SET_NONE )
+        Field ( PRIMITIVE_TYPE ( cds :: uint32 ),   hatCount,       DEFAULT_VALUE ( 0 ),        GET_DEFAULT, SET_NONE )
+        Field ( PRIMITIVE_TYPE ( cds :: uint8 * ),  hats,           DEFAULT_VALUE ( nullptr ),  GET_DEFAULT, SET_NONE )
 
         auto update () noexcept -> void override;
 

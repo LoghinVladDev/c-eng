@@ -9,7 +9,7 @@
 #include <CDS/Exception>
 
 
-#define C_ENG_MAP_START     CLASS ( RenderEngineAPIException, EXTERNAL_PARENT ( cds :: Exception ) )
+#define C_ENG_MAP_START     CLASS ( RenderEngineAPIException, PARENT ( cds :: Exception ) )
 #include <ObjectMapping.hpp>
 
 namespace engine {

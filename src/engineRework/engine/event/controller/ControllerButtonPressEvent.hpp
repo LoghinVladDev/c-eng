@@ -15,8 +15,7 @@
 namespace engine {
 
     Class {
-    private:
-        __C_ENG_CLASS_IMMUTABLE_PRIMITIVE_FIELD ( cds :: uint16, button, 0u )
+        Field ( PRIMITIVE_TYPE ( cds :: uint16 ), button, DEFAULT_VALUE ( 0u ), GET_DEFAULT, SET_NONE )
 
     public:
         Constructor (

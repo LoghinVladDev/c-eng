@@ -11,7 +11,7 @@ using namespace cds; // NOLINT(clion-misra-cpp2008-7-3-4)
 using namespace engine; // NOLINT(clion-misra-cpp2008-7-3-4)
 
 
-#define C_ENG_MAP_START     CLASS ( Event, NO_PARENT )
+#define C_ENG_MAP_START     CLASS ( Event, PARENT ( Object ) )
 #include <ObjectMapping.hpp>
 
 auto Self :: toString () const noexcept -> String {

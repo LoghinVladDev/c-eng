@@ -15,7 +15,7 @@
 namespace engine {
 
     Class {
-        __C_ENG_CLASS_MUTABLE_PRIMITIVE_FIELD ( bool, cancelClose, false )
+        Field ( PRIMITIVE_TYPE ( bool ), cancelClose, DEFAULT_VALUE ( false ), GET_DEFAULT, SET_DEFAULT )
 
     public:
         Destructor () noexcept override = default;

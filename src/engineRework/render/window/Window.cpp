@@ -36,7 +36,7 @@ using namespace cds; // NOLINT(clion-misra-cpp2008-7-3-4)
 using namespace engine; // NOLINT(clion-misra-cpp2008-7-3-4)
 
 
-#define C_ENG_MAP_START     CLASS ( Window, EXTERNAL_PARENT ( cds :: Object ) )
+#define C_ENG_MAP_START     CLASS ( Window, PARENT ( Object ) )
 #include <ObjectMapping.hpp>
 
 bool __GLFWActive = false; // NOLINT(bugprone-reserved-identifier)

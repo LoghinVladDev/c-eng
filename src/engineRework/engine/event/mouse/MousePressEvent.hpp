@@ -14,8 +14,8 @@
 namespace engine {
 
     Class {
-        __C_ENG_CLASS_IMMUTABLE_PRIMITIVE_FIELD ( __C_ENG_TYPE ( MouseButton ), button, __C_ENG_TYPE ( MouseButton ) :: MouseButtonUndefined )
-        __C_ENG_CLASS_IMMUTABLE_PRIMITIVE_FIELD ( __C_ENG_TYPE ( KeyModifiers ), modifiers, __C_ENG_TYPE ( KeyModifier ) :: KeyModifierNone )
+        Field ( ENGINE_PRIMITIVE_TYPE ( MouseButton ),  button,     DEFAULT_VALUE ( MouseButtonUndefined ), GET_DEFAULT, SET_NONE )
+        Field ( ENGINE_PRIMITIVE_TYPE ( KeyModifiers ), modifiers,  DEFAULT_VALUE ( KeyModifierNone ),      GET_DEFAULT, SET_NONE )
 
     public:
         Destructor () noexcept override = default;

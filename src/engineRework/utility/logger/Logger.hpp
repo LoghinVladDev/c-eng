@@ -14,27 +14,21 @@
 #include <Core.hpp>
 
 
-#define C_ENG_MAP_START     CLASS ( Logger, EXTERNAL_PARENT ( cds :: Object ) )
+#define C_ENG_MAP_START     CLASS ( Logger, PARENT ( cds :: Object ) )
 #include <ObjectMapping.hpp>
 
 namespace engine {
 
     Class {
-    public:
-        
-        __C_ENG_CLASS_PRIMITIVE_CONSTANT ( bool, defaultMirrorToConsole, false )                                                    // NOLINT(clion-misra-cpp2008-8-0-1)
-        __C_ENG_CLASS_PRIMITIVE_CONSTANT ( __C_ENG_TYPE ( LogLevel ), defaultLogLevel, __C_ENG_TYPE ( LogLevel ) :: LogLevelInfo )  // NOLINT(clion-misra-cpp2008-8-0-1)
-        __C_ENG_CLASS_PRIMITIVE_CONSTANT ( cds :: uint32, defaultTimeBufferSize, 256U )                                             // NOLINT(clion-misra-cpp2008-8-0-1)
+        Const ( PRIMITIVE_TYPE ( bool ),            defaultMirrorToConsole, VALUE ( false ) )
+        Const ( ENGINE_PRIMITIVE_TYPE ( LogLevel ), defaultLogLevel,        VALUE ( LogLevelInfo ) )
+        Const ( PRIMITIVE_TYPE ( cds :: uint32 ),   defaultTimeBufferSize,  VALUE ( 256 ) )
 
-    private:
-
-        std :: fstream                          _outputBuffer;
-
-        __C_ENG_CLASS_MUTABLE_PRIMITIVE_FIELD ( bool, mirrorToConsole, defaultMirrorToConsole )
-        __C_ENG_CLASS_MUTABLE_PRIMITIVE_FIELD ( __C_ENG_TYPE ( LogLevel ), logLevel, defaultLogLevel )
+        Field ( TYPE ( std :: fstream ),                outputBuffer,       NO_INIT,                                    GET_NONE,       SET_NONE )
+        Field ( PRIMITIVE_TYPE ( bool ),                mirrorToConsole,    DEFAULT_VALUE ( defaultMirrorToConsole ),   GET_DEFAULT,    SET_DEFAULT )
+        Field ( ENGINE_PRIMITIVE_TYPE ( LogLevel ),     logLevel,           DEFAULT_VALUE ( defaultLogLevel ),          GET_DEFAULT,    SET_DEFAULT )
 
     public:
-
         Constructor () noexcept;
 
         static auto instance () noexcept -> Self &;

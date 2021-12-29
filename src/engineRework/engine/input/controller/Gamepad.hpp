@@ -15,19 +15,16 @@
 namespace engine {
 
     Class {
-        __C_ENG_CLASS_PRIMITIVE_CONSTANT ( cds :: uint8, axesCount, 6U ) // NOLINT(clion-misra-cpp2008-5-0-4,clion-misra-cpp2008-5-0-6)
-        __C_ENG_CLASS_PRIMITIVE_CONSTANT ( cds :: uint8, buttonCount, 15U ) // NOLINT(clion-misra-cpp2008-5-0-4,clion-misra-cpp2008-5-0-6)
+        Const ( PRIMITIVE_TYPE ( cds :: uint8 ), axesCount,     VALUE ( 6 ) )
+        Const ( PRIMITIVE_TYPE ( cds :: uint8 ), buttonCount,   VALUE ( 15 ) )
 
-    private:
+        Field ( PRIMITIVE_TYPE ( cds :: StringLiteral ),        gamepadName,    DEFAULT_VALUE ( nullptr ),  GET_DEFAULT,    SET_NONE )
+        Field ( PRIMITIVE_TYPE ( bool ),                        firstUpdate,    DEFAULT_VALUE ( false ),    GET_NONE,       SET_NONE )
+
+        Field ( PRIMITIVE_TYPE_ARRAY ( float,   axesCount ),    axes,           NO_INIT,                    GET_NONE,       SET_NONE )
+        Field ( PRIMITIVE_TYPE_ARRAY ( bool,    buttonCount ),  buttons,        NO_INIT,                    GET_NONE,       SET_NONE )
+
         __C_ENG_FRIEND_STRUCT ( ControllerHandler );
-
-        __C_ENG_CLASS_IMMUTABLE_PRIMITIVE_FIELD ( cds :: StringLiteral, gamepadName, nullptr );
-
-        float   _axes[axesCount];
-        bool    _buttons[buttonCount];
-
-        bool    _firstUpdate { false };
-
     private:
         auto update () noexcept -> void override;
 

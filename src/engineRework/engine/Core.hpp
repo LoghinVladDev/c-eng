@@ -10,7 +10,7 @@
 namespace engine {
 
 
-#define C_ENG_MAP_START     ENUM ( EngineState, EXTERNAL_TYPE ( cds :: uint8 ) )
+#define C_ENG_MAP_START     ENUM ( EngineState, TYPE ( cds :: uint8 ) )
 #include <ObjectMapping.hpp>
 
     Enum {
@@ -25,7 +25,7 @@ namespace engine {
 #include <ObjectMapping.hpp>
     
 
-#define C_ENG_MAP_START     ENUM ( LogLevel, EXTERNAL_TYPE ( cds :: uint8 ) )
+#define C_ENG_MAP_START     ENUM ( LogLevel, TYPE ( cds :: uint8 ) )
 #include <ObjectMapping.hpp>
 
     Enum {
@@ -43,7 +43,7 @@ namespace engine {
 #include <ObjectMapping.hpp>
 
 
-#define C_ENG_MAP_START     ENUM ( EventType, EXTERNAL_TYPE ( cds :: uint8 ) )
+#define C_ENG_MAP_START     ENUM ( EventType, TYPE ( cds :: uint8 ) )
 #include <ObjectMapping.hpp>
 
     Enum {
@@ -87,7 +87,7 @@ namespace engine {
 #include <ObjectMapping.hpp>
 
 
-#define C_ENG_MAP_START     ENUM ( KeyModifier, EXTERNAL_TYPE ( cds :: uint16 ) )
+#define C_ENG_MAP_START     ENUM ( KeyModifier, TYPE ( cds :: uint16 ) )
 #include <ObjectMapping.hpp>
 
     Enum {
@@ -106,7 +106,7 @@ namespace engine {
 #include <ObjectMapping.hpp>
 
 
-#define C_ENG_MAP_START     ENUM ( Key, EXTERNAL_TYPE ( cds :: sint16 ) )
+#define C_ENG_MAP_START     ENUM ( Key, TYPE ( cds :: sint16 ) )
 #include <ObjectMapping.hpp>
 
     Enum {
@@ -237,7 +237,7 @@ namespace engine {
 #include <ObjectMapping.hpp>
 
 
-#define C_ENG_MAP_START     ENUM ( MouseButton, EXTERNAL_TYPE ( cds :: uint8 ) )
+#define C_ENG_MAP_START     ENUM ( MouseButton, TYPE ( cds :: uint8 ) )
 #include <ObjectMapping.hpp>
 
     Enum {
@@ -261,7 +261,7 @@ namespace engine {
 #include <ObjectMapping.hpp>
 
 
-#define C_ENG_MAP_START     ENUM ( WindowFlag, EXTERNAL_TYPE ( cds :: uint16 ) )
+#define C_ENG_MAP_START     ENUM ( WindowFlag, TYPE ( cds :: uint16 ) )
 #include <ObjectMapping.hpp>
 
     Enum {
@@ -285,7 +285,7 @@ namespace engine {
 #include <ObjectMapping.hpp>
 
 
-#define C_ENG_MAP_START     ENUM ( WindowType, EXTERNAL_TYPE ( cds :: uint8 ) )
+#define C_ENG_MAP_START     ENUM ( WindowType, TYPE ( cds :: uint8 ) )
 #include <ObjectMapping.hpp>
 
     Enum {
@@ -298,7 +298,7 @@ namespace engine {
 #include <ObjectMapping.hpp>
 
 
-#define C_ENG_MAP_START     ENUM ( ControllerHatState, EXTERNAL_TYPE ( cds :: uint8 ) )
+#define C_ENG_MAP_START     ENUM ( ControllerHatState, TYPE ( cds :: uint8 ) )
 #include <ObjectMapping.hpp>
 
     Enum {

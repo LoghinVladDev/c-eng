@@ -13,7 +13,7 @@
 #include <EventHandler.hpp>
 
 
-#define C_ENG_MAP_START     CLASS ( Engine, EXTERNAL_PARENT ( cds :: Object ) )
+#define C_ENG_MAP_START     CLASS ( Engine, PARENT ( cds :: Object ) )
 #include <ObjectMapping.hpp>
 
 namespace engine {
@@ -22,20 +22,20 @@ namespace engine {
     __C_ENG_PRE_DECLARE_CLASS ( RenderEngine );
 
     Class {
-        __C_ENG_CLASS_IMMUTABLE_PRIMITIVE_FIELD ( __C_ENG_TYPE ( EngineState ), state, __C_ENG_TYPE ( EngineState ) :: EngineStateInactive )
-        __C_ENG_CLASS_IMMUTABLE_PRIMITIVE_FIELD ( __C_ENG_TYPE ( Window ) *, window, nullptr )
-        __C_ENG_CLASS_IMMUTABLE_PRIMITIVE_FIELD ( __C_ENG_TYPE ( RenderEngine ) *, renderEngine, nullptr )
-        __C_ENG_CLASS_IMMUTABLE_PRIMITIVE_FIELD ( bool, externalRenderEngine, true )
+        Field ( ENGINE_PRIMITIVE_TYPE ( EngineState ),      state,                  DEFAULT_VALUE ( EngineStateInactive ),  GET_DEFAULT, SET_NONE )
+        Field ( ENGINE_PRIMITIVE_TYPE ( Window * ),         window,                 DEFAULT_VALUE ( nullptr ),              GET_DEFAULT, SET ( setWindow ) )
+        Field ( ENGINE_PRIMITIVE_TYPE ( RenderEngine * ),   renderEngine,           DEFAULT_VALUE ( nullptr ),              GET_DEFAULT, SET ( setRenderEngine ) )
+        Field ( PRIMITIVE_TYPE ( bool ),                    externalRenderEngine,   DEFAULT_VALUE ( false ),                GET_DEFAULT, SET_NONE )
 
-        __C_ENG_CLASS_IMMUTABLE_PRIMITIVE_FIELD ( double, frameDeltaTime, 0.0 )
-        __C_ENG_CLASS_IMMUTABLE_PRIMITIVE_FIELD ( bool, logFPSToConsole, false )
-        __C_ENG_CLASS_IMMUTABLE_PRIMITIVE_FIELD ( cds :: uint64, fpsUpdateFrameTime, 512ULL )
-        __C_ENG_CLASS_IMMUTABLE_PRIMITIVE_FIELD ( cds :: uint64, showFpsEveryTick, 8192ULL )
-        __C_ENG_CLASS_IMMUTABLE_PRIMITIVE_FIELD ( cds :: uint64, frameCount, 0ULL )
+        Field ( PRIMITIVE_TYPE ( bool ),                    logFPSToConsole,        DEFAULT_VALUE ( false ),                GET_DEFAULT, SET_DEFAULT )
+        Field ( PRIMITIVE_TYPE ( cds :: uint64 ),           fpsUpdateFrameTime,     DEFAULT_VALUE ( 512 ),                  GET_DEFAULT, SET_DEFAULT )
+        Field ( PRIMITIVE_TYPE ( cds :: uint64 ),           showFpsEveryTick,       DEFAULT_VALUE ( 8192 ),                 GET_DEFAULT, SET_DEFAULT )
 
-        __C_ENG_CLASS_IMMUTABLE_PRIMITIVE_FIELD ( double, fps, 0.0f )
+        Field ( PRIMITIVE_TYPE ( double ),                  frameDeltaTime,         DEFAULT_VALUE ( 0.0 ),                  GET_DEFAULT, SET_NONE )
+        Field ( PRIMITIVE_TYPE ( cds :: uint64 ),           frameCount,             DEFAULT_VALUE ( 0 ),                    GET_DEFAULT, SET_NONE )
+        Field ( PRIMITIVE_TYPE ( double ),                  fps,                    DEFAULT_VALUE ( 0.0 ),                  GET_DEFAULT, SET_NONE )
 
-        __C_ENG_CLASS_IMMUTABLE_FIELD ( __C_ENG_TYPE ( EventHandler ), eventHandler )
+        Field ( ENGINE_TYPE ( EventHandler ),               eventHandler,           NO_INIT,                                GET_DEFAULT, SET_NONE )
 
     private:
         auto initializeSettings () noexcept -> Self &;
@@ -54,8 +54,6 @@ namespace engine {
     public:
         auto static instance () noexcept -> Self &;
         auto start () noexcept -> Self &;
-        auto setWindow ( __C_ENG_TYPE ( Window ) * ) noexcept -> Self &;
-        auto setRenderEngine ( __C_ENG_TYPE ( RenderEngine ) * ) noexcept -> Self &;
         auto shutdownRequested () noexcept -> bool;
 
         __C_ENG_NO_DISCARD auto toString () const noexcept -> cds :: String override;

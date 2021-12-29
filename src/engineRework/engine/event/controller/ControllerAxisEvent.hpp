@@ -15,10 +15,9 @@
 namespace engine {
 
     Class {
-    private:
-        __C_ENG_CLASS_IMMUTABLE_PRIMITIVE_FIELD ( cds :: uint16, axis, 0u )
-        __C_ENG_CLASS_IMMUTABLE_PRIMITIVE_FIELD ( float, value, 0.0f )
-        __C_ENG_CLASS_IMMUTABLE_PRIMITIVE_FIELD ( float, oldValue, 0.0f )
+        Field ( PRIMITIVE_TYPE ( cds :: uint16 ),   axis,       DEFAULT_VALUE ( 0u ),   GET_DEFAULT, SET_NONE )
+        Field ( PRIMITIVE_TYPE ( float ),           value,      DEFAULT_VALUE ( 0.0f ), GET_DEFAULT, SET_NONE )
+        Field ( PRIMITIVE_TYPE ( float ),           oldValue,   DEFAULT_VALUE ( 0.0f ), GET_DEFAULT, SET_NONE )
 
     public:
         explicit Constructor (

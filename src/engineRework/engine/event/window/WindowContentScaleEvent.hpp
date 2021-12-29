@@ -15,7 +15,7 @@
 namespace engine {
 
     Class {
-        __C_ENG_CLASS_IMMUTABLE_FIELD ( __C_ENG_TYPE ( WindowContentScale ), scale, 0.0f, 0.0f )
+        Field ( ENGINE_TYPE ( WindowContentScale ), scale, DEFAULT_VALUE ( 0.0f, 0.0f ), GET_DEFAULT, SET_NONE )
 
     public:
         Destructor () noexcept override = default;

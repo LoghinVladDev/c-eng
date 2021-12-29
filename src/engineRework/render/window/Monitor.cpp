@@ -312,7 +312,7 @@ auto Self :: logMonitorQueryResult () noexcept -> void {
 #include <ObjectMapping.hpp>
 
 
-#define C_ENG_MAP_START     CLASS ( Monitor, EXTERNAL_PARENT ( cds :: Object ) )
+#define C_ENG_MAP_START     CLASS ( Monitor, PARENT ( Object ) )
 #include <ObjectMapping.hpp>
 
 auto Self :: monitors () noexcept -> Array < Self const * > const & {

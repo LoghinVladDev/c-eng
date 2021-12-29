@@ -17,8 +17,7 @@ namespace engine {
     __C_ENG_PRE_DECLARE_CLASS ( Controller );
 
     Class {
-    private:
-        __C_ENG_CLASS_IMMUTABLE_PRIMITIVE_FIELD ( __C_ENG_TYPE ( Controller ) *, controller, nullptr );
+        Field ( ENGINE_PRIMITIVE_TYPE ( Controller * ), controller, DEFAULT_VALUE ( nullptr ), GET_DEFAULT, SET_NONE )
 
     public:
         explicit Constructor (

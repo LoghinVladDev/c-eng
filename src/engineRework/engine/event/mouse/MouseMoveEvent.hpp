@@ -14,7 +14,7 @@
 namespace engine {
 
     Class {
-        __C_ENG_CLASS_IMMUTABLE_FIELD ( __C_ENG_TYPE ( Position ), oldPosition, 0u, 0u )
+        Field ( ENGINE_TYPE ( Position ), oldPosition, DEFAULT_VALUE ( 0u, 0u ), GET_DEFAULT, SET_NONE )
 
     public:
         Constructor (

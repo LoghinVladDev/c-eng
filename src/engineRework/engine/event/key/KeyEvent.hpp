@@ -14,8 +14,8 @@
 namespace engine {
 
     Class {
-        __C_ENG_CLASS_IMMUTABLE_PRIMITIVE_FIELD ( __C_ENG_TYPE ( Key ), key, __C_ENG_TYPE ( Key ) :: KeyUnknown )
-        __C_ENG_CLASS_IMMUTABLE_PRIMITIVE_FIELD ( __C_ENG_TYPE ( KeyModifiers ), modifiers, __C_ENG_TYPE ( KeyModifier ) :: KeyModifierNone )
+        Field ( ENGINE_PRIMITIVE_TYPE ( Key ),          key,        DEFAULT_VALUE ( KeyUnknown ),       GET_DEFAULT, SET_NONE )
+        Field ( ENGINE_PRIMITIVE_TYPE ( KeyModifiers ), modifiers,  DEFAULT_VALUE ( KeyModifierNone ),  GET_DEFAULT, SET_NONE )
 
     protected:
         Constructor (
