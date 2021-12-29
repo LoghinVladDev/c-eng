@@ -7,23 +7,21 @@
 
 #include <MouseEvent.hpp>
 
+
+#define C_ENG_MAP_START     CLASS ( MouseEnterEvent, ENGINE_PARENT ( MouseEvent ) )
+#include <ObjectMapping.hpp>
+
 namespace engine {
 
-
-#pragma push_macro ("__C_ENG_OBJECT_NAME")
-
-#undef __C_ENG_OBJECT_NAME
-#define __C_ENG_OBJECT_NAME MouseEnterEvent /* NOLINT(bugprone-reserved-identifier) */
-
-    __C_ENG_CLASS : public __C_ENG_TYPE ( MouseEvent ) {
+    Class {
     public:
-        __C_ENG_DESTRUCTOR () noexcept override = default;
+        Destructor () noexcept override = default;
 
-        __C_ENG_CONSTRUCTOR (
+        Constructor (
                 __C_ENG_TYPE ( Window )           * window,
                 __C_ENG_TYPE ( Position )   const & position
         ) noexcept :
-                __C_ENG_TYPE ( MouseEvent ) (
+                Parent (
                         window,
                         position
                 ) {
@@ -34,16 +32,17 @@ namespace engine {
             return __C_ENG_TYPE ( EventType ) :: EventTypeMouseEnterEvent;
         }
 
-        __C_ENG_NO_DISCARD inline auto copy () const noexcept -> __C_ENG_SELF * override {
-            return new __C_ENG_SELF ( * this );
+        __C_ENG_NO_DISCARD inline auto copy () const noexcept -> Self * override {
+            return new Self ( * this );
         }
 
         __C_ENG_NO_DISCARD auto toString () const noexcept -> cds :: String override;
     };
 
-#pragma pop_macro ("__C_ENG_OBJECT_NAME")
-
-
 }
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
 
 #endif //__C_ENG_MOUSEENTEREVENT_HPP

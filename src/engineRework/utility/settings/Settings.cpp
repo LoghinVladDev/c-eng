@@ -13,12 +13,11 @@ using namespace cds; // NOLINT(clion-misra-cpp2008-7-3-4)
 using namespace engine; // NOLINT(clion-misra-cpp2008-7-3-4)
 
 
-#undef __C_ENG_OBJECT_NAME
-#define __C_ENG_OBJECT_NAME Settings /* NOLINT(bugprone-reserved-identifier) */
+#define C_ENG_MAP_START     CLASS ( Settings, EXTERNAL_PARENT ( cds :: Object ) )
+#include <ObjectMapping.hpp>
 
-
-auto __C_ENG_SELF :: instance () noexcept -> __C_ENG_SELF & {
-    static __C_ENG_SELF settings;
+auto Self :: instance () noexcept -> Self & {
+    static Self settings;
 
     if ( ! settings.initialized() ) {
         (void) settings.load();
@@ -27,7 +26,7 @@ auto __C_ENG_SELF :: instance () noexcept -> __C_ENG_SELF & {
     return settings;
 }
 
-auto __C_ENG_SELF :: load () noexcept -> __C_ENG_SELF & {
+auto Self :: load () noexcept -> Self & {
 
     (void) __C_ENG_TYPE ( Logger ) :: instance().info ( "Initializing Settings" );
 
@@ -56,21 +55,21 @@ auto __C_ENG_SELF :: load () noexcept -> __C_ENG_SELF & {
     return * this;
 }
 
-auto __C_ENG_SELF :: get ( Key key ) noexcept -> Value {
+auto Self :: get ( Key key ) noexcept -> Value {
     if ( ! this->_settings.containsKey ( key ) ) {
-        this->_settings [ String ( key ) ] = __C_ENG_SELF :: defaultForKey ( key );
+        this->_settings [ String ( key ) ] = Self :: defaultForKey ( key );
     }
 
     return this->_settings [ String ( key ) ];
 }
 
-auto __C_ENG_SELF :: set ( Key key, Value value ) noexcept -> __C_ENG_SELF & {
+auto Self :: set ( Key key, Value value ) noexcept -> Self & {
     this->_settings [ String (key) ] = value;
 
     return * this;
 }
 
-static HashMap < String, __C_ENG_SELF :: Value > defaults = {
+static HashMap < String, Self :: Value > defaults = {
         { __C_ENG_TYPE ( Settings ) :: keyUseValidationLayers,                   __C_ENG_TYPE ( Settings ) :: defaultUseValidationLayers },
         { __C_ENG_TYPE ( Settings ) :: keyLogToConsole,                          __C_ENG_TYPE ( Settings ) :: defaultLogToConsole },
         { __C_ENG_TYPE ( Settings ) :: keyPeriodicCacheReconstructionInterval,   __C_ENG_TYPE ( Settings ) :: defaultPeriodicCacheReconstructionInterval },
@@ -81,7 +80,7 @@ static HashMap < String, __C_ENG_SELF :: Value > defaults = {
         { __C_ENG_TYPE ( Settings ) :: keyDrawDistance,                          __C_ENG_TYPE ( Settings ) :: defaultDrawDistance }
 };
 
-auto __C_ENG_SELF :: defaultForKey ( Key key ) noexcept -> Value {
+auto Self :: defaultForKey ( Key key ) noexcept -> Value {
     if ( defaults.containsKey ( String ( key ) ) ) {
         return defaults [ String ( key ) ];
     }
@@ -89,11 +88,11 @@ auto __C_ENG_SELF :: defaultForKey ( Key key ) noexcept -> Value {
     return 0ULL;
 }
 
-__C_ENG_SELF :: __C_ENG_DESTRUCTOR () noexcept {
+Self :: Destructor () noexcept {
     (void) this->save();
 }
 
-auto __C_ENG_SELF :: save () noexcept -> __C_ENG_SELF & {
+auto Self :: save () noexcept -> Self & {
     std :: fstream file ( defaultPath, std :: ios :: out | std :: ios :: trunc );
 
     for ( auto & pair : this->_settings ) {
@@ -103,8 +102,8 @@ auto __C_ENG_SELF :: save () noexcept -> __C_ENG_SELF & {
     return * this;
 }
 
-auto __C_ENG_SELF :: toString () const noexcept -> String {
-    return __C_ENG_STRINGIFY ( __C_ENG_SELF ) " "
+auto Self :: toString () const noexcept -> String {
+    return __C_ENG_STRINGIFY ( Self ) " "
            "{ initialized = "_s + :: toString ( this->initialized() ) +
            ", settings = "      + this->_settings.toString();
 }

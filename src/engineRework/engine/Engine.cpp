@@ -12,20 +12,21 @@ using namespace engine; // NOLINT(clion-misra-cpp2008-7-3-4)
 #include <Controller.hpp>
 #include <Monitor.hpp>
 #include <Window.hpp>
+#include <RenderEngine.hpp>
+#include <VulkanRenderEngine.hpp>
 
 
-#undef __C_ENG_OBJECT_NAME
-#define __C_ENG_OBJECT_NAME Engine /* NOLINT(bugprone-reserved-identifier) */
+#define C_ENG_MAP_START     CLASS ( Engine, EXTERNAL_PARENT ( cds :: Object ) )
+#include <ObjectMapping.hpp>
 
+Self :: Constructor () noexcept = default;
 
-__C_ENG_SELF :: __C_ENG_CONSTRUCTOR () noexcept = default;
-
-auto __C_ENG_SELF :: instance () noexcept -> __C_ENG_SELF & {
+auto Self :: instance () noexcept -> Self & {
     static __C_ENG_TYPE ( Engine ) instance;
     return instance;
 }
 
-auto __C_ENG_SELF :: start () noexcept -> __C_ENG_SELF & {
+auto Self :: start () noexcept -> Self & {
     (void) __C_ENG_TYPE ( Logger ) :: instance().debug(
             "Engine Created at 0x" +
             :: toString ( this ) + " and booting up" // NOLINT(clion-misra-cpp2008-5-2-9)
@@ -33,22 +34,38 @@ auto __C_ENG_SELF :: start () noexcept -> __C_ENG_SELF & {
 
     return this->startup().run().shutdown();
 }
-auto __C_ENG_SELF :: startup () noexcept -> __C_ENG_SELF & {
+
+auto Self :: startup () noexcept -> Self & {
     this->setState ( __C_ENG_TYPE ( EngineState ) :: EngineStateStartup );
 
     __C_ENG_TYPE ( Controller ) :: setEngine ( this );
     __C_ENG_TYPE ( Monitor ) :: initMonitorHandler ();
 
-    return this->initializeSettings();
+    return this
+        ->initializeSettings()
+        .initializeRenderEngine();
 }
 
-auto __C_ENG_SELF :: initializeSettings () noexcept -> __C_ENG_SELF & {
+auto Self :: initializeRenderEngine () noexcept -> Self & {
+    if ( this->renderEngine() == nullptr ) {
+        (void) __C_ENG_TYPE ( Logger ) :: instance ().info ("No Render Engine present, using default (Vulkan)");
+
+        this->_renderEngine = new vulkan :: __C_ENG_TYPE ( VulkanRenderEngine );
+        this->_externalRenderEngine = false;
+    }
+
+    (void) this->renderEngine()->init();
+
+    return * this;
+}
+
+auto Self :: initializeSettings () noexcept -> Self & {
     this->setState ( __C_ENG_TYPE ( EngineState ) :: EngineStateStartupAcquiringSettings );
 
     return * this;
 }
 
-auto __C_ENG_SELF :: run () noexcept -> __C_ENG_SELF & {
+auto Self :: run () noexcept -> Self & {
     this->setState ( __C_ENG_TYPE ( EngineState ) :: EngineStateRunning );
 
     double startTime = glfwGetTime();
@@ -84,7 +101,7 @@ auto __C_ENG_SELF :: run () noexcept -> __C_ENG_SELF & {
     return * this;
 }
 
-auto __C_ENG_SELF :: shutdownRequested() noexcept -> bool {
+auto Self :: shutdownRequested() noexcept -> bool {
     if ( this->window() != nullptr && this->window()->shouldClose() ) {
         return true;
     }
@@ -92,15 +109,15 @@ auto __C_ENG_SELF :: shutdownRequested() noexcept -> bool {
     return false;
 }
 
-auto __C_ENG_SELF :: shutdown () noexcept -> __C_ENG_SELF & {
+auto Self :: shutdown () noexcept -> Self & {
     this->setState ( __C_ENG_TYPE ( EngineState ) :: EngineStateShutdown );
 
     return * this;
 }
 
-auto __C_ENG_SELF :: setWindow (
+auto Self :: setWindow (
         __C_ENG_TYPE ( Window ) * window
-) noexcept -> __C_ENG_SELF & {
+) noexcept -> Self & {
 
     if ( this->_window != nullptr ) {
         (void) this->_window->setEngine ( nullptr );
@@ -119,8 +136,38 @@ auto __C_ENG_SELF :: setWindow (
     return * this;
 }
 
-auto __C_ENG_SELF :: toString () const noexcept -> String {
-    return __C_ENG_STRINGIFY ( __C_ENG_SELF ) " "
+auto Self :: setRenderEngine (
+        __C_ENG_TYPE ( RenderEngine ) * renderEngine
+) noexcept -> Self & {
+
+    if ( this->renderEngine() != nullptr ) {
+        /// detach old render engine
+
+        if ( ! this->externalRenderEngine() ) {
+            delete this->renderEngine();
+        }
+    }
+
+    this->_renderEngine = renderEngine;
+    this->_externalRenderEngine = true;
+
+    (void) __C_ENG_TYPE ( Logger ) :: instance().info (
+            "Render Engine '"_s +
+            this->_renderEngine->name() +
+            "' attached to engine"
+    );
+
+    return * this;
+}
+
+Self :: Destructor () noexcept {
+    if ( ! this->externalRenderEngine() ) {
+        delete this->renderEngine();
+    }
+}
+
+auto Self :: toString () const noexcept -> String {
+    return __C_ENG_STRINGIFY ( Self ) " "
            "{ state = "_s           + :: toString ( this->state() ) +
            ", lastFrameDelta = "    + this->frameDeltaTime() +
            ", frameCount = "        + this->frameCount() +

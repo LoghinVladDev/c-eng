@@ -739,41 +739,54 @@ if(Vulkan_FOUND)
     )
 
     set (
-            ENGINE_REWORK_RENDER_API_VULKAN_EXTENSION_SOURCES
+            ENGINE_REWORK_RENDER_API_VULKAN_CORE_SOURCES
+
+            src/engineRework/render/API/vulkan/core/VulkanCore.cpp
+            src/engineRework/render/API/vulkan/core/VulkanCore.hpp
+
+            src/engineRework/render/API/vulkan/core/VulkanAPICalls.hpp
+            src/engineRework/render/API/vulkan/core/VulkanAPIExceptions.hpp
+
+            src/engineRework/render/API/vulkan/core/VulkanAPIDetails.hpp
+            src/engineRework/render/API/vulkan/core/VulkanAPIExtensionDetails.hpp
+            src/engineRework/render/API/vulkan/core/VulkanAPIKhronosExtensionDetails.hpp
+            src/engineRework/render/API/vulkan/core/VulkanAPIAMDExtensionDetails.hpp
+            src/engineRework/render/API/vulkan/core/VulkanAPINVidiaExtensionDetails.hpp
+            src/engineRework/render/API/vulkan/core/VulkanAPIGoogleExtensionDetails.hpp
+            src/engineRework/render/API/vulkan/core/VulkanAPIAppleExtensionDetails.hpp
+            src/engineRework/render/API/vulkan/core/VulkanAPIIntelExtensionDetails.hpp
+            src/engineRework/render/API/vulkan/core/VulkanAPIQualcommExtensionDetails.hpp
+            src/engineRework/render/API/vulkan/core/VulkanAPIARMExtensionDetails.hpp
+            src/engineRework/render/API/vulkan/core/VulkanAPIValveExtensionDetails.hpp
+            src/engineRework/render/API/vulkan/core/VulkanAPIHuaweiExtensionDetails.hpp
+            src/engineRework/render/API/vulkan/core/VulkanAPIBlackberryExtensionDetails.hpp
     )
 
     set (
-            ENGINE_REWORK_RENDER_API_VULKAN_CORE_SOURCES
+            ENGINE_REWORK_RENDER_API_VULKAN_INSTANCE_SOURCES
 
-            src/engineRework/render/API/core/VulkanCore.cpp
-            src/engineRework/render/API/core/VulkanCore.hpp
-
-            src/engineRework/render/API/core/VulkanAPIDetails.hpp
-            src/engineRework/render/API/core/VulkanAPIExtensionDetails.hpp
-            src/engineRework/render/API/core/VulkanAPIKhronosExtensionDetails.hpp
-            src/engineRework/render/API/core/VulkanAPIAMDExtensionDetails.hpp
-            src/engineRework/render/API/core/VulkanAPINVidiaExtensionDetails.hpp
-            src/engineRework/render/API/core/VulkanAPIGoogleExtensionDetails.hpp
-            src/engineRework/render/API/core/VulkanAPIAppleExtensionDetails.hpp
-            src/engineRework/render/API/core/VulkanAPIIntelExtensionDetails.hpp
-            src/engineRework/render/API/core/VulkanAPIQualcommExtensionDetails.hpp
-            src/engineRework/render/API/core/VulkanAPIARMExtensionDetails.hpp
-            src/engineRework/render/API/core/VulkanAPIValveExtensionDetails.hpp
-            src/engineRework/render/API/core/VulkanAPIHuaweiExtensionDetails.hpp
-            src/engineRework/render/API/core/VulkanAPIBlackberryExtensionDetails.hpp
+            src/engineRework/render/API/vulkan/instance/Instance.cpp
+            src/engineRework/render/API/vulkan/instance/Instance.hpp
     )
 
     set (
             ENGINE_REWORK_RENDER_API_VULKAN_SOURCES
 
-            ${ENGINE_REWORK_RENDER_API_VULKAN_EXTENSION_SOURCES}
             ${ENGINE_REWORK_RENDER_API_VULKAN_CORE_SOURCES}
+            ${ENGINE_REWORK_RENDER_API_VULKAN_INSTANCE_SOURCES}
+
+            src/engineRework/render/API/vulkan/VulkanRenderEngine.cpp
+            src/engineRework/render/API/vulkan/VulkanRenderEngine.hpp
     )
 
     set (
             ENGINE_REWORK_RENDER_API_SOURCES
 
             ${ENGINE_REWORK_RENDER_API_VULKAN_SOURCES}
+
+            src/engineRework/render/API/RenderEngine.cpp
+            src/engineRework/render/API/RenderEngine.hpp
+            src/engineRework/render/API/RenderEngineTypes.hpp
     )
 
     set (
@@ -835,7 +848,7 @@ if(Vulkan_FOUND)
             src/engineRework/render/API
             src/engineRework/render/API/vulkan
             src/engineRework/render/API/vulkan/extension
-            src/engineRework/render/API/core
+            src/engineRework/render/API/vulkan/core
     )
 
 endif()

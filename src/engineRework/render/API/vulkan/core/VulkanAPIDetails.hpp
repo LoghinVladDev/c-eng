@@ -64,4 +64,18 @@
 #endif
 
 
+#include <VulkanAPIExtensionDetails.hpp>
+#include <VulkanAPIKhronosExtensionDetails.hpp>
+#include <VulkanAPIAMDExtensionDetails.hpp>
+#include <VulkanAPINVidiaExtensionDetails.hpp>
+#include <VulkanAPIGoogleExtensionDetails.hpp>
+#include <VulkanAPIAppleExtensionDetails.hpp>
+#include <VulkanAPIIntelExtensionDetails.hpp>
+#include <VulkanAPIQualcommExtensionDetails.hpp>
+#include <VulkanAPIARMExtensionDetails.hpp>
+#include <VulkanAPIValveExtensionDetails.hpp>
+#include <VulkanAPIHuaweiExtensionDetails.hpp>
+#include <VulkanAPIBlackberryExtensionDetails.hpp>
+
+
 #endif //__C_ENG_VULKANAPIDETAILS_HPP

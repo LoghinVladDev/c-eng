@@ -11,17 +11,16 @@ using namespace cds; // NOLINT(clion-misra-cpp2008-7-3-4)
 using namespace engine; // NOLINT(clion-misra-cpp2008-7-3-4)
 
 
-#undef __C_ENG_OBJECT_NAME
-#define __C_ENG_OBJECT_NAME Joystick /* NOLINT(bugprone-reserved-identifier) */
+#define C_ENG_MAP_START     CLASS ( Joystick, ENGINE_PARENT ( Controller ) )
+#include <ObjectMapping.hpp>
 
-
-__C_ENG_SELF :: __C_ENG_DESTRUCTOR () noexcept {
+Self :: Destructor () noexcept {
     delete[] this->_axes;
     delete[] this->_buttons;
     delete[] this->_hats;
 }
 
-auto __C_ENG_SELF :: toString () const noexcept -> String {
+auto Self :: toString () const noexcept -> String {
     static auto axesToString = []( float const * axes, uint32 axisCount ) noexcept -> String {
         String asString;
         for ( uint32 i = 0U; i <  axisCount; ++ i ) {
@@ -49,8 +48,8 @@ auto __C_ENG_SELF :: toString () const noexcept -> String {
         return asString;
     };
 
-    return __C_ENG_STRINGIFY ( __C_ENG_SELF ) " "
-           "{ base = "      + this->__C_ENG_TYPE(Controller)::toString() +
+    return __C_ENG_STRINGIFY ( Self ) " "
+           "{ base = "      + this-> Parent :: toString() +
            ", axes = "      + axesToString ( this->axes(), this->axisCount() ) +
            ", buttons = "   + buttonsToString ( this->buttons(), this->buttonCount() ) +
            ", hats = "      + hatsToString ( this->hats(), this->hatCount() ) +

@@ -13,17 +13,15 @@
 
 #include <Core.hpp>
 
+
+#define C_ENG_MAP_START     CLASS ( Monitor, EXTERNAL_PARENT ( cds :: Object ) )
+#include <ObjectMapping.hpp>
+
 namespace engine {
 
     __C_ENG_PRE_DECLARE_CLASS ( Window );
 
-
-#pragma push_macro ("__C_ENG_OBJECT_NAME")
-
-#undef __C_ENG_OBJECT_NAME
-#define __C_ENG_OBJECT_NAME Monitor /* NOLINT(bugprone-reserved-identifier) */
-
-    __C_ENG_CLASS : public cds :: Object {
+    Class {
     public:
         using Handle = GLFWmonitor *;
 
@@ -42,19 +40,19 @@ namespace engine {
             return this->_windowOnMonitor;
         }
 
-        auto static monitors () noexcept -> cds :: Array < __C_ENG_SELF const * > const &;
-        auto static primaryMonitor () noexcept -> __C_ENG_SELF const *;
+        auto static monitors () noexcept -> cds :: Array < Self const * > const &;
+        auto static primaryMonitor () noexcept -> Self const *;
         auto static initMonitorHandler () noexcept -> void;
 
-        __C_ENG_MAYBE_UNUSED auto setGamma ( float ) noexcept -> __C_ENG_SELF &;
+        __C_ENG_MAYBE_UNUSED auto setGamma ( float ) noexcept -> Self &;
 
         __C_ENG_NO_DISCARD auto toString () const noexcept -> cds :: String override;
         __C_ENG_NO_DISCARD auto equals ( cds :: Object const & ) const noexcept -> bool override;
     };
 
-#pragma pop_macro ("__C_ENG_OBJECT_NAME")
-
-
 }
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
 
 #endif //__C_ENG_MONITOR_HPP

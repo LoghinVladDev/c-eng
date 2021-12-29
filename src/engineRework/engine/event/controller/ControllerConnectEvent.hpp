@@ -7,40 +7,38 @@
 
 #include <ControllerEvent.hpp>
 
+
+#define C_ENG_MAP_START     CLASS ( ControllerConnectEvent, ENGINE_PARENT ( ControllerEvent ) )
+#include <ObjectMapping.hpp>
+
 namespace engine {
 
-
-#pragma push_macro ("__C_ENG_OBJECT_NAME")
-
-#undef __C_ENG_OBJECT_NAME
-#define __C_ENG_OBJECT_NAME ControllerConnectEvent /* NOLINT(bugprone-reserved-identifier) */
-
-    __C_ENG_CLASS : public __C_ENG_TYPE ( ControllerEvent ) {
+    Class {
     public:
-        explicit __C_ENG_CONSTRUCTOR (
+        explicit Constructor (
                 __C_ENG_TYPE ( Controller ) * controller
         ) noexcept :
-                __C_ENG_TYPE ( ControllerEvent ) ( nullptr ) {
+                Parent ( nullptr ) {
 
         }
 
-        __C_ENG_DESTRUCTOR () noexcept override = default;
+        Destructor () noexcept override = default;
 
         __C_ENG_NO_DISCARD constexpr auto type () const noexcept -> __C_ENG_TYPE ( EventType ) override {
             return __C_ENG_TYPE ( EventType ) :: EventTypeControllerConnectEvent;
         }
 
-        __C_ENG_NO_DISCARD inline auto copy () const noexcept -> __C_ENG_SELF * override {
-            return new __C_ENG_SELF ( * this );
+        __C_ENG_NO_DISCARD inline auto copy () const noexcept -> Self * override {
+            return new Self ( * this );
         }
 
         __C_ENG_NO_DISCARD auto toString () const noexcept -> cds :: String override;
     };
 
-#pragma pop_macro ("__C_ENG_OBJECT_NAME")
-    
-
 }
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
 
 
 #endif //__C_ENG_CONTROLLERCONNECTEVENT_HPP

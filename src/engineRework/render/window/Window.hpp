@@ -12,6 +12,10 @@
 
 #include <SimpleEventQueue.hpp>
 
+
+#define C_ENG_MAP_START     CLASS ( Window, EXTERNAL_PARENT ( cds :: Object ) )
+#include <ObjectMapping.hpp>
+
 namespace engine {
 
     __C_ENG_PRE_DECLARE_CLASS ( Engine );
@@ -22,13 +26,7 @@ namespace engine {
     __C_ENG_PRE_DECLARE_CLASS ( MouseEvent );
     __C_ENG_PRE_DECLARE_CLASS ( KeyEvent );
 
-
-#pragma push_macro ("__C_ENG_OBJECT_NAME")
-
-#undef __C_ENG_OBJECT_NAME
-#define __C_ENG_OBJECT_NAME Window /* NOLINT(bugprone-reserved-identifier) */
-
-    __C_ENG_CLASS : public cds :: Object {
+    Class {
     public:
         using Handle = GLFWwindow *;
 
@@ -66,87 +64,90 @@ namespace engine {
 
         __C_ENG_CLASS_IMMUTABLE_PRIMITIVE_FIELD ( __C_ENG_TYPE ( WindowType ), type, __C_ENG_TYPE ( WindowType ) :: WindowTypeWindowed );
 
-        friend auto __updateWindowSize ( __C_ENG_SELF *, cds :: uint32, cds :: uint32 ) noexcept -> void; // NOLINT(bugprone-reserved-identifier)
-        friend auto __updateCursorPos ( __C_ENG_SELF *, cds :: uint32, cds :: uint32 ) noexcept -> void; // NOLINT(bugprone-reserved-identifier)
+        friend auto __updateWindowSize ( Self *, cds :: uint32, cds :: uint32 ) noexcept -> void; // NOLINT(bugprone-reserved-identifier)
+        friend auto __updateCursorPos ( Self *, cds :: uint32, cds :: uint32 ) noexcept -> void; // NOLINT(bugprone-reserved-identifier)
 
         auto applyFlagHints () const noexcept -> void;
         auto updateWindowLimits () noexcept -> void;
 
     public:
-        auto init () noexcept (false) -> __C_ENG_SELF &;
-        auto clear () noexcept -> __C_ENG_SELF &;
+        auto init () noexcept (false) -> Self &;
+        auto clear () noexcept -> Self &;
 
-        auto setEngine ( __C_ENG_TYPE ( Engine ) * ) noexcept -> __C_ENG_SELF &;
+        auto setEngine ( __C_ENG_TYPE ( Engine ) * ) noexcept -> Self &;
 
-        explicit __C_ENG_CONSTRUCTOR ( __C_ENG_TYPE ( WindowFlags ) flags = defaultFlags ) noexcept :
+        explicit Constructor (
+                __C_ENG_TYPE ( WindowFlags ) flags = defaultFlags
+        ) noexcept :
                 _flags ( flags ) {
 
         }
 
-        __C_ENG_DESTRUCTOR () noexcept {
+        Destructor () noexcept {
             (void) this->clear();
         }
 
-        auto makeWindowed () noexcept -> __C_ENG_SELF &;
-        auto makeFullscreen ( __C_ENG_TYPE ( Monitor ) const * = nullptr ) noexcept -> __C_ENG_SELF &;
-        auto makeWindowedFullscreen ( __C_ENG_TYPE ( Monitor ) const * = nullptr ) noexcept -> __C_ENG_SELF &;
+        auto makeWindowed () noexcept -> Self &;
+        auto makeFullscreen ( __C_ENG_TYPE ( Monitor ) const * = nullptr ) noexcept -> Self &;
+        auto makeWindowedFullscreen ( __C_ENG_TYPE ( Monitor ) const * = nullptr ) noexcept -> Self &;
 
         __C_ENG_NO_DISCARD inline auto shouldClose () const noexcept -> bool {
             return glfwWindowShouldClose ( this->handle() );
         }
 
-        __C_ENG_MAYBE_UNUSED auto setWindowType ( __C_ENG_TYPE ( WindowType ), __C_ENG_TYPE ( Monitor ) const * = nullptr ) noexcept -> __C_ENG_SELF &;
+        __C_ENG_MAYBE_UNUSED auto setWindowType ( __C_ENG_TYPE ( WindowType ), __C_ENG_TYPE ( Monitor ) const * = nullptr ) noexcept -> Self &;
 
-        auto move ( __C_ENG_TYPE ( Position ) const & ) noexcept -> __C_ENG_SELF &;
-        auto resize ( __C_ENG_TYPE ( Size ) const & ) noexcept -> __C_ENG_SELF &;
+        auto move ( __C_ENG_TYPE ( Position ) const & ) noexcept -> Self &;
+        auto resize ( __C_ENG_TYPE ( Size ) const & ) noexcept -> Self &;
 
-        auto setMinimumSize ( __C_ENG_TYPE ( Size ) const & ) noexcept -> __C_ENG_SELF &;
-        auto setMaximumSize ( __C_ENG_TYPE ( Size ) const & ) noexcept -> __C_ENG_SELF &;
+        auto setMinimumSize ( __C_ENG_TYPE ( Size ) const & ) noexcept -> Self &;
+        auto setMaximumSize ( __C_ENG_TYPE ( Size ) const & ) noexcept -> Self &;
 
-        auto maximize () noexcept -> __C_ENG_SELF &;
-        auto minimize () noexcept -> __C_ENG_SELF &;
-        auto hide () noexcept -> __C_ENG_SELF &;
-        auto show () noexcept -> __C_ENG_SELF &;
-        __C_ENG_MAYBE_UNUSED auto grabInputFocus () noexcept -> __C_ENG_SELF &;
-        __C_ENG_MAYBE_UNUSED auto requestAttention () noexcept -> __C_ENG_SELF &;
+        auto maximize () noexcept -> Self &;
+        auto minimize () noexcept -> Self &;
+        auto hide () noexcept -> Self &;
+        auto show () noexcept -> Self &;
+        __C_ENG_MAYBE_UNUSED auto grabInputFocus () noexcept -> Self &;
+        __C_ENG_MAYBE_UNUSED auto requestAttention () noexcept -> Self &;
 
-        auto pollEvents () noexcept -> __C_ENG_SELF &;
+        auto pollEvents () noexcept -> Self &;
 
-        __C_ENG_MAYBE_UNUSED auto handleEvent ( __C_ENG_TYPE ( WindowEvent ) const & ) noexcept -> __C_ENG_SELF &;
-        __C_ENG_MAYBE_UNUSED auto handleEvent ( __C_ENG_TYPE ( MouseEvent ) const & ) noexcept -> __C_ENG_SELF &;
-        __C_ENG_MAYBE_UNUSED auto handleEvent ( __C_ENG_TYPE ( KeyEvent ) const & ) noexcept -> __C_ENG_SELF &;
-        __C_ENG_MAYBE_UNUSED auto handleEvent ( __C_ENG_TYPE ( Event ) const & ) noexcept -> __C_ENG_SELF &;
+        __C_ENG_MAYBE_UNUSED auto handleEvent ( __C_ENG_TYPE ( WindowEvent ) const & ) noexcept -> Self &;
+        __C_ENG_MAYBE_UNUSED auto handleEvent ( __C_ENG_TYPE ( MouseEvent ) const & ) noexcept -> Self &;
+        __C_ENG_MAYBE_UNUSED auto handleEvent ( __C_ENG_TYPE ( KeyEvent ) const & ) noexcept -> Self &;
+        __C_ENG_MAYBE_UNUSED auto handleEvent ( __C_ENG_TYPE ( Event ) const & ) noexcept -> Self &;
 
-        inline auto move ( cds :: uint32 x, cds :: uint32 y ) noexcept -> __C_ENG_SELF & {
+        inline auto move ( cds :: uint32 x, cds :: uint32 y ) noexcept -> Self & {
             return this->move ( { x, y } );
         }
 
-        inline auto resize ( cds :: uint32 width, cds :: uint32 height ) noexcept -> __C_ENG_SELF & {
+        inline auto resize ( cds :: uint32 width, cds :: uint32 height ) noexcept -> Self & {
             return this->resize ( { width, height } );
         }
 
-        __C_ENG_MAYBE_UNUSED inline auto setMinimumSize ( cds :: uint32 width, cds :: uint32 height ) noexcept -> __C_ENG_SELF & {
+        __C_ENG_MAYBE_UNUSED inline auto setMinimumSize ( cds :: uint32 width, cds :: uint32 height ) noexcept -> Self & {
             return this->setMinimumSize ( { width, height } );
         }
 
-        __C_ENG_MAYBE_UNUSED inline auto setMaximumSize ( cds :: uint32 width, cds :: uint32 height ) noexcept -> __C_ENG_SELF & {
+        __C_ENG_MAYBE_UNUSED inline auto setMaximumSize ( cds :: uint32 width, cds :: uint32 height ) noexcept -> Self & {
             return this->setMaximumSize ( { width, height } );
         }
 
-        __C_ENG_MAYBE_UNUSED auto setTitle ( cds :: String const & ) noexcept -> __C_ENG_SELF &;
+        __C_ENG_MAYBE_UNUSED auto setTitle ( cds :: String const & ) noexcept -> Self &;
 
-        auto grabMouseCursor () noexcept -> __C_ENG_SELF &;
-        auto releaseMouseCursor () noexcept -> __C_ENG_SELF &;
+        auto grabMouseCursor () noexcept -> Self &;
+        auto releaseMouseCursor () noexcept -> Self &;
 
-        auto monitorDisconnectedEvent () noexcept -> __C_ENG_SELF &;
+        auto monitorDisconnectedEvent () noexcept -> Self &;
 
         __C_ENG_NO_DISCARD auto toString () const noexcept -> cds :: String override;
         __C_ENG_NO_DISCARD auto equals ( cds :: Object const & ) const noexcept -> bool override;
     };
 
-#pragma pop_macro ("__C_ENG_OBJECT_NAME")
-
-
 }
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
 
 #endif //__C_ENG_WINDOW_HPP

@@ -9,436 +9,387 @@
 
 namespace engine {
 
-#pragma push_macro("__C_ENG_OBJECT_NAME")
-#pragma push_macro("__C_ENG_OBJECT_TYPE")
 
-#undef  __C_ENG_OBJECT_NAME
-#undef  __C_ENG_OBJECT_TYPE
-#define __C_ENG_OBJECT_NAME EngineState /* NOLINT(bugprone-reserved-identifier) */
-#define __C_ENG_OBJECT_TYPE cds :: uint8 /* NOLINT(bugprone-reserved-identifier) */
+#define C_ENG_MAP_START     ENUM ( EngineState, EXTERNAL_TYPE ( cds :: uint8 ) )
+#include <ObjectMapping.hpp>
 
-    __C_ENG_ENUM {
-        __C_ENG_ENUM_FIELD ( Inactive,                 0x00U ),
-        __C_ENG_ENUM_FIELD ( Startup,                  0x01U ),
-        __C_ENG_ENUM_FIELD ( StartupAcquiringSettings, 0x02U ),
-        __C_ENG_ENUM_FIELD ( Running,                  0x03U ),
-        __C_ENG_ENUM_FIELD ( Shutdown,                 0x04U )
+    Enum {
+        Field ( Inactive,                 0x00 ),
+        Field ( Startup,                  0x01 ),
+        Field ( StartupAcquiringSettings, 0x02 ),
+        Field ( Running,                  0x03 ),
+        Field ( Shutdown,                 0x04 )
     };
 
-#pragma pop_macro("__C_ENG_OBJECT_TYPE")
-#pragma pop_macro("__C_ENG_OBJECT_NAME")
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+    
 
+#define C_ENG_MAP_START     ENUM ( LogLevel, EXTERNAL_TYPE ( cds :: uint8 ) )
+#include <ObjectMapping.hpp>
 
-#pragma push_macro("__C_ENG_OBJECT_NAME")
-#pragma push_macro("__C_ENG_OBJECT_TYPE")
-
-#undef  __C_ENG_OBJECT_NAME
-#undef  __C_ENG_OBJECT_TYPE
-#define __C_ENG_OBJECT_NAME LogLevel /* NOLINT(bugprone-reserved-identifier) */
-#define __C_ENG_OBJECT_TYPE cds :: uint8 /* NOLINT(bugprone-reserved-identifier) */
-
-    __C_ENG_ENUM {
-        __C_ENG_ENUM_FIELD ( Forced,    0x00 ),
-        __C_ENG_ENUM_FIELD ( System,    0x01 ),
-        __C_ENG_ENUM_FIELD ( Fatal,     0x02 ),
-        __C_ENG_ENUM_FIELD ( Critical,  0x03 ),
-        __C_ENG_ENUM_FIELD ( Error,     0x04 ),
-        __C_ENG_ENUM_FIELD ( Warning,   0x05 ),
-        __C_ENG_ENUM_FIELD ( Debug,     0x06 ),
-        __C_ENG_ENUM_FIELD ( Info,      0x07 )
+    Enum {
+        Field ( Forced,    0x00 ),
+        Field ( System,    0x01 ),
+        Field ( Fatal,     0x02 ),
+        Field ( Critical,  0x03 ),
+        Field ( Error,     0x04 ),
+        Field ( Warning,   0x05 ),
+        Field ( Debug,     0x06 ),
+        Field ( Info,      0x07 )
     };
 
-#pragma pop_macro("__C_ENG_OBJECT_TYPE")
-#pragma pop_macro("__C_ENG_OBJECT_NAME")
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
 
 
-#pragma push_macro("__C_ENG_OBJECT_NAME")
-#pragma push_macro("__C_ENG_OBJECT_TYPE")
+#define C_ENG_MAP_START     ENUM ( EventType, EXTERNAL_TYPE ( cds :: uint8 ) )
+#include <ObjectMapping.hpp>
 
-#undef  __C_ENG_OBJECT_NAME
-#undef  __C_ENG_OBJECT_TYPE
-#define __C_ENG_OBJECT_NAME EventType /* NOLINT(bugprone-reserved-identifier) */
-#define __C_ENG_OBJECT_TYPE cds :: uint8 /* NOLINT(bugprone-reserved-identifier) */
+    Enum {
+        Field ( Custom,                        0x00 ),
 
-    __C_ENG_ENUM {
-        __C_ENG_ENUM_FIELD ( Custom,                        0x00 ),
+        Field ( CustomKeyEvent,                0x01 ),
+        Field ( KeyPressEvent,                 0x02 ),
+        Field ( KeyReleaseEvent,               0x03 ),
 
-        __C_ENG_ENUM_FIELD ( CustomKeyEvent,                0x01 ),
-        __C_ENG_ENUM_FIELD ( KeyPressEvent,                 0x02 ),
-        __C_ENG_ENUM_FIELD ( KeyReleaseEvent,               0x03 ),
+        Field ( CustomMouseEvent,              0x04 ),
+        Field ( MouseMoveEvent,                0x05 ),
+        Field ( MouseEnterEvent,               0x06 ),
+        Field ( MouseLeaveEvent,               0x07 ),
+        Field ( MouseScrollEvent,              0x08 ),
+        Field ( MousePressEvent,               0x09 ),
+        Field ( MouseReleaseEvent,             0x0A ),
 
-        __C_ENG_ENUM_FIELD ( CustomMouseEvent,              0x04 ),
-        __C_ENG_ENUM_FIELD ( MouseMoveEvent,                0x05 ),
-        __C_ENG_ENUM_FIELD ( MouseEnterEvent,               0x06 ),
-        __C_ENG_ENUM_FIELD ( MouseLeaveEvent,               0x07 ),
-        __C_ENG_ENUM_FIELD ( MouseScrollEvent,              0x08 ),
-        __C_ENG_ENUM_FIELD ( MousePressEvent,               0x09 ),
-        __C_ENG_ENUM_FIELD ( MouseReleaseEvent,             0x0A ),
+        Field ( CustomWindowEvent,             0x0B ),
+        Field ( WindowResizeEvent,             0x0C ),
+        Field ( WindowFrameBufferResizeEvent,  0x0D ),
+        Field ( WindowCloseEvent,              0x0E ),
+        Field ( WindowContentScaleEvent,       0x0F ),
+        Field ( WindowMoveEvent,               0x10 ),
+        Field ( WindowRestoreEvent,            0x11 ),
+        Field ( WindowMinimizeEvent,           0x12 ),
+        Field ( WindowMaximizeEvent,           0x13 ),
+        Field ( WindowGainFocusEvent,          0x14 ),
+        Field ( WindowLoseFocusEvent,          0x15 ),
+        Field ( WindowRefreshRequestEvent,     0x16 ),
 
-        __C_ENG_ENUM_FIELD ( CustomWindowEvent,             0x0B ),
-        __C_ENG_ENUM_FIELD ( WindowResizeEvent,             0x0C ),
-        __C_ENG_ENUM_FIELD ( WindowFrameBufferResizeEvent,  0x0D ),
-        __C_ENG_ENUM_FIELD ( WindowCloseEvent,              0x0E ),
-        __C_ENG_ENUM_FIELD ( WindowContentScaleEvent,       0x0F ),
-        __C_ENG_ENUM_FIELD ( WindowMoveEvent,               0x10 ),
-        __C_ENG_ENUM_FIELD ( WindowRestoreEvent,            0x11 ),
-        __C_ENG_ENUM_FIELD ( WindowMinimizeEvent,           0x12 ),
-        __C_ENG_ENUM_FIELD ( WindowMaximizeEvent,           0x13 ),
-        __C_ENG_ENUM_FIELD ( WindowGainFocusEvent,          0x14 ),
-        __C_ENG_ENUM_FIELD ( WindowLoseFocusEvent,          0x15 ),
-        __C_ENG_ENUM_FIELD ( WindowRefreshRequestEvent,     0x16 ),
-
-        __C_ENG_ENUM_FIELD ( CustomControllerEvent,         0x17 ),
-        __C_ENG_ENUM_FIELD ( ControllerConnectEvent,        0x18 ),
-        __C_ENG_ENUM_FIELD ( ControllerDisconnectEvent,     0x19 ),
-        __C_ENG_ENUM_FIELD ( ControllerAxisEvent,           0x1A ),
-        __C_ENG_ENUM_FIELD ( ControllerButtonPressEvent,    0x1B ),
-        __C_ENG_ENUM_FIELD ( ControllerButtonReleaseEvent,  0x1C ),
-        __C_ENG_ENUM_FIELD ( ControllerHatEvent,            0x1D )
+        Field ( CustomControllerEvent,         0x17 ),
+        Field ( ControllerConnectEvent,        0x18 ),
+        Field ( ControllerDisconnectEvent,     0x19 ),
+        Field ( ControllerAxisEvent,           0x1A ),
+        Field ( ControllerButtonPressEvent,    0x1B ),
+        Field ( ControllerButtonReleaseEvent,  0x1C ),
+        Field ( ControllerHatEvent,            0x1D )
     };
 
-#pragma pop_macro("__C_ENG_OBJECT_TYPE")
-#pragma pop_macro("__C_ENG_OBJECT_NAME")
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
 
 
-#pragma push_macro("__C_ENG_OBJECT_NAME")
-#pragma push_macro("__C_ENG_OBJECT_TYPE")
+#define C_ENG_MAP_START     ENUM ( KeyModifier, EXTERNAL_TYPE ( cds :: uint16 ) )
+#include <ObjectMapping.hpp>
 
-#undef  __C_ENG_OBJECT_NAME
-#undef  __C_ENG_OBJECT_TYPE
-#define __C_ENG_OBJECT_NAME KeyModifier /* NOLINT(bugprone-reserved-identifier) */
-#define __C_ENG_OBJECT_TYPE cds :: uint16 /* NOLINT(bugprone-reserved-identifier) */
+    Enum {
+        Field ( None,     0x0000 ),
+        Field ( Shift,    GLFW_MOD_SHIFT ),
+        Field ( Control,  GLFW_MOD_CONTROL ),
+        Field ( Alt,      GLFW_MOD_ALT ),
+        Field ( Super,    GLFW_MOD_SUPER ),
+        Field ( CapsLock, GLFW_MOD_CAPS_LOCK ),
+        Field ( NumLock,  GLFW_MOD_NUM_LOCK ),
 
-    __C_ENG_ENUM {
-        __C_ENG_ENUM_FIELD ( None,     0x0000 ),
-        __C_ENG_ENUM_FIELD ( Shift,    GLFW_MOD_SHIFT ),
-        __C_ENG_ENUM_FIELD ( Control,  GLFW_MOD_CONTROL ),
-        __C_ENG_ENUM_FIELD ( Alt,      GLFW_MOD_ALT ),
-        __C_ENG_ENUM_FIELD ( Super,    GLFW_MOD_SUPER ),
-        __C_ENG_ENUM_FIELD ( CapsLock, GLFW_MOD_CAPS_LOCK ),
-        __C_ENG_ENUM_FIELD ( NumLock,  GLFW_MOD_NUM_LOCK ),
-
-        __C_ENG_ENUM_FIELD ( MaxValue, KeyModifierNumLock )
+        Field ( MaxValue, KeyModifierNumLock )
     };
 
-#pragma pop_macro("__C_ENG_OBJECT_TYPE")
-#pragma pop_macro("__C_ENG_OBJECT_NAME")
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
 
 
-#pragma push_macro("__C_ENG_OBJECT_NAME")
-#pragma push_macro("__C_ENG_OBJECT_TYPE")
+#define C_ENG_MAP_START     ENUM ( Key, EXTERNAL_TYPE ( cds :: sint16 ) )
+#include <ObjectMapping.hpp>
 
-#undef  __C_ENG_OBJECT_NAME
-#undef  __C_ENG_OBJECT_TYPE
-#define __C_ENG_OBJECT_NAME Key /* NOLINT(bugprone-reserved-identifier) */
-#define __C_ENG_OBJECT_TYPE cds :: sint16 /* NOLINT(bugprone-reserved-identifier) */
-
-    __C_ENG_ENUM {
-        __C_ENG_ENUM_FIELD ( Unknown,           GLFW_KEY_UNKNOWN ),
-        __C_ENG_ENUM_FIELD ( Space,             GLFW_KEY_SPACE ),
-        __C_ENG_ENUM_FIELD ( Apostrophe,        GLFW_KEY_APOSTROPHE ),
-        __C_ENG_ENUM_FIELD ( Comma,             GLFW_KEY_COMMA ), /* , */
-        __C_ENG_ENUM_FIELD ( Minus,             GLFW_KEY_MINUS ), /* - */
-        __C_ENG_ENUM_FIELD ( Period,            GLFW_KEY_PERIOD ), /* . */
-        __C_ENG_ENUM_FIELD ( Slash,             GLFW_KEY_SLASH ), /* / */
-        __C_ENG_ENUM_FIELD ( 0,                 GLFW_KEY_0 ),
-        __C_ENG_ENUM_FIELD ( 1,                 GLFW_KEY_1 ),
-        __C_ENG_ENUM_FIELD ( 2,                 GLFW_KEY_2 ),
-        __C_ENG_ENUM_FIELD ( 3,                 GLFW_KEY_3 ),
-        __C_ENG_ENUM_FIELD ( 4,                 GLFW_KEY_4 ),
-        __C_ENG_ENUM_FIELD ( 5,                 GLFW_KEY_5 ),
-        __C_ENG_ENUM_FIELD ( 6,                 GLFW_KEY_6 ),
-        __C_ENG_ENUM_FIELD ( 7,                 GLFW_KEY_7 ),
-        __C_ENG_ENUM_FIELD ( 8,                 GLFW_KEY_8 ),
-        __C_ENG_ENUM_FIELD ( 9,                 GLFW_KEY_9 ),
-        __C_ENG_ENUM_FIELD ( Semicolon,         GLFW_KEY_SEMICOLON ), /* ; */
-        __C_ENG_ENUM_FIELD ( Equal,             GLFW_KEY_EQUAL ), /* = */
-        __C_ENG_ENUM_FIELD ( A,                 GLFW_KEY_A ),
-        __C_ENG_ENUM_FIELD ( B,                 GLFW_KEY_B ),
-        __C_ENG_ENUM_FIELD ( C,                 GLFW_KEY_C ),
-        __C_ENG_ENUM_FIELD ( D,                 GLFW_KEY_D ),
-        __C_ENG_ENUM_FIELD ( E,                 GLFW_KEY_E ),
-        __C_ENG_ENUM_FIELD ( F,                 GLFW_KEY_F ),
-        __C_ENG_ENUM_FIELD ( G,                 GLFW_KEY_G ),
-        __C_ENG_ENUM_FIELD ( H,                 GLFW_KEY_H ),
-        __C_ENG_ENUM_FIELD ( I,                 GLFW_KEY_I ),
-        __C_ENG_ENUM_FIELD ( J,                 GLFW_KEY_J ),
-        __C_ENG_ENUM_FIELD ( K,                 GLFW_KEY_K ),
-        __C_ENG_ENUM_FIELD ( L,                 GLFW_KEY_L ),
-        __C_ENG_ENUM_FIELD ( M,                 GLFW_KEY_M ),
-        __C_ENG_ENUM_FIELD ( N,                 GLFW_KEY_N ),
-        __C_ENG_ENUM_FIELD ( O,                 GLFW_KEY_O ),
-        __C_ENG_ENUM_FIELD ( P,                 GLFW_KEY_P ),
-        __C_ENG_ENUM_FIELD ( Q,                 GLFW_KEY_Q ),
-        __C_ENG_ENUM_FIELD ( R,                 GLFW_KEY_R ),
-        __C_ENG_ENUM_FIELD ( S,                 GLFW_KEY_S ),
-        __C_ENG_ENUM_FIELD ( T,                 GLFW_KEY_T ),
-        __C_ENG_ENUM_FIELD ( U,                 GLFW_KEY_U ),
-        __C_ENG_ENUM_FIELD ( V,                 GLFW_KEY_V ),
-        __C_ENG_ENUM_FIELD ( W,                 GLFW_KEY_W ),
-        __C_ENG_ENUM_FIELD ( X,                 GLFW_KEY_X ),
-        __C_ENG_ENUM_FIELD ( Y,                 GLFW_KEY_Y ),
-        __C_ENG_ENUM_FIELD ( Z,                 GLFW_KEY_Z ),
-        __C_ENG_ENUM_FIELD ( LeftBracket,       GLFW_KEY_LEFT_BRACKET ), /* [ */
-        __C_ENG_ENUM_FIELD ( Backslash,         GLFW_KEY_BACKSLASH ), /* \ */
-        __C_ENG_ENUM_FIELD ( RightBracket,      GLFW_KEY_RIGHT_BRACKET ), /* ] */
-        __C_ENG_ENUM_FIELD ( GraveAccent,       GLFW_KEY_GRAVE_ACCENT ), /* ` */
-        __C_ENG_ENUM_FIELD ( World1,            GLFW_KEY_WORLD_1 ), /* non-US #1 */
-        __C_ENG_ENUM_FIELD ( World2,            GLFW_KEY_WORLD_2 ), /* non-US #2 */
-        __C_ENG_ENUM_FIELD ( Escape,            GLFW_KEY_ESCAPE ),
-        __C_ENG_ENUM_FIELD ( Enter,             GLFW_KEY_ENTER ),
-        __C_ENG_ENUM_FIELD ( Tab,               GLFW_KEY_TAB ),
-        __C_ENG_ENUM_FIELD ( Backspace,         GLFW_KEY_BACKSPACE ),
-        __C_ENG_ENUM_FIELD ( Insert,            GLFW_KEY_INSERT ),
-        __C_ENG_ENUM_FIELD ( Delete,            GLFW_KEY_DELETE ),
-        __C_ENG_ENUM_FIELD ( Right,             GLFW_KEY_RIGHT ),
-        __C_ENG_ENUM_FIELD ( Left,              GLFW_KEY_LEFT ),
-        __C_ENG_ENUM_FIELD ( Down,              GLFW_KEY_DOWN ),
-        __C_ENG_ENUM_FIELD ( Up,                GLFW_KEY_UP ),
-        __C_ENG_ENUM_FIELD ( PageUp,            GLFW_KEY_PAGE_UP ),
-        __C_ENG_ENUM_FIELD ( PageDown,          GLFW_KEY_PAGE_DOWN ),
-        __C_ENG_ENUM_FIELD ( Home,              GLFW_KEY_HOME ),
-        __C_ENG_ENUM_FIELD ( End,               GLFW_KEY_END ),
-        __C_ENG_ENUM_FIELD ( CapsLock,          GLFW_KEY_CAPS_LOCK ),
-        __C_ENG_ENUM_FIELD ( ScrollLock,        GLFW_KEY_SCROLL_LOCK ),
-        __C_ENG_ENUM_FIELD ( NumLock,           GLFW_KEY_NUM_LOCK ),
-        __C_ENG_ENUM_FIELD ( PrintScreen,       GLFW_KEY_PRINT_SCREEN ),
-        __C_ENG_ENUM_FIELD ( Pause,             GLFW_KEY_PAUSE ),
-        __C_ENG_ENUM_FIELD ( F1,                GLFW_KEY_F1 ),
-        __C_ENG_ENUM_FIELD ( F2,                GLFW_KEY_F2 ),
-        __C_ENG_ENUM_FIELD ( F3,                GLFW_KEY_F3 ),
-        __C_ENG_ENUM_FIELD ( F4,                GLFW_KEY_F4 ),
-        __C_ENG_ENUM_FIELD ( F5,                GLFW_KEY_F5 ),
-        __C_ENG_ENUM_FIELD ( F6,                GLFW_KEY_F6 ),
-        __C_ENG_ENUM_FIELD ( F7,                GLFW_KEY_F7 ),
-        __C_ENG_ENUM_FIELD ( F8,                GLFW_KEY_F8 ),
-        __C_ENG_ENUM_FIELD ( F9,                GLFW_KEY_F9 ),
-        __C_ENG_ENUM_FIELD ( F10,               GLFW_KEY_F10 ),
-        __C_ENG_ENUM_FIELD ( F11,               GLFW_KEY_F11 ),
-        __C_ENG_ENUM_FIELD ( F12,               GLFW_KEY_F12 ),
-        __C_ENG_ENUM_FIELD ( F13,               GLFW_KEY_F13 ),
-        __C_ENG_ENUM_FIELD ( F14,               GLFW_KEY_F14 ),
-        __C_ENG_ENUM_FIELD ( F15,               GLFW_KEY_F15 ),
-        __C_ENG_ENUM_FIELD ( F16,               GLFW_KEY_F16 ),
-        __C_ENG_ENUM_FIELD ( F17,               GLFW_KEY_F17 ),
-        __C_ENG_ENUM_FIELD ( F18,               GLFW_KEY_F18 ),
-        __C_ENG_ENUM_FIELD ( F19,               GLFW_KEY_F19 ),
-        __C_ENG_ENUM_FIELD ( F20,               GLFW_KEY_F20 ),
-        __C_ENG_ENUM_FIELD ( F21,               GLFW_KEY_F21 ),
-        __C_ENG_ENUM_FIELD ( F22,               GLFW_KEY_F22 ),
-        __C_ENG_ENUM_FIELD ( F23,               GLFW_KEY_F23 ),
-        __C_ENG_ENUM_FIELD ( F24,               GLFW_KEY_F24 ),
-        __C_ENG_ENUM_FIELD ( F25,               GLFW_KEY_F25 ),
-        __C_ENG_ENUM_FIELD ( Keypad0,           GLFW_KEY_KP_0 ),
-        __C_ENG_ENUM_FIELD ( Keypad1,           GLFW_KEY_KP_1 ),
-        __C_ENG_ENUM_FIELD ( Keypad2,           GLFW_KEY_KP_2 ),
-        __C_ENG_ENUM_FIELD ( Keypad3,           GLFW_KEY_KP_3 ),
-        __C_ENG_ENUM_FIELD ( Keypad4,           GLFW_KEY_KP_4 ),
-        __C_ENG_ENUM_FIELD ( Keypad5,           GLFW_KEY_KP_5 ),
-        __C_ENG_ENUM_FIELD ( Keypad6,           GLFW_KEY_KP_6 ),
-        __C_ENG_ENUM_FIELD ( Keypad7,           GLFW_KEY_KP_7 ),
-        __C_ENG_ENUM_FIELD ( Keypad8,           GLFW_KEY_KP_8 ),
-        __C_ENG_ENUM_FIELD ( Keypad9,           GLFW_KEY_KP_9 ),
-        __C_ENG_ENUM_FIELD ( KeypadDecimal,     GLFW_KEY_KP_DECIMAL ),
-        __C_ENG_ENUM_FIELD ( KeypadDivide,      GLFW_KEY_KP_DIVIDE ),
-        __C_ENG_ENUM_FIELD ( KeypadMultiply,    GLFW_KEY_KP_MULTIPLY ),
-        __C_ENG_ENUM_FIELD ( KeypadSubtract,    GLFW_KEY_KP_SUBTRACT ),
-        __C_ENG_ENUM_FIELD ( KeypadAdd,         GLFW_KEY_KP_ADD ),
-        __C_ENG_ENUM_FIELD ( KeypadEnter,       GLFW_KEY_KP_ENTER ),
-        __C_ENG_ENUM_FIELD ( KeypadEqual,       GLFW_KEY_KP_EQUAL ),
-        __C_ENG_ENUM_FIELD ( LeftShift,         GLFW_KEY_LEFT_SHIFT ),
-        __C_ENG_ENUM_FIELD ( LeftControl,       GLFW_KEY_LEFT_CONTROL ),
-        __C_ENG_ENUM_FIELD ( LeftAlt,           GLFW_KEY_LEFT_ALT ),
-        __C_ENG_ENUM_FIELD ( LeftSuper,         GLFW_KEY_LEFT_SUPER ),
-        __C_ENG_ENUM_FIELD ( RightShift,        GLFW_KEY_RIGHT_SHIFT ),
-        __C_ENG_ENUM_FIELD ( RightControl,      GLFW_KEY_RIGHT_CONTROL ),
-        __C_ENG_ENUM_FIELD ( RightAlt,          GLFW_KEY_RIGHT_ALT ),
-        __C_ENG_ENUM_FIELD ( RightSuper,        GLFW_KEY_RIGHT_SUPER ),
-        __C_ENG_ENUM_FIELD ( Menu,              GLFW_KEY_MENU )
+    Enum {
+        Field ( Unknown,           GLFW_KEY_UNKNOWN ),
+        Field ( Space,             GLFW_KEY_SPACE ),
+        Field ( Apostrophe,        GLFW_KEY_APOSTROPHE ),
+        Field ( Comma,             GLFW_KEY_COMMA ), /* , */
+        Field ( Minus,             GLFW_KEY_MINUS ), /* - */
+        Field ( Period,            GLFW_KEY_PERIOD ), /* . */
+        Field ( Slash,             GLFW_KEY_SLASH ), /* / */
+        Field ( 0,                 GLFW_KEY_0 ),
+        Field ( 1,                 GLFW_KEY_1 ),
+        Field ( 2,                 GLFW_KEY_2 ),
+        Field ( 3,                 GLFW_KEY_3 ),
+        Field ( 4,                 GLFW_KEY_4 ),
+        Field ( 5,                 GLFW_KEY_5 ),
+        Field ( 6,                 GLFW_KEY_6 ),
+        Field ( 7,                 GLFW_KEY_7 ),
+        Field ( 8,                 GLFW_KEY_8 ),
+        Field ( 9,                 GLFW_KEY_9 ),
+        Field ( Semicolon,         GLFW_KEY_SEMICOLON ), /* ; */
+        Field ( Equal,             GLFW_KEY_EQUAL ), /* = */
+        Field ( A,                 GLFW_KEY_A ),
+        Field ( B,                 GLFW_KEY_B ),
+        Field ( C,                 GLFW_KEY_C ),
+        Field ( D,                 GLFW_KEY_D ),
+        Field ( E,                 GLFW_KEY_E ),
+        Field ( F,                 GLFW_KEY_F ),
+        Field ( G,                 GLFW_KEY_G ),
+        Field ( H,                 GLFW_KEY_H ),
+        Field ( I,                 GLFW_KEY_I ),
+        Field ( J,                 GLFW_KEY_J ),
+        Field ( K,                 GLFW_KEY_K ),
+        Field ( L,                 GLFW_KEY_L ),
+        Field ( M,                 GLFW_KEY_M ),
+        Field ( N,                 GLFW_KEY_N ),
+        Field ( O,                 GLFW_KEY_O ),
+        Field ( P,                 GLFW_KEY_P ),
+        Field ( Q,                 GLFW_KEY_Q ),
+        Field ( R,                 GLFW_KEY_R ),
+        Field ( S,                 GLFW_KEY_S ),
+        Field ( T,                 GLFW_KEY_T ),
+        Field ( U,                 GLFW_KEY_U ),
+        Field ( V,                 GLFW_KEY_V ),
+        Field ( W,                 GLFW_KEY_W ),
+        Field ( X,                 GLFW_KEY_X ),
+        Field ( Y,                 GLFW_KEY_Y ),
+        Field ( Z,                 GLFW_KEY_Z ),
+        Field ( LeftBracket,       GLFW_KEY_LEFT_BRACKET ), /* [ */
+        Field ( Backslash,         GLFW_KEY_BACKSLASH ), /* \ */
+        Field ( RightBracket,      GLFW_KEY_RIGHT_BRACKET ), /* ] */
+        Field ( GraveAccent,       GLFW_KEY_GRAVE_ACCENT ), /* ` */
+        Field ( World1,            GLFW_KEY_WORLD_1 ), /* non-US #1 */
+        Field ( World2,            GLFW_KEY_WORLD_2 ), /* non-US #2 */
+        Field ( Escape,            GLFW_KEY_ESCAPE ),
+        Field ( Enter,             GLFW_KEY_ENTER ),
+        Field ( Tab,               GLFW_KEY_TAB ),
+        Field ( Backspace,         GLFW_KEY_BACKSPACE ),
+        Field ( Insert,            GLFW_KEY_INSERT ),
+        Field ( Delete,            GLFW_KEY_DELETE ),
+        Field ( Right,             GLFW_KEY_RIGHT ),
+        Field ( Left,              GLFW_KEY_LEFT ),
+        Field ( Down,              GLFW_KEY_DOWN ),
+        Field ( Up,                GLFW_KEY_UP ),
+        Field ( PageUp,            GLFW_KEY_PAGE_UP ),
+        Field ( PageDown,          GLFW_KEY_PAGE_DOWN ),
+        Field ( Home,              GLFW_KEY_HOME ),
+        Field ( End,               GLFW_KEY_END ),
+        Field ( CapsLock,          GLFW_KEY_CAPS_LOCK ),
+        Field ( ScrollLock,        GLFW_KEY_SCROLL_LOCK ),
+        Field ( NumLock,           GLFW_KEY_NUM_LOCK ),
+        Field ( PrintScreen,       GLFW_KEY_PRINT_SCREEN ),
+        Field ( Pause,             GLFW_KEY_PAUSE ),
+        Field ( F1,                GLFW_KEY_F1 ),
+        Field ( F2,                GLFW_KEY_F2 ),
+        Field ( F3,                GLFW_KEY_F3 ),
+        Field ( F4,                GLFW_KEY_F4 ),
+        Field ( F5,                GLFW_KEY_F5 ),
+        Field ( F6,                GLFW_KEY_F6 ),
+        Field ( F7,                GLFW_KEY_F7 ),
+        Field ( F8,                GLFW_KEY_F8 ),
+        Field ( F9,                GLFW_KEY_F9 ),
+        Field ( F10,               GLFW_KEY_F10 ),
+        Field ( F11,               GLFW_KEY_F11 ),
+        Field ( F12,               GLFW_KEY_F12 ),
+        Field ( F13,               GLFW_KEY_F13 ),
+        Field ( F14,               GLFW_KEY_F14 ),
+        Field ( F15,               GLFW_KEY_F15 ),
+        Field ( F16,               GLFW_KEY_F16 ),
+        Field ( F17,               GLFW_KEY_F17 ),
+        Field ( F18,               GLFW_KEY_F18 ),
+        Field ( F19,               GLFW_KEY_F19 ),
+        Field ( F20,               GLFW_KEY_F20 ),
+        Field ( F21,               GLFW_KEY_F21 ),
+        Field ( F22,               GLFW_KEY_F22 ),
+        Field ( F23,               GLFW_KEY_F23 ),
+        Field ( F24,               GLFW_KEY_F24 ),
+        Field ( F25,               GLFW_KEY_F25 ),
+        Field ( Keypad0,           GLFW_KEY_KP_0 ),
+        Field ( Keypad1,           GLFW_KEY_KP_1 ),
+        Field ( Keypad2,           GLFW_KEY_KP_2 ),
+        Field ( Keypad3,           GLFW_KEY_KP_3 ),
+        Field ( Keypad4,           GLFW_KEY_KP_4 ),
+        Field ( Keypad5,           GLFW_KEY_KP_5 ),
+        Field ( Keypad6,           GLFW_KEY_KP_6 ),
+        Field ( Keypad7,           GLFW_KEY_KP_7 ),
+        Field ( Keypad8,           GLFW_KEY_KP_8 ),
+        Field ( Keypad9,           GLFW_KEY_KP_9 ),
+        Field ( KeypadDecimal,     GLFW_KEY_KP_DECIMAL ),
+        Field ( KeypadDivide,      GLFW_KEY_KP_DIVIDE ),
+        Field ( KeypadMultiply,    GLFW_KEY_KP_MULTIPLY ),
+        Field ( KeypadSubtract,    GLFW_KEY_KP_SUBTRACT ),
+        Field ( KeypadAdd,         GLFW_KEY_KP_ADD ),
+        Field ( KeypadEnter,       GLFW_KEY_KP_ENTER ),
+        Field ( KeypadEqual,       GLFW_KEY_KP_EQUAL ),
+        Field ( LeftShift,         GLFW_KEY_LEFT_SHIFT ),
+        Field ( LeftControl,       GLFW_KEY_LEFT_CONTROL ),
+        Field ( LeftAlt,           GLFW_KEY_LEFT_ALT ),
+        Field ( LeftSuper,         GLFW_KEY_LEFT_SUPER ),
+        Field ( RightShift,        GLFW_KEY_RIGHT_SHIFT ),
+        Field ( RightControl,      GLFW_KEY_RIGHT_CONTROL ),
+        Field ( RightAlt,          GLFW_KEY_RIGHT_ALT ),
+        Field ( RightSuper,        GLFW_KEY_RIGHT_SUPER ),
+        Field ( Menu,              GLFW_KEY_MENU )
     };
 
-#pragma pop_macro("__C_ENG_OBJECT_TYPE")
-#pragma pop_macro("__C_ENG_OBJECT_NAME")
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
 
 
-#pragma push_macro("__C_ENG_OBJECT_NAME")
-#pragma push_macro("__C_ENG_OBJECT_TYPE")
+#define C_ENG_MAP_START     ENUM ( MouseButton, EXTERNAL_TYPE ( cds :: uint8 ) )
+#include <ObjectMapping.hpp>
 
-#undef  __C_ENG_OBJECT_NAME
-#undef  __C_ENG_OBJECT_TYPE
-#define __C_ENG_OBJECT_NAME MouseButton /* NOLINT(bugprone-reserved-identifier) */
-#define __C_ENG_OBJECT_TYPE cds :: sint16 /* NOLINT(bugprone-reserved-identifier) */
+    Enum {
+        Field ( 1,            GLFW_MOUSE_BUTTON_1 ),
+        Field ( 2,            GLFW_MOUSE_BUTTON_2 ),
+        Field ( 3,            GLFW_MOUSE_BUTTON_3 ),
+        Field ( 4,            GLFW_MOUSE_BUTTON_4 ),
+        Field ( 5,            GLFW_MOUSE_BUTTON_5 ),
+        Field ( 6,            GLFW_MOUSE_BUTTON_6 ),
+        Field ( 7,            GLFW_MOUSE_BUTTON_7 ),
+        Field ( 8,            GLFW_MOUSE_BUTTON_8 ),
 
-    __C_ENG_ENUM {
-        __C_ENG_ENUM_FIELD ( 1,            GLFW_MOUSE_BUTTON_1 ),
-        __C_ENG_ENUM_FIELD ( 2,            GLFW_MOUSE_BUTTON_2 ),
-        __C_ENG_ENUM_FIELD ( 3,            GLFW_MOUSE_BUTTON_3 ),
-        __C_ENG_ENUM_FIELD ( 4,            GLFW_MOUSE_BUTTON_4 ),
-        __C_ENG_ENUM_FIELD ( 5,            GLFW_MOUSE_BUTTON_5 ),
-        __C_ENG_ENUM_FIELD ( 6,            GLFW_MOUSE_BUTTON_6 ),
-        __C_ENG_ENUM_FIELD ( 7,            GLFW_MOUSE_BUTTON_7 ),
-        __C_ENG_ENUM_FIELD ( 8,            GLFW_MOUSE_BUTTON_8 ),
+        Field ( Left,         MouseButton1 ),
+        Field ( Right,        MouseButton2 ),
+        Field ( Middle,       MouseButton3 ),
 
-        __C_ENG_ENUM_FIELD ( Left,         MouseButton1 ),
-        __C_ENG_ENUM_FIELD ( Right,        MouseButton2 ),
-        __C_ENG_ENUM_FIELD ( Middle,       MouseButton3 ),
-
-        __C_ENG_ENUM_FIELD ( Undefined,    0xffu )
+        Field ( Undefined,    0xffu )
     };
 
-#pragma pop_macro("__C_ENG_OBJECT_TYPE")
-#pragma pop_macro("__C_ENG_OBJECT_NAME")
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
 
 
-#pragma push_macro("__C_ENG_OBJECT_NAME")
-#pragma push_macro("__C_ENG_OBJECT_TYPE")
+#define C_ENG_MAP_START     ENUM ( WindowFlag, EXTERNAL_TYPE ( cds :: uint16 ) )
+#include <ObjectMapping.hpp>
 
-#undef  __C_ENG_OBJECT_NAME
-#undef  __C_ENG_OBJECT_TYPE
-#define __C_ENG_OBJECT_NAME WindowFlag /* NOLINT(bugprone-reserved-identifier) */
-#define __C_ENG_OBJECT_TYPE cds :: sint16 /* NOLINT(bugprone-reserved-identifier) */
+    Enum {
+        Field ( None,                      0x0000 ),
+        Field ( Resizable,                 0x0001 ),
+        Field ( Borderless,                0x0002 ),
+        Field ( StartMinimized,            0x0004 ),
+        Field ( GrabFocusOnOpen,           0x0008 ),
+        Field ( RestorePreviousMode,       0x0010 ),
+        Field ( StayOnTop,                 0x0020 ),
+        Field ( StartMaximized,            0x0040 ),
+        Field ( CenterCursorOnCreate,      0x0080 ),
+        Field ( TransparentFramebuffer,    0x0100 ),
+        Field ( GrabFocusOnRaise,          0x0200 ),
+        Field ( ScaleToMonitor,            0x0400 ),
 
-    __C_ENG_ENUM {
-        __C_ENG_ENUM_FIELD ( None,                      0x0000 ),
-        __C_ENG_ENUM_FIELD ( Resizable,                 0x0001 ),
-        __C_ENG_ENUM_FIELD ( Borderless,                0x0002 ),
-        __C_ENG_ENUM_FIELD ( StartMinimized,            0x0004 ),
-        __C_ENG_ENUM_FIELD ( GrabFocusOnOpen,           0x0008 ),
-        __C_ENG_ENUM_FIELD ( RestorePreviousMode,       0x0010 ),
-        __C_ENG_ENUM_FIELD ( StayOnTop,                 0x0020 ),
-        __C_ENG_ENUM_FIELD ( StartMaximized,            0x0040 ),
-        __C_ENG_ENUM_FIELD ( CenterCursorOnCreate,      0x0080 ),
-        __C_ENG_ENUM_FIELD ( TransparentFramebuffer,    0x0100 ),
-        __C_ENG_ENUM_FIELD ( GrabFocusOnRaise,          0x0200 ),
-        __C_ENG_ENUM_FIELD ( ScaleToMonitor,            0x0400 ),
-
-        __C_ENG_ENUM_FIELD ( MaxValue,                  WindowFlagScaleToMonitor )
+        Field ( MaxValue,                  WindowFlagScaleToMonitor )
     };
 
-#pragma pop_macro("__C_ENG_OBJECT_TYPE")
-#pragma pop_macro("__C_ENG_OBJECT_NAME")
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
 
 
-#pragma push_macro("__C_ENG_OBJECT_NAME")
-#pragma push_macro("__C_ENG_OBJECT_TYPE")
+#define C_ENG_MAP_START     ENUM ( WindowType, EXTERNAL_TYPE ( cds :: uint8 ) )
+#include <ObjectMapping.hpp>
 
-#undef  __C_ENG_OBJECT_NAME
-#undef  __C_ENG_OBJECT_TYPE
-#define __C_ENG_OBJECT_NAME WindowType /* NOLINT(bugprone-reserved-identifier) */
-#define __C_ENG_OBJECT_TYPE cds :: sint16 /* NOLINT(bugprone-reserved-identifier) */
-
-    __C_ENG_ENUM {
-        __C_ENG_ENUM_FIELD ( Windowed,              0x00 ),
-        __C_ENG_ENUM_FIELD ( Fullscreen,            0x01 ),
-        __C_ENG_ENUM_FIELD ( WindowedFullscreen,    0x02 )
+    Enum {
+        Field ( Windowed,              0x00 ),
+        Field ( Fullscreen,            0x01 ),
+        Field ( WindowedFullscreen,    0x02 )
     };
 
-#pragma pop_macro("__C_ENG_OBJECT_TYPE")
-#pragma pop_macro("__C_ENG_OBJECT_NAME")
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
 
 
-#pragma push_macro("__C_ENG_OBJECT_NAME")
-#pragma push_macro("__C_ENG_OBJECT_TYPE")
+#define C_ENG_MAP_START     ENUM ( ControllerHatState, EXTERNAL_TYPE ( cds :: uint8 ) )
+#include <ObjectMapping.hpp>
 
-#undef  __C_ENG_OBJECT_NAME
-#undef  __C_ENG_OBJECT_TYPE
-#define __C_ENG_OBJECT_NAME ControllerHatState /* NOLINT(bugprone-reserved-identifier) */
-#define __C_ENG_OBJECT_TYPE cds :: sint16 /* NOLINT(bugprone-reserved-identifier) */
-
-    __C_ENG_ENUM {
-        __C_ENG_ENUM_FIELD ( Centered,  GLFW_HAT_CENTERED ),
-        __C_ENG_ENUM_FIELD ( Up,        GLFW_HAT_UP ),
-        __C_ENG_ENUM_FIELD ( Left,      GLFW_HAT_LEFT ),
-        __C_ENG_ENUM_FIELD ( Right,     GLFW_HAT_RIGHT ),
-        __C_ENG_ENUM_FIELD ( Down,      GLFW_HAT_DOWN ),
-        __C_ENG_ENUM_FIELD ( LeftUp,    GLFW_HAT_LEFT_UP ),
-        __C_ENG_ENUM_FIELD ( LeftDown,  GLFW_HAT_LEFT_DOWN ),
-        __C_ENG_ENUM_FIELD ( RightUp,   GLFW_HAT_RIGHT_UP ),
-        __C_ENG_ENUM_FIELD ( RightDown, GLFW_HAT_RIGHT_DOWN )
+    Enum {
+        Field ( Centered,  GLFW_HAT_CENTERED ),
+        Field ( Up,        GLFW_HAT_UP ),
+        Field ( Left,      GLFW_HAT_LEFT ),
+        Field ( Right,     GLFW_HAT_RIGHT ),
+        Field ( Down,      GLFW_HAT_DOWN ),
+        Field ( LeftUp,    GLFW_HAT_LEFT_UP ),
+        Field ( LeftDown,  GLFW_HAT_LEFT_DOWN ),
+        Field ( RightUp,   GLFW_HAT_RIGHT_UP ),
+        Field ( RightDown, GLFW_HAT_RIGHT_DOWN )
     };
 
-#pragma pop_macro("__C_ENG_OBJECT_TYPE")
-#pragma pop_macro("__C_ENG_OBJECT_NAME")
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
 
 
-#pragma push_macro ("__C_ENG_OBJECT_NAME")
 
-#undef __C_ENG_OBJECT_NAME
-#define __C_ENG_OBJECT_NAME Position /* NOLINT(bugprone-reserved-identifier) */
+#define C_ENG_MAP_START     STRUCT ( Position, NO_PARENT )
+#include <ObjectMapping.hpp>
 
-    __C_ENG_STRUCT {
+    Struct {
         cds :: uint32 x;
         cds :: uint32 y;
     };
+    
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
 
-#pragma pop_macro ("__C_ENG_OBJECT_NAME")
 
+#define C_ENG_MAP_START     STRUCT ( Size, NO_PARENT )
+#include <ObjectMapping.hpp>
 
-#pragma push_macro ("__C_ENG_OBJECT_NAME")
-
-#undef __C_ENG_OBJECT_NAME
-#define __C_ENG_OBJECT_NAME Size /* NOLINT(bugprone-reserved-identifier) */
-
-    __C_ENG_STRUCT {
+    Struct {
         cds :: uint32 width;
         cds :: uint32 height;
     };
 
-#pragma pop_macro ("__C_ENG_OBJECT_NAME")
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
 
 
-#pragma push_macro ("__C_ENG_OBJECT_NAME")
+#define C_ENG_MAP_START     STRUCT ( ColorChannelsDepth, NO_PARENT )
+#include <ObjectMapping.hpp>
 
-#undef __C_ENG_OBJECT_NAME
-#define __C_ENG_OBJECT_NAME ColorChannelsDepth /* NOLINT(bugprone-reserved-identifier) */
-
-    __C_ENG_STRUCT {
+    Struct {
         cds :: uint32 red;
         cds :: uint32 green;
         cds :: uint32 blue;
     };
 
-#pragma pop_macro ("__C_ENG_OBJECT_NAME")
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
 
 
-#pragma push_macro ("__C_ENG_OBJECT_NAME")
+#define C_ENG_MAP_START     STRUCT ( MonitorVideoModeProperties, NO_PARENT )
+#include <ObjectMapping.hpp>
 
-#undef __C_ENG_OBJECT_NAME
-#define __C_ENG_OBJECT_NAME MonitorVideoModeProperties /* NOLINT(bugprone-reserved-identifier) */
-
-    __C_ENG_STRUCT {
+    Struct {
         __C_ENG_TYPE ( Size )               size;
         __C_ENG_TYPE ( ColorChannelsDepth ) colorChannelsDepth;
         cds :: uint32                       refreshRate;
     };
 
-#pragma pop_macro ("__C_ENG_OBJECT_NAME")
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
 
 
-#pragma push_macro ("__C_ENG_OBJECT_NAME")
+#define C_ENG_MAP_START     STRUCT ( ContentScale, NO_PARENT )
+#include <ObjectMapping.hpp>
 
-#undef __C_ENG_OBJECT_NAME
-#define __C_ENG_OBJECT_NAME ContentScale /* NOLINT(bugprone-reserved-identifier) */
-
-    __C_ENG_STRUCT {
+    Struct {
         float x;
         float y;
     };
 
-#pragma pop_macro ("__C_ENG_OBJECT_NAME")
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
 
 
-#pragma push_macro ("__C_ENG_OBJECT_NAME")
+#define C_ENG_MAP_START     STRUCT ( MonitorWorkArea, NO_PARENT )
+#include <ObjectMapping.hpp>
 
-#undef __C_ENG_OBJECT_NAME
-#define __C_ENG_OBJECT_NAME MonitorWorkArea /* NOLINT(bugprone-reserved-identifier) */
-
-    __C_ENG_STRUCT {
+    Struct {
         __C_ENG_TYPE ( Position )   position;
         __C_ENG_TYPE ( Size )       size;
     };
 
-#pragma pop_macro ("__C_ENG_OBJECT_NAME")
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
 
 
     __C_ENG_ALIAS ( MonitorName,            cds :: StringLiteral );
@@ -450,28 +401,24 @@ namespace engine {
     __C_ENG_ALIAS ( WindowFlags,            __C_ENG_TYPE ( Flags ) );
 
 
+#define C_ENG_MAP_START     STRUCT ( MonitorGammaRamp, NO_PARENT )
+#include <ObjectMapping.hpp>
 
-#pragma push_macro ("__C_ENG_OBJECT_NAME")
-
-#undef __C_ENG_OBJECT_NAME
-#define __C_ENG_OBJECT_NAME MonitorGammaRamp /* NOLINT(bugprone-reserved-identifier) */
-
-    __C_ENG_STRUCT {
+    Struct {
         cds :: uint32                           size;
         __C_ENG_TYPE ( MonitorGammaRampValue )  red;
         __C_ENG_TYPE ( MonitorGammaRampValue )  green;
         __C_ENG_TYPE ( MonitorGammaRampValue )  blue;
     };
 
-#pragma pop_macro ("__C_ENG_OBJECT_NAME")
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
 
 
-#pragma push_macro ("__C_ENG_OBJECT_NAME")
+#define C_ENG_MAP_START     STRUCT ( MonitorProperties, NO_PARENT )
+#include <ObjectMapping.hpp>
 
-#undef __C_ENG_OBJECT_NAME
-#define __C_ENG_OBJECT_NAME MonitorProperties /* NOLINT(bugprone-reserved-identifier) */
-
-    __C_ENG_STRUCT {
+    Struct {
         __C_ENG_TYPE ( MonitorName )                name;
         __C_ENG_TYPE ( Size )                       physicalSizeMM;
         __C_ENG_TYPE ( MonitorContentScale )        contentScale;
@@ -480,7 +427,8 @@ namespace engine {
         __C_ENG_TYPE ( MonitorVideoModeProperties ) activeVideoMode;
     };
 
-#pragma pop_macro ("__C_ENG_OBJECT_NAME")
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
 
 
     __C_ENG_NO_DISCARD auto toString ( bool ) noexcept -> cds :: StringLiteral;

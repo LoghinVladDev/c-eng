@@ -9,9 +9,9 @@ using namespace engine; // NOLINT(clion-misra-cpp2008-7-3-4)
 
 auto vulkan :: toString (
         vulkan :: __C_ENG_TYPE ( Result ) result
-) noexcept -> cds :: StringLiteral {
+) noexcept -> StringLiteral {
 
-    cds :: StringLiteral asString = "";
+    StringLiteral asString = "";
 
     switch ( result ) {
 
@@ -118,9 +118,9 @@ auto vulkan :: toString (
 
 auto vulkan :: toString (
         __C_ENG_TYPE ( StructureType ) type
-) noexcept -> cds :: StringLiteral {
+) noexcept -> StringLiteral {
 
-    cds :: StringLiteral asString = "";
+    StringLiteral asString = "";
 
     switch ( type ) {
 
@@ -1700,7 +1700,7 @@ auto vulkan :: toString (
 
 auto vulkan :: toString (
         __C_ENG_TYPE ( Offset2D ) const & offset
-) noexcept -> cds :: String {
+) noexcept -> String {
 
     return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( Offset2D ) ) " "
             "{ x = "_s  + offset.x +
@@ -1710,7 +1710,7 @@ auto vulkan :: toString (
 
 auto vulkan :: toString (
         __C_ENG_TYPE ( Offset3D ) const & offset
-) noexcept -> cds :: String {
+) noexcept -> String {
 
     return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( Offset3D ) ) " "
             "{ x = "_s  + offset.x +
@@ -1721,7 +1721,7 @@ auto vulkan :: toString (
 
 auto vulkan :: toString (
         __C_ENG_TYPE ( Extent2D ) const & extent
-) noexcept -> cds :: String {
+) noexcept -> String {
 
     return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( Extent2D ) ) " "
             "{ width = "_s  + extent.width +
@@ -1731,7 +1731,7 @@ auto vulkan :: toString (
 
 auto vulkan :: toString (
         __C_ENG_TYPE ( Extent3D ) const & extent
-) noexcept -> cds :: String {
+) noexcept -> String {
 
     return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( Extent3D ) ) " "
             "{ width = "_s  + extent.width +
@@ -1742,10 +1742,47 @@ auto vulkan :: toString (
 
 auto vulkan :: toString (
         __C_ENG_TYPE ( Rect ) const & rect
-) noexcept -> cds :: String {
+) noexcept -> String {
 
     return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( Offset2D ) ) " "
             "{ offset = "   + toString ( rect.offset ) +
             ", extent = "   + toString ( rect.extent ) +
             " }";
+}
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( Version ) const & version
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( Version ) ) " "
+            "{ variant = "_s    + version.variant   +
+            ", major = "        + version.major     +
+            ", minor = "        + version.minor     +
+            ", patch = "        + version.patch     +
+            " }";
+}
+
+auto vulkan :: uInt32ToInstanceVersion (
+        uint32 rawInstanceVersion
+) noexcept -> __C_ENG_TYPE ( Version ) {
+
+    __C_ENG_TYPE ( Version )    instanceVersion {};
+
+    instanceVersion.variant = static_cast < uint8 > ( VK_API_VERSION_VARIANT ( rawInstanceVersion ) ); // NOLINT(clion-misra-cpp2008-5-2-4)
+    instanceVersion.major = static_cast < uint8 > ( VK_API_VERSION_MAJOR ( rawInstanceVersion ) ); // NOLINT(clion-misra-cpp2008-5-2-4)
+    instanceVersion.minor = static_cast < uint16 > ( VK_API_VERSION_MINOR ( rawInstanceVersion ) ); // NOLINT(clion-misra-cpp2008-5-2-4)
+    instanceVersion.patch = static_cast < uint16 > ( VK_API_VERSION_PATCH ( rawInstanceVersion ) ); // NOLINT(clion-misra-cpp2008-5-2-4)
+
+    return instanceVersion;
+}
+
+auto vulkan :: instanceVersionToUInt32 (
+        __C_ENG_TYPE ( Version ) const & version
+) noexcept -> uint32 {
+    return VK_MAKE_API_VERSION (  // NOLINT(clion-misra-cpp2008-5-2-4)
+            version.variant,
+            version.major,
+            version.minor,
+            version.patch
+    );
 }

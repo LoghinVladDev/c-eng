@@ -26,19 +26,20 @@ static auto controllerConnectEventRootCallback (
     sint32
 ) noexcept -> void;
 
+
+#define C_ENG_MAP_START     STRUCT ( ControllerHandler, NO_PARENT )
+#include <ObjectMapping.hpp>
+
 namespace engine {
 
-#undef __C_ENG_OBJECT_NAME
-#define __C_ENG_OBJECT_NAME ControllerHandler /* NOLINT(bugprone-reserved-identifier) */
-
-    __C_ENG_STRUCT {
+    Struct {
         __C_ENG_TYPE ( Controller ) * connectedControllers [ __C_ENG_TYPE(Controller) :: controllerCapacity ] { nullptr }; // NOLINT(clion-misra-cpp2008-11-0-1)
         uint32 connectedControllerCount {0U}; // NOLINT(clion-misra-cpp2008-11-0-1)
 
         inline auto connectController ( sint32 ) noexcept -> void;
         inline auto disconnectController ( sint32 ) noexcept -> void;
 
-        __C_ENG_CONSTRUCTOR () noexcept {
+        Constructor () noexcept {
             (void) glfwSetJoystickCallback ( & controllerConnectEventRootCallback );
 
             for ( sint32 joystickID = 0; joystickID <= GLFW_JOYSTICK_LAST; ++ joystickID ) {
@@ -68,7 +69,7 @@ namespace engine {
             }
         }
 
-        __C_ENG_DESTRUCTOR () noexcept {
+        Destructor () noexcept {
             for ( uint32 i = 0U; i < connectedControllerCount; ++ i ) {
                 delete connectedControllers[ static_cast < sint32 > ( i ) ];
             }
@@ -77,11 +78,11 @@ namespace engine {
 
 }
 
-static __C_ENG_SELF handler;
+static Self handler;
 static __C_ENG_TYPE ( Engine ) * pGlobalEngine;
 
 
-auto __C_ENG_SELF :: connectController (
+auto Self :: connectController (
         sint32 controllerID
 ) noexcept -> void {
 
@@ -114,7 +115,7 @@ auto __C_ENG_SELF :: connectController (
     (void) __C_ENG_TYPE ( Logger ) :: instance ().info ( "Controller "_s + controllerID + " Connected" );
 }
 
-auto __C_ENG_SELF :: disconnectController (
+auto Self :: disconnectController (
         sint32 controllerID
 ) noexcept -> void {
 
@@ -148,12 +149,15 @@ auto __C_ENG_SELF :: disconnectController (
 
 }
 
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
 
-#undef __C_ENG_OBJECT_NAME
-#define __C_ENG_OBJECT_NAME Controller /* NOLINT(bugprone-reserved-identifier) */
+
+#define C_ENG_MAP_START     CLASS ( Controller, EXTERNAL_PARENT ( Object ) )
+#include <ObjectMapping.hpp>
 
 
-auto __C_ENG_SELF :: setEngine (
+auto Self :: setEngine (
         __C_ENG_TYPE ( Engine ) * pEngine
 ) noexcept -> void {
     pGlobalEngine = pEngine;
@@ -176,15 +180,15 @@ static auto controllerConnectEventRootCallback (
     }
 }
 
-__C_ENG_MAYBE_UNUSED auto __C_ENG_SELF :: connectedControllerCount () noexcept -> uint32 {
+__C_ENG_MAYBE_UNUSED auto Self :: connectedControllerCount () noexcept -> uint32 {
     return handler.connectedControllerCount;
 }
 
-__C_ENG_MAYBE_UNUSED auto __C_ENG_SELF :: connectedControllers () noexcept -> __C_ENG_SELF ** {
+__C_ENG_MAYBE_UNUSED auto Self :: connectedControllers () noexcept -> Self ** {
     return handler.connectedControllers;
 }
 
-auto __C_ENG_SELF :: updateEvents () noexcept -> void {
+auto Self :: updateEvents () noexcept -> void {
 
     for ( uint32 i = 0U; i < handler.connectedControllerCount; ++ i ) {
         handler.connectedControllers[i]->update();
@@ -215,7 +219,7 @@ struct RawHatEvent {
 };
 
 struct RawControllerEvent { // NOLINT(clion-misra-cpp2008-0-1-7)
-    __C_ENG_SELF :: Handle  handle;
+    Self :: Handle  handle;
     RawControllerEventType     type;
 
     union { // NOLINT(clion-misra-cpp2008-9-5-1)
@@ -394,12 +398,12 @@ auto __C_ENG_TYPE ( Joystick ) :: update () noexcept -> void {
 }
 
 static inline auto controllerAxisEventRootCallback (
-        __C_ENG_SELF :: Handle  handle,
+        Self :: Handle  handle,
         uint16                  axis,
         float                   newValue,
         float                   oldValue
 ) noexcept -> void {
-    auto pObject = reinterpret_cast < __C_ENG_SELF * > ( glfwGetJoystickUserPointer ( handle ) );
+    auto pObject = reinterpret_cast < Self * > ( glfwGetJoystickUserPointer ( handle ) );
     if ( pGlobalEngine != nullptr ) {
 
         __C_ENG_TYPE ( ControllerAxisEvent ) event (
@@ -415,11 +419,11 @@ static inline auto controllerAxisEventRootCallback (
 }
 
 static inline auto controllerButtonEventRootCallback (
-        __C_ENG_SELF :: Handle  handle,
+        Self :: Handle  handle,
         uint16                  button,
         bool                    pressed
 ) noexcept -> void {
-    auto pObject = reinterpret_cast < __C_ENG_SELF * > ( glfwGetJoystickUserPointer ( handle ) );
+    auto pObject = reinterpret_cast < Self * > ( glfwGetJoystickUserPointer ( handle ) );
     if ( pGlobalEngine != nullptr ) {
 
         if ( pressed ) {
@@ -446,11 +450,11 @@ static inline auto controllerButtonEventRootCallback (
 }
 
 static inline auto controllerHatEventRootCallback (
-        __C_ENG_SELF :: Handle  handle,
+        Self :: Handle  handle,
         uint16                  hat,
         uint8                   state
 ) noexcept -> void {
-    auto pObject = reinterpret_cast < __C_ENG_SELF * > ( glfwGetJoystickUserPointer ( handle ) );
+    auto pObject = reinterpret_cast < Self * > ( glfwGetJoystickUserPointer ( handle ) );
     if ( pGlobalEngine != nullptr ) {
 
         __C_ENG_TYPE ( ControllerHatEvent ) event (
@@ -466,13 +470,13 @@ static inline auto controllerHatEventRootCallback (
 
 static engine :: utility :: SimpleEventQueue < __C_ENG_TYPE ( ControllerEvent ) * > customEvents;
 
-__C_ENG_MAYBE_UNUSED auto __C_ENG_SELF :: handleEvent (
+__C_ENG_MAYBE_UNUSED auto Self :: handleEvent (
         __C_ENG_TYPE ( ControllerEvent ) const & event
 ) noexcept -> void {
     (void) customEvents.push( event.copy() );
 }
 
-auto __C_ENG_SELF :: pollEvents() noexcept -> void {
+auto Self :: pollEvents() noexcept -> void {
 
     for ( uint32 i = 0U; i < activeEventCount; ++ i ) {
         if ( activeEvents[i].type == RawControllerEventType :: Axis ) {
@@ -507,7 +511,7 @@ auto __C_ENG_SELF :: pollEvents() noexcept -> void {
 
     while ( ! customEvents.empty() ) {
         auto currentEvent = customEvents.pop();
-        
+
         if ( pGlobalEngine != nullptr ) {
             (void) pGlobalEngine->eventHandler().controllerCustomEvent ( currentEvent );
         }
@@ -518,14 +522,14 @@ auto __C_ENG_SELF :: pollEvents() noexcept -> void {
     activeEventCount = 0U;
 }
 
-auto __C_ENG_SELF :: toString () const noexcept -> String {
-    return __C_ENG_STRINGIFY ( __C_ENG_SELF ) " "
+auto Self :: toString () const noexcept -> String {
+    return __C_ENG_STRINGIFY ( Self ) " "
            "{ handle = "_s      + this->handle() +
            ", name = "          + this->name() +
            " }";
 }
 
-auto __C_ENG_SELF :: equals (
+auto Self :: equals (
         Object const & object
 ) const noexcept -> bool {
 

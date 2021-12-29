@@ -8,28 +8,26 @@
 
 #include <MouseEvent.hpp>
 
+
+#define C_ENG_MAP_START     CLASS ( MouseReleaseEvent, ENGINE_PARENT ( MouseEvent ) )
+#include <ObjectMapping.hpp>
+
 namespace engine {
 
-
-#pragma push_macro ("__C_ENG_OBJECT_NAME")
-
-#undef __C_ENG_OBJECT_NAME
-#define __C_ENG_OBJECT_NAME MouseReleaseEvent /* NOLINT(bugprone-reserved-identifier) */
-
-    __C_ENG_CLASS : public __C_ENG_TYPE ( MouseEvent ) {
+    Class {
         __C_ENG_CLASS_IMMUTABLE_PRIMITIVE_FIELD ( __C_ENG_TYPE ( MouseButton ), button, __C_ENG_TYPE ( MouseButton ) :: MouseButtonUndefined )
         __C_ENG_CLASS_IMMUTABLE_PRIMITIVE_FIELD ( __C_ENG_TYPE ( KeyModifiers ), modifiers, __C_ENG_TYPE ( KeyModifier ) :: KeyModifierNone )
 
     public:
-        __C_ENG_DESTRUCTOR () noexcept override = default;
+        Destructor () noexcept override = default;
 
-        __C_ENG_CONSTRUCTOR (
+        Constructor (
                 __C_ENG_TYPE ( Window )               * window,
                 __C_ENG_TYPE ( Position )       const & position,
                 __C_ENG_TYPE ( MouseButton )            button,
                 __C_ENG_TYPE ( KeyModifiers )           modifiers
         ) noexcept :
-                __C_ENG_TYPE ( MouseEvent ) (
+                Parent (
                         window,
                         position
                 ),
@@ -42,8 +40,8 @@ namespace engine {
             return __C_ENG_TYPE ( EventType ) :: EventTypeMouseReleaseEvent;
         }
 
-        __C_ENG_NO_DISCARD inline auto copy () const noexcept -> __C_ENG_SELF * override {
-            return new __C_ENG_SELF ( * this );
+        __C_ENG_NO_DISCARD inline auto copy () const noexcept -> Self * override {
+            return new Self ( * this );
         }
 
         __C_ENG_NO_DISCARD inline auto hash () const noexcept -> cds :: Index override {
@@ -55,10 +53,10 @@ namespace engine {
         __C_ENG_NO_DISCARD auto equals ( cds :: Object const & ) const noexcept -> bool override;
     };
 
-#pragma pop_macro ("__C_ENG_OBJECT_NAME")
-
-
 }
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
 
 
 #endif //__C_ENG_MOUSERELEASEEVENT_HPP

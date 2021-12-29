@@ -8,6 +8,10 @@
 #include <Preprocess.hpp>
 #include <CDS/Utility>
 
+
+#define C_ENG_MAP_START     CLASS ( EventHandler, EXTERNAL_PARENT ( cds :: Object ) )
+#include <ObjectMapping.hpp>
+
 namespace engine {
 
     __C_ENG_PRE_DECLARE_CLASS ( Event );
@@ -49,55 +53,50 @@ namespace engine {
     __C_ENG_PRE_DECLARE_CLASS ( MouseReleaseEvent );
     __C_ENG_PRE_DECLARE_CLASS ( MouseScrollEvent );
 
-
-#pragma push_macro ("__C_ENG_OBJECT_NAME")
-
-#undef __C_ENG_OBJECT_NAME
-#define __C_ENG_OBJECT_NAME EventHandler /* NOLINT(bugprone-reserved-identifier) */
-
-    __C_ENG_CLASS : public cds :: Object {
+    Class {
     public:
-        auto customEvent ( __C_ENG_TYPE ( Event ) * ) const noexcept -> __C_ENG_SELF const &;
+        auto customEvent ( __C_ENG_TYPE ( Event ) * ) const noexcept -> Self const &;
 
-        auto controllerCustomEvent ( __C_ENG_TYPE ( ControllerEvent ) * ) const noexcept -> __C_ENG_SELF const &;
-        auto controllerAxisEvent ( __C_ENG_TYPE ( ControllerAxisEvent ) * ) const noexcept -> __C_ENG_SELF const &;
-        auto controllerButtonPressEvent ( __C_ENG_TYPE ( ControllerButtonPressEvent ) * ) const noexcept -> __C_ENG_SELF const &;
-        auto controllerButtonReleaseEvent ( __C_ENG_TYPE ( ControllerButtonReleaseEvent ) * ) const noexcept -> __C_ENG_SELF const &;
-        auto controllerConnectEvent ( __C_ENG_TYPE ( ControllerConnectEvent ) * ) const noexcept -> __C_ENG_SELF const &;
-        auto controllerDisconnectEvent ( __C_ENG_TYPE ( ControllerDisconnectEvent ) * ) const noexcept -> __C_ENG_SELF const &;
-        auto controllerHatEvent ( __C_ENG_TYPE ( ControllerHatEvent ) * ) const noexcept -> __C_ENG_SELF const &;
+        auto controllerCustomEvent ( __C_ENG_TYPE ( ControllerEvent ) * ) const noexcept -> Self const &;
+        auto controllerAxisEvent ( __C_ENG_TYPE ( ControllerAxisEvent ) * ) const noexcept -> Self const &;
+        auto controllerButtonPressEvent ( __C_ENG_TYPE ( ControllerButtonPressEvent ) * ) const noexcept -> Self const &;
+        auto controllerButtonReleaseEvent ( __C_ENG_TYPE ( ControllerButtonReleaseEvent ) * ) const noexcept -> Self const &;
+        auto controllerConnectEvent ( __C_ENG_TYPE ( ControllerConnectEvent ) * ) const noexcept -> Self const &;
+        auto controllerDisconnectEvent ( __C_ENG_TYPE ( ControllerDisconnectEvent ) * ) const noexcept -> Self const &;
+        auto controllerHatEvent ( __C_ENG_TYPE ( ControllerHatEvent ) * ) const noexcept -> Self const &;
 
-        auto windowCustomEvent ( __C_ENG_TYPE ( WindowEvent ) * ) const noexcept -> __C_ENG_SELF const &;
-        auto windowResizeEvent ( __C_ENG_TYPE ( WindowResizeEvent ) * ) const noexcept -> __C_ENG_SELF const &;
-        auto windowCloseEvent ( __C_ENG_TYPE ( WindowCloseEvent ) * ) const noexcept -> __C_ENG_SELF const &;
-        auto windowFrameBufferResizeEvent ( __C_ENG_TYPE ( WindowFrameBufferResizeEvent ) * ) const noexcept -> __C_ENG_SELF const &;
-        auto windowContentScaleEvent ( __C_ENG_TYPE ( WindowContentScaleEvent ) * ) const noexcept -> __C_ENG_SELF const &;
-        auto windowMoveEvent ( __C_ENG_TYPE ( WindowMoveEvent ) * ) const noexcept -> __C_ENG_SELF const &;
-        auto windowRestoreEvent ( __C_ENG_TYPE ( WindowRestoreEvent ) * ) const noexcept -> __C_ENG_SELF const &;
-        auto windowMinimizeEvent ( __C_ENG_TYPE ( WindowMinimizeEvent ) * ) const noexcept -> __C_ENG_SELF const &;
-        auto windowMaximizeEvent ( __C_ENG_TYPE ( WindowMaximizeEvent ) * ) const noexcept -> __C_ENG_SELF const &;
-        auto windowGainFocusEvent ( __C_ENG_TYPE ( WindowGainFocusEvent ) * ) const noexcept -> __C_ENG_SELF const &;
-        auto windowLoseFocusEvent ( __C_ENG_TYPE ( WindowLoseFocusEvent ) * ) const noexcept -> __C_ENG_SELF const &;
-        auto windowRefreshRequestEvent ( __C_ENG_TYPE ( WindowRefreshRequestEvent ) * ) const noexcept -> __C_ENG_SELF const &;
+        auto windowCustomEvent ( __C_ENG_TYPE ( WindowEvent ) * ) const noexcept -> Self const &;
+        auto windowResizeEvent ( __C_ENG_TYPE ( WindowResizeEvent ) * ) const noexcept -> Self const &;
+        auto windowCloseEvent ( __C_ENG_TYPE ( WindowCloseEvent ) * ) const noexcept -> Self const &;
+        auto windowFrameBufferResizeEvent ( __C_ENG_TYPE ( WindowFrameBufferResizeEvent ) * ) const noexcept -> Self const &;
+        auto windowContentScaleEvent ( __C_ENG_TYPE ( WindowContentScaleEvent ) * ) const noexcept -> Self const &;
+        auto windowMoveEvent ( __C_ENG_TYPE ( WindowMoveEvent ) * ) const noexcept -> Self const &;
+        auto windowRestoreEvent ( __C_ENG_TYPE ( WindowRestoreEvent ) * ) const noexcept -> Self const &;
+        auto windowMinimizeEvent ( __C_ENG_TYPE ( WindowMinimizeEvent ) * ) const noexcept -> Self const &;
+        auto windowMaximizeEvent ( __C_ENG_TYPE ( WindowMaximizeEvent ) * ) const noexcept -> Self const &;
+        auto windowGainFocusEvent ( __C_ENG_TYPE ( WindowGainFocusEvent ) * ) const noexcept -> Self const &;
+        auto windowLoseFocusEvent ( __C_ENG_TYPE ( WindowLoseFocusEvent ) * ) const noexcept -> Self const &;
+        auto windowRefreshRequestEvent ( __C_ENG_TYPE ( WindowRefreshRequestEvent ) * ) const noexcept -> Self const &;
 
-        auto keyCustomEvent ( __C_ENG_TYPE ( KeyEvent ) * ) const noexcept -> __C_ENG_SELF const &;
-        auto keyPressEvent ( __C_ENG_TYPE ( KeyPressEvent ) * ) const noexcept -> __C_ENG_SELF const &;
-        auto keyReleaseEvent ( __C_ENG_TYPE ( KeyReleaseEvent ) * ) const noexcept -> __C_ENG_SELF const &;
+        auto keyCustomEvent ( __C_ENG_TYPE ( KeyEvent ) * ) const noexcept -> Self const &;
+        auto keyPressEvent ( __C_ENG_TYPE ( KeyPressEvent ) * ) const noexcept -> Self const &;
+        auto keyReleaseEvent ( __C_ENG_TYPE ( KeyReleaseEvent ) * ) const noexcept -> Self const &;
 
-        auto mouseCustomEvent ( __C_ENG_TYPE ( MouseEvent ) * ) const noexcept -> __C_ENG_SELF const &;
-        auto mouseMoveEvent ( __C_ENG_TYPE ( MouseMoveEvent ) * ) const noexcept -> __C_ENG_SELF const &;
-        auto mousePressEvent ( __C_ENG_TYPE ( MousePressEvent ) * ) const noexcept -> __C_ENG_SELF const &;
-        auto mouseReleaseEvent ( __C_ENG_TYPE ( MouseReleaseEvent ) * ) const noexcept -> __C_ENG_SELF const &;
-        auto mouseEnterEvent ( __C_ENG_TYPE ( MouseEnterEvent ) * ) const noexcept -> __C_ENG_SELF const &;
-        auto mouseLeaveEvent ( __C_ENG_TYPE ( MouseLeaveEvent ) * ) const noexcept -> __C_ENG_SELF const &;
-        auto mouseScrollEvent ( __C_ENG_TYPE ( MouseScrollEvent ) * ) const noexcept -> __C_ENG_SELF const &;
+        auto mouseCustomEvent ( __C_ENG_TYPE ( MouseEvent ) * ) const noexcept -> Self const &;
+        auto mouseMoveEvent ( __C_ENG_TYPE ( MouseMoveEvent ) * ) const noexcept -> Self const &;
+        auto mousePressEvent ( __C_ENG_TYPE ( MousePressEvent ) * ) const noexcept -> Self const &;
+        auto mouseReleaseEvent ( __C_ENG_TYPE ( MouseReleaseEvent ) * ) const noexcept -> Self const &;
+        auto mouseEnterEvent ( __C_ENG_TYPE ( MouseEnterEvent ) * ) const noexcept -> Self const &;
+        auto mouseLeaveEvent ( __C_ENG_TYPE ( MouseLeaveEvent ) * ) const noexcept -> Self const &;
+        auto mouseScrollEvent ( __C_ENG_TYPE ( MouseScrollEvent ) * ) const noexcept -> Self const &;
 
         __C_ENG_NO_DISCARD auto toString () const noexcept -> cds :: String override;
     };
 
-#pragma pop_macro ("__C_ENG_OBJECT_NAME")
-
-
 }
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
 
 #endif //__C_ENG_EVENTHANDLER_HPP

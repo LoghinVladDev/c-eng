@@ -36,12 +36,11 @@ using namespace cds; // NOLINT(clion-misra-cpp2008-7-3-4)
 using namespace engine; // NOLINT(clion-misra-cpp2008-7-3-4)
 
 
-#undef __C_ENG_OBJECT_NAME
-#define __C_ENG_OBJECT_NAME Window /* NOLINT(bugprone-reserved-identifier) */
-
+#define C_ENG_MAP_START     CLASS ( Window, EXTERNAL_PARENT ( cds :: Object ) )
+#include <ObjectMapping.hpp>
 
 bool __GLFWActive = false; // NOLINT(bugprone-reserved-identifier)
-static Array < __C_ENG_SELF const * > activeWindows;
+static Array < Self const * > activeWindows;
 
 constexpr static auto GLFWErrorCodeName ( int errorCode ) noexcept -> StringLiteral {
     StringLiteral errorName;
@@ -118,54 +117,54 @@ static auto terminateGLFW () noexcept -> void {
 }
 
 static auto windowFrameBufferResizeEventRootCallback (
-        __C_ENG_SELF :: Handle,
+        Self :: Handle,
         sint32,
         sint32
 ) noexcept -> void;
 
 static auto windowResizeEventRootCallback (
-        __C_ENG_SELF :: Handle,
+        Self :: Handle,
         sint32,
         sint32
 ) noexcept -> void;
 
 static auto windowCloseEventRootCallback (
-        __C_ENG_SELF :: Handle
+        Self :: Handle
 ) noexcept -> void;
 
 static auto windowContentScaleEventRootCallback (
-        __C_ENG_SELF :: Handle,
+        Self :: Handle,
         float,
         float
 ) noexcept -> void;
 
 static auto windowMoveEventRootCallback (
-        __C_ENG_SELF :: Handle,
+        Self :: Handle,
         sint32,
         sint32
 ) noexcept -> void;
 
 static auto windowMinimizeEventRootCallback (
-        __C_ENG_SELF :: Handle,
+        Self :: Handle,
         sint32
 ) noexcept -> void;
 
 static auto windowMaximizeEventRootCallback (
-        __C_ENG_SELF :: Handle,
+        Self :: Handle,
         sint32
 ) noexcept -> void;
 
 static auto windowFocusEventRootCallback (
-        __C_ENG_SELF :: Handle,
+        Self :: Handle,
         sint32
 ) noexcept -> void;
 
 static auto windowRefreshRequestEventRootCallback (
-        __C_ENG_SELF :: Handle
+        Self :: Handle
 ) noexcept -> void;
 
 static auto keyEventRootCallback (
-        __C_ENG_SELF :: Handle,
+        Self :: Handle,
         sint32,
         sint32,
         sint32,
@@ -173,30 +172,30 @@ static auto keyEventRootCallback (
 ) noexcept -> void;
 
 static auto mouseMoveEventRootCallback (
-        __C_ENG_SELF :: Handle,
+        Self :: Handle,
         double,
         double
 ) noexcept -> void;
 
 static auto mouseEnterEventRootCallback (
-        __C_ENG_SELF :: Handle,
+        Self :: Handle,
         sint32
 ) noexcept -> void;
 
 static auto mousePressEventRootCallback (
-        __C_ENG_SELF :: Handle,
+        Self :: Handle,
         sint32,
         sint32,
         sint32
 ) noexcept -> void;
 
 static auto mouseScrollEventRootCallback (
-        __C_ENG_SELF :: Handle,
+        Self :: Handle,
         double,
         double
 ) noexcept -> void;
 
-auto __C_ENG_SELF :: init () noexcept (false) -> __C_ENG_SELF & {
+auto Self :: init () noexcept (false) -> Self & {
     __initializeGLFW();
 
     (void) __C_ENG_TYPE ( Logger ) :: instance().info("Initializing Window");
@@ -292,12 +291,12 @@ auto __C_ENG_SELF :: init () noexcept (false) -> __C_ENG_SELF & {
     return * this;
 }
 
-auto __C_ENG_SELF :: setEngine ( __C_ENG_TYPE ( Engine ) * engine ) noexcept -> __C_ENG_SELF & {
+auto Self :: setEngine ( __C_ENG_TYPE ( Engine ) * engine ) noexcept -> Self & {
     this->_engine = engine;
     return * this;
 }
 
-auto __C_ENG_SELF :: grabMouseCursor () noexcept -> __C_ENG_SELF & {
+auto Self :: grabMouseCursor () noexcept -> Self & {
     glfwSetInputMode ( this->_handle, GLFW_CURSOR, GLFW_CURSOR_DISABLED );
     if ( glfwRawMouseMotionSupported() ) { // NOLINT(clion-misra-cpp2008-5-0-13)
         glfwSetInputMode ( this->_handle, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE );
@@ -306,12 +305,12 @@ auto __C_ENG_SELF :: grabMouseCursor () noexcept -> __C_ENG_SELF & {
     return * this;
 }
 
-auto __C_ENG_SELF :: releaseMouseCursor () noexcept -> __C_ENG_SELF & {
+auto Self :: releaseMouseCursor () noexcept -> Self & {
     glfwSetInputMode ( this->_handle, GLFW_CURSOR, GLFW_CURSOR_NORMAL );
     return * this;
 }
 
-auto __C_ENG_SELF :: clear () noexcept -> __C_ENG_SELF & {
+auto Self :: clear () noexcept -> Self & {
     if ( this->_handle == nullptr ) {
         return * this;
     }
@@ -328,9 +327,9 @@ auto __C_ENG_SELF :: clear () noexcept -> __C_ENG_SELF & {
     return * this;
 }
 
-__C_ENG_MAYBE_UNUSED auto __C_ENG_SELF :: setTitle (
+__C_ENG_MAYBE_UNUSED auto Self :: setTitle (
         String const & title
-) noexcept -> __C_ENG_SELF & {
+) noexcept -> Self & {
 
     this->_title = title;
 
@@ -341,10 +340,10 @@ __C_ENG_MAYBE_UNUSED auto __C_ENG_SELF :: setTitle (
     return * this;
 }
 
-__C_ENG_MAYBE_UNUSED auto __C_ENG_SELF :: setWindowType (
+__C_ENG_MAYBE_UNUSED auto Self :: setWindowType (
         __C_ENG_TYPE ( WindowType )         windowType,
         __C_ENG_TYPE ( Monitor )    const * pMonitor
-) noexcept -> __C_ENG_SELF & {
+) noexcept -> Self & {
 
     this->_type     = windowType;
     this->_monitor  = pMonitor;
@@ -362,9 +361,9 @@ __C_ENG_MAYBE_UNUSED auto __C_ENG_SELF :: setWindowType (
     return * this;
 }
 
-auto __C_ENG_SELF :: resize (
+auto Self :: resize (
         __C_ENG_TYPE ( Size ) const & size
-) noexcept -> __C_ENG_SELF & {
+) noexcept -> Self & {
 
     this->_size = size;
 
@@ -384,9 +383,9 @@ auto __C_ENG_SELF :: resize (
     return * this;
 }
 
-auto __C_ENG_SELF :: move (
+auto Self :: move (
         __C_ENG_TYPE ( Position ) const & position
-) noexcept -> __C_ENG_SELF & {
+) noexcept -> Self & {
 
     this->_position = position;
 
@@ -401,7 +400,7 @@ auto __C_ENG_SELF :: move (
     return * this;
 }
 
-auto __C_ENG_SELF :: makeWindowed () noexcept -> __C_ENG_SELF & {
+auto Self :: makeWindowed () noexcept -> Self & {
     if ( this->_type == __C_ENG_TYPE ( WindowType ) :: WindowTypeWindowed ) {
         return * this;
     } else {
@@ -458,9 +457,9 @@ auto __C_ENG_SELF :: makeWindowed () noexcept -> __C_ENG_SELF & {
     return * this;
 }
 
-auto __C_ENG_SELF :: makeFullscreen (
+auto Self :: makeFullscreen (
         __C_ENG_TYPE ( Monitor ) const * pMonitor
-) noexcept -> __C_ENG_SELF & {
+) noexcept -> Self & {
 
     if ( this->_type == __C_ENG_TYPE ( WindowType ) :: WindowTypeFullscreen && this->_monitor == pMonitor ) {
         return * this;
@@ -492,9 +491,9 @@ auto __C_ENG_SELF :: makeFullscreen (
     return * this;
 }
 
-auto __C_ENG_SELF :: makeWindowedFullscreen (
+auto Self :: makeWindowedFullscreen (
         __C_ENG_TYPE ( Monitor ) const * pMonitor
-) noexcept -> __C_ENG_SELF & {
+) noexcept -> Self & {
 
     if ( this->_type == __C_ENG_TYPE ( WindowType ) :: WindowTypeWindowedFullscreen && this->_monitor == pMonitor ) {
         return * this;
@@ -543,7 +542,7 @@ auto __C_ENG_SELF :: makeWindowedFullscreen (
 namespace engine {
 
     auto __updateWindowSize (
-            __C_ENG_SELF * pWindow,
+            Self * pWindow,
             cds :: uint32 width,
             cds :: uint32 height
     ) noexcept -> void {
@@ -557,11 +556,11 @@ namespace engine {
 }
 
 static auto windowFrameBufferResizeEventRootCallback (
-        __C_ENG_SELF :: Handle  handle,
-        sint32                  width,
-        sint32                  height
+        Self :: Handle  handle,
+        sint32          width,
+        sint32          height
 ) noexcept -> void {
-    auto pObject = reinterpret_cast < __C_ENG_SELF * > ( glfwGetWindowUserPointer ( handle ) );
+    auto pObject = reinterpret_cast < Self * > ( glfwGetWindowUserPointer ( handle ) );
     if ( pObject->engine() != nullptr ) {
         __C_ENG_TYPE ( WindowFrameBufferResizeEvent ) event (
                 pObject,
@@ -577,11 +576,11 @@ static auto windowFrameBufferResizeEventRootCallback (
 }
 
 static auto windowResizeEventRootCallback (
-        __C_ENG_SELF :: Handle  handle,
-        sint32                  width,
-        sint32                  height
+        Self :: Handle  handle,
+        sint32          width,
+        sint32          height
 ) noexcept -> void {
-    auto pObject = reinterpret_cast < __C_ENG_SELF * > ( glfwGetWindowUserPointer ( handle ) );
+    auto pObject = reinterpret_cast < Self * > ( glfwGetWindowUserPointer ( handle ) );
     if ( pObject->engine() != nullptr ) {
         __C_ENG_TYPE ( WindowResizeEvent ) event (
                 pObject,
@@ -603,9 +602,9 @@ static auto windowResizeEventRootCallback (
 }
 
 static auto windowCloseEventRootCallback (
-        __C_ENG_SELF :: Handle handle
+        Self :: Handle handle
 ) noexcept -> void {
-    auto pObject = reinterpret_cast < __C_ENG_SELF * > ( glfwGetWindowUserPointer ( handle ) );
+    auto pObject = reinterpret_cast < Self * > ( glfwGetWindowUserPointer ( handle ) );
     if ( pObject->engine() != nullptr ) {
 
         __C_ENG_TYPE ( WindowCloseEvent ) event ( pObject );
@@ -619,11 +618,11 @@ static auto windowCloseEventRootCallback (
 }
 
 static auto windowContentScaleEventRootCallback (
-        __C_ENG_SELF :: Handle  handle,
-        float                   xScale,
-        float                   yScale
+        Self :: Handle  handle,
+        float           xScale,
+        float           yScale
 ) noexcept -> void {
-    auto pObject = reinterpret_cast < __C_ENG_SELF * > ( glfwGetWindowUserPointer ( handle ) );
+    auto pObject = reinterpret_cast < Self * > ( glfwGetWindowUserPointer ( handle ) );
     if ( pObject->engine() != nullptr ) {
 
         __C_ENG_TYPE ( WindowContentScaleEvent ) event (
@@ -640,11 +639,11 @@ static auto windowContentScaleEventRootCallback (
 }
 
 static auto windowMoveEventRootCallback (
-        __C_ENG_SELF :: Handle  handle,
-        sint32                  xPos,
-        sint32                  yPos
+        Self :: Handle  handle,
+        sint32          xPos,
+        sint32          yPos
 ) noexcept -> void {
-    auto pObject = reinterpret_cast < __C_ENG_SELF * > ( glfwGetWindowUserPointer ( handle ) );
+    auto pObject = reinterpret_cast < Self * > ( glfwGetWindowUserPointer ( handle ) );
     if ( pObject->engine() != nullptr ) {
 
         __C_ENG_TYPE ( WindowMoveEvent ) event (
@@ -662,10 +661,10 @@ static auto windowMoveEventRootCallback (
 }
 
 static auto windowMinimizeEventRootCallback (
-        __C_ENG_SELF :: Handle  handle,
-        sint32                  minimized
+        Self :: Handle  handle,
+        sint32          minimized
 ) noexcept -> void {
-    auto pObject = reinterpret_cast < __C_ENG_SELF * > ( glfwGetWindowUserPointer ( handle ) );
+    auto pObject = reinterpret_cast < Self * > ( glfwGetWindowUserPointer ( handle ) );
     if ( pObject->engine() != nullptr ) {
 
         if ( static_cast < bool > ( minimized ) ) { // NOLINT(clion-misra-cpp2008-5-0-13)
@@ -689,10 +688,10 @@ static auto windowMinimizeEventRootCallback (
 }
 
 static auto windowMaximizeEventRootCallback (
-        __C_ENG_SELF :: Handle  handle,
-        sint32                  maximized
+        Self :: Handle  handle,
+        sint32          maximized
 ) noexcept -> void {
-    auto pObject = reinterpret_cast < __C_ENG_SELF * > ( glfwGetWindowUserPointer ( handle ) );
+    auto pObject = reinterpret_cast < Self * > ( glfwGetWindowUserPointer ( handle ) );
     if ( pObject->engine() != nullptr ) {
 
         if ( static_cast < bool > ( maximized ) ) { // NOLINT(clion-misra-cpp2008-5-0-13)
@@ -716,10 +715,10 @@ static auto windowMaximizeEventRootCallback (
 }
 
 static auto windowFocusEventRootCallback (
-        __C_ENG_SELF :: Handle  handle,
-        sint32                  focusGained
+        Self :: Handle  handle,
+        sint32          focusGained
 ) noexcept -> void {
-    auto pObject = reinterpret_cast < __C_ENG_SELF * > ( glfwGetWindowUserPointer ( handle ) );
+    auto pObject = reinterpret_cast < Self * > ( glfwGetWindowUserPointer ( handle ) );
     if ( pObject->engine() != nullptr ) {
 
         if ( static_cast < bool > ( focusGained ) ) { // NOLINT(clion-misra-cpp2008-5-0-13)
@@ -743,9 +742,9 @@ static auto windowFocusEventRootCallback (
 }
 
 static auto windowRefreshRequestEventRootCallback (
-        __C_ENG_SELF :: Handle handle
+        Self :: Handle handle
 ) noexcept -> void {
-    auto pObject = reinterpret_cast < __C_ENG_SELF * > ( glfwGetWindowUserPointer ( handle ) );
+    auto pObject = reinterpret_cast < Self * > ( glfwGetWindowUserPointer ( handle ) );
     if ( pObject->engine() != nullptr ) {
 
         __C_ENG_TYPE ( WindowRefreshRequestEvent ) event (
@@ -758,13 +757,13 @@ static auto windowRefreshRequestEventRootCallback (
 }
 
 static auto keyEventRootCallback (
-        __C_ENG_SELF :: Handle  handle,
-        sint32                  key,
-        sint32                  scanCode __C_ENG_MAYBE_UNUSED,
-        sint32                  action,
-        sint32                  modifiers
+        Self :: Handle  handle,
+        sint32          key,
+        sint32          scanCode __C_ENG_MAYBE_UNUSED,
+        sint32          action,
+        sint32          modifiers
 ) noexcept -> void {
-    auto pObject = reinterpret_cast < __C_ENG_SELF * > ( glfwGetWindowUserPointer ( handle ) );
+    auto pObject = reinterpret_cast < Self * > ( glfwGetWindowUserPointer ( handle ) );
     if ( pObject->engine() != nullptr ) {
 
         if ( action == GLFW_PRESS ) {
@@ -795,9 +794,9 @@ static auto keyEventRootCallback (
 namespace engine {
 
     auto __updateCursorPos (
-            __C_ENG_SELF  * window,
-            uint32          xPos,
-            uint32          yPos
+            Self  * window,
+            uint32  xPos,
+            uint32  yPos
     ) noexcept -> void {
 
         window->_mousePosition = ( __C_ENG_TYPE ( Position ) ) {
@@ -809,11 +808,11 @@ namespace engine {
 }
 
 static auto mouseMoveEventRootCallback (
-        __C_ENG_SELF :: Handle  handle,
+        Self :: Handle  handle,
         double                  xPos,
         double                  yPos
 ) noexcept -> void {
-    auto pObject = reinterpret_cast < __C_ENG_SELF * > ( glfwGetWindowUserPointer ( handle ) );
+    auto pObject = reinterpret_cast < Self * > ( glfwGetWindowUserPointer ( handle ) );
     if ( pObject->engine() != nullptr ) {
         auto castedXPos = static_cast < uint32 > ( xPos );
         auto castedYPos = static_cast < uint32 > ( yPos );
@@ -838,10 +837,10 @@ static auto mouseMoveEventRootCallback (
 }
 
 static auto mouseEnterEventRootCallback (
-        __C_ENG_SELF :: Handle  handle,
+        Self :: Handle  handle,
         sint32                  entered
 ) noexcept -> void {
-    auto pObject = reinterpret_cast < __C_ENG_SELF * > ( glfwGetWindowUserPointer ( handle ) );
+    auto pObject = reinterpret_cast < Self * > ( glfwGetWindowUserPointer ( handle ) );
     if ( pObject->engine() != nullptr ) {
         if ( static_cast < bool > ( entered ) ) { // NOLINT(clion-misra-cpp2008-5-0-13)
 
@@ -866,12 +865,12 @@ static auto mouseEnterEventRootCallback (
 }
 
 static auto mousePressEventRootCallback (
-        __C_ENG_SELF :: Handle  handle,
-        sint32                  button,
-        sint32                  action,
-        sint32                  modifiers
+        Self :: Handle  handle,
+        sint32          button,
+        sint32          action,
+        sint32          modifiers
 ) noexcept -> void {
-    auto pObject = reinterpret_cast < __C_ENG_SELF * > ( glfwGetWindowUserPointer ( handle ) );
+    auto pObject = reinterpret_cast < Self * > ( glfwGetWindowUserPointer ( handle ) );
     if ( pObject->engine() != nullptr ) {
         if ( action == GLFW_PRESS ) {
 
@@ -902,11 +901,11 @@ static auto mousePressEventRootCallback (
 }
 
 static auto mouseScrollEventRootCallback (
-        __C_ENG_SELF :: Handle  handle,
-        double                  xOffset,
-        double                  yOffset
+        Self :: Handle  handle,
+        double          xOffset,
+        double          yOffset
 ) noexcept -> void {
-    auto pObject = reinterpret_cast < __C_ENG_SELF * > ( glfwGetWindowUserPointer ( handle ) );
+    auto pObject = reinterpret_cast < Self * > ( glfwGetWindowUserPointer ( handle ) );
     if ( pObject->engine() != nullptr ) {
 
         __C_ENG_TYPE ( MouseScrollEvent ) event (
@@ -921,7 +920,7 @@ static auto mouseScrollEventRootCallback (
     }
 }
 
-auto __C_ENG_SELF :: monitorDisconnectedEvent () noexcept -> __C_ENG_SELF & {
+auto Self :: monitorDisconnectedEvent () noexcept -> Self & {
 
     return * this;
 }
@@ -968,7 +967,7 @@ static auto windowFlagGLFWValue ( __C_ENG_TYPE ( WindowFlag ) flag ) noexcept ->
     return GLFWValue;
 }
 
-auto __C_ENG_SELF :: applyFlagHints () const noexcept -> void {
+auto Self :: applyFlagHints () const noexcept -> void {
     for ( cds :: uint16 flag = 0x0001U; true; flag <<= 1 ) { // NOLINT(clion-misra-cpp2008-6-5-1)
         if ( ( flag & this->_flags ) != 0U ) {
             glfwWindowHint (
@@ -983,7 +982,7 @@ auto __C_ENG_SELF :: applyFlagHints () const noexcept -> void {
     }
 }
 
-auto __C_ENG_SELF :: updateWindowLimits () noexcept -> void { // NOLINT(readability-make-member-function-const)
+auto Self :: updateWindowLimits () noexcept -> void { // NOLINT(readability-make-member-function-const)
     if ( this->handle() == nullptr ) {
         return;
     }
@@ -1011,9 +1010,9 @@ auto __C_ENG_SELF :: updateWindowLimits () noexcept -> void { // NOLINT(readabil
     );
 }
 
-auto __C_ENG_SELF :: setMinimumSize (
+auto Self :: setMinimumSize (
         __C_ENG_TYPE ( Size ) const & size
-) noexcept -> __C_ENG_SELF & {
+) noexcept -> Self & {
 
     this->_minimumSize = size;
     this->updateWindowLimits();
@@ -1021,9 +1020,9 @@ auto __C_ENG_SELF :: setMinimumSize (
     return * this;
 }
 
-auto __C_ENG_SELF :: setMaximumSize (
+auto Self :: setMaximumSize (
         __C_ENG_TYPE ( Size ) const & size
-) noexcept -> __C_ENG_SELF & {
+) noexcept -> Self & {
 
     this->_maximumSize = size;
     this->updateWindowLimits();
@@ -1031,7 +1030,7 @@ auto __C_ENG_SELF :: setMaximumSize (
     return * this;
 }
 
-auto __C_ENG_SELF :: maximize () noexcept -> __C_ENG_SELF & {
+auto Self :: maximize () noexcept -> Self & {
     if ( this->handle() == nullptr ) {
         return * this;
     }
@@ -1041,7 +1040,7 @@ auto __C_ENG_SELF :: maximize () noexcept -> __C_ENG_SELF & {
     return * this;
 }
 
-auto __C_ENG_SELF :: minimize () noexcept -> __C_ENG_SELF & {
+auto Self :: minimize () noexcept -> Self & {
     if ( this->handle() == nullptr ) {
         return * this;
     }
@@ -1051,7 +1050,7 @@ auto __C_ENG_SELF :: minimize () noexcept -> __C_ENG_SELF & {
     return * this;
 }
 
-auto __C_ENG_SELF :: hide () noexcept -> __C_ENG_SELF & {
+auto Self :: hide () noexcept -> Self & {
     if ( this->handle() == nullptr ) {
         return * this;
     }
@@ -1061,7 +1060,7 @@ auto __C_ENG_SELF :: hide () noexcept -> __C_ENG_SELF & {
     return * this;
 }
 
-__C_ENG_MAYBE_UNUSED auto __C_ENG_SELF :: show () noexcept -> __C_ENG_SELF & {
+__C_ENG_MAYBE_UNUSED auto Self :: show () noexcept -> Self & {
     if ( this->handle() == nullptr ) {
         return * this;
     }
@@ -1071,7 +1070,7 @@ __C_ENG_MAYBE_UNUSED auto __C_ENG_SELF :: show () noexcept -> __C_ENG_SELF & {
     return * this;
 }
 
-__C_ENG_MAYBE_UNUSED auto __C_ENG_SELF :: grabInputFocus () noexcept -> __C_ENG_SELF & {
+__C_ENG_MAYBE_UNUSED auto Self :: grabInputFocus () noexcept -> Self & {
     if ( this->handle() == nullptr ) {
         return * this;
     }
@@ -1081,7 +1080,7 @@ __C_ENG_MAYBE_UNUSED auto __C_ENG_SELF :: grabInputFocus () noexcept -> __C_ENG_
     return * this;
 }
 
-__C_ENG_MAYBE_UNUSED auto __C_ENG_SELF :: requestAttention () noexcept -> __C_ENG_SELF & {
+__C_ENG_MAYBE_UNUSED auto Self :: requestAttention () noexcept -> Self & {
     if ( this->handle() == nullptr ) {
         return * this;
     }
@@ -1091,7 +1090,7 @@ __C_ENG_MAYBE_UNUSED auto __C_ENG_SELF :: requestAttention () noexcept -> __C_EN
     return * this;
 }
 
-auto __C_ENG_SELF :: pollEvents () noexcept -> __C_ENG_SELF & {
+auto Self :: pollEvents () noexcept -> Self & {
     glfwPollEvents();
 
     if ( this->engine() != nullptr ) {
@@ -1143,36 +1142,36 @@ auto __C_ENG_SELF :: pollEvents () noexcept -> __C_ENG_SELF & {
     return * this;
 }
 
-__C_ENG_MAYBE_UNUSED auto __C_ENG_SELF :: handleEvent (
+__C_ENG_MAYBE_UNUSED auto Self :: handleEvent (
         __C_ENG_TYPE ( WindowEvent ) const & event
-) noexcept -> __C_ENG_SELF & {
+) noexcept -> Self & {
     (void) this->_customWindowEvents.push ( event.copy() );
     return * this;
 }
 
-__C_ENG_MAYBE_UNUSED auto __C_ENG_SELF :: handleEvent (
+__C_ENG_MAYBE_UNUSED auto Self :: handleEvent (
         __C_ENG_TYPE ( MouseEvent ) const & event
-) noexcept -> __C_ENG_SELF & {
+) noexcept -> Self & {
     (void) this->_customMouseEvents.push ( event.copy() );
     return * this;
 }
 
-__C_ENG_MAYBE_UNUSED auto __C_ENG_SELF :: handleEvent (
+__C_ENG_MAYBE_UNUSED auto Self :: handleEvent (
         __C_ENG_TYPE ( KeyEvent ) const & event
-) noexcept -> __C_ENG_SELF & {
+) noexcept -> Self & {
     (void) this->_customKeyEvents.push ( event.copy() );
     return * this;
 }
 
-__C_ENG_MAYBE_UNUSED auto __C_ENG_SELF :: handleEvent (
+__C_ENG_MAYBE_UNUSED auto Self :: handleEvent (
         __C_ENG_TYPE ( Event ) const & event
-) noexcept -> __C_ENG_SELF & {
+) noexcept -> Self & {
     (void) this->_customEvents.push ( event.copy() );
     return * this;
 }
 
-auto __C_ENG_SELF :: toString () const noexcept -> String {
-    return __C_ENG_STRINGIFY ( __C_ENG_SELF ) " "
+auto Self :: toString () const noexcept -> String {
+    return __C_ENG_STRINGIFY ( Self ) " "
            "{ handle = "_s              + :: toString ( this->handle() ) +
            ", title = "                 + this->_title +
            ", position = "              + :: toString ( this->position() ) +
@@ -1192,7 +1191,7 @@ auto __C_ENG_SELF :: toString () const noexcept -> String {
            " }";
 }
 
-auto __C_ENG_SELF :: equals (
+auto Self :: equals (
         Object const & object
 ) const noexcept -> bool {
 

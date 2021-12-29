@@ -22,18 +22,17 @@ static auto monitorChangeDetectedCallback (
 ) noexcept -> void;
 
 
-#undef __C_ENG_OBJECT_NAME
-#define __C_ENG_OBJECT_NAME MonitorContainer /* NOLINT(bugprone-reserved-identifier) */
-
+#define C_ENG_MAP_START     STRUCT ( MonitorContainer, NO_PARENT )
+#include <ObjectMapping.hpp>
 
 namespace engine {
 
-    __C_ENG_STRUCT {
+    Struct {
         bool                                          monitorsQueried {false}; // NOLINT(clion-misra-cpp2008-11-0-1)
         Array < __C_ENG_TYPE ( Monitor ) const * >    monitors; // NOLINT(clion-misra-cpp2008-11-0-1)
         __C_ENG_TYPE ( Monitor ) const *              primaryMonitor {nullptr}; // NOLINT(clion-misra-cpp2008-11-0-1)
 
-        __C_ENG_CONSTRUCTOR () noexcept = default;
+        Constructor () noexcept = default;
 
         static auto queryProperties ( __C_ENG_TYPE ( Monitor ) * pMonitor ) noexcept -> void {
             pMonitor->_availableVideoModes.clear();
@@ -183,7 +182,7 @@ namespace engine {
 
         }
 
-        __C_ENG_DESTRUCTOR () noexcept {
+        Destructor () noexcept {
             for ( auto * e : monitors ) {
                 delete e;
             }
@@ -193,11 +192,11 @@ namespace engine {
         }
     };
 
-    static __C_ENG_SELF monitorContainer;
+    static Self monitorContainer;
 
 }
 
-auto __C_ENG_SELF :: logMonitorQueryResult () noexcept -> void {
+auto Self :: logMonitorQueryResult () noexcept -> void {
     (void) __C_ENG_TYPE ( Logger ) :: instance().info (
             "Found "_s + monitors.size() + " monitors"
     );
@@ -309,12 +308,14 @@ auto __C_ENG_SELF :: logMonitorQueryResult () noexcept -> void {
     }
 }
 
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
 
-#undef __C_ENG_OBJECT_NAME
-#define __C_ENG_OBJECT_NAME Monitor /* NOLINT(bugprone-reserved-identifier) */
 
+#define C_ENG_MAP_START     CLASS ( Monitor, EXTERNAL_PARENT ( cds :: Object ) )
+#include <ObjectMapping.hpp>
 
-auto __C_ENG_SELF :: monitors () noexcept -> Array < __C_ENG_SELF const * > const & {
+auto Self :: monitors () noexcept -> Array < Self const * > const & {
     if ( ! monitorContainer.monitorsQueried || ! __GLFWActive ) {
         monitorContainer.query();
     }
@@ -322,7 +323,7 @@ auto __C_ENG_SELF :: monitors () noexcept -> Array < __C_ENG_SELF const * > cons
     return monitorContainer.monitors;
 }
 
-auto __C_ENG_SELF :: primaryMonitor () noexcept -> __C_ENG_SELF const * {
+auto Self :: primaryMonitor () noexcept -> Self const * {
     if ( ! monitorContainer.monitorsQueried || ! __GLFWActive ) {
         monitorContainer.query();
     }
@@ -330,14 +331,14 @@ auto __C_ENG_SELF :: primaryMonitor () noexcept -> __C_ENG_SELF const * {
     return monitorContainer.primaryMonitor;
 }
 
-auto __C_ENG_SELF :: initMonitorHandler () noexcept -> void {
+auto Self :: initMonitorHandler () noexcept -> void {
     if ( ! monitorContainer.monitorsQueried || ! __GLFWActive ) {
         monitorContainer.query();
     }
 }
 
 static auto monitorChangeDetectedCallback (
-        __C_ENG_SELF :: Handle  handle,
+        Self :: Handle  handle,
         sint32                  event
 ) noexcept -> void {
 
@@ -359,7 +360,7 @@ static auto monitorChangeDetectedCallback (
                 " disconnected"
         );
 
-        __C_ENG_SELF const * pMonitor = nullptr;
+        Self const * pMonitor = nullptr;
         for ( auto * pActiveMonitor : monitorContainer.monitors ) {
             if ( pActiveMonitor->handle() == handle ) {
                 pMonitor = pActiveMonitor;
@@ -376,8 +377,8 @@ static auto monitorChangeDetectedCallback (
             (void) monitorContainer.monitors.removeAll ( pMonitor );
             if ( monitorContainer.primaryMonitor == pMonitor ) {
 
-                __C_ENG_SELF :: Handle newPrimaryMonitorHandle = glfwGetPrimaryMonitor();
-                __C_ENG_SELF const * newPrimaryMonitor = nullptr;
+                Self :: Handle newPrimaryMonitorHandle = glfwGetPrimaryMonitor();
+                Self const * newPrimaryMonitor = nullptr;
 
                 for ( auto const * pActiveMonitor : monitorContainer.monitors ) {
                     if ( pActiveMonitor->handle() == newPrimaryMonitorHandle ) {
@@ -410,16 +411,16 @@ static auto monitorChangeDetectedCallback (
 
 }
 
-__C_ENG_MAYBE_UNUSED auto __C_ENG_SELF :: setGamma (
+__C_ENG_MAYBE_UNUSED auto Self :: setGamma (
         float gammaValue
-) noexcept -> __C_ENG_SELF & {
+) noexcept -> Self & {
 
     glfwSetGamma ( this->handle(), gammaValue );
     return * this;
 }
 
-auto __C_ENG_SELF :: toString () const noexcept -> String {
-    return __C_ENG_STRINGIFY ( __C_ENG_SELF ) " "
+auto Self :: toString () const noexcept -> String {
+    return __C_ENG_STRINGIFY ( Self ) " "
            "{ handle = "_s              + :: toString ( this->handle() ) +
            "{ windowOnMonitor = "_s     + :: toString ( this->windowOnMonitor() ) +
            ", properties = "            + :: toString ( this->properties() ) +
@@ -427,7 +428,7 @@ auto __C_ENG_SELF :: toString () const noexcept -> String {
            " }";
 }
 
-auto __C_ENG_SELF :: equals (
+auto Self :: equals (
         Object const & object
 ) const noexcept -> bool {
 
@@ -442,3 +443,6 @@ auto __C_ENG_SELF :: equals (
 
     return this->handle() == pMonitor->handle();
 }
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>

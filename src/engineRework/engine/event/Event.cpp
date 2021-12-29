@@ -5,25 +5,23 @@
 #include "Event.hpp"
 
 #include <CDS/Long>
-#include <Window.hpp>
 
 
 using namespace cds; // NOLINT(clion-misra-cpp2008-7-3-4)
 using namespace engine; // NOLINT(clion-misra-cpp2008-7-3-4)
 
 
-#undef __C_ENG_OBJECT_NAME
-#define __C_ENG_OBJECT_NAME Event /* NOLINT(bugprone-reserved-identifier) */
+#define C_ENG_MAP_START     CLASS ( Event, NO_PARENT )
+#include <ObjectMapping.hpp>
 
-
-auto __C_ENG_SELF :: toString () const noexcept -> String {
-    return __C_ENG_STRINGIFY ( __C_ENG_SELF ) " "
+auto Self :: toString () const noexcept -> String {
+    return __C_ENG_STRINGIFY ( Self ) " "
            "{ type = "_s            + :: toString ( this->type() ) +
            ", windowHandle = "      + :: toString ( this->window() ) +
            " }";
 }
 
-auto __C_ENG_SELF :: equals (
+auto Self :: equals (
         Object const & object
 ) const noexcept -> bool {
 
@@ -31,7 +29,7 @@ auto __C_ENG_SELF :: equals (
         return true;
     }
 
-    auto pEvent = dynamic_cast < __C_ENG_SELF const * > ( & object );
+    auto pEvent = dynamic_cast < Self const * > ( & object );
     if ( pEvent == nullptr ) {
         return false;
     }

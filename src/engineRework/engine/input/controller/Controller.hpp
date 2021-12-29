@@ -8,18 +8,16 @@
 #include <Preprocess.hpp>
 #include <CDS/Array>
 
+
+#define C_ENG_MAP_START     CLASS ( Controller, EXTERNAL_PARENT ( cds :: Object ) )
+#include <ObjectMapping.hpp>
+
 namespace engine {
 
     __C_ENG_PRE_DECLARE_CLASS ( Engine );
     __C_ENG_PRE_DECLARE_CLASS ( ControllerEvent );
 
-
-#pragma push_macro ("__C_ENG_OBJECT_NAME")
-
-#undef __C_ENG_OBJECT_NAME
-#define __C_ENG_OBJECT_NAME Controller /* NOLINT(bugprone-reserved-identifier) */
-
-    __C_ENG_CLASS : public cds :: Object {
+    Class {
     public:
         using Handle = cds :: sint32;
         __C_ENG_CLASS_PRIMITIVE_CONSTANT ( cds :: uint32, controllerCapacity, 16u )
@@ -38,16 +36,16 @@ namespace engine {
 
         static auto setEngine ( __C_ENG_TYPE ( Engine ) * ) noexcept -> void;
 
-        __C_ENG_DESTRUCTOR () noexcept override = default;
+        Destructor () noexcept override = default;
 
         __C_ENG_NO_DISCARD __C_ENG_MAYBE_UNUSED static auto connectedControllerCount () noexcept -> cds :: uint32;
-        __C_ENG_NO_DISCARD __C_ENG_MAYBE_UNUSED static auto connectedControllers () noexcept -> __C_ENG_SELF **;
+        __C_ENG_NO_DISCARD __C_ENG_MAYBE_UNUSED static auto connectedControllers () noexcept -> Self **;
 
         __C_ENG_MAYBE_UNUSED static auto handleEvent ( __C_ENG_TYPE ( ControllerEvent ) const & ) noexcept -> void;
         static auto updateEvents () noexcept -> void;
         static auto pollEvents () noexcept -> void;
 
-        __C_ENG_NO_DISCARD inline auto copy () const noexcept -> __C_ENG_SELF * override {
+        __C_ENG_NO_DISCARD inline auto copy () const noexcept -> Self * override {
             return nullptr;
         }
 
@@ -59,10 +57,10 @@ namespace engine {
         __C_ENG_NO_DISCARD auto equals ( cds :: Object const & ) const noexcept -> bool override;
     };
 
-#pragma pop_macro ("__C_ENG_OBJECT_NAME")
-
-
 }
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
 
 
 #endif //__C_ENG_CONTROLLER_HPP

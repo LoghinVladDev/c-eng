@@ -9,26 +9,25 @@ using namespace cds; // NOLINT(clion-misra-cpp2008-7-3-4)
 using namespace engine; // NOLINT(clion-misra-cpp2008-7-3-4)
 
 
-#undef __C_ENG_OBJECT_NAME
-#define __C_ENG_OBJECT_NAME MouseMoveEvent /* NOLINT(bugprone-reserved-identifier) */
+#define C_ENG_MAP_START     CLASS ( MouseMoveEvent, ENGINE_PARENT ( MouseEvent ) )
+#include <ObjectMapping.hpp>
 
-
-auto __C_ENG_SELF :: toString () const noexcept -> String {
-    return __C_ENG_STRINGIFY ( __C_ENG_SELF ) " "
-           "{ base = "          + this->__C_ENG_TYPE(MouseEvent)::toString() +
+auto Self :: toString () const noexcept -> String {
+    return __C_ENG_STRINGIFY ( Self ) " "
+           "{ base = "          + this-> Parent :: toString() +
            ", oldPosition = "   + :: toString ( this->oldPosition() ) +
            " }";
 }
 
-auto __C_ENG_SELF :: equals (
+auto Self :: equals (
         Object const & object
 ) const noexcept -> bool {
 
-    if ( ! this->__C_ENG_TYPE(MouseEvent)::equals(object) ) {
+    if ( ! this-> Parent :: equals ( object ) ) {
         return false;
     }
 
-    auto pEvent = reinterpret_cast < __C_ENG_SELF const * > ( & object );
+    auto pEvent = reinterpret_cast < Self const * > ( & object );
 
     return :: equals ( this->oldPosition(), pEvent->oldPosition() );
 }
