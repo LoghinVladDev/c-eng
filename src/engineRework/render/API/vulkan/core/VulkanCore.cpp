@@ -4,6 +4,8 @@
 
 #include "VulkanCore.hpp"
 
+#include <Func.hpp>
+
 using namespace cds; // NOLINT(clion-misra-cpp2008-7-3-4)
 using namespace engine; // NOLINT(clion-misra-cpp2008-7-3-4)
 
@@ -110,6 +112,7 @@ auto vulkan :: toString (
 
 #endif
 
+        case vulkan :: __C_ENG_TYPE ( Result ) :: ResultErrorIllegalArgument:                        { asString = "Illegal Argument Passed to Binding Call";                                                                                                                                                                        break; }
         case vulkan :: __C_ENG_TYPE ( Result ) :: ResultUnknown:                                     { asString = "Unknown/Not Documented Result";                                                                                                                                                                                  break; }
     }
 
@@ -1696,6 +1699,35 @@ auto vulkan :: toString (
     return asString;
 }
 
+auto vulkan :: toString (
+        __C_ENG_TYPE ( DebugMessageSeverityFlag ) flag
+) noexcept -> StringLiteral {
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case __C_ENG_TYPE ( DebugMessageSeverityFlag ) :: DebugMessageSeverityFlagVerbose:  { asString = "Verbose"; break; }
+        case __C_ENG_TYPE ( DebugMessageSeverityFlag ) :: DebugMessageSeverityFlagInfo:     { asString = "Info";    break; }
+        case __C_ENG_TYPE ( DebugMessageSeverityFlag ) :: DebugMessageSeverityFlagWarning:  { asString = "Warning"; break; }
+        case __C_ENG_TYPE ( DebugMessageSeverityFlag ) :: DebugMessageSeverityFlagError:    { asString = "Error";   break; }
+    }
+
+    return asString;
+}
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( DebugMessageTypeFlag ) flag
+) noexcept -> StringLiteral {
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case __C_ENG_TYPE ( DebugMessageTypeFlag ) :: DebugMessageTypeFlagGeneral:      { asString = "General";     break; }
+        case __C_ENG_TYPE ( DebugMessageTypeFlag ) :: DebugMessageTypeFlagValidation:   { asString = "Validation";  break; }
+        case __C_ENG_TYPE ( DebugMessageTypeFlag ) :: DebugMessageTypeFlagPerformance:  { asString = "Performance"; break; }
+    }
+
+    return asString;
+}
+
 #include <CDS/String>
 
 auto vulkan :: toString (
@@ -1744,7 +1776,7 @@ auto vulkan :: toString (
         __C_ENG_TYPE ( Rect ) const & rect
 ) noexcept -> String {
 
-    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( Offset2D ) ) " "
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( Rect ) ) " "
             "{ offset = "   + toString ( rect.offset ) +
             ", extent = "   + toString ( rect.extent ) +
             " }";
@@ -1760,6 +1792,121 @@ auto vulkan :: toString (
             ", minor = "        + version.minor     +
             ", patch = "        + version.patch     +
             " }";
+}
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( ApplicationInfo ) const & createInfo
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( ApplicationInfo ) ) " "
+            "{ type = "_s           + toString ( createInfo.structureType ) +
+            ", next = "             + :: toString ( createInfo.pNext ) +
+            ", name = "             + createInfo.name +
+            ", version = "          + versionReadableFormat ( createInfo.version ) +
+            ", engineName = "       + createInfo.engineName +
+            ", engineVersion = "    + versionReadableFormat ( createInfo.engineVersion ) +
+            ", apiVersion = "       + versionReadableFormat ( createInfo.apiVersion ) +
+            " }";
+}
+
+#include <CDS/Long>
+auto vulkan :: toString (
+        __C_ENG_TYPE ( InstanceCreateInfo ) const & createInfo
+) noexcept -> String {
+
+    auto stringArrayToString = [] ( StringLiteral const * pLayerNames, uint32 layerCount ) noexcept -> String {
+        String asString = "[ ";
+
+        for ( uint32 i = 0U; i < layerCount; ++ i ) {
+            asString += pLayerNames[i] + ", "_s;
+        }
+
+        return asString.removePrefix(", ") + " ]";
+    };
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( InstanceCreateInfo ) ) " "
+            "{ type = "_s               + toString ( createInfo.structureType ) +
+            ", next = "                 + :: toString ( createInfo.pNext ) +
+            ", flags = "                + "0b" + Long ( createInfo.flags ).toString(2) +
+            ", applicationInfo = "      + :: toString ( createInfo.pApplicationInfo ) +
+            ", enabledLayers = "        + stringArrayToString ( createInfo.pEnabledLayerNames, createInfo.enabledLayerCount ) +
+            ", enabledExtensions = "    + stringArrayToString ( createInfo.pEnabledExtensionNames, createInfo.enabledExtensionCount ) +
+            " }";
+}
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( DebugMessengerCreateInfo ) const & createInfo
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( DebugMessengerCreateInfo ) ) " "
+            "{ type = "_s               + toString ( createInfo.structureType ) +
+            ", next = "                 + :: toString ( createInfo.pNext ) +
+            ", flags = "                + "0b" + Long ( createInfo.flags ).toString(2) +
+            ", messageSeverityFlags = " + "0b" + Long ( createInfo.messageSeverityFlags ).toString(2) +
+            ", messageTypeFlags = "     + "0b" + Long ( createInfo.messageTypeFlags ).toString(2) +
+            ", callback = "             + :: toString ( createInfo.callback ) +
+            ", userData = "             + :: toString ( createInfo.pCallbackUserData ) +
+            " }";
+}
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( LayerProperties ) const & properties
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( LayerProperties ) ) " "
+            "{ layerName = "_s      + properties.layerName +
+            ", specVersion = "      + versionReadableFormat ( properties.specVersion ) +
+            ", version = "          + properties.implementationVersion +
+            ", description = "      + properties.description +
+            " }";
+}
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( ExtensionProperties ) const & properties
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( ExtensionProperties ) ) " "
+            "{ layerName = "_s      + properties.name +
+            ", specVersion = "      + properties.specVersion +
+            " }";
+}
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( AllocationCallbacks ) const & allocationCallbacks
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( AllocationCallbacks ) ) " "
+            "{ allocationCallback = "_s                     + :: toString ( allocationCallbacks.allocationCallback ) +
+            ", reallocationCallback = "                     + :: toString ( allocationCallbacks.reallocationCallback ) +
+            ", freeCallback = "                             + :: toString ( allocationCallbacks.freeCallback ) +
+            ", internalAllocationNotificationCallback = "   + :: toString ( allocationCallbacks.internalAllocationNotificationCallback ) +
+            ", internalFreeNotificationCallback = "         + :: toString ( allocationCallbacks.internalFreeNotificationCallback ) +
+            " }";
+}
+
+auto vulkan :: compare (
+        __C_ENG_TYPE ( Version ) const & left,
+        __C_ENG_TYPE ( Version ) const & right
+) noexcept -> __C_ENG_TYPE ( CompareResult ) {
+
+    __C_ENG_TYPE ( CompareResult ) result;
+
+    result = engine :: compare ( left.variant, right.variant );
+    if ( result != __C_ENG_TYPE ( CompareResult ) :: CompareResultEquals ) {
+        return result;
+    }
+
+    result = engine :: compare ( left.major, right.major );
+    if ( result != __C_ENG_TYPE ( CompareResult ) :: CompareResultEquals ) {
+        return result;
+    }
+
+    result = engine :: compare ( left.minor, right.minor );
+    if ( result != __C_ENG_TYPE ( CompareResult ) :: CompareResultEquals ) {
+        return result;
+    }
+
+    return engine :: compare ( left.patch, right.patch );
 }
 
 auto vulkan :: uInt32ToInstanceVersion (
@@ -1784,5 +1931,16 @@ auto vulkan :: instanceVersionToUInt32 (
             version.major,
             version.minor,
             version.patch
+    );
+}
+
+auto vulkan :: versionReadableFormat (
+        __C_ENG_TYPE ( Version ) const & version
+) noexcept -> cds :: String {
+    return String :: f (
+            "%d.%d.%d",
+            static_cast < sint32 > ( version.major ),
+            static_cast < sint32 > ( version.minor ),
+            static_cast < sint32 > ( version.patch )
     );
 }

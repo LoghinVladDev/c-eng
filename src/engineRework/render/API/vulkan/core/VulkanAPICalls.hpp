@@ -9,11 +9,281 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
     namespace vulkan {
 
+        inline static auto toVulkanFormat (
+                __C_ENG_TYPE ( ApplicationInfo )    const * pApplicationInfo,
+                VkApplicationInfo                         * pVkApplicationInfo
+        ) noexcept -> void {
+
+            if ( pApplicationInfo == nullptr || pVkApplicationInfo == nullptr ) {
+                return;
+            }
+
+            * pVkApplicationInfo = {
+                    .sType              = VK_STRUCTURE_TYPE_APPLICATION_INFO,
+                    .pNext              = nullptr,
+                    .pApplicationName   = pApplicationInfo->name,
+                    .applicationVersion = instanceVersionToUInt32 ( pApplicationInfo->version ),
+                    .pEngineName        = pApplicationInfo->engineName,
+                    .engineVersion      = instanceVersionToUInt32 ( pApplicationInfo->engineVersion ),
+                    .apiVersion         = instanceVersionToUInt32 ( pApplicationInfo->apiVersion )
+            };
+        }
+
+        inline static auto toVulkanFormat (
+                __C_ENG_TYPE ( AllocationCallbacks )    const * pAllocationCallbacks,
+                VkAllocationCallbacks                         * pVkAllocationCallbacks
+        ) noexcept -> void {
+
+            if ( pAllocationCallbacks == nullptr || pVkAllocationCallbacks == nullptr ) {
+                return;
+            }
+
+            * pVkAllocationCallbacks = {
+                    .pUserData              = pAllocationCallbacks->pUserData,
+                    .pfnAllocation          = pAllocationCallbacks->allocationCallback,
+                    .pfnReallocation        = pAllocationCallbacks->reallocationCallback,
+                    .pfnFree                = pAllocationCallbacks->freeCallback,
+                    .pfnInternalAllocation  = pAllocationCallbacks->internalAllocationNotificationCallback,
+                    .pfnInternalFree        = pAllocationCallbacks->internalFreeNotificationCallback
+            };
+        }
+
+        inline static auto toVulkanFormat (
+                __C_ENG_TYPE ( InstanceCreateInfo )     const * pCreateInfo,
+                VkInstanceCreateInfo                          * pVkCreateInfo,
+                VkApplicationInfo                       const * pVkApplicationInfo,
+                void                                    const * pNext
+        ) noexcept -> void {
+
+            if ( pCreateInfo == nullptr || pVkCreateInfo == nullptr ) {
+                return;
+            }
+
+            * pVkCreateInfo = {
+                    .sType                      = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO,
+                    .pNext                      = pNext,
+                    .flags                      = pCreateInfo->flags,
+                    .pApplicationInfo           = pVkApplicationInfo,
+                    .enabledLayerCount          = pCreateInfo->enabledLayerCount,
+                    .ppEnabledLayerNames        = pCreateInfo->pEnabledLayerNames,
+                    .enabledExtensionCount      = pCreateInfo->enabledExtensionCount,
+                    .ppEnabledExtensionNames    = pCreateInfo->pEnabledExtensionNames
+            };
+        }
+
+        inline static auto toVulkanFormat (
+                __C_ENG_TYPE ( DebugMessengerCreateInfo )   const * pCreateInfo,
+                VkDebugUtilsMessengerCreateInfoEXT                * pVkCreateInfo
+        ) noexcept -> void {
+
+            if ( pCreateInfo == nullptr || pVkCreateInfo == nullptr ) {
+                return;
+            }
+
+            * pVkCreateInfo = {
+                    .sType                  = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT,
+                    .pNext                  = nullptr,
+                    .flags                  = pCreateInfo->flags,
+                    .messageSeverity        = pCreateInfo->messageSeverityFlags,
+                    .messageType            = pCreateInfo->messageTypeFlags,
+                    .pfnUserCallback        = pCreateInfo->callback,
+                    .pUserData              = pCreateInfo->pCallbackUserData
+            };
+        }
+
         __C_ENG_NO_DISCARD inline static auto enumerateInstanceVersion (
                 cds :: uint32 * pOutRawVersion
         ) noexcept -> __C_ENG_TYPE ( Result ) {
 
             return static_cast < __C_ENG_TYPE ( Result ) > ( vkEnumerateInstanceVersion ( pOutRawVersion ) );
+        }
+
+        __C_ENG_NO_DISCARD inline static auto enumerateInstanceLayerProperties (
+                cds :: uint32                       * pLayerPropertiesCount,
+                __C_ENG_TYPE ( LayerProperties )    * pProperties           = nullptr
+        ) noexcept -> __C_ENG_TYPE ( Result ) {
+
+            if ( pLayerPropertiesCount == nullptr ) {
+                return __C_ENG_TYPE ( Result ) :: ResultErrorIllegalArgument;
+            }
+
+            if ( pProperties == nullptr ) {
+                return static_cast < __C_ENG_TYPE ( Result ) > ( vkEnumerateInstanceLayerProperties (
+                            pLayerPropertiesCount,
+                            nullptr
+                    ));
+            }
+
+            auto pRawLayerProperties = new VkLayerProperties [ * pLayerPropertiesCount ];
+            auto result = vkEnumerateInstanceLayerProperties (
+                        pLayerPropertiesCount,
+                        pRawLayerProperties
+                );
+
+            if ( result != VkResult :: VK_SUCCESS ) {
+                delete [] pRawLayerProperties;
+                return static_cast < __C_ENG_TYPE ( Result ) > ( result );
+            }
+
+            for ( cds :: uint32 i = 0U; i < * pLayerPropertiesCount; ++ i ) {
+                (void) std :: memcpy ( pProperties[i].layerName,   pRawLayerProperties[i].layerName,   VK_MAX_EXTENSION_NAME_SIZE ); // NOLINT(clion-misra-cpp2008-5-2-12)
+                (void) std :: memcpy ( pProperties[i].description, pRawLayerProperties[i].description, VK_MAX_DESCRIPTION_SIZE ); // NOLINT(clion-misra-cpp2008-5-2-12)
+                pProperties[i].implementationVersion    = pRawLayerProperties[i].implementationVersion;
+                pProperties[i].specVersion              = uInt32ToInstanceVersion ( pRawLayerProperties[i].specVersion );
+            }
+
+            delete[] pRawLayerProperties;
+            return __C_ENG_TYPE ( Result ) :: ResultSuccess;
+        }
+
+        __C_ENG_NO_DISCARD inline static auto enumerateDeviceLayerProperties (
+                __C_ENG_TYPE ( PhysicalDeviceHandle )   handle,
+                cds :: uint32                         * pLayerPropertiesCount,
+                __C_ENG_TYPE ( LayerProperties )      * pProperties             = nullptr
+        ) noexcept -> __C_ENG_TYPE ( Result ) {
+
+            if (
+                    handle                  == nullptr ||
+                    pLayerPropertiesCount   == nullptr
+            ) {
+                return __C_ENG_TYPE ( Result ) :: ResultErrorIllegalArgument;
+            }
+
+            if ( pProperties == nullptr ) {
+                return static_cast < __C_ENG_TYPE ( Result ) > (
+                        vkEnumerateDeviceLayerProperties (
+                                handle,
+                                pLayerPropertiesCount,
+                                nullptr
+                        ));
+            }
+
+            auto pRawLayerProperties = new VkLayerProperties [ * pLayerPropertiesCount ];
+            auto result = vkEnumerateDeviceLayerProperties (
+                        handle,
+                        pLayerPropertiesCount,
+                        pRawLayerProperties
+                );
+
+            if ( result != VkResult :: VK_SUCCESS ) {
+                delete [] pRawLayerProperties;
+                return static_cast < __C_ENG_TYPE ( Result ) > ( result );
+            }
+
+            for ( cds :: uint32 i = 0U; i < * pLayerPropertiesCount; ++ i ) {
+                (void) std :: memcpy ( pProperties[i].layerName,   pRawLayerProperties[i].layerName,   VK_MAX_EXTENSION_NAME_SIZE ); // NOLINT(clion-misra-cpp2008-5-2-12)
+                (void) std :: memcpy ( pProperties[i].description, pRawLayerProperties[i].description, VK_MAX_DESCRIPTION_SIZE ); // NOLINT(clion-misra-cpp2008-5-2-12)
+                pProperties[i].implementationVersion    = pRawLayerProperties[i].implementationVersion;
+                pProperties[i].specVersion              = uInt32ToInstanceVersion ( pRawLayerProperties[i].specVersion );
+            }
+
+            delete[] pRawLayerProperties;
+            return __C_ENG_TYPE ( Result ) :: ResultSuccess;
+        }
+
+        __C_ENG_NO_DISCARD inline static auto enumerateInstanceExtensionProperties (
+                cds :: StringLiteral                    layerName,
+                cds :: uint32                         * pPropertyCount,
+                __C_ENG_TYPE ( ExtensionProperties )  * pProperties     = nullptr
+        ) noexcept -> __C_ENG_TYPE ( Result ) {
+
+            if ( pPropertyCount == nullptr ) {
+                return ResultErrorIllegalArgument;
+            }
+
+            if ( pProperties == nullptr ) {
+                return static_cast < __C_ENG_TYPE ( Result ) > ( vkEnumerateInstanceExtensionProperties (
+                            layerName,
+                            pPropertyCount,
+                            nullptr
+                    ));
+            }
+
+            auto pRawExtensionProperties = new VkExtensionProperties [ * pPropertyCount ];
+            auto result = vkEnumerateInstanceExtensionProperties(
+                        layerName,
+                        pPropertyCount,
+                        pRawExtensionProperties
+                );
+
+            if ( result != VkResult :: VK_SUCCESS ) {
+                delete[] pRawExtensionProperties;
+                return static_cast < __C_ENG_TYPE ( Result ) > ( result );
+            }
+
+            for ( cds :: uint32 i = 0U; i < * pPropertyCount; ++ i ) {
+                (void) std :: memcpy ( pProperties[i].name, pRawExtensionProperties[i].extensionName, VK_MAX_EXTENSION_NAME_SIZE ); // NOLINT(clion-misra-cpp2008-5-2-12)
+                pProperties[i].specVersion = pRawExtensionProperties[i].specVersion;
+            }
+
+            delete[] pRawExtensionProperties;
+            return ResultSuccess;
+        }
+
+        __C_ENG_NO_DISCARD static inline auto createInstance (
+                __C_ENG_TYPE ( InstanceCreateInfo )     const * pCreateInfo,
+                __C_ENG_TYPE ( AllocationCallbacks )    const * pAllocationCallbacks,
+                __C_ENG_TYPE ( InstanceHandle )               * pInstanceHandle
+        ) noexcept -> __C_ENG_TYPE ( Result ) {
+
+            if (
+                    pCreateInfo     == nullptr ||
+                    pInstanceHandle == nullptr
+            ) {
+                return ResultErrorIllegalArgument;
+            }
+
+            VkDebugUtilsMessengerCreateInfoEXT  messengerCreateInfo {};
+            VkAllocationCallbacks               allocationCallbacks {};
+            VkApplicationInfo                   applicationInfo {};
+            VkInstanceCreateInfo                instanceCreateInfo {};
+
+            VkAllocationCallbacks       const * pUsedAllocationCallbacks = nullptr;
+
+            void                        const * pInstanceNext = nullptr;
+
+            if ( pAllocationCallbacks != nullptr ) {
+                pUsedAllocationCallbacks = & allocationCallbacks;
+                toVulkanFormat ( pAllocationCallbacks, & allocationCallbacks );
+            }
+
+            if ( pCreateInfo->pNext != nullptr ) {
+                auto asBase = reinterpret_cast < __C_ENG_TYPE ( BaseInStructure ) const * > ( pCreateInfo->pNext );
+
+                if ( asBase->structureType == StructureTypeDebugUtilsMessengerCreateInfo ) {
+                    auto asTrueBase = reinterpret_cast < __C_ENG_TYPE ( DebugMessengerCreateInfo ) const * > ( pCreateInfo->pNext );
+
+                    pInstanceNext = & messengerCreateInfo;
+                    toVulkanFormat ( asTrueBase, & messengerCreateInfo );
+                }
+            }
+
+            toVulkanFormat ( pCreateInfo->pApplicationInfo, & applicationInfo );
+            toVulkanFormat ( pCreateInfo, & instanceCreateInfo, & applicationInfo, pInstanceNext );
+
+            return static_cast < __C_ENG_TYPE ( Result ) > (
+                    vkCreateInstance (
+                        & instanceCreateInfo,
+                        pUsedAllocationCallbacks,
+                        pInstanceHandle
+                    )
+            );
+        }
+
+        static inline auto destroyInstance (
+                __C_ENG_TYPE ( InstanceHandle )                 handle,
+                __C_ENG_TYPE ( AllocationCallbacks )    const * pAllocatorCallbacks
+        ) noexcept -> void {
+
+            VkAllocationCallbacks vkCallbacks {};
+            VkAllocationCallbacks * pUsedCallbacks = nullptr;
+
+            if ( pAllocatorCallbacks != nullptr ) {
+                pUsedCallbacks = & vkCallbacks;
+                toVulkanFormat ( pAllocatorCallbacks, & vkCallbacks );
+            }
+
+            vkDestroyInstance ( handle, pUsedCallbacks );
         }
 
     }

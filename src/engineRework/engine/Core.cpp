@@ -345,6 +345,21 @@ namespace engine {
         return asString;
     }
 
+    __C_ENG_NO_DISCARD auto toString (
+            __C_ENG_TYPE ( CompareResult ) result
+    ) noexcept -> StringLiteral {
+
+        StringLiteral asString = "";
+
+        switch ( result ) {
+            case __C_ENG_TYPE ( CompareResult ) :: CompareResultLess:     { asString = "Less";    break; }
+            case __C_ENG_TYPE ( CompareResult ) :: CompareResultEquals:   { asString = "Equals";  break; }
+            case __C_ENG_TYPE ( CompareResult ) :: CompareResultGreater:  { asString = "Greater"; break; }
+        }
+
+        return asString;
+    }
+
 
     __C_ENG_NO_DISCARD auto toString (
             __C_ENG_TYPE ( Position ) const & position

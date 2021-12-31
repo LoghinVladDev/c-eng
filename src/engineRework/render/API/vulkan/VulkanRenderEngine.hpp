@@ -6,6 +6,7 @@
 #define C_ENG_VULKANRENDERAPI_HPP
 
 #include <RenderEngine.hpp>
+#include <Instance.hpp>
 
 
 #define C_ENG_MAP_START     CLASS ( VulkanRenderEngine, ENGINE_PARENT ( RenderEngine ) )
@@ -15,15 +16,18 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
     namespace vulkan {
 
         Class {
+            Field ( ENGINE_TYPE ( Version ),    desiredVersion, DEFAULT_VALUE ( nullVersion ),  GET_DEFAULT, SET_INLINE ( setDesiredVersion ) ) // NOLINT(clion-misra-cpp2008-5-0-4,clion-misra-cpp2008-5-0-6)
+            Field ( ENGINE_TYPE ( Instance ),   instance,       NO_INIT,                        GET_DEFAULT, SET_NONE )
+
+        private:
+            __C_ENG_NO_DISCARD auto acquireSuitableAPIVersion () const noexcept (false) -> __C_ENG_TYPE ( Version );
+
         public:
             __C_ENG_NO_DISCARD constexpr auto name () const noexcept -> cds :: StringLiteral override {
                 return "Vulkan";
             }
 
-            auto init () noexcept (false) -> Self & override {
-                return * this;
-            }
-
+            auto init () noexcept (false) -> Self & override;
         };
     }
 }

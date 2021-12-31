@@ -34,29 +34,29 @@ namespace engine {
         Const ( ENGINE_PRIMITIVE_TYPE ( WindowFlags ),      defaultFlags,       VALUE ( WindowFlagResizable | WindowFlagGrabFocusOnOpen | WindowFlagGrabFocusOnRaise ) ) // NOLINT(clion-misra-cpp2008-4-5-2)
 
     private:
-        Field ( TYPE ( cds :: String ),                                                     title,              DEFAULT_VALUE ( defaultWindowTitle ),                                   GET_DEFAULT,    SET_NONE )
+        Field ( TYPE ( cds :: String ),                                                     title,                          DEFAULT_VALUE ( defaultWindowTitle ),                                   GET_DEFAULT,    SET_NONE )
 
-        Field ( TYPE ( utility :: SimpleEventQueue < __C_ENG_TYPE ( WindowEvent ) * > ),    customWindowEvents, NO_INIT,                                                                GET_NONE,       SET_NONE )
-        Field ( TYPE ( utility :: SimpleEventQueue < __C_ENG_TYPE ( MouseEvent ) * > ),     customMouseEvents,  NO_INIT,                                                                GET_NONE,       SET_NONE )
-        Field ( TYPE ( utility :: SimpleEventQueue < __C_ENG_TYPE ( KeyEvent ) * > ),       customKeyEvents,    NO_INIT,                                                                GET_NONE,       SET_NONE )
-        Field ( TYPE ( utility :: SimpleEventQueue < __C_ENG_TYPE ( Event ) * > ),          customEvents,       NO_INIT,                                                                GET_NONE,       SET_NONE )
+        Field ( TYPE ( utility :: SimpleEventQueue < __C_ENG_TYPE ( WindowEvent ) * > ),    customWindowEvents,             NO_INIT,                                                                GET_NONE,       SET_NONE )
+        Field ( TYPE ( utility :: SimpleEventQueue < __C_ENG_TYPE ( MouseEvent ) * > ),     customMouseEvents,              NO_INIT,                                                                GET_NONE,       SET_NONE )
+        Field ( TYPE ( utility :: SimpleEventQueue < __C_ENG_TYPE ( KeyEvent ) * > ),       customKeyEvents,                NO_INIT,                                                                GET_NONE,       SET_NONE )
+        Field ( TYPE ( utility :: SimpleEventQueue < __C_ENG_TYPE ( Event ) * > ),          customEvents,                   NO_INIT,                                                                GET_NONE,       SET_NONE )
 
-        Field ( PRIMITIVE_TYPE ( Handle ),                                                  handle,             DEFAULT_VALUE ( nullptr ),                                              GET_DEFAULT,    SET_NONE )
-        Field ( ENGINE_PRIMITIVE_TYPE ( WindowFlags ),                                      flags,              DEFAULT_VALUE ( defaultFlags ),                                         GET_DEFAULT,    SET_NONE )
+        Field ( PRIMITIVE_TYPE ( Handle ),                                                  handle,                         DEFAULT_VALUE ( nullptr ),                                              GET_DEFAULT,    SET_NONE )
+        Field ( ENGINE_PRIMITIVE_TYPE ( WindowFlags ),                                      flags,                          DEFAULT_VALUE ( defaultFlags ),                                         GET_DEFAULT,    SET_NONE )
 
-        Field ( ENGINE_TYPE ( Position ),                                                   position,           DEFAULT_VALUE ( 0u, 0u ),                                               GET_DEFAULT,    SET_NONE )
-        Field ( ENGINE_TYPE ( Size ),                                                       size,               DEFAULT_VALUE ( 0u, 0u ),                                               GET_DEFAULT,    SET_NONE )
-        Field ( ENGINE_TYPE ( Position ),                                                   mousePosition,      DEFAULT_VALUE ( 0u, 0u ),                                               GET_DEFAULT,    SET_NONE )
+        Field ( ENGINE_TYPE ( Position ),                                                   position,                       DEFAULT_VALUE ( 0u, 0u ),                                               GET_DEFAULT,    SET_NONE )
+        Field ( ENGINE_TYPE ( Size ),                                                       size,                           DEFAULT_VALUE ( 0u, 0u ),                                               GET_DEFAULT,    SET_NONE )
+        Field ( ENGINE_TYPE ( Position ),                                                   mousePosition,                  DEFAULT_VALUE ( 0u, 0u ),                                               GET_DEFAULT,    SET_NONE )
 
-        Field ( ENGINE_TYPE ( Size ),                                                       minimumSize,        DEFAULT_VALUE ( cds :: limits :: U32_MIN, cds :: limits :: U32_MIN ),   GET_DEFAULT,    SET ( setMinimumSize ) )
-        Field ( ENGINE_TYPE ( Size ),                                                       maximumSize,        DEFAULT_VALUE ( cds :: limits :: U32_MAX, cds :: limits :: U32_MAX ),   GET_DEFAULT,    SET ( setMaximumSize ) )
+        Field ( ENGINE_TYPE ( Size ),                                                       minimumSize,                    DEFAULT_VALUE ( cds :: limits :: U32_MIN, cds :: limits :: U32_MIN ),   GET_DEFAULT,    SET ( setMinimumSize ) )
+        Field ( ENGINE_TYPE ( Size ),                                                       maximumSize,                    DEFAULT_VALUE ( cds :: limits :: U32_MAX, cds :: limits :: U32_MAX ),   GET_DEFAULT,    SET ( setMaximumSize ) )
 
-        Field ( PRIMITIVE_TYPE ( cds :: uint32 ),                                           refreshRate,        DEFAULT_VALUE ( 60u ),                                                  GET_DEFAULT,    SET_NONE )
+        Field ( PRIMITIVE_TYPE ( cds :: uint32 ),                                           refreshRate,                    DEFAULT_VALUE ( 60u ),                                                  GET_DEFAULT,    SET_NONE )
 
-        Field ( ENGINE_PRIMITIVE_TYPE ( Engine * ),                                         engine,             DEFAULT_VALUE ( nullptr ),                                              GET_DEFAULT,    SET ( setEngine ) )
-        Field ( ENGINE_PRIMITIVE_TYPE ( Monitor const * ),                                  monitor,            DEFAULT_VALUE ( nullptr ),                                              GET_DEFAULT,    SET_NONE )
+        Field ( ENGINE_PRIMITIVE_TYPE ( Engine * ),                                         engine,                         DEFAULT_VALUE ( nullptr ),                                              GET_DEFAULT,    SET ( setEngine ) )
+        Field ( ENGINE_PRIMITIVE_TYPE ( Monitor const * ),                                  monitor,                        DEFAULT_VALUE ( nullptr ),                                              GET_DEFAULT,    SET_NONE )
 
-        Field ( ENGINE_PRIMITIVE_TYPE ( WindowType ),                                       type,               DEFAULT_VALUE ( WindowTypeWindowed ),                                   GET_DEFAULT,    SET_NONE )
+        Field ( ENGINE_PRIMITIVE_TYPE ( WindowType ),                                       type,                           DEFAULT_VALUE ( WindowTypeWindowed ),                                   GET_DEFAULT,    SET_NONE )
 
         friend auto __updateWindowSize ( Self *, cds :: uint32, cds :: uint32 ) noexcept -> void; // NOLINT(bugprone-reserved-identifier)
         friend auto __updateCursorPos ( Self *, cds :: uint32, cds :: uint32 ) noexcept -> void; // NOLINT(bugprone-reserved-identifier)
@@ -131,6 +131,13 @@ namespace engine {
 
         __C_ENG_NO_DISCARD auto toString () const noexcept -> cds :: String override;
         __C_ENG_NO_DISCARD auto equals ( cds :: Object const & ) const noexcept -> bool override;
+
+        struct ExtensionNames {
+            cds :: StringLiteral  * names;
+            cds :: uint32           count;
+        };
+
+        static auto vulkanRequiredExtensionNames () noexcept -> ExtensionNames;
     };
 
 }

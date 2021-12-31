@@ -25,7 +25,136 @@
  *                  If PARENT ( < className > ), class will be derived from class of given name
  *                  If ENGINE_PARENT ( < className > ), class will be derived from engine class of given name ( prefix applied )
  *
- *          If
+ *          If Struct -> STRUCT ( < name >, < derivationFormula > )
+ *              Same as class ( above )
+ *
+ *          If Enum -> ENUM ( < name >, < derivationFormula > )
+ *              < name > = desired object name
+ *              < derivationFormula > =
+ *                  If NO_TYPE, no inheritance applied to enum ( classic style )
+ *                  If TYPE ( < type > ) or ENGINE_TYPE ( < type > ), enum will be derived from said type,
+ *                      -> all variables of enum type occupy the size of the inherited type
+ *
+ *
+ *      Once between a BEGIN - END structure, the following keywords can be used for generation
+ *          - Class  ---  Used in CLASS formula
+ *              - generates the declaration tag of the class, with inheritance members.
+ *                  Example :
+ *                      #define C_ENG_MAP_BEGIN     CLASS ( Test, PARENT ( SomeObject ) )
+ *                      #include <ObjectMapping.hpp>
+ *
+ *                      Class {         /// 'Class' will generate __C_ENG_TYPE ( Test ) : public SomeObject
+ *
+ *                      };
+ *
+ *          - Struct  ---  Used in STRUCT formula
+ *              - same as above
+ *
+ *          - Enum  ---  Used in ENUM formula
+ *              - same as class/struct, without access modifier ( public )
+ *
+ *          - Constructor  ---  Used in CLASS / STRUCT formulas
+ *              - will generate the constructor name for this class
+ *                  Example :
+ *                      #define C_ENG_MAP_BEGIN     CLASS ( Test, NO_PARENT )
+ *                      #include <ObjectMapping.hpp>
+ *
+ *                      Class {
+ *                      public:
+ *
+ *                          Constructor ( int value ) {  /// will be replaced with __C_ENG_TYPE ( Test )
+ *                              /// construct object ...
+ *                          }
+ *                      };
+ *
+ *          - Destructor  ---  Used in CLASS / STRUCT formulas
+ *              - same as Constructor, but generates destructor
+ *
+ *          - Parent  ---  Used in CLASS / STRUCT formulas
+ *              - will generate the parent class name
+ *                  Example :
+ *                      #define C_ENG_MAP_BEGIN     CLASS ( Test, PARENT ( OtherClass ) )
+ *                      #include <ObjectMapping.hpp>
+ *
+ *                      Class {
+ *                      public:
+ *
+ *                          Constructor ( int value ) : Parent ( value ) { } /// calls base class constructor
+ *
+ *                          void fDoSomething () override {
+ *                              Parent :: fDoSomething (); /// calls overriden base function
+ *
+ *                              /// do extra stuff
+ *                          }
+ *
+ *                      };
+ *
+ *          - Self  ---  Used in CLASS / STRUCT formulas
+ *              - will generate the current class name
+ *                  Example :
+ *                      #define C_ENG_MAP_BEGIN     CLASS ( Test, PARENT ( OtherClass ) )
+ *                      #include <ObjectMapping.hpp>
+ *
+ *                      Class {
+ *                      public:
+ *
+ *                          Constructor ( int value ) : Parent ( value ) { } /// calls base class constructor
+ *
+ *                          static void fDoAnotherThing () {}
+ *
+ *                          void fDoSomething () override {
+ *                              Parent :: fDoSomething (); /// calls overriden base function
+ *
+ *                              Self :: fDoAnotherThing (); /// will generate __C_ENG_TYPE ( Test ) :: fDoAnotherThing ();
+ *                          }
+ *
+ *                      };
+ *
+ *          - Field  --- Used in CLASS / ENUM formulas
+ *              - if used in ENUM formula, generates an enum field prefixed by the enum name ( to avoid naming conflicts )
+ *                  Example:
+ *                      #define C_ENG_MAP_BEGIN     ENUM ( Test, TYPE ( cds :: uint8 ) )
+ *                      #include <ObjectMapping.hpp>
+ *
+ *                      Enum {                              /// replaced by enum Test : cds :: uint8 {
+ *                          Field ( Sample,     0 ),        /// replaced by TestSample = static_cast < cds :: uint8 > ( 0 ),
+ *                          Field ( Another,    1 )         /// replaced by TestAnother = static_cast < cds :: uint8 > ( 1 )
+ *                      };
+ *
+ *              - if used in CLASS formula, generates a class field with requested properties
+ *                  Usage : Field ( < typeFormula >, < name >, < defaultValueFormula >, < getterFormula >, < setterFormula > )
+ *                      - Type Formulas:
+ *                          - PRIMITIVE_TYPE ( < type > )                           -> will be a standard, non object, less or equals in size to 64 bits ( bool, int, float, pointers, etc. ), usually copied
+ *                          - TYPE ( < type > )                                     -> will be a complex type, larger than 64 bits, usually referenced
+ *                          - ENGINE_PRIMITIVE_TYPE ( < type > )                    -> same as PRIMITIVE_TYPE, but type name has the engine prefix applied
+ *                          - ENGINE_TYPE ( < type > )                              -> same as TYPE, but type name has the engine prefix applied
+ *                          - PRIMITIVE_TYPE_ARRAY ( < type >, < size > )           -> will be a standard, non object, less or equals in size to 64 bits per element, array
+ *                          - ENGINE_PRIMITIVE_TYPE_ARRAY ( < type >, < size > )    -> same as PRIMITIVE_TYPE_ARRAY, but type name has the engine prefix applied
+ *                      - name -> desired name of the field, used in getter. The field will be created with an underscore prefixed ( testField will actually be _testField )
+ *                      - Default Value Formulas:
+ *                          - DEFAULT_VALUE ( < value > )                           -> will initialize the object with given value, and, if it is primitive type, will cast the value to the element type
+ *                          - NO_INIT                                               -> as suggested, does not have an initializer
+ *                      - Getter Formulas:
+ *                          - GET_DEFAULT                                           -> will generate a standard getter, by copy for primitives or const reference for complex types, with the name of the field
+ *                          - GET_NONE                                              -> will not generate a getter
+ *                      - Setter Formulas:
+ *                          - SET_DEFAULT                                           -> will generate a setter by mutable getter, a function named just like the field returning a reference to field value
+ *                          - SET_NONE                                              -> will not generate a setter
+ *                          - SET ( < setterName > )                                -> will generate a setter declaration, which has to be defined in a source file / inlined in the header, with given name. The setter will return reference to caller object
+ *                          - SET_INLINE ( < setterName > )                         -> will generate an inline setter, which will have the given name, will set the value and return reference to caller object
+ *
+ *                  - For examples, refer to src/engineRework/render/window/Window.hpp
+ *          - Const  ---  Used in CLASS formula
+ *              - Will generate a class static constant ( or constant expression ) with given type, name and value
+ *              - Usage : Const ( < typeFormula >, < name >, < valueFormula > )
+ *                  - Type Formulas:
+ *                      - Same as Field Type Formula
+ *                  - Value Formulas:
+ *                      - VALUE ( < value > ) -> will encapsulate the parameter / parameters to cast / create object
+ *                  - For examples, refer to src/engineRework/utility/settings/Settings.hpp
+ *
+ *
+ *      - These Meta Definitions will be expanded further
  */
 
 
@@ -40,6 +169,34 @@
 #define __C_ENG_OBJECT_MAP_PARENT_CLASS(_typename, _baseFormula)                    __C_ENG_OBJECT_MAP_PARENT_CLASS_ ## _baseFormula
 #define __C_ENG_OBJECT_MAP_FIELD_CLASS(_typename, _baseFormula)                     __C_ENG_OBJECT_MAP_FIELD_CLASS_GEN
 #define __C_ENG_OBJECT_MAP_CONST_CLASS(_typename, _baseFormula)                     __C_ENG_OBJECT_MAP_CONST_GEN
+
+
+#define __C_ENG_OBJECT_MAP_CLASS_NESTED_CLASS(_typename, _nesterFormula, _baseFormula)              _typename
+#define __C_ENG_OBJECT_MAP_DECLARATION_NESTED_CLASS(_typename, _nesterFormula, _baseFormula)         \
+    class __C_ENG_OBJECT_MAP_DECLARATION_NESTED_CLASS_EXTRACT_NESTER_ ## _nesterFormula ::           \
+    __C_ENG_OBJECT_MAP_CLASS_NESTED_CLASS(_typename, _nesterFormula, _baseFormula)                   \
+    __C_ENG_OBJECT_MAP_PARENT_DECLARATION_ ## _baseFormula
+
+#define __C_ENG_OBJECT_MAP_CONSTRUCTOR_NESTED_CLASS(_typename, _nesterFormula, _baseFormula) \
+    __C_ENG_OBJECT_MAP_CLASS_NESTED_CLASS(_typename, _nesterFormula, _baseFormula)
+
+#define __C_ENG_OBJECT_MAP_DESTRUCTOR_NESTED_CLASS(_typename, _nesterFormula, _baseFormula) \
+    ~ __C_ENG_OBJECT_MAP_CLASS_NESTED_CLASS(_typename, _nesterFormula, _baseFormula)
+
+#define __C_ENG_OBJECT_MAP_SELF_NESTED_CLASS(_typename, _nesterFormula, _baseFormula)   \
+    __C_ENG_OBJECT_MAP_DECLARATION_NESTED_CLASS_EXTRACT_NESTER_ ## _nesterFormula ::    \
+    __C_ENG_OBJECT_MAP_CLASS_NESTED_CLASS(_typename, _nesterFormula, _baseFormula)
+
+#define __C_ENG_OBJECT_MAP_PARENT_NESTED_CLASS(_typename, _nesterFormula, _baseFormula) __C_ENG_OBJECT_MAP_PARENT_CLASS_ ## _baseFormula
+#define __C_ENG_OBJECT_MAP_FIELD_NESTED_CLASS(_typename, _nesterFormula, _baseFormula)  __C_ENG_OBJECT_MAP_FIELD_CLASS_GEN
+#define __C_ENG_OBJECT_MAP_CONST_NESTED_CLASS(_typename, _nesterFormula, _baseFormula)  __C_ENG_OBJECT_MAP_CONST_GEN
+#define __C_ENG_OBJECT_MAP_NESTER_NESTED_CLASS(_typename, _nesterFormula, _baseFormula) \
+    __C_ENG_OBJECT_MAP_DECLARATION_NESTED_CLASS_EXTRACT_NESTER_ ## _nesterFormula
+
+
+#define __C_ENG_OBJECT_MAP_DECLARATION_NESTED_CLASS_EXTRACT_NESTER_ENGINE_TYPE( _typename )      __C_ENG_TYPE ( _typename )
+#define __C_ENG_OBJECT_MAP_DECLARATION_NESTED_CLASS_EXTRACT_NESTER_TYPE( _typename )             _typename
+
 
 #define __C_ENG_OBJECT_MAP_FIELD_CLASS_GEN(_typeFormula, _name, _dValFormula, _getFormula, _setFormula) \
     private:                                                                                            \
@@ -338,6 +495,7 @@
 #define Parent                                                                      __C_ENG_OBJECT_MAP_META_CALL(__C_ENG_OBJECT_MAP_PARENT_,          C_ENG_MAP_START)
 #define Field                                                                       __C_ENG_OBJECT_MAP_META_CALL(__C_ENG_OBJECT_MAP_FIELD_,           C_ENG_MAP_START)
 #define Const                                                                       __C_ENG_OBJECT_MAP_META_CALL(__C_ENG_OBJECT_MAP_CONST_,           C_ENG_MAP_START)
+#define Nester                                                                      __C_ENG_OBJECT_MAP_META_CALL(__C_ENG_OBJECT_MAP_NESTER_,          C_ENG_MAP_START)
 
 
 #elif defined(C_ENG_MAP_END) && defined(C_ENG_MAP_START)
@@ -569,6 +727,20 @@
 #undef __C_ENG_OBJECT_MAP_FIELD_CLASS_GEN_EXTRACT_TYPE_ARRAY_SIZE_ENGINE_PRIMITIVE_TYPE_ARRAY
 
 
+#undef __C_ENG_OBJECT_MAP_CLASS_NESTED_CLASS
+#undef __C_ENG_OBJECT_MAP_DECLARATION_NESTED_CLASS
+#undef __C_ENG_OBJECT_MAP_CONSTRUCTOR_NESTED_CLASS
+#undef __C_ENG_OBJECT_MAP_DESTRUCTOR_NESTED_CLASS
+#undef __C_ENG_OBJECT_MAP_SELF_NESTED_CLASS
+#undef __C_ENG_OBJECT_MAP_PARENT_NESTED_CLASS
+#undef __C_ENG_OBJECT_MAP_FIELD_NESTED_CLASS
+#undef __C_ENG_OBJECT_MAP_CONST_NESTED_CLASS
+#undef __C_ENG_OBJECT_MAP_NESTER_NESTED_CLASS
+
+#undef __C_ENG_OBJECT_MAP_DECLARATION_NESTED_CLASS_EXTRACT_NESTER_ENGINE_TYPE
+#undef __C_ENG_OBJECT_MAP_DECLARATION_NESTED_CLASS_EXTRACT_NESTER_TYPE
+
+
 #undef Class
 #undef Struct
 #undef Enum
@@ -578,6 +750,7 @@
 #undef Self
 #undef Field
 #undef Const
+#undef Nester
 
 
 #undef C_ENG_MAP_END

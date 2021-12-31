@@ -317,6 +317,19 @@ namespace engine {
 #include <ObjectMapping.hpp>
 
 
+#define C_ENG_MAP_START     ENUM ( CompareResult,   TYPE ( cds :: sint8 ) )
+#include <ObjectMapping.hpp>
+
+    Enum {
+        Field ( Less,       -1 ),
+        Field ( Equals,     0 ),
+        Field ( Greater,    1 )
+    };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+
 
 #define C_ENG_MAP_START     STRUCT ( Position, NO_PARENT )
 #include <ObjectMapping.hpp>
@@ -443,6 +456,7 @@ namespace engine {
     __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( WindowType ) ) noexcept -> cds :: StringLiteral;
     __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( WindowFlag ) ) noexcept -> cds :: StringLiteral;
     __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( ControllerHatState ) ) noexcept -> cds :: StringLiteral;
+    __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( CompareResult ) ) noexcept -> cds :: StringLiteral;
 
     __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( Position ) const & ) noexcept -> cds :: String;
     __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( Size ) const & ) noexcept -> cds :: String;

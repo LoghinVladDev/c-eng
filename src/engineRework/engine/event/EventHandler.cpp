@@ -50,7 +50,7 @@ using namespace engine; // NOLINT(clion-misra-cpp2008-7-3-4)
 auto Self :: customEvent (
         __C_ENG_TYPE ( Event ) * pEvent
 ) const noexcept -> Self const & {
-    std :: cout << pEvent->toString() << '\n';
+//    std :: cout << pEvent->toString() << '\n';
 
     return * this;
 }
@@ -58,7 +58,7 @@ auto Self :: customEvent (
 auto Self :: controllerCustomEvent (
         __C_ENG_TYPE ( ControllerEvent ) * pEvent
 ) const noexcept -> Self const & {
-    std :: cout << pEvent->toString() << '\n';
+//    std :: cout << pEvent->toString() << '\n';
 
     return * this;
 }
@@ -66,7 +66,7 @@ auto Self :: controllerCustomEvent (
 auto Self :: controllerAxisEvent (
         __C_ENG_TYPE ( ControllerAxisEvent ) * pEvent
 ) const noexcept -> Self const & {
-    std :: cout << pEvent->toString() << '\n';
+//    std :: cout << pEvent->toString() << '\n';
 
     return * this;
 }
@@ -74,7 +74,7 @@ auto Self :: controllerAxisEvent (
 auto Self :: controllerButtonPressEvent (
         __C_ENG_TYPE ( ControllerButtonPressEvent ) * pEvent
 ) const noexcept -> Self const & {
-    std :: cout << pEvent->toString() << '\n';
+//    std :: cout << pEvent->toString() << '\n';
 
     return * this;
 }
@@ -82,7 +82,7 @@ auto Self :: controllerButtonPressEvent (
 auto Self :: controllerButtonReleaseEvent (
         __C_ENG_TYPE ( ControllerButtonReleaseEvent ) * pEvent
 ) const noexcept -> Self const & {
-    std :: cout << pEvent->toString() << '\n';
+//    std :: cout << pEvent->toString() << '\n';
 
     return * this;
 }
@@ -90,7 +90,7 @@ auto Self :: controllerButtonReleaseEvent (
 auto Self :: controllerConnectEvent (
         __C_ENG_TYPE ( ControllerConnectEvent ) * pEvent
 ) const noexcept -> Self const & {
-    std :: cout << pEvent->toString() << '\n';
+//    std :: cout << pEvent->toString() << '\n';
 
     return * this;
 }
@@ -98,7 +98,7 @@ auto Self :: controllerConnectEvent (
 auto Self :: controllerDisconnectEvent (
         __C_ENG_TYPE ( ControllerDisconnectEvent ) * pEvent
 ) const noexcept -> Self const & {
-    std :: cout << pEvent->toString() << '\n';
+//    std :: cout << pEvent->toString() << '\n';
 
     return * this;
 }
@@ -106,7 +106,7 @@ auto Self :: controllerDisconnectEvent (
 auto Self :: controllerHatEvent (
         __C_ENG_TYPE ( ControllerHatEvent ) * pEvent
 ) const noexcept -> Self const & {
-    std :: cout << pEvent->toString() << '\n';
+//    std :: cout << pEvent->toString() << '\n';
 
     return * this;
 }
@@ -114,7 +114,7 @@ auto Self :: controllerHatEvent (
 auto Self :: windowCustomEvent (
         __C_ENG_TYPE ( WindowEvent ) * pEvent
 ) const noexcept -> Self const & {
-    std :: cout << pEvent->toString() << '\n';
+//    std :: cout << pEvent->toString() << '\n';
 
     return * this;
 }
@@ -122,7 +122,7 @@ auto Self :: windowCustomEvent (
 auto Self :: windowResizeEvent (
         __C_ENG_TYPE ( WindowResizeEvent ) * pEvent
 ) const noexcept -> Self const & {
-    std :: cout << pEvent->toString() << '\n';
+//    std :: cout << pEvent->toString() << '\n';
 
     return * this;
 }
@@ -130,7 +130,7 @@ auto Self :: windowResizeEvent (
 auto Self :: windowCloseEvent (
         __C_ENG_TYPE ( WindowCloseEvent ) * pEvent
 ) const noexcept -> Self const & {
-    std :: cout << pEvent->toString() << '\n';
+//    std :: cout << pEvent->toString() << '\n';
 
     return * this;
 }
@@ -138,7 +138,7 @@ auto Self :: windowCloseEvent (
 auto Self :: windowFrameBufferResizeEvent (
         __C_ENG_TYPE ( WindowFrameBufferResizeEvent ) * pEvent
 ) const noexcept -> Self const & {
-    std :: cout << pEvent->toString() << '\n';
+//    std :: cout << pEvent->toString() << '\n';
 
     return * this;
 }
@@ -146,7 +146,7 @@ auto Self :: windowFrameBufferResizeEvent (
 auto Self :: windowContentScaleEvent (
         __C_ENG_TYPE ( WindowContentScaleEvent ) * pEvent
 ) const noexcept -> Self const & {
-    std :: cout << pEvent->toString() << '\n';
+//    std :: cout << pEvent->toString() << '\n';
 
     return * this;
 }
@@ -154,7 +154,7 @@ auto Self :: windowContentScaleEvent (
 auto Self :: windowMoveEvent (
         __C_ENG_TYPE ( WindowMoveEvent ) * pEvent
 ) const noexcept -> Self const & {
-    std :: cout << pEvent->toString() << '\n';
+//    std :: cout << pEvent->toString() << '\n';
 
     return * this;
 }
@@ -162,7 +162,7 @@ auto Self :: windowMoveEvent (
 auto Self :: windowRestoreEvent (
         __C_ENG_TYPE ( WindowRestoreEvent ) * pEvent
 ) const noexcept -> Self const & {
-    std :: cout << pEvent->toString() << '\n';
+//    std :: cout << pEvent->toString() << '\n';
 
     return * this;
 }
@@ -170,7 +170,7 @@ auto Self :: windowRestoreEvent (
 auto Self :: windowMinimizeEvent (
         __C_ENG_TYPE ( WindowMinimizeEvent ) * pEvent
 ) const noexcept -> Self const & {
-    std :: cout << pEvent->toString() << '\n';
+//    std :: cout << pEvent->toString() << '\n';
 
     return * this;
 }
@@ -178,7 +178,7 @@ auto Self :: windowMinimizeEvent (
 auto Self :: windowMaximizeEvent (
         __C_ENG_TYPE ( WindowMaximizeEvent ) * pEvent
 ) const noexcept -> Self const & {
-    std :: cout << pEvent->toString() << '\n';
+//    std :: cout << pEvent->toString() << '\n';
 
     return * this;
 }
@@ -186,7 +186,7 @@ auto Self :: windowMaximizeEvent (
 auto Self :: windowGainFocusEvent (
         __C_ENG_TYPE ( WindowGainFocusEvent ) * pEvent
 ) const noexcept -> Self const & {
-    std :: cout << pEvent->toString() << '\n';
+//    std :: cout << pEvent->toString() << '\n';
 
     return * this;
 }
@@ -194,7 +194,7 @@ auto Self :: windowGainFocusEvent (
 auto Self :: windowLoseFocusEvent (
         __C_ENG_TYPE ( WindowLoseFocusEvent ) * pEvent
 ) const noexcept -> Self const & {
-    std :: cout << pEvent->toString() << '\n';
+//    std :: cout << pEvent->toString() << '\n';
 
     return * this;
 }
@@ -202,7 +202,7 @@ auto Self :: windowLoseFocusEvent (
 auto Self :: windowRefreshRequestEvent (
         __C_ENG_TYPE ( WindowRefreshRequestEvent ) * pEvent
 ) const noexcept -> Self const & {
-    std :: cout << pEvent->toString() << '\n';
+//    std :: cout << pEvent->toString() << '\n';
 
     return * this;
 }
@@ -210,7 +210,7 @@ auto Self :: windowRefreshRequestEvent (
 auto Self :: keyCustomEvent (
         __C_ENG_TYPE ( KeyEvent ) * pEvent
 ) const noexcept -> Self const & {
-    std :: cout << pEvent->toString() << '\n';
+//    std :: cout << pEvent->toString() << '\n';
 
     return * this;
 }
@@ -218,7 +218,7 @@ auto Self :: keyCustomEvent (
 auto Self :: keyPressEvent (
         __C_ENG_TYPE ( KeyPressEvent ) * pEvent
 ) const noexcept -> Self const & {
-    std :: cout << pEvent->toString() << '\n';
+//    std :: cout << pEvent->toString() << '\n';
 
     return * this;
 }
@@ -226,7 +226,7 @@ auto Self :: keyPressEvent (
 auto Self :: keyReleaseEvent (
         __C_ENG_TYPE ( KeyReleaseEvent ) * pEvent
 ) const noexcept -> Self const & {
-    std :: cout << pEvent->toString() << '\n';
+//    std :: cout << pEvent->toString() << '\n';
 
     return * this;
 }
@@ -234,7 +234,7 @@ auto Self :: keyReleaseEvent (
 auto Self :: mouseCustomEvent (
         __C_ENG_TYPE ( MouseEvent ) * pEvent
 ) const noexcept -> Self const & {
-    std :: cout << pEvent->toString() << '\n';
+//    std :: cout << pEvent->toString() << '\n';
 
     return * this;
 }
@@ -242,7 +242,7 @@ auto Self :: mouseCustomEvent (
 auto Self :: mouseMoveEvent (
         __C_ENG_TYPE ( MouseMoveEvent ) * pEvent
 ) const noexcept -> Self const & {
-    std :: cout << pEvent->toString() << '\n';
+//    std :: cout << pEvent->toString() << '\n';
 
     return * this;
 }
@@ -250,7 +250,7 @@ auto Self :: mouseMoveEvent (
 auto Self :: mousePressEvent (
         __C_ENG_TYPE ( MousePressEvent ) * pEvent
 ) const noexcept -> Self const & {
-    std :: cout << pEvent->toString() << '\n';
+//    std :: cout << pEvent->toString() << '\n';
 
     return * this;
 }
@@ -258,7 +258,7 @@ auto Self :: mousePressEvent (
 auto Self :: mouseReleaseEvent (
         __C_ENG_TYPE ( MouseReleaseEvent ) * pEvent
 ) const noexcept -> Self const & {
-    std :: cout << pEvent->toString() << '\n';
+//    std :: cout << pEvent->toString() << '\n';
 
     return * this;
 }
@@ -266,7 +266,7 @@ auto Self :: mouseReleaseEvent (
 auto Self :: mouseEnterEvent (
         __C_ENG_TYPE ( MouseEnterEvent ) * pEvent
 ) const noexcept -> Self const & {
-    std :: cout << pEvent->toString() << '\n';
+//    std :: cout << pEvent->toString() << '\n';
 
     return * this;
 }
@@ -274,7 +274,7 @@ auto Self :: mouseEnterEvent (
 auto Self :: mouseLeaveEvent (
         __C_ENG_TYPE ( MouseLeaveEvent ) * pEvent
 ) const noexcept -> Self const & {
-    std :: cout << pEvent->toString() << '\n';
+//    std :: cout << pEvent->toString() << '\n';
 
     return * this;
 }
@@ -282,7 +282,7 @@ auto Self :: mouseLeaveEvent (
 auto Self :: mouseScrollEvent (
         __C_ENG_TYPE ( MouseScrollEvent ) * pEvent
 ) const noexcept -> Self const & {
-    std :: cout << pEvent->toString() << '\n';
+//    std :: cout << pEvent->toString() << '\n';
 
     return * this;
 }

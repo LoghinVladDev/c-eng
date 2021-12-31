@@ -22,6 +22,11 @@ namespace engine {
     __C_ENG_PRE_DECLARE_CLASS ( RenderEngine );
 
     Class {
+        Const ( PRIMITIVE_TYPE ( cds :: uint8 ),            versionVariant,         VALUE ( 0 ) )
+        Const ( PRIMITIVE_TYPE ( cds :: uint8 ),            versionMajor,           VALUE ( 0 ) )
+        Const ( PRIMITIVE_TYPE ( cds :: uint8 ),            versionMinor,           VALUE ( 2 ) )
+        Const ( PRIMITIVE_TYPE ( cds :: uint8 ),            versionPatch,           VALUE ( 192 ) )
+
         Field ( ENGINE_PRIMITIVE_TYPE ( EngineState ),      state,                  DEFAULT_VALUE ( EngineStateInactive ),  GET_DEFAULT, SET_NONE )
         Field ( ENGINE_PRIMITIVE_TYPE ( Window * ),         window,                 DEFAULT_VALUE ( nullptr ),              GET_DEFAULT, SET ( setWindow ) )
         Field ( ENGINE_PRIMITIVE_TYPE ( RenderEngine * ),   renderEngine,           DEFAULT_VALUE ( nullptr ),              GET_DEFAULT, SET ( setRenderEngine ) )

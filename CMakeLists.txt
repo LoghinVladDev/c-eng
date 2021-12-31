@@ -721,9 +721,16 @@ if(Vulkan_FOUND)
     )
 
     set (
+            ENGINE_REWORK_UTILITY_FUNC_SOURCES
+
+            src/engineRework/utility/func/Func.hpp
+    )
+
+    set (
             ENGINE_REWORK_UTILITY_SOURCES
 
             ${ENGINE_REWORK_UTILITY_LOGGER_SOURCES}
+            ${ENGINE_REWORK_UTILITY_FUNC_SOURCES}
             ${ENGINE_REWORK_UTILITY_PREPROCESS_SOURCES}
             ${ENGINE_REWORK_UTILITY_SETTINGS_SOURCES}
     )
@@ -763,7 +770,24 @@ if(Vulkan_FOUND)
     )
 
     set (
+            ENGINE_REWORK_RENDER_API_VULKAN_INSTANCE_ALLOCATOR_SOURCES
+
+            src/engineRework/render/API/vulkan/instance/allocator/Allocator.cpp
+            src/engineRework/render/API/vulkan/instance/allocator/Allocator.hpp
+    )
+
+    set (
+            ENGINE_REWORK_RENDER_API_VULKAN_INSTANCE_VALIDATION_SOURCES
+
+            src/engineRework/render/API/vulkan/instance/validation/LayerHandler.cpp
+            src/engineRework/render/API/vulkan/instance/validation/LayerHandler.hpp
+    )
+
+    set (
             ENGINE_REWORK_RENDER_API_VULKAN_INSTANCE_SOURCES
+
+            ${ENGINE_REWORK_RENDER_API_VULKAN_INSTANCE_ALLOCATOR_SOURCES}
+            ${ENGINE_REWORK_RENDER_API_VULKAN_INSTANCE_VALIDATION_SOURCES}
 
             src/engineRework/render/API/vulkan/instance/Instance.cpp
             src/engineRework/render/API/vulkan/instance/Instance.hpp
@@ -842,6 +866,7 @@ if(Vulkan_FOUND)
             src/engineRework/utility/logger
             src/engineRework/utility/preprocess
             src/engineRework/utility/settings
+            src/engineRework/utility/func
 
             src/engineRework/render
             src/engineRework/render/window
@@ -849,6 +874,9 @@ if(Vulkan_FOUND)
             src/engineRework/render/API/vulkan
             src/engineRework/render/API/vulkan/extension
             src/engineRework/render/API/vulkan/core
+            src/engineRework/render/API/vulkan/instance
+            src/engineRework/render/API/vulkan/instance/validation
+            src/engineRework/render/API/vulkan/instance/allocator
     )
 
 endif()

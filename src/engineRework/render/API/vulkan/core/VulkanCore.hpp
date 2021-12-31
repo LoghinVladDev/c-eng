@@ -12,6 +12,9 @@
 
 #include <VulkanAPIDetails.hpp>
 
+#include <Core.hpp>
+
+
 namespace cds {
     class String;
 }
@@ -121,6 +124,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
+            Field ( ErrorIllegalArgument,                      cds :: limits :: S32_MAX - 1 ),
             Field ( Unknown,                                   cds :: limits :: S32_MAX )
 
         };
@@ -1790,6 +1794,32 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #define C_ENG_MAP_END
 #include <ObjectMapping.hpp>
 
+#define C_ENG_MAP_START     ENUM ( DebugMessageSeverityFlag,    TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( Verbose,    VkDebugUtilsMessageSeverityFlagBitsEXT :: VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT ),
+            Field ( Info,       VkDebugUtilsMessageSeverityFlagBitsEXT :: VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT ),
+            Field ( Warning,    VkDebugUtilsMessageSeverityFlagBitsEXT :: VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT ),
+            Field ( Error,      VkDebugUtilsMessageSeverityFlagBitsEXT :: VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT )
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START     ENUM ( DebugMessageTypeFlag,    TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( General,        VkDebugUtilsMessageTypeFlagBitsEXT :: VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT ),
+            Field ( Validation,     VkDebugUtilsMessageTypeFlagBitsEXT :: VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT ),
+            Field ( Performance,    VkDebugUtilsMessageTypeFlagBitsEXT :: VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT ),
+            Field ( MaxValue,       DebugMessageTypeFlagPerformance )
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
 
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 
@@ -1800,6 +1830,24 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_ALIAS ( Extent3D, VkExtent3D );
 
         __C_ENG_ALIAS ( Rect, VkRect2D );
+
+        __C_ENG_ALIAS ( GenericVulkanStructure, void );
+
+        __C_ENG_ALIAS ( InstanceHandle,                 VkInstance );
+        __C_ENG_ALIAS ( PhysicalDeviceHandle,           VkPhysicalDevice );
+
+        __C_ENG_ALIAS ( InstanceCreateFlags,            VkInstanceCreateFlags );
+        __C_ENG_ALIAS ( DebugMessengerCreateFlags,      VkDebugUtilsMessengerCreateFlagsEXT );
+
+        __C_ENG_ALIAS ( DebugMessageSeverityFlags,      VkDebugUtilsMessageSeverityFlagsEXT );
+        __C_ENG_ALIAS ( DebugMessageTypeFlags,          VkDebugUtilsMessageTypeFlagsEXT );
+        __C_ENG_ALIAS ( DebugMessengerCallback,         PFN_vkDebugUtilsMessengerCallbackEXT );
+
+        __C_ENG_ALIAS ( AllocationFunction,             PFN_vkAllocationFunction );
+        __C_ENG_ALIAS ( ReallocationFunction,           PFN_vkReallocationFunction );
+        __C_ENG_ALIAS ( FreeFunction,                   PFN_vkFreeFunction );
+        __C_ENG_ALIAS ( InternalAllocationNotification, PFN_vkInternalAllocationNotification );
+        __C_ENG_ALIAS ( InternalFreeNotification,       PFN_vkInternalFreeNotification );
 
 #endif
 
@@ -1815,12 +1863,133 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
             cds :: uint16   patch;
         };
 
+        constexpr const Self nullVersion = {
+                .variant    = static_cast < cds :: uint8 > ( 0 ),
+                .major      = static_cast < cds :: uint8 > ( 0 ),
+                .minor      = static_cast < cds :: uint8 > ( 0 ),
+                .patch      = static_cast < cds :: uint8 > ( 0 )
+        };
+
 #define C_ENG_MAP_END
 #include <ObjectMapping.hpp>
 
 
+#define C_ENG_MAP_START     STRUCT ( ApplicationInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                  structureType;
+            __C_ENG_TYPE ( GenericVulkanStructure ) const * pNext;
+
+            cds :: StringLiteral                            name;
+            __C_ENG_TYPE ( Version )                        version;
+
+            cds :: StringLiteral                            engineName;
+            __C_ENG_TYPE ( Version )                        engineVersion;
+
+            __C_ENG_TYPE ( Version )                        apiVersion;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+
+#define C_ENG_MAP_START     STRUCT ( BaseInStructure, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                  structureType;
+            __C_ENG_TYPE ( GenericVulkanStructure ) const * pNext;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+
+#define C_ENG_MAP_START     STRUCT ( LayerProperties, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            char                        layerName [ VK_MAX_EXTENSION_NAME_SIZE ];
+            __C_ENG_TYPE ( Version )    specVersion;
+            cds :: uint32               implementationVersion;
+            char                        description [ VK_MAX_DESCRIPTION_SIZE ];
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+
+#define C_ENG_MAP_START     STRUCT ( ExtensionProperties, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            char                        name [ VK_MAX_EXTENSION_NAME_SIZE ];
+            cds :: uint32               specVersion;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+
+#define C_ENG_MAP_START     STRUCT ( DebugMessengerCreateInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                  structureType;
+            __C_ENG_TYPE ( GenericVulkanStructure ) const * pNext;
+            __C_ENG_TYPE ( DebugMessengerCreateFlags )      flags;
+            __C_ENG_TYPE ( DebugMessageSeverityFlags )      messageSeverityFlags;
+            __C_ENG_TYPE ( DebugMessageTypeFlags )          messageTypeFlags;
+            __C_ENG_TYPE ( DebugMessengerCallback )         callback;
+            void                                          * pCallbackUserData;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+
+#define C_ENG_MAP_START     STRUCT ( InstanceCreateInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                  structureType;
+            __C_ENG_TYPE ( GenericVulkanStructure ) const * pNext;
+            __C_ENG_TYPE ( InstanceCreateFlags )            flags;
+            __C_ENG_TYPE ( ApplicationInfo )        const * pApplicationInfo;
+
+            cds :: uint32                                   enabledLayerCount;
+            cds :: StringLiteral                    const * pEnabledLayerNames;
+
+            cds :: uint32                                   enabledExtensionCount;
+            cds :: StringLiteral                    const * pEnabledExtensionNames;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+
+#define C_ENG_MAP_START     STRUCT ( AllocationCallbacks, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            void                                              * pUserData;
+            __C_ENG_TYPE ( AllocationFunction )                 allocationCallback;
+            __C_ENG_TYPE ( ReallocationFunction )               reallocationCallback;
+            __C_ENG_TYPE ( FreeFunction )                       freeCallback;
+            __C_ENG_TYPE ( InternalAllocationNotification )     internalAllocationNotificationCallback;
+            __C_ENG_TYPE ( InternalFreeNotification )           internalFreeNotificationCallback;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+
+
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( Result ) ) noexcept -> cds :: StringLiteral;
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( StructureType ) ) noexcept -> cds :: StringLiteral;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( DebugMessageSeverityFlag ) ) noexcept -> cds :: StringLiteral;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( DebugMessageTypeFlag ) ) noexcept -> cds :: StringLiteral;
 
 
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( Offset2D ) const & ) noexcept -> cds :: String;
@@ -1832,8 +2001,19 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( Version ) const & ) noexcept -> cds :: String;
 
 
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( ApplicationInfo ) const & ) noexcept -> cds :: String;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( InstanceCreateInfo ) const & ) noexcept -> cds :: String;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( DebugMessengerCreateInfo ) const & ) noexcept -> cds :: String;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( LayerProperties ) const & ) noexcept -> cds :: String;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( ExtensionProperties ) const & ) noexcept -> cds :: String;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( AllocationCallbacks ) const & ) noexcept -> cds :: String;
+
+
+        __C_ENG_NO_DISCARD auto compare ( __C_ENG_TYPE ( Version ) const &, __C_ENG_TYPE ( Version ) const & ) noexcept -> __C_ENG_TYPE ( CompareResult );
+
         __C_ENG_NO_DISCARD auto uInt32ToInstanceVersion ( cds :: uint32 ) noexcept -> __C_ENG_TYPE ( Version );
         __C_ENG_NO_DISCARD auto instanceVersionToUInt32 ( __C_ENG_TYPE ( Version ) const & ) noexcept -> cds :: uint32;
+        __C_ENG_NO_DISCARD auto versionReadableFormat ( __C_ENG_TYPE ( Version ) const & ) noexcept -> cds :: String;
 
     }
 }
