@@ -1820,6 +1820,37 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #define C_ENG_MAP_END
 #include <ObjectMapping.hpp>
 
+#define C_ENG_MAP_START     ENUM ( ValidationFeatureEnable,    TYPE ( cds :: uint8 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( GpuAssisted,                    VkValidationFeatureEnableEXT :: VK_VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_EXT ),
+            Field ( GpuAssistedReserveBindingSlot,  VkValidationFeatureEnableEXT :: VK_VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_RESERVE_BINDING_SLOT_EXT ),
+            Field ( BestPractices,                  VkValidationFeatureEnableEXT :: VK_VALIDATION_FEATURE_ENABLE_BEST_PRACTICES_EXT ),
+            Field ( DebugPrintf,                    VkValidationFeatureEnableEXT :: VK_VALIDATION_FEATURE_ENABLE_DEBUG_PRINTF_EXT ),
+            Field ( SynchronizationValidation,      VkValidationFeatureEnableEXT :: VK_VALIDATION_FEATURE_ENABLE_SYNCHRONIZATION_VALIDATION_EXT )
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START     ENUM ( ValidationFeatureDisable,    TYPE ( cds :: uint8 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( All,                    VkValidationFeatureDisableEXT :: VK_VALIDATION_FEATURE_DISABLE_ALL_EXT ),
+            Field ( Shaders,                VkValidationFeatureDisableEXT :: VK_VALIDATION_FEATURE_DISABLE_SHADERS_EXT ),
+            Field ( ThreadSafety,           VkValidationFeatureDisableEXT :: VK_VALIDATION_FEATURE_DISABLE_THREAD_SAFETY_EXT ),
+            Field ( APIParameters,          VkValidationFeatureDisableEXT :: VK_VALIDATION_FEATURE_DISABLE_API_PARAMETERS_EXT ),
+            Field ( ObjectLifetimes,        VkValidationFeatureDisableEXT :: VK_VALIDATION_FEATURE_DISABLE_OBJECT_LIFETIMES_EXT ),
+            Field ( CoreChecks,             VkValidationFeatureDisableEXT :: VK_VALIDATION_FEATURE_DISABLE_CORE_CHECKS_EXT ),
+            Field ( UniqueHandles,          VkValidationFeatureDisableEXT :: VK_VALIDATION_FEATURE_DISABLE_UNIQUE_HANDLES_EXT ),
+            Field ( ShaderValidationCache,  VkValidationFeatureDisableEXT :: VK_VALIDATION_FEATURE_DISABLE_SHADER_VALIDATION_CACHE_EXT )
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
 
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 
@@ -1985,11 +2016,29 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #include <ObjectMapping.hpp>
 
 
+#define C_ENG_MAP_START     STRUCT ( ValidationFeatures, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericVulkanStructure )     const * pNext;
+            cds :: uint32                                       enabledValidationFeatureCount;
+            __C_ENG_TYPE ( ValidationFeatureEnable )    const * pEnabledValidationFeatures;
+            cds :: uint32                                       disabledValidationFeatureCount;
+            __C_ENG_TYPE ( ValidationFeatureDisable )   const * pDisabledValidationFeatures;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+
 
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( Result ) ) noexcept -> cds :: StringLiteral;
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( StructureType ) ) noexcept -> cds :: StringLiteral;
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( DebugMessageSeverityFlag ) ) noexcept -> cds :: StringLiteral;
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( DebugMessageTypeFlag ) ) noexcept -> cds :: StringLiteral;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( ValidationFeatureEnable ) ) noexcept -> cds :: StringLiteral;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( ValidationFeatureDisable ) ) noexcept -> cds :: StringLiteral;
 
 
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( Offset2D ) const & ) noexcept -> cds :: String;
@@ -2007,6 +2056,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( LayerProperties ) const & ) noexcept -> cds :: String;
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( ExtensionProperties ) const & ) noexcept -> cds :: String;
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( AllocationCallbacks ) const & ) noexcept -> cds :: String;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( ValidationFeatures ) const & ) noexcept -> cds :: String;
 
 
         __C_ENG_NO_DISCARD auto compare ( __C_ENG_TYPE ( Version ) const &, __C_ENG_TYPE ( Version ) const & ) noexcept -> __C_ENG_TYPE ( CompareResult );

@@ -54,6 +54,16 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
                 cds :: uint32           count;
             };
 
+            struct ValidationEnabledFeatures {
+                __C_ENG_TYPE ( ValidationFeatureEnable )    const * pFeatures;
+                cds :: uint32                                       count;
+            };
+
+            struct ValidationDisabledFeatures {
+                __C_ENG_TYPE ( ValidationFeatureDisable )   const * pFeatures;
+                cds :: uint32                                       count;
+            };
+
             auto init () noexcept (false) -> Self &;
             auto refreshLayers () noexcept (false) -> Self &;
             auto enabledLayerNames () noexcept -> LayerNames;

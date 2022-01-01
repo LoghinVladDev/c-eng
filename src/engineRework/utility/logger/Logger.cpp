@@ -20,9 +20,20 @@ using namespace engine; // NOLINT(clion-misra-cpp2008-7-3-4)
 #define C_ENG_MAP_START     CLASS ( Logger, PARENT ( Object ) )
 #include <ObjectMapping.hpp>
 
-auto Self :: instance () noexcept -> Self & {
-    static Self instance;
-    return instance;
+Self * pActiveInstance = nullptr;
+
+auto __setLoggerInstance ( // NOLINT(bugprone-reserved-identifier)
+        Self * pInstance
+) noexcept -> void {
+    pActiveInstance = pInstance;
+}
+
+auto Self :: instance () noexcept (false) -> Self & {
+    if ( pActiveInstance == nullptr ) {
+        throw NullPointerException ( "Set a Logger Instance First" );
+    }
+
+    return * pActiveInstance;
 }
 
 auto Self :: currentTime () noexcept -> StringLiteral {

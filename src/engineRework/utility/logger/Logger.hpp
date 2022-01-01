@@ -31,7 +31,7 @@ namespace engine {
     public:
         Constructor () noexcept;
 
-        static auto instance () noexcept -> Self &;
+        static auto instance () noexcept (false) -> Self &;
         static auto currentTime () noexcept -> cds :: StringLiteral;
 
         auto log ( cds :: String const &, __C_ENG_TYPE ( LogLevel ) ) noexcept -> Self &;

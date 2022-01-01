@@ -10,6 +10,7 @@
 
 #include <VulkanCore.hpp>
 #include <LayerHandler.hpp>
+#include <CDS/Array>
 
 
 #define C_ENG_MAP_START     CLASS ( Instance, PARENT ( cds :: Object ) )
@@ -21,24 +22,75 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
         Class {
             Const ( ENGINE_TYPE ( DebugMessageSeverityFlags ),  defaultMessageSeverityFlags, VALUE ( // NOLINT(clion-misra-cpp2008-4-5-2)
+
+#ifdef NDEBUG
+
+                    0U
+
+#else
+
                     DebugMessageSeverityFlagVerbose |
                     DebugMessageSeverityFlagInfo    |
                     DebugMessageSeverityFlagWarning |
                     DebugMessageSeverityFlagError
+
+#endif
+
             ))
 
             Const ( ENGINE_TYPE ( DebugMessageTypeFlags ),      defaultMessageTypeFlags,    VALUE ( // NOLINT(clion-misra-cpp2008-4-5-2)
+
+#ifdef NDEBUG
+
+                    0U
+
+#else
+
                     DebugMessageTypeFlagGeneral     |
                     DebugMessageTypeFlagValidation  |
                     DebugMessageTypeFlagPerformance
+
+#endif
+
             ))
 
-            Field ( ENGINE_TYPE ( Version ),                    version,                    DEFAULT_VALUE ( nullVersion ),                  GET_DEFAULT, SET_NONE )
-            Field ( ENGINE_TYPE ( LayerHandler ),               layerHandler,               NO_INIT,                                        GET_DEFAULT, SET_NONE )
-            Field ( ENGINE_TYPE ( DebugMessageSeverityFlags ),  debugMessageSeverityFlags,  DEFAULT_VALUE ( defaultMessageSeverityFlags ),  GET_DEFAULT, SET_NONE )
-            Field ( ENGINE_TYPE ( DebugMessageTypeFlags ),      debugMessageTypeFlags,      DEFAULT_VALUE ( defaultMessageTypeFlags ),      GET_DEFAULT, SET_NONE )
+            Const ( TYPE ( cds :: Array < __C_ENG_TYPE ( ValidationFeatureEnable ) > ),     defaultEnabledValidationFeatures, VALUE ({
 
-            Field ( ENGINE_TYPE ( InstanceHandle ),             handle,                     DEFAULT_VALUE ( nullptr ),                      GET_DEFAULT, SET_NONE )
+#ifdef NDEBUG
+
+#else
+
+                ValidationFeatureEnableGpuAssisted,
+                ValidationFeatureEnableGpuAssistedReserveBindingSlot,
+                ValidationFeatureEnableBestPractices,
+                ValidationFeatureEnableDebugPrintf,
+                ValidationFeatureEnableSynchronizationValidation
+
+#endif
+
+            }))
+
+            Const ( TYPE ( cds :: Array < __C_ENG_TYPE ( ValidationFeatureDisable ) > ),    defaultDisabledValidationFeatures, VALUE ({
+
+#ifndef NDEBUG
+
+#else
+
+                ValidationFeatureDisableAll
+
+#endif
+
+            }))
+
+            Field ( ENGINE_TYPE ( Version ),                                                version,                    DEFAULT_VALUE ( nullVersion ),                  GET_DEFAULT, SET_NONE )
+            Field ( ENGINE_TYPE ( LayerHandler ),                                           layerHandler,               NO_INIT,                                        GET_DEFAULT, SET_NONE )
+            Field ( ENGINE_TYPE ( DebugMessageSeverityFlags ),                              debugMessageSeverityFlags,  DEFAULT_VALUE ( defaultMessageSeverityFlags ),  GET_DEFAULT, SET_NONE )
+            Field ( ENGINE_TYPE ( DebugMessageTypeFlags ),                                  debugMessageTypeFlags,      DEFAULT_VALUE ( defaultMessageTypeFlags ),      GET_DEFAULT, SET_NONE )
+
+            Field ( ENGINE_TYPE ( InstanceHandle ),                                         handle,                     DEFAULT_VALUE ( nullptr ),                      GET_DEFAULT, SET_NONE )
+
+            Field ( TYPE ( cds :: Array < __C_ENG_TYPE ( ValidationFeatureEnable ) > ),     enabledValidationFeatures,  NO_INIT,                                        GET_DEFAULT, SET_NONE )
+            Field ( TYPE ( cds :: Array < __C_ENG_TYPE ( ValidationFeatureDisable ) > ),    disabledValidationFeatures, NO_INIT,                                        GET_DEFAULT, SET_NONE )
 
         public:
             class Builder;
@@ -72,12 +124,15 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
     namespace vulkan {
 
         Class {
-            Field ( ENGINE_TYPE ( Version ),                    version,                    DEFAULT_VALUE ( nullVersion ),                  GET_NONE, SET_INLINE ( setVersion ) )
-            Field ( ENGINE_TYPE ( DebugMessageSeverityFlags ),  debugMessageSeverityFlags,  DEFAULT_VALUE ( defaultMessageSeverityFlags ),  GET_NONE, SET_INLINE ( setDebugMessageSeverityFlags ) )
-            Field ( ENGINE_TYPE ( DebugMessageTypeFlags ),      debugMessageTypeFlags,      DEFAULT_VALUE ( defaultMessageTypeFlags ),      GET_NONE, SET_INLINE ( setDebugMessageTypeFlags ) )
+            Field ( ENGINE_TYPE ( Version ),                                                version,                    DEFAULT_VALUE ( nullVersion ),                          GET_NONE, SET_INLINE ( setVersion ) )
+            Field ( ENGINE_TYPE ( DebugMessageSeverityFlags ),                              debugMessageSeverityFlags,  DEFAULT_VALUE ( defaultMessageSeverityFlags ),          GET_NONE, SET_INLINE ( setDebugMessageSeverityFlags ) )
+            Field ( ENGINE_TYPE ( DebugMessageTypeFlags ),                                  debugMessageTypeFlags,      DEFAULT_VALUE ( defaultMessageTypeFlags ),              GET_NONE, SET_INLINE ( setDebugMessageTypeFlags ) )
+
+            Field ( TYPE ( cds :: Array < __C_ENG_TYPE ( ValidationFeatureEnable ) > ),     enabledValidationFeatures,  DEFAULT_VALUE ( defaultEnabledValidationFeatures ),     GET_NONE, SET_INLINE ( setEnabledValidationFeatures ) )
+            Field ( TYPE ( cds :: Array < __C_ENG_TYPE ( ValidationFeatureDisable ) > ),    disabledValidationFeatures, DEFAULT_VALUE ( defaultDisabledValidationFeatures ),    GET_NONE, SET_INLINE ( setDisabledValidationFeatures ) )
 
         public:
-            __C_ENG_NO_DISCARD auto build () const noexcept -> Nester;
+            __C_ENG_NO_DISCARD auto build () noexcept -> Nester;
         };
 
     }

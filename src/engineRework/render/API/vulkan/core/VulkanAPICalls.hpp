@@ -5,6 +5,8 @@
 #ifndef __C_ENG_VULKANAPICALLS_HPP
 #define __C_ENG_VULKANAPICALLS_HPP
 
+#include <VulkanCoreConfig.hpp>
+
 namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
     namespace vulkan {
@@ -88,6 +90,35 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
                     .messageType            = pCreateInfo->messageTypeFlags,
                     .pfnUserCallback        = pCreateInfo->callback,
                     .pUserData              = pCreateInfo->pCallbackUserData
+            };
+        }
+
+        inline static auto toVulkanFormat (
+                __C_ENG_TYPE ( ValidationFeatures ) const * pValidationFeatures,
+                VkValidationFeaturesEXT                   * pVkValidationFeatures,
+                VkValidationFeatureEnableEXT              * pEnableFeatures,
+                VkValidationFeatureDisableEXT             * pDisableFeatures
+        ) noexcept -> void {
+
+            if ( pValidationFeatures == nullptr || pVkValidationFeatures == nullptr ) {
+                return;
+            }
+
+            for ( cds :: uint32 i = 0U; i < pValidationFeatures->enabledValidationFeatureCount; ++ i ) {
+                pEnableFeatures[i] = static_cast < VkValidationFeatureEnableEXT > ( pValidationFeatures->pEnabledValidationFeatures[i] );
+            }
+
+            for ( cds :: uint32 i = 0U; i < pValidationFeatures->disabledValidationFeatureCount; ++ i ) {
+                pDisableFeatures[i] = static_cast < VkValidationFeatureDisableEXT > ( pValidationFeatures->pDisabledValidationFeatures[i] );
+            }
+
+            * pVkValidationFeatures = {
+                    .sType                          = VK_STRUCTURE_TYPE_VALIDATION_FEATURES_EXT,
+                    .pNext                          = nullptr,
+                    .enabledValidationFeatureCount  = pValidationFeatures->enabledValidationFeatureCount,
+                    .pEnabledValidationFeatures     = pEnableFeatures,
+                    .disabledValidationFeatureCount = pValidationFeatures->disabledValidationFeatureCount,
+                    .pDisabledValidationFeatures    = pDisableFeatures
             };
         }
 
@@ -237,8 +268,14 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
             VkAllocationCallbacks               allocationCallbacks {};
             VkApplicationInfo                   applicationInfo {};
             VkInstanceCreateInfo                instanceCreateInfo {};
+            VkValidationFeaturesEXT             validationFeatures {};
+
+            VkValidationFeatureEnableEXT       validationFeatureEnableArray     [__C_ENG_VULKAN_CORE_VALIDATION_FEATURE_ENABLE_MAX_COUNT];
+            VkValidationFeatureDisableEXT      validationFeatureDisableArray    [__C_ENG_VULKAN_CORE_VALIDATION_FEATURE_DISABLE_MAX_COUNT];
 
             VkAllocationCallbacks       const * pUsedAllocationCallbacks = nullptr;
+
+            VkBaseInStructure                 * pPreviousInChain = nullptr;
 
             void                        const * pInstanceNext = nullptr;
 
@@ -247,15 +284,33 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
                 toVulkanFormat ( pAllocationCallbacks, & allocationCallbacks );
             }
 
-            if ( pCreateInfo->pNext != nullptr ) {
-                auto asBase = reinterpret_cast < __C_ENG_TYPE ( BaseInStructure ) const * > ( pCreateInfo->pNext );
+            auto currentGenericStructure = reinterpret_cast < __C_ENG_TYPE ( BaseInStructure ) const * > ( pCreateInfo->pNext );
 
-                if ( asBase->structureType == StructureTypeDebugUtilsMessengerCreateInfo ) {
-                    auto asTrueBase = reinterpret_cast < __C_ENG_TYPE ( DebugMessengerCreateInfo ) const * > ( pCreateInfo->pNext );
+            while ( currentGenericStructure != nullptr ) {
+                VkBaseInStructure * pCurrentInChain = nullptr;
 
-                    pInstanceNext = & messengerCreateInfo;
-                    toVulkanFormat ( asTrueBase, & messengerCreateInfo );
+                if ( currentGenericStructure->structureType == StructureTypeDebugUtilsMessengerCreateInfo ) {
+                    auto currentStructure = reinterpret_cast < __C_ENG_TYPE ( DebugMessengerCreateInfo ) const * > ( currentGenericStructure );
+                    toVulkanFormat ( currentStructure, & messengerCreateInfo );
+                    pCurrentInChain = reinterpret_cast < VkBaseInStructure * > ( & messengerCreateInfo );
                 }
+
+                if ( currentGenericStructure->structureType == StructureTypeValidationFeatures ) {
+                    auto currentStructure = reinterpret_cast < __C_ENG_TYPE ( ValidationFeatures ) const * > ( currentGenericStructure );
+                    toVulkanFormat ( currentStructure, & validationFeatures, validationFeatureEnableArray, validationFeatureDisableArray ); // NOLINT(clion-misra-cpp2008-5-2-12)
+                    pCurrentInChain = reinterpret_cast < VkBaseInStructure * > ( & validationFeatures );
+                }
+
+                if ( pInstanceNext == nullptr ) {
+                    pInstanceNext = pCurrentInChain;
+                }
+
+                if ( pPreviousInChain != nullptr ) {
+                    pPreviousInChain->pNext = pCurrentInChain;
+                }
+
+                pPreviousInChain = pCurrentInChain;
+                currentGenericStructure = reinterpret_cast < __C_ENG_TYPE ( BaseInStructure ) const * > ( currentGenericStructure->pNext );
             }
 
             toVulkanFormat ( pCreateInfo->pApplicationInfo, & applicationInfo );

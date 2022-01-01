@@ -454,9 +454,9 @@
         __C_ENG_OBJECT_MAP_CONST_VALUE_CAST_ ## _typeFormula (_typeFormula, _valueFormula );
 
 #define __C_ENG_OBJECT_MAP_CONST_TYPE_MODIFIERS_PRIMITIVE_TYPE(...)         constexpr static
-#define __C_ENG_OBJECT_MAP_CONST_TYPE_MODIFIERS_TYPE(...)                   const static
+#define __C_ENG_OBJECT_MAP_CONST_TYPE_MODIFIERS_TYPE(...)                   const inline static
 #define __C_ENG_OBJECT_MAP_CONST_TYPE_MODIFIERS_ENGINE_PRIMITIVE_TYPE(...)  constexpr static
-#define __C_ENG_OBJECT_MAP_CONST_TYPE_MODIFIERS_ENGINE_TYPE(...)            const static
+#define __C_ENG_OBJECT_MAP_CONST_TYPE_MODIFIERS_ENGINE_TYPE(...)            const inline static
 
 #define __C_ENG_OBJECT_MAP_CONST_TYPE_PRIMITIVE_TYPE(...)         __VA_ARGS__
 #define __C_ENG_OBJECT_MAP_CONST_TYPE_TYPE(...)                   __VA_ARGS__
@@ -482,7 +482,7 @@
 #define __C_ENG_OBJECT_MAP_CONST_VALUE_CAST_ENGINE_TYPE_CALL(_typeFormula, _valueFormula) \
     = __C_ENG_OBJECT_MAP_CONST_VALUE_ ## _valueFormula
 
-#define __C_ENG_OBJECT_MAP_CONST_VALUE_VALUE(_value)    _value
+#define __C_ENG_OBJECT_MAP_CONST_VALUE_VALUE(...)    __VA_ARGS__
 
 
 

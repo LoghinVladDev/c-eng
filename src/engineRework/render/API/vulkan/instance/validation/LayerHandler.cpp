@@ -111,19 +111,22 @@ auto vulkan :: Self :: refreshLayers() noexcept (false) -> Self & {
                     if (
                             newLayers[layerIndex].enabled &&
                             std :: strcmp ( newLayers[layerIndex].properties.layerName, validationLayerName ) == 0 && // NOLINT(clion-misra-cpp2008-5-2-12)
-                            std :: strcmp ( pNewExtensions[extensionIndex].properties.name, validationRequiredExtensionName ) == 0 &&  // NOLINT(clion-misra-cpp2008-5-2-12)
-                            ! pNewExtensions[extensionIndex].enabled
+                            std :: strcmp ( pNewExtensions[extensionIndex].properties.name, validationRequiredExtensionName ) == 0 // NOLINT(clion-misra-cpp2008-5-2-12)
                     ) {
                         newDebugLayerEnabled                    = true;
-                        pNewExtensions[extensionIndex].enabled  = true;
-                        (void) __C_ENG_TYPE ( Settings ) :: instance().set (
-                                    (
-                                            "Validation_Layer_"_s + newLayers[layerIndex].properties.layerName +
-                                            "_Extension_" + pNewExtensions[ extensionIndex ].properties.name +
-                                            "_enabled"
-                                    ).cStr(),
-                                    1U
-                                );
+
+                        if ( ! pNewExtensions[extensionIndex].enabled ) {
+
+                            pNewExtensions[extensionIndex].enabled  = true;
+                            (void) __C_ENG_TYPE ( Settings ) :: instance().set (
+                                        (
+                                                "Validation_Layer_"_s + newLayers[layerIndex].properties.layerName +
+                                                "_Extension_" + pNewExtensions[ extensionIndex ].properties.name +
+                                                "_enabled"
+                                        ).cStr(),
+                                        1U
+                            );
+                        }
                     }
 
                     if ( pNewExtensions[extensionIndex].enabled ) {

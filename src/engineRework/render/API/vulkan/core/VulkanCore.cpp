@@ -1728,6 +1728,41 @@ auto vulkan :: toString (
     return asString;
 }
 
+auto vulkan :: toString (
+        __C_ENG_TYPE ( ValidationFeatureEnable ) flag
+) noexcept -> StringLiteral {
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case __C_ENG_TYPE ( ValidationFeatureEnable ) :: ValidationFeatureEnableGpuAssisted:                    { asString = "GPU Assisted Validation";                         break; }
+        case __C_ENG_TYPE ( ValidationFeatureEnable ) :: ValidationFeatureEnableGpuAssistedReserveBindingSlot:  { asString = "GPU Assisted Validation Reserved Binding Slot";   break; }
+        case __C_ENG_TYPE ( ValidationFeatureEnable ) :: ValidationFeatureEnableBestPractices:                  { asString = "Best Practices";                                  break; }
+        case __C_ENG_TYPE ( ValidationFeatureEnable ) :: ValidationFeatureEnableDebugPrintf:                    { asString = "GPU Shader Debug Printf";                         break; }
+        case __C_ENG_TYPE ( ValidationFeatureEnable ) :: ValidationFeatureEnableSynchronizationValidation:      { asString = "Synchronization Validation";                      break; }
+    }
+
+    return asString;
+}
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( ValidationFeatureDisable ) flag
+) noexcept -> StringLiteral {
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case __C_ENG_TYPE ( ValidationFeatureDisable ) :: ValidationFeatureDisableAll:                      { asString = "All Validation Features";                     break; }
+        case __C_ENG_TYPE ( ValidationFeatureDisable ) :: ValidationFeatureDisableShaders:                  { asString = "Shader Checks";                               break; }
+        case __C_ENG_TYPE ( ValidationFeatureDisable ) :: ValidationFeatureDisableThreadSafety:             { asString = "Thread Safety Checks";                        break; }
+        case __C_ENG_TYPE ( ValidationFeatureDisable ) :: ValidationFeatureDisableAPIParameters:            { asString = "Parameter Checks";                            break; }
+        case __C_ENG_TYPE ( ValidationFeatureDisable ) :: ValidationFeatureDisableObjectLifetimes:          { asString = "Object Lifetime Checks";                      break; }
+        case __C_ENG_TYPE ( ValidationFeatureDisable ) :: ValidationFeatureDisableCoreChecks:               { asString = "Core Validation Checks";                      break; }
+        case __C_ENG_TYPE ( ValidationFeatureDisable ) :: ValidationFeatureDisableUniqueHandles:            { asString = "Duplicate Non-Dispatchable Handle Checks";    break; }
+        case __C_ENG_TYPE ( ValidationFeatureDisable ) :: ValidationFeatureDisableShaderValidationCache:    { asString = "Shader Validation Caching";                   break; }
+    }
+
+    return asString;
+}
+
 #include <CDS/String>
 
 auto vulkan :: toString (
@@ -1846,6 +1881,50 @@ auto vulkan :: toString (
             ", messageTypeFlags = "     + "0b" + Long ( createInfo.messageTypeFlags ).toString(2) +
             ", callback = "             + :: toString ( createInfo.callback ) +
             ", userData = "             + :: toString ( createInfo.pCallbackUserData ) +
+            " }";
+}
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( ValidationFeatures ) const & createInfo
+) noexcept -> String {
+
+    auto enabledFeaturesToString = [](
+            __C_ENG_TYPE ( ValidationFeatureEnable )    const * pFeatures,
+            uint32                                              featureCount
+    ) noexcept -> String {
+        String asString;
+
+        for ( uint32 i = 0U; i < featureCount; ++ i ) {
+            asString += :: toString ( pFeatures[i] ) + ", "_s;
+        }
+
+        return asString.removeSuffix(", ");
+    };
+
+    auto disabledFeaturesToString = [](
+            __C_ENG_TYPE ( ValidationFeatureDisable )   const * pFeatures,
+            uint32                                              featureCount
+    ) noexcept -> String {
+        String asString;
+
+        for ( uint32 i = 0U; i < featureCount; ++ i ) {
+            asString += :: toString ( pFeatures[i] ) + ", "_s;
+        }
+
+        return asString.removeSuffix(", ");
+    };
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( ValidationFeatures ) ) " "
+            "{ type = "_s               + toString ( createInfo.structureType ) +
+            ", next = "                 + :: toString ( createInfo.pNext ) +
+            ", enabledFeatures = "
+            "{ count = "                + createInfo.enabledValidationFeatureCount +
+            ", features = "             + enabledFeaturesToString ( createInfo.pEnabledValidationFeatures, createInfo.enabledValidationFeatureCount ) +
+            " }" +
+            ", disabledFeatures = "
+            "{ count = "                + createInfo.disabledValidationFeatureCount +
+            ", features = "             + disabledFeaturesToString ( createInfo.pDisabledValidationFeatures, createInfo.disabledValidationFeatureCount ) +
+            " }"
             " }";
 }
 

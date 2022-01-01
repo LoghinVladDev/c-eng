@@ -42,7 +42,7 @@ static VKAPI_ATTR auto VKAPI_CALL debugMessengerCallback (
     auto typeFlagsToString = []( VkDebugUtilsMessageTypeFlagsEXT flags ) noexcept -> String {
         String asString = "";
 
-        for ( uint32 f = 0U; true; f <<= 1 ) { // NOLINT(clion-misra-cpp2008-6-5-1)
+        for ( uint32 f = 1U; true; f <<= 1 ) { // NOLINT(clion-misra-cpp2008-6-5-1)
             if ( ( f & flags ) != 0U ) {
                 asString += engine :: vulkan :: toString ( static_cast < engine :: vulkan :: __C_ENG_TYPE ( DebugMessageTypeFlag ) > ( f ) ) + ", "_s;
             }
@@ -70,7 +70,8 @@ static inline auto populateDebugMessengerCreateInfo (
         vulkan :: __C_ENG_TYPE ( DebugMessengerCreateInfo )   * pCreateInfo,
         vulkan :: __C_ENG_TYPE ( DebugMessageSeverityFlags )    messageSeverityFlags,
         vulkan :: __C_ENG_TYPE ( DebugMessageTypeFlags )        messageTypeFlags,
-        vulkan :: __C_ENG_TYPE ( DebugMessengerCallback )       callback
+        vulkan :: __C_ENG_TYPE ( DebugMessengerCallback )       callback,
+        void                                            const * pNext
 ) noexcept -> void {
 
     if ( pCreateInfo == nullptr ) {
@@ -79,7 +80,7 @@ static inline auto populateDebugMessengerCreateInfo (
 
     * pCreateInfo = {
             .structureType          = engine :: vulkan :: StructureTypeDebugUtilsMessengerCreateInfo,
-            .pNext                  = nullptr,
+            .pNext                  = pNext,
             .flags                  = 0U,
             .messageSeverityFlags   = messageSeverityFlags,
             .messageTypeFlags       = messageTypeFlags,
@@ -114,10 +115,10 @@ static inline auto populateApplicationInfo (
 
 static inline auto populateInstanceCreateInfo (
         vulkan :: __C_ENG_TYPE ( InstanceCreateInfo )             * pCreateInfo,
-        vulkan :: __C_ENG_TYPE ( DebugMessengerCreateInfo )       * pDebugMessengerCreateInfo,
         vulkan :: __C_ENG_TYPE ( ApplicationInfo )                * pApplicationInfo,
         vulkan :: __C_ENG_TYPE ( LayerHandler ) :: LayerNames     * pEnabledLayerNames,
-        vulkan :: __C_ENG_TYPE ( LayerHandler ) :: ExtensionNames * pEnabledExtensionNames
+        vulkan :: __C_ENG_TYPE ( LayerHandler ) :: ExtensionNames * pEnabledExtensionNames,
+        void                                                const * pNext
 ) noexcept -> void {
 
     if ( pCreateInfo == nullptr ) {
@@ -126,7 +127,7 @@ static inline auto populateInstanceCreateInfo (
 
     * pCreateInfo = {
             .structureType          = engine :: vulkan :: StructureTypeInstanceCreateInfo,
-            .pNext                  = pDebugMessengerCreateInfo,
+            .pNext                  = pNext,
             .flags                  = 0U,
             .pApplicationInfo       = pApplicationInfo,
             .enabledLayerCount      = pEnabledLayerNames->count,
@@ -136,6 +137,26 @@ static inline auto populateInstanceCreateInfo (
     };
 }
 
+static inline auto populateValidationFeatures (
+        vulkan :: __C_ENG_TYPE ( ValidationFeatures )                                 * pValidationFeatures,
+        vulkan :: __C_ENG_TYPE ( LayerHandler ) :: ValidationEnabledFeatures    const * pEnabledFeatures,
+        vulkan :: __C_ENG_TYPE ( LayerHandler ) :: ValidationDisabledFeatures   const * pDisabledFeatures,
+        void                                                                    const * pNext
+) noexcept -> void {
+
+    if ( pValidationFeatures == nullptr ) {
+        return;
+    }
+
+    * pValidationFeatures = {
+            .structureType                  = engine :: vulkan :: StructureTypeValidationFeatures,
+            .pNext                          = pNext,
+            .enabledValidationFeatureCount  = pEnabledFeatures->count,
+            .pEnabledValidationFeatures     = pEnabledFeatures->pFeatures,
+            .disabledValidationFeatureCount = pDisabledFeatures->count,
+            .pDisabledValidationFeatures    = pDisabledFeatures->pFeatures
+    };
+}
 
 #define C_ENG_MAP_START     CLASS ( Instance, EXTERNAL_PARENT ( Object ) )
 #include <ObjectMapping.hpp>
@@ -189,18 +210,51 @@ auto vulkan :: Self :: init () noexcept (false) -> Self & {
     __C_ENG_TYPE ( DebugMessengerCreateInfo )   debugMessengerCreateInfo {};
     __C_ENG_TYPE ( ApplicationInfo )            applicationInfo {};
     __C_ENG_TYPE ( InstanceCreateInfo )         instanceCreateInfo {};
+    __C_ENG_TYPE ( ValidationFeatures )         validationFeatures {};
 
-    __C_ENG_TYPE ( DebugMessengerCreateInfo ) * pUsedDebugMessengerCreateInfo = nullptr;
+    __C_ENG_TYPE ( ValidationFeatureEnable )    enabledValidationFeatures   [ __C_ENG_VULKAN_CORE_VALIDATION_FEATURE_ENABLE_MAX_COUNT ];
+    __C_ENG_TYPE ( ValidationFeatureDisable )   disabledValidationFeatures  [ __C_ENG_VULKAN_CORE_VALIDATION_FEATURE_DISABLE_MAX_COUNT ];
+
+    __C_ENG_TYPE ( LayerHandler ) :: ValidationEnabledFeatures  enabledFeatures {};
+    __C_ENG_TYPE ( LayerHandler ) :: ValidationDisabledFeatures disabledFeatures {};
+
+    void                                const * pNext = nullptr;
 
     if ( this->layerHandler().debugLayerEnabled() ) {
 
-        pUsedDebugMessengerCreateInfo = & debugMessengerCreateInfo;
+        for ( uint32 i = 0U; i < this->enabledValidationFeatures().size(); ++ i ) {
+            enabledValidationFeatures[i] = this->enabledValidationFeatures()[static_cast < sint32 > ( i )];
+        }
+
+        enabledFeatures = {
+                .pFeatures  = enabledValidationFeatures,
+                .count      = static_cast < cds :: uint32 > ( this->enabledValidationFeatures().size() )
+        };
+
+        for ( uint32 i = 0U; i < this->disabledValidationFeatures().size(); ++ i ) {
+            disabledValidationFeatures[i] = this->disabledValidationFeatures()[static_cast < sint32 > ( i )];
+        }
+
+        disabledFeatures = {
+                .pFeatures  = disabledValidationFeatures,
+                .count      = static_cast < cds :: uint32 > ( this->disabledValidationFeatures().size() )
+        };
+
+        pNext = & debugMessengerCreateInfo;
 
         populateDebugMessengerCreateInfo(
                 & debugMessengerCreateInfo,
                 this->debugMessageSeverityFlags(),
                 this->debugMessageTypeFlags(),
-                & debugMessengerCallback
+                & debugMessengerCallback,
+                & validationFeatures
+        );
+
+        populateValidationFeatures (
+                & validationFeatures,
+                & enabledFeatures,
+                & disabledFeatures,
+                nullptr
         );
     }
 
@@ -218,10 +272,10 @@ auto vulkan :: Self :: init () noexcept (false) -> Self & {
 
     populateInstanceCreateInfo (
             & instanceCreateInfo,
-            pUsedDebugMessengerCreateInfo,
             & applicationInfo,
             & layers,
-            & extensions
+            & extensions,
+            pNext
     );
 
     auto result = vulkan :: createInstance (
@@ -253,6 +307,8 @@ auto vulkan :: Self :: clean () noexcept (false) -> Self & {
             __C_ENG_TYPE ( Allocator ) :: instance().callbacks()
     );
 
+    this->_handle = nullptr;
+
     return * this;
 }
 
@@ -267,12 +323,14 @@ vulkan :: Self :: Destructor () noexcept {
 #define C_ENG_MAP_START     NESTED_CLASS ( Builder, ENGINE_TYPE ( Instance ), PARENT ( Object ) )
 #include <ObjectMapping.hpp>
 
-auto vulkan :: Self :: build () const noexcept -> Nester {
+auto vulkan :: Self :: build () noexcept -> Nester {
     Nester builtObject;
 
     builtObject._version                    = this->_version;
     builtObject._debugMessageSeverityFlags  = this->_debugMessageSeverityFlags;
     builtObject._debugMessageTypeFlags      = this->_debugMessageTypeFlags;
+    builtObject._enabledValidationFeatures  = std :: move ( this->_enabledValidationFeatures );
+    builtObject._disabledValidationFeatures = std :: move ( this->_disabledValidationFeatures );
 
     return builtObject;
 }
