@@ -328,7 +328,11 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         static inline auto destroyInstance (
                 __C_ENG_TYPE ( InstanceHandle )                 handle,
                 __C_ENG_TYPE ( AllocationCallbacks )    const * pAllocatorCallbacks
-        ) noexcept -> void {
+        ) noexcept -> __C_ENG_TYPE ( Result ) {
+
+            if ( handle == nullptr ) {
+                return ResultErrorIllegalArgument;
+            }
 
             VkAllocationCallbacks vkCallbacks {};
             VkAllocationCallbacks * pUsedCallbacks = nullptr;
@@ -339,6 +343,83 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
             }
 
             vkDestroyInstance ( handle, pUsedCallbacks );
+            return ResultSuccess;
+        }
+
+        static inline auto createDebugMessenger (
+                __C_ENG_TYPE ( InstanceHandle )                     instanceHandle,
+                __C_ENG_TYPE ( DebugMessengerCreateInfo )   const * pMessengerCreateInfo,
+                __C_ENG_TYPE ( AllocationCallbacks )        const * pAllocationCallbacks,
+                __C_ENG_TYPE ( DebugMessengerHandle )             * pHandle
+        ) noexcept -> __C_ENG_TYPE ( Result ) {
+
+            if ( pMessengerCreateInfo == nullptr || pHandle == nullptr || instanceHandle == nullptr ) {
+                return ResultErrorIllegalArgument;
+            }
+
+            PFN_vkCreateDebugUtilsMessengerEXT  function = nullptr;
+
+            VkDebugUtilsMessengerCreateInfoEXT  debugMessengerCreateInfo {};
+            VkAllocationCallbacks               allocationCallbacks {};
+
+            VkAllocationCallbacks             * pUsedAllocationCallbacks = nullptr;
+
+            function = reinterpret_cast < PFN_vkCreateDebugUtilsMessengerEXT > (
+                    vkGetInstanceProcAddr ( instanceHandle, __C_ENG_VULKAN_CORE_FUNCTION_NAME_CREATE_DEBUG_MESSENGER )
+            );
+
+            if ( function == nullptr ) {
+                return ResultErrorFunctionHandleNotFound;
+            }
+
+            if ( pAllocationCallbacks != nullptr ) {
+                pUsedAllocationCallbacks = & allocationCallbacks;
+                toVulkanFormat ( pAllocationCallbacks, & allocationCallbacks );
+            }
+
+            toVulkanFormat (
+                    pMessengerCreateInfo,
+                    & debugMessengerCreateInfo
+            );
+
+            return static_cast < __C_ENG_TYPE ( Result ) > ( function (
+                    instanceHandle,
+                    & debugMessengerCreateInfo,
+                    pUsedAllocationCallbacks,
+                    pHandle
+            ));
+        }
+
+        static inline auto destroyDebugMessenger (
+                __C_ENG_TYPE ( InstanceHandle )                 instanceHandle,
+                __C_ENG_TYPE ( DebugMessengerHandle )           debugMessengerHandle,
+                __C_ENG_TYPE ( AllocationCallbacks )    const * pAllocationCallbacks
+        ) noexcept -> __C_ENG_TYPE ( Result ) {
+
+            if ( instanceHandle == nullptr || debugMessengerHandle == nullptr ) {
+                return ResultErrorIllegalArgument;
+            }
+
+            PFN_vkDestroyDebugUtilsMessengerEXT function = nullptr;
+
+            VkAllocationCallbacks               allocationCallbacks {};
+            VkAllocationCallbacks             * pUsedCallbacks = nullptr;
+
+            function = reinterpret_cast < PFN_vkDestroyDebugUtilsMessengerEXT > (
+                    vkGetInstanceProcAddr ( instanceHandle, __C_ENG_VULKAN_CORE_FUNCTION_NAME_DESTROY_DEBUG_MESSENGER )
+            );
+
+            if ( function == nullptr ) {
+                return ResultErrorFunctionHandleNotFound;
+            }
+
+            if ( pAllocationCallbacks != nullptr ) {
+                pUsedCallbacks = & allocationCallbacks;
+                toVulkanFormat ( pAllocationCallbacks, & allocationCallbacks );
+            }
+
+            function ( instanceHandle, debugMessengerHandle, pUsedCallbacks );
+            return ResultSuccess;
         }
 
     }

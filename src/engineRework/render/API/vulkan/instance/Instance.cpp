@@ -294,20 +294,48 @@ auto vulkan :: Self :: init () noexcept (false) -> Self & {
             " created"
     );
 
+    if ( this->layerHandler().debugLayerEnabled() ) {
+
+        result = vulkan::createDebugMessenger(
+                this->handle(),
+                &debugMessengerCreateInfo,
+                __C_ENG_TYPE (Allocator)::instance().callbacks(),
+                &this->_debugMessengerHandle
+        );
+    }
+
     return * this;
 }
 
 auto vulkan :: Self :: clean () noexcept (false) -> Self & {
-    if ( this->_handle == nullptr ) {
-        return * this;
+    if ( this->_debugMessengerHandle != nullptr ) {
+
+        auto result = vulkan :: destroyDebugMessenger (
+                this->handle(),
+                this->debugMessengerHandle(),
+                __C_ENG_TYPE ( Allocator ) :: instance().callbacks()
+        );
+
+        if ( result != ResultSuccess ) {
+            __C_ENG_LOG_DETAILED_API_CALL_EXCEPTION (warning, "destroyDebugMessenger", result);
+        }
+
+        this->_debugMessengerHandle = nullptr;
     }
 
-    vulkan :: destroyInstance(
-            this->handle(),
-            __C_ENG_TYPE ( Allocator ) :: instance().callbacks()
-    );
+    if ( this->_handle != nullptr ) {
 
-    this->_handle = nullptr;
+        auto result = vulkan :: destroyInstance (
+                this->handle(),
+                __C_ENG_TYPE ( Allocator ) :: instance().callbacks()
+        );
+
+        if ( result != ResultSuccess ) {
+            __C_ENG_LOG_DETAILED_API_CALL_EXCEPTION (warning, "destroyInstance", result);
+        }
+
+        this->_handle = nullptr;
+    }
 
     return * this;
 }

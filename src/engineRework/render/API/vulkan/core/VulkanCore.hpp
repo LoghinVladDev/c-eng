@@ -124,6 +124,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
+            Field ( ErrorFunctionHandleNotFound,               cds :: limits :: S32_MAX - 2 ),
             Field ( ErrorIllegalArgument,                      cds :: limits :: S32_MAX - 1 ),
             Field ( Unknown,                                   cds :: limits :: S32_MAX )
 
@@ -1865,6 +1866,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_ALIAS ( GenericVulkanStructure, void );
 
         __C_ENG_ALIAS ( InstanceHandle,                 VkInstance );
+        __C_ENG_ALIAS ( DebugMessengerHandle,           VkDebugUtilsMessengerEXT );
         __C_ENG_ALIAS ( PhysicalDeviceHandle,           VkPhysicalDevice );
 
         __C_ENG_ALIAS ( InstanceCreateFlags,            VkInstanceCreateFlags );

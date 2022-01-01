@@ -88,6 +88,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
             Field ( ENGINE_TYPE ( DebugMessageTypeFlags ),                                  debugMessageTypeFlags,      DEFAULT_VALUE ( defaultMessageTypeFlags ),      GET_DEFAULT, SET_NONE )
 
             Field ( ENGINE_TYPE ( InstanceHandle ),                                         handle,                     DEFAULT_VALUE ( nullptr ),                      GET_DEFAULT, SET_NONE )
+            Field ( ENGINE_TYPE ( DebugMessengerHandle ),                                   debugMessengerHandle,       DEFAULT_VALUE ( nullptr ),                      GET_DEFAULT, SET_NONE )
 
             Field ( TYPE ( cds :: Array < __C_ENG_TYPE ( ValidationFeatureEnable ) > ),     enabledValidationFeatures,  NO_INIT,                                        GET_DEFAULT, SET_NONE )
             Field ( TYPE ( cds :: Array < __C_ENG_TYPE ( ValidationFeatureDisable ) > ),    disabledValidationFeatures, NO_INIT,                                        GET_DEFAULT, SET_NONE )

@@ -112,6 +112,7 @@ auto vulkan :: toString (
 
 #endif
 
+        case vulkan :: __C_ENG_TYPE ( Result ) :: ResultErrorFunctionHandleNotFound:                 { asString = "Function Requested not Present";                                                                                                                                                                                 break; }
         case vulkan :: __C_ENG_TYPE ( Result ) :: ResultErrorIllegalArgument:                        { asString = "Illegal Argument Passed to Binding Call";                                                                                                                                                                        break; }
         case vulkan :: __C_ENG_TYPE ( Result ) :: ResultUnknown:                                     { asString = "Unknown/Not Documented Result";                                                                                                                                                                                  break; }
     }

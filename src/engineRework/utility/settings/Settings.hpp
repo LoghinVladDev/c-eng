@@ -53,14 +53,15 @@ namespace engine {
         Field ( TYPE ( cds :: HashMap < cds :: String, Value > ),   settings,       NO_INIT,                    GET_NONE,       SET_NONE )
         Field ( PRIMITIVE_TYPE ( bool ),                            initialized,    DEFAULT_VALUE ( false ),    GET_DEFAULT,    SET_NONE )
 
+        Constructor () noexcept = default;
+
         auto load () noexcept -> Self &;
         auto save () noexcept -> Self &;
 
     public:
-        Constructor () noexcept = default;
         Destructor () noexcept;
 
-        static auto instance () noexcept (false) -> Self &;
+        static auto instance () noexcept -> Self &;
 
         auto get ( Key ) noexcept -> Value;
         auto set ( Key, Value ) noexcept -> Self &;

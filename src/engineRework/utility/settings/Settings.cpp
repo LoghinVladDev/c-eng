@@ -16,24 +16,14 @@ using namespace engine; // NOLINT(clion-misra-cpp2008-7-3-4)
 #define C_ENG_MAP_START     CLASS ( Settings, PARENT ( Object ) )
 #include <ObjectMapping.hpp>
 
-static Self * pActiveInstance = nullptr;
+auto Self :: instance () noexcept -> Self & {
+    static Self settings;
 
-auto __setSettingsInstance ( // NOLINT(bugprone-reserved-identifier)
-        Self * pInstance
-) noexcept -> void {
-    pActiveInstance = pInstance;
-}
-
-auto Self :: instance () noexcept (false) -> Self & {
-    if ( pActiveInstance == nullptr ) {
-        throw NullPointerException ( "Set a Settings instance first" );
+    if ( ! settings.initialized() ) {
+        (void) settings.load();
     }
 
-    if ( ! pActiveInstance->initialized() ) {
-        (void) pActiveInstance->load();
-    }
-
-    return * pActiveInstance;
+    return settings;
 }
 
 auto Self :: load () noexcept -> Self & {
