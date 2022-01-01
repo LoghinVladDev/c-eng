@@ -770,6 +770,13 @@ if(Vulkan_FOUND)
     )
 
     set (
+            ENGINE_REWORK_RENDER_API_VULKAN_INSTANCE_DEVICE_SOURCES
+
+            src/engineRework/render/API/vulkan/instance/device/PhysicalDevice.cpp
+            src/engineRework/render/API/vulkan/instance/device/PhysicalDevice.hpp
+    )
+
+    set (
             ENGINE_REWORK_RENDER_API_VULKAN_INSTANCE_ALLOCATOR_SOURCES
 
             src/engineRework/render/API/vulkan/instance/allocator/Allocator.cpp
@@ -784,10 +791,19 @@ if(Vulkan_FOUND)
     )
 
     set (
+            ENGINE_REWORK_RENDER_API_VULKAN_INSTANCE_SURFACE_SOURCES
+
+            src/engineRework/render/API/vulkan/instance/surface/Surface.cpp
+            src/engineRework/render/API/vulkan/instance/surface/Surface.hpp
+    )
+
+    set (
             ENGINE_REWORK_RENDER_API_VULKAN_INSTANCE_SOURCES
 
             ${ENGINE_REWORK_RENDER_API_VULKAN_INSTANCE_ALLOCATOR_SOURCES}
             ${ENGINE_REWORK_RENDER_API_VULKAN_INSTANCE_VALIDATION_SOURCES}
+            ${ENGINE_REWORK_RENDER_API_VULKAN_INSTANCE_DEVICE_SOURCES}
+            ${ENGINE_REWORK_RENDER_API_VULKAN_INSTANCE_SURFACE_SOURCES}
 
             src/engineRework/render/API/vulkan/instance/Instance.cpp
             src/engineRework/render/API/vulkan/instance/Instance.hpp
@@ -877,6 +893,7 @@ if(Vulkan_FOUND)
             src/engineRework/render/API/vulkan/instance
             src/engineRework/render/API/vulkan/instance/validation
             src/engineRework/render/API/vulkan/instance/allocator
+            src/engineRework/render/API/vulkan/instance/device
     )
 
 endif()

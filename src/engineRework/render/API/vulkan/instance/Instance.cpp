@@ -298,16 +298,16 @@ auto vulkan :: Self :: init () noexcept (false) -> Self & {
 
         result = vulkan::createDebugMessenger(
                 this->handle(),
-                &debugMessengerCreateInfo,
+                & debugMessengerCreateInfo,
                 __C_ENG_TYPE (Allocator)::instance().callbacks(),
-                &this->_debugMessengerHandle
+                & this->_debugMessengerHandle
         );
     }
 
     return * this;
 }
 
-auto vulkan :: Self :: clean () noexcept (false) -> Self & {
+auto vulkan :: Self :: clear () noexcept (false) -> Self & {
     if ( this->_debugMessengerHandle != nullptr ) {
 
         auto result = vulkan :: destroyDebugMessenger (
@@ -341,7 +341,7 @@ auto vulkan :: Self :: clean () noexcept (false) -> Self & {
 }
 
 vulkan :: Self :: Destructor () noexcept {
-    (void) this->clean();
+    (void) this->clear();
 }
 
 #define C_ENG_MAP_END

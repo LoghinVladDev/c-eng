@@ -16,8 +16,9 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
     namespace vulkan {
 
         Class {
-            Field ( ENGINE_TYPE ( Version ),    desiredVersion, DEFAULT_VALUE ( nullVersion ),  GET_DEFAULT, SET_INLINE ( setDesiredVersion ) ) // NOLINT(clion-misra-cpp2008-5-0-4,clion-misra-cpp2008-5-0-6)
-            Field ( ENGINE_TYPE ( Instance ),   instance,       NO_INIT,                        GET_DEFAULT, SET_NONE )
+            Field ( ENGINE_TYPE ( Version ),                    desiredVersion, DEFAULT_VALUE ( nullVersion ),  GET_DEFAULT, SET_INLINE ( setDesiredVersion ) ) // NOLINT(clion-misra-cpp2008-5-0-4,clion-misra-cpp2008-5-0-6)
+            Field ( ENGINE_PRIMITIVE_TYPE ( SurfaceHandle ),    surfaceHandle,  DEFAULT_VALUE ( nullptr ),      GET_DEFAULT, SET_NONE )
+            Field ( ENGINE_TYPE ( Instance ),                   instance,       NO_INIT,                        GET_DEFAULT, SET_NONE )
 
         private:
             __C_ENG_NO_DISCARD auto acquireSuitableAPIVersion () const noexcept (false) -> __C_ENG_TYPE ( Version );
@@ -28,6 +29,8 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
             }
 
             auto init () noexcept (false) -> Self & override;
+            auto clear () noexcept (false) -> Self & override;
+            Destructor () noexcept override;
         };
     }
 }

@@ -23,7 +23,7 @@ namespace engine {
 
 #define C_ENG_MAP_END
 #include <ObjectMapping.hpp>
-    
+
 
 #define C_ENG_MAP_START     ENUM ( LogLevel, TYPE ( cds :: uint8 ) )
 #include <ObjectMapping.hpp>
@@ -330,6 +330,18 @@ namespace engine {
 #include <ObjectMapping.hpp>
 
 
+#define C_ENG_MAP_START     ENUM ( RenderAPIType,   TYPE ( cds :: uint8 ) )
+#include <ObjectMapping.hpp>
+
+    Enum {
+        Field ( None,   0 ),
+        Field ( Vulkan, 1 )
+    };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+
 
 #define C_ENG_MAP_START     STRUCT ( Position, NO_PARENT )
 #include <ObjectMapping.hpp>
@@ -338,7 +350,7 @@ namespace engine {
         cds :: uint32 x;
         cds :: uint32 y;
     };
-    
+
 #define C_ENG_MAP_END
 #include <ObjectMapping.hpp>
 
@@ -444,6 +456,66 @@ namespace engine {
 #include <ObjectMapping.hpp>
 
 
+    __C_ENG_ALIAS ( GenericSurfaceHandle,           void );
+    __C_ENG_ALIAS ( GenericRenderInstanceHandle,    void );
+
+
+#define C_ENG_MAP_START     STRUCT ( RenderInstanceSurfaceAttachData, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+    Struct {
+        __C_ENG_TYPE ( RenderAPIType )                          renderAPIType;
+        __C_ENG_TYPE ( GenericRenderInstanceHandle )          * pAPIData;
+        __C_ENG_TYPE ( GenericSurfaceHandle )                 * pSurfaceHandle;
+        void                                                  * pUserData;
+    };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+
+#define C_ENG_MAP_START     STRUCT ( RenderInstanceSurfaceDetachData, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+    Struct {
+        __C_ENG_TYPE ( RenderAPIType )                          renderAPIType;
+        __C_ENG_TYPE ( GenericRenderInstanceHandle )          * pAPIData;
+        __C_ENG_TYPE ( GenericSurfaceHandle )                 * pSurfaceHandle;
+        void                                                  * pUserData;
+    };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+
+    __C_ENG_ALIAS (
+            RenderInstanceSurfaceAttachCallback,
+            auto (*) (
+                    __C_ENG_TYPE ( RenderInstanceSurfaceAttachData ) const *
+            ) noexcept -> bool
+    );
+
+    __C_ENG_ALIAS (
+            RenderInstanceSurfaceDetachCallback,
+            auto (*) (
+                    __C_ENG_TYPE ( RenderInstanceSurfaceDetachData ) const *
+            ) noexcept-> bool
+    );
+
+
+#define C_ENG_MAP_START     STRUCT ( RenderInstanceSurfaceCallbackInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+    Struct {
+        __C_ENG_TYPE ( RenderInstanceSurfaceAttachCallback )    attachCallback;
+        __C_ENG_TYPE ( RenderInstanceSurfaceDetachCallback )    detachCallback;
+        void                                                  * pUserData;
+    };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+
     __C_ENG_NO_DISCARD auto toString ( bool ) noexcept -> cds :: StringLiteral;
     __C_ENG_NO_DISCARD auto toString ( void const * ) noexcept -> cds :: String;
 
@@ -457,6 +529,7 @@ namespace engine {
     __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( WindowFlag ) ) noexcept -> cds :: StringLiteral;
     __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( ControllerHatState ) ) noexcept -> cds :: StringLiteral;
     __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( CompareResult ) ) noexcept -> cds :: StringLiteral;
+    __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( RenderAPIType ) ) noexcept -> cds :: StringLiteral;
 
     __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( Position ) const & ) noexcept -> cds :: String;
     __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( Size ) const & ) noexcept -> cds :: String;
@@ -466,6 +539,9 @@ namespace engine {
     __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( MonitorWorkArea ) const & ) noexcept -> cds :: String;
     __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( MonitorGammaRamp ) const & ) noexcept -> cds :: String;
     __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( MonitorProperties ) const & ) noexcept -> cds :: String;
+    __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( RenderInstanceSurfaceAttachData ) const & ) noexcept -> cds :: String;
+    __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( RenderInstanceSurfaceDetachData ) const & ) noexcept -> cds :: String;
+    __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( RenderInstanceSurfaceCallbackInfo ) const & ) noexcept -> cds :: String;
 
     __C_ENG_NO_DISCARD auto keyModifiersToString ( __C_ENG_TYPE ( KeyModifiers ) ) noexcept -> cds :: String;
     __C_ENG_NO_DISCARD auto windowFlagsToString ( __C_ENG_TYPE ( WindowFlags ) ) noexcept -> cds :: String;

@@ -1868,6 +1868,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_ALIAS ( InstanceHandle,                 VkInstance );
         __C_ENG_ALIAS ( DebugMessengerHandle,           VkDebugUtilsMessengerEXT );
         __C_ENG_ALIAS ( PhysicalDeviceHandle,           VkPhysicalDevice );
+        __C_ENG_ALIAS ( SurfaceHandle,                  VkSurfaceKHR );
 
         __C_ENG_ALIAS ( InstanceCreateFlags,            VkInstanceCreateFlags );
         __C_ENG_ALIAS ( DebugMessengerCreateFlags,      VkDebugUtilsMessengerCreateFlagsEXT );

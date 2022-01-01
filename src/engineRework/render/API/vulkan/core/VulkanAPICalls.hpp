@@ -422,6 +422,15 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
             return ResultSuccess;
         }
 
+        static inline auto enumeratePhysicalDevices (
+                __C_ENG_TYPE ( InstanceHandle )             handle,
+                cds :: uint32                             * pPhysicalDeviceCount,
+                __C_ENG_TYPE ( PhysicalDeviceHandle )     * pPhysicalDevices
+        ) noexcept -> __C_ENG_TYPE ( Result ) {
+
+            return ResultSuccess;
+        }
+
     }
 
 }

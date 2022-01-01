@@ -15,6 +15,71 @@ using namespace engine; // NOLINT(clion-misra-cpp2008-7-3-4)
 #include <RenderEngine.hpp>
 #include <VulkanRenderEngine.hpp>
 
+#include <VulkanCore.hpp>
+#include <Allocator.hpp>
+
+static auto renderSurfaceAttachCallback (
+        __C_ENG_TYPE ( RenderInstanceSurfaceAttachData ) const * pCallbackData
+) noexcept -> bool {
+    auto pEngine = reinterpret_cast < __C_ENG_TYPE ( Engine ) * > ( pCallbackData->pUserData );
+
+    if ( pCallbackData->renderAPIType == engine :: RenderAPITypeVulkan ) {
+
+        auto instanceHandle = reinterpret_cast < vulkan :: __C_ENG_TYPE ( InstanceHandle ) > ( pCallbackData->pAPIData );
+        auto surfaceHandle = reinterpret_cast < vulkan :: __C_ENG_TYPE ( SurfaceHandle ) * > ( pCallbackData->pSurfaceHandle );
+
+        auto pCallbacks = vulkan :: __C_ENG_TYPE ( Allocator ) :: instance().callbacks();
+
+        VkAllocationCallbacks   allocationCallbacks {};
+        VkAllocationCallbacks * pUsedCallbacks = nullptr;
+
+        if ( pCallbacks != nullptr ) {
+            pUsedCallbacks = & allocationCallbacks;
+            vulkan :: toVulkanFormat ( pCallbacks, & allocationCallbacks );
+        }
+
+        return VK_SUCCESS == glfwCreateWindowSurface (
+                instanceHandle,
+                pEngine->window()->handle(),
+                pUsedCallbacks,
+                surfaceHandle
+        );
+    }
+
+    return true;
+}
+
+static auto renderSurfaceDetachCallback (
+        __C_ENG_TYPE ( RenderInstanceSurfaceDetachData ) const * pCallbackData
+) noexcept -> bool {
+    auto pEngine = reinterpret_cast < __C_ENG_TYPE ( Engine ) * > ( pCallbackData->pUserData );
+
+    if ( pCallbackData->renderAPIType == engine :: RenderAPITypeVulkan ) {
+        auto instanceHandle = reinterpret_cast < vulkan :: __C_ENG_TYPE ( InstanceHandle ) > ( pCallbackData->pAPIData );
+        auto surfaceHandle = reinterpret_cast < vulkan :: __C_ENG_TYPE ( SurfaceHandle ) > ( pCallbackData->pSurfaceHandle );
+
+        auto pCallbacks = vulkan :: __C_ENG_TYPE ( Allocator ) :: instance().callbacks();
+
+        VkAllocationCallbacks   allocationCallbacks {};
+        VkAllocationCallbacks * pUsedCallbacks = nullptr;
+
+        if ( pCallbacks != nullptr ) {
+            pUsedCallbacks = & allocationCallbacks;
+            vulkan :: toVulkanFormat ( pCallbacks, & allocationCallbacks );
+        }
+
+        vkDestroySurfaceKHR (
+            instanceHandle,
+            surfaceHandle,
+            pUsedCallbacks
+        );
+
+        return true;
+    }
+
+    return true;
+}
+
 
 #define C_ENG_MAP_START     CLASS ( Engine, PARENT ( Object ) )
 #include <ObjectMapping.hpp>
@@ -53,6 +118,12 @@ auto Self :: initializeRenderEngine () noexcept -> Self & {
         this->_renderEngine = new vulkan :: __C_ENG_TYPE ( VulkanRenderEngine );
         this->_externalRenderEngine = false;
     }
+
+    (void) this->renderEngine()->setRenderSurfaceCallbacks({
+        .attachCallback = & renderSurfaceAttachCallback,
+        .detachCallback = & renderSurfaceDetachCallback,
+        .pUserData      = this
+    });
 
     (void) this->renderEngine()->init();
 
@@ -111,6 +182,10 @@ auto Self :: shutdownRequested() noexcept -> bool {
 
 auto Self :: shutdown () noexcept -> Self & {
     this->setState ( __C_ENG_TYPE ( EngineState ) :: EngineStateShutdown );
+
+    if ( this->renderEngine() != nullptr && ! this->externalRenderEngine() ) {
+        (void) this->renderEngine()->clear();
+    }
 
     return * this;
 }

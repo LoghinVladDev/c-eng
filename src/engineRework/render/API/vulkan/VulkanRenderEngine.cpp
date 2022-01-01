@@ -29,7 +29,53 @@ auto vulkan :: Self :: init () noexcept (false) -> Self & {
 
     (void) this->_instance.init();
 
+    if ( this->renderInstanceSurfaceCallbacks().attachCallback == nullptr ) {
+        (void) __C_ENG_TYPE ( Logger ) :: instance().error ( "No Instance Surface Attach Callback Present. Cannot bind window surface to render API" );
+    } else {
+        __C_ENG_TYPE ( RenderInstanceSurfaceAttachData ) callbackData {
+                .renderAPIType  = RenderAPITypeVulkan,
+                .pAPIData       = this->instance().handle(),
+                .pSurfaceHandle = & this->_surfaceHandle,
+                .pUserData      = this->renderInstanceSurfaceCallbacks().pUserData
+        };
+
+        if ( ! this->renderInstanceSurfaceCallbacks().attachCallback ( & callbackData ) ) {
+            (void) __C_ENG_TYPE ( Logger ) :: instance().warning ( "Instance Surface Attach Callback returned error value." );
+        }
+    }
+
     return * this;
+}
+
+auto vulkan :: Self :: clear () noexcept (false) -> Self & {
+
+    if ( this->_surfaceHandle != nullptr ) {
+
+        if ( this->renderInstanceSurfaceCallbacks().detachCallback == nullptr ) {
+            (void) __C_ENG_TYPE ( Logger ) :: instance().warning ( "No Instance Surface Detach Callback Present. Cannot bind window surface to render API" );
+        } else {
+            __C_ENG_TYPE ( RenderInstanceSurfaceDetachData ) callbackData {
+                    .renderAPIType  = RenderAPITypeVulkan,
+                    .pAPIData       = this->instance().handle(),
+                    .pSurfaceHandle = this->_surfaceHandle,
+                    .pUserData      = this->renderInstanceSurfaceCallbacks().pUserData
+            };
+
+            if ( ! this->renderInstanceSurfaceCallbacks().detachCallback ( & callbackData ) ) {
+                (void) __C_ENG_TYPE ( Logger ) :: instance().warning ( "Instance Surface Detach Callback returned error value." );
+            } else {
+                this->_surfaceHandle = nullptr;
+            }
+        }
+    }
+
+    (void) this->_instance.clear();
+
+    return * this;
+}
+
+vulkan :: Self :: Destructor() noexcept {
+    (void) this -> Self :: clear();
 }
 
 auto vulkan :: Self :: acquireSuitableAPIVersion() const noexcept (false) -> __C_ENG_TYPE ( Version ) {

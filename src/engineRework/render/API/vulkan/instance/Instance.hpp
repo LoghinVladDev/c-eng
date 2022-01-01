@@ -103,7 +103,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #endif
 
             auto init () noexcept (false) -> Self &;
-            auto clean () noexcept (false) -> Self &;
+            auto clear () noexcept (false) -> Self &;
             Constructor () noexcept = default;
             Destructor () noexcept override;
 

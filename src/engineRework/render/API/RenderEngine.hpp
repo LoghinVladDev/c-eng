@@ -7,6 +7,7 @@
 
 #include <Preprocess.hpp>
 #include <CDS/Object>
+#include <Core.hpp>
 
 
 #define C_ENG_MAP_START     CLASS ( RenderEngine, PARENT ( cds :: Object ) )
@@ -15,9 +16,12 @@
 namespace engine {
 
     Class {
+        Field ( ENGINE_TYPE ( RenderInstanceSurfaceCallbackInfo ), renderInstanceSurfaceCallbacks, DEFAULT_VALUE (nullptr, nullptr, nullptr), GET_DEFAULT_PROTECTED, SET_INLINE ( setRenderSurfaceCallbacks ) );
+
     public:
         __C_ENG_NO_DISCARD virtual auto name () const noexcept -> cds :: StringLiteral = 0;
         virtual auto init () noexcept (false) -> Self & = 0;
+        virtual auto clear () noexcept (false) -> Self & = 0;
         Destructor () noexcept override = default;
     };
 

@@ -360,6 +360,20 @@ namespace engine {
         return asString;
     }
 
+    __C_ENG_NO_DISCARD auto toString (
+            __C_ENG_TYPE ( RenderAPIType ) result
+    ) noexcept -> StringLiteral {
+
+        StringLiteral asString = "";
+
+        switch ( result ) {
+            case __C_ENG_TYPE ( RenderAPIType ) :: RenderAPITypeNone:     { asString = "Unknown/No Render API";     break; }
+            case __C_ENG_TYPE ( RenderAPIType ) :: RenderAPITypeVulkan:   { asString = "Vulkan Render API";         break; }
+        }
+
+        return asString;
+    }
+
 
     __C_ENG_NO_DISCARD auto toString (
             __C_ENG_TYPE ( Position ) const & position
@@ -455,6 +469,41 @@ namespace engine {
                ", workArea = "          + toString ( properties.workArea ) +
                ", gammaRamp = "         + toString ( properties.gammaRamp ) +
                ", activeVideoMode = "   + toString ( properties.activeVideoMode ) +
+               " }";
+    }
+
+    __C_ENG_NO_DISCARD auto toString (
+            __C_ENG_TYPE ( RenderInstanceSurfaceAttachData ) const & callbackData
+    ) noexcept -> String {
+
+        return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( RenderInstanceSurfaceAttachData ) ) " "
+               "{ renderAPIType = "_s   + toString ( callbackData.renderAPIType ) +
+               ", pAPIData = "          + toString ( callbackData.pAPIData ) +
+               ", surfaceHandle = "     + toString ( callbackData.pSurfaceHandle ) +
+               ", pUserData = "         + toString ( callbackData.pUserData ) +
+               " }";
+    }
+
+    __C_ENG_NO_DISCARD auto toString (
+            __C_ENG_TYPE ( RenderInstanceSurfaceDetachData ) const & callbackData
+    ) noexcept -> String {
+
+        return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( RenderInstanceSurfaceDetachData ) ) " "
+               "{ renderAPIType = "_s   + toString ( callbackData.renderAPIType ) +
+               ", pAPIData = "          + toString ( callbackData.pAPIData ) +
+               ", surfaceHandle = "     + toString ( callbackData.pSurfaceHandle ) +
+               ", pUserData = "         + toString ( callbackData.pUserData ) +
+               " }";
+    }
+
+    __C_ENG_NO_DISCARD auto toString (
+            __C_ENG_TYPE ( RenderInstanceSurfaceCallbackInfo ) const & callbackData
+    ) noexcept -> String {
+
+        return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( RenderInstanceSurfaceAttachCallbackInfo ) ) " "
+               "{ attachCallback = "_s  + toString ( callbackData.attachCallback ) +
+               ", detachCallback = "    + toString ( callbackData.detachCallback ) +
+               ", pUserData = "         + toString ( callbackData.pUserData ) +
                " }";
     }
 
