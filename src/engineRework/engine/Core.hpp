@@ -14,11 +14,12 @@ namespace engine {
 #include <ObjectMapping.hpp>
 
     Enum {
-        Field ( Inactive,                 0x00 ),
-        Field ( Startup,                  0x01 ),
-        Field ( StartupAcquiringSettings, 0x02 ),
-        Field ( Running,                  0x03 ),
-        Field ( Shutdown,                 0x04 )
+        Field ( Inactive,                           0x00 ),
+        Field ( Startup,                            0x01 ),
+        Field ( StartupAcquiringSettings,           0x02 ),
+        Field ( StartupInitializingRenderEngine,    0x03 ),
+        Field ( Running,                            0x04 ),
+        Field ( Shutdown,                           0x05 )
     };
 
 #define C_ENG_MAP_END

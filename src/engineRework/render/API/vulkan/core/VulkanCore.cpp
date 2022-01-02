@@ -112,6 +112,8 @@ auto vulkan :: toString (
 
 #endif
 
+        case vulkan :: __C_ENG_TYPE ( Result ) :: ResultErrorIncompatibleVersion:                    { asString = "API Version does not support call";                                                                                                                                                                              break; }
+        case vulkan :: __C_ENG_TYPE ( Result ) :: ResultErrorConfigurationArraySizeSmall:            { asString = "Array Size too Small, check 'VulkanCoreConfig.hpp'";                                                                                                                                                             break; }
         case vulkan :: __C_ENG_TYPE ( Result ) :: ResultErrorFunctionHandleNotFound:                 { asString = "Function Requested not Present";                                                                                                                                                                                 break; }
         case vulkan :: __C_ENG_TYPE ( Result ) :: ResultErrorIllegalArgument:                        { asString = "Illegal Argument Passed to Binding Call";                                                                                                                                                                        break; }
         case vulkan :: __C_ENG_TYPE ( Result ) :: ResultUnknown:                                     { asString = "Unknown/Not Documented Result";                                                                                                                                                                                  break; }
@@ -1764,6 +1766,205 @@ auto vulkan :: toString (
     return asString;
 }
 
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceType ) type
+) noexcept -> StringLiteral {
+    StringLiteral asString = "";
+
+    switch ( type ) {
+        case __C_ENG_TYPE ( PhysicalDeviceType ) :: PhysicalDeviceTypeUnknown:          { asString = "Unknown Physical Device Type";    break; }
+        case __C_ENG_TYPE ( PhysicalDeviceType ) :: PhysicalDeviceTypeIntegratedGPU:    { asString = "Integrated GPU";                  break; }
+        case __C_ENG_TYPE ( PhysicalDeviceType ) :: PhysicalDeviceTypeDedicatedGPU:     { asString = "Dedicated GPU";                   break; }
+        case __C_ENG_TYPE ( PhysicalDeviceType ) :: PhysicalDeviceTypeVirtualGPU:       { asString = "Virtual GPU";                     break; }
+        case __C_ENG_TYPE ( PhysicalDeviceType ) :: PhysicalDeviceTypeCPU:              { asString = "CPU";                             break; }
+    }
+
+    return asString;
+}
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( VendorID ) ID
+) noexcept -> StringLiteral {
+    StringLiteral asString = "";
+
+    switch ( ID ) {
+        case __C_ENG_TYPE ( VendorID ) :: VendorIDVIV:          { asString = "VIV";         break; }
+        case __C_ENG_TYPE ( VendorID ) :: VendorIDVSI:          { asString = "VSI";         break; }
+        case __C_ENG_TYPE ( VendorID ) :: VendorIDKazan:        { asString = "Kazan";       break; }
+        case __C_ENG_TYPE ( VendorID ) :: VendorIDCodeplay:     { asString = "Codeplay";    break; }
+        case __C_ENG_TYPE ( VendorID ) :: VendorIDMesa:         { asString = "Mesa";        break; }
+        case __C_ENG_TYPE ( VendorID ) :: VendorIDPOCL:         { asString = "POCL";        break; }
+    }
+
+    return asString;
+}
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( SampleCountFlag ) flag
+) noexcept -> StringLiteral {
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case __C_ENG_TYPE ( SampleCountFlag ) :: SampleCountFlag1Bit:   { asString = "1 Bit";   break; }
+        case __C_ENG_TYPE ( SampleCountFlag ) :: SampleCountFlag2Bit:   { asString = "2 Bits";  break; }
+        case __C_ENG_TYPE ( SampleCountFlag ) :: SampleCountFlag4Bit:   { asString = "4 Bits";  break; }
+        case __C_ENG_TYPE ( SampleCountFlag ) :: SampleCountFlag8Bit:   { asString = "8 Bits";  break; }
+        case __C_ENG_TYPE ( SampleCountFlag ) :: SampleCountFlag16Bit:  { asString = "16 Bits"; break; }
+        case __C_ENG_TYPE ( SampleCountFlag ) :: SampleCountFlag32Bit:  { asString = "32 Bits"; break; }
+        case __C_ENG_TYPE ( SampleCountFlag ) :: SampleCountFlag64Bit:  { asString = "64 Bits"; break; }
+    }
+
+    return asString;
+}
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PointClippingBehavior ) flag
+) noexcept -> StringLiteral {
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case __C_ENG_TYPE ( PointClippingBehavior ) :: PointClippingBehaviorAllClipPlanes:      { asString = "All Clip Planes";   break; }
+        case __C_ENG_TYPE ( PointClippingBehavior ) :: PointClippingBehaviorUserClipPlanesOnly: { asString = "User Clip Planes";  break; }
+    }
+
+    return asString;
+}
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( ShaderStageFlag ) flag
+) noexcept -> StringLiteral {
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case __C_ENG_TYPE ( ShaderStageFlag ) :: ShaderStageFlagVertex:                 { asString = "Vertex Shader Stage";                     break; }
+        case __C_ENG_TYPE ( ShaderStageFlag ) :: ShaderStageFlagTessellationControl:    { asString = "Tessellation Control Shader Stage";       break; }
+        case __C_ENG_TYPE ( ShaderStageFlag ) :: ShaderStageFlagTessellationEvaluation: { asString = "Tessellation Evaluation Shader Stage";    break; }
+        case __C_ENG_TYPE ( ShaderStageFlag ) :: ShaderStageFlagGeometry:               { asString = "Geometry Shader Stage";                   break; }
+        case __C_ENG_TYPE ( ShaderStageFlag ) :: ShaderStageFlagFragment:               { asString = "Fragment Shader Stage";                   break; }
+        case __C_ENG_TYPE ( ShaderStageFlag ) :: ShaderStageFlagCompute:                { asString = "Compute Shader Stage";                    break; }
+        case __C_ENG_TYPE ( ShaderStageFlag ) :: ShaderStageFlagAllGraphics:            { asString = "All Graphics Shader Stages";              break; }
+        case __C_ENG_TYPE ( ShaderStageFlag ) :: ShaderStageFlagAll:                    { asString = "All Shader Stages";                       break; }
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_RAY_TRACING_PIPELINE_AVAILABLE
+
+        case __C_ENG_TYPE ( ShaderStageFlag ) :: ShaderStageFlagRayGeneration:          { asString = "Ray Generation Shader Stage";             break; }
+        case __C_ENG_TYPE ( ShaderStageFlag ) :: ShaderStageFlagRayAnyHit:              { asString = "Ray Any Hit Shader Stage";                break; }
+        case __C_ENG_TYPE ( ShaderStageFlag ) :: ShaderStageFlagRayClosestHit:          { asString = "Ray Closest Hit Shader Stage";            break; }
+        case __C_ENG_TYPE ( ShaderStageFlag ) :: ShaderStageFlagRayMiss:                { asString = "Ray Miss Shader Stage";                   break; }
+        case __C_ENG_TYPE ( ShaderStageFlag ) :: ShaderStageFlagRayIntersection:        { asString = "Ray Intersection Shader Stage";           break; }
+        case __C_ENG_TYPE ( ShaderStageFlag ) :: ShaderStageFlagRayCallable:            { asString = "Ray Callable Shader Stage";               break; }
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_MESH_SHADER_AVAILABLE
+
+        case __C_ENG_TYPE ( ShaderStageFlag ) :: ShaderStageFlagMeshTaskNVidia:         { asString = "Task Shader Stage";                       break; }
+        case __C_ENG_TYPE ( ShaderStageFlag ) :: ShaderStageFlagMeshMeshNVidia:         { asString = "Mesh Shader Stage";                       break; }
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_HUAWEI_SUBPASS_SHADING_AVAILABLE
+
+        case __C_ENG_TYPE ( ShaderStageFlag ) :: ShaderStageFlagSubpassShadingHuawei:   { asString = "Subpass Shading Shader Stage";            break; }
+
+#endif
+
+    }
+
+    return asString;
+}
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( SubgroupFeatureFlag ) flag
+) noexcept -> StringLiteral {
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case __C_ENG_TYPE ( SubgroupFeatureFlag ) :: SubgroupFeatureFlagBasic:              { asString = "Basic";           break; }
+        case __C_ENG_TYPE ( SubgroupFeatureFlag ) :: SubgroupFeatureFlagVote:               { asString = "Vote";            break; }
+        case __C_ENG_TYPE ( SubgroupFeatureFlag ) :: SubgroupFeatureFlagArithmetic:         { asString = "Arithmetic";      break; }
+        case __C_ENG_TYPE ( SubgroupFeatureFlag ) :: SubgroupFeatureFlagShuffle:            { asString = "Shuffle";         break; }
+        case __C_ENG_TYPE ( SubgroupFeatureFlag ) :: SubgroupFeatureFlagShuffleRelative:    { asString = "ShuffleRelative"; break; }
+        case __C_ENG_TYPE ( SubgroupFeatureFlag ) :: SubgroupFeatureFlagClustered:          { asString = "Clustered";       break; }
+        case __C_ENG_TYPE ( SubgroupFeatureFlag ) :: SubgroupFeatureFlagQuad:               { asString = "Quad";            break; }
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SHADER_SUBGROUP_PARTITIONED_AVAILABLE
+
+        case __C_ENG_TYPE ( SubgroupFeatureFlag ) :: SubgroupFeatureFlagPartitionedNVidia:  { asString = "Partitioned";     break; }
+
+#endif
+
+    }
+
+    return asString;
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( DriverID ) ID
+) noexcept -> StringLiteral {
+    StringLiteral asString = "";
+
+    switch ( ID ) {
+        case __C_ENG_TYPE ( DriverID ) :: DriverIDAMDProprietary:                   { asString = "AMD Proprietary Driver";                      break; }
+        case __C_ENG_TYPE ( DriverID ) :: DriverIDAMDOpenSource:                    { asString = "AMD Open Source Driver";                      break; }
+        case __C_ENG_TYPE ( DriverID ) :: DriverIDMesaRadV:                         { asString = "Mesa RAD V Driver";                           break; }
+        case __C_ENG_TYPE ( DriverID ) :: DriverIDNVidiaProprietary:                { asString = "NVidia Proprietary Driver";                   break; }
+        case __C_ENG_TYPE ( DriverID ) :: DriverIDInterProprietaryWindows:          { asString = "Intel Proprietary Windows Driver";            break; }
+        case __C_ENG_TYPE ( DriverID ) :: DriverIDIntelOpenSourceMesa:              { asString = "Intel Open Source Mesa Driver";               break; }
+        case __C_ENG_TYPE ( DriverID ) :: DriverIDImaginationProprietary:           { asString = "Imagination Proprietary Driver";              break; }
+        case __C_ENG_TYPE ( DriverID ) :: DriverIDQualcommProprietary:              { asString = "Qualcomm Proprietary Driver";                 break; }
+        case __C_ENG_TYPE ( DriverID ) :: DriverIDARMProprietary:                   { asString = "ARM Proprietary Driver";                      break; }
+        case __C_ENG_TYPE ( DriverID ) :: DriverIDGoogleSwiftshader:                { asString = "Google Switfshader Driver";                   break; }
+        case __C_ENG_TYPE ( DriverID ) :: DriverIDGoogleGamesPlatformProprietary:   { asString = "Google Games Platform Proprietary Driver";    break; }
+        case __C_ENG_TYPE ( DriverID ) :: DriverIDBroadcomProprietary:              { asString = "Broadcom Proprietary Driver";                 break; }
+        case __C_ENG_TYPE ( DriverID ) :: DriverIDMesaLLVMPipe:                     { asString = "Mesa LLVM Pipe Driver";                       break; }
+        case __C_ENG_TYPE ( DriverID ) :: DriverIDMoltenVulkan:                     { asString = "MoltenVk Driver";                             break; }
+        case __C_ENG_TYPE ( DriverID ) :: DriverIDCoreAVIProprietary:               { asString = "Core AVI Proprietary Driver";                 break; }
+        case __C_ENG_TYPE ( DriverID ) :: DriverIDJuiceProprietary:                 { asString = "Juice Proprietary Driver";                    break; }
+        case __C_ENG_TYPE ( DriverID ) :: DriverIDVeriSiliconProprietary:           { asString = "Veri Silicon Proprietary Driver";             break; }
+    }
+
+    return asString;
+}
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( ShaderFloatControlsIndependence ) value
+) noexcept -> StringLiteral {
+    StringLiteral asString = "";
+
+    switch ( value ) {
+        case __C_ENG_TYPE ( ShaderFloatControlsIndependence ) :: ShaderFloatControlsIndependence32BitOnly:  { asString = "32 Bit Only"; break; }
+        case __C_ENG_TYPE ( ShaderFloatControlsIndependence ) :: ShaderFloatControlsIndependenceAll:        { asString = "All";         break; }
+        case __C_ENG_TYPE ( ShaderFloatControlsIndependence ) :: ShaderFloatControlsIndependenceNone:       { asString = "None";        break; }
+    }
+
+    return asString;
+}
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( ResolveModeFlag ) flag
+) noexcept -> StringLiteral {
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case __C_ENG_TYPE ( ResolveModeFlag ) :: ResolveModeFlagNone:       { asString = "No Resolve";          break; }
+        case __C_ENG_TYPE ( ResolveModeFlag ) :: ResolveModeFlagSampleZero: { asString = "Resolve by 0 sample"; break; }
+        case __C_ENG_TYPE ( ResolveModeFlag ) :: ResolveModeFlagAverage:    { asString = "Resolve by average";  break; }
+        case __C_ENG_TYPE ( ResolveModeFlag ) :: ResolveModeFlagMin:        { asString = "Resolve by min";      break; }
+        case __C_ENG_TYPE ( ResolveModeFlag ) :: ResolveModeFlagMax:        { asString = "Resolve by max";      break; }
+    }
+
+    return asString;
+}
+
+#endif
+
 #include <CDS/String>
 
 auto vulkan :: toString (
@@ -1830,6 +2031,14 @@ auto vulkan :: toString (
             " }";
 }
 
+#include <CDS/Long>
+auto vulkan :: toString (
+        __C_ENG_TYPE ( DeviceSize ) deviceSize
+) noexcept -> String {
+
+    return ""_s + static_cast < uint64 > ( deviceSize );
+}
+
 auto vulkan :: toString (
         __C_ENG_TYPE ( ApplicationInfo ) const & createInfo
 ) noexcept -> String {
@@ -1845,7 +2054,6 @@ auto vulkan :: toString (
             " }";
 }
 
-#include <CDS/Long>
 auto vulkan :: toString (
         __C_ENG_TYPE ( InstanceCreateInfo ) const & createInfo
 ) noexcept -> String {
@@ -1963,6 +2171,280 @@ auto vulkan :: toString (
             ", internalFreeNotificationCallback = "         + :: toString ( allocationCallbacks.internalFreeNotificationCallback ) +
             " }";
 }
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceLimits ) const &   deviceLimits
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceLimits ) ) " "_s +
+            "{ maxImageDimension1D = "                              + deviceLimits.maxImageDimension1D +
+            ", maxImageDimension2D = "                              + deviceLimits.maxImageDimension2D +
+            ", maxImageDimension3D = "                              + deviceLimits.maxImageDimension3D +
+            ", maxImageDimensionCube = "                            + deviceLimits.maxImageDimensionCube +
+            ", maxImageArrayLayers = "                              + deviceLimits.maxImageArrayLayers +
+            ", maxTexelBufferElements = "                           + deviceLimits.maxTexelBufferElements +
+            ", maxUniformBufferRange = "                            + deviceLimits.maxUniformBufferRange +
+            ", maxStorageBufferRange = "                            + deviceLimits.maxStorageBufferRange +
+            ", maxPushConstantsSize = "                             + deviceLimits.maxPushConstantsSize +
+            ", maxMemoryAllocationCount = "                         + deviceLimits.maxMemoryAllocationCount +
+            ", maxSamplerAllocationCount = "                        + deviceLimits.maxSamplerAllocationCount +
+            ", bufferImageGranularity = "                           + toString ( deviceLimits.bufferImageGranularity ) +
+            ", sparseAddressSpaceSize = "                           + toString ( deviceLimits.sparseAddressSpaceSize ) +
+            ", maxBoundDescriptorSets = "                           + deviceLimits.maxBoundDescriptorSets +
+            ", maxPerStageDescriptorSamplers = "                    + deviceLimits.maxPerStageDescriptorSamplers +
+            ", maxPerStageDescriptorUniformBuffers = "              + deviceLimits.maxPerStageDescriptorUniformBuffers +
+            ", maxPerStageDescriptorStorageBuffers = "              + deviceLimits.maxPerStageDescriptorStorageBuffers +
+            ", maxPerStageDescriptorSampledImages = "               + deviceLimits.maxPerStageDescriptorSampledImages +
+            ", maxPerStageDescriptorStorageImages = "               + deviceLimits.maxPerStageDescriptorStorageImages +
+            ", maxPerStageDescriptorInputAttachments = "            + deviceLimits.maxPerStageDescriptorInputAttachments +
+            ", maxPerStageResources = "                             + deviceLimits.maxPerStageResources +
+            ", maxDescriptorSetSamplers = "                         + deviceLimits.maxDescriptorSetSamplers +
+            ", maxDescriptorSetUniformBuffers = "                   + deviceLimits.maxDescriptorSetUniformBuffers +
+            ", maxDescriptorSetUniformBuffersDynamic = "            + deviceLimits.maxDescriptorSetUniformBuffersDynamic +
+            ", maxDescriptorSetStorageBuffers = "                   + deviceLimits.maxDescriptorSetStorageBuffers +
+            ", maxDescriptorSetStorageBuffersDynamic = "            + deviceLimits.maxDescriptorSetStorageBuffersDynamic +
+            ", maxDescriptorSetSampledImages = "                    + deviceLimits.maxDescriptorSetSampledImages +
+            ", maxDescriptorSetStorageImages = "                    + deviceLimits.maxDescriptorSetStorageImages +
+            ", maxDescriptorSetInputAttachments = "                 + deviceLimits.maxDescriptorSetInputAttachments +
+            ", maxVertexInputAttributes = "                         + deviceLimits.maxVertexInputAttributes +
+            ", maxVertexInputBindings = "                           + deviceLimits.maxVertexInputBindings +
+            ", maxVertexInputAttributeOffset = "                    + deviceLimits.maxVertexInputAttributeOffset +
+            ", maxVertexInputBindingStride = "                      + deviceLimits.maxVertexInputBindingStride +
+            ", maxVertexOutputComponents = "                        + deviceLimits.maxVertexOutputComponents +
+            ", maxTessellationGenerationLevel = "                   + deviceLimits.maxTessellationGenerationLevel +
+            ", maxTessellationPatchSize = "                         + deviceLimits.maxTessellationPatchSize +
+            ", maxTessellationControlPerVertexInputComponents = "   + deviceLimits.maxTessellationControlPerVertexInputComponents +
+            ", maxTessellationControlPerVertexOutputComponents = "  + deviceLimits.maxTessellationControlPerVertexOutputComponents +
+            ", maxTessellationControlPerPatchOutputComponents = "   + deviceLimits.maxTessellationControlPerPatchOutputComponents +
+            ", maxTessellationControlTotalOutputComponents = "      + deviceLimits.maxTessellationControlTotalOutputComponents +
+            ", maxTessellationEvaluationInputComponents = "         + deviceLimits.maxTessellationEvaluationInputComponents +
+            ", maxTessellationEvaluationOutputComponents = "        + deviceLimits.maxTessellationEvaluationOutputComponents +
+            ", maxGeometryShaderInvocations = "                     + deviceLimits.maxGeometryShaderInvocations +
+            ", maxGeometryInputComponents = "                       + deviceLimits.maxGeometryInputComponents +
+            ", maxGeometryOutputComponents = "                      + deviceLimits.maxGeometryOutputComponents +
+            ", maxGeometryOutputVertices = "                        + deviceLimits.maxGeometryOutputVertices +
+            ", maxGeometryTotalOutputComponents = "                 + deviceLimits.maxGeometryTotalOutputComponents +
+            ", maxFragmentInputComponents = "                       + deviceLimits.maxFragmentInputComponents +
+            ", maxFragmentOutputAttachments = "                     + deviceLimits.maxFragmentOutputAttachments +
+            ", maxFragmentDualSourceAttachments = "                 + deviceLimits.maxFragmentDualSourceAttachments +
+            ", maxFragmentCombinedOutputResources = "               + deviceLimits.maxFragmentCombinedOutputResources +
+            ", maxComputeSharedMemorySize = "                       + deviceLimits.maxComputeSharedMemorySize +
+            ", maxComputeWorkGroupCount = [ "                       + deviceLimits.maxComputeWorkGroupCount[0] + ", " + deviceLimits.maxComputeWorkGroupCount[1] + ", " + deviceLimits.maxComputeWorkGroupCount[2] + " ]" +
+            ", maxComputeWorkGroupInvocations = "                   + deviceLimits.maxComputeWorkGroupInvocations +
+            ", maxComputeWorkGroupSize = [ "                        + deviceLimits.maxComputeWorkGroupSize[0] + ", " + deviceLimits.maxComputeWorkGroupSize[1] + ", " + deviceLimits.maxComputeWorkGroupSize[2] + " ]" +
+            ", subPixelPrecisionBits = "                            + deviceLimits.subPixelPrecisionBits +
+            ", subTexelPrecisionBits = "                            + deviceLimits.subTexelPrecisionBits +
+            ", mipmapPrecisionBits = "                              + deviceLimits.mipmapPrecisionBits +
+            ", maxDrawIndexedIndexValue = "                         + deviceLimits.maxDrawIndexedIndexValue +
+            ", maxDrawIndirectCount = "                             + deviceLimits.maxDrawIndirectCount +
+            ", maxSamplerLodBias = "                                + deviceLimits.maxSamplerLodBias +
+            ", maxSamplerAnisotropy = "                             + deviceLimits.maxSamplerAnisotropy +
+            ", maxViewports = "                                     + deviceLimits.maxViewports +
+            ", maxViewportDimensions = [ "                          + deviceLimits.maxViewportDimensions[0] + ", " + deviceLimits.maxViewportDimensions[1] + " ]" +
+            ", viewportBoundsRange = [ "                            + deviceLimits.viewportBoundsRange[0] + ", " + deviceLimits.viewportBoundsRange[1] + " ]" +
+            ", viewportSubPixelBits = "                             + deviceLimits.viewportSubPixelBits +
+            ", minMemoryMapAlignment = "                            + deviceLimits.minMemoryMapAlignment +
+            ", minTexelBufferOffsetAlignment = "                    + toString ( deviceLimits.minTexelBufferOffsetAlignment ) +
+            ", minUniformBufferOffsetAlignment = "                  + toString ( deviceLimits.minUniformBufferOffsetAlignment ) +
+            ", minStorageBufferOffsetAlignment = "                  + toString ( deviceLimits.minStorageBufferOffsetAlignment ) +
+            ", minTexelOffset = "                                   + deviceLimits.minTexelOffset +
+            ", maxTexelOffset = "                                   + deviceLimits.maxTexelOffset +
+            ", minTexelGatherOffset = "                             + deviceLimits.minTexelGatherOffset +
+            ", maxTexelGatherOffset = "                             + deviceLimits.maxTexelGatherOffset +
+            ", minInterpolationOffset = "                           + deviceLimits.minInterpolationOffset +
+            ", maxInterpolationOffset = "                           + deviceLimits.maxInterpolationOffset +
+            ", subPixelInterpolationOffsetBits = "                  + deviceLimits.subPixelInterpolationOffsetBits +
+            ", maxFramebufferWidth = "                              + deviceLimits.maxFramebufferWidth +
+            ", maxFramebufferHeight = "                             + deviceLimits.maxFramebufferHeight +
+            ", maxFramebufferLayers = "                             + deviceLimits.maxFramebufferLayers +
+            ", framebufferColorSampleCounts = "                     + "0b" + Long ( deviceLimits.framebufferColorSampleCounts ).toString(2) +
+            ", framebufferDepthSampleCounts = "                     + "0b" + Long ( deviceLimits.framebufferDepthSampleCounts ).toString(2) +
+            ", framebufferStencilSampleCounts = "                   + "0b" + Long ( deviceLimits.framebufferStencilSampleCounts ).toString(2) +
+            ", framebufferNoAttachmentsSampleCounts = "             + "0b" + Long ( deviceLimits.framebufferNoAttachmentsSampleCounts ).toString(2) +
+            ", maxColorAttachments = "                              + deviceLimits.maxColorAttachments +
+            ", sampledImageColorSampleCounts = "                    + "0b" + Long ( deviceLimits.sampledImageColorSampleCounts ).toString(2) +
+            ", sampledImageIntegerSampleCounts = "                  + "0b" + Long ( deviceLimits.sampledImageIntegerSampleCounts ).toString(2) +
+            ", sampledImageDepthSampleCounts = "                    + "0b" + Long ( deviceLimits.sampledImageDepthSampleCounts ).toString(2) +
+            ", sampledImageStencilSampleCounts = "                  + "0b" + Long ( deviceLimits.sampledImageStencilSampleCounts ).toString(2) +
+            ", storageImageSampleCounts = "                         + "0b" + Long ( deviceLimits.storageImageSampleCounts ).toString(2) +
+            ", maxSampleMaskWords = "                               + deviceLimits.maxSampleMaskWords +
+            ", timestampComputeAndGraphics = "                      + ( deviceLimits.timestampComputeAndGraphics == VK_TRUE ? "true" : "false" ) +
+            ", timestampPeriod = "                                  + deviceLimits.timestampPeriod +
+            ", maxClipDistances = "                                 + deviceLimits.maxClipDistances +
+            ", maxCullDistances = "                                 + deviceLimits.maxCullDistances +
+            ", maxCombinedClipAndCullDistances = "                  + deviceLimits.maxCombinedClipAndCullDistances +
+            ", discreteQueuePriorities = "                          + deviceLimits.discreteQueuePriorities +
+            ", pointSizeRange = [ "                                 + deviceLimits.pointSizeRange[0] + ", " + deviceLimits.pointSizeRange[1] + " ]" +
+            ", lineWidthRange = [ "                                 + deviceLimits.lineWidthRange[0] + ", " + deviceLimits.lineWidthRange[1] + " ]" +
+            ", pointSizeGranularity = "                             + deviceLimits.pointSizeGranularity +
+            ", lineWidthGranularity = "                             + deviceLimits.lineWidthGranularity +
+            ", strictLines = "                                      + ( deviceLimits.strictLines == VK_TRUE ? "true" : "false" ) +
+            ", standardSampleLocations = "                          + ( deviceLimits.standardSampleLocations == VK_TRUE ? "true" : "false" ) +
+            ", optimalBufferCopyOffsetAlignment = "                 + toString ( deviceLimits.optimalBufferCopyOffsetAlignment ) +
+            ", optimalBufferCopyRowPitchAlignment = "               + toString ( deviceLimits.optimalBufferCopyRowPitchAlignment ) +
+            ", nonCoherentAtomSize = "                              + toString ( deviceLimits.nonCoherentAtomSize ) +
+            " }";
+}
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceSparseProperties ) const & properties
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceSparseProperties ) ) " "
+            "{ residencyStandard2DBlockShape = "_s          + properties.residencyStandard2DBlockShape +
+            ", residencyStandard2DMultisampleBlockShape = " + properties.residencyStandard2DMultisampleBlockShape +
+            ", residencyStandard3DBlockShape = "            + properties.residencyStandard3DBlockShape +
+            ", residencyAlignedMipSize = "                  + properties.residencyAlignedMipSize +
+            ", residencyNonResidentStrict = "               + properties.residencyNonResidentStrict +
+            " }";
+}
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceProperties ) const & properties
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceProperties ) ) " "
+            "{ apiVersion = "           + versionReadableFormat ( properties.apiVersion ) +
+            ", driverVersion = "        + properties.driverVersion +
+            ", vendorID = "             + properties.vendorID +
+            ", deviceID = "             + properties.deviceID +
+            ", deviceType = "           + toString ( properties.deviceType ) +
+            ", deviceName = "           + properties.deviceName +
+            ", pipelineCacheUUID = "    + :: toString ( properties.pipelineCacheUUID ) + // NOLINT(clion-misra-cpp2008-5-2-12)
+            ", limits = "               + toString ( properties.limits ) +
+            ", sparseProperties = "     + toString ( properties.sparseProperties ) +
+            " }";
+}
+
+static auto deduceAndMoveToNextInPropertiesChain (
+        vulkan :: __C_ENG_TYPE ( GenericOutStructure ) * pInStructure
+) noexcept -> String {
+    if ( pInStructure == nullptr ) {
+        return "null";
+    }
+
+    return "";
+}
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceExtendedProperties ) const & properties
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceExtendedProperties ) ) " "
+            "{ type = "_s          + toString ( properties.structureType ) +
+            ", baseProperties = "   + toString ( properties.properties ) +
+            ", nextInChain = "      + deduceAndMoveToNextInPropertiesChain (
+                    reinterpret_cast < __C_ENG_TYPE ( GenericOutStructure ) * > ( properties.pNext )
+            ) +
+            " }";
+}
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceVulkan11Properties ) const & properties
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceVulkan11Properties ) ) " "
+            "{ type = "_s                               + toString ( properties.structureType ) +
+            ", pNext = "                                + :: toString ( properties.pNext ) +
+            ", deviceUUID = "                           + :: toString ( properties.deviceUUID ) + // NOLINT(clion-misra-cpp2008-5-2-12)
+            ", driverUUID = "                           + :: toString ( properties.driverUUID ) + // NOLINT(clion-misra-cpp2008-5-2-12)
+            ", deviceLUID = "                           + :: toString ( properties.deviceLUID ) + // NOLINT(clion-misra-cpp2008-5-2-12)
+            ", deviceNodeMask = "                       + properties.deviceNodeMask +
+            ", deviceLUIDValid = "                      + ( properties.deviceLUIDValid == VK_TRUE ? "true" : "false" ) +
+            ", subgroupSize = "                         + properties.subgroupSize +
+            ", subgroupSupportedStages = "              + "0b" + Long ( properties.subgroupSupportedStages ).toString(2) +
+            ", subgroupSupportedOperations = "          + "0b" + Long ( properties.subgroupSupportedOperations ).toString(2) +
+            ", subgroupQuadOperationsInAllStages = "    + ( properties.subgroupQuadOperationsInAllStages == VK_TRUE ? "true" : "false" ) +
+            ", pointClippingBehavior = "                + toString ( properties.pointClippingBehavior ) +
+            ", maxMultiviewViewCount = "                + properties.maxMultiviewViewCount +
+            ", maxMultiviewInstanceIndex = "            + properties.maxMultiviewInstanceIndex +
+            ", protectedNoFault = "                     + ( properties.protectedNoFault == VK_TRUE ? "true" : "false" ) +
+            ", maxPerSetDescriptors = "                 + properties.maxPerSetDescriptors +
+            ", maxMemoryAllocationSize = "              + toString ( properties.maxMemoryAllocationSize ) +
+            " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( ConformanceVersion ) const & version
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( ConformanceVersion ) ) " "
+            "{ major = "_s      + version.major +
+            ", minor = "        + version.minor +
+            ", subminor = "     + version.subminor +
+            ", patch = "        + version.patch +
+            " }";
+}
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceVulkan12Properties ) const & properties
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceVulkan12Properties ) ) " "
+            "{ type = "_s                                               + toString ( properties.structureType ) +
+            ", pNext = "                                                + :: toString ( properties.pNext ) +
+            ", driverID = "                                             + toString ( properties.driverID ) +
+            ", driverName = "                                           + properties.driverName +
+            ", driverInfo = "                                           + properties.driverInfo +
+            ", conformanceVersion = "                                   + toString ( properties.conformanceVersion ) +
+            ", denormBehaviorIndependence = "                           + toString ( properties.denormBehaviorIndependence ) +
+            ", roundingModeIndependence = "                             + toString ( properties.roundingModeIndependence ) +
+            ", shaderSignedZeroInfNanPreserveFloat16 = "                + ( properties.shaderSignedZeroInfNanPreserveFloat16 == VK_TRUE ? "true" : "false" ) +
+            ", shaderSignedZeroInfNanPreserveFloat32 = "                + ( properties.shaderSignedZeroInfNanPreserveFloat32 == VK_TRUE ? "true" : "false" ) +
+            ", shaderSignedZeroInfNanPreserveFloat64 = "                + ( properties.shaderSignedZeroInfNanPreserveFloat64 == VK_TRUE ? "true" : "false" ) +
+            ", shaderDenormPreserveFloat16 = "                          + ( properties.shaderDenormPreserveFloat16 == VK_TRUE ? "true" : "false" ) +
+            ", shaderDenormPreserveFloat32 = "                          + ( properties.shaderDenormPreserveFloat32 == VK_TRUE ? "true" : "false" ) +
+            ", shaderDenormPreserveFloat64 = "                          + ( properties.shaderDenormPreserveFloat64 == VK_TRUE ? "true" : "false" ) +
+            ", shaderDenormFlushToZeroFloat16 = "                       + ( properties.shaderDenormFlushToZeroFloat16 == VK_TRUE ? "true" : "false" ) +
+            ", shaderDenormFlushToZeroFloat32 = "                       + ( properties.shaderDenormFlushToZeroFloat32 == VK_TRUE ? "true" : "false" ) +
+            ", shaderDenormFlushToZeroFloat64 = "                       + ( properties.shaderDenormFlushToZeroFloat64 == VK_TRUE ? "true" : "false" ) +
+            ", shaderRoundingModeRTEFloat16 = "                         + ( properties.shaderRoundingModeRTEFloat16 == VK_TRUE ? "true" : "false" ) +
+            ", shaderRoundingModeRTEFloat32 = "                         + ( properties.shaderRoundingModeRTEFloat32 == VK_TRUE ? "true" : "false" ) +
+            ", shaderRoundingModeRTEFloat64 = "                         + ( properties.shaderRoundingModeRTEFloat64 == VK_TRUE ? "true" : "false" ) +
+            ", shaderRoundingModeRTZFloat16 = "                         + ( properties.shaderRoundingModeRTZFloat16 == VK_TRUE ? "true" : "false" ) +
+            ", shaderRoundingModeRTZFloat32 = "                         + ( properties.shaderRoundingModeRTZFloat32 == VK_TRUE ? "true" : "false" ) +
+            ", shaderRoundingModeRTZFloat64 = "                         + ( properties.shaderRoundingModeRTZFloat64 == VK_TRUE ? "true" : "false" ) +
+            ", maxUpdateAfterBindDescriptorsInAllPools = "              + properties.maxUpdateAfterBindDescriptorsInAllPools +
+            ", shaderUniformBufferArrayNonUniformIndexingNative = "     + ( properties.shaderUniformBufferArrayNonUniformIndexingNative == VK_TRUE ? "true" : "false" ) +
+            ", shaderSampledImageArrayNonUniformIndexingNative = "      + ( properties.shaderSampledImageArrayNonUniformIndexingNative == VK_TRUE ? "true" : "false" ) +
+            ", shaderStorageBufferArrayNonUniformIndexingNative = "     + ( properties.shaderStorageBufferArrayNonUniformIndexingNative == VK_TRUE ? "true" : "false" ) +
+            ", shaderStorageImageArrayNonUniformIndexingNative = "      + ( properties.shaderStorageImageArrayNonUniformIndexingNative == VK_TRUE ? "true" : "false" ) +
+            ", shaderInputAttachmentArrayNonUniformIndexingNative = "   + ( properties.shaderInputAttachmentArrayNonUniformIndexingNative == VK_TRUE ? "true" : "false" ) +
+            ", robustBufferAccessUpdateAfterBind = "                    + ( properties.robustBufferAccessUpdateAfterBind == VK_TRUE ? "true" : "false" ) +
+            ", quadDivergentImplicitLod = "                             + ( properties.quadDivergentImplicitLod == VK_TRUE ? "true" : "false" ) +
+            ", maxPerStageDescriptorUpdateAfterBindSamplers = "         + properties.maxPerStageDescriptorUpdateAfterBindSamplers +
+            ", maxPerStageDescriptorUpdateAfterBindUniformBuffers = "   + properties.maxPerStageDescriptorUpdateAfterBindUniformBuffers +
+            ", maxPerStageDescriptorUpdateAfterBindStorageBuffers = "   + properties.maxPerStageDescriptorUpdateAfterBindStorageBuffers +
+            ", maxPerStageDescriptorUpdateAfterBindSampledImages = "    + properties.maxPerStageDescriptorUpdateAfterBindSampledImages +
+            ", maxPerStageDescriptorUpdateAfterBindStoredImages = "     + properties.maxPerStageDescriptorUpdateAfterBindStoredImages +
+            ", maxPerStageDescriptorUpdateAfterBindInputAttachments = " + properties.maxPerStageDescriptorUpdateAfterBindInputAttachments +
+            ", maxPerStageUpdateAfterBindResources = "                  + properties.maxPerStageUpdateAfterBindResources +
+            ", maxDescriptorSetUpdateAfterBindSamplers = "              + properties.maxDescriptorSetUpdateAfterBindSamplers +
+            ", maxDescriptorSetUpdateAfterBindUniformBuffers = "        + properties.maxDescriptorSetUpdateAfterBindUniformBuffers +
+            ", maxDescriptorSetUpdateAfterBindUniformBuffersDynamic = " + properties.maxDescriptorSetUpdateAfterBindUniformBuffersDynamic +
+            ", maxDescriptorSetUpdateAfterBindStorageBuffers = "        + properties.maxDescriptorSetUpdateAfterBindStorageBuffers +
+            ", maxDescriptorSetUpdateAfterBindStorageBuffersDynamic = " + properties.maxDescriptorSetUpdateAfterBindStorageBuffersDynamic +
+            ", maxDescriptorSetUpdateAfterBindSampledImages = "         + properties.maxDescriptorSetUpdateAfterBindSampledImages +
+            ", maxDescriptorSetUpdateAfterBindStorageImages = "         + properties.maxDescriptorSetUpdateAfterBindStorageImages +
+            ", maxDescriptorSetUpdateAfterBindBindInputAttachments = "  + properties.maxDescriptorSetUpdateAfterBindBindInputAttachments +
+            ", supportedDepthResolveModes = "                           + toString ( properties.supportedDepthResolveModes ) +
+            ", supportedStencilResolveModes = "                         + toString ( properties.supportedStencilResolveModes ) +
+            ", independentResolveNone = "                               + ( properties.independentResolveNone == VK_TRUE ? "true" : "false" ) +
+            ", independentResolve = "                                   + ( properties.independentResolve == VK_TRUE ? "true" : "false" ) +
+            ", filterMinmaxSingleComponentsFormats = "                  + ( properties.filterMinmaxSingleComponentsFormats == VK_TRUE ? "true" : "false" ) +
+            ", filterMinmaxImageComponentsMapping = "                   + ( properties.filterMinmaxImageComponentsMapping == VK_TRUE ? "true" : "false" ) +
+            ", maxTimelineSemaphoreValueDifference = "                  + properties.maxTimelineSemaphoreValueDifference +
+            ", framebufferIntegerColorSampleCounts = "                  + toString ( properties.framebufferIntegerColorSampleCounts ) +
+            " }";
+}
+
+#endif
 
 auto vulkan :: compare (
         __C_ENG_TYPE ( Version ) const & left,

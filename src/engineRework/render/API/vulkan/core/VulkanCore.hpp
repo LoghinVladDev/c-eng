@@ -124,6 +124,8 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
+            Field ( ErrorIncompatibleVersion,                  cds :: limits :: S32_MAX - 4 ),
+            Field ( ErrorConfigurationArraySizeSmall,          cds :: limits :: S32_MAX - 3 ),
             Field ( ErrorFunctionHandleNotFound,               cds :: limits :: S32_MAX - 2 ),
             Field ( ErrorIllegalArgument,                      cds :: limits :: S32_MAX - 1 ),
             Field ( Unknown,                                   cds :: limits :: S32_MAX )
@@ -1795,6 +1797,38 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #define C_ENG_MAP_END
 #include <ObjectMapping.hpp>
 
+
+#define C_ENG_MAP_START     ENUM ( PhysicalDeviceType,  TYPE ( cds :: uint8 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( Unknown,        VkPhysicalDeviceType :: VK_PHYSICAL_DEVICE_TYPE_OTHER ),
+            Field ( IntegratedGPU,  VkPhysicalDeviceType :: VK_PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU ),
+            Field ( DedicatedGPU,   VkPhysicalDeviceType :: VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU ),
+            Field ( VirtualGPU,     VkPhysicalDeviceType :: VK_PHYSICAL_DEVICE_TYPE_VIRTUAL_GPU ),
+            Field ( CPU,            VkPhysicalDeviceType :: VK_PHYSICAL_DEVICE_TYPE_CPU )
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+
+#define C_ENG_MAP_START     ENUM ( VendorID,  TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( VIV,        VkVendorId :: VK_VENDOR_ID_VIV ),
+            Field ( VSI,        VkVendorId :: VK_VENDOR_ID_VSI ),
+            Field ( Kazan,      VkVendorId :: VK_VENDOR_ID_KAZAN ),
+            Field ( Codeplay,   VkVendorId :: VK_VENDOR_ID_CODEPLAY ),
+            Field ( Mesa,       VkVendorId :: VK_VENDOR_ID_MESA ),
+            Field ( POCL,       VkVendorId :: VK_VENDOR_ID_POCL )
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+
 #define C_ENG_MAP_START     ENUM ( DebugMessageSeverityFlag,    TYPE ( cds :: uint32 ) )
 #include <ObjectMapping.hpp>
 
@@ -1852,18 +1886,186 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #define C_ENG_MAP_END
 #include <ObjectMapping.hpp>
 
+#define C_ENG_MAP_START     ENUM ( SampleCountFlag, TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( 1Bit,   VkSampleCountFlagBits :: VK_SAMPLE_COUNT_1_BIT ),
+            Field ( 2Bit,   VkSampleCountFlagBits :: VK_SAMPLE_COUNT_2_BIT ),
+            Field ( 4Bit,   VkSampleCountFlagBits :: VK_SAMPLE_COUNT_4_BIT ),
+            Field ( 8Bit,   VkSampleCountFlagBits :: VK_SAMPLE_COUNT_8_BIT ),
+            Field ( 16Bit,  VkSampleCountFlagBits :: VK_SAMPLE_COUNT_16_BIT ),
+            Field ( 32Bit,  VkSampleCountFlagBits :: VK_SAMPLE_COUNT_32_BIT ),
+            Field ( 64Bit,  VkSampleCountFlagBits :: VK_SAMPLE_COUNT_64_BIT ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START     ENUM ( PointClippingBehavior, TYPE ( cds :: uint8 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( AllClipPlanes,      VkPointClippingBehavior :: VK_POINT_CLIPPING_BEHAVIOR_ALL_CLIP_PLANES ),
+            Field ( UserClipPlanesOnly, VkPointClippingBehavior :: VK_POINT_CLIPPING_BEHAVIOR_USER_CLIP_PLANES_ONLY )
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START     ENUM ( ShaderStageFlag, TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_RAY_TRACING_PIPELINE_AVAILABLE
+
+            Field ( RayGeneration,          VkShaderStageFlagBits :: VK_SHADER_STAGE_RAYGEN_BIT_KHR ),
+            Field ( RayAnyHit,              VkShaderStageFlagBits :: VK_SHADER_STAGE_ANY_HIT_BIT_KHR ),
+            Field ( RayClosestHit,          VkShaderStageFlagBits :: VK_SHADER_STAGE_CLOSEST_HIT_BIT_KHR ),
+            Field ( RayMiss,                VkShaderStageFlagBits :: VK_SHADER_STAGE_MISS_BIT_KHR ),
+            Field ( RayIntersection,        VkShaderStageFlagBits :: VK_SHADER_STAGE_INTERSECTION_BIT_KHR ),
+            Field ( RayCallable,            VkShaderStageFlagBits :: VK_SHADER_STAGE_CALLABLE_BIT_KHR ),
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_MESH_SHADER_AVAILABLE
+
+            Field ( MeshTaskNVidia,         VkShaderStageFlagBits :: VK_SHADER_STAGE_TASK_BIT_NV ),
+            Field ( MeshMeshNVidia,         VkShaderStageFlagBits :: VK_SHADER_STAGE_MESH_BIT_NV ),
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_HUAWEI_SUBPASS_SHADING_AVAILABLE
+
+            Field ( SubpassShadingHuawei,   VkShaderStageFlagBits :: VK_SHADER_STAGE_SUBPASS_SHADING_BIT_HUAWEI ),
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+
+            Field ( RayGenerationNVidia,    ShaderStageFlagRayGeneration ),
+            Field ( RayAnyHitNVidia,        ShaderStageFlagRayAnyHit ),
+            Field ( RayClosestHitNVidia,    ShaderStageFlagRayClosestHit ),
+            Field ( RayMissNVidia,          ShaderStageFlagRayMiss ),
+            Field ( RayIntersectionNVidia,  ShaderStageFlagRayIntersection ),
+            Field ( RayCallableNVidia,      ShaderStageFlagRayCallable ),
+
+#endif
+
+            Field ( Vertex,                 VkShaderStageFlagBits :: VK_SHADER_STAGE_VERTEX_BIT ),
+            Field ( TessellationControl,    VkShaderStageFlagBits :: VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT ),
+            Field ( TessellationEvaluation, VkShaderStageFlagBits :: VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT ),
+            Field ( Geometry,               VkShaderStageFlagBits :: VK_SHADER_STAGE_GEOMETRY_BIT ),
+            Field ( Fragment,               VkShaderStageFlagBits :: VK_SHADER_STAGE_FRAGMENT_BIT ),
+            Field ( Compute,                VkShaderStageFlagBits :: VK_SHADER_STAGE_COMPUTE_BIT ),
+            Field ( AllGraphics,            VkShaderStageFlagBits :: VK_SHADER_STAGE_ALL_GRAPHICS ),
+            Field ( All,                    VkShaderStageFlagBits :: VK_SHADER_STAGE_ALL )
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+
+#define C_ENG_MAP_START     ENUM ( SubgroupFeatureFlag,     TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SHADER_SUBGROUP_PARTITIONED_AVAILABLE
+
+            Field ( PartitionedNVidia,  VkSubgroupFeatureFlagBits :: VK_SUBGROUP_FEATURE_PARTITIONED_BIT_NV ),
+
+#endif
+
+            Field ( Basic,              VkSubgroupFeatureFlagBits :: VK_SUBGROUP_FEATURE_BASIC_BIT ),
+            Field ( Vote,               VkSubgroupFeatureFlagBits :: VK_SUBGROUP_FEATURE_VOTE_BIT ),
+            Field ( Arithmetic,         VkSubgroupFeatureFlagBits :: VK_SUBGROUP_FEATURE_ARITHMETIC_BIT ),
+            Field ( Shuffle,            VkSubgroupFeatureFlagBits :: VK_SUBGROUP_FEATURE_SHUFFLE_BIT ),
+            Field ( ShuffleRelative,    VkSubgroupFeatureFlagBits :: VK_SUBGROUP_FEATURE_SHUFFLE_RELATIVE_BIT ),
+            Field ( Clustered,          VkSubgroupFeatureFlagBits :: VK_SUBGROUP_FEATURE_CLUSTERED_BIT ),
+            Field ( Quad,               VkSubgroupFeatureFlagBits :: VK_SUBGROUP_FEATURE_QUAD_BIT )
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+
+#define C_ENG_MAP_START     ENUM ( DriverID,    TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( AMDProprietary,                 VkDriverId :: VK_DRIVER_ID_AMD_PROPRIETARY ),
+            Field ( AMDOpenSource,                  VkDriverId :: VK_DRIVER_ID_AMD_OPEN_SOURCE ),
+            Field ( MesaRadV,                       VkDriverId :: VK_DRIVER_ID_MESA_RADV ),
+            Field ( NVidiaProprietary,              VkDriverId :: VK_DRIVER_ID_NVIDIA_PROPRIETARY ),
+            Field ( InterProprietaryWindows,        VkDriverId :: VK_DRIVER_ID_INTEL_PROPRIETARY_WINDOWS ),
+            Field ( IntelOpenSourceMesa,            VkDriverId :: VK_DRIVER_ID_INTEL_OPEN_SOURCE_MESA ),
+            Field ( ImaginationProprietary,         VkDriverId :: VK_DRIVER_ID_IMAGINATION_PROPRIETARY ),
+            Field ( QualcommProprietary,            VkDriverId :: VK_DRIVER_ID_QUALCOMM_PROPRIETARY ),
+            Field ( ARMProprietary,                 VkDriverId :: VK_DRIVER_ID_ARM_PROPRIETARY ),
+            Field ( GoogleSwiftshader,              VkDriverId :: VK_DRIVER_ID_GOOGLE_SWIFTSHADER ),
+            Field ( GoogleGamesPlatformProprietary, VkDriverId :: VK_DRIVER_ID_GGP_PROPRIETARY ),
+            Field ( BroadcomProprietary,            VkDriverId :: VK_DRIVER_ID_BROADCOM_PROPRIETARY ),
+            Field ( MesaLLVMPipe,                   VkDriverId :: VK_DRIVER_ID_MESA_LLVMPIPE ),
+            Field ( MoltenVulkan,                   VkDriverId :: VK_DRIVER_ID_MOLTENVK ),
+            Field ( CoreAVIProprietary,             VkDriverId :: VK_DRIVER_ID_COREAVI_PROPRIETARY ),
+            Field ( JuiceProprietary,               VkDriverId :: VK_DRIVER_ID_JUICE_PROPRIETARY ),
+            Field ( VeriSiliconProprietary,         VkDriverId :: VK_DRIVER_ID_VERISILICON_PROPRIETARY )
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+
+#define C_ENG_MAP_START     ENUM ( ShaderFloatControlsIndependence, TYPE ( cds :: uint8 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( 32BitOnly,  VkShaderFloatControlsIndependence :: VK_SHADER_FLOAT_CONTROLS_INDEPENDENCE_32_BIT_ONLY ),
+            Field ( All,        VkShaderFloatControlsIndependence :: VK_SHADER_FLOAT_CONTROLS_INDEPENDENCE_ALL ),
+            Field ( None,       VkShaderFloatControlsIndependence :: VK_SHADER_FLOAT_CONTROLS_INDEPENDENCE_NONE )
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+
+#define C_ENG_MAP_START     ENUM ( ResolveModeFlag, TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( None,       VkResolveModeFlagBits :: VK_RESOLVE_MODE_NONE ),
+            Field ( SampleZero, VkResolveModeFlagBits :: VK_RESOLVE_MODE_SAMPLE_ZERO_BIT ),
+            Field ( Average,    VkResolveModeFlagBits :: VK_RESOLVE_MODE_AVERAGE_BIT ),
+            Field ( Min,        VkResolveModeFlagBits :: VK_RESOLVE_MODE_MIN_BIT ),
+            Field ( Max,        VkResolveModeFlagBits :: VK_RESOLVE_MODE_MAX_BIT )
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
 
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 
-        __C_ENG_ALIAS ( Offset2D, VkOffset2D );
-        __C_ENG_ALIAS ( Offset3D, VkOffset3D );
+        __C_ENG_ALIAS ( Offset2D,   VkOffset2D );
+        __C_ENG_ALIAS ( Offset3D,   VkOffset3D );
 
-        __C_ENG_ALIAS ( Extent2D, VkExtent2D );
-        __C_ENG_ALIAS ( Extent3D, VkExtent3D );
+        __C_ENG_ALIAS ( Extent2D,   VkExtent2D );
+        __C_ENG_ALIAS ( Extent3D,   VkExtent3D );
 
-        __C_ENG_ALIAS ( Rect, VkRect2D );
+        __C_ENG_ALIAS ( Rect,       VkRect2D );
 
-        __C_ENG_ALIAS ( GenericVulkanStructure, void );
+        __C_ENG_ALIAS ( DeviceSize, VkDeviceSize );
+        __C_ENG_ALIAS ( Bool,       VkBool32 );
+
+        __C_ENG_ALIAS ( GenericStructure, void );
 
         __C_ENG_ALIAS ( InstanceHandle,                 VkInstance );
         __C_ENG_ALIAS ( DebugMessengerHandle,           VkDebugUtilsMessengerEXT );
@@ -1872,6 +2074,8 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
         __C_ENG_ALIAS ( InstanceCreateFlags,            VkInstanceCreateFlags );
         __C_ENG_ALIAS ( DebugMessengerCreateFlags,      VkDebugUtilsMessengerCreateFlagsEXT );
+        __C_ENG_ALIAS ( SampleCountFlags,               VkSampleCountFlags );
+        __C_ENG_ALIAS ( ShaderStageFlags,               VkShaderStageFlags );
 
         __C_ENG_ALIAS ( DebugMessageSeverityFlags,      VkDebugUtilsMessageSeverityFlagsEXT );
         __C_ENG_ALIAS ( DebugMessageTypeFlags,          VkDebugUtilsMessageTypeFlagsEXT );
@@ -1882,6 +2086,18 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_ALIAS ( FreeFunction,                   PFN_vkFreeFunction );
         __C_ENG_ALIAS ( InternalAllocationNotification, PFN_vkInternalAllocationNotification );
         __C_ENG_ALIAS ( InternalFreeNotification,       PFN_vkInternalFreeNotification );
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+
+        __C_ENG_ALIAS ( SubgroupFeatureFlags,           VkSubgroupFeatureFlags );
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+
+        __C_ENG_ALIAS ( ResolveModeFlags,               VkResolveModeFlags );
 
 #endif
 
@@ -1913,7 +2129,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
         Struct {
             __C_ENG_TYPE ( StructureType )                  structureType;
-            __C_ENG_TYPE ( GenericVulkanStructure ) const * pNext;
+            __C_ENG_TYPE ( GenericStructure )             * pNext;
 
             cds :: StringLiteral                            name;
             __C_ENG_TYPE ( Version )                        version;
@@ -1922,18 +2138,6 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
             __C_ENG_TYPE ( Version )                        engineVersion;
 
             __C_ENG_TYPE ( Version )                        apiVersion;
-        };
-
-#define C_ENG_MAP_END
-#include <ObjectMapping.hpp>
-
-
-#define C_ENG_MAP_START     STRUCT ( BaseInStructure, NO_PARENT )
-#include <ObjectMapping.hpp>
-
-        Struct {
-            __C_ENG_TYPE ( StructureType )                  structureType;
-            __C_ENG_TYPE ( GenericVulkanStructure ) const * pNext;
         };
 
 #define C_ENG_MAP_END
@@ -1971,7 +2175,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
         Struct {
             __C_ENG_TYPE ( StructureType )                  structureType;
-            __C_ENG_TYPE ( GenericVulkanStructure ) const * pNext;
+            __C_ENG_TYPE ( GenericStructure )             * pNext;
             __C_ENG_TYPE ( DebugMessengerCreateFlags )      flags;
             __C_ENG_TYPE ( DebugMessageSeverityFlags )      messageSeverityFlags;
             __C_ENG_TYPE ( DebugMessageTypeFlags )          messageTypeFlags;
@@ -1988,7 +2192,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
         Struct {
             __C_ENG_TYPE ( StructureType )                  structureType;
-            __C_ENG_TYPE ( GenericVulkanStructure ) const * pNext;
+            __C_ENG_TYPE ( GenericStructure )             * pNext;
             __C_ENG_TYPE ( InstanceCreateFlags )            flags;
             __C_ENG_TYPE ( ApplicationInfo )        const * pApplicationInfo;
 
@@ -2024,7 +2228,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
         Struct {
             __C_ENG_TYPE ( StructureType )                      structureType;
-            __C_ENG_TYPE ( GenericVulkanStructure )     const * pNext;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
             cds :: uint32                                       enabledValidationFeatureCount;
             __C_ENG_TYPE ( ValidationFeatureEnable )    const * pEnabledValidationFeatures;
             cds :: uint32                                       disabledValidationFeatureCount;
@@ -2035,6 +2239,362 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #include <ObjectMapping.hpp>
 
 
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceLimits, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            /// largest guaranteed width to be supported by all images created of type VK_IMAGE_TYPE_1D
+            cds :: uint32                       maxImageDimension1D;
+            /// largest guaranteed dimension ( width / height ) to be supported by all images created of type VK_IMAGE_TYPE_2D, without VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT
+            cds :: uint32                       maxImageDimension2D;
+            /// largest guaranteed dimension ( width / height / depth ) to be supported by all images created of type VK_IMAGE_TYPE_3D
+            cds :: uint32                       maxImageDimension3D;
+            /// largest guaranteed dimension ( width / height ) to be supported by all images created of type VK_IMAGE_TYPE_2D with VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT
+            cds :: uint32                       maxImageDimensionCube;
+            /// max number of layers for an image
+            cds :: uint32                       maxImageArrayLayers;
+
+            /// max number of addressable texels for a buffer view created with  VK_BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT or VK_BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT
+            cds :: uint32                       maxTexelBufferElements;
+
+            /// max value that can be specified in the range member of a VkDescriptorBufferInfo passed to vkUpdateDescriptorSets of type VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER or VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC
+            cds :: uint32                       maxUniformBufferRange;
+            cds :: uint32                       maxStorageBufferRange;
+
+            cds :: uint32                       maxPushConstantsSize;
+
+            cds :: uint32                       maxMemoryAllocationCount;
+            cds :: uint32                       maxSamplerAllocationCount;
+
+            __C_ENG_TYPE ( DeviceSize )         bufferImageGranularity;
+            __C_ENG_TYPE ( DeviceSize )         sparseAddressSpaceSize;
+
+            cds :: uint32                       maxBoundDescriptorSets;
+
+            cds :: uint32                       maxPerStageDescriptorSamplers;
+            cds :: uint32                       maxPerStageDescriptorUniformBuffers;
+            cds :: uint32                       maxPerStageDescriptorStorageBuffers;
+            cds :: uint32                       maxPerStageDescriptorSampledImages;
+            cds :: uint32                       maxPerStageDescriptorStorageImages;
+            cds :: uint32                       maxPerStageDescriptorInputAttachments;
+            cds :: uint32                       maxPerStageResources;
+
+            cds :: uint32                       maxDescriptorSetSamplers;
+            cds :: uint32                       maxDescriptorSetUniformBuffers;
+            cds :: uint32                       maxDescriptorSetUniformBuffersDynamic;
+            cds :: uint32                       maxDescriptorSetStorageBuffers;
+            cds :: uint32                       maxDescriptorSetStorageBuffersDynamic;
+            cds :: uint32                       maxDescriptorSetSampledImages;
+            cds :: uint32                       maxDescriptorSetStorageImages;
+            cds :: uint32                       maxDescriptorSetInputAttachments;
+
+            cds :: uint32                       maxVertexInputAttributes;
+            cds :: uint32                       maxVertexInputBindings;
+            cds :: uint32                       maxVertexInputAttributeOffset;
+            cds :: uint32                       maxVertexInputBindingStride;
+            cds :: uint32                       maxVertexOutputComponents;
+
+            cds :: uint32                       maxTessellationGenerationLevel;
+            cds :: uint32                       maxTessellationPatchSize;
+            cds :: uint32                       maxTessellationControlPerVertexInputComponents;
+            cds :: uint32                       maxTessellationControlPerVertexOutputComponents;
+            cds :: uint32                       maxTessellationControlPerPatchOutputComponents;
+            cds :: uint32                       maxTessellationControlTotalOutputComponents;
+            cds :: uint32                       maxTessellationEvaluationInputComponents;
+            cds :: uint32                       maxTessellationEvaluationOutputComponents;
+
+            cds :: uint32                       maxGeometryShaderInvocations;
+            cds :: uint32                       maxGeometryInputComponents;
+            cds :: uint32                       maxGeometryOutputComponents;
+            cds :: uint32                       maxGeometryOutputVertices;
+            cds :: uint32                       maxGeometryTotalOutputComponents;
+
+            cds :: uint32                       maxFragmentInputComponents;
+            cds :: uint32                       maxFragmentOutputAttachments;
+            cds :: uint32                       maxFragmentDualSourceAttachments;
+            cds :: uint32                       maxFragmentCombinedOutputResources;
+
+            cds :: uint32                       maxComputeSharedMemorySize;
+            cds :: uint32                       maxComputeWorkGroupCount[3];
+            cds :: uint32                       maxComputeWorkGroupInvocations;
+            cds :: uint32                       maxComputeWorkGroupSize[3];
+
+            cds :: uint32                       subPixelPrecisionBits;
+            cds :: uint32                       subTexelPrecisionBits;
+
+            cds :: uint32                       mipmapPrecisionBits;
+
+            cds :: uint32                       maxDrawIndexedIndexValue;
+            cds :: uint32                       maxDrawIndirectCount;
+
+            float                               maxSamplerLodBias;
+            float                               maxSamplerAnisotropy;
+
+            cds :: uint32                       maxViewports;
+            cds :: uint32                       maxViewportDimensions[2];
+            float                               viewportBoundsRange[2];
+            cds :: uint32                       viewportSubPixelBits;
+
+            cds :: Size                         minMemoryMapAlignment;
+
+            __C_ENG_TYPE ( DeviceSize )         minTexelBufferOffsetAlignment;
+            __C_ENG_TYPE ( DeviceSize )         minUniformBufferOffsetAlignment;
+            __C_ENG_TYPE ( DeviceSize )         minStorageBufferOffsetAlignment;
+
+            cds :: sint32                       minTexelOffset;
+            cds :: uint32                       maxTexelOffset;
+            cds :: sint32                       minTexelGatherOffset;
+            cds :: uint32                       maxTexelGatherOffset;
+
+            float                               minInterpolationOffset;
+            float                               maxInterpolationOffset;
+            cds :: uint32                       subPixelInterpolationOffsetBits;
+
+            cds :: uint32                       maxFramebufferWidth;
+            cds :: uint32                       maxFramebufferHeight;
+            cds :: uint32                       maxFramebufferLayers;
+
+            __C_ENG_TYPE ( SampleCountFlags )   framebufferColorSampleCounts;
+            __C_ENG_TYPE ( SampleCountFlags )   framebufferDepthSampleCounts;
+            __C_ENG_TYPE ( SampleCountFlags )   framebufferStencilSampleCounts;
+            __C_ENG_TYPE ( SampleCountFlags )   framebufferNoAttachmentsSampleCounts;
+
+            cds :: uint32                       maxColorAttachments;
+
+            __C_ENG_TYPE ( SampleCountFlags )   sampledImageColorSampleCounts;
+            __C_ENG_TYPE ( SampleCountFlags )   sampledImageIntegerSampleCounts;
+            __C_ENG_TYPE ( SampleCountFlags )   sampledImageDepthSampleCounts;
+            __C_ENG_TYPE ( SampleCountFlags )   sampledImageStencilSampleCounts;
+            __C_ENG_TYPE ( SampleCountFlags )   storageImageSampleCounts;
+
+            cds :: uint32                       maxSampleMaskWords;
+
+            __C_ENG_TYPE ( Bool )               timestampComputeAndGraphics;
+            float                               timestampPeriod;
+
+            cds :: uint32                       maxClipDistances;
+            cds :: uint32                       maxCullDistances;
+            cds :: uint32                       maxCombinedClipAndCullDistances;
+
+            cds :: uint32                       discreteQueuePriorities;
+
+            float                               pointSizeRange[2];
+            float                               lineWidthRange[2];
+            float                               pointSizeGranularity;
+            float                               lineWidthGranularity;
+            __C_ENG_TYPE ( Bool )               strictLines;
+
+            __C_ENG_TYPE ( Bool )               standardSampleLocations;
+
+            __C_ENG_TYPE ( DeviceSize )         optimalBufferCopyOffsetAlignment;
+            __C_ENG_TYPE ( DeviceSize )         optimalBufferCopyRowPitchAlignment;
+
+            __C_ENG_TYPE ( DeviceSize )         nonCoherentAtomSize;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceSparseProperties,    NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( Bool ) residencyStandard2DBlockShape;
+            __C_ENG_TYPE ( Bool ) residencyStandard2DMultisampleBlockShape;
+            __C_ENG_TYPE ( Bool ) residencyStandard3DBlockShape;
+            __C_ENG_TYPE ( Bool ) residencyAlignedMipSize;
+            __C_ENG_TYPE ( Bool ) residencyNonResidentStrict;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceProperties,  NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( Version )                        apiVersion;
+            cds :: uint32                                   driverVersion;
+            cds :: uint32                                   vendorID;
+            cds :: uint32                                   deviceID;
+            __C_ENG_TYPE ( PhysicalDeviceType )             deviceType;
+            char                                            deviceName [ VK_MAX_PHYSICAL_DEVICE_NAME_SIZE ];
+            cds :: uint8                                    pipelineCacheUUID [ VK_UUID_SIZE ];
+            __C_ENG_TYPE ( PhysicalDeviceLimits )           limits;
+            __C_ENG_TYPE ( PhysicalDeviceSparseProperties ) sparseProperties;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceExtendedProperties,  NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                  structureType;
+            __C_ENG_TYPE ( GenericStructure )             * pNext;
+            __C_ENG_TYPE ( PhysicalDeviceProperties )       properties;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+
+#define C_ENG_MAP_START     STRUCT ( GenericInStructure,  NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericInStructure )         const * pNext;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+
+#define C_ENG_MAP_START     STRUCT ( GenericOutStructure,  NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericOutStructure )              * pNext;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceVulkan11Properties,  NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )          structureType;
+            __C_ENG_TYPE ( GenericStructure )     * pNext;
+            cds :: uint8                            deviceUUID [ VK_UUID_SIZE ];
+            cds :: uint8                            driverUUID [ VK_UUID_SIZE ];
+            cds :: uint8                            deviceLUID [ VK_LUID_SIZE ];
+            cds :: uint32                           deviceNodeMask;
+            __C_ENG_TYPE ( Bool )                   deviceLUIDValid;
+            cds :: uint32                           subgroupSize;
+            __C_ENG_TYPE ( ShaderStageFlags )       subgroupSupportedStages;
+            __C_ENG_TYPE ( SubgroupFeatureFlags )   subgroupSupportedOperations;
+            __C_ENG_TYPE ( Bool )                   subgroupQuadOperationsInAllStages;
+            __C_ENG_TYPE ( PointClippingBehavior )  pointClippingBehavior;
+            cds :: uint32                           maxMultiviewViewCount;
+            cds :: uint32                           maxMultiviewInstanceIndex;
+            __C_ENG_TYPE ( Bool )                   protectedNoFault;
+            cds :: uint32                           maxPerSetDescriptors;
+            __C_ENG_TYPE ( DeviceSize )             maxMemoryAllocationSize;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( ConformanceVersion,  NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            cds :: uint8    major;
+            cds :: uint8    minor;
+            cds :: uint8    subminor;
+            cds :: uint8    patch;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceVulkan12Properties,  NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+
+            __C_ENG_TYPE ( DriverID )                           driverID;
+            char                                                driverName [ VK_MAX_DRIVER_NAME_SIZE ];
+            char                                                driverInfo [ VK_MAX_DRIVER_INFO_SIZE ];
+
+            __C_ENG_TYPE ( ConformanceVersion )                 conformanceVersion;
+            __C_ENG_TYPE ( ShaderFloatControlsIndependence )    denormBehaviorIndependence;
+            __C_ENG_TYPE ( ShaderFloatControlsIndependence )    roundingModeIndependence;
+
+            __C_ENG_TYPE ( Bool )                               shaderSignedZeroInfNanPreserveFloat16;
+            __C_ENG_TYPE ( Bool )                               shaderSignedZeroInfNanPreserveFloat32;
+            __C_ENG_TYPE ( Bool )                               shaderSignedZeroInfNanPreserveFloat64;
+
+            __C_ENG_TYPE ( Bool )                               shaderDenormPreserveFloat16;
+            __C_ENG_TYPE ( Bool )                               shaderDenormPreserveFloat32;
+            __C_ENG_TYPE ( Bool )                               shaderDenormPreserveFloat64;
+            __C_ENG_TYPE ( Bool )                               shaderDenormFlushToZeroFloat16;
+            __C_ENG_TYPE ( Bool )                               shaderDenormFlushToZeroFloat32;
+            __C_ENG_TYPE ( Bool )                               shaderDenormFlushToZeroFloat64;
+
+            __C_ENG_TYPE ( Bool )                               shaderRoundingModeRTEFloat16;
+            __C_ENG_TYPE ( Bool )                               shaderRoundingModeRTEFloat32;
+            __C_ENG_TYPE ( Bool )                               shaderRoundingModeRTEFloat64;
+            __C_ENG_TYPE ( Bool )                               shaderRoundingModeRTZFloat16;
+            __C_ENG_TYPE ( Bool )                               shaderRoundingModeRTZFloat32;
+            __C_ENG_TYPE ( Bool )                               shaderRoundingModeRTZFloat64;
+
+            cds :: uint16                                       maxUpdateAfterBindDescriptorsInAllPools;
+
+            __C_ENG_TYPE ( Bool )                               shaderUniformBufferArrayNonUniformIndexingNative;
+            __C_ENG_TYPE ( Bool )                               shaderSampledImageArrayNonUniformIndexingNative;
+            __C_ENG_TYPE ( Bool )                               shaderStorageBufferArrayNonUniformIndexingNative;
+            __C_ENG_TYPE ( Bool )                               shaderStorageImageArrayNonUniformIndexingNative;
+            __C_ENG_TYPE ( Bool )                               shaderInputAttachmentArrayNonUniformIndexingNative;
+
+            __C_ENG_TYPE ( Bool )                               robustBufferAccessUpdateAfterBind;
+
+            __C_ENG_TYPE ( Bool )                               quadDivergentImplicitLod;
+
+            cds :: uint32                                       maxPerStageDescriptorUpdateAfterBindSamplers;
+            cds :: uint32                                       maxPerStageDescriptorUpdateAfterBindUniformBuffers;
+            cds :: uint32                                       maxPerStageDescriptorUpdateAfterBindStorageBuffers;
+            cds :: uint32                                       maxPerStageDescriptorUpdateAfterBindSampledImages;
+            cds :: uint32                                       maxPerStageDescriptorUpdateAfterBindStoredImages;
+            cds :: uint32                                       maxPerStageDescriptorUpdateAfterBindInputAttachments;
+
+            cds :: uint32                                       maxPerStageUpdateAfterBindResources;
+
+            cds :: uint32                                       maxDescriptorSetUpdateAfterBindSamplers;
+            cds :: uint32                                       maxDescriptorSetUpdateAfterBindUniformBuffers;
+            cds :: uint32                                       maxDescriptorSetUpdateAfterBindUniformBuffersDynamic;
+            cds :: uint32                                       maxDescriptorSetUpdateAfterBindStorageBuffers;
+            cds :: uint32                                       maxDescriptorSetUpdateAfterBindStorageBuffersDynamic;
+            cds :: uint32                                       maxDescriptorSetUpdateAfterBindSampledImages;
+            cds :: uint32                                       maxDescriptorSetUpdateAfterBindStorageImages;
+            cds :: uint32                                       maxDescriptorSetUpdateAfterBindBindInputAttachments;
+
+            __C_ENG_TYPE ( ResolveModeFlags )                   supportedDepthResolveModes;
+            __C_ENG_TYPE ( ResolveModeFlags )                   supportedStencilResolveModes;
+
+            __C_ENG_TYPE ( Bool )                               independentResolveNone;
+            __C_ENG_TYPE ( Bool )                               independentResolve;
+
+            __C_ENG_TYPE ( Bool )                               filterMinmaxSingleComponentsFormats;
+            __C_ENG_TYPE ( Bool )                               filterMinmaxImageComponentsMapping;
+
+            cds :: uint64                                       maxTimelineSemaphoreValueDifference;
+
+            __C_ENG_TYPE ( SampleCountFlags )                   framebufferIntegerColorSampleCounts;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
 
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( Result ) ) noexcept -> cds :: StringLiteral;
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( StructureType ) ) noexcept -> cds :: StringLiteral;
@@ -2042,6 +2602,25 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( DebugMessageTypeFlag ) ) noexcept -> cds :: StringLiteral;
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( ValidationFeatureEnable ) ) noexcept -> cds :: StringLiteral;
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( ValidationFeatureDisable ) ) noexcept -> cds :: StringLiteral;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceType ) ) noexcept -> cds :: StringLiteral;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( VendorID ) ) noexcept -> cds :: StringLiteral;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( SampleCountFlag ) ) noexcept -> cds :: StringLiteral;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PointClippingBehavior ) ) noexcept -> cds :: StringLiteral;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( ShaderStageFlag ) ) noexcept -> cds :: StringLiteral;
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( SubgroupFeatureFlag ) ) noexcept -> cds :: StringLiteral;
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( DriverID ) ) noexcept -> cds :: StringLiteral;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( ShaderFloatControlsIndependence ) ) noexcept -> cds :: StringLiteral;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( ResolveModeFlag ) ) noexcept -> cds :: StringLiteral;
+
+#endif
 
 
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( Offset2D ) const & ) noexcept -> cds :: String;
@@ -2052,6 +2631,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( Version ) const & ) noexcept -> cds :: String;
 
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( DeviceSize ) ) noexcept -> cds :: String;
 
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( ApplicationInfo ) const & ) noexcept -> cds :: String;
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( InstanceCreateInfo ) const & ) noexcept -> cds :: String;
@@ -2061,6 +2641,23 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( AllocationCallbacks ) const & ) noexcept -> cds :: String;
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( ValidationFeatures ) const & ) noexcept -> cds :: String;
 
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceLimits ) const & ) noexcept -> cds :: String;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceSparseProperties ) const & ) noexcept -> cds :: String;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceProperties ) const & ) noexcept -> cds :: String;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceExtendedProperties ) const & ) noexcept -> cds :: String;
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceVulkan11Properties ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( ConformanceVersion ) const & ) noexcept -> cds :: String;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceVulkan12Properties ) const & ) noexcept -> cds :: String;
+
+#endif
 
         __C_ENG_NO_DISCARD auto compare ( __C_ENG_TYPE ( Version ) const &, __C_ENG_TYPE ( Version ) const & ) noexcept -> __C_ENG_TYPE ( CompareResult );
 

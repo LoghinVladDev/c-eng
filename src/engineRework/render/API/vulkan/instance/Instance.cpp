@@ -8,6 +8,7 @@
 #include <VulkanCore.hpp>
 #include <Engine.hpp>
 #include <Allocator.hpp>
+#include <VulkanCoreConfig.hpp>
 
 
 using namespace cds; // NOLINT(clion-misra-cpp2008-7-3-4)
@@ -71,7 +72,7 @@ static inline auto populateDebugMessengerCreateInfo (
         vulkan :: __C_ENG_TYPE ( DebugMessageSeverityFlags )    messageSeverityFlags,
         vulkan :: __C_ENG_TYPE ( DebugMessageTypeFlags )        messageTypeFlags,
         vulkan :: __C_ENG_TYPE ( DebugMessengerCallback )       callback,
-        void                                            const * pNext
+        void                                                  * pNext
 ) noexcept -> void {
 
     if ( pCreateInfo == nullptr ) {
@@ -118,7 +119,7 @@ static inline auto populateInstanceCreateInfo (
         vulkan :: __C_ENG_TYPE ( ApplicationInfo )                * pApplicationInfo,
         vulkan :: __C_ENG_TYPE ( LayerHandler ) :: LayerNames     * pEnabledLayerNames,
         vulkan :: __C_ENG_TYPE ( LayerHandler ) :: ExtensionNames * pEnabledExtensionNames,
-        void                                                const * pNext
+        void                                                      * pNext
 ) noexcept -> void {
 
     if ( pCreateInfo == nullptr ) {
@@ -141,7 +142,7 @@ static inline auto populateValidationFeatures (
         vulkan :: __C_ENG_TYPE ( ValidationFeatures )                                 * pValidationFeatures,
         vulkan :: __C_ENG_TYPE ( LayerHandler ) :: ValidationEnabledFeatures    const * pEnabledFeatures,
         vulkan :: __C_ENG_TYPE ( LayerHandler ) :: ValidationDisabledFeatures   const * pDisabledFeatures,
-        void                                                                    const * pNext
+        void                                                                          * pNext
 ) noexcept -> void {
 
     if ( pValidationFeatures == nullptr ) {
@@ -218,7 +219,7 @@ auto vulkan :: Self :: init () noexcept (false) -> Self & {
     __C_ENG_TYPE ( LayerHandler ) :: ValidationEnabledFeatures  enabledFeatures {};
     __C_ENG_TYPE ( LayerHandler ) :: ValidationDisabledFeatures disabledFeatures {};
 
-    void                                const * pNext = nullptr;
+    void                                      * pNext = nullptr;
 
     if ( this->layerHandler().debugLayerEnabled() ) {
 

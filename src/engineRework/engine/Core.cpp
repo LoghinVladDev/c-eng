@@ -36,11 +36,12 @@ namespace engine {
         StringLiteral asString;
 
         switch ( state ) {
-            case __C_ENG_TYPE ( EngineState ) :: EngineStateInactive:                   { asString = "Inactive";                    break; }
-            case __C_ENG_TYPE ( EngineState ) :: EngineStateStartupAcquiringSettings:   { asString = "Acquiring Settings";          break; }
-            case __C_ENG_TYPE ( EngineState ) :: EngineStateStartup:                    { asString = "Starting Up";                 break; }
-            case __C_ENG_TYPE ( EngineState ) :: EngineStateRunning:                    { asString = "Running";                     break; }
-            case __C_ENG_TYPE ( EngineState ) :: EngineStateShutdown:                   { asString = "Shutdown";                    break; }
+            case __C_ENG_TYPE ( EngineState ) :: EngineStateInactive:                           { asString = "Inactive";                    break; }
+            case __C_ENG_TYPE ( EngineState ) :: EngineStateStartupAcquiringSettings:           { asString = "Acquiring Settings";          break; }
+            case __C_ENG_TYPE ( EngineState ) :: EngineStateStartupInitializingRenderEngine:    { asString = "Initializing Render Engine";  break; }
+            case __C_ENG_TYPE ( EngineState ) :: EngineStateStartup:                            { asString = "Starting Up";                 break; }
+            case __C_ENG_TYPE ( EngineState ) :: EngineStateRunning:                            { asString = "Running";                     break; }
+            case __C_ENG_TYPE ( EngineState ) :: EngineStateShutdown:                           { asString = "Shutdown";                    break; }
         }
 
         return asString;

@@ -5,6 +5,7 @@
 #include "VulkanRenderEngine.hpp"
 #include <VulkanAPIExceptions.hpp>
 #include <Logger.hpp>
+#include <PhysicalDevice.hpp>
 
 using namespace cds; // NOLINT(clion-misra-cpp2008-7-3-4)
 using namespace engine; // NOLINT(clion-misra-cpp2008-7-3-4)
@@ -42,6 +43,25 @@ auto vulkan :: Self :: init () noexcept (false) -> Self & {
         if ( ! this->renderInstanceSurfaceCallbacks().attachCallback ( & callbackData ) ) {
             (void) __C_ENG_TYPE ( Logger ) :: instance().warning ( "Instance Surface Attach Callback returned error value." );
         }
+    }
+
+    __C_ENG_TYPE ( PhysicalDevice ) :: refreshPhysicalDevices ( & this->_instance );
+
+    vulkan :: VPhysicalDeviceExtendedProperties properties {};
+    vulkan :: VGenericOutStructure prop1 {};
+    vulkan :: VGenericOutStructure prop2 {};
+
+    properties.structureType = StructureTypePhysicalDeviceProperties;
+    properties.pNext = & prop1;
+
+    prop1.structureType = StructureTypePhysicalDeviceVulkan_1_1_Properties;
+    prop1.pNext = & prop2;
+
+    prop2.structureType = StructureTypePhysicalDeviceVulkan_1_2_Properties;
+    prop2.pNext = nullptr;
+
+    for ( auto & d : VPhysicalDevice::physicalDevices() ) {
+        (void) vulkan :: getPhysicalDeviceProperties ( d.handle(), & properties );
     }
 
     return * this;

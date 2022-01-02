@@ -30,18 +30,10 @@ static auto renderSurfaceAttachCallback (
 
         auto pCallbacks = vulkan :: __C_ENG_TYPE ( Allocator ) :: instance().callbacks();
 
-        VkAllocationCallbacks   allocationCallbacks {};
-        VkAllocationCallbacks * pUsedCallbacks = nullptr;
-
-        if ( pCallbacks != nullptr ) {
-            pUsedCallbacks = & allocationCallbacks;
-            vulkan :: toVulkanFormat ( pCallbacks, & allocationCallbacks );
-        }
-
-        return VK_SUCCESS == glfwCreateWindowSurface (
+        return vulkan :: ResultSuccess == vulkan :: createSurface (
                 instanceHandle,
                 pEngine->window()->handle(),
-                pUsedCallbacks,
+                pCallbacks,
                 surfaceHandle
         );
     }
@@ -60,21 +52,11 @@ static auto renderSurfaceDetachCallback (
 
         auto pCallbacks = vulkan :: __C_ENG_TYPE ( Allocator ) :: instance().callbacks();
 
-        VkAllocationCallbacks   allocationCallbacks {};
-        VkAllocationCallbacks * pUsedCallbacks = nullptr;
-
-        if ( pCallbacks != nullptr ) {
-            pUsedCallbacks = & allocationCallbacks;
-            vulkan :: toVulkanFormat ( pCallbacks, & allocationCallbacks );
-        }
-
-        vkDestroySurfaceKHR (
-            instanceHandle,
-            surfaceHandle,
-            pUsedCallbacks
+        return vulkan :: ResultSuccess == vulkan :: destroySurface (
+                instanceHandle,
+                surfaceHandle,
+                pCallbacks
         );
-
-        return true;
     }
 
     return true;
@@ -112,6 +94,8 @@ auto Self :: startup () noexcept -> Self & {
 }
 
 auto Self :: initializeRenderEngine () noexcept -> Self & {
+    this->setState ( __C_ENG_TYPE ( EngineState ) :: EngineStateStartupInitializingRenderEngine );
+
     if ( this->renderEngine() == nullptr ) {
         (void) __C_ENG_TYPE ( Logger ) :: instance ().info ("No Render Engine present, using default (Vulkan)");
 
@@ -138,6 +122,8 @@ auto Self :: initializeSettings () noexcept -> Self & {
 
 auto Self :: run () noexcept -> Self & {
     this->setState ( __C_ENG_TYPE ( EngineState ) :: EngineStateRunning );
+
+    (void) __C_ENG_TYPE ( Logger ) :: instance().info ( "Initialization Complete, running Application" );
 
     double startTime = glfwGetTime();
     double lastFPSUpdateTime = 0.0;
