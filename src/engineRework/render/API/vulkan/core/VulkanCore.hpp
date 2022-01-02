@@ -2051,6 +2051,19 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
+#if __C_ENG_VULKAN_API_EXTENSION_AMD_SHADER_CORE_PROPERTIES_2_AVAILABLE
+
+#define C_ENG_MAP_START     ENUM ( ShaderCorePropertiesFlagAMD, TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
 
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 
@@ -2098,6 +2111,12 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
 
         __C_ENG_ALIAS ( ResolveModeFlags,               VkResolveModeFlags );
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_AMD_SHADER_CORE_PROPERTIES_2_AVAILABLE
+
+        __C_ENG_ALIAS ( ShaderCorePropertiesFlagsAMD,               VkShaderCorePropertiesFlagsAMD );
 
 #endif
 
@@ -2495,6 +2514,87 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #define C_ENG_MAP_END
 #include <ObjectMapping.hpp>
 
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceIDProperties,    NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )          structureType;
+            __C_ENG_TYPE ( GenericStructure )     * pNext;
+            cds :: uint8                            deviceUUID [ VK_UUID_SIZE ];
+            cds :: uint8                            driverUUID [ VK_UUID_SIZE ];
+            cds :: uint8                            deviceLUID [ VK_LUID_SIZE ];
+            cds :: uint32                           deviceNodeMask;
+            __C_ENG_TYPE ( Bool )                   deviceLUIDValid;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceMaintenanceProperties,    NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )          structureType;
+            __C_ENG_TYPE ( GenericStructure )     * pNext;
+            cds :: uint32                           maxPerSetDescriptors;
+            __C_ENG_TYPE ( DeviceSize )             maxMemoryAllocationSize;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceMultiviewProperties,    NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )          structureType;
+            __C_ENG_TYPE ( GenericStructure )     * pNext;
+            cds :: uint32                           maxMultiviewViewCount;
+            cds :: uint32                           maxMultiviewInstanceIndex;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDevicePointClippingProperties,    NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )          structureType;
+            __C_ENG_TYPE ( GenericStructure )     * pNext;
+            __C_ENG_TYPE ( PointClippingBehavior )  pointClippingBehavior;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceProtectedMemoryProperties,    NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )          structureType;
+            __C_ENG_TYPE ( GenericStructure )     * pNext;
+            __C_ENG_TYPE ( Bool )                   protectedNoFault;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceSubgroupProperties,    NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )          structureType;
+            __C_ENG_TYPE ( GenericStructure )     * pNext;
+            cds :: uint32                           subgroupSize;
+            __C_ENG_TYPE ( ShaderStageFlags )       supportedStages;
+            __C_ENG_TYPE ( SubgroupFeatureFlags )   supportedOperations;
+            __C_ENG_TYPE ( Bool )                   quadOperationsInAllStages;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
 #endif
 
 #if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
@@ -2523,8 +2623,8 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
             __C_ENG_TYPE ( DriverID )                           driverID;
             char                                                driverName [ VK_MAX_DRIVER_NAME_SIZE ];
             char                                                driverInfo [ VK_MAX_DRIVER_INFO_SIZE ];
-
             __C_ENG_TYPE ( ConformanceVersion )                 conformanceVersion;
+
             __C_ENG_TYPE ( ShaderFloatControlsIndependence )    denormBehaviorIndependence;
             __C_ENG_TYPE ( ShaderFloatControlsIndependence )    roundingModeIndependence;
 
@@ -2593,7 +2693,976 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #define C_ENG_MAP_END
 #include <ObjectMapping.hpp>
 
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceDriverProperties,    NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+
+            __C_ENG_TYPE ( DriverID )                           driverID;
+            char                                                driverName [ VK_MAX_DRIVER_NAME_SIZE ];
+            char                                                driverInfo [ VK_MAX_DRIVER_INFO_SIZE ];
+            __C_ENG_TYPE ( ConformanceVersion )                 conformanceVersion;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceDepthStencilResolveProperties,   NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+
+            __C_ENG_TYPE ( ResolveModeFlags )                   supportedDepthResolveModes;
+            __C_ENG_TYPE ( ResolveModeFlags )                   supportedStencilResolveModes;
+            __C_ENG_TYPE ( Bool )                               independentResolveNone;
+            __C_ENG_TYPE ( Bool )                               independentResolve;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceDescriptorIndexingProperties,   NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )      structureType;
+            __C_ENG_TYPE ( GenericStructure ) * pNext;
+
+            cds :: uint32                       maxUpdateAfterBindDescriptorsInAllPools;
+
+            __C_ENG_TYPE ( Bool )               shaderUniformBufferArrayNonUniformIndexingNative;
+            __C_ENG_TYPE ( Bool )               shaderSampledImageArrayNonUniformIndexingNative;
+            __C_ENG_TYPE ( Bool )               shaderStorageBufferArrayNonUniformIndexingNative;
+            __C_ENG_TYPE ( Bool )               shaderStorageImageArrayNonUniformIndexingNative;
+            __C_ENG_TYPE ( Bool )               shaderInputAttachmentArrayNonUniformIndexingNative;
+
+            __C_ENG_TYPE ( Bool )               robustBufferAccessUpdateAfterBind;
+
+            __C_ENG_TYPE ( Bool )               quadDivergentImplicitLod;
+
+            cds :: uint32                       maxPerStageDescriptorUpdateAfterBindSamplers;
+            cds :: uint32                       maxPerStageDescriptorUpdateAfterBindUniformBuffers;
+            cds :: uint32                       maxPerStageDescriptorUpdateAfterBindStorageBuffers;
+            cds :: uint32                       maxPerStageDescriptorUpdateAfterBindSampledImages;
+            cds :: uint32                       maxPerStageDescriptorUpdateAfterBindStorageImages;
+            cds :: uint32                       maxPerStageDescriptorUpdateAfterBindInputAttachments;
+            cds :: uint32                       maxPerStageUpdateAfterBindResources;
+
+            cds :: uint32                       maxDescriptorSetUpdateAfterBindSamplers;
+            cds :: uint32                       maxDescriptorSetUpdateAfterBindUniformBuffers;
+            cds :: uint32                       maxDescriptorSetUpdateAfterBindUniformBuffersDynamic;
+            cds :: uint32                       maxDescriptorSetUpdateAfterBindStorageBuffers;
+            cds :: uint32                       maxDescriptorSetUpdateAfterBindStorageBuffersDynamic;
+            cds :: uint32                       maxDescriptorSetUpdateAfterBindSampledImages;
+            cds :: uint32                       maxDescriptorSetUpdateAfterBindStorageImages;
+            cds :: uint32                       maxDescriptorSetUpdateAfterBindInputAttachments;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceFloatControlsProperties,   NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+
+            __C_ENG_TYPE ( ShaderFloatControlsIndependence )    denormBehaviorIndependence;
+            __C_ENG_TYPE ( ShaderFloatControlsIndependence )    roundingModeIndependence;
+
+            __C_ENG_TYPE ( Bool )                               shaderSignedZeroInfNanPreserveFloat16;
+            __C_ENG_TYPE ( Bool )                               shaderSignedZeroInfNanPreserveFloat32;
+            __C_ENG_TYPE ( Bool )                               shaderSignedZeroInfNanPreserveFloat64;
+
+            __C_ENG_TYPE ( Bool )                               shaderDenormPreserveFloat16;
+            __C_ENG_TYPE ( Bool )                               shaderDenormPreserveFloat32;
+            __C_ENG_TYPE ( Bool )                               shaderDenormPreserveFloat64;
+            __C_ENG_TYPE ( Bool )                               shaderDenormFlushToZeroFloat16;
+            __C_ENG_TYPE ( Bool )                               shaderDenormFlushToZeroFloat32;
+            __C_ENG_TYPE ( Bool )                               shaderDenormFlushToZeroFloat64;
+
+            __C_ENG_TYPE ( Bool )                               shaderRoundingModeRTEFloat16;
+            __C_ENG_TYPE ( Bool )                               shaderRoundingModeRTEFloat32;
+            __C_ENG_TYPE ( Bool )                               shaderRoundingModeRTEFloat64;
+            __C_ENG_TYPE ( Bool )                               shaderRoundingModeRTZFloat16;
+            __C_ENG_TYPE ( Bool )                               shaderRoundingModeRTZFloat32;
+            __C_ENG_TYPE ( Bool )                               shaderRoundingModeRTZFloat64;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceSamplerFilterMinmaxProperties,   NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               filterMinmaxSingleComponentFormats;
+            __C_ENG_TYPE ( Bool )                               filterMinmaxImageComponentMapping;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceTimelineSemaphoreProperties,   NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            cds :: uint64                                       maxTimelineSemaphoreValueDifference;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
 #endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_PCI_BUS_INFO_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDevicePCIBusInfoProperties,    NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+
+            cds :: uint32                                       pciDomain;
+            cds :: uint32                                       pciBus;
+            cds :: uint32                                       pciDevice;
+            cds :: uint32                                       pciFunction;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_PHYSICAL_DEVICE_DRM_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceDRMProperties,    NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )      structureType;
+            __C_ENG_TYPE ( GenericStructure ) * pNext;
+
+            __C_ENG_TYPE ( Bool )               hasPrimary;
+            __C_ENG_TYPE ( Bool )               hasRender;
+
+            cds :: sint64                       primaryMajor;
+            cds :: sint64                       primaryMinor;
+            cds :: sint64                       renderMajor;
+            cds :: sint64                       renderMinor;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceAccelerationStructureProperties, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )      structureType;
+            __C_ENG_TYPE ( GenericStructure ) * pNext;
+
+            cds :: uint64                       maxGeometryCount;
+            cds :: uint64                       maxInstanceCount;
+            cds :: uint64                       maxPrimitiveCount;
+            cds :: uint32                       maxPerStageDescriptorAccelerationStructures;
+            cds :: uint32                       maxPerStageDescriptorUpdateAfterBindAccelerationStructures;
+            cds :: uint32                       maxDescriptorSetAccelerationStructures;
+            cds :: uint32                       maxDescriptorSetUpdateAfterBindAccelerationStructures;
+            cds :: uint32                       minAccelerationStructureScratchOffsetAlignment;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_BLEND_OPERATION_ADVANCED_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceBlendOperationAdvancedProperties, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )      structureType;
+            __C_ENG_TYPE ( GenericStructure ) * pNext;
+
+            cds :: uint32                       advancedBlendMaxColorAttachments;
+            __C_ENG_TYPE ( Bool )               advancedBlendIndependentBlend;
+            __C_ENG_TYPE ( Bool )               advancedBlendNonPremultipliedSrcColor;
+            __C_ENG_TYPE ( Bool )               advancedBlendNonPremultipliedDstColor;
+            __C_ENG_TYPE ( Bool )               advancedBlendCorrelatedOverlap;
+            __C_ENG_TYPE ( Bool )               advancedBlendAllOperations;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_CONSERVATIVE_RASTERIZATION_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceConservativeRasterizationProperties, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )      structureType;
+            __C_ENG_TYPE ( GenericStructure ) * pNext;
+
+            float                               primitiveOverestimationSize;
+            float                               maxExtraPrimitiveOverestimationSize;
+            float                               extraPrimitiveOverestimationSizeGranularity;
+            __C_ENG_TYPE ( Bool )               primitiveUnderestimation;
+            __C_ENG_TYPE ( Bool )               conservativePointAndLineRasterization;
+            __C_ENG_TYPE ( Bool )               degenerateTrianglesRasterized;
+            __C_ENG_TYPE ( Bool )               degenerateLinesRasterized;
+            __C_ENG_TYPE ( Bool )               fullyCoveredFragmentShaderInputVariable;
+            __C_ENG_TYPE ( Bool )               conservativeRasterizationPostDepthCoverage;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_COOPERATIVE_MATRIX_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceCooperativeMatrixPropertiesNVidia,   NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )      structureType;
+            __C_ENG_TYPE ( GenericStructure ) * pNext;
+            __C_ENG_TYPE ( ShaderStageFlags )   cooperativeMatrixSupportedStages;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_CUSTOM_BORDER_COLOR_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceCustomBorderColorProperties, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )      structureType;
+            __C_ENG_TYPE ( GenericStructure ) * pNext;
+            cds :: uint32                       maxCustomBorderColorSamples;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEVICE_GENERATED_COMMANDS_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceDeviceGeneratedCommandsProperties,   NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )      structureType;
+            __C_ENG_TYPE ( GenericStructure ) * pNext;
+            cds :: uint32                       maxGraphicsShaderGroupCount;
+            cds :: uint32                       maxIndirectSequenceCount;
+            cds :: uint32                       maxIndirectCommandsTokenCount;
+            cds :: uint32                       maxIndirectCommandsStreamCount;
+            cds :: uint32                       maxIndirectCommandsTokenOffset;
+            cds :: uint32                       maxIndirectCommandsStreamStride;
+            cds :: uint32                       minSequencesCountBufferOffsetAlignment;
+            cds :: uint32                       minSequencesIndexBufferOffsetAlignment;
+            cds :: uint32                       minIndirectCommandsBufferOffsetAlignment;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_DISCARD_RECTANGLES_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceDiscardRectangleProperties,  NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )      structureType;
+            __C_ENG_TYPE ( GenericStructure ) * pNext;
+            cds :: uint32                       maxDiscardRectangles;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_EXTERNAL_MEMORY_HOST_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceExternalMemoryHostProperties,  NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )      structureType;
+            __C_ENG_TYPE ( GenericStructure ) * pNext;
+            __C_ENG_TYPE ( DeviceSize )         minImportedHostPointerAlignment;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_FRAGMENT_DENSITY_MAP_2_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceFragmentDensityMap2Properties,  NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )      structureType;
+            __C_ENG_TYPE ( GenericStructure ) * pNext;
+            __C_ENG_TYPE ( Bool )               subsampledLoads;
+            __C_ENG_TYPE ( Bool )               subsampledCoarseReconstructionEarlyAccess;
+            cds :: uint32                       maxSubsampledArrayLayers;
+            cds :: uint32                       maxDescriptorSetSubsampledSamplers;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_QUALCOMM_FRAGMENT_DENSITY_MAP_OFFSET_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceFragmentDensityMapOffsetPropertiesQualcomm,  NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )      structureType;
+            __C_ENG_TYPE ( GenericStructure ) * pNext;
+            __C_ENG_TYPE ( Extent2D )           fragmentDensityOffsetGranularity;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_FRAGMENT_DENSITY_MAP_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceFragmentDensityMapProperties,  NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )      structureType;
+            __C_ENG_TYPE ( GenericStructure ) * pNext;
+            __C_ENG_TYPE ( Extent2D )           minFragmentDensityTexelSize;
+            __C_ENG_TYPE ( Extent2D )           maxFragmentDensityTexelSize;
+            __C_ENG_TYPE ( Bool )               fragmentDensityInvocations;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_FRAGMENT_SHADING_RATE_ENUMS_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceFragmentShadingRateEnumsPropertiesNVidia,  NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )      structureType;
+            __C_ENG_TYPE ( GenericStructure ) * pNext;
+            __C_ENG_TYPE ( SampleCountFlag )    maxFragmentShadingRateInvocationCount;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_FRAGMENT_SHADING_RATE_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceFragmentShadingRateProperties,  NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )      structureType;
+            __C_ENG_TYPE ( GenericStructure ) * pNext;
+            __C_ENG_TYPE ( Extent2D )           maxFragmentShadingRateAttachmentTexelSize;
+            __C_ENG_TYPE ( Extent2D )           minFragmentShadingRateAttachmentTexelSize;
+            cds :: uint32                       maxFragmentShadingRateAttachmentTexelSizeAspectRatio;
+            __C_ENG_TYPE ( Bool )               primitiveFragmentShadingRateWithMultipleViewports;
+            __C_ENG_TYPE ( Bool )               layeredShadingRateAttachments;
+            __C_ENG_TYPE ( Bool )               fragmentShadingRateNonTrivialCombinerOps;
+            __C_ENG_TYPE ( Extent2D )           maxFragmentSize;
+            cds :: uint32                       maxFragmentSizeAspectRatio;
+            cds :: uint32                       maxFragmentShadingRateCoverageSamples;
+            __C_ENG_TYPE ( SampleCountFlag )    maxFragmentShadingRateRasterizationSamples;
+            __C_ENG_TYPE ( Bool )               fragmentShadingRateWithShaderDepthStencilWrites;
+            __C_ENG_TYPE ( Bool )               fragmentShadingRateWithSampleMask;
+            __C_ENG_TYPE ( Bool )               fragmentShadingRateWithShaderSampleMask;
+            __C_ENG_TYPE ( Bool )               fragmentShadingRateWithConservativeRasterization;
+            __C_ENG_TYPE ( Bool )               fragmentShadingRateWithFragmentShaderInterlock;
+            __C_ENG_TYPE ( Bool )               fragmentShadingRateWithCustomSampleLocations;
+            __C_ENG_TYPE ( Bool )               fragmentShadingRateStrictMultiplyCombiner;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_INLINE_UNIFORM_BLOCK_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceInlineUniformBlockProperties,  NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )      structureType;
+            __C_ENG_TYPE ( GenericStructure ) * pNext;
+            cds :: uint32                       maxInlineUniformBlockSize;
+            cds :: uint32                       maxPerStageDescriptorInlineUniformBlocks;
+            cds :: uint32                       maxPerStageDescriptorUpdateAfterBindInlineUniformBlocks;
+            cds :: uint32                       maxDescriptorSetInlineUniformBlocks;
+            cds :: uint32                       maxDescriptorSetUpdateAfterBindInlineUniformBlocks;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_LINE_RASTERIZATION_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceLineRasterizationProperties,  NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )      structureType;
+            __C_ENG_TYPE ( GenericStructure ) * pNext;
+            cds :: uint32                       lineSubPixelPrecisionBits;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_MAINTENANCE_4_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceMaintenance4Properties,  NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )      structureType;
+            __C_ENG_TYPE ( GenericStructure ) * pNext;
+            __C_ENG_TYPE ( DeviceSize )         maxBufferSize;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_MESH_SHADER_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceMeshShaderPropertiesNVidia,  NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )      structureType;
+            __C_ENG_TYPE ( GenericStructure ) * pNext;
+            cds :: uint32                       maxDrawMeshTasksCount;
+            cds :: uint32                       maxTaskWorkGroupInvocations;
+            cds :: uint32                       maxTaskWorkGroupSize[3];
+            cds :: uint32                       maxTaskTotalMemorySize;
+            cds :: uint32                       maxTaskOutputCount;
+            cds :: uint32                       maxMeshWorkGroupInvocations;
+            cds :: uint32                       maxMeshWorkGroupSize[3];
+            cds :: uint32                       maxMeshTotalMemorySize;
+            cds :: uint32                       maxMeshOutputVertices;
+            cds :: uint32                       maxMeshOutputPrimitives;
+            cds :: uint32                       maxMeshMultiviewViewCount;
+            cds :: uint32                       meshOutputPerVertexGranularity;
+            cds :: uint32                       meshOutputPerPrimitiveGranularity;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_MULTI_DRAW_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceMultiDrawProperties,  NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )      structureType;
+            __C_ENG_TYPE ( GenericStructure ) * pNext;
+            cds :: uint32                       maxMultiDrawCount;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXPERIMENTAL_MULTIVIEW_PER_VIEW_ATTRIBUTES_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceMultiviewPerViewAttributesPropertiesNVidia,  NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )      structureType;
+            __C_ENG_TYPE ( GenericStructure ) * pNext;
+            __C_ENG_TYPE ( Bool )               perViewPositionAllComponents;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PERFORMANCE_QUERY_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDevicePerformanceQueryProperties,  NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )      structureType;
+            __C_ENG_TYPE ( GenericStructure ) * pNext;
+            __C_ENG_TYPE ( Bool )               allowCommandBufferQueryCopies;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PORTABILITY_SUBSET_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDevicePortabilitySubsetProperties,  NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )      structureType;
+            __C_ENG_TYPE ( GenericStructure ) * pNext;
+            cds :: uint32                       minVertexInputBindingStrideAlignment;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_PROVOKING_VERTEX_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceProvokingVertexProperties,  NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )      structureType;
+            __C_ENG_TYPE ( GenericStructure ) * pNext;
+            __C_ENG_TYPE ( Bool )               provokingVertexModePerPipeline;
+            __C_ENG_TYPE ( Bool )               transformFeedbackPreservesTriangleFanProvokingVertex;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PUSH_DESCRIPTOR_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDevicePushDescriptorProperties,  NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )      structureType;
+            __C_ENG_TYPE ( GenericStructure ) * pNext;
+            cds :: uint32                       maxPushDescriptors;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_RAY_TRACING_PIPELINE_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceRayTracingPipelineProperties,  NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )      structureType;
+            __C_ENG_TYPE ( GenericStructure ) * pNext;
+            cds :: uint32                       shaderGroupHandleSize;
+            cds :: uint32                       maxRayRecursionDepth;
+            cds :: uint32                       maxShaderGroupStride;
+            cds :: uint32                       shaderGroupBaseAlignment;
+            cds :: uint32                       shaderGroupHandleCaptureReplaySize;
+            cds :: uint32                       maxRayDispatchInvocationCount;
+            cds :: uint32                       shaderGroupHandleAlignment;
+            cds :: uint32                       maxRayHitAttributeSize;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceRayTracingPropertiesNVidia,  NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )      structureType;
+            __C_ENG_TYPE ( GenericStructure ) * pNext;
+            cds :: uint32                       shaderGroupHandleSize;
+            cds :: uint32                       maxRecursionDepth;
+            cds :: uint32                       maxShaderGroupStride;
+            cds :: uint32                       shaderGroupBaseAlignment;
+            cds :: uint64                       maxGeometryCount;
+            cds :: uint64                       maxInstanceCount;
+            cds :: uint64                       maxTriangleCount;
+            cds :: uint32                       maxDescriptorSetAccelerationStructures;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_ROBUSTNESS_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceRobustnessProperties,  NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )      structureType;
+            __C_ENG_TYPE ( GenericStructure ) * pNext;
+            __C_ENG_TYPE ( DeviceSize )         robustStorageBufferAccessSizeAlignment;
+            __C_ENG_TYPE ( DeviceSize )         robustUniformBufferAccessSizeAlignment;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_SAMPLE_LOCATIONS_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceSampleLocationsProperties,  NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )      structureType;
+            __C_ENG_TYPE ( GenericStructure ) * pNext;
+            __C_ENG_TYPE ( SampleCountFlags )   sampleLocationSampleCounts;
+            __C_ENG_TYPE ( Extent2D )           maxSampleLocationGridSize;
+            float                               sampleLocationCoordinateRange[2];
+            cds :: uint32                       sampleLocationSubPixelBits;
+            __C_ENG_TYPE ( Bool )               variableSampleLocations;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_AMD_SHADER_CORE_PROPERTIES_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceShaderCorePropertiesAMD,  NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )      structureType;
+            __C_ENG_TYPE ( GenericStructure ) * pNext;
+            cds :: uint32                       shaderEngineCount;
+            cds :: uint32                       shaderArraysPerEngineCount;
+            cds :: uint32                       computeUnitsPerShaderArray;
+            cds :: uint32                       simdPerComputeUnit;
+            cds :: uint32                       wavefrontsPerSimd;
+            cds :: uint32                       wavefrontSize;
+            cds :: uint32                       sgprsPerSimd;
+            cds :: uint32                       minSgprAllocation;
+            cds :: uint32                       maxSgprAllocation;
+            cds :: uint32                       sgprAllocationGranularity;
+            cds :: uint32                       vgprsPerSimd;
+            cds :: uint32                       minVgprAllocation;
+            cds :: uint32                       maxVgprAllocation;
+            cds :: uint32                       vgprAllocationGranularity;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_AMD_SHADER_CORE_PROPERTIES_2_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceShaderCoreProperties2AMD,  NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                  structureType;
+            __C_ENG_TYPE ( GenericStructure )             * pNext;
+            __C_ENG_TYPE ( ShaderCorePropertiesFlagsAMD )   shaderCoreFeatures;
+            cds :: uint32                                   activeComputeUnitCount;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SHADER_SM_BUILTINS_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceShaderSMBuiltinsProperties,  NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                  structureType;
+            __C_ENG_TYPE ( GenericStructure )             * pNext;
+            cds :: uint32                                   shaderSMCount;
+            cds :: uint32                                   shaderWarpsPerSM;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SHADING_RATE_IMAGE_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceShadingRateImagePropertiesNVidia,  NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                  structureType;
+            __C_ENG_TYPE ( GenericStructure )             * pNext;
+            __C_ENG_TYPE ( Extent2D )                       shadingRateTexelSize;
+            cds :: uint32                                   shadingRatePaletteSize;
+            cds :: uint32                                   shadingRateMaxCoarseSamples;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_SUBGROUP_SIZE_CONTROL_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceSubgroupSizeControlProperties,  NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                  structureType;
+            __C_ENG_TYPE ( GenericStructure )             * pNext;
+            cds :: uint32                                   minSubgroupSize;
+            cds :: uint32                                   maxSubgroupSize;
+            cds :: uint32                                   maxComputeWorkgroupSubgroups;
+            __C_ENG_TYPE ( ShaderStageFlags )               requiredSubgroupSizeStages;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_HUAWEI_SUBPASS_SHADING_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceSubpassShadingPropertiesHuawei,  NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                  structureType;
+            __C_ENG_TYPE ( GenericStructure )             * pNext;
+            cds :: uint32                                   maxSubpassShadingWorkgroupSizeAspectRatio;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_TEXEL_BUFFER_ALIGNMENT_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceTexelBufferAlignmentProperties,  NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                  structureType;
+            __C_ENG_TYPE ( GenericStructure )             * pNext;
+            __C_ENG_TYPE ( DeviceSize )                     storageTexelBufferOffsetAlignmentBytes;
+            __C_ENG_TYPE ( Bool )                           storageTexelBufferOffsetSingleTexelAlignment;
+            __C_ENG_TYPE ( DeviceSize )                     uniformTexelBufferOffsetAlignmentBytes;
+            __C_ENG_TYPE ( Bool )                           uniformTexelBufferOffsetSingleTexelAlignment;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_TRANSFORM_FEEDBACK_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceTransformFeedbackProperties,  NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                  structureType;
+            __C_ENG_TYPE ( GenericStructure )             * pNext;
+            cds :: uint32                                   maxTransformFeedbackStreams;
+            cds :: uint32                                   maxTransformFeedbackBuffers;
+            __C_ENG_TYPE ( DeviceSize )                     maxTransformFeedbackBufferSize;
+            cds :: uint32                                   maxTransformFeedbackStreamDataSize;
+            cds :: uint32                                   maxTransformFeedbackBufferDataSize;
+            cds :: uint32                                   maxTransformFeedbackBufferDataStride;
+            __C_ENG_TYPE ( Bool )                           transformFeedbackQueries;
+            __C_ENG_TYPE ( Bool )                           transformFeedbackStreamsLinesTriangles;
+            __C_ENG_TYPE ( Bool )                           transformFeedbackRasterizationStreamSelect;
+            __C_ENG_TYPE ( Bool )                           transformFeedbackDraw;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_VERTEX_ATTRIBUTE_DIVISOR_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceVertexAttributeDivisorProperties,  NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                  structureType;
+            __C_ENG_TYPE ( GenericStructure )             * pNext;
+            cds :: uint32                                   maxVertexAttribDivisor;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_INTEGER_DOT_PRODUCT_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceShaderIntegerDotProductProperties,   NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )      structureType;
+            __C_ENG_TYPE ( GenericStructure ) * pNext;
+
+            __C_ENG_TYPE ( Bool )               integerDotProduct8BitUnsignedAccelerated;
+            __C_ENG_TYPE ( Bool )               integerDotProduct8BitSignedAccelerated;
+            __C_ENG_TYPE ( Bool )               integerDotProduct8BitMixedSignednessAccelerated;
+
+            __C_ENG_TYPE ( Bool )               integerDotProduct4x8BitPackedUnsignedAccelerated;
+            __C_ENG_TYPE ( Bool )               integerDotProduct4x8BitPackedSignedAccelerated;
+            __C_ENG_TYPE ( Bool )               integerDotProduct4x8BitPackedMixedSignednessAccelerated;
+
+            __C_ENG_TYPE ( Bool )               integerDotProduct16BitUnsignedAccelerated;
+            __C_ENG_TYPE ( Bool )               integerDotProduct16BitSignedAccelerated;
+            __C_ENG_TYPE ( Bool )               integerDotProduct16BitMixedSignednessAccelerated;
+
+            __C_ENG_TYPE ( Bool )               integerDotProduct32BitUnsignedAccelerated;
+            __C_ENG_TYPE ( Bool )               integerDotProduct32BitSignedAccelerated;
+            __C_ENG_TYPE ( Bool )               integerDotProduct32BitMixedSignednessAccelerated;
+
+            __C_ENG_TYPE ( Bool )               integerDotProduct64BitUnsignedAccelerated;
+            __C_ENG_TYPE ( Bool )               integerDotProduct64BitSignedAccelerated;
+            __C_ENG_TYPE ( Bool )               integerDotProduct64BitMixedSignednessAccelerated;
+
+            __C_ENG_TYPE ( Bool )               integerDotProductAccumulatingSaturating8BitUnsignedAccelerated;
+            __C_ENG_TYPE ( Bool )               integerDotProductAccumulatingSaturating8BitSignedAccelerated;
+            __C_ENG_TYPE ( Bool )               integerDotProductAccumulatingSaturating8BitMixedSignednessAccelerated;
+
+            __C_ENG_TYPE ( Bool )               integerDotProductAccumulatingSaturating4x8BitPackedUnsignedAccelerated;
+            __C_ENG_TYPE ( Bool )               integerDotProductAccumulatingSaturating4x8BitPackedSignedAccelerated;
+            __C_ENG_TYPE ( Bool )               integerDotProductAccumulatingSaturating4x8BitPackedMixedSignednessAccelerated;
+
+            __C_ENG_TYPE ( Bool )               integerDotProductAccumulatingSaturating16BitUnsignedAccelerated;
+            __C_ENG_TYPE ( Bool )               integerDotProductAccumulatingSaturating16BitSignedAccelerated;
+            __C_ENG_TYPE ( Bool )               integerDotProductAccumulatingSaturating16BitMixedSignednessAccelerated;
+
+            __C_ENG_TYPE ( Bool )               integerDotProductAccumulatingSaturating32BitUnsignedAccelerated;
+            __C_ENG_TYPE ( Bool )               integerDotProductAccumulatingSaturating32BitSignedAccelerated;
+            __C_ENG_TYPE ( Bool )               integerDotProductAccumulatingSaturating32BitMixedSignednessAccelerated;
+
+            __C_ENG_TYPE ( Bool )               integerDotProductAccumulatingSaturating64BitUnsignedAccelerated;
+            __C_ENG_TYPE ( Bool )               integerDotProductAccumulatingSaturating64BitSignedAccelerated;
+            __C_ENG_TYPE ( Bool )               integerDotProductAccumulatingSaturating64BitMixedSignednessAccelerated;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
 
 
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( Result ) ) noexcept -> cds :: StringLiteral;
@@ -2619,6 +3688,12 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( DriverID ) ) noexcept -> cds :: StringLiteral;
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( ShaderFloatControlsIndependence ) ) noexcept -> cds :: StringLiteral;
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( ResolveModeFlag ) ) noexcept -> cds :: StringLiteral;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_AMD_SHADER_CORE_PROPERTIES_2_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( ShaderCorePropertiesFlagAMD ) ) noexcept -> cds :: StringLiteral;
 
 #endif
 
@@ -2649,6 +3724,12 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
 
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceVulkan11Properties ) const & ) noexcept -> cds :: String;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceIDProperties ) const & ) noexcept -> cds :: String;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceMaintenanceProperties ) const & ) noexcept -> cds :: String;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceMultiviewProperties ) const & ) noexcept -> cds :: String;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDevicePointClippingProperties ) const & ) noexcept -> cds :: String;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceProtectedMemoryProperties ) const & ) noexcept -> cds :: String;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceSubgroupProperties ) const & ) noexcept -> cds :: String;
 
 #endif
 
@@ -2656,6 +3737,246 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( ConformanceVersion ) const & ) noexcept -> cds :: String;
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceVulkan12Properties ) const & ) noexcept -> cds :: String;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceDriverProperties ) const & ) noexcept -> cds :: String;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceDepthStencilResolveProperties ) const & ) noexcept -> cds :: String;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceDescriptorIndexingProperties ) const & ) noexcept -> cds :: String;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceFloatControlsProperties ) const & ) noexcept -> cds :: String;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceSamplerFilterMinmaxProperties ) const & ) noexcept -> cds :: String;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceTimelineSemaphoreProperties ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_PCI_BUS_INFO_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDevicePCIBusInfoProperties ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_PHYSICAL_DEVICE_DRM_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceDRMProperties ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceAccelerationStructureProperties ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_BLEND_OPERATION_ADVANCED_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceBlendOperationAdvancedProperties ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_CONSERVATIVE_RASTERIZATION_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceConservativeRasterizationProperties ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_COOPERATIVE_MATRIX_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceCooperativeMatrixPropertiesNVidia ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_CUSTOM_BORDER_COLOR_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceCustomBorderColorProperties ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEVICE_GENERATED_COMMANDS_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceDeviceGeneratedCommandsProperties ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_DISCARD_RECTANGLES_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceDiscardRectangleProperties ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_EXTERNAL_MEMORY_HOST_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceExternalMemoryHostProperties ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_FRAGMENT_DENSITY_MAP_2_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceFragmentDensityMap2Properties ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_QUALCOMM_FRAGMENT_DENSITY_MAP_OFFSET_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceFragmentDensityMapOffsetPropertiesQualcomm ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_FRAGMENT_DENSITY_MAP_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceFragmentDensityMapProperties ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_FRAGMENT_SHADING_RATE_ENUMS_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceFragmentShadingRateEnumsPropertiesNVidia ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_FRAGMENT_SHADING_RATE_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceFragmentShadingRateProperties ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_INLINE_UNIFORM_BLOCK_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceInlineUniformBlockProperties ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_LINE_RASTERIZATION_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceLineRasterizationProperties ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_MAINTENANCE_4_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceMaintenance4Properties ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_MESH_SHADER_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceMeshShaderPropertiesNVidia ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_MULTI_DRAW_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceMultiDrawProperties ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXPERIMENTAL_MULTIVIEW_PER_VIEW_ATTRIBUTES_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceMultiviewPerViewAttributesPropertiesNVidia ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PORTABILITY_SUBSET_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDevicePortabilitySubsetProperties ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_PROVOKING_VERTEX_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceProvokingVertexProperties ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PUSH_DESCRIPTOR_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDevicePushDescriptorProperties ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_RAY_TRACING_PIPELINE_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceRayTracingPipelineProperties ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceRayTracingPropertiesNVidia ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_ROBUSTNESS_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceRobustnessProperties ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_SAMPLE_LOCATIONS_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceSampleLocationsProperties ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_AMD_SHADER_CORE_PROPERTIES_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceShaderCorePropertiesAMD ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_AMD_SHADER_CORE_PROPERTIES_2_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceShaderCoreProperties2AMD ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SHADER_SM_BUILTINS_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceShaderSMBuiltinsProperties ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SHADING_RATE_IMAGE_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceShadingRateImagePropertiesNVidia ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_SUBGROUP_SIZE_CONTROL_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceSubgroupSizeControlProperties ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_HUAWEI_SUBPASS_SHADING_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceSubpassShadingPropertiesHuawei ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_TEXEL_BUFFER_ALIGNMENT_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceTexelBufferAlignmentProperties ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_TRANSFORM_FEEDBACK_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceTransformFeedbackProperties ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VERTEX_ATTRIBUTE_DIVISOR_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceVertexAttributeDivisorProperties ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_INTEGER_DOT_PRODUCT_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceShaderIntegerDotProductProperties ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PERFORMANCE_QUERY_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDevicePerformanceQueryProperties ) const & ) noexcept -> cds :: String;
 
 #endif
 
