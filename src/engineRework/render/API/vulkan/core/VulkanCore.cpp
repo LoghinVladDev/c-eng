@@ -1965,6 +1965,40 @@ auto vulkan :: toString (
 
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( QueueFlag ) flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case __C_ENG_TYPE ( QueueFlag ) :: QueueFlagGraphics:       { asString = "Graphics";        break; }
+        case __C_ENG_TYPE ( QueueFlag ) :: QueueFlagCompute:        { asString = "Compute";         break; }
+        case __C_ENG_TYPE ( QueueFlag ) :: QueueFlagTransfer:       { asString = "Transfer";        break; }
+        case __C_ENG_TYPE ( QueueFlag ) :: QueueFlagSparseBinding:  { asString = "Sparse Binding";  break; }
+        case __C_ENG_TYPE ( QueueFlag ) :: QueueFlagProtected:      { asString = "Protected";       break; }
+
+#if __C_ENG_VULKAN_BETA_EXTENSIONS_ENABLED && __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_DECODE_QUEUE_AVAILABLE
+
+        case __C_ENG_TYPE ( QueueFlag ) :: QueueFlagVideoDecode:    { asString = "Video Decode";    break; }
+
+#endif
+
+#if __C_ENG_VULKAN_BETA_EXTENSIONS_ENABLED && __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_ENCODE_QUEUE_AVAILABLE
+
+        case __C_ENG_TYPE ( QueueFlag ) :: QueueFlagVideoEncode:    { asString = "Video Encode";    break; }
+
+#endif
+
+    }
+
+    return asString;
+}
+
+#endif
+
 #if __C_ENG_VULKAN_API_EXTENSION_AMD_SHADER_CORE_PROPERTIES_2_AVAILABLE
 
 auto vulkan :: toString (
@@ -2509,7 +2543,7 @@ auto vulkan :: toString (
             ", maxPerStageDescriptorUpdateAfterBindUniformBuffers = "   + properties.maxPerStageDescriptorUpdateAfterBindUniformBuffers +
             ", maxPerStageDescriptorUpdateAfterBindStorageBuffers = "   + properties.maxPerStageDescriptorUpdateAfterBindStorageBuffers +
             ", maxPerStageDescriptorUpdateAfterBindSampledImages = "    + properties.maxPerStageDescriptorUpdateAfterBindSampledImages +
-            ", maxPerStageDescriptorUpdateAfterBindStoredImages = "     + properties.maxPerStageDescriptorUpdateAfterBindStoredImages +
+            ", maxPerStageDescriptorUpdateAfterBindStoredImages = "     + properties.maxPerStageDescriptorUpdateAfterBindStorageImages +
             ", maxPerStageDescriptorUpdateAfterBindInputAttachments = " + properties.maxPerStageDescriptorUpdateAfterBindInputAttachments +
             ", maxPerStageUpdateAfterBindResources = "                  + properties.maxPerStageUpdateAfterBindResources +
             ", maxDescriptorSetUpdateAfterBindSamplers = "              + properties.maxDescriptorSetUpdateAfterBindSamplers +
@@ -2519,13 +2553,13 @@ auto vulkan :: toString (
             ", maxDescriptorSetUpdateAfterBindStorageBuffersDynamic = " + properties.maxDescriptorSetUpdateAfterBindStorageBuffersDynamic +
             ", maxDescriptorSetUpdateAfterBindSampledImages = "         + properties.maxDescriptorSetUpdateAfterBindSampledImages +
             ", maxDescriptorSetUpdateAfterBindStorageImages = "         + properties.maxDescriptorSetUpdateAfterBindStorageImages +
-            ", maxDescriptorSetUpdateAfterBindBindInputAttachments = "  + properties.maxDescriptorSetUpdateAfterBindBindInputAttachments +
+            ", maxDescriptorSetUpdateAfterBindBindInputAttachments = "  + properties.maxDescriptorSetUpdateAfterBindInputAttachments +
             ", supportedDepthResolveModes = "                           + toString ( properties.supportedDepthResolveModes ) +
             ", supportedStencilResolveModes = "                         + toString ( properties.supportedStencilResolveModes ) +
             ", independentResolveNone = "                               + ( properties.independentResolveNone == VK_TRUE ? "true" : "false" ) +
             ", independentResolve = "                                   + ( properties.independentResolve == VK_TRUE ? "true" : "false" ) +
-            ", filterMinmaxSingleComponentsFormats = "                  + ( properties.filterMinmaxSingleComponentsFormats == VK_TRUE ? "true" : "false" ) +
-            ", filterMinmaxImageComponentsMapping = "                   + ( properties.filterMinmaxImageComponentsMapping == VK_TRUE ? "true" : "false" ) +
+            ", filterMinmaxSingleComponentsFormats = "                  + ( properties.filterMinmaxSingleComponentFormats == VK_TRUE ? "true" : "false" ) +
+            ", filterMinmaxImageComponentsMapping = "                   + ( properties.filterMinmaxImageComponentMapping == VK_TRUE ? "true" : "false" ) +
             ", maxTimelineSemaphoreValueDifference = "                  + properties.maxTimelineSemaphoreValueDifference +
             ", framebufferIntegerColorSampleCounts = "                  + toString ( properties.framebufferIntegerColorSampleCounts ) +
             " }";
@@ -2771,7 +2805,7 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceCustomBorderColorProperties ) ) " "
            "{ type = "_s                                        + toString ( properties.structureType ) +
            ", pNext = "                                         + :: toString ( properties.pNext ) +
-           ", maxCustomBorderColorSamples = "                   + properties.maxCustomBorderColorSamples +
+           ", maxCustomBorderColorSamples = "                   + properties.maxCustomBorderColorSamplers +
            " }";
 }
 
@@ -2780,10 +2814,10 @@ auto vulkan :: toString (
 #if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEVICE_GENERATED_COMMANDS_AVAILABLE
 
 auto vulkan :: toString (
-        __C_ENG_TYPE ( PhysicalDeviceDeviceGeneratedCommandsProperties ) const & properties
+        __C_ENG_TYPE ( PhysicalDeviceDeviceGeneratedCommandsPropertiesNVidia ) const & properties
 ) noexcept -> String {
 
-    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceDeviceGeneratedCommandsProperties ) ) " "
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceDeviceGeneratedCommandsPropertiesNVidia ) ) " "
            "{ type = "_s                                    + toString ( properties.structureType ) +
            ", pNext = "                                     + :: toString ( properties.pNext ) +
            ", maxGraphicsShaderGroupCount = "               + properties.maxGraphicsShaderGroupCount +
@@ -2990,7 +3024,7 @@ auto vulkan :: toString (
            ", maxTaskTotalMemorySize = "            + properties.maxTaskTotalMemorySize +
            ", maxTaskOutputCount = "                + properties.maxTaskOutputCount +
            ", maxMeshWorkGroupInvocations = "       + properties.maxMeshWorkGroupInvocations +
-           ", maxMeshWorkGroupSize = "              + properties.maxMeshWorkGroupSize[0] + ", " + properties.maxMeshWorkGroupSize[1] + ", " + properties.maxMeshWorkGroupSize[2] + " ]" +
+           ", maxMeshWorkGroupSize = [ "            + properties.maxMeshWorkGroupSize[0] + ", " + properties.maxMeshWorkGroupSize[1] + ", " + properties.maxMeshWorkGroupSize[2] + " ]" +
            ", maxMeshTotalMemorySize = "            + properties.maxMeshTotalMemorySize +
            ", maxMeshOutputVertices = "             + properties.maxMeshOutputVertices +
            ", maxMeshOutputPrimitives = "           + properties.maxMeshOutputPrimitives +
@@ -3017,7 +3051,7 @@ auto vulkan :: toString (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXPERIMENTAL_MULTIVIEW_PER_VIEW_ATTRIBUTES_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE && __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXPERIMENTAL_MULTIVIEW_PER_VIEW_ATTRIBUTES_AVAILABLE
 
 auto vulkan :: toString (
         __C_ENG_TYPE ( PhysicalDeviceMultiviewPerViewAttributesPropertiesNVidia ) const & properties
@@ -3219,10 +3253,10 @@ auto vulkan :: toString (
 #if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SHADER_SM_BUILTINS_AVAILABLE
 
 auto vulkan :: toString (
-        __C_ENG_TYPE ( PhysicalDeviceShaderSMBuiltinsProperties ) const & properties
+        __C_ENG_TYPE ( PhysicalDeviceShaderSMBuiltinsPropertiesNVidia ) const & properties
 ) noexcept -> String {
 
-    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceShaderSMBuiltinsProperties ) ) " "
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceShaderSMBuiltinsPropertiesNVidia ) ) " "
            "{ type = "_s                            + toString ( properties.structureType ) +
            ", pNext = "                             + :: toString ( properties.pNext ) +
            ", shaderSMCount = "                     + properties.shaderSMCount +
@@ -3379,6 +3413,295 @@ auto vulkan :: toString (
            ", integerDotProductAccumulatingSaturating64BitSignedAccelerated = "                 + ( properties.integerDotProductAccumulatingSaturating64BitSignedAccelerated == VK_TRUE ? "true" : "false" ) +
            ", integerDotProductAccumulatingSaturating64BitMixedSignednessAccelerated = "        + ( properties.integerDotProductAccumulatingSaturating64BitMixedSignednessAccelerated == VK_TRUE ? "true" : "false" ) +
            " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceDetails ) const & details
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceDetails ) ) " "
+            "{ basicProperties = "                                  + toString ( details.basicProperties ) +
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+
+            ", vulkan11Properties = "                               + toString ( details.vulkan11Properties ) +
+            ", IDProperties = "                                     + toString ( details.IDProperties ) +
+            ", maintenanceProperties = "                            + toString ( details.maintenanceProperties ) +
+            ", multiviewProperties = "                              + toString ( details.multiviewProperties ) +
+            ", pointClippingProperties = "                          + toString ( details.pointClippingProperties ) +
+            ", protectedMemoryProperties = "                        + toString ( details.protectedMemoryProperties ) +
+            ", subgroupProperties = "                               + toString ( details.subgroupProperties ) +
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+
+            ", vulkan12Properties = "                               + toString ( details.vulkan12Properties ) +
+            ", driverProperties = "                                 + toString ( details.driverProperties ) +
+            ", depthStencilResolveProperties = "                    + toString ( details.depthStencilResolveProperties ) +
+            ", descriptorIndexingProperties = "                     + toString ( details.descriptorIndexingProperties ) +
+            ", deviceFloatControlsProperties = "                    + toString ( details.deviceFloatControlsProperties ) +
+            ", samplerFilterMinmaxProperties = "                    + toString ( details.samplerFilterMinmaxProperties ) +
+            ", timelineSemaphoreProperties = "                      + toString ( details.timelineSemaphoreProperties ) +
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_PCI_BUS_INFO_AVAILABLE
+
+            ", pciBusInfoProperties = "                             + toString ( details.pciBusInfoProperties ) +
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_PHYSICAL_DEVICE_DRM_AVAILABLE
+
+            ", DRMProperties = "                                    + toString ( details.DRMProperties ) +
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+
+            ", accelerationStructureProperties = "                  + toString ( details.accelerationStructureProperties ) +
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_BLEND_OPERATION_ADVANCED_AVAILABLE
+
+            ", blendOperationAdvancedProperties = "                 + toString ( details.blendOperationAdvancedProperties ) +
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_CONSERVATIVE_RASTERIZATION_AVAILABLE
+
+            ", conservativeRasterizationProperties = "              + toString ( details.conservativeRasterizationProperties ) +
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_COOPERATIVE_MATRIX_AVAILABLE
+
+            ", cooperativeMatrixPropertiesNVidia = "                + toString ( details.cooperativeMatrixPropertiesNVidia ) +
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_CUSTOM_BORDER_COLOR_AVAILABLE
+
+            ", customBorderColorProperties = "                      + toString ( details.customBorderColorProperties ) +
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEVICE_GENERATED_COMMANDS_AVAILABLE
+
+            ", deviceGeneratedCommandsProperties = "                + toString ( details.deviceGeneratedCommandsProperties ) +
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_DISCARD_RECTANGLES_AVAILABLE
+
+            ", discardRectangleProperties = "                       + toString ( details.discardRectangleProperties ) +
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_EXTERNAL_MEMORY_HOST_AVAILABLE
+
+            ", externalMemoryHostProperties = "                     + toString ( details.externalMemoryHostProperties ) +
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_FRAGMENT_DENSITY_MAP_2_AVAILABLE
+
+            ", fragmentDensityMap2Properties = "                    + toString ( details.fragmentDensityMap2Properties ) +
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_QUALCOMM_FRAGMENT_DENSITY_MAP_OFFSET_AVAILABLE
+
+            ", fragmentDensityMapOffsetPropertiesQualcomm = "       + toString ( details.fragmentDensityMapOffsetPropertiesQualcomm ) +
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_FRAGMENT_DENSITY_MAP_AVAILABLE
+
+            ", fragmentDensityMapProperties = "                     + toString ( details.fragmentDensityMapProperties ) +
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_FRAGMENT_SHADING_RATE_ENUMS_AVAILABLE
+
+            ", fragmentShadingRateEnumsPropertiesNVidia = "         + toString ( details.fragmentShadingRateEnumsPropertiesNVidia ) +
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_FRAGMENT_SHADING_RATE_AVAILABLE
+
+            ", fragmentShadingRateProperties = "                    + toString ( details.fragmentShadingRateProperties ) +
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_INLINE_UNIFORM_BLOCK_AVAILABLE
+
+            ", inlineUniformBlockProperties = "                     + toString ( details.inlineUniformBlockProperties ) +
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_LINE_RASTERIZATION_AVAILABLE
+
+            ", lineRasterizationProperties = "                      + toString ( details.lineRasterizationProperties ) +
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_MAINTENANCE_4_AVAILABLE
+
+            ", maintenance4Properties = "                           + toString ( details.maintenance4Properties ) +
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_MESH_SHADER_AVAILABLE
+
+            ", meshShaderPropertiesNVidia = "                       + toString ( details.meshShaderPropertiesNVidia ) +
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_MULTI_DRAW_AVAILABLE
+
+            ", multiDrawProperties = "                              + toString ( details.multiDrawProperties ) +
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE && __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXPERIMENTAL_MULTIVIEW_PER_VIEW_ATTRIBUTES_AVAILABLE
+
+            ", multiviewPerViewAttributesPropertiesNVidia = "       + toString ( details.multiviewPerViewAttributesPropertiesNVidia ) +
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PERFORMANCE_QUERY_AVAILABLE
+
+            ", performanceQueryProperties = "                       + toString ( details.performanceQueryProperties ) +
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PORTABILITY_SUBSET_AVAILABLE
+
+            ", portabilitySubsetProperties = "                      + toString ( details.portabilitySubsetProperties ) +
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_PROVOKING_VERTEX_AVAILABLE
+
+            ", provokingVertexProperties = "                        + toString ( details.provokingVertexProperties ) +
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PUSH_DESCRIPTOR_AVAILABLE
+
+            ", pushDescriptorProperties = "                         + toString ( details.pushDescriptorProperties ) +
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_RAY_TRACING_PIPELINE_AVAILABLE
+
+            ", rayTracingPipelineProperties = "                     + toString ( details.rayTracingPipelineProperties ) +
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+
+            ", rayTracingPropertiesNVidia = "                       + toString ( details.rayTracingPropertiesNVidia ) +
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_ROBUSTNESS_AVAILABLE
+
+            ", robustnessProperties = "                             + toString ( details.robustnessProperties ) +
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_SAMPLE_LOCATIONS_AVAILABLE
+
+            ", sampleLocationsProperties = "                        + toString ( details.sampleLocationsProperties ) +
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_AMD_SHADER_CORE_PROPERTIES_AVAILABLE
+
+            ", shaderCorePropertiesAMD = "                          + toString ( details.shaderCorePropertiesAMD ) +
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_AMD_SHADER_CORE_PROPERTIES_2_AVAILABLE
+
+            ", shaderCoreProperties2AMD = "                         + toString ( details.shaderCoreProperties2AMD ) +
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SHADER_SM_BUILTINS_AVAILABLE
+
+            ", shaderSmBuiltinsProperties = "                       + toString ( details.shaderSmBuiltinsProperties ) +
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SHADING_RATE_IMAGE_AVAILABLE
+
+            ", shadingRateImagePropertiesNVidia = "                 + toString ( details.shadingRateImagePropertiesNVidia ) +
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_SUBGROUP_SIZE_CONTROL_AVAILABLE
+
+            ", subgroupSizeControlProperties = "                    + toString ( details.subgroupSizeControlProperties ) +
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_HUAWEI_SUBPASS_SHADING_AVAILABLE
+
+            ", subpassShadingPropertiesHuawei = "                   + toString ( details.subpassShadingPropertiesHuawei ) +
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_TEXEL_BUFFER_ALIGNMENT_AVAILABLE
+
+            ", texelBufferAlignmentProperties = "                   + toString ( details.texelBufferAlignmentProperties ) +
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_TRANSFORM_FEEDBACK_AVAILABLE
+
+            ", transformFeedbackProperties = "                      + toString ( details.transformFeedbackProperties ) +
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VERTEX_ATTRIBUTE_DIVISOR_AVAILABLE
+
+            ", vertexAttributeDivisorProperties = "                 + toString ( details.vertexAttributeDivisorProperties ) +
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_INTEGER_DOT_PRODUCT_AVAILABLE
+
+            ", shaderIntegerDotProductProperties = "                + toString ( details.shaderIntegerDotProductProperties ) +
+
+#endif
+
+
+            " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( QueueFamilyProperties ) const & properties
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( QueueFamilyProperties ) ) " "
+            "{ queueFlags = "_s                 + "0b" + Long ( properties.queueFlags ).toString(2) +
+            ", queueCount = "                   + properties.queueCount +
+            ", timestampValidBits = "           + properties.timestampValidBits +
+            ", minImageTransferGranularity = "  + toString ( properties.minImageTransferGranularity ) +
+            " }";
 }
 
 #endif

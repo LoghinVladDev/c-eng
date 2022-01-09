@@ -25,6 +25,9 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
         __C_ENG_NO_DISCARD extern auto getPhysicalDeviceProperties ( __C_ENG_TYPE ( PhysicalDeviceHandle ), __C_ENG_TYPE ( PhysicalDeviceProperties ) * ) noexcept -> __C_ENG_TYPE ( Result );
         __C_ENG_NO_DISCARD extern auto getPhysicalDeviceProperties ( __C_ENG_TYPE ( PhysicalDeviceHandle ), __C_ENG_TYPE ( PhysicalDeviceExtendedProperties ) * ) noexcept -> __C_ENG_TYPE ( Result );
+        __C_ENG_NO_DISCARD extern auto getPhysicalDeviceDetails ( __C_ENG_TYPE ( PhysicalDeviceHandle ), __C_ENG_TYPE ( PhysicalDeviceDetails ) * ) noexcept -> __C_ENG_TYPE ( Result );
+
+        __C_ENG_NO_DISCARD extern auto getPhysicalDeviceQueueFamilyProperties ( __C_ENG_TYPE ( PhysicalDeviceHandle ), cds :: uint32 *, __C_ENG_TYPE ( QueueFamilyProperties ) * ) noexcept -> __C_ENG_TYPE ( Result );
 
     }
 

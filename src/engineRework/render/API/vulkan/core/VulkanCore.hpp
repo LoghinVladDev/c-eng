@@ -1400,8 +1400,8 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEVICE_GENERATED_COMMANDS_AVAILABLE
 
-            Field ( PhysicalDeviceDeviceGeneratedCommandsPropertiesNVidia,                 VkStructureType :: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEVICE_GENERATED_COMMANDS_FEATURES_NV ),
-            Field ( PhysicalDeviceDeviceGeneratedCommandsFeaturesNVidia,                   VkStructureType :: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEVICE_GENERATED_COMMANDS_PROPERTIES_NV ),
+            Field ( PhysicalDeviceDeviceGeneratedCommandsPropertiesNVidia,                 VkStructureType :: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEVICE_GENERATED_COMMANDS_PROPERTIES_NV ),
+            Field ( PhysicalDeviceDeviceGeneratedCommandsFeaturesNVidia,                   VkStructureType :: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEVICE_GENERATED_COMMANDS_FEATURES_NV ),
             Field ( GraphicsShaderGroupCreateInfoNVidia,                                   VkStructureType :: VK_STRUCTURE_TYPE_GRAPHICS_SHADER_GROUP_CREATE_INFO_NV ),
             Field ( GraphicsPipelineShaderGroupsCreateInfoNVidia,                          VkStructureType :: VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_SHADER_GROUPS_CREATE_INFO_NV ),
             Field ( IndirectCommandsLayoutTokenNVidia,                                     VkStructureType :: VK_STRUCTURE_TYPE_INDIRECT_COMMANDS_LAYOUT_TOKEN_NV ),
@@ -2067,6 +2067,175 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 
+#define C_ENG_MAP_START     ENUM ( QueueFlag, TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( Graphics,       VkQueueFlagBits :: VK_QUEUE_GRAPHICS_BIT ),
+            Field ( Compute,        VkQueueFlagBits :: VK_QUEUE_COMPUTE_BIT ),
+            Field ( Transfer,       VkQueueFlagBits :: VK_QUEUE_TRANSFER_BIT ),
+            Field ( SparseBinding,  VkQueueFlagBits :: VK_QUEUE_SPARSE_BINDING_BIT ),
+            Field ( Protected,      VkQueueFlagBits :: VK_QUEUE_PROTECTED_BIT ),
+
+#if __C_ENG_VULKAN_BETA_EXTENSIONS_ENABLED && __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_DECODE_QUEUE_AVAILABLE
+
+            Field ( VideoDecode,    VkQueueFlagBits :: VK_QUEUE_VIDEO_DECODE_BIT_KHR ),
+
+#endif
+
+#if __C_ENG_VULKAN_BETA_EXTENSIONS_ENABLED && __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_ENCODE_QUEUE_AVAILABLE
+
+            Field ( VideoEncode,    VkQueueFlagBits :: VK_QUEUE_VIDEO_ENCODE_BIT_KHR )
+
+#endif
+
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+
+#define C_ENG_MAP_START     ENUM ( PipelineStageFlag, TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+
+#if __C_ENG_VULKAN_API_EXTENSION_TRANSFORM_FEEDBACK_AVAILABLE
+
+            Field ( TransformFeedback,              VkPipelineStageFlagBits :: VK_PIPELINE_STAGE_TRANSFORM_FEEDBACK_BIT_EXT ),
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_CONDITIONAL_RENDERING_AVAILABLE
+
+            Field ( ConditionalRendering,           VkPipelineStageFlagBits :: VK_PIPELINE_STAGE_CONDITIONAL_RENDERING_BIT_EXT ),
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+
+            Field ( AccelerationStructureBuild,     VkPipelineStageFlagBits :: VK_PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR ),
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_RAY_TRACING_PIPELINE_AVAILABLE
+
+            Field ( RayTracingShader,               VkPipelineStageFlagBits :: VK_PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_KHR ),
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_MESH_SHADER_AVAILABLE
+
+            Field ( TaskShaderNVidia,               VkPipelineStageFlagBits :: VK_PIPELINE_STAGE_TASK_SHADER_BIT_NV ),
+            Field ( MeshShaderNVidia,               VkPipelineStageFlagBits :: VK_PIPELINE_STAGE_MESH_SHADER_BIT_NV ),
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_FRAGMENT_DENSITY_MAP_AVAILABLE
+
+            Field ( FragmentDensityProcess,         VkPipelineStageFlagBits :: VK_PIPELINE_STAGE_FRAGMENT_DENSITY_PROCESS_BIT_EXT ),
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_FRAGMENT_SHADING_RATE_AVAILABLE
+
+            Field ( FragmentShadingRateAttachment,  VkPipelineStageFlagBits :: VK_PIPELINE_STAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR ),
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEVICE_GENERATED_COMMANDS_AVAILABLE
+
+            Field ( CommandPreprocessNVidia,        VkPipelineStageFlagBits :: VK_PIPELINE_STAGE_COMMAND_PREPROCESS_BIT_NV ),
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
+
+            Field ( None,                           VkPipelineStageFlagBits :: VK_PIPELINE_STAGE_NONE_KHR ),
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SHADING_RATE_IMAGE_AVAILABLE
+
+            Field ( ShadingRateImage,               VkPipelineStageFlagBits :: VK_PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV ),
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+
+            Field ( RayTracingShaderNVidia,         VkPipelineStageFlagBits :: VK_PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_NV ),
+
+#endif
+
+            Field ( TopOfPipe,                      VkPipelineStageFlagBits :: VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT ),
+            Field ( DrawIndirect,                   VkPipelineStageFlagBits :: VK_PIPELINE_STAGE_DRAW_INDIRECT_BIT ),
+            Field ( VertexInput,                    VkPipelineStageFlagBits :: VK_PIPELINE_STAGE_VERTEX_INPUT_BIT ),
+            Field ( VertexShader,                   VkPipelineStageFlagBits :: VK_PIPELINE_STAGE_VERTEX_SHADER_BIT ),
+            Field ( TessellationControlShader,      VkPipelineStageFlagBits :: VK_PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT ),
+            Field ( TessellationEvaluationShader,   VkPipelineStageFlagBits :: VK_PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT ),
+            Field ( GeometryShader,                 VkPipelineStageFlagBits :: VK_PIPELINE_STAGE_GEOMETRY_SHADER_BIT ),
+            Field ( FragmentShader,                 VkPipelineStageFlagBits :: VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT ),
+            Field ( EarlyFragmentTests,             VkPipelineStageFlagBits :: VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT ),
+            Field ( LateFragmentTests,              VkPipelineStageFlagBits :: VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT ),
+            Field ( ColorAttachmentOutput,          VkPipelineStageFlagBits :: VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT ),
+            Field ( ComputeShader,                  VkPipelineStageFlagBits :: VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT ),
+            Field ( Transfer,                       VkPipelineStageFlagBits :: VK_PIPELINE_STAGE_TRANSFER_BIT ),
+            Field ( BottomOfPipe,                   VkPipelineStageFlagBits :: VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT ),
+            Field ( Host,                           VkPipelineStageFlagBits :: VK_PIPELINE_STAGE_HOST_BIT ),
+            Field ( AllGraphics,                    VkPipelineStageFlagBits :: VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT ),
+            Field ( AllCommands,                    VkPipelineStageFlagBits :: VK_PIPELINE_STAGE_ALL_COMMANDS_BIT )
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_GLOBAL_PRIORITY_AVAILABLE
+
+#define C_ENG_MAP_START     ENUM ( GlobalQueuePriority, TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( Low,        VkQueueGlobalPriorityEXT :: VK_QUEUE_GLOBAL_PRIORITY_LOW_EXT ),
+            Field ( Medium,     VkQueueGlobalPriorityEXT :: VK_QUEUE_GLOBAL_PRIORITY_MEDIUM_EXT ),
+            Field ( High,       VkQueueGlobalPriorityEXT :: VK_QUEUE_GLOBAL_PRIORITY_HIGH_EXT ),
+            Field ( Realtime,   VkQueueGlobalPriorityEXT :: VK_QUEUE_GLOBAL_PRIORITY_REALTIME_EXT )
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_QUEUE_AVAILABLE
+
+#define C_ENG_MAP_START     ENUM ( VideoCodecOperationFlag, TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+
+#if __C_ENG_VULKAN_BETA_EXTENSIONS_ENABLED
+
+            Field ( EncodeH264, VkVideoCodecOperationFlagBitsKHR :: VK_VIDEO_CODEC_OPERATION_ENCODE_H264_BIT_EXT ),
+            Field ( EncodeH265, VkVideoCodecOperationFlagBitsKHR :: VK_VIDEO_CODEC_OPERATION_ENCODE_H264_BIT_EXT ),
+            Field ( DecodeH264, VkVideoCodecOperationFlagBitsKHR :: VK_VIDEO_CODEC_OPERATION_ENCODE_H264_BIT_EXT ),
+            Field ( DecodeH265, VkVideoCodecOperationFlagBitsKHR :: VK_VIDEO_CODEC_OPERATION_ENCODE_H264_BIT_EXT ),
+
+#endif
+
+            Field ( Invalid,    VkVideoCodecOperationFlagBitsKHR :: VK_VIDEO_CODEC_OPERATION_INVALID_BIT_KHR )
+
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+
         __C_ENG_ALIAS ( Offset2D,   VkOffset2D );
         __C_ENG_ALIAS ( Offset3D,   VkOffset3D );
 
@@ -2089,6 +2258,8 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_ALIAS ( DebugMessengerCreateFlags,      VkDebugUtilsMessengerCreateFlagsEXT );
         __C_ENG_ALIAS ( SampleCountFlags,               VkSampleCountFlags );
         __C_ENG_ALIAS ( ShaderStageFlags,               VkShaderStageFlags );
+        __C_ENG_ALIAS ( QueueFlags,                     VkQueueFlags );
+        __C_ENG_ALIAS ( PipelineStageFlags,             VkPipelineStageFlags );
 
         __C_ENG_ALIAS ( DebugMessageSeverityFlags,      VkDebugUtilsMessageSeverityFlagsEXT );
         __C_ENG_ALIAS ( DebugMessageTypeFlags,          VkDebugUtilsMessageTypeFlagsEXT );
@@ -2116,10 +2287,15 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #if __C_ENG_VULKAN_API_EXTENSION_AMD_SHADER_CORE_PROPERTIES_2_AVAILABLE
 
-        __C_ENG_ALIAS ( ShaderCorePropertiesFlagsAMD,               VkShaderCorePropertiesFlagsAMD );
+        __C_ENG_ALIAS ( ShaderCorePropertiesFlagsAMD,   VkShaderCorePropertiesFlagsAMD );
 
 #endif
 
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_QUEUE_AVAILABLE
+
+        __C_ENG_ALIAS ( VideoCodecOperationFlags,       VkVideoCodecOperationFlagsKHR );
+
+#endif
 
 
 #define C_ENG_MAP_START     STRUCT ( Version, NO_PARENT )
@@ -2646,7 +2822,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
             __C_ENG_TYPE ( Bool )                               shaderRoundingModeRTZFloat32;
             __C_ENG_TYPE ( Bool )                               shaderRoundingModeRTZFloat64;
 
-            cds :: uint16                                       maxUpdateAfterBindDescriptorsInAllPools;
+            cds :: uint32                                       maxUpdateAfterBindDescriptorsInAllPools;
 
             __C_ENG_TYPE ( Bool )                               shaderUniformBufferArrayNonUniformIndexingNative;
             __C_ENG_TYPE ( Bool )                               shaderSampledImageArrayNonUniformIndexingNative;
@@ -2662,7 +2838,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
             cds :: uint32                                       maxPerStageDescriptorUpdateAfterBindUniformBuffers;
             cds :: uint32                                       maxPerStageDescriptorUpdateAfterBindStorageBuffers;
             cds :: uint32                                       maxPerStageDescriptorUpdateAfterBindSampledImages;
-            cds :: uint32                                       maxPerStageDescriptorUpdateAfterBindStoredImages;
+            cds :: uint32                                       maxPerStageDescriptorUpdateAfterBindStorageImages;
             cds :: uint32                                       maxPerStageDescriptorUpdateAfterBindInputAttachments;
 
             cds :: uint32                                       maxPerStageUpdateAfterBindResources;
@@ -2674,7 +2850,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
             cds :: uint32                                       maxDescriptorSetUpdateAfterBindStorageBuffersDynamic;
             cds :: uint32                                       maxDescriptorSetUpdateAfterBindSampledImages;
             cds :: uint32                                       maxDescriptorSetUpdateAfterBindStorageImages;
-            cds :: uint32                                       maxDescriptorSetUpdateAfterBindBindInputAttachments;
+            cds :: uint32                                       maxDescriptorSetUpdateAfterBindInputAttachments;
 
             __C_ENG_TYPE ( ResolveModeFlags )                   supportedDepthResolveModes;
             __C_ENG_TYPE ( ResolveModeFlags )                   supportedStencilResolveModes;
@@ -2682,8 +2858,8 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
             __C_ENG_TYPE ( Bool )                               independentResolveNone;
             __C_ENG_TYPE ( Bool )                               independentResolve;
 
-            __C_ENG_TYPE ( Bool )                               filterMinmaxSingleComponentsFormats;
-            __C_ENG_TYPE ( Bool )                               filterMinmaxImageComponentsMapping;
+            __C_ENG_TYPE ( Bool )                               filterMinmaxSingleComponentFormats;
+            __C_ENG_TYPE ( Bool )                               filterMinmaxImageComponentMapping;
 
             cds :: uint64                                       maxTimelineSemaphoreValueDifference;
 
@@ -2753,6 +2929,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
             cds :: uint32                       maxPerStageDescriptorUpdateAfterBindSampledImages;
             cds :: uint32                       maxPerStageDescriptorUpdateAfterBindStorageImages;
             cds :: uint32                       maxPerStageDescriptorUpdateAfterBindInputAttachments;
+
             cds :: uint32                       maxPerStageUpdateAfterBindResources;
 
             cds :: uint32                       maxDescriptorSetUpdateAfterBindSamplers;
@@ -2975,7 +3152,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         Struct {
             __C_ENG_TYPE ( StructureType )      structureType;
             __C_ENG_TYPE ( GenericStructure ) * pNext;
-            cds :: uint32                       maxCustomBorderColorSamples;
+            cds :: uint32                       maxCustomBorderColorSamplers;
         };
 
 #define C_ENG_MAP_END
@@ -2986,7 +3163,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEVICE_GENERATED_COMMANDS_AVAILABLE
 
-#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceDeviceGeneratedCommandsProperties,   NO_PARENT )
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceDeviceGeneratedCommandsPropertiesNVidia,   NO_PARENT )
 #include <ObjectMapping.hpp>
 
         Struct {
@@ -3250,7 +3427,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #endif
 
 
-#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXPERIMENTAL_MULTIVIEW_PER_VIEW_ATTRIBUTES_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE && __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXPERIMENTAL_MULTIVIEW_PER_VIEW_ATTRIBUTES_AVAILABLE
 
 #define C_ENG_MAP_START     STRUCT ( PhysicalDeviceMultiviewPerViewAttributesPropertiesNVidia,  NO_PARENT )
 #include <ObjectMapping.hpp>
@@ -3284,7 +3461,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #endif
 
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PORTABILITY_SUBSET_AVAILABLE
+#if __C_ENG_VULKAN_BETA_EXTENSIONS_ENABLED && __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PORTABILITY_SUBSET_AVAILABLE
 
 #define C_ENG_MAP_START     STRUCT ( PhysicalDevicePortabilitySubsetProperties,  NO_PARENT )
 #include <ObjectMapping.hpp>
@@ -3473,7 +3650,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SHADER_SM_BUILTINS_AVAILABLE
 
-#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceShaderSMBuiltinsProperties,  NO_PARENT )
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceShaderSMBuiltinsPropertiesNVidia,  NO_PARENT )
 #include <ObjectMapping.hpp>
 
         Struct {
@@ -3663,7 +3840,426 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceDetails,     NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+
+            __C_ENG_TYPE ( PhysicalDeviceProperties )                                       basicProperties;
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceVulkan11Properties )                               vulkan11Properties;
+            __C_ENG_TYPE ( PhysicalDeviceIDProperties )                                     IDProperties;
+            __C_ENG_TYPE ( PhysicalDeviceMaintenanceProperties )                            maintenanceProperties;
+            __C_ENG_TYPE ( PhysicalDeviceMultiviewProperties )                              multiviewProperties;
+            __C_ENG_TYPE ( PhysicalDevicePointClippingProperties )                          pointClippingProperties;
+            __C_ENG_TYPE ( PhysicalDeviceProtectedMemoryProperties )                        protectedMemoryProperties;
+            __C_ENG_TYPE ( PhysicalDeviceSubgroupProperties )                               subgroupProperties;
+                                                                                            
+#endif                                                                                      
+                                                                                            
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE                                                
+
+            __C_ENG_TYPE ( PhysicalDeviceVulkan12Properties )                               vulkan12Properties;
+            __C_ENG_TYPE ( PhysicalDeviceDriverProperties )                                 driverProperties;
+            __C_ENG_TYPE ( PhysicalDeviceDepthStencilResolveProperties )                    depthStencilResolveProperties;
+            __C_ENG_TYPE ( PhysicalDeviceDescriptorIndexingProperties )                     descriptorIndexingProperties;
+            __C_ENG_TYPE ( PhysicalDeviceFloatControlsProperties )                          deviceFloatControlsProperties;
+            __C_ENG_TYPE ( PhysicalDeviceSamplerFilterMinmaxProperties )                    samplerFilterMinmaxProperties;
+            __C_ENG_TYPE ( PhysicalDeviceTimelineSemaphoreProperties )                      timelineSemaphoreProperties;
+                                                                                            
+#endif                                                                                      
+                                                                                            
+#if __C_ENG_VULKAN_API_EXTENSION_PCI_BUS_INFO_AVAILABLE                                     
+                                                                                            
+            __C_ENG_TYPE ( PhysicalDevicePCIBusInfoProperties )                             pciBusInfoProperties;
+                                                                                            
+#endif                                                                                      
+                                                                                            
+#if __C_ENG_VULKAN_API_EXTENSION_PHYSICAL_DEVICE_DRM_AVAILABLE                              
+                                                                                            
+            __C_ENG_TYPE ( PhysicalDeviceDRMProperties )                                    DRMProperties;
+                                                                                            
+#endif                                                                                      
+                                                                                            
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE                   
+                                                                                            
+            __C_ENG_TYPE ( PhysicalDeviceAccelerationStructureProperties )                  accelerationStructureProperties;
+                                                                                            
+#endif                                                                                      
+                                                                                            
+#if __C_ENG_VULKAN_API_EXTENSION_BLEND_OPERATION_ADVANCED_AVAILABLE                         
+                                                                                            
+            __C_ENG_TYPE ( PhysicalDeviceBlendOperationAdvancedProperties )                 blendOperationAdvancedProperties;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_CONSERVATIVE_RASTERIZATION_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceConservativeRasterizationProperties )              conservativeRasterizationProperties;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_COOPERATIVE_MATRIX_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceCooperativeMatrixPropertiesNVidia )                cooperativeMatrixPropertiesNVidia;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_CUSTOM_BORDER_COLOR_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceCustomBorderColorProperties )                      customBorderColorProperties;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEVICE_GENERATED_COMMANDS_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceDeviceGeneratedCommandsPropertiesNVidia )          deviceGeneratedCommandsProperties;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_DISCARD_RECTANGLES_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceDiscardRectangleProperties )                       discardRectangleProperties;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_EXTERNAL_MEMORY_HOST_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceExternalMemoryHostProperties )                     externalMemoryHostProperties;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_FRAGMENT_DENSITY_MAP_2_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceFragmentDensityMap2Properties )                    fragmentDensityMap2Properties;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_QUALCOMM_FRAGMENT_DENSITY_MAP_OFFSET_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceFragmentDensityMapOffsetPropertiesQualcomm )       fragmentDensityMapOffsetPropertiesQualcomm;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_FRAGMENT_DENSITY_MAP_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceFragmentDensityMapProperties )                     fragmentDensityMapProperties;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_FRAGMENT_SHADING_RATE_ENUMS_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceFragmentShadingRateEnumsPropertiesNVidia )         fragmentShadingRateEnumsPropertiesNVidia;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_FRAGMENT_SHADING_RATE_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceFragmentShadingRateProperties )                    fragmentShadingRateProperties;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_INLINE_UNIFORM_BLOCK_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceInlineUniformBlockProperties )                     inlineUniformBlockProperties;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_LINE_RASTERIZATION_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceLineRasterizationProperties )                      lineRasterizationProperties;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_MAINTENANCE_4_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceMaintenance4Properties )                           maintenance4Properties;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_MESH_SHADER_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceMeshShaderPropertiesNVidia )                       meshShaderPropertiesNVidia;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_MULTI_DRAW_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceMultiDrawProperties )                              multiDrawProperties;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE && __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXPERIMENTAL_MULTIVIEW_PER_VIEW_ATTRIBUTES_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceMultiviewPerViewAttributesPropertiesNVidia )       multiviewPerViewAttributesPropertiesNVidia;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PERFORMANCE_QUERY_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDevicePerformanceQueryProperties )                       performanceQueryProperties;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PORTABILITY_SUBSET_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDevicePortabilitySubsetProperties )                      portabilitySubsetProperties;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_PROVOKING_VERTEX_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceProvokingVertexProperties )                        provokingVertexProperties;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PUSH_DESCRIPTOR_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDevicePushDescriptorProperties )                         pushDescriptorProperties;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_RAY_TRACING_PIPELINE_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceRayTracingPipelineProperties )                     rayTracingPipelineProperties;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceRayTracingPropertiesNVidia )                       rayTracingPropertiesNVidia;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_ROBUSTNESS_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceRobustnessProperties )                             robustnessProperties;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_SAMPLE_LOCATIONS_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceSampleLocationsProperties )                        sampleLocationsProperties;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_AMD_SHADER_CORE_PROPERTIES_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceShaderCorePropertiesAMD )                          shaderCorePropertiesAMD;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_AMD_SHADER_CORE_PROPERTIES_2_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceShaderCoreProperties2AMD )                         shaderCoreProperties2AMD;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SHADER_SM_BUILTINS_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceShaderSMBuiltinsPropertiesNVidia )                 shaderSmBuiltinsProperties;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SHADING_RATE_IMAGE_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceShadingRateImagePropertiesNVidia )                 shadingRateImagePropertiesNVidia;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_SUBGROUP_SIZE_CONTROL_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceSubgroupSizeControlProperties )                    subgroupSizeControlProperties;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_HUAWEI_SUBPASS_SHADING_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceSubpassShadingPropertiesHuawei )                   subpassShadingPropertiesHuawei;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_TEXEL_BUFFER_ALIGNMENT_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceTexelBufferAlignmentProperties )                   texelBufferAlignmentProperties;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_TRANSFORM_FEEDBACK_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceTransformFeedbackProperties )                      transformFeedbackProperties;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VERTEX_ATTRIBUTE_DIVISOR_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceVertexAttributeDivisorProperties )                 vertexAttributeDivisorProperties;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_INTEGER_DOT_PRODUCT_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceShaderIntegerDotProductProperties )                shaderIntegerDotProductProperties;
+
+#endif
+
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+
+#define C_ENG_MAP_START     STRUCT ( QueueFamilyProperties, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+
+            /// bitmask of QueueFlag indicating capabilities of queues of this family
+            __C_ENG_TYPE ( QueueFlags ) queueFlags;
+
+            /// number of queues in this family
+            cds :: uint32               queueCount;
+
+            /// number of meaningful bits in the timestamps written via commandWriteTimestamp. Valid range for count
+            /// is 36..64 bits, or 0 ( no support for timestamps ). Bits outside the range are guaranteed to be 0
+            cds :: uint32               timestampValidBits;
+
+            /// minimum granularity supported for image transfer on this queue family
+            /// (0,0,0) = only whole mip levels must be transferred using image transfer operations, as in
+            ///     any image's offset must be x=0,y=0,z=0
+            ///     any image's extent must match the width, height, depth of the image subresource
+            /// (A, B, C), where A, B and C are 2^n, restrictions:
+            ///     offset must be x = A * a, B * b, C * c, where a, b, c are int
+            ///     width of extent must be width = A * a, where a is int, or x + width = width of image subresource
+            ///     height of extent must be height = B * b, where b is int, or y + height = height of image subresource
+            ///     depth of extent must be depth = C * c, where c is int, or z + depth = depth of image subresource
+            __C_ENG_TYPE ( Extent3D )   minImageTransferGranularity;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START     STRUCT ( QueueFamilyExtendedProperties, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )              type;
+            __C_ENG_TYPE ( GenericStructure )         * pNext;
+            __C_ENG_TYPE ( QueueFamilyProperties )      properties;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEVICE_DIAGNOSTIC_CHECKPOINTS_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( QueueFamilyCheckpointPropertiesNVidia, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )      type;
+            __C_ENG_TYPE ( GenericStructure ) * pNext;
+            __C_ENG_TYPE ( PipelineStageFlags ) checkpointExecutionStageMask;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_GLOBAL_PRIORITY_QUERY_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( QueueFamilyGlobalPriorityProperties, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )          type;
+            __C_ENG_TYPE ( GenericStructure )     * pNext;
+            cds :: uint32                           priorityCount;
+            __C_ENG_TYPE ( GlobalQueuePriority )    priorities [ VK_MAX_GLOBAL_PRIORITY_SIZE_EXT ];
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_QUEUE_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( QueueFamilyQueryResultStatusProperties, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )          type;
+            __C_ENG_TYPE ( GenericStructure )     * pNext;
+            __C_ENG_TYPE ( Bool )                   supported;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START     STRUCT ( VideoQueueFamilyProperties, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )              type;
+            __C_ENG_TYPE ( GenericStructure )         * pNext;
+            __C_ENG_TYPE ( VideoCodecOperationFlags )   videoCodecOperations;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( QueueFamilyDetails,    NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                              structureType;
+            __C_ENG_TYPE ( GenericStructure )                         * pNext;
+
+            __C_ENG_TYPE ( QueueFamilyProperties )                      properties;
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEVICE_DIAGNOSTIC_CHECKPOINTS_AVAILABLE
+
+            __C_ENG_TYPE ( QueueFamilyCheckpointPropertiesNVidia )      checkpointProperties;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_GLOBAL_PRIORITY_QUERY_AVAILABLE
+
+            __C_ENG_TYPE ( QueueFamilyGlobalPriorityProperties )        globalPriorityProperties;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_QUEUE_AVAILABLE
+
+            __C_ENG_TYPE ( QueueFamilyQueryResultStatusProperties )     queryResultStatusProperties;
+
+#endif
+
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( Result ) ) noexcept -> cds :: StringLiteral;
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( StructureType ) ) noexcept -> cds :: StringLiteral;
@@ -3676,6 +4272,9 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( SampleCountFlag ) ) noexcept -> cds :: StringLiteral;
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PointClippingBehavior ) ) noexcept -> cds :: StringLiteral;
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( ShaderStageFlag ) ) noexcept -> cds :: StringLiteral;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( QueueFlag ) ) noexcept -> cds :: StringLiteral;
+
+#endif
 
 #if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
 
@@ -3697,6 +4296,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( Offset2D ) const & ) noexcept -> cds :: String;
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( Offset3D ) const & ) noexcept -> cds :: String;
@@ -3720,6 +4320,11 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceSparseProperties ) const & ) noexcept -> cds :: String;
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceProperties ) const & ) noexcept -> cds :: String;
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceExtendedProperties ) const & ) noexcept -> cds :: String;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceDetails ) const & ) noexcept -> cds :: String;
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( QueueFamilyProperties ) const & ) noexcept -> cds :: String;
+
+#endif
 
 #if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
 
@@ -3790,7 +4395,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEVICE_GENERATED_COMMANDS_AVAILABLE
 
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceDeviceGeneratedCommandsProperties ) const & ) noexcept -> cds :: String;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceDeviceGeneratedCommandsPropertiesNVidia ) const & ) noexcept -> cds :: String;
 
 #endif
 
@@ -3866,7 +4471,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXPERIMENTAL_MULTIVIEW_PER_VIEW_ATTRIBUTES_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE && __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXPERIMENTAL_MULTIVIEW_PER_VIEW_ATTRIBUTES_AVAILABLE
 
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceMultiviewPerViewAttributesPropertiesNVidia ) const & ) noexcept -> cds :: String;
 
@@ -3928,7 +4533,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SHADER_SM_BUILTINS_AVAILABLE
 
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceShaderSMBuiltinsProperties ) const & ) noexcept -> cds :: String;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceShaderSMBuiltinsPropertiesNVidia ) const & ) noexcept -> cds :: String;
 
 #endif
 

@@ -23,8 +23,9 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
         __C_ENG_PRE_DECLARE_CLASS ( Instance );
 
-        Class {
+        Class { // NOLINT(cppcoreguidelines-pro-type-member-init)
             Field ( ENGINE_PRIMITIVE_TYPE ( PhysicalDeviceHandle ), handle, DEFAULT_VALUE ( nullptr ),  GET_DEFAULT,    SET_NONE )
+            Field ( ENGINE_TYPE ( PhysicalDeviceDetails ),          details, NO_INIT,                   GET_DEFAULT,    SET_NONE )
 
         private:
             Constructor () noexcept = default;

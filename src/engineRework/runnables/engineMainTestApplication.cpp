@@ -14,6 +14,8 @@ int main (
         int argumentCount,
         char ** arguments
 ) {
+
+
     if ( static_cast < bool > ( __C_ENG_TYPE ( Settings ) :: instance().get( __C_ENG_TYPE ( Settings ) :: keyLogToConsole ) ) ) { // NOLINT(clion-misra-cpp2008-5-0-13)
         __C_ENG_TYPE ( Logger ) :: instance ().mirrorToConsole() = true;
     }

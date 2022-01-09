@@ -43,7 +43,7 @@ bool __GLFWActive = false; // NOLINT(bugprone-reserved-identifier)
 static Array < Self const * > activeWindows;
 
 constexpr static auto GLFWErrorCodeName ( int errorCode ) noexcept -> StringLiteral {
-    StringLiteral errorName;
+    StringLiteral errorName = "";
 
     switch ( errorCode ) {
         case GLFW_NOT_INITIALIZED:      { errorName = "GLFW_NOT_INITIALIZED";       break; }
@@ -76,7 +76,11 @@ auto __initializeGLFW () noexcept (false) -> void { // NOLINT(bugprone-reserved-
 
     if ( glfwInit () == GLFW_FALSE ) {
         (void) __C_ENG_TYPE ( Logger ) :: instance ().fatal ("GLFW Could not be initialized");
-        throw RuntimeException ( "GLFW Initialization Failure" );
+
+        char const * description;
+        int code = glfwGetError(& description);
+
+        throw RuntimeException ( "GLFW Initialization Failure : "_s + GLFWErrorCodeName(code) + ", " + description );
     }
 
     (void) glfwSetErrorCallback ( & GLFWErrorCallback );

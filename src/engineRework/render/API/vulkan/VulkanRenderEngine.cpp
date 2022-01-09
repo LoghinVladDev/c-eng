@@ -47,23 +47,6 @@ auto vulkan :: Self :: init () noexcept (false) -> Self & {
 
     __C_ENG_TYPE ( PhysicalDevice ) :: refreshPhysicalDevices ( & this->_instance );
 
-    vulkan :: VPhysicalDeviceExtendedProperties properties {};
-    vulkan :: VGenericOutStructure prop1 {};
-    vulkan :: VGenericOutStructure prop2 {};
-
-    properties.structureType = StructureTypePhysicalDeviceProperties;
-    properties.pNext = & prop1;
-
-    prop1.structureType = StructureTypePhysicalDeviceVulkan_1_1_Properties;
-    prop1.pNext = & prop2;
-
-    prop2.structureType = StructureTypePhysicalDeviceVulkan_1_2_Properties;
-    prop2.pNext = nullptr;
-
-    for ( auto & d : VPhysicalDevice::physicalDevices() ) {
-        (void) vulkan :: getPhysicalDeviceProperties ( d.handle(), & properties );
-    }
-
     return * this;
 }
 
