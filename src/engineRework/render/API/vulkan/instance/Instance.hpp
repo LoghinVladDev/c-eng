@@ -63,7 +63,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
                 ValidationFeatureEnableGpuAssisted,
                 ValidationFeatureEnableGpuAssistedReserveBindingSlot,
                 ValidationFeatureEnableBestPractices,
-                ValidationFeatureEnableDebugPrintf,
+//                ValidationFeatureEnableDebugPrintf, https://vulkan.lunarg.com/doc/view/1.2.189.0/linux/1.2-extensions/vkspec.html#VUID-VkValidationFeaturesEXT-pEnabledValidationFeatures-02968
                 ValidationFeatureEnableSynchronizationValidation
 
 #endif

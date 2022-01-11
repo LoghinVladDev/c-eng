@@ -1312,7 +1312,7 @@ inline static auto fromVulkanFormat (
 
     if ( pIn == nullptr || pOut == nullptr ) {
         return;
-    };
+    }
 
     pOut->shaderGroupHandleSize                     = pIn->shaderGroupHandleSize;
     pOut->maxRecursionDepth                         = pIn->maxRecursionDepth;
@@ -3087,12 +3087,21 @@ static auto createChain (
 
 #endif
 
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+
+    currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: __C_ENG_TYPE ( GenericOutStructure ) * > ( & details->rayTracingPropertiesNVidia ); // NOLINT(clion-misra-cpp2008-6-2-1)
+    currentInChain->structureType = engine :: vulkan :: StructureTypePhysicalDeviceRayTracingPropertiesNVidia;
+
+#endif
+
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_INTEGER_DOT_PRODUCT_AVAILABLE
 
     currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: __C_ENG_TYPE ( GenericOutStructure ) * > ( & details->shaderIntegerDotProductProperties ); // NOLINT(clion-misra-cpp2008-6-2-1)
     currentInChain->structureType = engine :: vulkan :: PhysicalDeviceShaderIntegerDotProductProperties;
 
 #endif
+
+    currentInChain->pNext = nullptr;
 
 }
 
