@@ -32,8 +32,6 @@ static VkExtensionProperties                extensionProperties         [ __C_EN
 
 static VkPhysicalDevice                     physicalDevices             [ __C_ENG_VULKAN_CORE_PHYSICAL_DEVICE_MAX_COUNT ];
 
-static VkQueueFamilyProperties              queueFamilyProperties       [ __C_ENG_VULKAN_CORE_QUEUE_FAMILY_MAX_COUNT ];
-
 
 /**
  * ----------------------------------------------
@@ -272,6 +270,34 @@ static VkPhysicalDeviceFragmentDensityMapOffsetPropertiesQCOM       deviceFragme
  */
 #if __C_ENG_VULKAN_API_EXTENSION_HUAWEI_SUBPASS_SHADING_AVAILABLE
 static VkPhysicalDeviceSubpassShadingPropertiesHUAWEI               deviceSubpassShadingProperties;
+#endif
+
+
+static VkQueueFamilyProperties                                      queueFamilyProperties [ __C_ENG_VULKAN_CORE_QUEUE_FAMILY_MAX_COUNT ];
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+
+static VkQueueFamilyProperties2                                     queueFamilyExtendedProperties [ __C_ENG_VULKAN_CORE_QUEUE_FAMILY_MAX_COUNT ];
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEVICE_DIAGNOSTIC_CHECKPOINTS_AVAILABLE
+
+static VkQueueFamilyCheckpointPropertiesNV                          queueFamilyCheckpointProperties [ __C_ENG_VULKAN_CORE_QUEUE_FAMILY_MAX_COUNT ];
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_GLOBAL_PRIORITY_QUERY_AVAILABLE
+
+static VkQueueFamilyGlobalPriorityPropertiesEXT                     queueFamilyGlobalPriorityProperties [ __C_ENG_VULKAN_CORE_QUEUE_FAMILY_MAX_COUNT ];
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_QUEUE_AVAILABLE
+
+static VkQueueFamilyQueryResultStatusPropertiesKHR                  queueFamilyQueryResultStatusProperties [ __C_ENG_VULKAN_CORE_QUEUE_FAMILY_MAX_COUNT ];
+static VkVideoQueueFamilyPropertiesKHR                              videoQueueFamilyProperties [ __C_ENG_VULKAN_CORE_QUEUE_FAMILY_MAX_COUNT ];
+
 #endif
 
 
@@ -1619,7 +1645,7 @@ auto vulkan :: enumerateInstanceLayerProperties (
 
     result = vkEnumerateInstanceLayerProperties (
             pLayerPropertiesCount,
-            layerProperties // NOLINT(clion-misra-cpp2008-5-2-12)
+            & layerProperties[0]
     );
 
     if ( result != VkResult :: VK_SUCCESS ) {
@@ -1665,7 +1691,7 @@ auto vulkan :: enumerateDeviceLayerProperties (
     result = vkEnumerateDeviceLayerProperties (
             handle,
             pLayerPropertiesCount,
-            layerProperties // NOLINT(clion-misra-cpp2008-5-2-12)
+            & layerProperties[0]
     );
 
     if ( result != VkResult :: VK_SUCCESS ) {
@@ -1707,7 +1733,7 @@ auto vulkan :: enumerateInstanceExtensionProperties (
     result = vkEnumerateInstanceExtensionProperties(
             layerName,
             pPropertyCount,
-            extensionProperties // NOLINT(clion-misra-cpp2008-5-2-12)
+            & extensionProperties[0]
     );
 
     if ( result != VkResult :: VK_SUCCESS ) {
@@ -1766,7 +1792,7 @@ auto vulkan :: createInstance (
                 return ResultErrorConfigurationArraySizeSmall;
             }
 
-            toVulkanFormat ( currentStructure, & validationFeatures ); // NOLINT(clion-misra-cpp2008-5-2-12)
+            toVulkanFormat ( currentStructure, & validationFeatures );
             pCurrentInChain = reinterpret_cast < VkBaseInStructure * > ( & validationFeatures );
         }
 
@@ -1909,7 +1935,7 @@ auto vulkan :: enumeratePhysicalDevices (
     result = vkEnumeratePhysicalDevices (
             handle,
             pPhysicalDeviceCount,
-            physicalDevices // NOLINT(clion-misra-cpp2008-5-2-12)
+            & physicalDevices[0]
     );
 
     if ( result != VkResult :: VK_SUCCESS ) {
@@ -2153,7 +2179,7 @@ auto vulkan :: getPhysicalDeviceProperties (
     return ResultSuccess;
 }
 
-static auto toVulkanFormat (
+static inline auto toVulkanFormat (
         vulkan :: __C_ENG_TYPE ( PhysicalDeviceExtendedProperties ) const * pExtendedProperties
 ) noexcept -> void {
 
@@ -2463,7 +2489,7 @@ static auto fromVulkanFormat (
         return;
     }
 
-    if ( pExtendedProperties->structureType != engine::vulkan::StructureTypePhysicalDeviceProperties ) {
+    if ( pExtendedProperties->structureType != vulkan :: StructureTypePhysicalDeviceProperties ) {
         return;
     }
 
@@ -2472,7 +2498,7 @@ static auto fromVulkanFormat (
     while ( currentInChain != nullptr ) {
         switch ( currentInChain->structureType ) {
 
-            case engine :: vulkan :: StructureTypePhysicalDeviceProperties:                                             { fromVulkanFormat ( & deviceProperties, & reinterpret_cast < vulkan :: __C_ENG_TYPE ( PhysicalDeviceExtendedProperties ) * > ( currentInChain )->properties );                                                               break; }
+            case engine :: vulkan :: StructureTypePhysicalDeviceProperties:                                             { fromVulkanFormat ( reinterpret_cast < vulkan :: __C_ENG_TYPE ( PhysicalDeviceExtendedProperties ) * > ( currentInChain ), & deviceExtendedProperties );                                               break; }
 
 #if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
 
@@ -2741,8 +2767,7 @@ static auto fromVulkanFormat (
     }
 }
 
-auto vulkan ::
-getPhysicalDeviceProperties (
+auto vulkan :: getPhysicalDeviceProperties (
         __C_ENG_TYPE ( PhysicalDeviceHandle )               handle,
         __C_ENG_TYPE ( PhysicalDeviceExtendedProperties ) * pProperties
 ) noexcept -> __C_ENG_TYPE ( Result ) {
@@ -2757,7 +2782,7 @@ getPhysicalDeviceProperties (
     );
 
     auto version = vulkan :: uInt32ToInstanceVersion ( deviceProperties.apiVersion );
-    if ( vulkan :: compare ( version, { .variant = 0u, .major = 1u, .minor = 1u, .patch = 0u } ) == CompareResultLess ) { // NOLINT(clion-misra-cpp2008-2-13-4)
+    if ( vulkan :: compare ( version, versionConstants :: version11 ) == CompareResultLess ) {
         return ResultErrorIncompatibleVersion;
     }
 
@@ -3136,18 +3161,18 @@ auto vulkan :: getPhysicalDeviceDetails (
 }
 
 inline static auto fromVulkanFormat (
-        vulkan :: __C_ENG_TYPE ( QueueFamilyProperties ) * pIn,
-        VkQueueFamilyProperties                    const * pOut
+        vulkan :: __C_ENG_TYPE ( QueueFamilyProperties ) * pDest,
+        VkQueueFamilyProperties                    const * pSrc
 ) noexcept -> void {
 
-    if ( pIn == nullptr || pOut == nullptr ) {
+    if (pDest == nullptr || pSrc == nullptr ) {
         return;
     }
 
-    pIn->queueFlags                     = pOut->queueFlags;
-    pIn->queueCount                     = pOut->queueCount;
-    pIn->timestampValidBits             = pOut->timestampValidBits;
-    pIn->minImageTransferGranularity    = pOut->minImageTransferGranularity;
+    pDest->queueFlags                     = pSrc->queueFlags;
+    pDest->queueCount                     = pSrc->queueCount;
+    pDest->timestampValidBits             = pSrc->timestampValidBits;
+    pDest->minImageTransferGranularity    = pSrc->minImageTransferGranularity;
 }
 
 auto vulkan :: getPhysicalDeviceQueueFamilyProperties (
@@ -3177,11 +3202,336 @@ auto vulkan :: getPhysicalDeviceQueueFamilyProperties (
     vkGetPhysicalDeviceQueueFamilyProperties (
             handle,
             pQueueFamilyPropertyCount,
-            queueFamilyProperties // NOLINT(clion-misra-cpp2008-5-2-12)
+            & queueFamilyProperties[0]
     );
 
     for ( uint32 i = 0U; i < * pQueueFamilyPropertyCount; ++ i ) {
         fromVulkanFormat ( & pQueueFamilyProperties[i], & queueFamilyProperties[i] );
+    }
+
+    return ResultSuccess;
+}
+
+static inline auto toVulkanFormat (
+        uint32                                                              queueFamilyCount,
+        vulkan :: __C_ENG_TYPE ( QueueFamilyExtendedProperties )    const * pExtendedProperties
+) noexcept -> void {
+
+    if ( pExtendedProperties == nullptr ) {
+        return;
+    }
+
+    for ( uint32 i = 0U; i < queueFamilyCount; ++ i ) {
+        queueFamilyExtendedProperties[i].sType = VK_STRUCTURE_TYPE_QUEUE_FAMILY_PROPERTIES_2;
+
+        auto currentInChain     = reinterpret_cast < vulkan :: __C_ENG_TYPE ( GenericInStructure ) const * > ( pExtendedProperties->pNext );
+        auto currentInVkChain   = reinterpret_cast < VkBaseOutStructure * > ( & queueFamilyExtendedProperties[i] );
+
+        while ( currentInChain != nullptr ) {
+            switch ( currentInChain->structureType ) {
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEVICE_DIAGNOSTIC_CHECKPOINTS_AVAILABLE
+
+                case engine :: vulkan :: StructureTypeQueueFamilyCheckpointPropertiesNVidia:    { currentInVkChain->pNext = reinterpret_cast < VkBaseOutStructure * > ( & queueFamilyCheckpointProperties[i] );         break; }
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_GLOBAL_PRIORITY_QUERY_AVAILABLE
+
+                case engine :: vulkan :: StructureTypeQueueFamilyGlobalPriorityProperties:      { currentInVkChain->pNext = reinterpret_cast < VkBaseOutStructure * > ( & queueFamilyGlobalPriorityProperties[i] );     break; }
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_QUEUE_AVAILABLE
+
+                case engine :: vulkan :: StructureTypeQueueFamilyQueryResultStatusProperties:   { currentInVkChain->pNext = reinterpret_cast < VkBaseOutStructure * > ( & queueFamilyQueryResultStatusProperties[i] );  break; }
+                case engine :: vulkan :: StructureTypeVideoQueueFamilyProperties:               { currentInVkChain->pNext = reinterpret_cast < VkBaseOutStructure * > ( & videoQueueFamilyProperties[i] );              break; }
+
+#endif
+
+                default:                                                                        { currentInVkChain->pNext = nullptr;                                                                                    break; }
+
+            }
+
+            if ( currentInVkChain->pNext != nullptr ) {
+                currentInVkChain->pNext->sType  = static_cast < VkStructureType > ( currentInChain->structureType );
+                currentInVkChain                = currentInVkChain->pNext;
+            }
+
+            currentInChain                  = currentInChain->pNext;
+        }
+    }
+}
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEVICE_DIAGNOSTIC_CHECKPOINTS_AVAILABLE
+
+static inline auto fromVulkanFormat (
+        vulkan :: __C_ENG_TYPE ( QueueFamilyCheckpointPropertiesNVidia )          * pDestination,
+        VkQueueFamilyCheckpointPropertiesNV                                 const * pSource
+) noexcept -> void {
+
+    if ( pDestination == nullptr || pSource == nullptr ) {
+        return;
+    }
+
+    pDestination->checkpointExecutionStageMask  = pSource->checkpointExecutionStageMask;
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_GLOBAL_PRIORITY_QUERY_AVAILABLE
+
+static inline auto fromVulkanFormat (
+        vulkan :: __C_ENG_TYPE ( QueueFamilyGlobalPriorityProperties )        * pDestination,
+        VkQueueFamilyGlobalPriorityPropertiesEXT                        const * pSource
+) noexcept -> void {
+
+    if ( pDestination == nullptr || pSource == nullptr ) {
+        return;
+    }
+
+    pDestination->priorityCount = pSource->priorityCount;
+
+    for ( uint32 i = 0U; i < pDestination->priorityCount; ++ i ) {
+        pDestination->priorities[i] = static_cast < vulkan :: __C_ENG_TYPE ( GlobalQueuePriority ) > ( pSource->priorities[i] ) ;
+    }
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_QUEUE_AVAILABLE
+
+static inline auto fromVulkanFormat (
+        vulkan :: __C_ENG_TYPE ( QueueFamilyQueryResultStatusProperties )          * pDestination,
+        VkQueueFamilyQueryResultStatusPropertiesKHR                          const * pSource
+) noexcept -> void {
+
+    if ( pDestination == nullptr || pSource == nullptr ) {
+        return;
+    }
+
+    pDestination->supported = pSource->supported;
+}
+
+static inline auto fromVulkanFormat (
+        vulkan :: __C_ENG_TYPE ( VideoQueueFamilyProperties )          * pDestination,
+        VkVideoQueueFamilyPropertiesKHR                          const * pSource
+) noexcept -> void {
+
+    if ( pDestination == nullptr || pSource == nullptr ) {
+        return;
+    }
+
+    pDestination->videoCodecOperations = pSource->videoCodecOperations;
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+
+static inline auto fromVulkanFormat (
+        vulkan :: __C_ENG_TYPE ( QueueFamilyExtendedProperties )          * pDestination,
+        VkQueueFamilyProperties2                                    const * pSource
+) noexcept -> void {
+
+    if ( pDestination == nullptr || pSource == nullptr ) {
+        return;
+    }
+
+    fromVulkanFormat ( & pDestination->properties, & pSource->queueFamilyProperties );
+}
+
+#endif
+
+static inline auto fromVulkanFormat (
+        uint32                                                              queueFamilyCount,
+        vulkan :: __C_ENG_TYPE ( QueueFamilyExtendedProperties )          * pDestination
+) noexcept -> void {
+
+    if ( pDestination == nullptr ) {
+        return;
+    }
+
+    if ( pDestination->structureType != vulkan :: StructureTypeQueueFamilyProperties ) {
+        return;
+    }
+
+    for ( uint32 i = 0U; i < queueFamilyCount; ++ i ) {
+        auto currentInChain = reinterpret_cast < vulkan :: __C_ENG_TYPE ( GenericOutStructure ) * > ( & pDestination[i] );
+
+        while ( currentInChain != nullptr ) {
+            switch ( currentInChain->structureType ) {
+
+                case engine :: vulkan :: StructureTypeQueueFamilyProperties:                    { fromVulkanFormat ( reinterpret_cast < vulkan :: __C_ENG_TYPE ( QueueFamilyExtendedProperties ) * > ( currentInChain ), & queueFamilyExtendedProperties[i] );                      break; }
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEVICE_DIAGNOSTIC_CHECKPOINTS_AVAILABLE
+
+                case engine :: vulkan :: StructureTypeQueueFamilyCheckpointPropertiesNVidia:    { fromVulkanFormat ( reinterpret_cast < vulkan :: __C_ENG_TYPE ( QueueFamilyCheckpointPropertiesNVidia ) * > ( currentInChain ), & queueFamilyCheckpointProperties[i] );            break; }
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_GLOBAL_PRIORITY_QUERY_AVAILABLE
+
+                case engine :: vulkan :: StructureTypeQueueFamilyGlobalPriorityProperties:      { fromVulkanFormat ( reinterpret_cast < vulkan :: __C_ENG_TYPE ( QueueFamilyGlobalPriorityProperties ) * > ( currentInChain ), & queueFamilyGlobalPriorityProperties[i] );          break; }
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_QUEUE_AVAILABLE
+
+                case engine :: vulkan :: StructureTypeQueueFamilyQueryResultStatusProperties:   { fromVulkanFormat ( reinterpret_cast < vulkan :: __C_ENG_TYPE ( QueueFamilyQueryResultStatusProperties ) * > ( currentInChain ), & queueFamilyQueryResultStatusProperties[i] );    break; }
+                case engine :: vulkan :: StructureTypeVideoQueueFamilyProperties:               { fromVulkanFormat ( reinterpret_cast < vulkan :: __C_ENG_TYPE ( VideoQueueFamilyProperties ) * > ( currentInChain ), & videoQueueFamilyProperties[i] );                            break; }
+
+#endif
+
+                default: {
+                    break;
+                }
+
+            }
+
+            currentInChain = currentInChain->pNext;
+        }
+    }
+}
+
+auto vulkan :: getPhysicalDeviceQueueFamilyProperties (
+        __C_ENG_TYPE ( PhysicalDeviceHandle )               handle,
+        uint32                                            * pQueueFamilyPropertyCount,
+        __C_ENG_TYPE ( QueueFamilyExtendedProperties )    * pQueueFamilyProperties
+) noexcept -> __C_ENG_TYPE ( Result ) {
+
+    if ( handle == nullptr || pQueueFamilyPropertyCount == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+    if ( pQueueFamilyProperties == nullptr ) {
+        vkGetPhysicalDeviceQueueFamilyProperties2 (
+                handle,
+                pQueueFamilyPropertyCount,
+                nullptr
+        );
+
+        return ResultSuccess;
+    }
+
+    vkGetPhysicalDeviceProperties (
+            handle,
+            & deviceProperties
+    );
+
+    auto version = vulkan :: uInt32ToInstanceVersion ( deviceProperties.apiVersion );
+    if ( vulkan :: compare ( version, versionConstants :: version11 ) == CompareResultLess ) {
+        return ResultErrorIncompatibleVersion;
+    }
+
+    if ( * pQueueFamilyPropertyCount > __C_ENG_VULKAN_CORE_QUEUE_FAMILY_MAX_COUNT ) {
+        return ResultErrorConfigurationArraySizeSmall;
+    }
+
+    toVulkanFormat ( * pQueueFamilyPropertyCount, pQueueFamilyProperties );
+
+    vkGetPhysicalDeviceQueueFamilyProperties2 (
+            handle,
+            pQueueFamilyPropertyCount,
+            & queueFamilyExtendedProperties[0]
+    );
+
+    fromVulkanFormat ( * pQueueFamilyPropertyCount, pQueueFamilyProperties );
+
+    return ResultSuccess;
+}
+
+static inline auto createChain (
+        uint32                                                      queueFamilyCount,
+        vulkan :: __C_ENG_TYPE ( QueueFamilyDetails )             * pDetails,
+        vulkan :: __C_ENG_TYPE ( QueueFamilyExtendedProperties )  * pExtendedProperties
+) noexcept -> void {
+
+    if ( pDetails == nullptr || pExtendedProperties == nullptr ) {
+        return;
+    }
+
+    for ( uint32 i = 0U; i < queueFamilyCount; ++ i ) {
+
+        auto currentInChain = reinterpret_cast < vulkan :: __C_ENG_TYPE ( GenericOutStructure ) * > ( & pExtendedProperties[i] );
+        currentInChain->structureType = vulkan :: StructureTypeQueueFamilyProperties;
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEVICE_DIAGNOSTIC_CHECKPOINTS_AVAILABLE
+
+        currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: __C_ENG_TYPE ( GenericOutStructure ) * > ( & pDetails[i].checkpointPropertiesNVidia ); // NOLINT(clion-misra-cpp2008-6-2-1)
+        currentInChain->structureType = vulkan :: StructureTypeQueueFamilyCheckpointPropertiesNVidia;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_GLOBAL_PRIORITY_QUERY_AVAILABLE
+
+        currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: __C_ENG_TYPE ( GenericOutStructure ) * > ( & pDetails[i].globalPriorityProperties ); // NOLINT(clion-misra-cpp2008-6-2-1)
+        currentInChain->structureType = vulkan :: StructureTypeQueueFamilyGlobalPriorityProperties;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_QUEUE_AVAILABLE
+
+        currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: __C_ENG_TYPE ( GenericOutStructure ) * > ( & pDetails[i].queryResultStatusProperties ); // NOLINT(clion-misra-cpp2008-6-2-1)
+        currentInChain->structureType = vulkan :: StructureTypeQueueFamilyQueryResultStatusProperties;
+
+        currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: __C_ENG_TYPE ( GenericOutStructure ) * > ( & pDetails[i].videoProperties ); // NOLINT(clion-misra-cpp2008-6-2-1)
+        currentInChain->structureType = vulkan :: StructureTypeVideoQueueFamilyProperties;
+
+#endif
+
+        currentInChain->pNext = nullptr;
+
+    }
+}
+
+auto vulkan :: getPhysicalDeviceQueueFamilyDetails (
+        __C_ENG_TYPE ( PhysicalDeviceHandle )   handle,
+        uint32                                * pQueueFamilyCount,
+        __C_ENG_TYPE ( QueueFamilyDetails )   * pQueueFamilyDetails
+) noexcept -> __C_ENG_TYPE ( Result ) {
+
+    if ( handle == nullptr || pQueueFamilyCount == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+    if ( pQueueFamilyDetails == nullptr ) {
+        vkGetPhysicalDeviceQueueFamilyProperties2 (
+                handle,
+                pQueueFamilyCount,
+                nullptr
+        );
+
+        return ResultSuccess;
+    }
+
+    if ( * pQueueFamilyCount > __C_ENG_VULKAN_CORE_QUEUE_FAMILY_MAX_COUNT ) {
+        return ResultErrorConfigurationArraySizeSmall;
+    }
+
+    __C_ENG_TYPE ( QueueFamilyExtendedProperties ) extendedProperties [ __C_ENG_VULKAN_CORE_QUEUE_FAMILY_MAX_COUNT ];
+
+    createChain ( * pQueueFamilyCount, pQueueFamilyDetails, & extendedProperties[0] );
+
+    auto lResult = vulkan :: getPhysicalDeviceQueueFamilyProperties (
+            handle,
+            pQueueFamilyCount,
+            & extendedProperties[0]
+    );
+
+    if ( lResult != ResultSuccess ) {
+        return lResult;
+    }
+
+    for ( uint32 i = 0U; i < * pQueueFamilyCount; ++ i ) {
+        auto currentInChain = reinterpret_cast < __C_ENG_TYPE ( GenericOutStructure ) * > ( & extendedProperties[i] );
+        while ( currentInChain->pNext != nullptr ) {
+            auto current = currentInChain;
+            currentInChain = currentInChain->pNext;
+            current->pNext = nullptr;
+        }
+
+        (void) std :: memcpy ( & pQueueFamilyDetails->properties, & extendedProperties[i].properties, sizeof ( __C_ENG_TYPE ( QueueFamilyProperties ) ) );
     }
 
     return ResultSuccess;

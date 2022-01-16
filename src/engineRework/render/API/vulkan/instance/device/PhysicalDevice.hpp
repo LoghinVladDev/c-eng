@@ -6,14 +6,8 @@
 #define C_ENG_PHYSICALDEVICE_HPP
 
 #include <Preprocess.hpp>
-#include <CDS/Object>
+#include <CDS/Array>
 #include <VulkanCore.hpp>
-
-
-namespace cds {
-    template < typename T >
-    class Array;
-}
 
 #define C_ENG_MAP_START     CLASS ( PhysicalDevice,     PARENT ( cds :: Object ) )
 #include <ObjectMapping.hpp>
@@ -24,8 +18,9 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_PRE_DECLARE_CLASS ( Instance );
 
         Class { // NOLINT(cppcoreguidelines-pro-type-member-init)
-            Field ( ENGINE_PRIMITIVE_TYPE ( PhysicalDeviceHandle ), handle, DEFAULT_VALUE ( nullptr ),  GET_DEFAULT,    SET_NONE )
-            Field ( ENGINE_TYPE ( PhysicalDeviceDetails ),          details, NO_INIT,                   GET_DEFAULT,    SET_NONE )
+            Field ( ENGINE_PRIMITIVE_TYPE ( PhysicalDeviceHandle ),                 handle,             DEFAULT_VALUE ( nullptr ),  GET_DEFAULT,    SET_NONE )
+            Field ( ENGINE_TYPE ( PhysicalDeviceDetails ),                          details,            NO_INIT,                    GET_DEFAULT,    SET_NONE )
+            Field ( TYPE ( cds :: Array < __C_ENG_TYPE ( QueueFamilyDetails ) > ),  queueFamilyDetails, NO_INIT,                    GET_DEFAULT,    SET_NONE )
 
         private:
             Constructor () noexcept = default;

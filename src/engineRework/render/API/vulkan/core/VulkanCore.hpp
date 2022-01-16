@@ -2157,7 +2157,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SHADING_RATE_IMAGE_AVAILABLE
 
-            Field ( ShadingRateImage,               VkPipelineStageFlagBits :: VK_PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV ),
+            Field ( ShadingRateImageNVidia,         VkPipelineStageFlagBits :: VK_PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV ),
 
 #endif
 
@@ -4143,11 +4143,15 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #define C_ENG_MAP_END
 #include <ObjectMapping.hpp>
 
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+
 #define C_ENG_MAP_START     STRUCT ( QueueFamilyExtendedProperties, NO_PARENT )
 #include <ObjectMapping.hpp>
 
         Struct {
-            __C_ENG_TYPE ( StructureType )              type;
+            __C_ENG_TYPE ( StructureType )              structureType;
             __C_ENG_TYPE ( GenericStructure )         * pNext;
             __C_ENG_TYPE ( QueueFamilyProperties )      properties;
         };
@@ -4164,7 +4168,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #include <ObjectMapping.hpp>
 
         Struct {
-            __C_ENG_TYPE ( StructureType )      type;
+            __C_ENG_TYPE ( StructureType )      structureType;
             __C_ENG_TYPE ( GenericStructure ) * pNext;
             __C_ENG_TYPE ( PipelineStageFlags ) checkpointExecutionStageMask;
         };
@@ -4181,7 +4185,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #include <ObjectMapping.hpp>
 
         Struct {
-            __C_ENG_TYPE ( StructureType )          type;
+            __C_ENG_TYPE ( StructureType )          structureType;
             __C_ENG_TYPE ( GenericStructure )     * pNext;
             cds :: uint32                           priorityCount;
             __C_ENG_TYPE ( GlobalQueuePriority )    priorities [ VK_MAX_GLOBAL_PRIORITY_SIZE_EXT ];
@@ -4199,7 +4203,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #include <ObjectMapping.hpp>
 
         Struct {
-            __C_ENG_TYPE ( StructureType )          type;
+            __C_ENG_TYPE ( StructureType )          structureType;
             __C_ENG_TYPE ( GenericStructure )     * pNext;
             __C_ENG_TYPE ( Bool )                   supported;
         };
@@ -4211,7 +4215,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #include <ObjectMapping.hpp>
 
         Struct {
-            __C_ENG_TYPE ( StructureType )              type;
+            __C_ENG_TYPE ( StructureType )              structureType;
             __C_ENG_TYPE ( GenericStructure )         * pNext;
             __C_ENG_TYPE ( VideoCodecOperationFlags )   videoCodecOperations;
         };
@@ -4228,14 +4232,11 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #include <ObjectMapping.hpp>
 
         Struct {
-            __C_ENG_TYPE ( StructureType )                              structureType;
-            __C_ENG_TYPE ( GenericStructure )                         * pNext;
-
             __C_ENG_TYPE ( QueueFamilyProperties )                      properties;
 
 #if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEVICE_DIAGNOSTIC_CHECKPOINTS_AVAILABLE
 
-            __C_ENG_TYPE ( QueueFamilyCheckpointPropertiesNVidia )      checkpointProperties;
+            __C_ENG_TYPE ( QueueFamilyCheckpointPropertiesNVidia )      checkpointPropertiesNVidia;
 
 #endif
 
@@ -4248,6 +4249,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_QUEUE_AVAILABLE
 
             __C_ENG_TYPE ( QueueFamilyQueryResultStatusProperties )     queryResultStatusProperties;
+            __C_ENG_TYPE ( VideoQueueFamilyProperties )                 videoProperties;
 
 #endif
 
@@ -4273,6 +4275,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PointClippingBehavior ) ) noexcept -> cds :: StringLiteral;
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( ShaderStageFlag ) ) noexcept -> cds :: StringLiteral;
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( QueueFlag ) ) noexcept -> cds :: StringLiteral;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PipelineStageFlag ) ) noexcept -> cds :: StringLiteral;
 
 #endif
 
@@ -4293,6 +4296,18 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #if __C_ENG_VULKAN_API_EXTENSION_AMD_SHADER_CORE_PROPERTIES_2_AVAILABLE
 
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( ShaderCorePropertiesFlagAMD ) ) noexcept -> cds :: StringLiteral;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_GLOBAL_PRIORITY_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( GlobalQueuePriority ) ) noexcept -> cds :: StringLiteral;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_QUEUE_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( VideoCodecOperationFlag ) ) noexcept -> cds :: StringLiteral;
 
 #endif
 
@@ -4323,6 +4338,8 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceDetails ) const & ) noexcept -> cds :: String;
 
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( QueueFamilyProperties ) const & ) noexcept -> cds :: String;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( QueueFamilyExtendedProperties ) const & ) noexcept -> cds :: String;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( QueueFamilyDetails ) const & ) noexcept -> cds :: String;
 
 #endif
 
@@ -4585,11 +4602,38 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEVICE_DIAGNOSTIC_CHECKPOINTS_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( QueueFamilyCheckpointPropertiesNVidia ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_GLOBAL_PRIORITY_QUERY_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( QueueFamilyGlobalPriorityProperties ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_QUEUE_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( QueueFamilyQueryResultStatusProperties ) const & ) noexcept -> cds :: String;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( VideoQueueFamilyProperties ) const & ) noexcept -> cds :: String;
+
+#endif
+
         __C_ENG_NO_DISCARD auto compare ( __C_ENG_TYPE ( Version ) const &, __C_ENG_TYPE ( Version ) const & ) noexcept -> __C_ENG_TYPE ( CompareResult );
 
         __C_ENG_NO_DISCARD auto uInt32ToInstanceVersion ( cds :: uint32 ) noexcept -> __C_ENG_TYPE ( Version );
         __C_ENG_NO_DISCARD auto instanceVersionToUInt32 ( __C_ENG_TYPE ( Version ) const & ) noexcept -> cds :: uint32;
         __C_ENG_NO_DISCARD auto versionReadableFormat ( __C_ENG_TYPE ( Version ) const & ) noexcept -> cds :: String;
+
+        namespace versionConstants {
+
+            constexpr static __C_ENG_TYPE ( Version ) const version10 = { .variant = 0U, .major = 1U, .minor = 0U, .patch = 0U };
+            constexpr static __C_ENG_TYPE ( Version ) const version11 = { .variant = 0U, .major = 1U, .minor = 1U, .patch = 0U };
+            constexpr static __C_ENG_TYPE ( Version ) const version12 = { .variant = 0U, .major = 1U, .minor = 2U, .patch = 0U };
+
+        }
 
     }
 }

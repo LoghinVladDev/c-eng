@@ -28,11 +28,13 @@ static vulkan :: __C_ENG_TYPE ( PhysicalDeviceHandle ) physicalDeviceHandles [ _
 static inline auto logPhysicalDevices () noexcept -> void {
     (void) __C_ENG_TYPE ( Logger ) :: instance().info ( "Found "_s + :: physicalDevices.size() + " vulkan compatible devices : " );
 
-    for ( auto const & device : physicalDevices ) {
+    for ( uint32 i = 0U; i < physicalDevices.size(); ++ i ) {
 
-        auto deviceAsString = toString(device.details());
+        (void) __C_ENG_TYPE ( Logger ) :: instance().info ( " "_s * 4 + "Device " + i );
 
-        int indent = 4;
+        auto deviceAsString = toString(physicalDevices[static_cast < Index > ( i )].details());
+
+        int indent = 8;
         auto rows = deviceAsString.split(',');
 
         for ( auto & row : rows ) {
@@ -70,7 +72,75 @@ static inline auto logPhysicalDevices () noexcept -> void {
                 (void) __C_ENG_TYPE ( Logger ) :: instance().info ( ( " "_s * indent ) + row );
 
                 if ( reduceCount > 0U ) {
-                    indent -= reduceCount * 4U;
+                    indent -= reduceCount * 4U; // NOLINT(cppcoreguidelines-narrowing-conversions)
+                }
+            }
+        }
+
+        (void) __C_ENG_TYPE ( Logger ) :: instance().info (" "_s * indent + "Device " + i + " Queue Family Properties : ");
+
+        for ( uint32 j = 0U; j < physicalDevices[static_cast < Index > ( i )].queueFamilyDetails().size(); ++ j ) {
+            indent += 4;
+
+            (void) __C_ENG_TYPE ( Logger ) :: instance().info (" "_s * indent + "Family " + j);
+
+            auto queuePropertiesAsString = toString(physicalDevices[static_cast < Index > ( i )].queueFamilyDetails()[static_cast < Index > ( j )]);
+
+            auto innerRows = queuePropertiesAsString.split(',');
+
+            for ( auto & row : innerRows ) {
+                (void) row.trim();
+
+                if ( row.contains('[') && row.contains(']') ) {
+
+                    auto count = row.count('}');
+                    count += row.count(']');
+
+                    (void) row.rtrim('}').rtrim(' ').rtrim(']').rtrim(' ').rtrim('}');
+
+                    auto sides = row.split("=");
+
+                    (void) __C_ENG_TYPE ( Logger ) :: instance().info ( " "_s * indent + sides[0] + " =" );
+
+                    indent += 4;
+                    (void) __C_ENG_TYPE ( Logger ) :: instance().info ( " "_s * indent + sides[1].ltrim().removePrefix("[ ").rtrim().removeSuffix(" ]") );
+
+                    indent -= (count + 1U) * 4U; // NOLINT(cppcoreguidelines-narrowing-conversions)
+
+                } else if ( row.contains("{") || row.contains("[") ) {
+
+                    auto inlineRows = row.split("{[");
+                    bool first = true;
+
+                    for ( auto & inlineRow : inlineRows ) {
+
+                        if ( ! first ) {
+                            indent += 4;
+                            (void) inlineRow.trim();
+                        } else {
+                            first = false;
+                        }
+
+                        (void) __C_ENG_TYPE ( Logger ) :: instance().info ( ( " "_s * indent ) + inlineRow );
+
+                    }
+
+                } else {
+                    auto reduceCount = row.count('}');
+                    while ( row.contains("}") ) {
+                        (void)row.trim().removeSuffix("}");
+                    }
+
+                    reduceCount += row.count(']');
+                    while ( row.contains("]") ) {
+                        (void)row.trim().removeSuffix("]");
+                    }
+
+                    (void) __C_ENG_TYPE ( Logger ) :: instance().info ( ( " "_s * indent ) + row );
+
+                    if ( reduceCount > 0U ) {
+                        indent -= reduceCount * 4U; // NOLINT(cppcoreguidelines-narrowing-conversions)
+                    }
                 }
             }
         }
@@ -127,10 +197,43 @@ auto vulkan :: Self :: refreshPhysicalDevices (
                 __C_ENG_LOG_AND_THROW_DETAILED_API_CALL_EXCEPTION ( debug, "getPhysicalDeviceDetails", result );
             }
 
+            try {
+
+                uint32 queueFamilyCount;
+                result = vulkan :: getPhysicalDeviceQueueFamilyDetails (
+                        device.handle(),
+                        & queueFamilyCount
+                );
+
+                if ( result != ResultSuccess ) {
+                    __C_ENG_LOG_AND_THROW_DETAILED_API_CALL_EXCEPTION ( debug, "getPhysicalDeviceQueueFamilyDetails", result );
+                }
+
+                auto queueFamilyDetails = new __C_ENG_TYPE ( QueueFamilyDetails ) [ queueFamilyCount ];
+                result = vulkan :: getPhysicalDeviceQueueFamilyDetails(
+                        device.handle(),
+                        & queueFamilyCount,
+                        & queueFamilyDetails[0]
+                );
+
+                if ( result != ResultSuccess ) {
+                    delete [] queueFamilyDetails;
+                    __C_ENG_LOG_AND_THROW_DETAILED_API_CALL_EXCEPTION ( debug, "getPhysicalDeviceQueueFamilyDetails", result );
+                }
+
+                device._queueFamilyDetails.resize ( queueFamilyCount );
+                for ( uint32 queueFamilyIndex = 0U; queueFamilyIndex < queueFamilyCount; ++ queueFamilyIndex ) {
+                    (void) std :: memcpy ( & device._queueFamilyDetails[static_cast < Index > ( queueFamilyIndex )], & queueFamilyDetails[queueFamilyIndex], sizeof ( queueFamilyDetails[queueFamilyIndex] ) );
+                }
+
+            } catch ( ... ) {
+                throw;
+            }
+
             (void) :: physicalDevices.pushBack(device);
 
         } catch ( Exception const & exception ) {
-            (void) __C_ENG_TYPE ( Logger ) :: instance().debug ( "Properties acquisition for device failed" );
+            (void) __C_ENG_TYPE ( Logger ) :: instance().debug ( "Properties acquisition for device "_s + i + " failed" );
         }
     }
 

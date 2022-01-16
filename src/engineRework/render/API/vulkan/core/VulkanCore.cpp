@@ -1874,6 +1874,100 @@ auto vulkan :: toString (
     return asString;
 }
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PipelineStageFlag ) stage
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( stage ) {
+        case __C_ENG_TYPE ( PipelineStageFlag ) :: PipelineStageFlagTopOfPipe:                      { asString = "Top of Pipe";                         break; }
+        case __C_ENG_TYPE ( PipelineStageFlag ) :: PipelineStageFlagDrawIndirect:                   { asString = "Draw Indirect";                       break; }
+        case __C_ENG_TYPE ( PipelineStageFlag ) :: PipelineStageFlagVertexInput:                    { asString = "Vertex Input";                        break; }
+        case __C_ENG_TYPE ( PipelineStageFlag ) :: PipelineStageFlagVertexShader:                   { asString = "Vertex Shader";                       break; }
+        case __C_ENG_TYPE ( PipelineStageFlag ) :: PipelineStageFlagTessellationControlShader:      { asString = "Tessellation Control Shader";         break; }
+        case __C_ENG_TYPE ( PipelineStageFlag ) :: PipelineStageFlagTessellationEvaluationShader:   { asString = "Tessellation Evaluation Shader";      break; }
+        case __C_ENG_TYPE ( PipelineStageFlag ) :: PipelineStageFlagGeometryShader:                 { asString = "Geometry Shader";                     break; }
+        case __C_ENG_TYPE ( PipelineStageFlag ) :: PipelineStageFlagFragmentShader:                 { asString = "Fragment Shader";                     break; }
+        case __C_ENG_TYPE ( PipelineStageFlag ) :: PipelineStageFlagEarlyFragmentTests:             { asString = "Early Fragment Tests";                break; }
+        case __C_ENG_TYPE ( PipelineStageFlag ) :: PipelineStageFlagLateFragmentTests:              { asString = "Late Fragment Tests";                 break; }
+        case __C_ENG_TYPE ( PipelineStageFlag ) :: PipelineStageFlagColorAttachmentOutput:          { asString = "Color Attachment Output";             break; }
+        case __C_ENG_TYPE ( PipelineStageFlag ) :: PipelineStageFlagComputeShader:                  { asString = "Compute Shader";                      break; }
+        case __C_ENG_TYPE ( PipelineStageFlag ) :: PipelineStageFlagTransfer:                       { asString = "Transfer";                            break; }
+        case __C_ENG_TYPE ( PipelineStageFlag ) :: PipelineStageFlagBottomOfPipe:                   { asString = "Bottom Of Pipe";                      break; }
+        case __C_ENG_TYPE ( PipelineStageFlag ) :: PipelineStageFlagHost:                           { asString = "Host";                                break; }
+        case __C_ENG_TYPE ( PipelineStageFlag ) :: PipelineStageFlagAllGraphics:                    { asString = "All Graphics";                        break; }
+        case __C_ENG_TYPE ( PipelineStageFlag ) :: PipelineStageFlagAllCommands:                    { asString = "All Commands";                        break; }
+
+#if __C_ENG_VULKAN_API_EXTENSION_TRANSFORM_FEEDBACK_AVAILABLE
+
+        case __C_ENG_TYPE ( PipelineStageFlag ) :: PipelineStageFlagTransformFeedback:              { asString = "Transform Feedback";                  break; }
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_CONDITIONAL_RENDERING_AVAILABLE
+
+        case __C_ENG_TYPE ( PipelineStageFlag ) :: PipelineStageFlagConditionalRendering:           { asString = "Conditional Rendering";               break; }
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+
+        case __C_ENG_TYPE ( PipelineStageFlag ) :: PipelineStageFlagAccelerationStructureBuild:     { asString = "Acceleration Structure Build";        break; }
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_RAY_TRACING_PIPELINE_AVAILABLE
+
+        case __C_ENG_TYPE ( PipelineStageFlag ) :: PipelineStageFlagRayTracingShader:               { asString = "Ray Tracing Shader";                  break; }
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_MESH_SHADER_AVAILABLE
+
+        case __C_ENG_TYPE ( PipelineStageFlag ) :: PipelineStageFlagTaskShaderNVidia:               { asString = "Task Shader NVidia";                  break; }
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_MESH_SHADER_AVAILABLE
+
+        case __C_ENG_TYPE ( PipelineStageFlag ) :: PipelineStageFlagMeshShaderNVidia:               { asString = "Mesh Shader NVidia";                  break; }
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_FRAGMENT_DENSITY_MAP_AVAILABLE
+
+        case __C_ENG_TYPE ( PipelineStageFlag ) :: PipelineStageFlagFragmentDensityProcess:         { asString = "Fragment Density Process";            break; }
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_FRAGMENT_SHADING_RATE_AVAILABLE
+
+        case __C_ENG_TYPE ( PipelineStageFlag ) :: PipelineStageFlagFragmentShadingRateAttachment:  { asString = "Fragment Shading Rate Attachment";    break; }
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEVICE_GENERATED_COMMANDS_AVAILABLE
+
+        case __C_ENG_TYPE ( PipelineStageFlag ) :: PipelineStageFlagCommandPreprocessNVidia:        { asString = "Command Preprocess NVidia";           break; }
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
+
+        case __C_ENG_TYPE ( PipelineStageFlag ) :: PipelineStageFlagNone:                           { asString = "None";                                break; }
+
+#endif
+
+    }
+
+    return asString;
+}
+
+#endif
+
 #if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
 
 auto vulkan :: toString (
@@ -1992,6 +2086,26 @@ auto vulkan :: toString (
 
 #endif
 
+    }
+
+    return asString;
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_GLOBAL_PRIORITY_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( GlobalQueuePriority ) priority
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( priority ) {
+        case __C_ENG_TYPE ( GlobalQueuePriority ) :: GlobalQueuePriorityLow:        { asString = "Low";         break; }
+        case __C_ENG_TYPE ( GlobalQueuePriority ) :: GlobalQueuePriorityMedium:     { asString = "Medium";      break; }
+        case __C_ENG_TYPE ( GlobalQueuePriority ) :: GlobalQueuePriorityHigh:       { asString = "High";        break; }
+        case __C_ENG_TYPE ( GlobalQueuePriority ) :: GlobalQueuePriorityRealtime:   { asString = "Realtime";    break; }
     }
 
     return asString;
@@ -3701,6 +3815,131 @@ auto vulkan :: toString (
             ", queueCount = "                   + properties.queueCount +
             ", timestampValidBits = "           + properties.timestampValidBits +
             ", minImageTransferGranularity = "  + toString ( properties.minImageTransferGranularity ) +
+            " }";
+}
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( QueueFamilyExtendedProperties ) const & properties
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( QueueFamilyExtendedProperties ) ) " "
+            "{ type = "_s       + toString ( properties.structureType ) +
+            ", pNext = "        + :: toString ( properties.pNext ) +
+            ", properties = "   + toString ( properties.properties ) +
+            " }";
+}
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( QueueFamilyDetails ) const & properties
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( QueueFamilyDetails ) ) " "
+            "{ properties = "                   + toString ( properties.properties ) +
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEVICE_DIAGNOSTIC_CHECKPOINTS_AVAILABLE
+
+            ", checkpointProperties = "         + toString ( properties.checkpointPropertiesNVidia ) +
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_GLOBAL_PRIORITY_QUERY_AVAILABLE
+
+            ", globalPriorityProperties = "     + toString ( properties.globalPriorityProperties ) +
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_QUEUE_AVAILABLE
+
+            ", queryResultStatusProperties = "  + toString ( properties.queryResultStatusProperties ) +
+            ", videoProperties = "              + toString ( properties.videoProperties ) +
+
+#endif
+
+            " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEVICE_DIAGNOSTIC_CHECKPOINTS_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( QueueFamilyCheckpointPropertiesNVidia ) const & properties
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( QueueFamilyCheckpointPropertiesNVidia ) ) " "
+           "{ type = "_s                        + toString ( properties.structureType ) +
+           ", pNext = "                         + :: toString ( properties.pNext ) +
+           ", checkpointExecutionStageMask = "  + "0b" + Long ( properties.checkpointExecutionStageMask ).toString(2) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_GLOBAL_PRIORITY_QUERY_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( QueueFamilyGlobalPriorityProperties ) const & properties
+) noexcept -> String {
+
+    String prioritiesAsString = "[ ";
+    for ( uint32 i = 0U; i < properties.priorityCount; ++ i ) {
+        prioritiesAsString += toString ( static_cast < __C_ENG_TYPE ( GlobalQueuePriority ) > ( properties.priorities[i] ) ) + ", "_s;
+    }
+
+    (void) prioritiesAsString.removeSuffix(", ").append(" ]");
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( QueueFamilyGlobalPriorityProperties ) ) " "
+            "{ type = "_s               + toString ( properties.structureType ) +
+            ", pNext = "                + :: toString ( properties.pNext ) +
+            ", priorityCount = "        + properties.priorityCount +
+            ", priorities = "           + prioritiesAsString +
+            " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_QUEUE_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( VideoCodecOperationFlag ) operation
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( operation ) {
+        case __C_ENG_TYPE ( VideoCodecOperationFlag ) :: VideoCodecOperationFlagInvalid:            { asString = "Invalid";         break; }
+
+#if __C_ENG_VULKAN_BETA_EXTENSIONS_ENABLED
+
+        case __C_ENG_TYPE ( VideoCodecOperationFlag ) :: VideoCodecOperationFlagEncodeH264:         { asString = "Encode H264";     break; }
+        case __C_ENG_TYPE ( VideoCodecOperationFlag ) :: VideoCodecOperationFlagEncodeH265:         { asString = "Encode H265";     break; }
+        case __C_ENG_TYPE ( VideoCodecOperationFlag ) :: VideoCodecOperationFlagDecodeH264:         { asString = "Decode H264";     break; }
+        case __C_ENG_TYPE ( VideoCodecOperationFlag ) :: VideoCodecOperationFlagDecodeH265:         { asString = "Decode H265";     break; }
+
+#endif
+
+    }
+}
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( QueueFamilyQueryResultStatusProperties ) const & properties
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( QueueFamilyQueryResultStatusProperties ) ) " "
+            "{ type = "_s               + :: toString ( properties.structureType ) +
+            ", pNext = "                + :: toString ( properties.pNext ) +
+            ", supported = "            + ( properties.supported == VK_TRUE ? "true" : "false" ) +
+            " }";
+}
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( VideoQueueFamilyProperties ) const & properties
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( VideoQueueFamilyProperties ) ) " "
+            "{ type = "_s               + :: toString ( properties.structureType ) +
+            ", pNext = "                + :: toString ( properties.pNext ) +
+            ", videoCodecOperations = " + "0b" + Long ( properties.videoCodecOperations ).toString(2) +
             " }";
 }
 
