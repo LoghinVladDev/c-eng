@@ -2,8 +2,8 @@
 // Created by loghin on 22.12.2021.
 //
 
-#ifndef __C_ENG_CONTROLLER_HPP
-#define __C_ENG_CONTROLLER_HPP
+#ifndef __C_ENG_CONTROLLER_HPP__
+#define __C_ENG_CONTROLLER_HPP__
 
 #include <Preprocess.hpp>
 #include <CDS/Array>
@@ -42,7 +42,7 @@ namespace engine {
         __C_ENG_NO_DISCARD __C_ENG_MAYBE_UNUSED static auto connectedControllers () noexcept -> Self **;
 
         __C_ENG_MAYBE_UNUSED static auto handleEvent ( __C_ENG_TYPE ( ControllerEvent ) const & ) noexcept -> void;
-        static auto updateEvents () noexcept -> void;
+        __C_ENG_MAYBE_UNUSED static auto updateEvents () noexcept -> void;
         static auto pollEvents () noexcept -> void;
 
         __C_ENG_NO_DISCARD inline auto copy () const noexcept -> Self * override {
@@ -63,4 +63,4 @@ namespace engine {
 #include <ObjectMapping.hpp>
 
 
-#endif //__C_ENG_CONTROLLER_HPP
+#endif //__C_ENG_CONTROLLER_HPP__

@@ -15,6 +15,15 @@ using namespace cds; // NOLINT(clion-misra-cpp2008-7-3-4)
 using namespace engine; // NOLINT(clion-misra-cpp2008-7-3-4)
 
 
+static vulkan :: __C_ENG_TYPE ( DebugMessengerBasicNotifyCallback ) basicNotifyCallback = nullptr;
+
+__C_ENG_MAYBE_UNUSED auto setBasicNotifyCallback (
+        vulkan :: __C_ENG_TYPE ( DebugMessengerBasicNotifyCallback ) pBasicNotifyCallback
+) noexcept -> void {
+    basicNotifyCallback = pBasicNotifyCallback;
+}
+
+
 static VKAPI_ATTR auto VKAPI_CALL debugMessengerCallback (
         VkDebugUtilsMessageSeverityFlagBitsEXT          messageSeverityFlags,
         VkDebugUtilsMessageTypeFlagsEXT                 messageTypeFlags,
@@ -63,6 +72,10 @@ static VKAPI_ATTR auto VKAPI_CALL debugMessengerCallback (
                     pCallbackData->pMessage
             )
     );
+
+    if ( basicNotifyCallback != nullptr ) {
+        basicNotifyCallback();
+    }
 
     return VK_FALSE;
 }
@@ -178,7 +191,7 @@ auto vulkan :: Self :: supportedVulkanVersion () noexcept (false) -> __C_ENG_TYP
 #endif
 
 auto vulkan :: Self :: init () noexcept (false) -> Self & {
-    if ( compare ( this->version(), nullVersion ) == CompareResultEquals ) {
+    if ( compare ( this->version(), versionConstants :: nullVersion ) == CompareResultEquals ) {
 
 #if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
 
@@ -262,7 +275,7 @@ auto vulkan :: Self :: init () noexcept (false) -> Self & {
     populateApplicationInfo (
             & applicationInfo,
             "Engine Sample Application",
-            nullVersion,
+            versionConstants :: nullVersion,
             "c-eng", {
                 .variant    = __C_ENG_TYPE ( Engine ) :: versionVariant,
                 .major      = __C_ENG_TYPE ( Engine ) :: versionMajor,
@@ -297,7 +310,7 @@ auto vulkan :: Self :: init () noexcept (false) -> Self & {
 
     if ( this->layerHandler().debugLayerEnabled() ) {
 
-        result = vulkan::createDebugMessenger(
+        result = vulkan :: createDebugMessenger(
                 this->handle(),
                 & debugMessengerCreateInfo,
                 __C_ENG_TYPE (Allocator)::instance().callbacks(),

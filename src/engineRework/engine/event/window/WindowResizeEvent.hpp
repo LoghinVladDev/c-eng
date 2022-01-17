@@ -2,8 +2,8 @@
 // Created by loghin on 20.12.2021.
 //
 
-#ifndef __C_ENG_WINDOWRESIZEEVENT_HPP
-#define __C_ENG_WINDOWRESIZEEVENT_HPP
+#ifndef __C_ENG_WINDOW_RESIZE_EVENT_HPP__
+#define __C_ENG_WINDOW_RESIZE_EVENT_HPP__
 
 
 #include <WindowEvent.hpp>
@@ -50,4 +50,4 @@ namespace engine {
 #include <ObjectMapping.hpp>
 
 
-#endif //__C_ENG_WINDOWRESIZEEVENT_HPP
+#endif //__C_ENG_WINDOW_RESIZE_EVENT_HPP__

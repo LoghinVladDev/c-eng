@@ -2,8 +2,8 @@
 // Created by loghin on 21.12.2021.
 //
 
-#ifndef __C_ENG_MONITOR_HPP
-#define __C_ENG_MONITOR_HPP
+#ifndef __C_ENG_MONITOR_HPP__
+#define __C_ENG_MONITOR_HPP__
 
 
 #include <Preprocess.hpp>
@@ -41,8 +41,8 @@ namespace engine {
         }
 
         auto static monitors () noexcept -> cds :: Array < Self const * > const &;
-        auto static primaryMonitor () noexcept -> Self const *;
-        auto static initMonitorHandler () noexcept -> void;
+        __C_ENG_MAYBE_UNUSED auto static primaryMonitor () noexcept -> Self const *;
+        __C_ENG_MAYBE_UNUSED auto static initMonitorHandler () noexcept -> void;
 
         __C_ENG_MAYBE_UNUSED auto setGamma ( float ) noexcept -> Self &;
 
@@ -55,4 +55,4 @@ namespace engine {
 #define C_ENG_MAP_END
 #include <ObjectMapping.hpp>
 
-#endif //__C_ENG_MONITOR_HPP
+#endif //__C_ENG_MONITOR_HPP__

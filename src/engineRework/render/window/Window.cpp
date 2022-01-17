@@ -1211,7 +1211,7 @@ auto Self :: equals (
     return this->handle() == pWindow->handle();
 }
 
-auto Self :: vulkanRequiredExtensionNames() noexcept -> ExtensionNames {
+__C_ENG_MAYBE_UNUSED auto Self :: vulkanRequiredExtensionNames() noexcept -> ExtensionNames {
     ExtensionNames names { nullptr, 0U };
 
     if ( ! static_cast < bool > ( glfwVulkanSupported() ) ) { // NOLINT(clion-misra-cpp2008-5-0-13)

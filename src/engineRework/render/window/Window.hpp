@@ -2,8 +2,8 @@
 // Created by loghin on 19.12.2021.
 //
 
-#ifndef __C_ENG_WINDOW_HPP
-#define __C_ENG_WINDOW_HPP
+#ifndef __C_ENG_WINDOW_HPP__
+#define __C_ENG_WINDOW_HPP__
 
 #include <Preprocess.hpp>
 #include <CDS/Object>
@@ -83,7 +83,7 @@ namespace engine {
         auto makeFullscreen ( __C_ENG_TYPE ( Monitor ) const * = nullptr ) noexcept -> Self &;
         auto makeWindowedFullscreen ( __C_ENG_TYPE ( Monitor ) const * = nullptr ) noexcept -> Self &;
 
-        __C_ENG_NO_DISCARD inline auto shouldClose () const noexcept -> bool {
+        __C_ENG_NO_DISCARD __C_ENG_MAYBE_UNUSED inline auto shouldClose () const noexcept -> bool {
             return glfwWindowShouldClose ( this->handle() );
         }
 
@@ -137,7 +137,7 @@ namespace engine {
             cds :: uint32           count;
         };
 
-        static auto vulkanRequiredExtensionNames () noexcept -> ExtensionNames;
+        __C_ENG_MAYBE_UNUSED static auto vulkanRequiredExtensionNames () noexcept -> ExtensionNames;
     };
 
 }
@@ -146,4 +146,4 @@ namespace engine {
 #include <ObjectMapping.hpp>
 
 
-#endif //__C_ENG_WINDOW_HPP
+#endif //__C_ENG_WINDOW_HPP__

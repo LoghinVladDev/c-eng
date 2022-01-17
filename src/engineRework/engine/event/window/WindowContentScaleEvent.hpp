@@ -2,8 +2,8 @@
 // Created by loghin on 21.12.2021.
 //
 
-#ifndef __C_ENG_WINDOWCONTENTSCALEEVENT_HPP
-#define __C_ENG_WINDOWCONTENTSCALEEVENT_HPP
+#ifndef __C_ENG_WINDOW_CONTENT_SCALE_EVENT_HPP__
+#define __C_ENG_WINDOW_CONTENT_SCALE_EVENT_HPP__
 
 
 #include <WindowEvent.hpp>
@@ -47,4 +47,4 @@ namespace engine {
 #include <ObjectMapping.hpp>
 
 
-#endif //__C_ENG_WINDOWCONTENTSCALEEVENT_HPP
+#endif //__C_ENG_WINDOW_CONTENT_SCALE_EVENT_HPP__

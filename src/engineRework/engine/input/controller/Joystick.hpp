@@ -2,8 +2,8 @@
 // Created by loghin on 22.12.2021.
 //
 
-#ifndef __C_ENG_JOYSTICK_HPP
-#define __C_ENG_JOYSTICK_HPP
+#ifndef __C_ENG_JOYSTICK_HPP__
+#define __C_ENG_JOYSTICK_HPP__
 
 
 #include <Controller.hpp>
@@ -40,4 +40,4 @@ namespace engine {
 #include <ObjectMapping.hpp>
 
 
-#endif //__C_ENG_JOYSTICK_HPP
+#endif //__C_ENG_JOYSTICK_HPP__

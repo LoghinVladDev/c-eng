@@ -710,7 +710,6 @@ if(Vulkan_FOUND)
             src/engineRework/utility/preprocess/Naming.hpp
             src/engineRework/utility/preprocess/Preprocess.hpp
             src/engineRework/utility/preprocess/Compiler.hpp
-            src/engineRework/utility/preprocess/ClassGenerators.hpp
     )
 
     set (
@@ -772,7 +771,16 @@ if(Vulkan_FOUND)
     )
 
     set (
+            ENGINE_REWORK_RENDER_API_VULKAN_INSTANCE_DEVICE_QUEUE_SOURCES
+
+            src/engineRework/render/API/vulkan/instance/device/queue/QueueFamily.cpp
+            src/engineRework/render/API/vulkan/instance/device/queue/QueueFamily.hpp
+    )
+
+    set (
             ENGINE_REWORK_RENDER_API_VULKAN_INSTANCE_DEVICE_SOURCES
+
+            ${ENGINE_REWORK_RENDER_API_VULKAN_INSTANCE_DEVICE_QUEUE_SOURCES}
 
             src/engineRework/render/API/vulkan/instance/device/PhysicalDevice.cpp
             src/engineRework/render/API/vulkan/instance/device/PhysicalDevice.hpp
@@ -888,6 +896,7 @@ if(Vulkan_FOUND)
             src/engineRework/render/API/vulkan/instance/validation
             src/engineRework/render/API/vulkan/instance/allocator
             src/engineRework/render/API/vulkan/instance/device
+            src/engineRework/render/API/vulkan/instance/device/queue
     )
 
 endif()

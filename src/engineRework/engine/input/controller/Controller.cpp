@@ -187,12 +187,11 @@ __C_ENG_MAYBE_UNUSED auto Self :: connectedControllers () noexcept -> Self ** {
     return handler.connectedControllers;
 }
 
-auto Self :: updateEvents () noexcept -> void {
+__C_ENG_MAYBE_UNUSED auto Self :: updateEvents () noexcept -> void {
 
     for ( uint32 i = 0U; i < handler.connectedControllerCount; ++ i ) {
         handler.connectedControllers[i]->update();
     }
-
 }
 
 enum RawControllerEventType : uint8 {

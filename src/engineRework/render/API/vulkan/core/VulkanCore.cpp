@@ -112,6 +112,8 @@ auto vulkan :: toString (
 
 #endif
 
+        case vulkan :: __C_ENG_TYPE ( Result ) :: ResultErrorInvalidUsage:                           { asString = "Invalid Usage of Vulkan Function";                                                                                                                                                                              break; }
+        case vulkan :: __C_ENG_TYPE ( Result ) :: ResultErrorFunctionNotSupportedICD:                { asString = "Vulkan ICD does not support the requested function call";                                                                                                                                                                              break; }
         case vulkan :: __C_ENG_TYPE ( Result ) :: ResultErrorIncompatibleVersion:                    { asString = "API Version does not support call";                                                                                                                                                                              break; }
         case vulkan :: __C_ENG_TYPE ( Result ) :: ResultErrorConfigurationArraySizeSmall:            { asString = "Array Size too Small, check 'VulkanCoreConfig.hpp'";                                                                                                                                                             break; }
         case vulkan :: __C_ENG_TYPE ( Result ) :: ResultErrorFunctionHandleNotFound:                 { asString = "Function Requested not Present";                                                                                                                                                                                 break; }
@@ -246,7 +248,7 @@ auto vulkan :: toString (
         case StructureTypeExternalFenceProperties:                                                  { asString = "StructureTypeExternalFenceProperties";                                            break; }
         case StructureTypeExportFenceCreateInfo:                                                    { asString = "StructureTypeExportFenceCreateInfo";                                              break; }
         case StructureTypeExportSemaphoreCreateInfo:                                                { asString = "StructureTypeExportSemaphoreCreateInfo";                                          break; }
-        case StructureTypePhysicalDeviceExternalSempahoreInfo:                                      { asString = "StructureTypePhysicalDeviceExternalSempahoreInfo";                                break; }
+        case StructureTypePhysicalDeviceExternalSemaphoreInfo:                                      { asString = "StructureTypePhysicalDeviceExternalSemaphoreInfo";                                break; }
         case StructureTypeExternalSemaphoreProperties:                                              { asString = "StructureTypeExternalSemaphoreProperties";                                        break; }
         case StructureTypePhysicalDeviceMaintenanceProperties:                                      { asString = "StructureTypePhysicalDeviceMaintenanceProperties";                                break; }
         case StructureTypeDescriptorSetLayoutSupport:                                               { asString = "StructureTypeDescriptorSetLayoutSupport";                                         break; }
@@ -1414,7 +1416,7 @@ auto vulkan :: toString (
         case StructureTypeMemoryBarrier2:                                                        { asString = "StructureTypeMemoryBarrier2";                                                        break; }
         case StructureTypeBufferMemoryBarrier2:                                                  { asString = "StructureTypeBufferMemoryBarrier2";                                                  break; }
         case StructureTypeImageMemoryBarrier2:                                                   { asString = "StructureTypeImageMemoryBarrier2";                                                   break; }
-        case StructureTypeDependencryInfo:                                                       { asString = "StructureTypeDependencryInfo";                                                       break; }
+        case StructureTypeDependencyInfo:                                                        { asString = "StructureTypeDependencyInfo";                                                       break; }
         case StructureTypeSubmitInfo2:                                                           { asString = "StructureTypeSubmitInfo2";                                                           break; }
         case StructureTypeSemaphoreSubmitInfo:                                                   { asString = "StructureTypeSemaphoreSubmitInfo";                                                   break; }
         case StructureTypeCommandBufferSubmitInfo:                                               { asString = "StructureTypeCommandBufferSubmitInfo";                                               break; }
@@ -2096,16 +2098,16 @@ auto vulkan :: toString (
 #if __C_ENG_VULKAN_API_EXTENSION_GLOBAL_PRIORITY_AVAILABLE
 
 auto vulkan :: toString (
-        __C_ENG_TYPE ( GlobalQueuePriority ) priority
+        __C_ENG_TYPE ( QueueGlobalPriority ) priority
 ) noexcept -> StringLiteral {
 
     StringLiteral asString = "";
 
     switch ( priority ) {
-        case __C_ENG_TYPE ( GlobalQueuePriority ) :: GlobalQueuePriorityLow:        { asString = "Low";         break; }
-        case __C_ENG_TYPE ( GlobalQueuePriority ) :: GlobalQueuePriorityMedium:     { asString = "Medium";      break; }
-        case __C_ENG_TYPE ( GlobalQueuePriority ) :: GlobalQueuePriorityHigh:       { asString = "High";        break; }
-        case __C_ENG_TYPE ( GlobalQueuePriority ) :: GlobalQueuePriorityRealtime:   { asString = "Realtime";    break; }
+        case __C_ENG_TYPE ( QueueGlobalPriority ) :: QueueGlobalPriorityLow:        { asString = "Low";         break; }
+        case __C_ENG_TYPE ( QueueGlobalPriority ) :: QueueGlobalPriorityMedium:     { asString = "Medium";      break; }
+        case __C_ENG_TYPE ( QueueGlobalPriority ) :: QueueGlobalPriorityHigh:       { asString = "High";        break; }
+        case __C_ENG_TYPE ( QueueGlobalPriority ) :: QueueGlobalPriorityRealtime:   { asString = "Realtime";    break; }
     }
 
     return asString;
@@ -2119,6 +2121,97 @@ auto vulkan :: toString (
         __C_ENG_TYPE ( ShaderCorePropertiesFlagAMD ) flag
 ) noexcept -> StringLiteral {
     StringLiteral asString = "";
+
+    return asString;
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PERFORMANCE_QUERY_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PerformanceCounterUnit ) unit
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( unit ) {
+        case __C_ENG_TYPE ( PerformanceCounterUnit ) :: PerformanceCounterUnitGeneric:          { asString = "Generic";             break; }
+        case __C_ENG_TYPE ( PerformanceCounterUnit ) :: PerformanceCounterUnitPercentage:       { asString = "Percentage";          break; }
+        case __C_ENG_TYPE ( PerformanceCounterUnit ) :: PerformanceCounterUnitNanoseconds:      { asString = "Nanoseconds";         break; }
+        case __C_ENG_TYPE ( PerformanceCounterUnit ) :: PerformanceCounterUnitBytes:            { asString = "Bytes";               break; }
+        case __C_ENG_TYPE ( PerformanceCounterUnit ) :: PerformanceCounterUnitBytesPerSecond:   { asString = "Bytes per Second";    break; }
+        case __C_ENG_TYPE ( PerformanceCounterUnit ) :: PerformanceCounterUnitKelvin:           { asString = "Kelvin";              break; }
+        case __C_ENG_TYPE ( PerformanceCounterUnit ) :: PerformanceCounterUnitWatts:            { asString = "Watts";               break; }
+        case __C_ENG_TYPE ( PerformanceCounterUnit ) :: PerformanceCounterUnitVolts:            { asString = "Volts";               break; }
+        case __C_ENG_TYPE ( PerformanceCounterUnit ) :: PerformanceCounterUnitAmps:             { asString = "Amps";                break; }
+        case __C_ENG_TYPE ( PerformanceCounterUnit ) :: PerformanceCounterUnitHertz:            { asString = "Hertz";               break; }
+        case __C_ENG_TYPE ( PerformanceCounterUnit ) :: PerformanceCounterUnitCycles:           { asString = "Cycles";              break; }
+    }
+
+    return asString;
+}
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PerformanceCounterScope ) scope
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( scope ) {
+        case __C_ENG_TYPE ( PerformanceCounterScope ) :: PerformanceCounterScopeCommandBuffer:  { asString = "Command Buffer";  break; }
+        case __C_ENG_TYPE ( PerformanceCounterScope ) :: PerformanceCounterScopeRenderPass:     { asString = "Render Pass";     break; }
+        case __C_ENG_TYPE ( PerformanceCounterScope ) :: PerformanceCounterScopeCommand:        { asString = "Command";         break; }
+    }
+
+    return asString;
+}
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PerformanceCounterStorage ) storage
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( storage ) {
+        case __C_ENG_TYPE ( PerformanceCounterStorage ) :: PerformanceCounterStorageInt32:      { asString = "SInt32";  break; }
+        case __C_ENG_TYPE ( PerformanceCounterStorage ) :: PerformanceCounterStorageInt64:      { asString = "SInt64";  break; }
+        case __C_ENG_TYPE ( PerformanceCounterStorage ) :: PerformanceCounterStorageUInt32:     { asString = "UInt32";  break; }
+        case __C_ENG_TYPE ( PerformanceCounterStorage ) :: PerformanceCounterStorageUInt64:     { asString = "UInt64";  break; }
+        case __C_ENG_TYPE ( PerformanceCounterStorage ) :: PerformanceCounterStorageFloat32:    { asString = "Float32"; break; }
+        case __C_ENG_TYPE ( PerformanceCounterStorage ) :: PerformanceCounterStorageFloat64:    { asString = "Float64"; break; }
+    }
+
+    return asString;
+}
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PerformanceCounterDescriptionFlag ) flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case __C_ENG_TYPE ( PerformanceCounterDescriptionFlag ) :: PerformanceCounterDescriptionFlagPerformanceImpacting:      { asString = "Performance Impacting";  break; }
+        case __C_ENG_TYPE ( PerformanceCounterDescriptionFlag ) :: PerformanceCounterDescriptionFlagConcurrentlyImpacted:      { asString = "Concurrently Impacted";  break; }
+    }
+
+    return asString;
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( DeviceQueueCreateFlag ) flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case __C_ENG_TYPE ( DeviceQueueCreateFlag ) :: DeviceQueueCreateFlagProtected:  { asString = "Protected";   break; }
+    }
 
     return asString;
 }
@@ -2598,6 +2691,26 @@ auto vulkan :: toString (
             ", supportedStages = "                      + "0b" + Long ( properties.supportedStages ).toString(2) +
             ", supportedOperations = "                  + "0b" + Long ( properties.supportedOperations ).toString(2) +
             ", quadOperationsInAllStages = "            + ( properties.quadOperationsInAllStages == VK_TRUE ? "true" : "false" ) +
+            " }";
+}
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceGroupProperties ) const & properties
+) noexcept -> String {
+
+    String devicesAsString = "[ ";
+    for ( uint32 i = 0U; i < properties.physicalDeviceCount; ++ i ) {
+        devicesAsString += :: toString ( properties.physicalDevices[i] ) + ", ";
+    }
+
+    (void) devicesAsString.removeSuffix(", ").append(" ]");
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceSubgroupProperties ) ) " "
+            "{ type = "_s                               + toString ( properties.structureType ) +
+            ", pNext = "                                + :: toString ( properties.pNext ) +
+            ", physicalDeviceCount = "                  + properties.physicalDeviceCount +
+            ", physicalDevices = "                      + devicesAsString +
+            ", subsetAllocation = "                     + ( properties.subsetAllocation == VK_TRUE ? "true" : "false" ) +
             " }";
 }
 
@@ -3193,6 +3306,34 @@ auto vulkan :: toString (
            " }";
 }
 
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PerformanceCounter ) const & properties
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PerformanceCounter ) ) " "
+           "{ type = "_s                            + toString ( properties.structureType ) +
+           ", pNext = "                             + :: toString ( properties.pNext ) +
+           ", unit = "                              + toString ( properties.unit ) +
+           ", scope = "                             + toString ( properties.scope ) +
+           ", storage = "                           + toString ( properties.storage ) +
+           ", uuid = "                              + :: toString ( & properties.uuid[0] ) +
+           " }";
+}
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PerformanceCounterDescription ) const & properties
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PerformanceCounterDescription ) ) " "
+           "{ type = "_s                            + toString ( properties.structureType ) +
+           ", pNext = "                             + :: toString ( properties.pNext ) +
+           ", flags = "                             + "0b" + Long ( properties.flags ).toString(2) +
+           ", name = "                              + properties.name +
+           ", category = "                          + properties.category +
+           ", description = "                       + properties.description +
+           " }";
+}
+
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PORTABILITY_SUBSET_AVAILABLE
@@ -3534,11 +3675,75 @@ auto vulkan :: toString (
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 
 auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceFeatures ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceFeatures ) ) " "
+            "{ robustBufferAccess = "_s                                 + ( features.robustBufferAccess == VK_TRUE ? "true" : "false" ) +
+            ", fullDrawIndexUint32 = "                                  + ( features.fullDrawIndexUint32 == VK_TRUE ? "true" : "false" ) +
+            ", imageCubeArray = "                                       + ( features.imageCubeArray == VK_TRUE ? "true" : "false" ) +
+            ", independentBlend = "                                     + ( features.independentBlend == VK_TRUE ? "true" : "false" ) +
+            ", geometryShader = "                                       + ( features.geometryShader == VK_TRUE ? "true" : "false" ) +
+            ", tessellationShader = "                                   + ( features.tessellationShader == VK_TRUE ? "true" : "false" ) +
+            ", sampleRateShading = "                                    + ( features.sampleRateShading == VK_TRUE ? "true" : "false" ) +
+            ", dualSrcBlend = "                                         + ( features.dualSrcBlend == VK_TRUE ? "true" : "false" ) +
+            ", logicOp = "                                              + ( features.logicOp == VK_TRUE ? "true" : "false" ) +
+            ", multiDrawIndirect = "                                    + ( features.multiDrawIndirect == VK_TRUE ? "true" : "false" ) +
+            ", drawIndirectFirstInstance = "                            + ( features.drawIndirectFirstInstance == VK_TRUE ? "true" : "false" ) +
+            ", depthClamp = "                                           + ( features.depthClamp == VK_TRUE ? "true" : "false" ) +
+            ", depthBiasClamp = "                                       + ( features.depthBiasClamp == VK_TRUE ? "true" : "false" ) +
+            ", fillModeNonSolid = "                                     + ( features.fillModeNonSolid == VK_TRUE ? "true" : "false" ) +
+            ", depthBounds = "                                          + ( features.depthBounds == VK_TRUE ? "true" : "false" ) +
+            ", wideLines = "                                            + ( features.wideLines == VK_TRUE ? "true" : "false" ) +
+            ", largePoints = "                                          + ( features.largePoints == VK_TRUE ? "true" : "false" ) +
+            ", alphaToOne = "                                           + ( features.alphaToOne == VK_TRUE ? "true" : "false" ) +
+            ", multiViewport = "                                        + ( features.multiViewport == VK_TRUE ? "true" : "false" ) +
+            ", samplerAnisotropy = "                                    + ( features.samplerAnisotropy == VK_TRUE ? "true" : "false" ) +
+            ", textureCompressionETC2 = "                               + ( features.textureCompressionETC2 == VK_TRUE ? "true" : "false" ) +
+            ", textureCompressionASTC_LDR = "                           + ( features.textureCompressionASTC_LDR == VK_TRUE ? "true" : "false" ) +
+            ", textureCompressionBC = "                                 + ( features.textureCompressionBC == VK_TRUE ? "true" : "false" ) +
+            ", occlusionQueryPrecise = "                                + ( features.occlusionQueryPrecise == VK_TRUE ? "true" : "false" ) +
+            ", pipelineStatisticsQuery = "                              + ( features.pipelineStatisticsQuery == VK_TRUE ? "true" : "false" ) +
+            ", vertexPipelineStoresAndAtomics = "                       + ( features.vertexPipelineStoresAndAtomics == VK_TRUE ? "true" : "false" ) +
+            ", fragmentStoresAndAtomics = "                             + ( features.fragmentStoresAndAtomics == VK_TRUE ? "true" : "false" ) +
+            ", shaderTessellationAndGeometryPointSize = "               + ( features.shaderTessellationAndGeometryPointSize == VK_TRUE ? "true" : "false" ) +
+            ", shaderImageGatherExtended = "                            + ( features.shaderImageGatherExtended == VK_TRUE ? "true" : "false" ) +
+            ", shaderStorageImageExtendedFormats = "                    + ( features.shaderStorageImageExtendedFormats == VK_TRUE ? "true" : "false" ) +
+            ", shaderStorageImageMultisample = "                        + ( features.shaderStorageImageMultisample == VK_TRUE ? "true" : "false" ) +
+            ", shaderStorageImageReadWithoutFormat = "                  + ( features.shaderStorageImageReadWithoutFormat == VK_TRUE ? "true" : "false" ) +
+            ", shaderStorageImageWriteWithoutFormat = "                 + ( features.shaderStorageImageWriteWithoutFormat == VK_TRUE ? "true" : "false" ) +
+            ", shaderUniformBufferArrayDynamicIndexing = "              + ( features.shaderUniformBufferArrayDynamicIndexing == VK_TRUE ? "true" : "false" ) +
+            ", shaderSampledImageArrayDynamicIndexing = "               + ( features.shaderSampledImageArrayDynamicIndexing == VK_TRUE ? "true" : "false" ) +
+            ", shaderStorageBufferArrayDynamicIndexing = "              + ( features.shaderStorageBufferArrayDynamicIndexing == VK_TRUE ? "true" : "false" ) +
+            ", shaderStorageImageArrayDynamicIndexing = "               + ( features.shaderStorageImageArrayDynamicIndexing == VK_TRUE ? "true" : "false" ) +
+            ", shaderClipDistance = "                                   + ( features.shaderClipDistance == VK_TRUE ? "true" : "false" ) +
+            ", shaderCullDistance = "                                   + ( features.shaderCullDistance == VK_TRUE ? "true" : "false" ) +
+            ", shaderFloat64 = "                                        + ( features.shaderFloat64 == VK_TRUE ? "true" : "false" ) +
+            ", shaderInt64 = "                                          + ( features.shaderInt64 == VK_TRUE ? "true" : "false" ) +
+            ", shaderInt16 = "                                          + ( features.shaderInt16 == VK_TRUE ? "true" : "false" ) +
+            ", shaderResourceResidency = "                              + ( features.shaderResourceResidency == VK_TRUE ? "true" : "false" ) +
+            ", shaderResourceMinLod = "                                 + ( features.shaderResourceMinLod == VK_TRUE ? "true" : "false" ) +
+            ", sparseBinding = "                                        + ( features.sparseBinding == VK_TRUE ? "true" : "false" ) +
+            ", sparseResidencyBuffer = "                                + ( features.sparseResidencyBuffer == VK_TRUE ? "true" : "false" ) +
+            ", sparseResidencyImage2D = "                               + ( features.sparseResidencyImage2D == VK_TRUE ? "true" : "false" ) +
+            ", sparseResidencyImage3D = "                               + ( features.sparseResidencyImage3D == VK_TRUE ? "true" : "false" ) +
+            ", sparseResidency2Samples = "                              + ( features.sparseResidency2Samples == VK_TRUE ? "true" : "false" ) +
+            ", sparseResidency4Samples = "                              + ( features.sparseResidency4Samples == VK_TRUE ? "true" : "false" ) +
+            ", sparseResidency8Samples = "                              + ( features.sparseResidency8Samples == VK_TRUE ? "true" : "false" ) +
+            ", sparseResidency16Samples = "                             + ( features.sparseResidency16Samples == VK_TRUE ? "true" : "false" ) +
+            ", sparseResidencyAliased = "                               + ( features.sparseResidencyAliased == VK_TRUE ? "true" : "false" ) +
+            ", variableMultisampleRate = "                              + ( features.variableMultisampleRate == VK_TRUE ? "true" : "false" ) +
+            ", inheritedQueries = "                                     + ( features.inheritedQueries == VK_TRUE ? "true" : "false" ) +
+            "}";
+}
+
+auto vulkan :: toString (
         __C_ENG_TYPE ( PhysicalDeviceDetails ) const & details
 ) noexcept -> String {
 
     return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceDetails ) ) " "
             "{ basicProperties = "                                  + toString ( details.basicProperties ) +
+            ", basicFeatures = "                                    + toString ( details.basicFeatures ) +
 
 #if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
 
@@ -3883,7 +4088,7 @@ auto vulkan :: toString (
 
     String prioritiesAsString = "[ ";
     for ( uint32 i = 0U; i < properties.priorityCount; ++ i ) {
-        prioritiesAsString += toString ( static_cast < __C_ENG_TYPE ( GlobalQueuePriority ) > ( properties.priorities[i] ) ) + ", "_s;
+        prioritiesAsString += toString ( static_cast < __C_ENG_TYPE ( QueueGlobalPriority ) > ( properties.priorities[i] ) ) + ", "_s;
     }
 
     (void) prioritiesAsString.removeSuffix(", ").append(" ]");
@@ -3941,6 +4146,30 @@ auto vulkan :: toString (
             ", pNext = "                + :: toString ( properties.pNext ) +
             ", videoCodecOperations = " + "0b" + Long ( properties.videoCodecOperations ).toString(2) +
             " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( DeviceQueueCreateInfo ) const & info
+) noexcept -> String {
+
+    String queuePrioritiesAsString = "[ ";
+    for ( uint32 i = 0U; i < info.queueCount; ++ i ) {
+        queuePrioritiesAsString += info.pQueuePriorities[i] + ", "_s;
+    }
+    (void) queuePrioritiesAsString.removeSuffix(", ").append(" ]");
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( DeviceQueueCreateInfo ) ) " "
+           "{ type = "_s                + :: toString ( info.structureType ) +
+           ", pNext = "                 + :: toString ( info.pNext ) +
+           ", flags = "                 + "0b" + Long ( info.flags ).toString(2) +
+           ", queueFamilyIndex = "      + info.queueFamilyIndex +
+           ", queueCount = "            + info.queueCount +
+           ", pQueuePriorities = "      + queuePrioritiesAsString +
+           " }";
 }
 
 #endif

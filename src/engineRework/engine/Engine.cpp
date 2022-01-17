@@ -163,6 +163,8 @@ auto Self :: shutdownRequested() noexcept -> bool {
         return true;
     }
 
+    (void) this;
+
     return false;
 }
 

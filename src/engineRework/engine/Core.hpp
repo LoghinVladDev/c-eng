@@ -2,8 +2,8 @@
 // Created by loghin on 20.12.2021.
 //
 
-#ifndef __C_ENG_CORE_HPP
-#define __C_ENG_CORE_HPP
+#ifndef __C_ENG_CORE_HPP__
+#define __C_ENG_CORE_HPP__
 
 #include <CDS/Types>
 
@@ -638,4 +638,4 @@ namespace engine {
 
 }
 
-#endif //__C_ENG_CORE_HPP
+#endif //__C_ENG_CORE_HPP__

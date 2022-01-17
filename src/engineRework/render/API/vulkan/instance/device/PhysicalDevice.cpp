@@ -19,7 +19,7 @@ using namespace engine; // NOLINT(clion-misra-cpp2008-7-3-4)
 #include <ObjectMapping.hpp>
 
 static vulkan :: __C_ENG_TYPE ( Instance ) const * pLastQueriedInstance = nullptr;
-static Array < vulkan :: Self const > physicalDevices;
+static Array < vulkan :: Self > physicalDevices;
 
 static vulkan :: __C_ENG_TYPE ( PhysicalDeviceHandle ) physicalDeviceHandles [ __C_ENG_VULKAN_CORE_PHYSICAL_DEVICE_MAX_COUNT ];
 
@@ -79,12 +79,12 @@ static inline auto logPhysicalDevices () noexcept -> void {
 
         (void) __C_ENG_TYPE ( Logger ) :: instance().info (" "_s * indent + "Device " + i + " Queue Family Properties : ");
 
-        for ( uint32 j = 0U; j < physicalDevices[static_cast < Index > ( i )].queueFamilyDetails().size(); ++ j ) {
+        for ( uint32 j = 0U; j < physicalDevices[static_cast < Index > ( i )].queueFamilies().size(); ++ j ) {
             indent += 4;
 
             (void) __C_ENG_TYPE ( Logger ) :: instance().info (" "_s * indent + "Family " + j);
 
-            auto queuePropertiesAsString = toString(physicalDevices[static_cast < Index > ( i )].queueFamilyDetails()[static_cast < Index > ( j )]);
+            auto queuePropertiesAsString = toString(physicalDevices[static_cast < Index > ( i )].queueFamilies()[static_cast < Index > ( j )].details());
 
             auto innerRows = queuePropertiesAsString.split(',');
 
@@ -159,7 +159,7 @@ auto vulkan :: Self :: refreshPhysicalDevices (
 
     uint32 physicalDeviceCount = 0U;
 
-    :: physicalDevices.clear();
+    cds :: Array < Self > newPhysicalDevices;
 
     auto result = vulkan :: enumeratePhysicalDevices (
             pInstance->handle(),
@@ -186,7 +186,8 @@ auto vulkan :: Self :: refreshPhysicalDevices (
 
             Self device;
 
-            device._handle = physicalDeviceHandles[i];
+            device._handle      = physicalDeviceHandles[i];
+            device._instance    = pInstance;
 
             result = vulkan :: getPhysicalDeviceDetails(
                     device.handle(),
@@ -197,58 +198,73 @@ auto vulkan :: Self :: refreshPhysicalDevices (
                 __C_ENG_LOG_AND_THROW_DETAILED_API_CALL_EXCEPTION ( debug, "getPhysicalDeviceDetails", result );
             }
 
-            try {
-
-                uint32 queueFamilyCount;
-                result = vulkan :: getPhysicalDeviceQueueFamilyDetails (
-                        device.handle(),
-                        & queueFamilyCount
-                );
-
-                if ( result != ResultSuccess ) {
-                    __C_ENG_LOG_AND_THROW_DETAILED_API_CALL_EXCEPTION ( debug, "getPhysicalDeviceQueueFamilyDetails", result );
-                }
-
-                auto queueFamilyDetails = new __C_ENG_TYPE ( QueueFamilyDetails ) [ queueFamilyCount ];
-                result = vulkan :: getPhysicalDeviceQueueFamilyDetails(
-                        device.handle(),
-                        & queueFamilyCount,
-                        & queueFamilyDetails[0]
-                );
-
-                if ( result != ResultSuccess ) {
-                    delete [] queueFamilyDetails;
-                    __C_ENG_LOG_AND_THROW_DETAILED_API_CALL_EXCEPTION ( debug, "getPhysicalDeviceQueueFamilyDetails", result );
-                }
-
-                device._queueFamilyDetails.resize ( queueFamilyCount );
-                for ( uint32 queueFamilyIndex = 0U; queueFamilyIndex < queueFamilyCount; ++ queueFamilyIndex ) {
-                    (void) std :: memcpy ( & device._queueFamilyDetails[static_cast < Index > ( queueFamilyIndex )], & queueFamilyDetails[queueFamilyIndex], sizeof ( queueFamilyDetails[queueFamilyIndex] ) );
-                }
-
-            } catch ( ... ) {
-                throw;
-            }
-
-            (void) :: physicalDevices.pushBack(device);
+            (void) newPhysicalDevices.pushBack(device);
+            (void) newPhysicalDevices.back().refreshQueueFamilies();
 
         } catch ( Exception const & exception ) {
             (void) __C_ENG_TYPE ( Logger ) :: instance().debug ( "Properties acquisition for device "_s + i + " failed" );
         }
     }
 
+    pLastQueriedInstance = pInstance;
+    :: physicalDevices = std :: move ( newPhysicalDevices );
+
 #ifndef NDEBUG
 
     logPhysicalDevices();
 
 #endif
+}
 
-    pLastQueriedInstance = pInstance;
+auto vulkan :: Self :: refreshQueueFamilies () noexcept (false) -> Self & {
+
+    __C_ENG_TYPE ( QueueFamilyDetails ) * pQueueFamilyDetails = nullptr;
+
+    try {
+
+        uint32 queueFamilyCount;
+        auto result = vulkan :: getPhysicalDeviceQueueFamilyDetails (
+                this->handle(),
+                & queueFamilyCount
+        );
+
+        if ( result != ResultSuccess ) {
+            __C_ENG_LOG_AND_THROW_DETAILED_API_CALL_EXCEPTION ( debug, "getPhysicalDeviceQueueFamilyDetails", result );
+        }
+
+        pQueueFamilyDetails = new __C_ENG_TYPE ( QueueFamilyDetails ) [ queueFamilyCount ];
+        result = vulkan :: getPhysicalDeviceQueueFamilyDetails(
+                this->handle(),
+                & queueFamilyCount,
+                & pQueueFamilyDetails[0]
+        );
+
+        if ( result != ResultSuccess ) {
+            __C_ENG_LOG_AND_THROW_DETAILED_API_CALL_EXCEPTION ( debug, "getPhysicalDeviceQueueFamilyDetails", result );
+        }
+
+        this->_queueFamilies.resize ( queueFamilyCount );
+        for ( uint32 queueFamilyIndex = 0U; queueFamilyIndex < queueFamilyCount; ++ queueFamilyIndex ) {
+            (void) this->_queueFamilies[static_cast < Index > ( queueFamilyIndex )].init(
+                    this,
+                    queueFamilyIndex,
+                    pQueueFamilyDetails[queueFamilyIndex]
+            );
+        }
+
+        delete[] pQueueFamilyDetails;
+
+    } catch ( ... ) {
+        delete[] pQueueFamilyDetails;
+        throw;
+    }
+
+    return * this;
 }
 
 auto vulkan :: Self :: physicalDevices (
         __C_ENG_TYPE ( Instance ) const * pInstance
-) noexcept (false) -> Array < Self const > const & {
+) noexcept (false) -> Array < Self > const & {
     if ( pInstance != nullptr && pLastQueriedInstance != pInstance ) {
         Self :: refreshPhysicalDevices ( pInstance );
     }

@@ -2,8 +2,8 @@
 // Created by loghin on 31.12.2021.
 //
 
-#ifndef C_ENG_ALLOCATOR_HPP
-#define C_ENG_ALLOCATOR_HPP
+#ifndef __C_ENG_ALLOCATOR_HPP__
+#define __C_ENG_ALLOCATOR_HPP__
 
 #include <Preprocess.hpp>
 #include <CDS/Object>
@@ -33,4 +33,4 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #include <ObjectMapping.hpp>
 
 
-#endif //C_ENG_ALLOCATOR_HPP
+#endif //__C_ENG_ALLOCATOR_HPP__

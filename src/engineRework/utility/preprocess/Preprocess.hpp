@@ -2,8 +2,8 @@
 // Created by loghin on 18.12.2021.
 //
 
-#ifndef __C_ENG_PREPROCESS_H
-#define __C_ENG_PREPROCESS_H
+#ifndef __C_ENG_PREPROCESS_HPP__
+#define __C_ENG_PREPROCESS_HPP__
 
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
@@ -25,6 +25,5 @@
 
 #include <Naming.hpp>
 #include <Compiler.hpp>
-#include <ClassGenerators.hpp>
 
-#endif //__C_ENG_PREPROCESS_H
+#endif //__C_ENG_PREPROCESS_HPP__

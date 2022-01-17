@@ -2,8 +2,8 @@
 // Created by loghin on 19.12.2021.
 //
 
-#ifndef __C_ENG_SETTINGS_HPP
-#define __C_ENG_SETTINGS_HPP
+#ifndef __C_ENG_SETTINGS_HPP__
+#define __C_ENG_SETTINGS_HPP__
 
 #include <Preprocess.hpp>
 #include <CDS/HashMap>
@@ -77,4 +77,4 @@ namespace engine {
 #include <ObjectMapping.hpp>
 
 
-#endif //__C_ENG_SETTINGS_HPP
+#endif //__C_ENG_SETTINGS_HPP__

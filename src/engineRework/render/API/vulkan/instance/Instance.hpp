@@ -2,8 +2,8 @@
 // Created by loghin on 28.12.2021.
 //
 
-#ifndef __C_ENG_INSTANCE_HPP
-#define __C_ENG_INSTANCE_HPP
+#ifndef __C_ENG_INSTANCE_HPP__
+#define __C_ENG_INSTANCE_HPP__
 
 #include <Preprocess.hpp>
 #include <CDS/Object>
@@ -82,16 +82,16 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
             }))
 
-            Field ( ENGINE_TYPE ( Version ),                                                version,                    DEFAULT_VALUE ( nullVersion ),                  GET_DEFAULT, SET_NONE )
-            Field ( ENGINE_TYPE ( LayerHandler ),                                           layerHandler,               NO_INIT,                                        GET_DEFAULT, SET_NONE )
-            Field ( ENGINE_TYPE ( DebugMessageSeverityFlags ),                              debugMessageSeverityFlags,  DEFAULT_VALUE ( defaultMessageSeverityFlags ),  GET_DEFAULT, SET_NONE )
-            Field ( ENGINE_TYPE ( DebugMessageTypeFlags ),                                  debugMessageTypeFlags,      DEFAULT_VALUE ( defaultMessageTypeFlags ),      GET_DEFAULT, SET_NONE )
+            Field ( ENGINE_TYPE ( Version ),                                                version,                    DEFAULT_VALUE ( versionConstants :: nullVersion ),  GET_DEFAULT, SET_NONE )
+            Field ( ENGINE_TYPE ( LayerHandler ),                                           layerHandler,               NO_INIT,                                            GET_DEFAULT, SET_NONE )
+            Field ( ENGINE_TYPE ( DebugMessageSeverityFlags ),                              debugMessageSeverityFlags,  DEFAULT_VALUE ( defaultMessageSeverityFlags ),      GET_DEFAULT, SET_NONE )
+            Field ( ENGINE_TYPE ( DebugMessageTypeFlags ),                                  debugMessageTypeFlags,      DEFAULT_VALUE ( defaultMessageTypeFlags ),          GET_DEFAULT, SET_NONE )
 
-            Field ( ENGINE_TYPE ( InstanceHandle ),                                         handle,                     DEFAULT_VALUE ( nullptr ),                      GET_DEFAULT, SET_NONE )
-            Field ( ENGINE_TYPE ( DebugMessengerHandle ),                                   debugMessengerHandle,       DEFAULT_VALUE ( nullptr ),                      GET_DEFAULT, SET_NONE )
+            Field ( ENGINE_TYPE ( InstanceHandle ),                                         handle,                     DEFAULT_VALUE ( nullptr ),                          GET_DEFAULT, SET_NONE )
+            Field ( ENGINE_TYPE ( DebugMessengerHandle ),                                   debugMessengerHandle,       DEFAULT_VALUE ( nullptr ),                          GET_DEFAULT, SET_NONE )
 
-            Field ( TYPE ( cds :: Array < __C_ENG_TYPE ( ValidationFeatureEnable ) > ),     enabledValidationFeatures,  NO_INIT,                                        GET_DEFAULT, SET_NONE )
-            Field ( TYPE ( cds :: Array < __C_ENG_TYPE ( ValidationFeatureDisable ) > ),    disabledValidationFeatures, NO_INIT,                                        GET_DEFAULT, SET_NONE )
+            Field ( TYPE ( cds :: Array < __C_ENG_TYPE ( ValidationFeatureEnable ) > ),     enabledValidationFeatures,  NO_INIT,                                            GET_DEFAULT, SET_NONE )
+            Field ( TYPE ( cds :: Array < __C_ENG_TYPE ( ValidationFeatureDisable ) > ),    disabledValidationFeatures, NO_INIT,                                            GET_DEFAULT, SET_NONE )
 
         public:
             class Builder;
@@ -125,7 +125,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
     namespace vulkan {
 
         Class {
-            Field ( ENGINE_TYPE ( Version ),                                                version,                    DEFAULT_VALUE ( nullVersion ),                          GET_NONE, SET_INLINE ( setVersion ) )
+            Field ( ENGINE_TYPE ( Version ),                                                version,                    DEFAULT_VALUE ( versionConstants :: nullVersion ),      GET_NONE, SET_INLINE ( setVersion ) )
             Field ( ENGINE_TYPE ( DebugMessageSeverityFlags ),                              debugMessageSeverityFlags,  DEFAULT_VALUE ( defaultMessageSeverityFlags ),          GET_NONE, SET_INLINE ( setDebugMessageSeverityFlags ) )
             Field ( ENGINE_TYPE ( DebugMessageTypeFlags ),                                  debugMessageTypeFlags,      DEFAULT_VALUE ( defaultMessageTypeFlags ),              GET_NONE, SET_INLINE ( setDebugMessageTypeFlags ) )
 
@@ -144,4 +144,4 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #include <ObjectMapping.hpp>
 
 
-#endif // __C_ENG_INSTANCE_HPP
+#endif // __C_ENG_INSTANCE_HPP__

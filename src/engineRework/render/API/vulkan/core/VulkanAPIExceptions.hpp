@@ -2,8 +2,8 @@
 // Created by loghin on 28.12.2021.
 //
 
-#ifndef C_ENG_VULKANAPIEXCEPTIONS_HPP
-#define C_ENG_VULKANAPIEXCEPTIONS_HPP
+#ifndef __C_ENG_VULKAN_API_EXCEPTIONS_HPP__
+#define __C_ENG_VULKAN_API_EXCEPTIONS_HPP__
 
 #include <RenderEngineTypes.hpp>
 #include <Preprocess.hpp>
@@ -116,4 +116,4 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
     }
 }
 
-#endif //C_ENG_VULKANAPIEXCEPTIONS_HPP
+#endif //__C_ENG_VULKAN_API_EXCEPTIONS_HPP__

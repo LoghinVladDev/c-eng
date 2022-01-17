@@ -2,8 +2,8 @@
 // Created by loghin on 23.12.2021.
 //
 
-#ifndef __C_ENG_SIMPLEEVENTQUEUE_HPP
-#define __C_ENG_SIMPLEEVENTQUEUE_HPP
+#ifndef __C_ENG_SIMPLE_EVENT_QUEUE_HPP__
+#define __C_ENG_SIMPLE_EVENT_QUEUE_HPP__
 
 #include <Preprocess.hpp>
 #include <CDS/Utility>
@@ -76,4 +76,4 @@ namespace engine :: utility {
 
 }
 
-#endif //__C_ENG_SIMPLEEVENTQUEUE_HPP
+#endif //__C_ENG_SIMPLE_EVENT_QUEUE_HPP__

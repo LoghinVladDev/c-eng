@@ -2,8 +2,8 @@
 // Created by loghin on 30.12.2021.
 //
 
-#ifndef C_ENG_FUNC_HPP
-#define C_ENG_FUNC_HPP
+#ifndef __C_ENG_FUNC_HPP__
+#define __C_ENG_FUNC_HPP__
 
 #include <Preprocess.hpp>
 #include <Core.hpp>
@@ -29,4 +29,4 @@ namespace engine {
 
 }
 
-#endif //C_ENG_FUNC_HPP
+#endif //__C_ENG_FUNC_HPP__

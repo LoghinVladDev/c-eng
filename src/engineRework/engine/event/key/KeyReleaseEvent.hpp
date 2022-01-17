@@ -2,8 +2,8 @@
 // Created by loghin on 20.12.2021.
 //
 
-#ifndef __C_ENG_KEYRELEASEEVENT_HPP
-#define __C_ENG_KEYRELEASEEVENT_HPP
+#ifndef __C_ENG_KEY_RELEASE_EVENT_HPP__
+#define __C_ENG_KEY_RELEASE_EVENT_HPP__
 
 
 #include <KeyEvent.hpp>
@@ -48,4 +48,4 @@ namespace engine {
 #include <ObjectMapping.hpp>
 
 
-#endif //__C_ENG_KEYRELEASEEVENT_HPP
+#endif //__C_ENG_KEY_RELEASE_EVENT_HPP__

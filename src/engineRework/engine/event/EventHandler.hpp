@@ -2,8 +2,8 @@
 // Created by loghin on 22.12.2021.
 //
 
-#ifndef __C_ENG_EVENTHANDLER_HPP
-#define __C_ENG_EVENTHANDLER_HPP
+#ifndef __C_ENG_EVENT_HANDLER_HPP__
+#define __C_ENG_EVENT_HANDLER_HPP__
 
 #include <Preprocess.hpp>
 #include <CDS/Utility>
@@ -99,4 +99,4 @@ namespace engine {
 #include <ObjectMapping.hpp>
 
 
-#endif //__C_ENG_EVENTHANDLER_HPP
+#endif //__C_ENG_EVENT_HANDLER_HPP__

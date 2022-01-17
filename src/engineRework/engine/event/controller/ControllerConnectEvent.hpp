@@ -2,8 +2,8 @@
 // Created by loghin on 22.12.2021.
 //
 
-#ifndef __C_ENG_CONTROLLERCONNECTEVENT_HPP
-#define __C_ENG_CONTROLLERCONNECTEVENT_HPP
+#ifndef __C_ENG_CONTROLLER_CONNECT_EVENT_HPP__
+#define __C_ENG_CONTROLLER_CONNECT_EVENT_HPP__
 
 #include <ControllerEvent.hpp>
 
@@ -41,4 +41,4 @@ namespace engine {
 #include <ObjectMapping.hpp>
 
 
-#endif //__C_ENG_CONTROLLERCONNECTEVENT_HPP
+#endif //__C_ENG_CONTROLLER_CONNECT_EVENT_HPP__

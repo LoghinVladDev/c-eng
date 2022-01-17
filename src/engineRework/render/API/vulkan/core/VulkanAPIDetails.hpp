@@ -2,8 +2,8 @@
 // Created by loghin on 27.12.2021.
 //
 
-#ifndef __C_ENG_VULKANAPIDETAILS_HPP
-#define __C_ENG_VULKANAPIDETAILS_HPP
+#ifndef __C_ENG_VULKAN_API_DETAILS_HPP__
+#define __C_ENG_VULKAN_API_DETAILS_HPP__
 
 
 #define __C_ENG_VULKAN_BETA_EXTENSIONS_ENABLED false
@@ -78,4 +78,4 @@
 #include <VulkanAPIBlackberryExtensionDetails.hpp>
 
 
-#endif //__C_ENG_VULKANAPIDETAILS_HPP
+#endif //__C_ENG_VULKAN_API_DETAILS_HPP__

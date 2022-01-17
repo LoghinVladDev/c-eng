@@ -2,8 +2,8 @@
 // Created by loghin on 28.12.2021.
 //
 
-#ifndef C_ENG_RENDERENGINETYPES_HPP
-#define C_ENG_RENDERENGINETYPES_HPP
+#ifndef __C_ENG_RENDER_ENGINE_TYPES_HPP__
+#define __C_ENG_RENDER_ENGINE_TYPES_HPP__
 
 
 #include <CDS/Exception>
@@ -28,4 +28,4 @@ namespace engine {
 #include <ObjectMapping.hpp>
 
 
-#endif //C_ENG_RENDERENGINETYPES_HPP
+#endif //__C_ENG_RENDER_ENGINE_TYPES_HPP__

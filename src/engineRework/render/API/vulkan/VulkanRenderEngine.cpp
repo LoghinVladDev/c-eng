@@ -82,7 +82,7 @@ vulkan :: Self :: Destructor() noexcept {
 }
 
 auto vulkan :: Self :: acquireSuitableAPIVersion() const noexcept (false) -> __C_ENG_TYPE ( Version ) {
-    __C_ENG_TYPE ( Version ) chosenVersion = nullVersion;
+    __C_ENG_TYPE ( Version ) chosenVersion = versionConstants :: nullVersion;
 
 #if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
 
@@ -104,7 +104,7 @@ auto vulkan :: Self :: acquireSuitableAPIVersion() const noexcept (false) -> __C
 #endif
 
     if (
-            compare ( this->desiredVersion(), nullVersion ) == CompareResultEquals ||
+            compare ( this->desiredVersion(), versionConstants :: nullVersion ) == CompareResultEquals ||
             compare ( this->desiredVersion(), greatestVersion ) == CompareResultGreater
     ) {
         chosenVersion = greatestVersion;
@@ -112,7 +112,7 @@ auto vulkan :: Self :: acquireSuitableAPIVersion() const noexcept (false) -> __C
         chosenVersion = this->desiredVersion();
     }
 
-    if ( compare ( chosenVersion, nullVersion ) == CompareResultEquals ) {
+    if ( compare ( chosenVersion, versionConstants :: nullVersion ) == CompareResultEquals ) {
         throw __C_ENG_TYPE ( VulkanAPIException ) ( "No suitable vulkan version found" );
     }
 

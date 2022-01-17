@@ -5,6 +5,7 @@
 #include <VulkanCore.hpp>
 #include <VulkanAPICalls.hpp>
 #include <VulkanCoreConfig.hpp>
+#include <VulkanAPICallsValidUsage.hpp>
 
 
 /**
@@ -23,6 +24,7 @@ static VkInstanceCreateInfo                 instanceCreateInfo;
 static VkValidationFeaturesEXT              validationFeatures;
 
 static VkPhysicalDeviceProperties           deviceProperties;
+static VkPhysicalDeviceFeatures             deviceFeatures;
 
 static VkValidationFeatureEnableEXT         validationFeatureEnables    [ __C_ENG_VULKAN_CORE_VALIDATION_FEATURE_ENABLE_MAX_COUNT ];
 static VkValidationFeatureDisableEXT        validationFeatureDisables   [ __C_ENG_VULKAN_CORE_VALIDATION_FEATURE_DISABLE_MAX_COUNT ];
@@ -299,6 +301,26 @@ static VkQueueFamilyQueryResultStatusPropertiesKHR                  queueFamilyQ
 static VkVideoQueueFamilyPropertiesKHR                              videoQueueFamilyProperties [ __C_ENG_VULKAN_CORE_QUEUE_FAMILY_MAX_COUNT ];
 
 #endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PERFORMANCE_QUERY_AVAILABLE
+
+static VkPerformanceCounterKHR                                      counters [ __C_ENG_VULKAN_CORE_QUEUE_FAMILY_PERFORMANCE_COUNTER_MAX_COUNT ];
+static VkPerformanceCounterDescriptionKHR                           counterDescriptions [ __C_ENG_VULKAN_CORE_QUEUE_FAMILY_PERFORMANCE_COUNTER_MAX_COUNT ];
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+
+static VkPhysicalDeviceGroupProperties                              physicalDeviceGroupProperties [ __C_ENG_VULKAN_CORE_PHYSICAL_DEVICE_GROUP_MAX_COUNT ];
+
+#endif
+
+static VkDeviceCreateInfo                                           deviceCreateInfo;
+
+
+static PFN_vkCreateDebugUtilsMessengerEXT                                   pVkInstanceProcessCreateDebugMessenger                                       = nullptr;
+static PFN_vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR  pVkInstanceProcessEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCounters = nullptr;
 
 
 /**
@@ -1662,7 +1684,7 @@ auto vulkan :: enumerateInstanceLayerProperties (
     return __C_ENG_TYPE ( Result ) :: ResultSuccess;
 }
 
-auto vulkan :: enumerateDeviceLayerProperties (
+__C_ENG_MAYBE_UNUSED auto vulkan :: enumerateDeviceLayerProperties (
         __C_ENG_TYPE ( PhysicalDeviceHandle )   handle,
         uint32                                * pLayerPropertiesCount,
         __C_ENG_TYPE ( LayerProperties )      * pProperties
@@ -1851,15 +1873,15 @@ auto vulkan :: createDebugMessenger (
         return ResultErrorIllegalArgument;
     }
 
-    PFN_vkCreateDebugUtilsMessengerEXT  function = nullptr;
     VkAllocationCallbacks             * pUsedAllocationCallbacks = nullptr;
 
-    function = reinterpret_cast < PFN_vkCreateDebugUtilsMessengerEXT > (
-            vkGetInstanceProcAddr ( instanceHandle, __C_ENG_VULKAN_CORE_FUNCTION_NAME_CREATE_DEBUG_MESSENGER )
-    );
+    if ( pVkInstanceProcessCreateDebugMessenger == nullptr ) {
 
-    if ( function == nullptr ) {
-        return ResultErrorFunctionHandleNotFound;
+        auto lResult = vulkan :: getInstanceFunctionAddress (
+                instanceHandle,
+                __C_ENG_VULKAN_CORE_FUNCTION_NAME_CREATE_DEBUG_MESSENGER,
+                reinterpret_cast < void ** > ( & pVkInstanceProcessCreateDebugMessenger )
+        );
     }
 
     if ( pAllocationCallbacks != nullptr ) {
@@ -1872,7 +1894,7 @@ auto vulkan :: createDebugMessenger (
             & messengerCreateInfo
     );
 
-    return static_cast < __C_ENG_TYPE ( Result ) > ( function (
+    return static_cast < __C_ENG_TYPE ( Result ) > ( pVkInstanceProcessCreateDebugMessenger (
             instanceHandle,
             & messengerCreateInfo,
             pUsedAllocationCallbacks,
@@ -2160,7 +2182,76 @@ static inline auto fromVulkanFormat (
     (void) std :: memcpy ( pProperties->limits.lineWidthRange,              pVkProperties->limits.lineWidthRange,           sizeof ( pVkProperties->limits.lineWidthRange[0] ) * 2U ); // NOLINT(clion-misra-cpp2008-5-2-12)
 }
 
-auto vulkan :: getPhysicalDeviceProperties (
+static inline auto fromVulkanFormat (
+        vulkan :: __C_ENG_TYPE ( PhysicalDeviceFeatures )         * pDestination,
+        VkPhysicalDeviceFeatures                            const * pSource
+) noexcept -> void {
+
+    if (
+            pDestination    == nullptr ||
+            pSource         == nullptr
+    ) {
+        return;
+    }
+
+    pDestination->robustBufferAccess                        = pSource->robustBufferAccess;
+    pDestination->fullDrawIndexUint32                       = pSource->fullDrawIndexUint32;
+    pDestination->imageCubeArray                            = pSource->imageCubeArray;
+    pDestination->independentBlend                          = pSource->independentBlend;
+    pDestination->geometryShader                            = pSource->geometryShader;
+    pDestination->tessellationShader                        = pSource->tessellationShader;
+    pDestination->sampleRateShading                         = pSource->sampleRateShading;
+    pDestination->dualSrcBlend                              = pSource->dualSrcBlend;
+    pDestination->logicOp                                   = pSource->logicOp;
+    pDestination->multiDrawIndirect                         = pSource->multiDrawIndirect;
+    pDestination->drawIndirectFirstInstance                 = pSource->drawIndirectFirstInstance;
+    pDestination->depthClamp                                = pSource->depthClamp;
+    pDestination->depthBiasClamp                            = pSource->depthBiasClamp;
+    pDestination->fillModeNonSolid                          = pSource->fillModeNonSolid;
+    pDestination->depthBounds                               = pSource->depthBounds;
+    pDestination->wideLines                                 = pSource->wideLines;
+    pDestination->largePoints                               = pSource->largePoints;
+    pDestination->alphaToOne                                = pSource->alphaToOne;
+    pDestination->multiViewport                             = pSource->multiViewport;
+    pDestination->samplerAnisotropy                         = pSource->samplerAnisotropy;
+    pDestination->textureCompressionETC2                    = pSource->textureCompressionETC2;
+    pDestination->textureCompressionASTC_LDR                = pSource->textureCompressionASTC_LDR;
+    pDestination->textureCompressionBC                      = pSource->textureCompressionBC;
+    pDestination->occlusionQueryPrecise                     = pSource->occlusionQueryPrecise;
+    pDestination->pipelineStatisticsQuery                   = pSource->pipelineStatisticsQuery;
+    pDestination->vertexPipelineStoresAndAtomics            = pSource->vertexPipelineStoresAndAtomics;
+    pDestination->fragmentStoresAndAtomics                  = pSource->fragmentStoresAndAtomics;
+    pDestination->shaderTessellationAndGeometryPointSize    = pSource->shaderTessellationAndGeometryPointSize;
+    pDestination->shaderImageGatherExtended                 = pSource->shaderImageGatherExtended;
+    pDestination->shaderStorageImageExtendedFormats         = pSource->shaderStorageImageExtendedFormats;
+    pDestination->shaderStorageImageMultisample             = pSource->shaderStorageImageMultisample;
+    pDestination->shaderStorageImageReadWithoutFormat       = pSource->shaderStorageImageReadWithoutFormat;
+    pDestination->shaderStorageImageWriteWithoutFormat      = pSource->shaderStorageImageWriteWithoutFormat;
+    pDestination->shaderUniformBufferArrayDynamicIndexing   = pSource->shaderUniformBufferArrayDynamicIndexing;
+    pDestination->shaderSampledImageArrayDynamicIndexing    = pSource->shaderSampledImageArrayDynamicIndexing;
+    pDestination->shaderStorageBufferArrayDynamicIndexing   = pSource->shaderStorageBufferArrayDynamicIndexing;
+    pDestination->shaderStorageImageArrayDynamicIndexing    = pSource->shaderStorageImageArrayDynamicIndexing;
+    pDestination->shaderClipDistance                        = pSource->shaderClipDistance;
+    pDestination->shaderCullDistance                        = pSource->shaderCullDistance;
+    pDestination->shaderFloat64                             = pSource->shaderFloat64;
+    pDestination->shaderInt64                               = pSource->shaderInt64;
+    pDestination->shaderInt16                               = pSource->shaderInt16;
+    pDestination->shaderResourceResidency                   = pSource->shaderResourceResidency;
+    pDestination->shaderResourceMinLod                      = pSource->shaderResourceMinLod;
+    pDestination->sparseBinding                             = pSource->sparseBinding;
+    pDestination->sparseResidencyBuffer                     = pSource->sparseResidencyBuffer;
+    pDestination->sparseResidencyImage2D                    = pSource->sparseResidencyImage2D;
+    pDestination->sparseResidencyImage3D                    = pSource->sparseResidencyImage3D;
+    pDestination->sparseResidency2Samples                   = pSource->sparseResidency2Samples;
+    pDestination->sparseResidency4Samples                   = pSource->sparseResidency4Samples;
+    pDestination->sparseResidency8Samples                   = pSource->sparseResidency8Samples;
+    pDestination->sparseResidency16Samples                  = pSource->sparseResidency16Samples;
+    pDestination->sparseResidencyAliased                    = pSource->sparseResidencyAliased;
+    pDestination->variableMultisampleRate                   = pSource->variableMultisampleRate;
+    pDestination->inheritedQueries                          = pSource->inheritedQueries;
+}
+
+__C_ENG_MAYBE_UNUSED auto vulkan :: getPhysicalDeviceProperties (
         __C_ENG_TYPE ( PhysicalDeviceHandle )       handle,
         __C_ENG_TYPE ( PhysicalDeviceProperties ) * pProperties
 ) noexcept -> __C_ENG_TYPE ( Result ) {
@@ -2175,6 +2266,28 @@ auto vulkan :: getPhysicalDeviceProperties (
     );
 
     fromVulkanFormat ( & deviceProperties, pProperties );
+
+    return ResultSuccess;
+}
+
+auto vulkan :: getPhysicalDeviceFeatures (
+        __C_ENG_TYPE ( PhysicalDeviceHandle )       physicalDeviceHandle,
+        __C_ENG_TYPE ( PhysicalDeviceFeatures )   * pPhysicalDeviceFeatures
+) noexcept -> __C_ENG_TYPE ( Result ) {
+
+    if (
+            physicalDeviceHandle == nullptr ||
+                    pPhysicalDeviceFeatures == nullptr
+    ) {
+        return ResultErrorIllegalArgument;
+    }
+
+    vkGetPhysicalDeviceFeatures (
+            physicalDeviceHandle,
+            & deviceFeatures
+    );
+
+    fromVulkanFormat ( pPhysicalDeviceFeatures, & deviceFeatures );
 
     return ResultSuccess;
 }
@@ -3175,7 +3288,7 @@ inline static auto fromVulkanFormat (
     pDest->minImageTransferGranularity    = pSrc->minImageTransferGranularity;
 }
 
-auto vulkan :: getPhysicalDeviceQueueFamilyProperties (
+__C_ENG_MAYBE_UNUSED auto vulkan :: getPhysicalDeviceQueueFamilyProperties (
         __C_ENG_TYPE ( PhysicalDeviceHandle )       handle,
         cds :: uint32                             * pQueueFamilyPropertyCount,
         __C_ENG_TYPE ( QueueFamilyProperties )    * pQueueFamilyProperties
@@ -3293,7 +3406,7 @@ static inline auto fromVulkanFormat (
     pDestination->priorityCount = pSource->priorityCount;
 
     for ( uint32 i = 0U; i < pDestination->priorityCount; ++ i ) {
-        pDestination->priorities[i] = static_cast < vulkan :: __C_ENG_TYPE ( GlobalQueuePriority ) > ( pSource->priorities[i] ) ;
+        pDestination->priorities[i] = static_cast < vulkan :: __C_ENG_TYPE ( QueueGlobalPriority ) > ( pSource->priorities[i] ) ;
     }
 }
 
@@ -3535,4 +3648,247 @@ auto vulkan :: getPhysicalDeviceQueueFamilyDetails (
     }
 
     return ResultSuccess;
+}
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PERFORMANCE_QUERY_AVAILABLE
+
+__C_ENG_MAYBE_UNUSED auto vulkan :: enumeratePhysicalDeviceQueueFamilyPerformanceQueryCounters (
+        __C_ENG_TYPE ( InstanceHandle )                     instanceHandle,
+        __C_ENG_TYPE ( PhysicalDeviceHandle )               physicalDeviceHandle,
+        uint32                                              queueFamilyIndex,
+        uint32                                            * pCounterCount,
+        __C_ENG_TYPE ( PerformanceCounter )               * pCounters,
+        __C_ENG_TYPE ( PerformanceCounterDescription )    * pCounterDescriptions
+) noexcept -> __C_ENG_TYPE ( Result ) {
+
+    if ( instanceHandle == nullptr || physicalDeviceHandle == nullptr || pCounterCount == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+    if ( pVkInstanceProcessEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCounters == nullptr ) {
+
+        auto lResult = vulkan ::getInstanceFunctionAddress (
+                instanceHandle,
+                __C_ENG_VULKAN_CORE_FUNCTION_NAME_ENUMERATE_PHYSICAL_DEVICE_QUEUE_FAMILY_PERFORMANCE_QUERY_COUNTERS,
+                reinterpret_cast < void ** > ( & pVkInstanceProcessEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCounters )
+        );
+
+        if ( lResult != ResultSuccess ) {
+            return lResult;
+        }
+    }
+
+    if ( pCounters == nullptr && pCounterDescriptions == nullptr ) {
+
+        return static_cast < __C_ENG_TYPE ( Result ) > (
+                pVkInstanceProcessEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCounters (
+                        physicalDeviceHandle,
+                        queueFamilyIndex,
+                        pCounterCount,
+                        nullptr,
+                        nullptr
+                )
+        );
+    }
+
+    if ( * pCounterCount > __C_ENG_VULKAN_CORE_QUEUE_FAMILY_PERFORMANCE_COUNTER_MAX_COUNT ) {
+        return ResultErrorConfigurationArraySizeSmall;
+    }
+
+    result = pVkInstanceProcessEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCounters (
+            physicalDeviceHandle,
+            queueFamilyIndex,
+            pCounterCount,
+            & counters[0],
+            & counterDescriptions[0]
+    );
+
+    if ( result != VkResult :: VK_SUCCESS ) {
+        return static_cast < __C_ENG_TYPE ( Result ) > ( result );
+    }
+
+    for ( uint32 i = 0U; i < * pCounterCount; ++ i ) {
+
+        pCounters[i].structureType  = StructureTypePerformanceCounter;
+        pCounters[i].pNext          = nullptr;
+        pCounters[i].unit           = static_cast < __C_ENG_TYPE ( PerformanceCounterUnit ) > ( counters[i].unit );
+        pCounters[i].scope          = static_cast < __C_ENG_TYPE ( PerformanceCounterScope ) > ( counters[i].scope );
+        pCounters[i].storage        = static_cast < __C_ENG_TYPE ( PerformanceCounterStorage ) > ( counters[i].storage );
+        (void) std :: memcpy ( & pCounters[i].uuid[0], & counters[i].uuid[0], sizeof ( counters[i].uuid[0] ) * VK_UUID_SIZE );
+
+        pCounterDescriptions[i].structureType   = StructureTypePerformanceCounterDescription;
+        pCounterDescriptions[i].pNext           = nullptr;
+        pCounterDescriptions[i].flags           = static_cast < __C_ENG_TYPE ( PerformanceCounterDescriptionFlags ) > ( counterDescriptions[i].flags );
+        (void) std :: memcpy ( & pCounterDescriptions[i].name[0], & counterDescriptions[i].name[0], sizeof ( counterDescriptions[i].name[0] ) * VK_MAX_DESCRIPTION_SIZE );
+        (void) std :: memcpy ( & pCounterDescriptions[i].category[0], & counterDescriptions[i].category[0], sizeof ( counterDescriptions[i].category[0] ) * VK_MAX_DESCRIPTION_SIZE );
+        (void) std :: memcpy ( & pCounterDescriptions[i].description[0], & counterDescriptions[i].description[0], sizeof ( counterDescriptions[i].description[0] ) * VK_MAX_DESCRIPTION_SIZE );
+
+    }
+
+    return ResultSuccess;
+}
+
+#endif
+
+__C_ENG_MAYBE_UNUSED auto vulkan :: getFunctionAddress (
+        StringLiteral   functionName,
+        void         ** ppFunction
+) noexcept -> __C_ENG_TYPE ( Result ) {
+
+    if ( ppFunction == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+    * ppFunction = reinterpret_cast < void * > ( vkGetInstanceProcAddr ( nullptr, functionName ) );
+
+    if ( * ppFunction == nullptr ) {
+        return ResultErrorFunctionHandleNotFound;
+    }
+
+    return ResultSuccess;
+}
+
+auto vulkan :: getInstanceFunctionAddress (
+        __C_ENG_TYPE ( InstanceHandle ) instanceHandle,
+        StringLiteral                   functionName,
+        void                         ** ppFunction
+) noexcept -> __C_ENG_TYPE ( Result ) {
+
+    if ( ppFunction == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+    * ppFunction = reinterpret_cast < void * > ( vkGetInstanceProcAddr ( instanceHandle, functionName ) );
+
+    if ( * ppFunction == nullptr ) {
+        return ResultErrorFunctionHandleNotFound;
+    }
+
+    return ResultSuccess;
+}
+
+auto vulkan :: getDeviceFunctionAddress (
+        __C_ENG_TYPE ( DeviceHandle )   deviceHandle,
+        StringLiteral                   functionName,
+        void                         ** ppFunction
+) noexcept -> __C_ENG_TYPE ( Result ) {
+
+    if ( ppFunction == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+    * ppFunction = reinterpret_cast < void * > ( vkGetDeviceProcAddr ( deviceHandle, functionName ) );
+
+    if ( * ppFunction == nullptr ) {
+        return ResultErrorFunctionHandleNotFound;
+    }
+
+    return ResultSuccess;
+}
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+
+static inline auto fromVulkanFormat (
+        vulkan :: __C_ENG_TYPE ( PhysicalDeviceGroupProperties )          * pDestination,
+        VkPhysicalDeviceGroupProperties                             const * pSource
+) noexcept -> void {
+
+    if ( pDestination == nullptr || pSource == nullptr ) {
+        return;
+    }
+
+    pDestination->structureType         = vulkan :: StructureTypePhysicalDeviceGroupProperties;
+    pDestination->pNext                 = nullptr;
+    pDestination->physicalDeviceCount   = pSource->physicalDeviceCount;
+    pDestination->subsetAllocation      = pSource->subsetAllocation;
+
+    (void) std :: memcpy ( & pDestination->physicalDevices[0], & pSource->physicalDevices[0], sizeof ( pSource->physicalDevices[0] ) * VK_MAX_DEVICE_GROUP_SIZE ); // NOLINT(bugprone-sizeof-expression)
+}
+
+__C_ENG_NO_DISCARD __C_ENG_MAYBE_UNUSED auto vulkan :: enumeratePhysicalDeviceGroups (
+        __C_ENG_TYPE ( InstanceHandle )                   instanceHandle,
+        cds :: uint32                                   * pPhysicalDeviceGroupCount,
+        __C_ENG_TYPE ( PhysicalDeviceGroupProperties )  * pPhysicalDeviceGroupProperties
+) noexcept -> __C_ENG_TYPE ( Result ) {
+
+    if ( instanceHandle == nullptr || pPhysicalDeviceGroupCount == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+    if ( pPhysicalDeviceGroupProperties == nullptr ) {
+        return static_cast < __C_ENG_TYPE ( Result ) > (
+                vkEnumeratePhysicalDeviceGroups (
+                        instanceHandle,
+                        pPhysicalDeviceGroupCount,
+                        nullptr
+                )
+        );
+    }
+
+    if ( * pPhysicalDeviceGroupCount > __C_ENG_VULKAN_CORE_PHYSICAL_DEVICE_GROUP_MAX_COUNT ) {
+        return ResultErrorConfigurationArraySizeSmall;
+    }
+
+    result = vkEnumeratePhysicalDeviceGroups (
+            instanceHandle,
+            pPhysicalDeviceGroupCount,
+            & physicalDeviceGroupProperties[0]
+    );
+
+    if ( result != VK_SUCCESS ) {
+        return static_cast < __C_ENG_TYPE ( Result ) > ( result );
+    }
+
+    for ( uint32 i = 0U; i < * pPhysicalDeviceGroupCount; ++ i ) {
+        fromVulkanFormat ( & pPhysicalDeviceGroupProperties[i], & physicalDeviceGroupProperties[0] );
+    }
+
+    return ResultSuccess;
+}
+
+#endif
+
+auto toVulkanFormat (
+        VkDeviceCreateInfo                                  * pDestination,
+        vulkan :: __C_ENG_TYPE ( DeviceCreateInfo ) const   * pSource
+) noexcept -> void {
+
+}
+
+auto vulkan :: createDevice (
+        __C_ENG_TYPE ( PhysicalDeviceHandle )           physicalDeviceHandle,
+        __C_ENG_TYPE ( DeviceCreateInfo )       const * pDeviceCreateInfo,
+        __C_ENG_TYPE ( AllocationCallbacks )    const * pAllocationCallbacks,
+        __C_ENG_TYPE ( DeviceHandle )                 * pDeviceHandle
+) noexcept -> __C_ENG_TYPE ( Result ) {
+
+    if (
+            physicalDeviceHandle    == nullptr ||
+            pDeviceCreateInfo       == nullptr ||
+            pDeviceHandle           == nullptr
+    ) {
+        return ResultErrorIllegalArgument;
+    }
+
+    if ( ! validate ( pDeviceCreateInfo ) ) {
+        return ResultErrorInvalidUsage;
+    }
+
+    VkAllocationCallbacks * pUsedAllocationCallback = nullptr;
+
+    if ( pAllocationCallbacks != nullptr ) {
+        pUsedAllocationCallback = & allocationCallbacks;
+        toVulkanFormat ( pAllocationCallbacks, pUsedAllocationCallback );
+    }
+
+    toVulkanFormat ( & deviceCreateInfo, pDeviceCreateInfo );
+
+    return static_cast < __C_ENG_TYPE ( Result ) > (
+            vkCreateDevice (
+                    physicalDeviceHandle,
+                    & deviceCreateInfo,
+                    pUsedAllocationCallback,
+                    pDeviceHandle
+            )
+    );
 }

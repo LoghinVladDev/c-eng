@@ -2,8 +2,8 @@
 // Created by loghin on 18.12.2021.
 //
 
-#ifndef __C_ENG_NAMING_HPP
-#define __C_ENG_NAMING_HPP
+#ifndef __C_ENG_NAMING_HPP__
+#define __C_ENG_NAMING_HPP__
 
 
 #ifndef __C_ENG_DEFAULT_NAMING_PREFIX
@@ -28,4 +28,4 @@
 #define __C_ENG_FRIEND_STRUCT(_name)    friend struct __C_ENG_TYPE(_name)
 
 
-#endif //__C_ENG_NAMING_HPP
+#endif //__C_ENG_NAMING_HPP__

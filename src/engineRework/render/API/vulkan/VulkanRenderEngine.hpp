@@ -2,8 +2,8 @@
 // Created by loghin on 28.12.2021.
 //
 
-#ifndef C_ENG_VULKANRENDERAPI_HPP
-#define C_ENG_VULKANRENDERAPI_HPP
+#ifndef __C_ENG_VULKAN_RENDER_ENGINE_HPP__
+#define __C_ENG_VULKAN_RENDER_ENGINE_HPP__
 
 #include <RenderEngine.hpp>
 #include <Instance.hpp>
@@ -16,9 +16,9 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
     namespace vulkan {
 
         Class {
-            Field ( ENGINE_TYPE ( Version ),                    desiredVersion, DEFAULT_VALUE ( nullVersion ),  GET_DEFAULT, SET_INLINE ( setDesiredVersion ) ) // NOLINT(clion-misra-cpp2008-5-0-4,clion-misra-cpp2008-5-0-6)
-            Field ( ENGINE_PRIMITIVE_TYPE ( SurfaceHandle ),    surfaceHandle,  DEFAULT_VALUE ( nullptr ),      GET_DEFAULT, SET_NONE )
-            Field ( ENGINE_TYPE ( Instance ),                   instance,       NO_INIT,                        GET_DEFAULT, SET_NONE )
+            Field ( ENGINE_TYPE ( Version ),                    desiredVersion, DEFAULT_VALUE ( versionConstants :: nullVersion ),  GET_DEFAULT, SET_INLINE ( setDesiredVersion ) ) // NOLINT(clion-misra-cpp2008-5-0-4,clion-misra-cpp2008-5-0-6)
+            Field ( ENGINE_PRIMITIVE_TYPE ( SurfaceHandle ),    surfaceHandle,  DEFAULT_VALUE ( nullptr ),                          GET_DEFAULT, SET_NONE )
+            Field ( ENGINE_TYPE ( Instance ),                   instance,       NO_INIT,                                            GET_DEFAULT, SET_NONE )
 
         private:
             __C_ENG_NO_DISCARD auto acquireSuitableAPIVersion () const noexcept (false) -> __C_ENG_TYPE ( Version );
@@ -39,4 +39,4 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #include <ObjectMapping.hpp>
 
 
-#endif //C_ENG_VULKANRENDERAPI_HPP
+#endif //__C_ENG_VULKAN_RENDER_ENGINE_HPP__

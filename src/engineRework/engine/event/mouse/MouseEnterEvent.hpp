@@ -2,8 +2,8 @@
 // Created by loghin on 20.12.2021.
 //
 
-#ifndef __C_ENG_MOUSEENTEREVENT_HPP
-#define __C_ENG_MOUSEENTEREVENT_HPP
+#ifndef __C_ENG_MOUSE_ENTER_EVENT_HPP__
+#define __C_ENG_MOUSE_ENTER_EVENT_HPP__
 
 #include <MouseEvent.hpp>
 
@@ -45,4 +45,4 @@ namespace engine {
 #include <ObjectMapping.hpp>
 
 
-#endif //__C_ENG_MOUSEENTEREVENT_HPP
+#endif //__C_ENG_MOUSE_ENTER_EVENT_HPP__

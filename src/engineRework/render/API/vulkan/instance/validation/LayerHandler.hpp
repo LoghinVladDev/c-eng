@@ -2,8 +2,8 @@
 // Created by loghin on 30.12.2021.
 //
 
-#ifndef C_ENG_LAYERHANDLER_HPP
-#define C_ENG_LAYERHANDLER_HPP
+#ifndef __C_ENG_LAYER_HANDLER_HPP__
+#define __C_ENG_LAYER_HANDLER_HPP__
 
 #include <Preprocess.hpp>
 #include <CDS/Array>
@@ -54,7 +54,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
                 cds :: uint32           count;
             };
 
-            struct ValidationEnabledFeatures {
+            struct __C_ENG_MAYBE_UNUSED ValidationEnabledFeatures {
                 __C_ENG_TYPE ( ValidationFeatureEnable )    const * pFeatures;
                 cds :: uint32                                       count;
             };
@@ -79,4 +79,4 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #include <ObjectMapping.hpp>
 
 
-#endif //C_ENG_LAYERHANDLER_HPP
+#endif //__C_ENG_LAYER_HANDLER_HPP__

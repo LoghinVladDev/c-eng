@@ -323,7 +323,7 @@ auto Self :: monitors () noexcept -> Array < Self const * > const & {
     return monitorContainer.monitors;
 }
 
-auto Self :: primaryMonitor () noexcept -> Self const * {
+__C_ENG_MAYBE_UNUSED auto Self :: primaryMonitor () noexcept -> Self const * {
     if ( ! monitorContainer.monitorsQueried || ! __GLFWActive ) {
         monitorContainer.query();
     }
@@ -331,7 +331,7 @@ auto Self :: primaryMonitor () noexcept -> Self const * {
     return monitorContainer.primaryMonitor;
 }
 
-auto Self :: initMonitorHandler () noexcept -> void {
+__C_ENG_MAYBE_UNUSED auto Self :: initMonitorHandler () noexcept -> void {
     if ( ! monitorContainer.monitorsQueried || ! __GLFWActive ) {
         monitorContainer.query();
     }

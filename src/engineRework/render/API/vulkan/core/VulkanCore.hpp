@@ -2,8 +2,8 @@
 // Created by loghin on 26.12.2021.
 //
 
-#ifndef __C_ENG_VULKANCORE_HPP
-#define __C_ENG_VULKANCORE_HPP
+#ifndef __C_ENG_VULKAN_CORE_HPP__
+#define __C_ENG_VULKAN_CORE_HPP__
 
 #include <Preprocess.hpp>
 #include <CDS/Types>
@@ -124,6 +124,8 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
+            Field ( ErrorInvalidUsage,                         cds :: limits :: S32_MAX - 6 ),
+            Field ( ErrorFunctionNotSupportedICD,              cds :: limits :: S32_MAX - 5 ),
             Field ( ErrorIncompatibleVersion,                  cds :: limits :: S32_MAX - 4 ),
             Field ( ErrorConfigurationArraySizeSmall,          cds :: limits :: S32_MAX - 3 ),
             Field ( ErrorFunctionHandleNotFound,               cds :: limits :: S32_MAX - 2 ),
@@ -296,7 +298,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
             Field ( ExportFenceCreateInfo,                                                 VkStructureType :: VK_STRUCTURE_TYPE_EXPORT_FENCE_CREATE_INFO ),
 
             Field ( ExportSemaphoreCreateInfo,                                             VkStructureType :: VK_STRUCTURE_TYPE_EXPORT_SEMAPHORE_CREATE_INFO ),
-            Field ( PhysicalDeviceExternalSempahoreInfo,                                   VkStructureType :: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_SEMAPHORE_INFO ),
+            Field ( PhysicalDeviceExternalSemaphoreInfo,                                   VkStructureType :: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_SEMAPHORE_INFO ),
             Field ( ExternalSemaphoreProperties,                                           VkStructureType :: VK_STRUCTURE_TYPE_EXTERNAL_SEMAPHORE_PROPERTIES ),
 
             Field ( PhysicalDeviceMaintenanceProperties,                                   VkStructureType :: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_3_PROPERTIES ),
@@ -1509,7 +1511,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
             Field ( MemoryBarrier2,                                                        VkStructureType :: VK_STRUCTURE_TYPE_MEMORY_BARRIER_2_KHR ),
             Field ( BufferMemoryBarrier2,                                                  VkStructureType :: VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER_2_KHR ),
             Field ( ImageMemoryBarrier2,                                                   VkStructureType :: VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2_KHR ),
-            Field ( DependencryInfo,                                                       VkStructureType :: VK_STRUCTURE_TYPE_DEPENDENCY_INFO_KHR ),
+            Field ( DependencyInfo,                                                        VkStructureType :: VK_STRUCTURE_TYPE_DEPENDENCY_INFO_KHR ),
             Field ( SubmitInfo2,                                                           VkStructureType :: VK_STRUCTURE_TYPE_SUBMIT_INFO_2_KHR ),
             Field ( SemaphoreSubmitInfo,                                                   VkStructureType :: VK_STRUCTURE_TYPE_SEMAPHORE_SUBMIT_INFO_KHR ),
             Field ( CommandBufferSubmitInfo,                                               VkStructureType :: VK_STRUCTURE_TYPE_COMMAND_BUFFER_SUBMIT_INFO_KHR ),
@@ -1966,6 +1968,18 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #define C_ENG_MAP_END
 #include <ObjectMapping.hpp>
 
+
+#define C_ENG_MAP_START     ENUM ( DeviceQueueCreateFlag,   TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( Protected,  VkDeviceQueueCreateFlagBits :: VK_DEVICE_QUEUE_CREATE_PROTECTED_BIT )
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+
 #if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
 
 #define C_ENG_MAP_START     ENUM ( SubgroupFeatureFlag,     TYPE ( cds :: uint32 ) )
@@ -2193,7 +2207,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #if __C_ENG_VULKAN_API_EXTENSION_GLOBAL_PRIORITY_AVAILABLE
 
-#define C_ENG_MAP_START     ENUM ( GlobalQueuePriority, TYPE ( cds :: uint32 ) )
+#define C_ENG_MAP_START     ENUM ( QueueGlobalPriority, TYPE ( cds :: uint32 ) )
 #include <ObjectMapping.hpp>
 
         Enum {
@@ -2234,6 +2248,72 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #endif
 
 
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PERFORMANCE_QUERY_AVAILABLE
+
+#define C_ENG_MAP_START     ENUM ( PerformanceCounterUnit,  TYPE ( cds :: uint8 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( Generic,            VkPerformanceCounterUnitKHR :: VK_PERFORMANCE_COUNTER_UNIT_GENERIC_KHR ),
+            Field ( Percentage,         VkPerformanceCounterUnitKHR :: VK_PERFORMANCE_COUNTER_UNIT_PERCENTAGE_KHR ),
+            Field ( Nanoseconds,        VkPerformanceCounterUnitKHR :: VK_PERFORMANCE_COUNTER_UNIT_NANOSECONDS_KHR ),
+            Field ( Bytes,              VkPerformanceCounterUnitKHR :: VK_PERFORMANCE_COUNTER_UNIT_BYTES_KHR ),
+            Field ( BytesPerSecond,     VkPerformanceCounterUnitKHR :: VK_PERFORMANCE_COUNTER_UNIT_BYTES_PER_SECOND_KHR ),
+            Field ( Kelvin,             VkPerformanceCounterUnitKHR :: VK_PERFORMANCE_COUNTER_UNIT_KELVIN_KHR ),
+            Field ( Watts,              VkPerformanceCounterUnitKHR :: VK_PERFORMANCE_COUNTER_UNIT_WATTS_KHR ),
+            Field ( Volts,              VkPerformanceCounterUnitKHR :: VK_PERFORMANCE_COUNTER_UNIT_VOLTS_KHR ),
+            Field ( Amps,               VkPerformanceCounterUnitKHR :: VK_PERFORMANCE_COUNTER_UNIT_AMPS_KHR ),
+            Field ( Hertz,              VkPerformanceCounterUnitKHR :: VK_PERFORMANCE_COUNTER_UNIT_HERTZ_KHR ),
+            Field ( Cycles,             VkPerformanceCounterUnitKHR :: VK_PERFORMANCE_COUNTER_UNIT_CYCLES_KHR )
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+
+#define C_ENG_MAP_START     ENUM ( PerformanceCounterScope, TYPE ( cds :: uint8 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( CommandBuffer,      VkPerformanceCounterScopeKHR :: VK_PERFORMANCE_COUNTER_SCOPE_COMMAND_BUFFER_KHR ),
+            Field ( RenderPass,         VkPerformanceCounterScopeKHR :: VK_PERFORMANCE_COUNTER_SCOPE_RENDER_PASS_KHR ),
+            Field ( Command,            VkPerformanceCounterScopeKHR :: VK_PERFORMANCE_COUNTER_SCOPE_COMMAND_KHR )
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+
+#define C_ENG_MAP_START     ENUM ( PerformanceCounterStorage,   TYPE ( cds :: uint8 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( Int32,      VkPerformanceCounterStorageKHR :: VK_PERFORMANCE_COUNTER_STORAGE_INT32_KHR ),
+            Field ( Int64,      VkPerformanceCounterStorageKHR :: VK_PERFORMANCE_COUNTER_STORAGE_INT64_KHR ),
+            Field ( UInt32,     VkPerformanceCounterStorageKHR :: VK_PERFORMANCE_COUNTER_STORAGE_UINT32_KHR ),
+            Field ( UInt64,     VkPerformanceCounterStorageKHR :: VK_PERFORMANCE_COUNTER_STORAGE_UINT64_KHR ),
+            Field ( Float32,    VkPerformanceCounterStorageKHR :: VK_PERFORMANCE_COUNTER_STORAGE_FLOAT32_KHR ),
+            Field ( Float64,    VkPerformanceCounterStorageKHR :: VK_PERFORMANCE_COUNTER_STORAGE_FLOAT64_KHR )
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+
+#define C_ENG_MAP_START     ENUM ( PerformanceCounterDescriptionFlag,   TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( PerformanceImpacting,   VkPerformanceCounterDescriptionFlagBitsKHR :: VK_PERFORMANCE_COUNTER_DESCRIPTION_PERFORMANCE_IMPACTING_BIT_KHR ),
+            Field ( ConcurrentlyImpacted,   VkPerformanceCounterDescriptionFlagBitsKHR :: VK_PERFORMANCE_COUNTER_DESCRIPTION_CONCURRENTLY_IMPACTED_BIT_KHR )
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 
         __C_ENG_ALIAS ( Offset2D,   VkOffset2D );
@@ -2253,9 +2333,12 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_ALIAS ( DebugMessengerHandle,           VkDebugUtilsMessengerEXT );
         __C_ENG_ALIAS ( PhysicalDeviceHandle,           VkPhysicalDevice );
         __C_ENG_ALIAS ( SurfaceHandle,                  VkSurfaceKHR );
+        __C_ENG_ALIAS ( DeviceHandle,                   VkDevice );
 
         __C_ENG_ALIAS ( InstanceCreateFlags,            VkInstanceCreateFlags );
         __C_ENG_ALIAS ( DebugMessengerCreateFlags,      VkDebugUtilsMessengerCreateFlagsEXT );
+        __C_ENG_ALIAS ( DeviceCreateFlags,              VkDeviceCreateFlags );
+        __C_ENG_ALIAS ( DeviceQueueCreateFlags,         VkDeviceQueueCreateFlags );
         __C_ENG_ALIAS ( SampleCountFlags,               VkSampleCountFlags );
         __C_ENG_ALIAS ( ShaderStageFlags,               VkShaderStageFlags );
         __C_ENG_ALIAS ( QueueFlags,                     VkQueueFlags );
@@ -2297,6 +2380,21 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PERFORMANCE_QUERY_AVAILABLE
+
+        __C_ENG_ALIAS ( PerformanceCounterDescriptionFlags, VkPerformanceCounterDescriptionFlagsKHR );
+
+#endif
+
+        __C_ENG_ALIAS ( DebugMessengerBasicNotifyCallback,  void (*) () );
+
+#if __C_ENG_VULKAN_API_EXTENSION_DEVICE_MEMORY_REPORT_AVAILABLE
+
+        __C_ENG_ALIAS ( DeviceMemoryReportFlags,    VkDeviceMemoryReportFlagsEXT );
+        __C_ENG_ALIAS ( DeviceMemoryReportCallback, PFN_vkDeviceMemoryReportCallbackEXT );
+
+#endif
+
 
 #define C_ENG_MAP_START     STRUCT ( Version, NO_PARENT )
 #include <ObjectMapping.hpp>
@@ -2306,13 +2404,6 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
             cds :: uint8    major;
             cds :: uint16   minor;
             cds :: uint16   patch;
-        };
-
-        constexpr const Self nullVersion = {
-                .variant    = static_cast < cds :: uint8 > ( 0 ),
-                .major      = static_cast < cds :: uint8 > ( 0 ),
-                .minor      = static_cast < cds :: uint8 > ( 0 ),
-                .patch      = static_cast < cds :: uint8 > ( 0 )
         };
 
 #define C_ENG_MAP_END
@@ -2662,7 +2753,150 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #include <ObjectMapping.hpp>
 
 
+#if __C_ENG_VULKAN_API_EXTENSION_GLOBAL_PRIORITY_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( DeviceQueueGlobalPriorityCreateInfo,   NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( QueueGlobalPriority )                globalPriority;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( DeviceQueueCreateInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( DeviceQueueCreateFlags )             flags;
+            cds :: uint32                                       queueFamilyIndex;
+            cds :: uint32                                       queueCount;
+            float                                       const * pQueuePriorities;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceFeatures,    NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( Bool )   robustBufferAccess;
+            __C_ENG_TYPE ( Bool )   fullDrawIndexUint32;
+            __C_ENG_TYPE ( Bool )   imageCubeArray;
+            __C_ENG_TYPE ( Bool )   independentBlend;
+            __C_ENG_TYPE ( Bool )   geometryShader;
+            __C_ENG_TYPE ( Bool )   tessellationShader;
+            __C_ENG_TYPE ( Bool )   sampleRateShading;
+            __C_ENG_TYPE ( Bool )   dualSrcBlend;
+            __C_ENG_TYPE ( Bool )   logicOp;
+            __C_ENG_TYPE ( Bool )   multiDrawIndirect;
+            __C_ENG_TYPE ( Bool )   drawIndirectFirstInstance;
+            __C_ENG_TYPE ( Bool )   depthClamp;
+            __C_ENG_TYPE ( Bool )   depthBiasClamp;
+            __C_ENG_TYPE ( Bool )   fillModeNonSolid;
+            __C_ENG_TYPE ( Bool )   depthBounds;
+            __C_ENG_TYPE ( Bool )   wideLines;
+            __C_ENG_TYPE ( Bool )   largePoints;
+            __C_ENG_TYPE ( Bool )   alphaToOne;
+            __C_ENG_TYPE ( Bool )   multiViewport;
+            __C_ENG_TYPE ( Bool )   samplerAnisotropy;
+            __C_ENG_TYPE ( Bool )   textureCompressionETC2;
+            __C_ENG_TYPE ( Bool )   textureCompressionASTC_LDR;
+            __C_ENG_TYPE ( Bool )   textureCompressionBC;
+            __C_ENG_TYPE ( Bool )   occlusionQueryPrecise;
+            __C_ENG_TYPE ( Bool )   pipelineStatisticsQuery;
+            __C_ENG_TYPE ( Bool )   vertexPipelineStoresAndAtomics;
+            __C_ENG_TYPE ( Bool )   fragmentStoresAndAtomics;
+            __C_ENG_TYPE ( Bool )   shaderTessellationAndGeometryPointSize;
+            __C_ENG_TYPE ( Bool )   shaderImageGatherExtended;
+            __C_ENG_TYPE ( Bool )   shaderStorageImageExtendedFormats;
+            __C_ENG_TYPE ( Bool )   shaderStorageImageMultisample;
+            __C_ENG_TYPE ( Bool )   shaderStorageImageReadWithoutFormat;
+            __C_ENG_TYPE ( Bool )   shaderStorageImageWriteWithoutFormat;
+            __C_ENG_TYPE ( Bool )   shaderUniformBufferArrayDynamicIndexing;
+            __C_ENG_TYPE ( Bool )   shaderSampledImageArrayDynamicIndexing;
+            __C_ENG_TYPE ( Bool )   shaderStorageBufferArrayDynamicIndexing;
+            __C_ENG_TYPE ( Bool )   shaderStorageImageArrayDynamicIndexing;
+            __C_ENG_TYPE ( Bool )   shaderClipDistance;
+            __C_ENG_TYPE ( Bool )   shaderCullDistance;
+            __C_ENG_TYPE ( Bool )   shaderFloat64;
+            __C_ENG_TYPE ( Bool )   shaderInt64;
+            __C_ENG_TYPE ( Bool )   shaderInt16;
+            __C_ENG_TYPE ( Bool )   shaderResourceResidency;
+            __C_ENG_TYPE ( Bool )   shaderResourceMinLod;
+            __C_ENG_TYPE ( Bool )   sparseBinding;
+            __C_ENG_TYPE ( Bool )   sparseResidencyBuffer;
+            __C_ENG_TYPE ( Bool )   sparseResidencyImage2D;
+            __C_ENG_TYPE ( Bool )   sparseResidencyImage3D;
+            __C_ENG_TYPE ( Bool )   sparseResidency2Samples;
+            __C_ENG_TYPE ( Bool )   sparseResidency4Samples;
+            __C_ENG_TYPE ( Bool )   sparseResidency8Samples;
+            __C_ENG_TYPE ( Bool )   sparseResidency16Samples;
+            __C_ENG_TYPE ( Bool )   sparseResidencyAliased;
+            __C_ENG_TYPE ( Bool )   variableMultisampleRate;
+            __C_ENG_TYPE ( Bool )   inheritedQueries;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+
+#define C_ENG_MAP_START     STRUCT ( DeviceCreateInfo,  NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( DeviceCreateFlags )                  flags;
+            cds :: uint32                                       queueCreateInfoCount;
+            __C_ENG_TYPE ( DeviceQueueCreateInfo )      const * pQueueCreateInfos;
+
+#if ! __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+
+            cds :: uint32                                       enabledLayerCount;
+            cds :: StringLiteral                        const * pEnabledLayerNames;
+
+#endif
+
+            cds :: uint32                                       enabledExtensionCount;
+            cds :: StringLiteral                        const * pEnabledExtensionNames;
+            __C_ENG_TYPE ( PhysicalDeviceFeatures )     const * pEnabledFeatures;
+
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
 #if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceExtendedFeatures,    NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )          structureType;
+            __C_ENG_TYPE ( GenericStructure )     * pNext;
+            __C_ENG_TYPE ( PhysicalDeviceFeatures ) features;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
 
 #define C_ENG_MAP_START     STRUCT ( PhysicalDeviceVulkan11Properties,  NO_PARENT )
 #include <ObjectMapping.hpp>
@@ -2766,6 +3000,21 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
             __C_ENG_TYPE ( ShaderStageFlags )       supportedStages;
             __C_ENG_TYPE ( SubgroupFeatureFlags )   supportedOperations;
             __C_ENG_TYPE ( Bool )                   quadOperationsInAllStages;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceGroupProperties, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )          structureType;
+            __C_ENG_TYPE ( GenericStructure )     * pNext;
+            cds :: uint32                           physicalDeviceCount;
+            __C_ENG_TYPE ( PhysicalDeviceHandle )   physicalDevices [ VK_MAX_DEVICE_GROUP_SIZE ];
+            __C_ENG_TYPE ( Bool )                   subsetAllocation;
         };
 
 #define C_ENG_MAP_END
@@ -3458,6 +3707,38 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #define C_ENG_MAP_END
 #include <ObjectMapping.hpp>
 
+
+#define C_ENG_MAP_START     STRUCT ( PerformanceCounter,    NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )              structureType;
+            __C_ENG_TYPE ( GenericStructure )         * pNext;
+            __C_ENG_TYPE ( PerformanceCounterUnit )     unit;
+            __C_ENG_TYPE ( PerformanceCounterScope )    scope;
+            __C_ENG_TYPE ( PerformanceCounterStorage )  storage;
+            cds :: uint8                                uuid [ VK_UUID_SIZE ];
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+
+#define C_ENG_MAP_START     STRUCT ( PerformanceCounterDescription,  NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( PerformanceCounterDescriptionFlags ) flags;
+            char                                                name [ VK_MAX_DESCRIPTION_SIZE ];
+            char                                                category [ VK_MAX_DESCRIPTION_SIZE ];
+            char                                                description [ VK_MAX_DESCRIPTION_SIZE ];
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
 #endif
 
 
@@ -3848,6 +4129,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         Struct {
 
             __C_ENG_TYPE ( PhysicalDeviceProperties )                                       basicProperties;
+            __C_ENG_TYPE ( PhysicalDeviceFeatures )                                         basicFeatures;
 
 #if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
 
@@ -4188,7 +4470,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
             __C_ENG_TYPE ( StructureType )          structureType;
             __C_ENG_TYPE ( GenericStructure )     * pNext;
             cds :: uint32                           priorityCount;
-            __C_ENG_TYPE ( GlobalQueuePriority )    priorities [ VK_MAX_GLOBAL_PRIORITY_SIZE_EXT ];
+            __C_ENG_TYPE ( QueueGlobalPriority )    priorities [ VK_MAX_GLOBAL_PRIORITY_SIZE_EXT ];
         };
 
 #define C_ENG_MAP_END
@@ -4261,6 +4543,2015 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #endif
 
 
+#if __C_ENG_VULKAN_API_EXTENSION_DEVICE_MEMORY_REPORT_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( DeviceDeviceMemoryReportCreateInfo,    NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )           const * pNext;
+            __C_ENG_TYPE ( DeviceMemoryReportFlags )            flags;
+            __C_ENG_TYPE ( DeviceMemoryReportCallback )         callback;
+            void                                              * pUserData;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEVICE_DIAGNOSTICS_CONFIG_AVAILABLE
+
+#define C_ENG_MAP_START     ENUM ( DeviceDiagnosticsConfigFlagNVidia, TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( EnableShaderDebugInfo,      VkDeviceDiagnosticsConfigFlagBitsNV :: VK_DEVICE_DIAGNOSTICS_CONFIG_ENABLE_SHADER_DEBUG_INFO_BIT_NV ),
+            Field ( EnableResourceTracking,     VkDeviceDiagnosticsConfigFlagBitsNV :: VK_DEVICE_DIAGNOSTICS_CONFIG_ENABLE_RESOURCE_TRACKING_BIT_NV ),
+            Field ( EnableAutomaticCheckpoints, VkDeviceDiagnosticsConfigFlagBitsNV :: VK_DEVICE_DIAGNOSTICS_CONFIG_ENABLE_AUTOMATIC_CHECKPOINTS_BIT_NV )
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+        __C_ENG_ALIAS ( DeviceDiagnosticsConfigFlagsNVidia, VkDeviceDiagnosticsConfigFlagsNV );
+
+#define C_ENG_MAP_START     STRUCT ( DeviceDiagnosticsConfigCreateInfoNVidia,   NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )           const * pNext;
+            __C_ENG_TYPE ( DeviceDiagnosticsConfigFlagsNVidia ) flags;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( DeviceGroupDeviceCreateInfo,   NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )           const * pNext;
+            cds :: uint32                                       physicalDeviceCount;
+            __C_ENG_TYPE ( PhysicalDeviceHandle )       const * pPhysicalDevices;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_AMD_MEMORY_OVERALLOCATION_BEHAVIOUR_AVAILABLE
+
+#define C_ENG_MAP_START     ENUM ( MemoryOverallocationBehaviorAMD, TYPE ( cds :: uint8 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( Default,        VkMemoryOverallocationBehaviorAMD :: VK_MEMORY_OVERALLOCATION_BEHAVIOR_DEFAULT_AMD ),
+            Field ( Allowed,        VkMemoryOverallocationBehaviorAMD :: VK_MEMORY_OVERALLOCATION_BEHAVIOR_ALLOWED_AMD ),
+            Field ( Disallowed,     VkMemoryOverallocationBehaviorAMD :: VK_MEMORY_OVERALLOCATION_BEHAVIOR_DISALLOWED_AMD )
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START     STRUCT ( DeviceMemoryOverallocationCreateInfoAMD, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )           const * pNext;
+            __C_ENG_TYPE ( MemoryOverallocationBehaviorAMD )    overallocationBehavior;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_PRIVATE_DATA_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( DevicePrivateDataCreateInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )           const * pNext;
+            cds :: uint32                                       privateDataSlotRequestCount;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDevice16BitStorageFeatures, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               storageBuffer16BitAccess;
+            __C_ENG_TYPE ( Bool )                               uniformAndStorageBuffer16BitAccess;
+            __C_ENG_TYPE ( Bool )                               storagePushConstant16;
+            __C_ENG_TYPE ( Bool )                               storageInputOutput16;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceMultiviewFeatures, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               multiview;
+            __C_ENG_TYPE ( Bool )                               multiviewGeometryShader;
+            __C_ENG_TYPE ( Bool )                               multiviewTessellationShader;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceProtectedMemoryFeatures, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               protectedMemory;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceSamplerYCBCRConversionFeatures, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               samplerYCBCRConversion;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceShaderDrawParametersFeatures, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               shaderDrawParameters;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceVariablePointersFeatures, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               variablePointersStorageBuffer;
+            __C_ENG_TYPE ( Bool )                               variablePointers;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceVulkan11Features, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               storageBuffer16BitAccess;
+            __C_ENG_TYPE ( Bool )                               uniformAndStorageBuffer16BitAccess;
+            __C_ENG_TYPE ( Bool )                               storagePushConstant16;
+            __C_ENG_TYPE ( Bool )                               storageInputOutput16;
+            __C_ENG_TYPE ( Bool )                               multiview;
+            __C_ENG_TYPE ( Bool )                               multiviewGeometryShader;
+            __C_ENG_TYPE ( Bool )                               multiviewTessellationShader;
+            __C_ENG_TYPE ( Bool )                               variablePointersStorageBuffer;
+            __C_ENG_TYPE ( Bool )                               variablePointers;
+            __C_ENG_TYPE ( Bool )                               protectedMemory;
+            __C_ENG_TYPE ( Bool )                               samplerYcbcrConversion;
+            __C_ENG_TYPE ( Bool )                               shaderDrawParameters;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDevice8BitStorageFeatures, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               storageBuffer8BitAccess;
+            __C_ENG_TYPE ( Bool )                               uniformAndStorageBuffer8BitAccess;
+            __C_ENG_TYPE ( Bool )                               storagePushConstant8;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceBufferDeviceAddressFeatures, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               bufferDeviceAddress;
+            __C_ENG_TYPE ( Bool )                               bufferDeviceAddressCaptureReplay;
+            __C_ENG_TYPE ( Bool )                               bufferDeviceAddressMultiDevice;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceDescriptorIndexingFeatures, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               shaderInputAttachmentArrayDynamicIndexing;
+            __C_ENG_TYPE ( Bool )                               shaderUniformTexelBufferArrayDynamicIndexing;
+            __C_ENG_TYPE ( Bool )                               shaderStorageTexelBufferArrayDynamicIndexing;
+            __C_ENG_TYPE ( Bool )                               shaderUniformBufferArrayNonUniformIndexing;
+            __C_ENG_TYPE ( Bool )                               shaderSampledImageArrayNonUniformIndexing;
+            __C_ENG_TYPE ( Bool )                               shaderStorageBufferArrayNonUniformIndexing;
+            __C_ENG_TYPE ( Bool )                               shaderStorageImageArrayNonUniformIndexing;
+            __C_ENG_TYPE ( Bool )                               shaderInputAttachmentArrayNonUniformIndexing;
+            __C_ENG_TYPE ( Bool )                               shaderUniformTexelBufferArrayNonUniformIndexing;
+            __C_ENG_TYPE ( Bool )                               shaderStorageTexelBufferArrayNonUniformIndexing;
+            __C_ENG_TYPE ( Bool )                               descriptorBindingUniformBufferUpdateAfterBind;
+            __C_ENG_TYPE ( Bool )                               descriptorBindingSampledImageUpdateAfterBind;
+            __C_ENG_TYPE ( Bool )                               descriptorBindingStorageImageUpdateAfterBind;
+            __C_ENG_TYPE ( Bool )                               descriptorBindingStorageBufferUpdateAfterBind;
+            __C_ENG_TYPE ( Bool )                               descriptorBindingUniformTexelBufferUpdateAfterBind;
+            __C_ENG_TYPE ( Bool )                               descriptorBindingStorageTexelBufferUpdateAfterBind;
+            __C_ENG_TYPE ( Bool )                               descriptorBindingUpdateUnusedWhilePending;
+            __C_ENG_TYPE ( Bool )                               descriptorBindingPartiallyBound;
+            __C_ENG_TYPE ( Bool )                               descriptorBindingVariableDescriptorCount;
+            __C_ENG_TYPE ( Bool )                               runtimeDescriptorArray;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceHostQueryResetFeatures, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               hostQueryReset;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceImagelessFramebufferFeatures, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               imagelessFramebuffer;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceScalarBlockLayoutFeatures, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               scalarBlockLayout;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceSeparateDepthStencilLayoutsFeatures, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               separateDepthStencilLayouts;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceShaderAtomicInt64Features, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               shaderBufferInt64Atomics;
+            __C_ENG_TYPE ( Bool )                               shaderSharedInt64Atomics;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceShaderFloat16Int8Features, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               shaderFloat16;
+            __C_ENG_TYPE ( Bool )                               shaderInt8;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceShaderSubgroupExtendedTypesFeatures, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               shaderSubgroupExtendedTypes;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceTimelineSemaphoreFeatures, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               timelineSemaphore;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceUniformBufferStandardLayoutFeatures, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               uniformBufferStandardLayout;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceVulkanMemoryModelFeatures, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               vulkanMemoryModel;
+            __C_ENG_TYPE ( Bool )                               vulkanMemoryModelDeviceScope;
+            __C_ENG_TYPE ( Bool )                               vulkanMemoryModelAvailabilityVisibilityChains;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceVulkan12Features, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               samplerMirrorClampToEdge;
+            __C_ENG_TYPE ( Bool )                               drawIndirectCount;
+            __C_ENG_TYPE ( Bool )                               storageBuffer8BitAccess;
+            __C_ENG_TYPE ( Bool )                               uniformAndStorageBuffer8BitAccess;
+            __C_ENG_TYPE ( Bool )                               storagePushConstant8;
+            __C_ENG_TYPE ( Bool )                               shaderBufferInt64Atomics;
+            __C_ENG_TYPE ( Bool )                               shaderSharedInt64Atomics;
+            __C_ENG_TYPE ( Bool )                               shaderFloat16;
+            __C_ENG_TYPE ( Bool )                               shaderInt8;
+            __C_ENG_TYPE ( Bool )                               descriptorIndexing;
+            __C_ENG_TYPE ( Bool )                               shaderInputAttachmentArrayDynamicIndexing;
+            __C_ENG_TYPE ( Bool )                               shaderUniformTexelBufferArrayDynamicIndexing;
+            __C_ENG_TYPE ( Bool )                               shaderStorageTexelBufferArrayDynamicIndexing;
+            __C_ENG_TYPE ( Bool )                               shaderUniformBufferArrayNonUniformIndexing;
+            __C_ENG_TYPE ( Bool )                               shaderSampledImageArrayNonUniformIndexing;
+            __C_ENG_TYPE ( Bool )                               shaderStorageBufferArrayNonUniformIndexing;
+            __C_ENG_TYPE ( Bool )                               shaderStorageImageArrayNonUniformIndexing;
+            __C_ENG_TYPE ( Bool )                               shaderInputAttachmentArrayNonUniformIndexing;
+            __C_ENG_TYPE ( Bool )                               shaderUniformTexelBufferArrayNonUniformIndexing;
+            __C_ENG_TYPE ( Bool )                               shaderStorageTexelBufferArrayNonUniformIndexing;
+            __C_ENG_TYPE ( Bool )                               descriptorBindingUniformBufferUpdateAfterBind;
+            __C_ENG_TYPE ( Bool )                               descriptorBindingSampledImageUpdateAfterBind;
+            __C_ENG_TYPE ( Bool )                               descriptorBindingStorageImageUpdateAfterBind;
+            __C_ENG_TYPE ( Bool )                               descriptorBindingStorageBufferUpdateAfterBind;
+            __C_ENG_TYPE ( Bool )                               descriptorBindingUniformTexelBufferUpdateAfterBind;
+            __C_ENG_TYPE ( Bool )                               descriptorBindingStorageTexelBufferUpdateAfterBind;
+            __C_ENG_TYPE ( Bool )                               descriptorBindingUpdateUnusedWhilePending;
+            __C_ENG_TYPE ( Bool )                               descriptorBindingPartiallyBound;
+            __C_ENG_TYPE ( Bool )                               descriptorBindingVariableDescriptorCount;
+            __C_ENG_TYPE ( Bool )                               runtimeDescriptorArray;
+            __C_ENG_TYPE ( Bool )                               samplerFilterMinmax;
+            __C_ENG_TYPE ( Bool )                               scalarBlockLayout;
+            __C_ENG_TYPE ( Bool )                               imagelessFramebuffer;
+            __C_ENG_TYPE ( Bool )                               uniformBufferStandardLayout;
+            __C_ENG_TYPE ( Bool )                               shaderSubgroupExtendedTypes;
+            __C_ENG_TYPE ( Bool )                               separateDepthStencilLayouts;
+            __C_ENG_TYPE ( Bool )                               hostQueryReset;
+            __C_ENG_TYPE ( Bool )                               timelineSemaphore;
+            __C_ENG_TYPE ( Bool )                               bufferDeviceAddress;
+            __C_ENG_TYPE ( Bool )                               bufferDeviceAddressCaptureReplay;
+            __C_ENG_TYPE ( Bool )                               bufferDeviceAddressMultiDevice;
+            __C_ENG_TYPE ( Bool )                               vulkanMemoryModel;
+            __C_ENG_TYPE ( Bool )                               vulkanMemoryModelDeviceScope;
+            __C_ENG_TYPE ( Bool )                               vulkanMemoryModelAvailabilityVisibilityChains;
+            __C_ENG_TYPE ( Bool )                               shaderOutputViewportIndex;
+            __C_ENG_TYPE ( Bool )                               shaderOutputLayer;
+            __C_ENG_TYPE ( Bool )                               subgroupBroadcastDynamicId;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_4444_FORMATS_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDevice4444FormatsFeatures, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               formatA4R4G4B4;
+            __C_ENG_TYPE ( Bool )                               formatA4B4G4R4;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_ASTC_DECODE_MODE_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceASTCDecodeFeatures, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               decodeModeSharedExponent;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceAccelerationStructureFeatures, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               accelerationStructure;
+            __C_ENG_TYPE ( Bool )                               accelerationStructureCaptureReplay;
+            __C_ENG_TYPE ( Bool )                               accelerationStructureIndirectBuild;
+            __C_ENG_TYPE ( Bool )                               accelerationStructureHostCommands;
+            __C_ENG_TYPE ( Bool )                               descriptorBindingAccelerationStructureUpdateAfterBind;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_BLEND_OPERATION_ADVANCED_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceBlendOperationAdvancedFeatures, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               advancedBlendCoherentOperations;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_BORDER_COLOR_SWIZZLE_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceBorderColorSwizzleFeatures, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               borderColorSwizzle;
+            __C_ENG_TYPE ( Bool )                               borderColorSwizzleFromImage;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_AMD_DEVICE_COHERENT_MEMORY_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceCoherentMemoryFeaturesAMD, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               deviceCoherentMemory;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_COLOR_WRITE_ENABLE_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceColorWriteEnableFeatures, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               colorWriteEnable;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_COMPUTE_SHADER_DERIVATIVES_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceComputeShaderDerivativesFeatures, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               computeDerivativeGroupQuads;
+            __C_ENG_TYPE ( Bool )                               computeDerivativeGroupLinear;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_CONDITIONAL_RENDERING_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceConditionalRenderingFeatures, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               conditionalRendering;
+            __C_ENG_TYPE ( Bool )                               inheritedConditionalRendering;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_COOPERATIVE_MATRIX_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceCooperativeMatrixFeaturesNVidia, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               cooperativeMatrix;
+            __C_ENG_TYPE ( Bool )                               cooperativeMatrixRobustBufferAccess;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_CORNER_SAMPLED_IMAGE_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceCornerSampledImageFeaturesNVidia, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               cornerSampledImage;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_COVERAGE_REDUCTION_MODE_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceCoverageReductionModeNVidia, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               coverageReductionMode;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_CUSTOM_BORDER_COLOR_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceCustomBorderColorFeatures, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               customBorderColors;
+            __C_ENG_TYPE ( Bool )                               customBorderColorsWithoutFormat;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEDICATED_ALLOCATION_IMAGE_ALIASING_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceDedicatedAllocationImageAliasingFeaturesNVidia, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               dedicatedAllocationImageAliasing;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_DEPTH_CLIP_CONTROL_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceDepthClipControlFeatures, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               depthClipControl;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_DEPTH_CLIP_ENABLE_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceDepthClipEnableFeatures, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               depthClipEnable;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEVICE_GENERATED_COMMANDS_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceDeviceGeneratedCommandsFeaturesNVidia, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               deviceGeneratedCommands;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_DEVICE_MEMORY_REPORT_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceDeviceMemoryReportFeatures, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               deviceMemoryReport;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEVICE_DIAGNOSTICS_CONFIG_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceDiagnosticsConfigFeaturesNVidia, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               diagnosticsConfig;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceDynamicRenderingFeatures, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               dynamicRendering;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SCISSOR_EXCLUSIVE_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceExclusiveScissorFeaturesNVidia, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               exclusiveScissor;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_EXTENDED_DYNAMIC_STATE_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceExtendedDynamicState2Features, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               extendedDynamicState2;
+            __C_ENG_TYPE ( Bool )                               extendedDynamicState2LogicOp;
+            __C_ENG_TYPE ( Bool )                               extendedDynamicState2PatchControlPoints;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceExtendedDynamicStateFeatures, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               extendedDynamicState;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXTERNAL_MEMORY_RDMA_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceExternalMemoryRDMAFeaturesNVidia, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               externalMemoryRDMA;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_FRAGMENT_DENSITY_MAP_2_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceFragmentDensityMap2Features, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               fragmentDensityMapDeferred;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_FRAGMENT_DENSITY_MAP_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceFragmentDensityMapFeatures, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               fragmentDensityMap;
+            __C_ENG_TYPE ( Bool )                               fragmentDensityMapDynamic;
+            __C_ENG_TYPE ( Bool )                               fragmentDensityMapNonSubsampledImages;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_QUALCOMM_FRAGMENT_DENSITY_MAP_OFFSET_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceFragmentDensityMapOffsetFeaturesQualcomm, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               fragmentDensityMapOffset;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_FRAGMENT_SHADER_BARYCENTRIC_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceFragmentShaderBarycentricFeaturesNVidia, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               fragmentShaderBarycentric;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_FRAGMENT_SHADER_INTERLOCK_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceFragmentShaderInterlockFeatures, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               fragmentShaderSampleInterlock;
+            __C_ENG_TYPE ( Bool )                               fragmentShaderPixelInterlock;
+            __C_ENG_TYPE ( Bool )                               fragmentShaderShadingRateInterlock;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_FRAGMENT_SHADING_RATE_ENUMS_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceFragmentShadingRateEnumsFeaturesNVidia, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               fragmentShadingRateEnums;
+            __C_ENG_TYPE ( Bool )                               supersampleFragmentShadingRates;
+            __C_ENG_TYPE ( Bool )                               noInvocationFragmentShadingRates;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_FRAGMENT_SHADING_RATE_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceFragmentShadingRateFeatures, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               pipelineFragmentShadingRate;
+            __C_ENG_TYPE ( Bool )                               primitiveFragmentShadingRate;
+            __C_ENG_TYPE ( Bool )                               attachmentFragmentShadingRate;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_GLOBAL_PRIORITY_QUERY_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceGlobalPriorityQueryFeatures, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               globalPriorityQuery;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_IMAGE_ROBUSTNESS_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceImageRobustnessFeatures, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               robustImageAccess;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_IMAGE_VIEW_MIN_LOD_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceImageViewMinLODFeatures, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               minLOD;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_INDEX_TYPE_UINT8_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceIndexTypeUInt8Features, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               indexTypeUInt8;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_INHERITED_VIEWPORT_SCISSOR_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceInheritedViewportScissorFeaturesNVidia, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               inheritedViewportScissor2D;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_INLINE_UNIFORM_BLOCK_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceInlineUniformBlockFeatures, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               inlineUniformBlock;
+            __C_ENG_TYPE ( Bool )                               descriptorBindingInlineUniformBlockUpdateAfterBind;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_HUAWEI_INVOCATION_MASK_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceInvocationMaskFeaturesHuawei, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               invocationMask;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_LINE_RASTERIZATION_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceLineRasterizationFeatures, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               rectangularLines;
+            __C_ENG_TYPE ( Bool )                               bresenhamLines;
+            __C_ENG_TYPE ( Bool )                               smoothLines;
+            __C_ENG_TYPE ( Bool )                               stippledRectangularLines;
+            __C_ENG_TYPE ( Bool )                               stippledBresenhamLines;
+            __C_ENG_TYPE ( Bool )                               stippledSmoothLines;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_LINEAR_COLOR_ATTACHMENT_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceLinearColorAttachmentFeaturesNVidia, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               linearColorAttachment;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_MAINTENANCE_4_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceMaintenance4Features, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               maintenance4;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_MEMORY_PRIORITY_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceMemoryPriorityFeatures, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               memoryPriority;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_MESH_SHADER_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceMeshShaderFeaturesNVidia, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               taskShader;
+            __C_ENG_TYPE ( Bool )                               meshShader;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_MULTI_DRAW_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceMultiDrawFeatures, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               multiDraw;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_VALVE_MUTABLE_DESCRIPTOR_TYPE_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceMutableDescriptorTypeFeaturesValve, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               mutableDescriptorType;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_PAGEABLE_DEVICE_LOCAL_MEMORY_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDevicePageableDeviceLocalMemoryFeatures, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               pageableDeviceLocalMemory;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PERFORMANCE_QUERY_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDevicePerformanceQueryFeatures, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               performanceCounterQueryPools;
+            __C_ENG_TYPE ( Bool )                               performanceCounterMultipleQueryPools;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_PIPELINE_CREATION_CACHE_CONTROL_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDevicePipelineCreationCacheControlFeatures, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               pipelineCreationCacheControl;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PIPELINE_EXECUTABLE_PROPERTIES_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDevicePipelineExecutablePropertiesFeatures, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               pipelineExecutableInfo;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PORTABILITY_SUBSET_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDevicePortabilitySubsetFeatures, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               constantAlphaColorBlendFactors;
+            __C_ENG_TYPE ( Bool )                               events;
+            __C_ENG_TYPE ( Bool )                               imageViewFormatReinterpretation;
+            __C_ENG_TYPE ( Bool )                               imageViewFormatSwizzle;
+            __C_ENG_TYPE ( Bool )                               imageView2DOn3DImage;
+            __C_ENG_TYPE ( Bool )                               multisampleArrayImage;
+            __C_ENG_TYPE ( Bool )                               mutableComparisonSamplers;
+            __C_ENG_TYPE ( Bool )                               pointPolygons;
+            __C_ENG_TYPE ( Bool )                               samplerMipLodBias;
+            __C_ENG_TYPE ( Bool )                               separateStencilMaskRef;
+            __C_ENG_TYPE ( Bool )                               shaderSampleRateInterpolationFunctions;
+            __C_ENG_TYPE ( Bool )                               tessellationIsolines;
+            __C_ENG_TYPE ( Bool )                               tessellationPointMode;
+            __C_ENG_TYPE ( Bool )                               triangleFans;
+            __C_ENG_TYPE ( Bool )                               vertexAttributeAccessBeyondStride;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PRESENT_ID_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDevicePresentIDFeatures, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               presentID;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PRESENT_WAIT_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDevicePresentWaitFeatures, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               presentWait;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_PRIMITIVE_TOPOLOGY_LIST_RESTART_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDevicePrimitiveTopologyListRestartFeatures, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               primitiveTopologyListRestart;
+            __C_ENG_TYPE ( Bool )                               primitiveTopologyPatchListRestart;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_PRIVATE_DATA_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDevicePrivateDataFeatures, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               privateData;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_PROVOKING_VERTEX_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceProvokingVertexFeatures, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               provokingVertexLast;
+            __C_ENG_TYPE ( Bool )                               transformFeedbackPreservesProvokingVertex;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_RGBA_10_X_6_FORMATS_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceRGBA10x6FormatsFeatures, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               formatRGBA10x6WithoutYCBCRSampler;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_ARM_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceRasterizationOrderAttachmentAccessFeaturesARM, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               rasterizationOrderColorAttachmentAccess;
+            __C_ENG_TYPE ( Bool )                               rasterizationOrderDepthAttachmentAccess;
+            __C_ENG_TYPE ( Bool )                               rasterizationOrderStencilAttachmentAccess;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_RAY_QUERY_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceRayQueryFeatures, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               rayQuery;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_MOTION_BLUR_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceRayTracingMotionBlurFeaturesNVidia, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               rayTracingMotionBlur;
+            __C_ENG_TYPE ( Bool )                               rayTracingMotionBlurPipelineTraceRaysIndirect;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_RAY_TRACING_PIPELINE_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceRayTracingPipelineFeatures, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               rayTracingPipeline;
+            __C_ENG_TYPE ( Bool )                               rayTracingPipelineShaderGroupHandleCaptureReplay;
+            __C_ENG_TYPE ( Bool )                               rayTracingPipelineShaderGroupHandleCaptureReplayMixed;
+            __C_ENG_TYPE ( Bool )                               rayTracingPipelineTraceRaysIndirect;
+            __C_ENG_TYPE ( Bool )                               rayTraversalPrimitiveCulling;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_REPRESENTATIVE_FRAGMENT_TEST_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceRepresentativeFragmentTestFeaturesNVidia, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               representativeFragmentTest;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_ROBUSTNESS_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceRobustnessFeatures, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               robustBufferAccess;
+            __C_ENG_TYPE ( Bool )                               robustImageAccess;
+            __C_ENG_TYPE ( Bool )                               nullDescriptor;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_SHADER_ATOMIC_FLOAT_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceShaderAtomicFloatFeatures, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               shaderBufferFloat32Atomics;
+            __C_ENG_TYPE ( Bool )                               shaderBufferFloat32AtomicAdd;
+            __C_ENG_TYPE ( Bool )                               shaderBufferFloat64Atomics;
+            __C_ENG_TYPE ( Bool )                               shaderBufferFloat64AtomicAdd;
+            __C_ENG_TYPE ( Bool )                               shaderSharedFloat32Atomics;
+            __C_ENG_TYPE ( Bool )                               shaderSharedFloat32AtomicAdd;
+            __C_ENG_TYPE ( Bool )                               shaderSharedFloat64Atomics;
+            __C_ENG_TYPE ( Bool )                               shaderSharedFloat64AtomicAdd;
+            __C_ENG_TYPE ( Bool )                               shaderImageFloat32Atomics;
+            __C_ENG_TYPE ( Bool )                               shaderImageFloat32AtomicAdd;
+            __C_ENG_TYPE ( Bool )                               sparseImageFloat32Atomics;
+            __C_ENG_TYPE ( Bool )                               sparseImageFloat32AtomicAdd;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_SHADER_ATOMIC_FLOAT_2_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceShaderAtomicFloat2Features, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               shaderBufferFloat16Atomics;
+            __C_ENG_TYPE ( Bool )                               shaderBufferFloat16AtomicAdd;
+            __C_ENG_TYPE ( Bool )                               shaderBufferFloat16AtomicMinMax;
+            __C_ENG_TYPE ( Bool )                               shaderBufferFloat32AtomicMinMax;
+            __C_ENG_TYPE ( Bool )                               shaderBufferFloat64AtomicMinMax;
+            __C_ENG_TYPE ( Bool )                               shaderSharedFloat16Atomics;
+            __C_ENG_TYPE ( Bool )                               shaderSharedFloat16AtomicAdd;
+            __C_ENG_TYPE ( Bool )                               shaderSharedFloat16AtomicMinMax;
+            __C_ENG_TYPE ( Bool )                               shaderSharedFloat32AtomicMinMax;
+            __C_ENG_TYPE ( Bool )                               shaderSharedFloat64AtomicMinMax;
+            __C_ENG_TYPE ( Bool )                               shaderImageFloat32AtomicMinMax;
+            __C_ENG_TYPE ( Bool )                               sparseImageFloat32AtomicMinMax;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_CLOCK_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceShaderClockFeatures, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               shaderSubgroupClock;
+            __C_ENG_TYPE ( Bool )                               shaderDeviceClock;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_SHADER_DEMOTE_TO_HELPER_INVOCATION_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceShaderDemoteToHelperInvocationFeatures, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               shaderDemoteToHelperInvocation;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_SHADER_IMAGE_ATOMIC_INT64_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceShaderImageAtomicInt64Features, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               shaderImageInt64Atomics;
+            __C_ENG_TYPE ( Bool )                               sparseImageInt64Atomics;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SHADER_IMAGE_FOOTPRINT_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceShaderImageFootprintFeaturesNVidia, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               imageFootprint;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_INTEGER_DOT_PRODUCT_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceShaderIntegerDotProductFeatures, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               shaderIntegerDotProduct;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_INTEL_SHADER_INTEGER_FUNCTIONS_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceShaderIntegerFunctionsFeaturesIntel, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               shaderIntegerFunctions;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SHADER_SM_BUILTINS_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceShaderSMBuiltinsFeaturesNVidia, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               shaderSMBuiltins;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_SUBGROUP_UNIFORM_CONTROL_FLOW_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceShaderSubgroupUniformControlFlowFeatures, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               shaderSubgroupUniformControlFlow;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_TERMINATE_INVOCATION_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceShaderTerminateInvocationFeatures, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               shaderTerminateInvocation;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SHADING_RATE_IMAGE_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceShadingRateImageFeaturesNVidia, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               shadingRateImage;
+            __C_ENG_TYPE ( Bool )                               shadingRateCoarseSampleOrder;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_SUBGROUP_SIZE_CONTROL_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceSubgroupSizeControlFeatures, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               subgroupSizeControl;
+            __C_ENG_TYPE ( Bool )                               computeFullSubgroups;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_HUAWEI_SUBPASS_SHADING_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceSubpassShadingFeaturesHuawei, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               subpassShading;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceSynchronizationFeatures, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               synchronization;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_TEXEL_BUFFER_ALIGNMENT_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceTexelBufferAlignmentFeatures, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               texelBufferAlignment;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_TEXTURE_COMPRESSION_ASTC_HDR_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceTextureCompressionASTCHDRFeatures, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               textureCompressionASTCHDR;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_TRANSFORM_FEEDBACK_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceTransformFeedbackFeatures, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               transformFeedback;
+            __C_ENG_TYPE ( Bool )                               geometryStreams;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_VERTEX_ATTRIBUTE_DIVISOR_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceVertexAttributeDivisorFeatures, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               vertexAttributeInstanceRateDivisor;
+            __C_ENG_TYPE ( Bool )                               vertexAttributeInstanceRateZeroDivisor;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_VERTEX_INPUT_DYNAMIC_STATE_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceVertexInputDynamicStateFeatures, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               vertexInputDynamicState;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_WORKGROUP_MEMORY_EXPLICIT_LAYOUT_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceWorkgroupMemoryExplicitLayoutFeatures, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               workgroupMemoryExplicitLayout;
+            __C_ENG_TYPE ( Bool )                               workgroupMemoryExplicitLayoutScalarBlockLayout;
+            __C_ENG_TYPE ( Bool )                               workgroupMemoryExplicitLayout8BitAccess;
+            __C_ENG_TYPE ( Bool )                               workgroupMemoryExplicitLayout16BitAccess;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_YCBCR_2_PLANE_444_FORMATS_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceYCBCR2Plane444FormatsFeatures, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               YCBCR2Plane444Formats;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_YCBCR_IMAGE_ARRAYS_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceYCBCRImageArraysFeatures, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               YCBCRImageArrays;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ZERO_INITIALIZE_WORKGROUP_MEMORY_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceZeroInitializeWorkgroupMemoryFeatures, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )                      structureType;
+            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( Bool )                               shaderZeroInitializeWorkgroupMemory;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( Result ) ) noexcept -> cds :: StringLiteral;
@@ -4276,6 +6567,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( ShaderStageFlag ) ) noexcept -> cds :: StringLiteral;
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( QueueFlag ) ) noexcept -> cds :: StringLiteral;
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PipelineStageFlag ) ) noexcept -> cds :: StringLiteral;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( DeviceQueueCreateFlag ) ) noexcept -> cds :: StringLiteral;
 
 #endif
 
@@ -4301,13 +6593,22 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #if __C_ENG_VULKAN_API_EXTENSION_GLOBAL_PRIORITY_AVAILABLE
 
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( GlobalQueuePriority ) ) noexcept -> cds :: StringLiteral;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( QueueGlobalPriority ) ) noexcept -> cds :: StringLiteral;
 
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_QUEUE_AVAILABLE
 
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( VideoCodecOperationFlag ) ) noexcept -> cds :: StringLiteral;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PERFORMANCE_QUERY_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PerformanceCounterUnit ) ) noexcept -> cds :: StringLiteral;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PerformanceCounterScope ) ) noexcept -> cds :: StringLiteral;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PerformanceCounterStorage ) ) noexcept -> cds :: StringLiteral;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PerformanceCounterDescriptionFlag ) ) noexcept -> cds :: StringLiteral;
 
 #endif
 
@@ -4334,17 +6635,21 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceLimits ) const & ) noexcept -> cds :: String;
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceSparseProperties ) const & ) noexcept -> cds :: String;
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceProperties ) const & ) noexcept -> cds :: String;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceExtendedProperties ) const & ) noexcept -> cds :: String;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceFeatures ) const & ) noexcept -> cds :: String;
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceDetails ) const & ) noexcept -> cds :: String;
 
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( QueueFamilyProperties ) const & ) noexcept -> cds :: String;
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( QueueFamilyExtendedProperties ) const & ) noexcept -> cds :: String;
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( QueueFamilyDetails ) const & ) noexcept -> cds :: String;
 
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( DeviceCreateInfo ) const & ) noexcept -> cds :: String;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( DeviceQueueCreateInfo ) const & ) noexcept -> cds :: String;
+
 #endif
 
 #if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
 
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceExtendedProperties ) const & ) noexcept -> cds :: String;
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceVulkan11Properties ) const & ) noexcept -> cds :: String;
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceIDProperties ) const & ) noexcept -> cds :: String;
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceMaintenanceProperties ) const & ) noexcept -> cds :: String;
@@ -4352,6 +6657,18 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDevicePointClippingProperties ) const & ) noexcept -> cds :: String;
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceProtectedMemoryProperties ) const & ) noexcept -> cds :: String;
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceSubgroupProperties ) const & ) noexcept -> cds :: String;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceGroupProperties ) const & ) noexcept -> cds :: String;
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceExtendedFeatures ) const & ) noexcept -> cds :: String;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceVulkan11Features ) const & ) noexcept -> cds :: String;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDevice16BitStorageFeatures ) const & ) noexcept -> cds :: String;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceMultiviewFeatures ) const & ) noexcept -> cds :: String;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceProtectedMemoryFeatures ) const & ) noexcept -> cds :: String;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceSamplerYCBCRConversionFeatures ) const & ) noexcept -> cds :: String;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceShaderDrawParametersFeatures ) const & ) noexcept -> cds :: String;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceVariablePointersFeatures ) const & ) noexcept -> cds :: String;
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( DeviceGroupDeviceCreateInfo ) const & ) noexcept -> cds :: String;
 
 #endif
 
@@ -4365,6 +6682,21 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceFloatControlsProperties ) const & ) noexcept -> cds :: String;
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceSamplerFilterMinmaxProperties ) const & ) noexcept -> cds :: String;
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceTimelineSemaphoreProperties ) const & ) noexcept -> cds :: String;
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDevice8BitStorageFeatures ) const & ) noexcept -> cds :: String;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceVulkan12Features ) const & ) noexcept -> cds :: String;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceBufferDeviceAddressFeatures ) const & ) noexcept -> cds :: String;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceDescriptorIndexingFeatures ) const & ) noexcept -> cds :: String;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceHostQueryResetFeatures ) const & ) noexcept -> cds :: String;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceImagelessFramebufferFeatures ) const & ) noexcept -> cds :: String;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceScalarBlockLayoutFeatures ) const & ) noexcept -> cds :: String;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceSeparateDepthStencilLayoutsFeatures ) const & ) noexcept -> cds :: String;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceShaderAtomicInt64Features ) const & ) noexcept -> cds :: String;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceShaderFloat16Int8Features ) const & ) noexcept -> cds :: String;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceShaderSubgroupExtendedTypesFeatures ) const & ) noexcept -> cds :: String;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceTimelineSemaphoreFeatures ) const & ) noexcept -> cds :: String;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceUniformBufferStandardLayoutFeatures ) const & ) noexcept -> cds :: String;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceVulkanMemoryModelFeatures ) const & ) noexcept -> cds :: String;
 
 #endif
 
@@ -4383,12 +6715,14 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
 
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceAccelerationStructureProperties ) const & ) noexcept -> cds :: String;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceAccelerationStructureFeatures ) const & ) noexcept -> cds :: String;
 
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_BLEND_OPERATION_ADVANCED_AVAILABLE
 
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceBlendOperationAdvancedProperties ) const & ) noexcept -> cds :: String;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceBlendOperationAdvancedFeatures ) const & ) noexcept -> cds :: String;
 
 #endif
 
@@ -4401,6 +6735,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_COOPERATIVE_MATRIX_AVAILABLE
 
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceCooperativeMatrixPropertiesNVidia ) const & ) noexcept -> cds :: String;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceCooperativeMatrixFeaturesNVidia ) const & ) noexcept -> cds :: String;
 
 #endif
 
@@ -4413,6 +6748,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEVICE_GENERATED_COMMANDS_AVAILABLE
 
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceDeviceGeneratedCommandsPropertiesNVidia ) const & ) noexcept -> cds :: String;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceDeviceGeneratedCommandsFeaturesNVidia ) const & ) noexcept -> cds :: String;
 
 #endif
 
@@ -4599,12 +6935,20 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PERFORMANCE_QUERY_AVAILABLE
 
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDevicePerformanceQueryProperties ) const & ) noexcept -> cds :: String;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PerformanceCounter ) const & ) noexcept -> cds :: String;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PerformanceCounterDescription ) const & ) noexcept -> cds :: String;
 
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEVICE_DIAGNOSTIC_CHECKPOINTS_AVAILABLE
 
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( QueueFamilyCheckpointPropertiesNVidia ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_GLOBAL_PRIORITY_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( DeviceQueueGlobalPriorityCreateInfo ) const & ) noexcept -> cds :: String;
 
 #endif
 
@@ -4621,6 +6965,513 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEVICE_DIAGNOSTICS_CONFIG_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( DeviceDiagnosticsConfigFlagNVidia ) ) noexcept -> cds :: StringLiteral;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( DeviceDiagnosticsConfigCreateInfoNVidia ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_AMD_MEMORY_OVERALLOCATION_BEHAVIOUR_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( MemoryOverallocationBehaviorAMD ) ) noexcept -> cds :: StringLiteral;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( DeviceMemoryOverallocationCreateInfoAMD ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_PRIVATE_DATA_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( DevicePrivateDataCreateInfo ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_4444_FORMATS_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDevice4444FormatsFeatures ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_ASTC_DECODE_MODE_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceASTCDecodeFeatures ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_BORDER_COLOR_SWIZZLE_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceBorderColorSwizzleFeatures ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_AMD_DEVICE_COHERENT_MEMORY_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceCoherentMemoryFeaturesAMD ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_COLOR_WRITE_ENABLE_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceColorWriteEnableFeatures ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_COMPUTE_SHADER_DERIVATIVES_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceComputeShaderDerivativesFeatures ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_CONDITIONAL_RENDERING_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceConditionalRenderingFeatures ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_CORNER_SAMPLED_IMAGE_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceCornerSampledImageFeaturesNVidia ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_COVERAGE_REDUCTION_MODE_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceCoverageReductionModeNVidia ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_CUSTOM_BORDER_COLOR_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceCustomBorderColorFeatures ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEDICATED_ALLOCATION_IMAGE_ALIASING_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceDedicatedAllocationImageAliasingFeaturesNVidia ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_DEPTH_CLIP_CONTROL_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceDepthClipControlFeatures ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_DEPTH_CLIP_ENABLE_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceDepthClipEnableFeatures ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_DEVICE_MEMORY_REPORT_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceDeviceMemoryReportFeatures ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEVICE_DIAGNOSTICS_CONFIG_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceDiagnosticsConfigFeaturesNVidia ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceDynamicRenderingFeatures ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SCISSOR_EXCLUSIVE_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceExclusiveScissorFeaturesNVidia ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_EXTENDED_DYNAMIC_STATE_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceExtendedDynamicStateFeatures ) const & ) noexcept -> cds :: String;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceExtendedDynamicState2Features ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_EXTENDED_DYNAMIC_STATE_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceExternalMemoryRDMAFeaturesNVidia ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_FRAGMENT_DENSITY_MAP_2_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceFragmentDensityMap2Features ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_FRAGMENT_DENSITY_MAP_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceFragmentDensityMapFeatures ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_QUALCOMM_FRAGMENT_DENSITY_MAP_OFFSET_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceFragmentDensityMapOffsetFeaturesQualcomm ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_FRAGMENT_SHADER_BARYCENTRIC_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceFragmentShaderBarycentricFeaturesNVidia ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_FRAGMENT_SHADER_INTERLOCK_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceFragmentShaderInterlockFeatures ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_FRAGMENT_SHADING_RATE_ENUMS_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceFragmentShadingRateEnumsFeaturesNVidia ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_FRAGMENT_SHADING_RATE_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceFragmentShadingRateFeatures ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_GLOBAL_PRIORITY_QUERY_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceGlobalPriorityQueryFeatures ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_IMAGE_ROBUSTNESS_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceImageRobustnessFeatures ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_IMAGE_VIEW_MIN_LOD_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceImageViewMinLODFeatures ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_INDEX_TYPE_UINT8_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceIndexTypeUInt8Features ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_INHERITED_VIEWPORT_SCISSOR_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceInheritedViewportScissorFeaturesNVidia ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_INLINE_UNIFORM_BLOCK_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceInlineUniformBlockFeatures ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_HUAWEI_INVOCATION_MASK_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceInvocationMaskFeaturesHuawei ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_LINE_RASTERIZATION_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceLineRasterizationFeatures ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_LINEAR_COLOR_ATTACHMENT_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceLinearColorAttachmentFeaturesNVidia ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_MAINTENANCE_4_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceMaintenance4Features ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_MEMORY_PRIORITY_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceMemoryPriorityFeatures ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_MESH_SHADER_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceMeshShaderFeaturesNVidia ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_MULTI_DRAW_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceMultiDrawFeatures ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VALVE_MUTABLE_DESCRIPTOR_TYPE_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceMutableDescriptorTypeFeaturesValve ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_PAGEABLE_DEVICE_LOCAL_MEMORY_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDevicePageableDeviceLocalMemoryFeatures ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PERFORMANCE_QUERY_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDevicePerformanceQueryFeatures ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_PIPELINE_CREATION_CACHE_CONTROL_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDevicePipelineCreationCacheControlFeatures ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PIPELINE_EXECUTABLE_PROPERTIES_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDevicePipelineExecutablePropertiesFeatures ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PORTABILITY_SUBSET_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDevicePortabilitySubsetFeatures ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PRESENT_ID_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDevicePresentIDFeatures ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PRESENT_WAIT_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDevicePresentWaitFeatures ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_PRIMITIVE_TOPOLOGY_LIST_RESTART_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDevicePrimitiveTopologyListRestartFeatures ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_PRIVATE_DATA_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDevicePrivateDataFeatures ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_PROVOKING_VERTEX_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceProvokingVertexFeatures ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_RGBA_10_X_6_FORMATS_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceRGBA10x6FormatsFeatures ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_ARM_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceRasterizationOrderAttachmentAccessFeaturesARM ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_RAY_QUERY_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceRayQueryFeatures ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_MOTION_BLUR_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceRayTracingMotionBlurFeaturesNVidia ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_RAY_TRACING_PIPELINE_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceRayTracingPipelineFeatures ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_REPRESENTATIVE_FRAGMENT_TEST_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceRepresentativeFragmentTestFeaturesNVidia ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_ROBUSTNESS_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceRobustnessFeatures ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_SHADER_ATOMIC_FLOAT_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceShaderAtomicFloatFeatures ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_SHADER_ATOMIC_FLOAT_2_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceShaderAtomicFloat2Features ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_CLOCK_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceShaderClockFeatures ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_SHADER_DEMOTE_TO_HELPER_INVOCATION_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceShaderDemoteToHelperInvocationFeatures ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_SHADER_IMAGE_ATOMIC_INT64_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceShaderImageAtomicInt64Features ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SHADER_IMAGE_FOOTPRINT_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceShaderImageFootprintFeaturesNVidia ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_INTEGER_DOT_PRODUCT_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceShaderIntegerDotProductFeatures ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_INTEL_SHADER_INTEGER_FUNCTIONS_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceShaderIntegerFunctionsFeaturesIntel ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SHADER_SM_BUILTINS_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceShaderSMBuiltinsFeaturesNVidia ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_SUBGROUP_UNIFORM_CONTROL_FLOW_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceShaderSubgroupUniformControlFlowFeatures ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_TERMINATE_INVOCATION_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceShaderTerminateInvocationFeatures ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SHADING_RATE_IMAGE_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceShadingRateImageFeaturesNVidia ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_SUBGROUP_SIZE_CONTROL_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceSubgroupSizeControlFeatures ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_HUAWEI_SUBPASS_SHADING_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceSubpassShadingFeaturesHuawei ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceSynchronizationFeatures ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_TEXEL_BUFFER_ALIGNMENT_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceTexelBufferAlignmentFeatures ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_TEXTURE_COMPRESSION_ASTC_HDR_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceTextureCompressionASTCHDRFeatures ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_TRANSFORM_FEEDBACK_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceTransformFeedbackFeatures ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VERTEX_ATTRIBUTE_DIVISOR_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceVertexAttributeDivisorFeatures ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VERTEX_INPUT_DYNAMIC_STATE_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceVertexInputDynamicStateFeatures ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_WORKGROUP_MEMORY_EXPLICIT_LAYOUT_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceWorkgroupMemoryExplicitLayoutFeatures ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_YCBCR_2_PLANE_444_FORMATS_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceYCBCR2Plane444FormatsFeatures ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_YCBCR_IMAGE_ARRAYS_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceYCBCRImageArraysFeatures ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ZERO_INITIALIZE_WORKGROUP_MEMORY_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceZeroInitializeWorkgroupMemoryFeatures ) const & ) noexcept -> cds :: String;
+
+#endif
+
         __C_ENG_NO_DISCARD auto compare ( __C_ENG_TYPE ( Version ) const &, __C_ENG_TYPE ( Version ) const & ) noexcept -> __C_ENG_TYPE ( CompareResult );
 
         __C_ENG_NO_DISCARD auto uInt32ToInstanceVersion ( cds :: uint32 ) noexcept -> __C_ENG_TYPE ( Version );
@@ -4629,9 +7480,11 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
         namespace versionConstants {
 
-            constexpr static __C_ENG_TYPE ( Version ) const version10 = { .variant = 0U, .major = 1U, .minor = 0U, .patch = 0U };
-            constexpr static __C_ENG_TYPE ( Version ) const version11 = { .variant = 0U, .major = 1U, .minor = 1U, .patch = 0U };
-            constexpr static __C_ENG_TYPE ( Version ) const version12 = { .variant = 0U, .major = 1U, .minor = 2U, .patch = 0U };
+
+            constexpr static __C_ENG_TYPE ( Version ) const nullVersion                         = { .variant = 0U, .major = 0U, .minor = 0U, .patch = 0U };
+            constexpr static __C_ENG_TYPE ( Version ) const version10      __C_ENG_MAYBE_UNUSED = { .variant = 0U, .major = 1U, .minor = 0U, .patch = 0U };
+            constexpr static __C_ENG_TYPE ( Version ) const version11                           = { .variant = 0U, .major = 1U, .minor = 1U, .patch = 0U };
+            constexpr static __C_ENG_TYPE ( Version ) const version12      __C_ENG_MAYBE_UNUSED = { .variant = 0U, .major = 1U, .minor = 2U, .patch = 0U };
 
         }
 
@@ -4640,4 +7493,4 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #include <VulkanAPICalls.hpp>
 
-#endif //__C_ENG_VULKANCORE_HPP
+#endif //__C_ENG_VULKAN_CORE_HPP__
