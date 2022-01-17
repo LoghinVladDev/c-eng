@@ -4131,7 +4131,7 @@ auto vulkan :: toString (
 ) noexcept -> String {
 
     return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( QueueFamilyQueryResultStatusProperties ) ) " "
-            "{ type = "_s               + :: toString ( properties.structureType ) +
+            "{ type = "_s               + toString ( properties.structureType ) +
             ", pNext = "                + :: toString ( properties.pNext ) +
             ", supported = "            + ( properties.supported == VK_TRUE ? "true" : "false" ) +
             " }";
@@ -4142,10 +4142,25 @@ auto vulkan :: toString (
 ) noexcept -> String {
 
     return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( VideoQueueFamilyProperties ) ) " "
-            "{ type = "_s               + :: toString ( properties.structureType ) +
+            "{ type = "_s               + toString ( properties.structureType ) +
             ", pNext = "                + :: toString ( properties.pNext ) +
             ", videoCodecOperations = " + "0b" + Long ( properties.videoCodecOperations ).toString(2) +
             " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_GLOBAL_PRIORITY_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( DeviceQueueGlobalPriorityCreateInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( DeviceQueueGlobalPriorityCreateInfo ) ) " "
+           "{ type = "_s                + toString ( info.structureType ) +
+           ", pNext = "                 + :: toString ( info.pNext ) +
+           ", globalPriority = "        + toString ( info.globalPriority ) +
+           " }";
 }
 
 #endif
@@ -4163,12 +4178,1869 @@ auto vulkan :: toString (
     (void) queuePrioritiesAsString.removeSuffix(", ").append(" ]");
 
     return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( DeviceQueueCreateInfo ) ) " "
-           "{ type = "_s                + :: toString ( info.structureType ) +
+           "{ type = "_s                + toString ( info.structureType ) +
            ", pNext = "                 + :: toString ( info.pNext ) +
            ", flags = "                 + "0b" + Long ( info.flags ).toString(2) +
            ", queueFamilyIndex = "      + info.queueFamilyIndex +
            ", queueCount = "            + info.queueCount +
            ", pQueuePriorities = "      + queuePrioritiesAsString +
+           " }";
+}
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( DeviceCreateInfo ) const & info
+) noexcept -> String {
+
+    String queueCreateInfosAsString = "[ ";
+    for ( uint32 i = 0U; i < info.queueCreateInfoCount; ++ i ) {
+        queueCreateInfosAsString += toString ( info.pQueueCreateInfos[i] ) + ", "_s;
+    }
+    (void) queueCreateInfosAsString.removeSuffix(", ").append(" ]");
+
+#if ! __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+
+    String layerNamesAsString = "[ ";
+    for ( uint32 i = 0U; i < info.enabledLayerCount; ++ i ) {
+        layerNamesAsString += info.pEnabledLayerNames[i] + ", ";
+    }
+    (void) layerNamesAsString.removeSuffix(", ").append(" ]");
+
+#endif
+
+    String enabledExtensionNames = "[ ";
+    for ( uint32 i = 0U; i < info.enabledExtensionCount; ++ i ) {
+        enabledExtensionNames += info.pEnabledExtensionNames[i] + ", "_s;
+    }
+    (void) enabledExtensionNames.removeSuffix(", ").append(" ]");
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( DeviceQueueCreateInfo ) ) " "
+           "{ type = "_s                    + toString ( info.structureType ) +
+           ", pNext = "                     + :: toString ( info.pNext ) +
+           ", flags = "                     + "0b" + Long ( info.flags ).toString(2) +
+           ", queueCreateInfoCount = "      + info.queueCreateInfoCount +
+           ", pQueueCreateInfos = "         + queueCreateInfosAsString +
+
+#if ! __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+
+           ", enabledLayerCount = "         + info.enabledLayerCount +
+           ", pEnabledLayerNames = "        + layerNamesAsString +
+
+#endif
+
+           ", enabledExtensionCount = "     + info.enabledExtensionCount +
+           ", pEnabledExtensionNames = "    + enabledExtensionNames +
+           ", pEnabledFeatures = "          + :: toString ( info.pEnabledFeatures ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( DeviceGroupDeviceCreateInfo ) const & info
+) noexcept -> String {
+
+    String physicalDevicesAsString = "[ ";
+    for ( uint32 i = 0U; i < info.physicalDeviceCount; ++ i ) {
+        physicalDevicesAsString += :: toString ( info.pPhysicalDevices[i] ) + ", "_s;
+    }
+    (void) physicalDevicesAsString.removeSuffix(", ").append(" ]");
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( DeviceGroupDeviceCreateInfo ) ) " "
+           "{ type = "_s                + toString ( info.structureType ) +
+           ", pNext = "                 + :: toString ( info.pNext ) +
+           ", physicalDeviceCount = "   + info.physicalDeviceCount +
+           ", pPhysicalDevices = "      + physicalDevicesAsString +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_AMD_MEMORY_OVERALLOCATION_BEHAVIOUR_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( MemoryOverallocationBehaviorAMD ) behavior
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+    switch ( behavior ) {
+        case __C_ENG_TYPE ( MemoryOverallocationBehaviorAMD ) :: MemoryOverallocationBehaviorAMDDefault:    { asString = "Default";     break; }
+        case __C_ENG_TYPE ( MemoryOverallocationBehaviorAMD ) :: MemoryOverallocationBehaviorAMDAllowed:    { asString = "Allowed";     break; }
+        case __C_ENG_TYPE ( MemoryOverallocationBehaviorAMD ) :: MemoryOverallocationBehaviorAMDDisallowed: { asString = "Disallowed";  break; }
+    }
+
+    return asString;
+}
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( DeviceMemoryOverallocationCreateInfoAMD ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( DeviceMemoryOverallocationCreateInfoAMD ) ) " "
+           "{ type = "_s                    + toString ( info.structureType ) +
+           ", pNext = "                     + :: toString ( info.pNext ) +
+           ", overallocationBehavior = "    + toString ( info.overallocationBehavior ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_PRIVATE_DATA_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( DevicePrivateDataCreateInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( DevicePrivateDataCreateInfo ) ) " "
+           "{ type = "_s                        + toString ( info.structureType ) +
+           ", pNext = "                         + :: toString ( info.pNext ) +
+           ", privateDataSlotRequestCount = "   + info.privateDataSlotRequestCount +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_DEVICE_MEMORY_REPORT_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( DeviceDeviceMemoryReportCreateInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( DeviceDeviceMemoryReportCreateInfo ) ) " "
+           "{ type = "_s                        + toString ( info.structureType ) +
+           ", pNext = "                         + :: toString ( info.pNext ) +
+           ", flags = "                         + "0b" + Long ( info.flags ).toString (2) +
+           ", callback = "                      + :: toString ( info.callback ) +
+           ", pUserData = "                     + :: toString ( info.pUserData ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEVICE_DIAGNOSTICS_CONFIG_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( DeviceDiagnosticsConfigFlagNVidia ) flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+    switch ( flag ) {
+        case __C_ENG_TYPE ( DeviceDiagnosticsConfigFlagNVidia ) :: DeviceDiagnosticsConfigFlagNVidiaEnableShaderDebugInfo:      { asString = "Shader Debug Info";       break; }
+        case __C_ENG_TYPE ( DeviceDiagnosticsConfigFlagNVidia ) :: DeviceDiagnosticsConfigFlagNVidiaEnableAutomaticCheckpoints: { asString = "Automatic Checkpoints";   break; }
+        case __C_ENG_TYPE ( DeviceDiagnosticsConfigFlagNVidia ) :: DeviceDiagnosticsConfigFlagNVidiaEnableResourceTracking:     { asString = "Resource Tracking";       break; }
+    }
+
+    return asString;
+}
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( DeviceDiagnosticsConfigCreateInfoNVidia ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( DeviceDiagnosticsConfigCreateInfoNVidia ) ) " "
+           "{ type = "_s                    + toString ( info.structureType ) +
+           ", pNext = "                     + :: toString ( info.pNext ) +
+           ", flags = "                     + "0b" + Long ( info.flags ).toString(2) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDevice16BitStorageFeatures ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDevice16BitStorageFeatures ) ) " "
+           "{ type = "_s                                    + toString ( features.structureType ) +
+           ", pNext = "                                     + :: toString ( features.pNext ) +
+           ", storageBuffer16BitAccess = "                  + ( features.storageBuffer16BitAccess == VK_TRUE ? "true" : "false" ) +
+           ", uniformAndStorageBuffer16BitAccess = "        + ( features.uniformAndStorageBuffer16BitAccess == VK_TRUE ? "true" : "false" ) +
+           ", storagePushConstant16 = "                     + ( features.storagePushConstant16 == VK_TRUE ? "true" : "false" ) +
+           ", storageInputOutput16 = "                      + ( features.storageInputOutput16 == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceMultiviewFeatures ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceMultiviewFeatures ) ) " "
+           "{ type = "_s                                    + toString ( features.structureType ) +
+           ", pNext = "                                     + :: toString ( features.pNext ) +
+           ", multiview = "                                 + ( features.multiview == VK_TRUE ? "true" : "false" ) +
+           ", multiviewGeometryShader = "                   + ( features.multiviewGeometryShader == VK_TRUE ? "true" : "false" ) +
+           ", multiviewTessellationShader = "               + ( features.multiviewTessellationShader == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceProtectedMemoryFeatures ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceProtectedMemoryFeatures ) ) " "
+           "{ type = "_s                                    + toString ( features.structureType ) +
+           ", pNext = "                                     + :: toString ( features.pNext ) +
+           ", protectedMemory = "                           + ( features.protectedMemory == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceSamplerYCBCRConversionFeatures ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceSamplerYCBCRConversionFeatures ) ) " "
+           "{ type = "_s                                    + toString ( features.structureType ) +
+           ", pNext = "                                     + :: toString ( features.pNext ) +
+           ", samplerYCBCRConversion = "                    + ( features.samplerYCBCRConversion == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceShaderDrawParametersFeatures ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceShaderDrawParametersFeatures ) ) " "
+           "{ type = "_s                                    + toString ( features.structureType ) +
+           ", pNext = "                                     + :: toString ( features.pNext ) +
+           ", shaderDrawParameters = "                      + ( features.shaderDrawParameters == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceVariablePointersFeatures ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceVariablePointersFeatures ) ) " "
+           "{ type = "_s                                    + toString ( features.structureType ) +
+           ", pNext = "                                     + :: toString ( features.pNext ) +
+           ", variablePointersStorageBuffer = "             + ( features.variablePointersStorageBuffer == VK_TRUE ? "true" : "false" ) +
+           ", variablePointers = "                          + ( features.variablePointers == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceVulkan11Features ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceVulkan11Features ) ) " "
+           "{ type = "_s                                    + toString ( features.structureType ) +
+           ", pNext = "                                     + :: toString ( features.pNext ) +
+           ", storageBuffer16BitAccess = "                  + ( features.storageBuffer16BitAccess == VK_TRUE ? "true" : "false" ) +
+           ", uniformAndStorageBuffer16BitAccess = "        + ( features.uniformAndStorageBuffer16BitAccess == VK_TRUE ? "true" : "false" ) +
+           ", storagePushConstant16 = "                     + ( features.storagePushConstant16 == VK_TRUE ? "true" : "false" ) +
+           ", storageInputOutput16 = "                      + ( features.storageInputOutput16 == VK_TRUE ? "true" : "false" ) +
+           ", multiview = "                                 + ( features.multiview == VK_TRUE ? "true" : "false" ) +
+           ", multiviewGeometryShader = "                   + ( features.multiviewGeometryShader == VK_TRUE ? "true" : "false" ) +
+           ", multiviewTessellationShader = "               + ( features.multiviewTessellationShader == VK_TRUE ? "true" : "false" ) +
+           ", variablePointersStorageBuffer = "             + ( features.variablePointersStorageBuffer == VK_TRUE ? "true" : "false" ) +
+           ", variablePointers = "                          + ( features.variablePointers == VK_TRUE ? "true" : "false" ) +
+           ", protectedMemory = "                           + ( features.protectedMemory == VK_TRUE ? "true" : "false" ) +
+           ", samplerYcbcrConversion = "                    + ( features.samplerYcbcrConversion == VK_TRUE ? "true" : "false" ) +
+           ", shaderDrawParameters = "                      + ( features.shaderDrawParameters == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDevice8BitStorageFeatures ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDevice8BitStorageFeatures ) ) " "
+           "{ type = "_s                                    + toString ( features.structureType ) +
+           ", pNext = "                                     + :: toString ( features.pNext ) +
+           ", storageBuffer8BitAccess = "                   + ( features.storageBuffer8BitAccess == VK_TRUE ? "true" : "false" ) +
+           ", uniformAndStorageBuffer8BitAccess = "         + ( features.uniformAndStorageBuffer8BitAccess == VK_TRUE ? "true" : "false" ) +
+           ", storagePushConstant8 = "                      + ( features.storagePushConstant8 == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceBufferDeviceAddressFeatures ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceBufferDeviceAddressFeatures ) ) " "
+           "{ type = "_s                                    + toString ( features.structureType ) +
+           ", pNext = "                                     + :: toString ( features.pNext ) +
+           ", bufferDeviceAddress = "                       + ( features.bufferDeviceAddress == VK_TRUE ? "true" : "false" ) +
+           ", bufferDeviceAddressCaptureReplay = "          + ( features.bufferDeviceAddressCaptureReplay == VK_TRUE ? "true" : "false" ) +
+           ", bufferDeviceAddressMultiDevice = "            + ( features.bufferDeviceAddressMultiDevice == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceDescriptorIndexingFeatures ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceDescriptorIndexingFeatures ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", shaderInputAttachmentArrayDynamicIndexing = "             + ( features.shaderInputAttachmentArrayDynamicIndexing == VK_TRUE ? "true" : "false" ) +
+           ", shaderUniformTexelBufferArrayDynamicIndexing = "          + ( features.shaderUniformTexelBufferArrayDynamicIndexing == VK_TRUE ? "true" : "false" ) +
+           ", shaderStorageTexelBufferArrayDynamicIndexing = "          + ( features.shaderStorageTexelBufferArrayDynamicIndexing == VK_TRUE ? "true" : "false" ) +
+           ", shaderUniformBufferArrayNonUniformIndexing = "            + ( features.shaderUniformBufferArrayNonUniformIndexing == VK_TRUE ? "true" : "false" ) +
+           ", shaderSampledImageArrayNonUniformIndexing = "             + ( features.shaderSampledImageArrayNonUniformIndexing == VK_TRUE ? "true" : "false" ) +
+           ", shaderStorageBufferArrayNonUniformIndexing = "            + ( features.shaderStorageBufferArrayNonUniformIndexing == VK_TRUE ? "true" : "false" ) +
+           ", shaderStorageImageArrayNonUniformIndexing = "             + ( features.shaderStorageImageArrayNonUniformIndexing == VK_TRUE ? "true" : "false" ) +
+           ", shaderInputAttachmentArrayNonUniformIndexing = "          + ( features.shaderInputAttachmentArrayNonUniformIndexing == VK_TRUE ? "true" : "false" ) +
+           ", shaderUniformTexelBufferArrayNonUniformIndexing = "       + ( features.shaderUniformTexelBufferArrayNonUniformIndexing == VK_TRUE ? "true" : "false" ) +
+           ", shaderStorageTexelBufferArrayNonUniformIndexing = "       + ( features.shaderStorageTexelBufferArrayNonUniformIndexing == VK_TRUE ? "true" : "false" ) +
+           ", descriptorBindingUniformBufferUpdateAfterBind = "         + ( features.descriptorBindingUniformBufferUpdateAfterBind == VK_TRUE ? "true" : "false" ) +
+           ", descriptorBindingSampledImageUpdateAfterBind = "          + ( features.descriptorBindingSampledImageUpdateAfterBind == VK_TRUE ? "true" : "false" ) +
+           ", descriptorBindingStorageImageUpdateAfterBind = "          + ( features.descriptorBindingStorageImageUpdateAfterBind == VK_TRUE ? "true" : "false" ) +
+           ", descriptorBindingStorageBufferUpdateAfterBind = "         + ( features.descriptorBindingStorageBufferUpdateAfterBind == VK_TRUE ? "true" : "false" ) +
+           ", descriptorBindingUniformTexelBufferUpdateAfterBind = "    + ( features.descriptorBindingUniformTexelBufferUpdateAfterBind == VK_TRUE ? "true" : "false" ) +
+           ", descriptorBindingStorageTexelBufferUpdateAfterBind = "    + ( features.descriptorBindingStorageTexelBufferUpdateAfterBind == VK_TRUE ? "true" : "false" ) +
+           ", descriptorBindingUpdateUnusedWhilePending = "             + ( features.descriptorBindingUpdateUnusedWhilePending == VK_TRUE ? "true" : "false" ) +
+           ", descriptorBindingPartiallyBound = "                       + ( features.descriptorBindingPartiallyBound == VK_TRUE ? "true" : "false" ) +
+           ", descriptorBindingVariableDescriptorCount = "              + ( features.descriptorBindingVariableDescriptorCount == VK_TRUE ? "true" : "false" ) +
+           ", runtimeDescriptorArray = "                                + ( features.runtimeDescriptorArray == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceHostQueryResetFeatures ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceHostQueryResetFeatures ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", hostQueryReset = "                                        + ( features.hostQueryReset == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceImagelessFramebufferFeatures ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceImagelessFramebufferFeatures ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", imagelessFramebuffer = "                                  + ( features.imagelessFramebuffer == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceScalarBlockLayoutFeatures ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceScalarBlockLayoutFeatures ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", scalarBlockLayout = "                                     + ( features.scalarBlockLayout == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceSeparateDepthStencilLayoutsFeatures ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceSeparateDepthStencilLayoutsFeatures ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", separateDepthStencilLayouts = "                           + ( features.separateDepthStencilLayouts == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceShaderAtomicInt64Features ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceShaderAtomicInt64Features ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", shaderBufferInt64Atomics = "                              + ( features.shaderBufferInt64Atomics == VK_TRUE ? "true" : "false" ) +
+           ", shaderSharedInt64Atomics = "                              + ( features.shaderSharedInt64Atomics == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceShaderFloat16Int8Features ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceShaderFloat16Int8Features ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", shaderFloat16 = "                                         + ( features.shaderFloat16 == VK_TRUE ? "true" : "false" ) +
+           ", shaderInt8 = "                                            + ( features.shaderInt8 == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceShaderSubgroupExtendedTypesFeatures ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceShaderSubgroupExtendedTypesFeatures ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", shaderSubgroupExtendedTypes = "                           + ( features.shaderSubgroupExtendedTypes == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceTimelineSemaphoreFeatures ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceTimelineSemaphoreFeatures ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", timelineSemaphore = "                                     + ( features.timelineSemaphore == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceUniformBufferStandardLayoutFeatures ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceUniformBufferStandardLayoutFeatures ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", uniformBufferStandardLayout = "                           + ( features.uniformBufferStandardLayout == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceVulkanMemoryModelFeatures ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceVulkanMemoryModelFeatures ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", vulkanMemoryModel = "                                     + ( features.vulkanMemoryModel == VK_TRUE ? "true" : "false" ) +
+           ", vulkanMemoryModelDeviceScope = "                          + ( features.vulkanMemoryModelDeviceScope == VK_TRUE ? "true" : "false" ) +
+           ", vulkanMemoryModelAvailabilityVisibilityChains = "         + ( features.vulkanMemoryModelAvailabilityVisibilityChains == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceVulkan12Features ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceVulkan12Features ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", samplerMirrorClampToEdge = "                              + ( features.samplerMirrorClampToEdge == VK_TRUE ? "true" : "false" ) +
+           ", drawIndirectCount = "                                     + ( features.drawIndirectCount == VK_TRUE ? "true" : "false" ) +
+           ", storageBuffer8BitAccess = "                               + ( features.storageBuffer8BitAccess == VK_TRUE ? "true" : "false" ) +
+           ", uniformAndStorageBuffer8BitAccess = "                     + ( features.uniformAndStorageBuffer8BitAccess == VK_TRUE ? "true" : "false" ) +
+           ", storagePushConstant8 = "                                  + ( features.storagePushConstant8 == VK_TRUE ? "true" : "false" ) +
+           ", shaderBufferInt64Atomics = "                              + ( features.shaderBufferInt64Atomics == VK_TRUE ? "true" : "false" ) +
+           ", shaderSharedInt64Atomics = "                              + ( features.shaderSharedInt64Atomics == VK_TRUE ? "true" : "false" ) +
+           ", shaderFloat16 = "                                         + ( features.shaderFloat16 == VK_TRUE ? "true" : "false" ) +
+           ", shaderInt8 = "                                            + ( features.shaderInt8 == VK_TRUE ? "true" : "false" ) +
+           ", descriptorIndexing = "                                    + ( features.descriptorIndexing == VK_TRUE ? "true" : "false" ) +
+           ", shaderInputAttachmentArrayDynamicIndexing = "             + ( features.shaderInputAttachmentArrayDynamicIndexing == VK_TRUE ? "true" : "false" ) +
+           ", shaderUniformTexelBufferArrayDynamicIndexing = "          + ( features.shaderUniformTexelBufferArrayDynamicIndexing == VK_TRUE ? "true" : "false" ) +
+           ", shaderStorageTexelBufferArrayDynamicIndexing = "          + ( features.shaderStorageTexelBufferArrayDynamicIndexing == VK_TRUE ? "true" : "false" ) +
+           ", shaderUniformBufferArrayNonUniformIndexing = "            + ( features.shaderUniformBufferArrayNonUniformIndexing == VK_TRUE ? "true" : "false" ) +
+           ", shaderSampledImageArrayNonUniformIndexing = "             + ( features.shaderSampledImageArrayNonUniformIndexing == VK_TRUE ? "true" : "false" ) +
+           ", shaderStorageBufferArrayNonUniformIndexing = "            + ( features.shaderStorageBufferArrayNonUniformIndexing == VK_TRUE ? "true" : "false" ) +
+           ", shaderStorageImageArrayNonUniformIndexing = "             + ( features.shaderStorageImageArrayNonUniformIndexing == VK_TRUE ? "true" : "false" ) +
+           ", shaderInputAttachmentArrayNonUniformIndexing = "          + ( features.shaderInputAttachmentArrayNonUniformIndexing == VK_TRUE ? "true" : "false" ) +
+           ", shaderUniformTexelBufferArrayNonUniformIndexing = "       + ( features.shaderUniformTexelBufferArrayNonUniformIndexing == VK_TRUE ? "true" : "false" ) +
+           ", shaderStorageTexelBufferArrayNonUniformIndexing = "       + ( features.shaderStorageTexelBufferArrayNonUniformIndexing == VK_TRUE ? "true" : "false" ) +
+           ", descriptorBindingUniformBufferUpdateAfterBind = "         + ( features.descriptorBindingUniformBufferUpdateAfterBind == VK_TRUE ? "true" : "false" ) +
+           ", descriptorBindingSampledImageUpdateAfterBind = "          + ( features.descriptorBindingSampledImageUpdateAfterBind == VK_TRUE ? "true" : "false" ) +
+           ", descriptorBindingStorageImageUpdateAfterBind = "          + ( features.descriptorBindingStorageImageUpdateAfterBind == VK_TRUE ? "true" : "false" ) +
+           ", descriptorBindingStorageBufferUpdateAfterBind = "         + ( features.descriptorBindingStorageBufferUpdateAfterBind == VK_TRUE ? "true" : "false" ) +
+           ", descriptorBindingUniformTexelBufferUpdateAfterBind = "    + ( features.descriptorBindingUniformTexelBufferUpdateAfterBind == VK_TRUE ? "true" : "false" ) +
+           ", descriptorBindingStorageTexelBufferUpdateAfterBind = "    + ( features.descriptorBindingStorageTexelBufferUpdateAfterBind == VK_TRUE ? "true" : "false" ) +
+           ", descriptorBindingUpdateUnusedWhilePending = "             + ( features.descriptorBindingUpdateUnusedWhilePending == VK_TRUE ? "true" : "false" ) +
+           ", descriptorBindingPartiallyBound = "                       + ( features.descriptorBindingPartiallyBound == VK_TRUE ? "true" : "false" ) +
+           ", descriptorBindingVariableDescriptorCount = "              + ( features.descriptorBindingVariableDescriptorCount == VK_TRUE ? "true" : "false" ) +
+           ", runtimeDescriptorArray = "                                + ( features.runtimeDescriptorArray == VK_TRUE ? "true" : "false" ) +
+           ", samplerFilterMinmax = "                                   + ( features.samplerFilterMinmax == VK_TRUE ? "true" : "false" ) +
+           ", scalarBlockLayout = "                                     + ( features.scalarBlockLayout == VK_TRUE ? "true" : "false" ) +
+           ", imagelessFramebuffer = "                                  + ( features.imagelessFramebuffer == VK_TRUE ? "true" : "false" ) +
+           ", uniformBufferStandardLayout = "                           + ( features.uniformBufferStandardLayout == VK_TRUE ? "true" : "false" ) +
+           ", shaderSubgroupExtendedTypes = "                           + ( features.shaderSubgroupExtendedTypes == VK_TRUE ? "true" : "false" ) +
+           ", separateDepthStencilLayouts = "                           + ( features.separateDepthStencilLayouts == VK_TRUE ? "true" : "false" ) +
+           ", hostQueryReset = "                                        + ( features.hostQueryReset == VK_TRUE ? "true" : "false" ) +
+           ", timelineSemaphore = "                                     + ( features.timelineSemaphore == VK_TRUE ? "true" : "false" ) +
+           ", bufferDeviceAddress = "                                   + ( features.bufferDeviceAddress == VK_TRUE ? "true" : "false" ) +
+           ", bufferDeviceAddressCaptureReplay = "                      + ( features.bufferDeviceAddressCaptureReplay == VK_TRUE ? "true" : "false" ) +
+           ", bufferDeviceAddressMultiDevice = "                        + ( features.bufferDeviceAddressMultiDevice == VK_TRUE ? "true" : "false" ) +
+           ", vulkanMemoryModel = "                                     + ( features.vulkanMemoryModel == VK_TRUE ? "true" : "false" ) +
+           ", vulkanMemoryModelDeviceScope = "                          + ( features.vulkanMemoryModelDeviceScope == VK_TRUE ? "true" : "false" ) +
+           ", vulkanMemoryModelAvailabilityVisibilityChains = "         + ( features.vulkanMemoryModelAvailabilityVisibilityChains == VK_TRUE ? "true" : "false" ) +
+           ", shaderOutputViewportIndex = "                             + ( features.shaderOutputViewportIndex == VK_TRUE ? "true" : "false" ) +
+           ", shaderOutputLayer = "                                     + ( features.shaderOutputLayer == VK_TRUE ? "true" : "false" ) +
+           ", subgroupBroadcastDynamicId = "                            + ( features.subgroupBroadcastDynamicId == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_4444_FORMATS_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDevice4444FormatsFeatures ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDevice4444FormatsFeatures ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", formatA4R4G4B4 = "                                        + ( features.formatA4R4G4B4 == VK_TRUE ? "true" : "false" ) +
+           ", formatA4B4G4R4 = "                                        + ( features.formatA4B4G4R4 == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_ASTC_DECODE_MODE_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceASTCDecodeFeatures ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceASTCDecodeFeatures ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", decodeModeSharedExponent = "                              + ( features.decodeModeSharedExponent == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceAccelerationStructureFeatures ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceAccelerationStructureFeatures ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", accelerationStructure = "                                 + ( features.accelerationStructure == VK_TRUE ? "true" : "false" ) +
+           ", accelerationStructureCaptureReplay = "                    + ( features.accelerationStructureCaptureReplay == VK_TRUE ? "true" : "false" ) +
+           ", accelerationStructureIndirectBuild = "                    + ( features.accelerationStructureIndirectBuild == VK_TRUE ? "true" : "false" ) +
+           ", accelerationStructureHostCommands = "                     + ( features.accelerationStructureHostCommands == VK_TRUE ? "true" : "false" ) +
+           ", descriptorBindingAccelerationStructureUpdateAfterBind = " + ( features.descriptorBindingAccelerationStructureUpdateAfterBind == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_BLEND_OPERATION_ADVANCED_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceBlendOperationAdvancedFeatures ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceBlendOperationAdvancedFeatures ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", advancedBlendCoherentOperations = "                       + ( features.advancedBlendCoherentOperations == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_BORDER_COLOR_SWIZZLE_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceBorderColorSwizzleFeatures ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceBorderColorSwizzleFeatures ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", borderColorSwizzle = "                                    + ( features.borderColorSwizzle == VK_TRUE ? "true" : "false" ) +
+           ", borderColorSwizzleFromImage = "                           + ( features.borderColorSwizzleFromImage == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_AMD_DEVICE_COHERENT_MEMORY_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceCoherentMemoryFeaturesAMD ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceCoherentMemoryFeaturesAMD ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", deviceCoherentMemory = "                                  + ( features.deviceCoherentMemory == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_COLOR_WRITE_ENABLE_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceColorWriteEnableFeatures ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceColorWriteEnableFeatures ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", colorWriteEnable = "                                      + ( features.colorWriteEnable == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_COMPUTE_SHADER_DERIVATIVES_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceComputeShaderDerivativesFeatures ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceComputeShaderDerivativesFeatures ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", computeDerivativeGroupQuads = "                           + ( features.computeDerivativeGroupQuads == VK_TRUE ? "true" : "false" ) +
+           ", computeDerivativeGroupLinear = "                          + ( features.computeDerivativeGroupLinear == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_CONDITIONAL_RENDERING_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceConditionalRenderingFeatures ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceConditionalRenderingFeatures ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", conditionalRendering = "                                  + ( features.conditionalRendering == VK_TRUE ? "true" : "false" ) +
+           ", inheritedConditionalRendering = "                         + ( features.inheritedConditionalRendering == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_COOPERATIVE_MATRIX_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceCooperativeMatrixFeaturesNVidia ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceCooperativeMatrixFeaturesNVidia ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", cooperativeMatrix = "                                     + ( features.cooperativeMatrix == VK_TRUE ? "true" : "false" ) +
+           ", cooperativeMatrixRobustBufferAccess = "                   + ( features.cooperativeMatrixRobustBufferAccess == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_CORNER_SAMPLED_IMAGE_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceCornerSampledImageFeaturesNVidia ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceCornerSampledImageFeaturesNVidia ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", cornerSampledImage = "                                    + ( features.cornerSampledImage == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_COVERAGE_REDUCTION_MODE_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceCoverageReductionModeNVidia ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceCoverageReductionModeNVidia ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", coverageReductionMode = "                                 + ( features.coverageReductionMode == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_CUSTOM_BORDER_COLOR_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceCustomBorderColorFeatures ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceCustomBorderColorFeatures ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", customBorderColors = "                                    + ( features.customBorderColors == VK_TRUE ? "true" : "false" ) +
+           ", customBorderColorsWithoutFormat = "                       + ( features.customBorderColorsWithoutFormat == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEDICATED_ALLOCATION_IMAGE_ALIASING_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceDedicatedAllocationImageAliasingFeaturesNVidia ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceDedicatedAllocationImageAliasingFeaturesNVidia ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", dedicatedAllocationImageAliasing = "                      + ( features.dedicatedAllocationImageAliasing == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_DEPTH_CLIP_CONTROL_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceDepthClipControlFeatures ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceDepthClipControlFeatures ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", depthClipControl = "                                      + ( features.depthClipControl == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_DEPTH_CLIP_ENABLE_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceDepthClipEnableFeatures ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceDepthClipEnableFeatures ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", depthClipEnable = "                                       + ( features.depthClipEnable == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEVICE_GENERATED_COMMANDS_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceDeviceGeneratedCommandsFeaturesNVidia ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceDeviceGeneratedCommandsFeaturesNVidia ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", deviceGeneratedCommands = "                               + ( features.deviceGeneratedCommands == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_DEVICE_MEMORY_REPORT_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceDeviceMemoryReportFeatures ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceDeviceMemoryReportFeatures ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", deviceMemoryReport = "                                    + ( features.deviceMemoryReport == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEVICE_DIAGNOSTICS_CONFIG_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceDiagnosticsConfigFeaturesNVidia ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceDiagnosticsConfigFeaturesNVidia ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", diagnosticsConfig = "                                     + ( features.diagnosticsConfig == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceDynamicRenderingFeatures ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceDynamicRenderingFeatures ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", dynamicRendering = "                                      + ( features.dynamicRendering == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SCISSOR_EXCLUSIVE_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceExclusiveScissorFeaturesNVidia ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceExclusiveScissorFeaturesNVidia ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", exclusiveScissor = "                                      + ( features.exclusiveScissor == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_EXTENDED_DYNAMIC_STATE_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceExtendedDynamicState2Features ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceExtendedDynamicState2Features ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", extendedDynamicState2 = "                                 + ( features.extendedDynamicState2 == VK_TRUE ? "true" : "false" ) +
+           ", extendedDynamicState2LogicOp = "                          + ( features.extendedDynamicState2LogicOp == VK_TRUE ? "true" : "false" ) +
+           ", extendedDynamicState2PatchControlPoints = "               + ( features.extendedDynamicState2PatchControlPoints == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceExtendedDynamicStateFeatures ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceExtendedDynamicStateFeatures ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", extendedDynamicState = "                                  + ( features.extendedDynamicState == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXTERNAL_MEMORY_RDMA_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceExternalMemoryRDMAFeaturesNVidia ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceExternalMemoryRDMAFeaturesNVidia ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", externalMemoryRDMA = "                                    + ( features.externalMemoryRDMA == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_FRAGMENT_DENSITY_MAP_2_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceFragmentDensityMap2Features ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceFragmentDensityMap2Features ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", fragmentDensityMapDeferred = "                            + ( features.fragmentDensityMapDeferred == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_FRAGMENT_DENSITY_MAP_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceFragmentDensityMapFeatures ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceFragmentDensityMapFeatures ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", fragmentDensityMap = "                                    + ( features.fragmentDensityMap == VK_TRUE ? "true" : "false" ) +
+           ", fragmentDensityMapDynamic = "                             + ( features.fragmentDensityMapDynamic == VK_TRUE ? "true" : "false" ) +
+           ", fragmentDensityMapNonSubsampledImages = "                 + ( features.fragmentDensityMapNonSubsampledImages == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_QUALCOMM_FRAGMENT_DENSITY_MAP_OFFSET_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceFragmentDensityMapOffsetFeaturesQualcomm ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceFragmentDensityMapOffsetFeaturesQualcomm ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", fragmentDensityMapOffset = "                              + ( features.fragmentDensityMapOffset == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_FRAGMENT_SHADER_BARYCENTRIC_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceFragmentShaderBarycentricFeaturesNVidia ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceFragmentShaderBarycentricFeaturesNVidia ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", fragmentShaderBarycentric = "                             + ( features.fragmentShaderBarycentric == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_FRAGMENT_SHADER_INTERLOCK_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceFragmentShaderInterlockFeatures ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceFragmentShaderInterlockFeatures ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", fragmentShaderSampleInterlock = "                         + ( features.fragmentShaderSampleInterlock == VK_TRUE ? "true" : "false" ) +
+           ", fragmentShaderPixelInterlock = "                          + ( features.fragmentShaderPixelInterlock == VK_TRUE ? "true" : "false" ) +
+           ", fragmentShaderShadingRateInterlock = "                    + ( features.fragmentShaderShadingRateInterlock == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_FRAGMENT_SHADING_RATE_ENUMS_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceFragmentShadingRateEnumsFeaturesNVidia ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceFragmentShadingRateEnumsFeaturesNVidia ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", fragmentShadingRateEnums = "                              + ( features.fragmentShadingRateEnums == VK_TRUE ? "true" : "false" ) +
+           ", supersampleFragmentShadingRates = "                       + ( features.supersampleFragmentShadingRates == VK_TRUE ? "true" : "false" ) +
+           ", noInvocationFragmentShadingRates = "                      + ( features.noInvocationFragmentShadingRates == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_FRAGMENT_SHADING_RATE_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceFragmentShadingRateFeatures ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceFragmentShadingRateFeatures ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", pipelineFragmentShadingRate = "                           + ( features.pipelineFragmentShadingRate == VK_TRUE ? "true" : "false" ) +
+           ", primitiveFragmentShadingRate = "                          + ( features.primitiveFragmentShadingRate == VK_TRUE ? "true" : "false" ) +
+           ", attachmentFragmentShadingRate = "                         + ( features.attachmentFragmentShadingRate == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_GLOBAL_PRIORITY_QUERY_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceGlobalPriorityQueryFeatures ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceGlobalPriorityQueryFeatures ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", globalPriorityQuery = "                                   + ( features.globalPriorityQuery == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_IMAGE_ROBUSTNESS_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceImageRobustnessFeatures ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceImageRobustnessFeatures ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", robustImageAccess = "                                     + ( features.robustImageAccess == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_IMAGE_VIEW_MIN_LOD_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceImageViewMinLODFeatures ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceImageViewMinLODFeatures ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", minLOD = "                                                + ( features.minLOD == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_INDEX_TYPE_UINT8_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceIndexTypeUInt8Features ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceIndexTypeUInt8Features ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", indexTypeUInt8 = "                                        + ( features.indexTypeUInt8 == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_INHERITED_VIEWPORT_SCISSOR_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceInheritedViewportScissorFeaturesNVidia ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceInheritedViewportScissorFeaturesNVidia ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", inheritedViewportScissor2D = "                            + ( features.inheritedViewportScissor2D == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_INLINE_UNIFORM_BLOCK_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceInlineUniformBlockFeatures ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceInlineUniformBlockFeatures ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", inlineUniformBlock = "                                    + ( features.inlineUniformBlock == VK_TRUE ? "true" : "false" ) +
+           ", descriptorBindingInlineUniformBlockUpdateAfterBind = "    + ( features.descriptorBindingInlineUniformBlockUpdateAfterBind == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_HUAWEI_INVOCATION_MASK_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceInvocationMaskFeaturesHuawei ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceInvocationMaskFeaturesHuawei ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", invocationMask = "                                        + ( features.invocationMask == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_LINE_RASTERIZATION_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceLineRasterizationFeatures ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceLineRasterizationFeatures ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", rectangularLines = "                                      + ( features.rectangularLines == VK_TRUE ? "true" : "false" ) +
+           ", bresenhamLines = "                                        + ( features.bresenhamLines == VK_TRUE ? "true" : "false" ) +
+           ", smoothLines = "                                           + ( features.smoothLines == VK_TRUE ? "true" : "false" ) +
+           ", stippledRectangularLines = "                              + ( features.stippledRectangularLines == VK_TRUE ? "true" : "false" ) +
+           ", stippledBresenhamLines = "                                + ( features.stippledBresenhamLines == VK_TRUE ? "true" : "false" ) +
+           ", stippledSmoothLines = "                                   + ( features.stippledSmoothLines == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_LINEAR_COLOR_ATTACHMENT_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceLinearColorAttachmentFeaturesNVidia ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceLinearColorAttachmentFeaturesNVidia ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", linearColorAttachment = "                                 + ( features.linearColorAttachment == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_MAINTENANCE_4_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceMaintenance4Features ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceMaintenance4Features ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", maintenance4 = "                                          + ( features.maintenance4 == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_MEMORY_PRIORITY_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceMemoryPriorityFeatures ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceMemoryPriorityFeatures ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", memoryPriority = "                                        + ( features.memoryPriority == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_MESH_SHADER_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceMeshShaderFeaturesNVidia ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceMeshShaderFeaturesNVidia ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", taskShader = "                                            + ( features.taskShader == VK_TRUE ? "true" : "false" ) +
+           ", meshShader = "                                            + ( features.meshShader == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_MULTI_DRAW_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceMultiDrawFeatures ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceMultiDrawFeatures ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", multiDraw = "                                             + ( features.multiDraw == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VALVE_MUTABLE_DESCRIPTOR_TYPE_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceMutableDescriptorTypeFeaturesValve ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceMutableDescriptorTypeFeaturesValve ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", mutableDescriptorType = "                                 + ( features.mutableDescriptorType == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_PAGEABLE_DEVICE_LOCAL_MEMORY_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDevicePageableDeviceLocalMemoryFeatures ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDevicePageableDeviceLocalMemoryFeatures ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", pageableDeviceLocalMemory = "                             + ( features.pageableDeviceLocalMemory == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PERFORMANCE_QUERY_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDevicePerformanceQueryFeatures ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDevicePerformanceQueryFeatures ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", performanceCounterQueryPools = "                          + ( features.performanceCounterQueryPools == VK_TRUE ? "true" : "false" ) +
+           ", performanceCounterMultipleQueryPools = "                  + ( features.performanceCounterMultipleQueryPools == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_PIPELINE_CREATION_CACHE_CONTROL_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDevicePipelineCreationCacheControlFeatures ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDevicePipelineCreationCacheControlFeatures ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", pipelineCreationCacheControl = "                          + ( features.pipelineCreationCacheControl == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PIPELINE_EXECUTABLE_PROPERTIES_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDevicePipelineExecutablePropertiesFeatures ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDevicePipelineExecutablePropertiesFeatures ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", pipelineExecutableInfo = "                                + ( features.pipelineExecutableInfo == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PORTABILITY_SUBSET_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDevicePortabilitySubsetFeatures ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDevicePortabilitySubsetFeatures ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", constantAlphaColorBlendFactors = "                        + ( features.constantAlphaColorBlendFactors == VK_TRUE ? "true" : "false" ) +
+           ", events = "                                                + ( features.events == VK_TRUE ? "true" : "false" ) +
+           ", imageViewFormatReinterpretation = "                       + ( features.imageViewFormatReinterpretation == VK_TRUE ? "true" : "false" ) +
+           ", imageViewFormatSwizzle = "                                + ( features.imageViewFormatSwizzle == VK_TRUE ? "true" : "false" ) +
+           ", imageView2DOn3DImage = "                                  + ( features.imageView2DOn3DImage == VK_TRUE ? "true" : "false" ) +
+           ", multisampleArrayImage = "                                 + ( features.multisampleArrayImage == VK_TRUE ? "true" : "false" ) +
+           ", mutableComparisonSamplers = "                             + ( features.mutableComparisonSamplers == VK_TRUE ? "true" : "false" ) +
+           ", pointPolygons = "                                         + ( features.pointPolygons == VK_TRUE ? "true" : "false" ) +
+           ", samplerMipLodBias = "                                     + ( features.samplerMipLodBias == VK_TRUE ? "true" : "false" ) +
+           ", separateStencilMaskRef = "                                + ( features.separateStencilMaskRef == VK_TRUE ? "true" : "false" ) +
+           ", shaderSampleRateInterpolationFunctions = "                + ( features.shaderSampleRateInterpolationFunctions == VK_TRUE ? "true" : "false" ) +
+           ", tessellationIsolines = "                                  + ( features.tessellationIsolines == VK_TRUE ? "true" : "false" ) +
+           ", tessellationPointMode = "                                 + ( features.tessellationPointMode == VK_TRUE ? "true" : "false" ) +
+           ", triangleFans = "                                          + ( features.triangleFans == VK_TRUE ? "true" : "false" ) +
+           ", vertexAttributeAccessBeyondStride = "                     + ( features.vertexAttributeAccessBeyondStride == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PRESENT_ID_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDevicePresentIDFeatures ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDevicePresentIDFeatures ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", presentID = "                                             + ( features.presentID == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PRESENT_WAIT_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDevicePresentWaitFeatures ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDevicePresentWaitFeatures ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", presentWait = "                                           + ( features.presentWait == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_PRIMITIVE_TOPOLOGY_LIST_RESTART_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDevicePrimitiveTopologyListRestartFeatures ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDevicePrimitiveTopologyListRestartFeatures ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", primitiveTopologyListRestart = "                          + ( features.primitiveTopologyListRestart == VK_TRUE ? "true" : "false" ) +
+           ", primitiveTopologyPatchListRestart = "                     + ( features.primitiveTopologyPatchListRestart == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_PRIVATE_DATA_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDevicePrivateDataFeatures ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDevicePrivateDataFeatures ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", privateData = "                                           + ( features.privateData == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_PROVOKING_VERTEX_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceProvokingVertexFeatures ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceProvokingVertexFeatures ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", provokingVertexLast = "                                   + ( features.provokingVertexLast == VK_TRUE ? "true" : "false" ) +
+           ", transformFeedbackPreservesProvokingVertex = "             + ( features.transformFeedbackPreservesProvokingVertex == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_RGBA_10_X_6_FORMATS_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceRGBA10x6FormatsFeatures ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceRGBA10x6FormatsFeatures ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", formatRGBA10x6WithoutYCBCRSampler = "                     + ( features.formatRGBA10x6WithoutYCBCRSampler == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_ARM_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceRasterizationOrderAttachmentAccessFeaturesARM ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceRasterizationOrderAttachmentAccessFeaturesARM ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", rasterizationOrderColorAttachmentAccess = "               + ( features.rasterizationOrderColorAttachmentAccess == VK_TRUE ? "true" : "false" ) +
+           ", rasterizationOrderDepthAttachmentAccess = "               + ( features.rasterizationOrderDepthAttachmentAccess == VK_TRUE ? "true" : "false" ) +
+           ", rasterizationOrderStencilAttachmentAccess = "             + ( features.rasterizationOrderStencilAttachmentAccess == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_RAY_QUERY_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceRayQueryFeatures ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceRayQueryFeatures ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", rayQuery = "                                              + ( features.rayQuery == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_MOTION_BLUR_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceRayTracingMotionBlurFeaturesNVidia ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceRayTracingMotionBlurFeaturesNVidia ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", rayTracingMotionBlur = "                                  + ( features.rayTracingMotionBlur == VK_TRUE ? "true" : "false" ) +
+           ", rayTracingMotionBlurPipelineTraceRaysIndirect = "         + ( features.rayTracingMotionBlurPipelineTraceRaysIndirect == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_RAY_TRACING_PIPELINE_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceRayTracingPipelineFeatures ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceRayTracingPipelineFeatures ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", rayTracingPipeline = "                                    + ( features.rayTracingPipeline == VK_TRUE ? "true" : "false" ) +
+           ", rayTracingPipelineShaderGroupHandleCaptureReplay = "      + ( features.rayTracingPipelineShaderGroupHandleCaptureReplay == VK_TRUE ? "true" : "false" ) +
+           ", rayTracingPipelineShaderGroupHandleCaptureReplayMixed = " + ( features.rayTracingPipelineShaderGroupHandleCaptureReplayMixed == VK_TRUE ? "true" : "false" ) +
+           ", rayTracingPipelineTraceRaysIndirect = "                   + ( features.rayTracingPipelineTraceRaysIndirect == VK_TRUE ? "true" : "false" ) +
+           ", rayTraversalPrimitiveCulling = "                          + ( features.rayTraversalPrimitiveCulling == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_REPRESENTATIVE_FRAGMENT_TEST_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceRepresentativeFragmentTestFeaturesNVidia ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceRepresentativeFragmentTestFeaturesNVidia ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", representativeFragmentTest = "                            + ( features.representativeFragmentTest == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_ROBUSTNESS_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceRobustnessFeatures ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceRobustnessFeatures ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", robustBufferAccess = "                                    + ( features.robustBufferAccess == VK_TRUE ? "true" : "false" ) +
+           ", robustImageAccess = "                                     + ( features.robustImageAccess == VK_TRUE ? "true" : "false" ) +
+           ", nullDescriptor = "                                        + ( features.nullDescriptor == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_SHADER_ATOMIC_FLOAT_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceShaderAtomicFloatFeatures ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceShaderAtomicFloatFeatures ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", shaderBufferFloat32Atomics = "                            + ( features.shaderBufferFloat32Atomics == VK_TRUE ? "true" : "false" ) +
+           ", shaderBufferFloat32AtomicAdd = "                          + ( features.shaderBufferFloat32AtomicAdd == VK_TRUE ? "true" : "false" ) +
+           ", shaderBufferFloat64Atomics = "                            + ( features.shaderBufferFloat64Atomics == VK_TRUE ? "true" : "false" ) +
+           ", shaderBufferFloat64AtomicAdd = "                          + ( features.shaderBufferFloat64AtomicAdd == VK_TRUE ? "true" : "false" ) +
+           ", shaderSharedFloat32Atomics = "                            + ( features.shaderSharedFloat32Atomics == VK_TRUE ? "true" : "false" ) +
+           ", shaderSharedFloat32AtomicAdd = "                          + ( features.shaderSharedFloat32AtomicAdd == VK_TRUE ? "true" : "false" ) +
+           ", shaderSharedFloat64Atomics = "                            + ( features.shaderSharedFloat64Atomics == VK_TRUE ? "true" : "false" ) +
+           ", shaderSharedFloat64AtomicAdd = "                          + ( features.shaderSharedFloat64AtomicAdd == VK_TRUE ? "true" : "false" ) +
+           ", shaderImageFloat32Atomics = "                             + ( features.shaderImageFloat32Atomics == VK_TRUE ? "true" : "false" ) +
+           ", shaderImageFloat32AtomicAdd = "                           + ( features.shaderImageFloat32AtomicAdd == VK_TRUE ? "true" : "false" ) +
+           ", sparseImageFloat32Atomics = "                             + ( features.sparseImageFloat32Atomics == VK_TRUE ? "true" : "false" ) +
+           ", sparseImageFloat32AtomicAdd = "                           + ( features.sparseImageFloat32AtomicAdd == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_SHADER_ATOMIC_FLOAT_2_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceShaderAtomicFloat2Features ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceShaderAtomicFloat2Features ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", shaderBufferFloat16Atomics = "                            + ( features.shaderBufferFloat16Atomics == VK_TRUE ? "true" : "false" ) +
+           ", shaderBufferFloat16AtomicAdd = "                          + ( features.shaderBufferFloat16AtomicAdd == VK_TRUE ? "true" : "false" ) +
+           ", shaderBufferFloat16AtomicMinMax = "                       + ( features.shaderBufferFloat16AtomicMinMax == VK_TRUE ? "true" : "false" ) +
+           ", shaderBufferFloat32AtomicMinMax = "                       + ( features.shaderBufferFloat32AtomicMinMax == VK_TRUE ? "true" : "false" ) +
+           ", shaderBufferFloat64AtomicMinMax = "                       + ( features.shaderBufferFloat64AtomicMinMax == VK_TRUE ? "true" : "false" ) +
+           ", shaderSharedFloat16Atomics = "                            + ( features.shaderSharedFloat16Atomics == VK_TRUE ? "true" : "false" ) +
+           ", shaderSharedFloat16AtomicAdd = "                          + ( features.shaderSharedFloat16AtomicAdd == VK_TRUE ? "true" : "false" ) +
+           ", shaderSharedFloat16AtomicMinMax = "                       + ( features.shaderSharedFloat16AtomicMinMax == VK_TRUE ? "true" : "false" ) +
+           ", shaderSharedFloat32AtomicMinMax = "                       + ( features.shaderSharedFloat32AtomicMinMax == VK_TRUE ? "true" : "false" ) +
+           ", shaderSharedFloat64AtomicMinMax = "                       + ( features.shaderSharedFloat64AtomicMinMax == VK_TRUE ? "true" : "false" ) +
+           ", shaderImageFloat32AtomicMinMax = "                        + ( features.shaderImageFloat32AtomicMinMax == VK_TRUE ? "true" : "false" ) +
+           ", sparseImageFloat32AtomicMinMax = "                        + ( features.sparseImageFloat32AtomicMinMax == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_CLOCK_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceShaderClockFeatures ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceShaderClockFeatures ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", shaderSubgroupClock = "                                   + ( features.shaderSubgroupClock == VK_TRUE ? "true" : "false" ) +
+           ", shaderDeviceClock = "                                     + ( features.shaderDeviceClock == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_SHADER_DEMOTE_TO_HELPER_INVOCATION_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceShaderDemoteToHelperInvocationFeatures ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceShaderDemoteToHelperInvocationFeatures ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", shaderSubgroupClock = "                                   + ( features.shaderDemoteToHelperInvocation == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_SHADER_IMAGE_ATOMIC_INT64_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceShaderImageAtomicInt64Features ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceShaderImageAtomicInt64Features ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", shaderImageInt64Atomics = "                               + ( features.shaderImageInt64Atomics == VK_TRUE ? "true" : "false" ) +
+           ", sparseImageInt64Atomics = "                               + ( features.sparseImageInt64Atomics == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SHADER_IMAGE_FOOTPRINT_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceShaderImageFootprintFeaturesNVidia ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceShaderImageFootprintFeaturesNVidia ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", imageFootprint = "                                        + ( features.imageFootprint == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_INTEGER_DOT_PRODUCT_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceShaderIntegerDotProductFeatures ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceShaderIntegerDotProductFeatures ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", shaderIntegerDotProduct = "                               + ( features.shaderIntegerDotProduct == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_INTEL_SHADER_INTEGER_FUNCTIONS_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceShaderIntegerFunctionsFeaturesIntel ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceShaderIntegerFunctionsFeaturesIntel ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", shaderIntegerFunctions = "                                + ( features.shaderIntegerFunctions == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SHADER_SM_BUILTINS_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceShaderSMBuiltinsFeaturesNVidia ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceShaderSMBuiltinsFeaturesNVidia ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", shaderSMBuiltins = "                                      + ( features.shaderSMBuiltins == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_SUBGROUP_UNIFORM_CONTROL_FLOW_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceShaderSubgroupUniformControlFlowFeatures ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceShaderSubgroupUniformControlFlowFeatures ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", shaderSubgroupUniformControlFlow = "                      + ( features.shaderSubgroupUniformControlFlow == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_TERMINATE_INVOCATION_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceShaderTerminateInvocationFeatures ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceShaderTerminateInvocationFeatures ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", shaderTerminateInvocation = "                             + ( features.shaderTerminateInvocation == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SHADING_RATE_IMAGE_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceShadingRateImageFeaturesNVidia ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceShadingRateImageFeaturesNVidia ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", shadingRateImage = "                                      + ( features.shadingRateImage == VK_TRUE ? "true" : "false" ) +
+           ", shadingRateCoarseSampleOrder = "                          + ( features.shadingRateCoarseSampleOrder == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_SUBGROUP_SIZE_CONTROL_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceSubgroupSizeControlFeatures ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceSubgroupSizeControlFeatures ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", subgroupSizeControl = "                                   + ( features.subgroupSizeControl == VK_TRUE ? "true" : "false" ) +
+           ", computeFullSubgroups = "                                  + ( features.computeFullSubgroups == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_HUAWEI_SUBPASS_SHADING_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceSubpassShadingFeaturesHuawei ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceSubpassShadingFeaturesHuawei ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", subpassShading = "                                        + ( features.subpassShading == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceSynchronizationFeatures ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceSynchronizationFeatures ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", synchronization = "                                       + ( features.synchronization == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_TEXEL_BUFFER_ALIGNMENT_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceTexelBufferAlignmentFeatures ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceTexelBufferAlignmentFeatures ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", texelBufferAlignment = "                                  + ( features.texelBufferAlignment == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_TEXTURE_COMPRESSION_ASTC_HDR_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceTextureCompressionASTCHDRFeatures ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceTextureCompressionASTCHDRFeatures ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", textureCompressionASTCHDR = "                             + ( features.textureCompressionASTCHDR == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_TRANSFORM_FEEDBACK_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceTransformFeedbackFeatures ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceTransformFeedbackFeatures ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", transformFeedback = "                                     + ( features.transformFeedback == VK_TRUE ? "true" : "false" ) +
+           ", geometryStreams = "                                       + ( features.geometryStreams == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VERTEX_ATTRIBUTE_DIVISOR_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceVertexAttributeDivisorFeatures ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceVertexAttributeDivisorFeatures ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", vertexAttributeInstanceRateDivisor = "                    + ( features.vertexAttributeInstanceRateDivisor == VK_TRUE ? "true" : "false" ) +
+           ", vertexAttributeInstanceRateZeroDivisor = "                + ( features.vertexAttributeInstanceRateZeroDivisor == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VERTEX_INPUT_DYNAMIC_STATE_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceVertexInputDynamicStateFeatures ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceVertexInputDynamicStateFeatures ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", vertexInputDynamicState = "                               + ( features.vertexInputDynamicState == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_WORKGROUP_MEMORY_EXPLICIT_LAYOUT_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceWorkgroupMemoryExplicitLayoutFeatures ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceWorkgroupMemoryExplicitLayoutFeatures ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", workgroupMemoryExplicitLayout = "                         + ( features.workgroupMemoryExplicitLayout == VK_TRUE ? "true" : "false" ) +
+           ", workgroupMemoryExplicitLayoutScalarBlockLayout = "        + ( features.workgroupMemoryExplicitLayoutScalarBlockLayout == VK_TRUE ? "true" : "false" ) +
+           ", workgroupMemoryExplicitLayout8BitAccess = "               + ( features.workgroupMemoryExplicitLayout8BitAccess == VK_TRUE ? "true" : "false" ) +
+           ", workgroupMemoryExplicitLayout16BitAccess = "              + ( features.workgroupMemoryExplicitLayout16BitAccess == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_YCBCR_2_PLANE_444_FORMATS_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceYCBCR2Plane444FormatsFeatures ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceYCBCR2Plane444FormatsFeatures ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", YCBCR2Plane444Formats = "                                 + ( features.YCBCR2Plane444Formats == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_YCBCR_IMAGE_ARRAYS_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceYCBCRImageArraysFeatures ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceYCBCRImageArraysFeatures ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", YCBCRImageArrays = "                                      + ( features.YCBCRImageArrays == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ZERO_INITIALIZE_WORKGROUP_MEMORY_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceZeroInitializeWorkgroupMemoryFeatures ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceZeroInitializeWorkgroupMemoryFeatures ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", shaderZeroInitializeWorkgroupMemory = "                   + ( features.shaderZeroInitializeWorkgroupMemory == VK_TRUE ? "true" : "false" ) +
            " }";
 }
 
