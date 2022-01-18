@@ -4121,279 +4121,8 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
+
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
-
-#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceDetails,     NO_PARENT )
-#include <ObjectMapping.hpp>
-
-        Struct {
-
-            __C_ENG_TYPE ( PhysicalDeviceProperties )                                       basicProperties;
-            __C_ENG_TYPE ( PhysicalDeviceFeatures )                                         basicFeatures;
-
-#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
-
-            __C_ENG_TYPE ( PhysicalDeviceVulkan11Properties )                               vulkan11Properties;
-            __C_ENG_TYPE ( PhysicalDeviceIDProperties )                                     IDProperties;
-            __C_ENG_TYPE ( PhysicalDeviceMaintenanceProperties )                            maintenanceProperties;
-            __C_ENG_TYPE ( PhysicalDeviceMultiviewProperties )                              multiviewProperties;
-            __C_ENG_TYPE ( PhysicalDevicePointClippingProperties )                          pointClippingProperties;
-            __C_ENG_TYPE ( PhysicalDeviceProtectedMemoryProperties )                        protectedMemoryProperties;
-            __C_ENG_TYPE ( PhysicalDeviceSubgroupProperties )                               subgroupProperties;
-                                                                                            
-#endif                                                                                      
-                                                                                            
-#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE                                                
-
-            __C_ENG_TYPE ( PhysicalDeviceVulkan12Properties )                               vulkan12Properties;
-            __C_ENG_TYPE ( PhysicalDeviceDriverProperties )                                 driverProperties;
-            __C_ENG_TYPE ( PhysicalDeviceDepthStencilResolveProperties )                    depthStencilResolveProperties;
-            __C_ENG_TYPE ( PhysicalDeviceDescriptorIndexingProperties )                     descriptorIndexingProperties;
-            __C_ENG_TYPE ( PhysicalDeviceFloatControlsProperties )                          deviceFloatControlsProperties;
-            __C_ENG_TYPE ( PhysicalDeviceSamplerFilterMinmaxProperties )                    samplerFilterMinmaxProperties;
-            __C_ENG_TYPE ( PhysicalDeviceTimelineSemaphoreProperties )                      timelineSemaphoreProperties;
-                                                                                            
-#endif                                                                                      
-                                                                                            
-#if __C_ENG_VULKAN_API_EXTENSION_PCI_BUS_INFO_AVAILABLE                                     
-                                                                                            
-            __C_ENG_TYPE ( PhysicalDevicePCIBusInfoProperties )                             pciBusInfoProperties;
-                                                                                            
-#endif                                                                                      
-                                                                                            
-#if __C_ENG_VULKAN_API_EXTENSION_PHYSICAL_DEVICE_DRM_AVAILABLE                              
-                                                                                            
-            __C_ENG_TYPE ( PhysicalDeviceDRMProperties )                                    DRMProperties;
-                                                                                            
-#endif                                                                                      
-                                                                                            
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE                   
-                                                                                            
-            __C_ENG_TYPE ( PhysicalDeviceAccelerationStructureProperties )                  accelerationStructureProperties;
-                                                                                            
-#endif                                                                                      
-                                                                                            
-#if __C_ENG_VULKAN_API_EXTENSION_BLEND_OPERATION_ADVANCED_AVAILABLE                         
-                                                                                            
-            __C_ENG_TYPE ( PhysicalDeviceBlendOperationAdvancedProperties )                 blendOperationAdvancedProperties;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_CONSERVATIVE_RASTERIZATION_AVAILABLE
-
-            __C_ENG_TYPE ( PhysicalDeviceConservativeRasterizationProperties )              conservativeRasterizationProperties;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_COOPERATIVE_MATRIX_AVAILABLE
-
-            __C_ENG_TYPE ( PhysicalDeviceCooperativeMatrixPropertiesNVidia )                cooperativeMatrixPropertiesNVidia;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_CUSTOM_BORDER_COLOR_AVAILABLE
-
-            __C_ENG_TYPE ( PhysicalDeviceCustomBorderColorProperties )                      customBorderColorProperties;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEVICE_GENERATED_COMMANDS_AVAILABLE
-
-            __C_ENG_TYPE ( PhysicalDeviceDeviceGeneratedCommandsPropertiesNVidia )          deviceGeneratedCommandsProperties;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_DISCARD_RECTANGLES_AVAILABLE
-
-            __C_ENG_TYPE ( PhysicalDeviceDiscardRectangleProperties )                       discardRectangleProperties;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_EXTERNAL_MEMORY_HOST_AVAILABLE
-
-            __C_ENG_TYPE ( PhysicalDeviceExternalMemoryHostProperties )                     externalMemoryHostProperties;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_FRAGMENT_DENSITY_MAP_2_AVAILABLE
-
-            __C_ENG_TYPE ( PhysicalDeviceFragmentDensityMap2Properties )                    fragmentDensityMap2Properties;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_QUALCOMM_FRAGMENT_DENSITY_MAP_OFFSET_AVAILABLE
-
-            __C_ENG_TYPE ( PhysicalDeviceFragmentDensityMapOffsetPropertiesQualcomm )       fragmentDensityMapOffsetPropertiesQualcomm;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_FRAGMENT_DENSITY_MAP_AVAILABLE
-
-            __C_ENG_TYPE ( PhysicalDeviceFragmentDensityMapProperties )                     fragmentDensityMapProperties;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_FRAGMENT_SHADING_RATE_ENUMS_AVAILABLE
-
-            __C_ENG_TYPE ( PhysicalDeviceFragmentShadingRateEnumsPropertiesNVidia )         fragmentShadingRateEnumsPropertiesNVidia;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_FRAGMENT_SHADING_RATE_AVAILABLE
-
-            __C_ENG_TYPE ( PhysicalDeviceFragmentShadingRateProperties )                    fragmentShadingRateProperties;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_INLINE_UNIFORM_BLOCK_AVAILABLE
-
-            __C_ENG_TYPE ( PhysicalDeviceInlineUniformBlockProperties )                     inlineUniformBlockProperties;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_LINE_RASTERIZATION_AVAILABLE
-
-            __C_ENG_TYPE ( PhysicalDeviceLineRasterizationProperties )                      lineRasterizationProperties;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_MAINTENANCE_4_AVAILABLE
-
-            __C_ENG_TYPE ( PhysicalDeviceMaintenance4Properties )                           maintenance4Properties;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_MESH_SHADER_AVAILABLE
-
-            __C_ENG_TYPE ( PhysicalDeviceMeshShaderPropertiesNVidia )                       meshShaderPropertiesNVidia;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_MULTI_DRAW_AVAILABLE
-
-            __C_ENG_TYPE ( PhysicalDeviceMultiDrawProperties )                              multiDrawProperties;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE && __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXPERIMENTAL_MULTIVIEW_PER_VIEW_ATTRIBUTES_AVAILABLE
-
-            __C_ENG_TYPE ( PhysicalDeviceMultiviewPerViewAttributesPropertiesNVidia )       multiviewPerViewAttributesPropertiesNVidia;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PERFORMANCE_QUERY_AVAILABLE
-
-            __C_ENG_TYPE ( PhysicalDevicePerformanceQueryProperties )                       performanceQueryProperties;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PORTABILITY_SUBSET_AVAILABLE
-
-            __C_ENG_TYPE ( PhysicalDevicePortabilitySubsetProperties )                      portabilitySubsetProperties;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_PROVOKING_VERTEX_AVAILABLE
-
-            __C_ENG_TYPE ( PhysicalDeviceProvokingVertexProperties )                        provokingVertexProperties;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PUSH_DESCRIPTOR_AVAILABLE
-
-            __C_ENG_TYPE ( PhysicalDevicePushDescriptorProperties )                         pushDescriptorProperties;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_RAY_TRACING_PIPELINE_AVAILABLE
-
-            __C_ENG_TYPE ( PhysicalDeviceRayTracingPipelineProperties )                     rayTracingPipelineProperties;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
-
-            __C_ENG_TYPE ( PhysicalDeviceRayTracingPropertiesNVidia )                       rayTracingPropertiesNVidia;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_ROBUSTNESS_AVAILABLE
-
-            __C_ENG_TYPE ( PhysicalDeviceRobustnessProperties )                             robustnessProperties;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_SAMPLE_LOCATIONS_AVAILABLE
-
-            __C_ENG_TYPE ( PhysicalDeviceSampleLocationsProperties )                        sampleLocationsProperties;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_AMD_SHADER_CORE_PROPERTIES_AVAILABLE
-
-            __C_ENG_TYPE ( PhysicalDeviceShaderCorePropertiesAMD )                          shaderCorePropertiesAMD;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_AMD_SHADER_CORE_PROPERTIES_2_AVAILABLE
-
-            __C_ENG_TYPE ( PhysicalDeviceShaderCoreProperties2AMD )                         shaderCoreProperties2AMD;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SHADER_SM_BUILTINS_AVAILABLE
-
-            __C_ENG_TYPE ( PhysicalDeviceShaderSMBuiltinsPropertiesNVidia )                 shaderSmBuiltinsProperties;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SHADING_RATE_IMAGE_AVAILABLE
-
-            __C_ENG_TYPE ( PhysicalDeviceShadingRateImagePropertiesNVidia )                 shadingRateImagePropertiesNVidia;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_SUBGROUP_SIZE_CONTROL_AVAILABLE
-
-            __C_ENG_TYPE ( PhysicalDeviceSubgroupSizeControlProperties )                    subgroupSizeControlProperties;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_HUAWEI_SUBPASS_SHADING_AVAILABLE
-
-            __C_ENG_TYPE ( PhysicalDeviceSubpassShadingPropertiesHuawei )                   subpassShadingPropertiesHuawei;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_TEXEL_BUFFER_ALIGNMENT_AVAILABLE
-
-            __C_ENG_TYPE ( PhysicalDeviceTexelBufferAlignmentProperties )                   texelBufferAlignmentProperties;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_TRANSFORM_FEEDBACK_AVAILABLE
-
-            __C_ENG_TYPE ( PhysicalDeviceTransformFeedbackProperties )                      transformFeedbackProperties;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_VERTEX_ATTRIBUTE_DIVISOR_AVAILABLE
-
-            __C_ENG_TYPE ( PhysicalDeviceVertexAttributeDivisorProperties )                 vertexAttributeDivisorProperties;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_INTEGER_DOT_PRODUCT_AVAILABLE
-
-            __C_ENG_TYPE ( PhysicalDeviceShaderIntegerDotProductProperties )                shaderIntegerDotProductProperties;
-
-#endif
-
-        };
-
-#define C_ENG_MAP_END
-#include <ObjectMapping.hpp>
-
 
 #define C_ENG_MAP_START     STRUCT ( QueueFamilyProperties, NO_PARENT )
 #include <ObjectMapping.hpp>
@@ -5136,7 +4865,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_COMPUTE_SHADER_DERIVATIVES_AVAILABLE
 
-#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceComputeShaderDerivativesFeatures, NO_PARENT )
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceComputeShaderDerivativesFeaturesNVidia, NO_PARENT )
 #include <ObjectMapping.hpp>
 
         Struct {
@@ -6551,6 +6280,675 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #endif
 
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceDetails,     NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+
+            __C_ENG_TYPE ( PhysicalDeviceProperties )                                       basicProperties;
+            __C_ENG_TYPE ( PhysicalDeviceFeatures )                                         basicFeatures;
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceVulkan11Properties )                               vulkan11Properties;
+            __C_ENG_TYPE ( PhysicalDeviceIDProperties )                                     IDProperties;
+            __C_ENG_TYPE ( PhysicalDeviceMaintenanceProperties )                            maintenanceProperties;
+            __C_ENG_TYPE ( PhysicalDeviceMultiviewProperties )                              multiviewProperties;
+            __C_ENG_TYPE ( PhysicalDevicePointClippingProperties )                          pointClippingProperties;
+            __C_ENG_TYPE ( PhysicalDeviceProtectedMemoryProperties )                        protectedMemoryProperties;
+            __C_ENG_TYPE ( PhysicalDeviceSubgroupProperties )                               subgroupProperties;
+
+            __C_ENG_TYPE ( PhysicalDeviceVulkan11Features )                                 vulkan11Features;
+            __C_ENG_TYPE ( PhysicalDevice16BitStorageFeatures )                             _16BitStorageFeatures;
+            __C_ENG_TYPE ( PhysicalDeviceMultiviewFeatures )                                multiviewFeatures;
+            __C_ENG_TYPE ( PhysicalDeviceProtectedMemoryFeatures )                          protectedMemoryFeatures;
+            __C_ENG_TYPE ( PhysicalDeviceSamplerYCBCRConversionFeatures )                   samplerYCBCRConversionFeatures;
+            __C_ENG_TYPE ( PhysicalDeviceShaderDrawParametersFeatures )                     shaderDrawParametersFeatures;
+            __C_ENG_TYPE ( PhysicalDeviceVariablePointersFeatures )                         variablePointersFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceVulkan12Properties )                               vulkan12Properties;
+            __C_ENG_TYPE ( PhysicalDeviceDriverProperties )                                 driverProperties;
+            __C_ENG_TYPE ( PhysicalDeviceDepthStencilResolveProperties )                    depthStencilResolveProperties;
+            __C_ENG_TYPE ( PhysicalDeviceDescriptorIndexingProperties )                     descriptorIndexingProperties;
+            __C_ENG_TYPE ( PhysicalDeviceFloatControlsProperties )                          deviceFloatControlsProperties;
+            __C_ENG_TYPE ( PhysicalDeviceSamplerFilterMinmaxProperties )                    samplerFilterMinmaxProperties;
+            __C_ENG_TYPE ( PhysicalDeviceTimelineSemaphoreProperties )                      timelineSemaphoreProperties;
+
+            __C_ENG_TYPE ( PhysicalDeviceVulkan12Features )                                 vulkan12Features;
+            __C_ENG_TYPE ( PhysicalDevice8BitStorageFeatures )                              _8BitStorageFeatures;
+            __C_ENG_TYPE ( PhysicalDeviceBufferDeviceAddressFeatures )                      bufferDeviceAddressFeatures;
+            __C_ENG_TYPE ( PhysicalDeviceDescriptorIndexingFeatures )                       descriptorIndexingFeatures;
+            __C_ENG_TYPE ( PhysicalDeviceHostQueryResetFeatures )                           hostQueryResetFeatures;
+            __C_ENG_TYPE ( PhysicalDeviceImagelessFramebufferFeatures )                     imagelessFramebufferFeatures;
+            __C_ENG_TYPE ( PhysicalDeviceScalarBlockLayoutFeatures )                        scalarBlockLayoutFeatures;
+            __C_ENG_TYPE ( PhysicalDeviceSeparateDepthStencilLayoutsFeatures )              separateDepthStencilLayoutsFeatures;
+            __C_ENG_TYPE ( PhysicalDeviceShaderAtomicInt64Features )                        shaderAtomicInt64Features;
+            __C_ENG_TYPE ( PhysicalDeviceShaderFloat16Int8Features )                        shaderFloat16Int8Features;
+            __C_ENG_TYPE ( PhysicalDeviceShaderSubgroupExtendedTypesFeatures )              shaderSubgroupExtendedTypesFeatures;
+            __C_ENG_TYPE ( PhysicalDeviceTimelineSemaphoreFeatures )                        timelineSemaphoreFeatures;
+            __C_ENG_TYPE ( PhysicalDeviceUniformBufferStandardLayoutFeatures )              uniformBufferStandardLayoutFeatures;
+            __C_ENG_TYPE ( PhysicalDeviceVulkanMemoryModelFeatures )                        vulkanMemoryModelFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_4444_FORMATS_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDevice4444FormatsFeatures )                              _4444FormatsFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_ASTC_DECODE_MODE_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceASTCDecodeFeatures )                               ASTCDecodeFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_PCI_BUS_INFO_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDevicePCIBusInfoProperties )                             pciBusInfoProperties;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_PHYSICAL_DEVICE_DRM_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceDRMProperties )                                    DRMProperties;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceAccelerationStructureProperties )                  accelerationStructureProperties;
+            __C_ENG_TYPE ( PhysicalDeviceAccelerationStructureFeatures )                    accelerationStructureFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_BLEND_OPERATION_ADVANCED_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceBlendOperationAdvancedProperties )                 blendOperationAdvancedProperties;
+            __C_ENG_TYPE ( PhysicalDeviceBlendOperationAdvancedFeatures )                   blendOperationAdvancedFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_BORDER_COLOR_SWIZZLE_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceBorderColorSwizzleFeatures )                       borderColorSwizzleFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_AMD_DEVICE_COHERENT_MEMORY_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceCoherentMemoryFeaturesAMD )                        coherentMemoryFeaturesAMD;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_COLOR_WRITE_ENABLE_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceColorWriteEnableFeatures )                         colorWriteEnabledFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_COMPUTE_SHADER_DERIVATIVES_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceComputeShaderDerivativesFeaturesNVidia )           computeShaderDerivativesFeaturesNVidia;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_CONDITIONAL_RENDERING_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceConditionalRenderingFeatures )                     conditionalRenderingFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_CONSERVATIVE_RASTERIZATION_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceConservativeRasterizationProperties )              conservativeRasterizationProperties;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_COOPERATIVE_MATRIX_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceCooperativeMatrixPropertiesNVidia )                cooperativeMatrixPropertiesNVidia;
+            __C_ENG_TYPE ( PhysicalDeviceCooperativeMatrixFeaturesNVidia )                  cooperativeMatrixFeaturesNVidia;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_CORNER_SAMPLED_IMAGE_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceCornerSampledImageFeaturesNVidia )                 cornerSampledImageFeaturesNVidia;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_COVERAGE_REDUCTION_MODE_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceCoverageReductionModeNVidia )                      coverageReductionModeFeaturesNVidia;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_CUSTOM_BORDER_COLOR_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceCustomBorderColorProperties )                      customBorderColorProperties;
+            __C_ENG_TYPE ( PhysicalDeviceCustomBorderColorFeatures )                        customBorderColorFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEDICATED_ALLOCATION_IMAGE_ALIASING_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceDedicatedAllocationImageAliasingFeaturesNVidia )   dedicatedAllocationImageAliasingFeaturesNVidia;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_DEPTH_CLIP_CONTROL_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceDepthClipControlFeatures )                         depthClipControlFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_DEPTH_CLIP_ENABLE_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceDepthClipEnableFeatures )                          depthClipEnableFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEVICE_GENERATED_COMMANDS_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceDeviceGeneratedCommandsPropertiesNVidia )          deviceGeneratedCommandsProperties;
+            __C_ENG_TYPE ( PhysicalDeviceDeviceGeneratedCommandsFeaturesNVidia )            deviceGeneratedCommandsFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_DEVICE_MEMORY_REPORT_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceDeviceMemoryReportFeatures )                       deviceMemoryReportFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEVICE_DIAGNOSTICS_CONFIG_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceDiagnosticsConfigFeaturesNVidia )                  diagnosticsConfigFeaturesNVidia;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_DISCARD_RECTANGLES_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceDiscardRectangleProperties )                       discardRectangleProperties;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceDynamicRenderingFeatures )                         dynamicRenderingFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SCISSOR_EXCLUSIVE_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceExclusiveScissorFeaturesNVidia )                   exclusiveScissorFeaturesNVidia;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_EXTENDED_DYNAMIC_STATE_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceExtendedDynamicStateFeatures )                     extendedDynamicStateFeatures;
+            __C_ENG_TYPE ( PhysicalDeviceExtendedDynamicState2Features )                    extendedDynamicState2Features;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_EXTERNAL_MEMORY_HOST_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceExternalMemoryHostProperties )                     externalMemoryHostProperties;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXTERNAL_MEMORY_RDMA_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceExternalMemoryRDMAFeaturesNVidia )                 externalMemoryRDMAFeaturesNVidia;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_FRAGMENT_DENSITY_MAP_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceFragmentDensityMapFeatures )                       fragmentDensityMapFeatures;
+            __C_ENG_TYPE ( PhysicalDeviceFragmentDensityMapProperties )                     fragmentDensityMapProperties;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_FRAGMENT_DENSITY_MAP_2_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceFragmentDensityMap2Features )                      fragmentDensityMap2Features;
+            __C_ENG_TYPE ( PhysicalDeviceFragmentDensityMap2Properties )                    fragmentDensityMap2Properties;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_QUALCOMM_FRAGMENT_DENSITY_MAP_OFFSET_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceFragmentDensityMapOffsetFeaturesQualcomm )         fragmentDensityMapOffsetFeaturesQualcomm;
+            __C_ENG_TYPE ( PhysicalDeviceFragmentDensityMapOffsetPropertiesQualcomm )       fragmentDensityMapOffsetPropertiesQualcomm;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_FRAGMENT_SHADER_BARYCENTRIC_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceFragmentShaderBarycentricFeaturesNVidia )          fragmentShaderBarycentricFeaturesNVidia;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_FRAGMENT_SHADER_INTERLOCK_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceFragmentShaderInterlockFeatures )                  fragmentShaderInterlockFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_FRAGMENT_SHADING_RATE_ENUMS_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceFragmentShadingRateEnumsFeaturesNVidia )           fragmentShadingRateEnumsFeaturesNVidia;
+            __C_ENG_TYPE ( PhysicalDeviceFragmentShadingRateEnumsPropertiesNVidia )         fragmentShadingRateEnumsPropertiesNVidia;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_FRAGMENT_SHADING_RATE_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceFragmentShadingRateFeatures )                      fragmentShadingRateFeatures;
+            __C_ENG_TYPE ( PhysicalDeviceFragmentShadingRateProperties )                    fragmentShadingRateProperties;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_GLOBAL_PRIORITY_QUERY_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceGlobalPriorityQueryFeatures )                      globalPriorityQueryFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_IMAGE_ROBUSTNESS_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceImageRobustnessFeatures )                          imageRobustnessFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_IMAGE_VIEW_MIN_LOD_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceImageViewMinLODFeatures )                          imageViewMinLODFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_INDEX_TYPE_UINT8_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceIndexTypeUInt8Features )                           indexTypeUInt8Features;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_INHERITED_VIEWPORT_SCISSOR_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceInheritedViewportScissorFeaturesNVidia )           inheritedViewportScissorFeaturesNVidia;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_INLINE_UNIFORM_BLOCK_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceInlineUniformBlockProperties )                     inlineUniformBlockProperties;
+            __C_ENG_TYPE ( PhysicalDeviceInlineUniformBlockFeatures )                       inlineUniformBlockFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_HUAWEI_INVOCATION_MASK_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceInvocationMaskFeaturesHuawei )                     invocationMaskFeaturesHuawei;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_LINE_RASTERIZATION_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceLineRasterizationProperties )                      lineRasterizationProperties;
+            __C_ENG_TYPE ( PhysicalDeviceLineRasterizationFeatures )                        lineRasterizationFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_LINEAR_COLOR_ATTACHMENT_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceLinearColorAttachmentFeaturesNVidia )              linearColorAttahmentFeaturesNVidia;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_MAINTENANCE_4_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceMaintenance4Properties )                           maintenance4Properties;
+            __C_ENG_TYPE ( PhysicalDeviceMaintenance4Features )                             maintenance4Features;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_MEMORY_PRIORITY_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceMemoryPriorityFeatures )                           memoryPriorityFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_MESH_SHADER_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceMeshShaderPropertiesNVidia )                       meshShaderPropertiesNVidia;
+            __C_ENG_TYPE ( PhysicalDeviceMeshShaderFeaturesNVidia )                         meshShaderFeaturesNVidia;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_MULTI_DRAW_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceMultiDrawProperties )                              multiDrawProperties;
+            __C_ENG_TYPE ( PhysicalDeviceMultiDrawFeatures )                                multiDrawFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VALVE_MUTABLE_DESCRIPTOR_TYPE_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceMutableDescriptorTypeFeaturesValve )               mutableDescriptorTypeFeaturesValve;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE && __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXPERIMENTAL_MULTIVIEW_PER_VIEW_ATTRIBUTES_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceMultiviewPerViewAttributesPropertiesNVidia )       multiviewPerViewAttributesPropertiesNVidia;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_PAGEABLE_DEVICE_LOCAL_MEMORY_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDevicePageableDeviceLocalMemoryFeatures )                pageableDeviceLocalMemoryFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PERFORMANCE_QUERY_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDevicePerformanceQueryProperties )                       performanceQueryProperties;
+            __C_ENG_TYPE ( PhysicalDevicePerformanceQueryFeatures )                         performanceQueryFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_PIPELINE_CREATION_CACHE_CONTROL_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDevicePipelineCreationCacheControlFeatures )             pipelineCreationCacheControlFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PIPELINE_EXECUTABLE_PROPERTIES_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDevicePipelineExecutablePropertiesFeatures )             pipelineExecutablePropertiesFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PORTABILITY_SUBSET_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDevicePortabilitySubsetProperties )                      portabilitySubsetProperties;
+            __C_ENG_TYPE ( PhysicalDevicePortabilitySubsetFeatures )                        portabilitySubsetFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PRESENT_ID_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDevicePresentIDFeatures )                                presentIDFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PRESENT_WAIT_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDevicePresentWaitFeatures )                              presentWaitFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_PRIMITIVE_TOPOLOGY_LIST_RESTART_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDevicePrimitiveTopologyListRestartFeatures )             primitiveTopologyListRestartFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_PRIVATE_DATA_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDevicePrivateDataFeatures )                              privateDataFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_PROVOKING_VERTEX_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceProvokingVertexProperties )                        provokingVertexProperties;
+            __C_ENG_TYPE ( PhysicalDeviceProvokingVertexFeatures )                          provokingVertexFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PUSH_DESCRIPTOR_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDevicePushDescriptorProperties )                         pushDescriptorProperties;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_RGBA_10_X_6_FORMATS_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceRGBA10x6FormatsFeatures )                          RGBA10x6FormatsFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_ARM_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceRasterizationOrderAttachmentAccessFeaturesARM )    rasterizationOrderAttachmentAccessFeaturesARM;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_RAY_QUERY_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceRayQueryFeatures )                                 rayQueryFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceRayTracingPropertiesNVidia )                       rayTracingPropertiesNVidia;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_MOTION_BLUR_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceRayTracingMotionBlurFeaturesNVidia )               rayTracingMotionBlurFeaturesNVidia;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_RAY_TRACING_PIPELINE_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceRayTracingPipelineProperties )                     rayTracingPipelineProperties;
+            __C_ENG_TYPE ( PhysicalDeviceRayTracingPipelineFeatures )                       rayTracingPipelineFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_REPRESENTATIVE_FRAGMENT_TEST_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceRepresentativeFragmentTestFeaturesNVidia )         representativeFragmentTestFeaturesNVidia;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_ROBUSTNESS_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceRobustnessProperties )                             robustnessProperties;
+            __C_ENG_TYPE ( PhysicalDeviceRobustnessFeatures )                               robustnessFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_SAMPLE_LOCATIONS_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceSampleLocationsProperties )                        sampleLocationsProperties;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_SHADER_ATOMIC_FLOAT_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceShaderAtomicFloatFeatures )                        shaderAtomicFloatFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_SHADER_ATOMIC_FLOAT_2_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceShaderAtomicFloat2Features )                       shaderAtomicFloat2Features;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_AMD_SHADER_CORE_PROPERTIES_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceShaderCorePropertiesAMD )                          shaderCorePropertiesAMD;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_AMD_SHADER_CORE_PROPERTIES_2_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceShaderCoreProperties2AMD )                         shaderCoreProperties2AMD;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_CLOCK_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceShaderClockFeatures )                              shaderClockFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_SHADER_DEMOTE_TO_HELPER_INVOCATION_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceShaderDemoteToHelperInvocationFeatures )           shaderDemoteToHelperInvocationFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_SHADER_IMAGE_ATOMIC_INT64_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceShaderImageAtomicInt64Features )                   shaderImageAtomicInt64Features;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SHADER_IMAGE_FOOTPRINT_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceShaderImageFootprintFeaturesNVidia )               shaderImageFootprintFeaturesNVidia;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SHADER_SM_BUILTINS_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceShaderSMBuiltinsPropertiesNVidia )                 shaderSmBuiltinsPropertiesNVidia;
+            __C_ENG_TYPE ( PhysicalDeviceShaderSMBuiltinsFeaturesNVidia )                   shaderSmBuiltinsFeaturesNVidia;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_SUBGROUP_UNIFORM_CONTROL_FLOW_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceShaderSubgroupUniformControlFlowFeatures )         shaderSubgroupUniformControlFlowFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_TERMINATE_INVOCATION_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceShaderTerminateInvocationFeatures )                shaderTerminateInvocationFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SHADING_RATE_IMAGE_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceShadingRateImagePropertiesNVidia )                 shadingRateImagePropertiesNVidia;
+            __C_ENG_TYPE ( PhysicalDeviceShadingRateImageFeaturesNVidia )                   shadingRateImageFeaturesNVidia;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_SUBGROUP_SIZE_CONTROL_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceSubgroupSizeControlProperties )                    subgroupSizeControlProperties;
+            __C_ENG_TYPE ( PhysicalDeviceSubgroupSizeControlFeatures )                      subgroupSizeControlFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_HUAWEI_SUBPASS_SHADING_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceSubpassShadingPropertiesHuawei )                   subpassShadingPropertiesHuawei;
+            __C_ENG_TYPE ( PhysicalDeviceSubpassShadingFeaturesHuawei )                     subpassShadingFeaturesHuawei;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceSynchronizationFeatures )                          synchronizationFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_TEXEL_BUFFER_ALIGNMENT_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceTexelBufferAlignmentProperties )                   texelBufferAlignmentProperties;
+            __C_ENG_TYPE ( PhysicalDeviceTexelBufferAlignmentFeatures )                     texelBufferAlignmentFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_TEXTURE_COMPRESSION_ASTC_HDR_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceTextureCompressionASTCHDRFeatures )                textureCompressionASTCHDRFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_TRANSFORM_FEEDBACK_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceTransformFeedbackProperties )                      transformFeedbackProperties;
+            __C_ENG_TYPE ( PhysicalDeviceTransformFeedbackFeatures )                        transformFeedbackFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VERTEX_ATTRIBUTE_DIVISOR_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceVertexAttributeDivisorProperties )                 vertexAttributeDivisorProperties;
+            __C_ENG_TYPE ( PhysicalDeviceVertexAttributeDivisorFeatures )                   vertexAttributeDivisorFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VERTEX_INPUT_DYNAMIC_STATE_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceVertexInputDynamicStateFeatures )                  vertexInputDynamicState;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_INTEGER_DOT_PRODUCT_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceShaderIntegerDotProductProperties )                shaderIntegerDotProductProperties;
+            __C_ENG_TYPE ( PhysicalDeviceShaderIntegerDotProductFeatures )                  shaderIntegerDotProductFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_INTEL_SHADER_INTEGER_FUNCTIONS_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceShaderIntegerFunctionsFeaturesIntel )              shaderIntegerFunctionsFeaturesIntel;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_WORKGROUP_MEMORY_EXPLICIT_LAYOUT_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceWorkgroupMemoryExplicitLayoutFeatures )            workgroupMemoryExplicitLayoutFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_YCBCR_2_PLANE_444_FORMATS_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceYCBCR2Plane444FormatsFeatures )                    YCBCR2Plane444FormatFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_YCBCR_IMAGE_ARRAYS_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceYCBCRImageArraysFeatures )                         YCBCRImageArraysFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ZERO_INITIALIZE_WORKGROUP_MEMORY_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceZeroInitializeWorkgroupMemoryFeatures )            zeroInitializeWorkgroupMemoryFeatures;
+
+#endif
+
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
 
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 
@@ -7017,7 +7415,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_COMPUTE_SHADER_DERIVATIVES_AVAILABLE
 
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceComputeShaderDerivativesFeatures ) const & ) noexcept -> cds :: String;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceComputeShaderDerivativesFeaturesNVidia ) const & ) noexcept -> cds :: String;
 
 #endif
 
@@ -7485,7 +7883,6 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_NO_DISCARD auto versionReadableFormat ( __C_ENG_TYPE ( Version ) const & ) noexcept -> cds :: String;
 
         namespace versionConstants {
-
 
             constexpr static __C_ENG_TYPE ( Version ) const nullVersion                         = { .variant = 0U, .major = 0U, .minor = 0U, .patch = 0U };
             constexpr static __C_ENG_TYPE ( Version ) const version10      __C_ENG_MAYBE_UNUSED = { .variant = 0U, .major = 1U, .minor = 0U, .patch = 0U };

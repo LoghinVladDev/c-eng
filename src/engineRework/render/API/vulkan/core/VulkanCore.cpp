@@ -3957,7 +3957,7 @@ auto vulkan :: toString (
 
 #if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SHADER_SM_BUILTINS_AVAILABLE
 
-            ", shaderSmBuiltinsProperties = "                       + toString ( details.shaderSmBuiltinsProperties ) +
+            ", shaderSmBuiltinsProperties = "                       + toString ( details.shaderSmBuiltinsPropertiesNVidia ) +
 
 #endif
 
@@ -4790,10 +4790,10 @@ auto vulkan :: toString (
 #if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_COMPUTE_SHADER_DERIVATIVES_AVAILABLE
 
 auto vulkan :: toString (
-        __C_ENG_TYPE ( PhysicalDeviceComputeShaderDerivativesFeatures ) const & features
+        __C_ENG_TYPE ( PhysicalDeviceComputeShaderDerivativesFeaturesNVidia ) const & features
 ) noexcept -> String {
 
-    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceComputeShaderDerivativesFeatures ) ) " "
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceComputeShaderDerivativesFeaturesNVidia ) ) " "
            "{ type = "_s                                                + toString ( features.structureType ) +
            ", pNext = "                                                 + :: toString ( features.pNext ) +
            ", computeDerivativeGroupQuads = "                           + ( features.computeDerivativeGroupQuads == VK_TRUE ? "true" : "false" ) +
