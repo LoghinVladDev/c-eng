@@ -7,13 +7,11 @@
 #include <VulkanCoreConfig.hpp>
 #include <VulkanAPICallsValidUsage.hpp>
 
-
 /**
  * VkPhysicalDeviceVertexAttributeDivisorPropertiesEXT
  */
 using namespace cds; // NOLINT(clion-misra-cpp2008-7-3-4)
 using namespace engine; // NOLINT(clion-misra-cpp2008-7-3-4)
-
 
 static VkResult                             result = VK_SUCCESS;
 
@@ -3235,7 +3233,7 @@ static auto createChain (
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_INTEGER_DOT_PRODUCT_AVAILABLE
 
     currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: __C_ENG_TYPE ( GenericOutStructure ) * > ( & details->shaderIntegerDotProductProperties ); // NOLINT(clion-misra-cpp2008-6-2-1)
-    currentInChain->structureType = engine :: vulkan :: PhysicalDeviceShaderIntegerDotProductProperties;
+    currentInChain->structureType = engine :: vulkan :: StructureTypePhysicalDeviceShaderIntegerDotProductProperties;
 
 #endif
 
