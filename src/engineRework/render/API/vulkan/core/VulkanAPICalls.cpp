@@ -34,11 +34,11 @@ static VkPhysicalDevice                     physicalDevices             [ __C_EN
 
 
 /**
- * ----------------------------------------------
- * ----------------------------------------------
- * -------- Vulkan 1.1 Device Properties --------
- * ----------------------------------------------
- * ----------------------------------------------
+ * ---------------------------------------------------------
+ * ---------------------------------------------------------
+ * -------- Vulkan 1.1 Device Properties & Features --------
+ * ---------------------------------------------------------
+ * ---------------------------------------------------------
  */
 #if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
 static VkPhysicalDeviceProperties2                                  deviceExtendedProperties;
@@ -49,14 +49,23 @@ static VkPhysicalDeviceMultiviewProperties                          deviceMultiv
 static VkPhysicalDevicePointClippingProperties                      devicePointClippingProperties;
 static VkPhysicalDeviceProtectedMemoryProperties                    deviceProtectedMemoryProperties;
 static VkPhysicalDeviceSubgroupProperties                           deviceSubgroupProperties;
+
+static VkPhysicalDeviceFeatures2                                    deviceExtendedFeatures;
+static VkPhysicalDeviceVulkan11Features                             deviceVulkan11Features;
+static VkPhysicalDevice16BitStorageFeatures                         device16BitStorageFeatures;
+static VkPhysicalDeviceMultiviewFeatures                            deviceMultiviewFeatures;
+static VkPhysicalDeviceProtectedMemoryFeatures                      deviceProtectedMemoryFeatures;
+static VkPhysicalDeviceSamplerYcbcrConversionFeatures               deviceSamplerYCBCRConversionFeatures;
+static VkPhysicalDeviceShaderDrawParametersFeatures                 deviceShaderDrawParametersFeatures;
+static VkPhysicalDeviceVariablePointersFeatures                     deviceVariablePointersFeatures;
 #endif
 
 /**
- * ----------------------------------------------
- * ----------------------------------------------
- * -------- Vulkan 1.2 Device Properties --------
- * ----------------------------------------------
- * ----------------------------------------------
+ * ---------------------------------------------------------
+ * ---------------------------------------------------------
+ * -------- Vulkan 1.2 Device Properties & Features --------
+ * ---------------------------------------------------------
+ * ---------------------------------------------------------
  */
 #if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
 static VkPhysicalDeviceVulkan12Properties                           deviceVulkan12Properties;
@@ -66,18 +75,54 @@ static VkPhysicalDeviceDriverProperties                             deviceDriver
 static VkPhysicalDeviceFloatControlsProperties                      deviceFloatControlsProperties;
 static VkPhysicalDeviceSamplerFilterMinmaxProperties                deviceSamplerFilterMinmaxProperties;
 static VkPhysicalDeviceTimelineSemaphoreProperties                  deviceTimelineSemaphoreProperties;
+
+static VkPhysicalDeviceVulkan12Features                             deviceVulkan12Features;
+static VkPhysicalDevice8BitStorageFeatures                          device8BitStorageFeatures;
+static VkPhysicalDeviceBufferDeviceAddressFeatures                  deviceBufferDeviceAddressFeatures;
+static VkPhysicalDeviceDescriptorIndexingFeatures                   deviceDescriptorIndexingFeatures;
+static VkPhysicalDeviceHostQueryResetFeatures                       deviceHostQueryResetFeatures;
+static VkPhysicalDeviceImagelessFramebufferFeatures                 deviceImagelessFramebufferFeatures;
+static VkPhysicalDeviceScalarBlockLayoutFeatures                    deviceScalarBlockLayoutFeatures;
+static VkPhysicalDeviceSeparateDepthStencilLayoutsFeatures          deviceSeparateDepthStencilLayoutsFeatures;
+static VkPhysicalDeviceShaderAtomicInt64Features                    deviceShaderAtomicInt64Features;
+static VkPhysicalDeviceShaderFloat16Int8Features                    deviceShaderFloat16Int8Features;
+static VkPhysicalDeviceShaderSubgroupExtendedTypesFeatures          deviceSubgroupExtendedTypesFeatures;
+static VkPhysicalDeviceTimelineSemaphoreFeatures                    deviceTimelineSemaphoreFeatures;
+static VkPhysicalDeviceUniformBufferStandardLayoutFeatures          deviceUniformBufferStandardLayoutFeatures;
+static VkPhysicalDeviceVulkanMemoryModelFeatures                    deviceVulkanMemoryModelFeatures;
 #endif
 
 
 /**
- * ----------------------------------------------
- * ----------------------------------------------
- * ---- Vulkan Extensions Device Properties -----
- * ----------------------------------------------
- * ----------------------------------------------
+ * --------------------------------------------------------
+ * --------------------------------------------------------
+ * ---- Vulkan Extensions Device Properties & Features ----
+ * --------------------------------------------------------
+ * --------------------------------------------------------
  */
+#if __C_ENG_VULKAN_API_EXTENSION_4444_FORMATS_AVAILABLE
+static VkPhysicalDevice4444FormatsFeaturesEXT                       device4444FormatsFeatures;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_ASTC_DECODE_MODE_AVAILABLE
+static VkPhysicalDeviceASTCDecodeFeaturesEXT                        deviceAstcDecodeFeatures;
+#endif
+
 #if __C_ENG_VULKAN_API_EXTENSION_BLEND_OPERATION_ADVANCED_AVAILABLE
 static VkPhysicalDeviceBlendOperationAdvancedPropertiesEXT          deviceBlendOperationAdvancedProperties;
+static VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT            deviceBlendOperationAdvancedFeatures;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_BORDER_COLOR_SWIZZLE_AVAILABLE
+static VkPhysicalDeviceBorderColorSwizzleFeaturesEXT                deviceBorderColorSwizzleFeatures;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_COLOR_WRITE_ENABLE_AVAILABLE
+static VkPhysicalDeviceColorWriteEnableFeaturesEXT                  deviceColorWriteEnableFeatures;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_CONDITIONAL_RENDERING_AVAILABLE
+static VkPhysicalDeviceConditionalRenderingFeaturesEXT              deviceConditionalRenderingFeatures;
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_CONSERVATIVE_RASTERIZATION_AVAILABLE
@@ -86,6 +131,24 @@ static VkPhysicalDeviceConservativeRasterizationPropertiesEXT       deviceConser
 
 #if __C_ENG_VULKAN_API_EXTENSION_CUSTOM_BORDER_COLOR_AVAILABLE
 static VkPhysicalDeviceCustomBorderColorPropertiesEXT               deviceCustomBorderColorProperties;
+static VkPhysicalDeviceCustomBorderColorFeaturesEXT                 deviceCustomBorderColorFeatures;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_DEPTH_CLIP_CONTROL_AVAILABLE
+static VkPhysicalDeviceDepthClipControlFeaturesEXT                  deviceDepthClipControlFeatures;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_DEPTH_CLIP_ENABLE_AVAILABLE
+static VkPhysicalDeviceDepthClipEnableFeaturesEXT                   deviceDepthClipEnableFeatures;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_DEVICE_MEMORY_REPORT_AVAILABLE
+static VkPhysicalDeviceDeviceMemoryReportFeaturesEXT                deviceDeviceMemoryReportFeatures;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_EXTENDED_DYNAMIC_STATE_AVAILABLE
+static VkPhysicalDeviceExtendedDynamicStateFeaturesEXT              deviceExtendedDynamicStateFeatures;
+static VkPhysicalDeviceExtendedDynamicState2FeaturesEXT             deviceExtendedDynamicState2Features;
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_DISCARD_RECTANGLES_AVAILABLE
@@ -98,26 +161,71 @@ static VkPhysicalDeviceExternalMemoryHostPropertiesEXT              deviceExtern
 
 #if __C_ENG_VULKAN_API_EXTENSION_FRAGMENT_DENSITY_MAP_AVAILABLE
 static VkPhysicalDeviceFragmentDensityMapPropertiesEXT              deviceFragmentDensityMapProperties;
+static VkPhysicalDeviceFragmentDensityMapFeaturesEXT                deviceFragmentDensityMapFeatures;
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_FRAGMENT_DENSITY_MAP_2_AVAILABLE
 static VkPhysicalDeviceFragmentDensityMap2PropertiesEXT             deviceFragmentDensityMap2Properties;
+static VkPhysicalDeviceFragmentDensityMap2FeaturesEXT               deviceFragmentDensityMap2Features;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_FRAGMENT_SHADER_INTERLOCK_AVAILABLE
+static VkPhysicalDeviceFragmentShaderInterlockFeaturesEXT           deviceFragmentShaderInterlockFeatures;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_GLOBAL_PRIORITY_QUERY_AVAILABLE
+static VkPhysicalDeviceGlobalPriorityQueryFeaturesEXT               deviceGlobalPriorityQueryFeatures;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_IMAGE_ROBUSTNESS_AVAILABLE
+static VkPhysicalDeviceImageRobustnessFeaturesEXT                   deviceImageRobustnessFeatures;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_IMAGE_VIEW_MIN_LOD_AVAILABLE
+static VkPhysicalDeviceImageViewMinLodFeaturesEXT                   deviceImageViewMinLODFeatures;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_INDEX_TYPE_UINT8_AVAILABLE
+static VkPhysicalDeviceIndexTypeUint8FeaturesEXT                    deviceIndexTypeUInt8Features;
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_INLINE_UNIFORM_BLOCK_AVAILABLE
 static VkPhysicalDeviceInlineUniformBlockPropertiesEXT              deviceInlineUniformBlockProperties;
+static VkPhysicalDeviceInlineUniformBlockFeaturesEXT                deviceInlineUniformBlockFeatures;
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_LINE_RASTERIZATION_AVAILABLE
 static VkPhysicalDeviceLineRasterizationPropertiesEXT               deviceLineRasterizationProperties;
+static VkPhysicalDeviceLineRasterizationFeaturesEXT                 deviceLineRasterizationFeatures;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_PAGEABLE_DEVICE_LOCAL_MEMORY_AVAILABLE
+static VkPhysicalDevicePageableDeviceLocalMemoryFeaturesEXT         devicePageableDeviceLocalMemoryFeatures;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_MEMORY_PRIORITY_AVAILABLE
+static VkPhysicalDeviceMemoryPriorityFeaturesEXT                    deviceMemoryPriorityFeatures;
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_MULTI_DRAW_AVAILABLE
 static VkPhysicalDeviceMultiDrawPropertiesEXT                       deviceMultiDrawProperties;
+static VkPhysicalDeviceMultiDrawFeaturesEXT                         deviceMultiDrawFeatures;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_PIPELINE_CREATION_CACHE_CONTROL_AVAILABLE
+static VkPhysicalDevicePipelineCreationCacheControlFeaturesEXT      devicePipelineCreationCacheControlFeatures;
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_PCI_BUS_INFO_AVAILABLE
 static VkPhysicalDevicePCIBusInfoPropertiesEXT                      devicePciBusInfoProperties;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_PRIMITIVE_TOPOLOGY_LIST_RESTART_AVAILABLE
+static VkPhysicalDevicePrimitiveTopologyListRestartFeaturesEXT      devicePrimitiveTopologyListRestartFeatures;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_PRIVATE_DATA_AVAILABLE
+static VkPhysicalDevicePrivateDataFeaturesEXT                       devicePrivateDataFeatures;
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_PHYSICAL_DEVICE_DRM_AVAILABLE
@@ -126,6 +234,7 @@ static VkPhysicalDeviceDrmPropertiesEXT                             deviceDrmPro
 
 #if __C_ENG_VULKAN_API_EXTENSION_PROVOKING_VERTEX_AVAILABLE
 static VkPhysicalDeviceProvokingVertexPropertiesEXT                 deviceProvokingVertexProperties;
+static VkPhysicalDeviceProvokingVertexFeaturesEXT                   deviceProvokingVertexFeatures;
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_ROBUSTNESS_AVAILABLE
@@ -154,30 +263,51 @@ static VkPhysicalDeviceVertexAttributeDivisorPropertiesEXT          deviceVertex
 
 
 /**
- * -----------------------------------------------------
- * -----------------------------------------------------
- * ---- Vulkan Khronos Extensions Device Properties ----
- * -----------------------------------------------------
- * -----------------------------------------------------
+ * ----------------------------------------------------------------
+ * ----------------------------------------------------------------
+ * ---- Vulkan Khronos Extensions Device Properties & Features ----
+ * ----------------------------------------------------------------
+ * ----------------------------------------------------------------
  */
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
 static VkPhysicalDeviceAccelerationStructurePropertiesKHR           deviceAccelerationStructureProperties;
+static VkPhysicalDeviceAccelerationStructureFeaturesKHR             deviceAccelerationStructureFeatures;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE
+static VkPhysicalDeviceDynamicRenderingFeaturesKHR                  deviceDynamicRenderingFeatures;
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_FRAGMENT_SHADING_RATE_AVAILABLE
 static VkPhysicalDeviceFragmentShadingRatePropertiesKHR             deviceFragmentShadingRateProperties;
+static VkPhysicalDeviceFragmentShadingRateFeaturesKHR               deviceFragmentShadingRateFeatures;
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_MAINTENANCE_4_AVAILABLE
 static VkPhysicalDeviceMaintenance4PropertiesKHR                    deviceMaintenance4Properties;
+static VkPhysicalDeviceMaintenance4FeaturesKHR                      deviceMaintenance4Features;
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PERFORMANCE_QUERY_AVAILABLE
 static VkPhysicalDevicePerformanceQueryPropertiesKHR                devicePerformanceQueryProperties;
+static VkPhysicalDevicePerformanceQueryFeaturesKHR                  devicePerformanceQueryFeatures;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PIPELINE_EXECUTABLE_PROPERTIES_AVAILABLE
+static VkPhysicalDevicePipelineExecutablePropertiesFeaturesKHR      devicePipelineExecutablePropertiesFeatures;
 #endif
 
 #if __C_ENG_VULKAN_BETA_EXTENSIONS_ENABLED && __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PORTABILITY_SUBSET_AVAILABLE
 static VkPhysicalDevicePortabilitySubsetPropertiesKHR               devicePortabilitySubsetProperties;
+static VkPhysicalDevicePortabilitySubsetFeaturesKHR                 devicePortabilitySubsetFeatures;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PRESENT_ID_AVAILABLE
+static VkPhysicalDevicePresentIdFeaturesKHR                         devicePresentIDFeatures;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PRESENT_WAIT_AVAILABLE
+static VkPhysicalDevicePresentWaitFeaturesKHR                       devicePresentWaitFeatures;
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PUSH_DESCRIPTOR_AVAILABLE
@@ -194,26 +324,70 @@ static VkPhysicalDeviceShaderIntegerDotProductPropertiesKHR         deviceShader
 
 
 /**
- * ----------------------------------------------------
- * ----------------------------------------------------
- * ---- Vulkan NVidia Extensions Device Properties ----
- * ----------------------------------------------------
- * ----------------------------------------------------
+ * ---------------------------------------------------------------
+ * ---------------------------------------------------------------
+ * ---- Vulkan NVidia Extensions Device Properties & Features ----
+ * ---------------------------------------------------------------
+ * ---------------------------------------------------------------
  */
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_COMPUTE_SHADER_DERIVATIVES_AVAILABLE
+static VkPhysicalDeviceComputeShaderDerivativesFeaturesNV           deviceComputeShaderDerivativesFeatures;
+#endif
+
 #if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_COOPERATIVE_MATRIX_AVAILABLE
 static VkPhysicalDeviceCooperativeMatrixPropertiesNV                deviceCooperativeMatrixProperties;
+static VkPhysicalDeviceCooperativeMatrixFeaturesNV                  deviceCooperativeMatrixFeatures;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_CORNER_SAMPLED_IMAGE_AVAILABLE
+static VkPhysicalDeviceCornerSampledImageFeaturesNV                 deviceDeviceCornerSampledImageFeatures;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_COVERAGE_REDUCTION_MODE_AVAILABLE
+static VkPhysicalDeviceCoverageReductionModeFeaturesNV              deviceCoverageReductionModeFeatures;
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEVICE_GENERATED_COMMANDS_AVAILABLE
 static VkPhysicalDeviceDeviceGeneratedCommandsPropertiesNV          deviceDeviceGeneratedCommandsProperties;
+static VkPhysicalDeviceDeviceGeneratedCommandsFeaturesNV            deviceDeviceGeneratedCommandsFeatures;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEDICATED_ALLOCATION_IMAGE_ALIASING_AVAILABLE
+static VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV   deviceDedicatedAllocationImageAliasingFeatures;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEVICE_DIAGNOSTICS_CONFIG_AVAILABLE
+static VkPhysicalDeviceDiagnosticsConfigFeaturesNV                  deviceDiagnosticsConfigFeatures;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SCISSOR_EXCLUSIVE_AVAILABLE
+static VkPhysicalDeviceExclusiveScissorFeaturesNV                   deviceExclusiveScissorFeatures;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXTERNAL_MEMORY_RDMA_AVAILABLE
+static VkPhysicalDeviceExternalMemoryRDMAFeaturesNV                 deviceExternalMemoryRDMAFeatures;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_FRAGMENT_SHADER_BARYCENTRIC_AVAILABLE
+static VkPhysicalDeviceFragmentShaderBarycentricFeaturesNV          deviceFragmentShaderBarycentricFeatures;
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_FRAGMENT_SHADING_RATE_ENUMS_AVAILABLE
 static VkPhysicalDeviceFragmentShadingRateEnumsPropertiesNV         deviceFragmentShadingRateEnumsProperties;
+static VkPhysicalDeviceFragmentShadingRateEnumsFeaturesNV           deviceFragmentShadingRateEnumsFeatures;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_INHERITED_VIEWPORT_SCISSOR_AVAILABLE
+static VkPhysicalDeviceInheritedViewportScissorFeaturesNV           deviceInheritedViewportScissorFeatures;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_LINEAR_COLOR_ATTACHMENT_AVAILABLE
+static VkPhysicalDeviceLinearColorAttachmentFeaturesNV              deviceLinearColorAttachmentFeatures;
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_MESH_SHADER_AVAILABLE
 static VkPhysicalDeviceMeshShaderPropertiesNV                       deviceMeshShaderProperties;
+static VkPhysicalDeviceMeshShaderFeaturesNV                         deviceMeshShaderFeatures;
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
@@ -234,11 +408,11 @@ static VkPhysicalDeviceMultiviewPerViewAttributesPropertiesNVX      deviceMultiv
 
 
 /**
- * -------------------------------------------------
- * -------------------------------------------------
- * ---- Vulkan AMD Extensions Device Properties ----
- * -------------------------------------------------
- * -------------------------------------------------
+ * ------------------------------------------------------------
+ * ------------------------------------------------------------
+ * ---- Vulkan AMD Extensions Device Properties & Features ----
+ * ------------------------------------------------------------
+ * ------------------------------------------------------------
  */
 #if __C_ENG_VULKAN_API_EXTENSION_AMD_SHADER_CORE_PROPERTIES_AVAILABLE
 static VkPhysicalDeviceShaderCorePropertiesAMD                      deviceShaderCoreProperties;
@@ -248,28 +422,49 @@ static VkPhysicalDeviceShaderCorePropertiesAMD                      deviceShader
 static VkPhysicalDeviceShaderCoreProperties2AMD                     deviceShaderCoreProperties2;
 #endif
 
-
-/**
- * ------------------------------------------------------
- * ------------------------------------------------------
- * ---- Vulkan Qualcomm Extensions Device Properties ----
- * ------------------------------------------------------
- * ------------------------------------------------------
- */
-#if __C_ENG_VULKAN_API_EXTENSION_QUALCOMM_FRAGMENT_DENSITY_MAP_OFFSET_AVAILABLE
-static VkPhysicalDeviceFragmentDensityMapOffsetPropertiesQCOM       deviceFragmentDensityMapOffsetProperties;
+#if __C_ENG_VULKAN_API_EXTENSION_AMD_DEVICE_COHERENT_MEMORY_AVAILABLE
+static VkPhysicalDeviceCoherentMemoryFeaturesAMD                    deviceCoherentMemoryFeatures;
 #endif
 
 
 /**
- * ----------------------------------------------------
- * ----------------------------------------------------
- * ---- Vulkan Huawei Extensions Device Properties ----
- * ----------------------------------------------------
- * ----------------------------------------------------
+ * -----------------------------------------------------------------
+ * -----------------------------------------------------------------
+ * ---- Vulkan Qualcomm Extensions Device Properties & Features ----
+ * -----------------------------------------------------------------
+ * -----------------------------------------------------------------
+ */
+#if __C_ENG_VULKAN_API_EXTENSION_QUALCOMM_FRAGMENT_DENSITY_MAP_OFFSET_AVAILABLE
+static VkPhysicalDeviceFragmentDensityMapOffsetPropertiesQCOM       deviceFragmentDensityMapOffsetProperties;
+static VkPhysicalDeviceFragmentDensityMapOffsetFeaturesQCOM         deviceFragmentDensityMapOffsetFeatures;
+#endif
+
+
+/**
+ * ---------------------------------------------------------------
+ * ---------------------------------------------------------------
+ * ---- Vulkan Huawei Extensions Device Properties & Features ----
+ * ---------------------------------------------------------------
+ * ---------------------------------------------------------------
  */
 #if __C_ENG_VULKAN_API_EXTENSION_HUAWEI_SUBPASS_SHADING_AVAILABLE
 static VkPhysicalDeviceSubpassShadingPropertiesHUAWEI               deviceSubpassShadingProperties;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_HUAWEI_INVOCATION_MASK_AVAILABLE
+static VkPhysicalDeviceInvocationMaskFeaturesHUAWEI                 deviceInvocationMaskFeatures;
+#endif
+
+
+/**
+ * --------------------------------------------------------------
+ * --------------------------------------------------------------
+ * ---- Vulkan Valve Extensions Device Properties & Features ----
+ * --------------------------------------------------------------
+ * --------------------------------------------------------------
+ */
+#if __C_ENG_VULKAN_API_EXTENSION_VALVE_MUTABLE_DESCRIPTOR_TYPE_AVAILABLE
+static VkPhysicalDeviceMutableDescriptorTypeFeaturesVALVE           deviceMutableDescriptorTypeFeatures;
 #endif
 
 

@@ -5247,10 +5247,10 @@ auto vulkan :: toString (
 #if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_COVERAGE_REDUCTION_MODE_AVAILABLE
 
 auto vulkan :: toString (
-        __C_ENG_TYPE ( PhysicalDeviceCoverageReductionModeNVidia ) const & features
+        __C_ENG_TYPE ( PhysicalDeviceCoverageReductionModeFeaturesNVidia ) const & features
 ) noexcept -> String {
 
-    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceCoverageReductionModeNVidia ) ) " "
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceCoverageReductionModeFeaturesNVidia ) ) " "
            "{ type = "_s                                                + toString ( features.structureType ) +
            ", pNext = "                                                 + :: toString ( features.pNext ) +
            ", coverageReductionMode = "                                 + ( features.coverageReductionMode == VK_TRUE ? "true" : "false" ) +

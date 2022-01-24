@@ -4936,7 +4936,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_COVERAGE_REDUCTION_MODE_AVAILABLE
 
-#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceCoverageReductionModeNVidia, NO_PARENT )
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceCoverageReductionModeFeaturesNVidia, NO_PARENT )
 #include <ObjectMapping.hpp>
 
         Struct {
@@ -6426,7 +6426,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_COVERAGE_REDUCTION_MODE_AVAILABLE
 
-            __C_ENG_TYPE ( PhysicalDeviceCoverageReductionModeNVidia )                      coverageReductionModeFeaturesNVidia;
+            __C_ENG_TYPE ( PhysicalDeviceCoverageReductionModeFeaturesNVidia )              coverageReductionModeFeaturesNVidia;
 
 #endif
 
@@ -7433,7 +7433,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_COVERAGE_REDUCTION_MODE_AVAILABLE
 
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceCoverageReductionModeNVidia ) const & ) noexcept -> cds :: String;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceCoverageReductionModeFeaturesNVidia ) const & ) noexcept -> cds :: String;
 
 #endif
 
