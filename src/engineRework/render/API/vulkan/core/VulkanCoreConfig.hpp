@@ -22,4 +22,14 @@
 #define __C_ENG_VULKAN_CORE_FUNCTION_NAME_DESTROY_DEBUG_MESSENGER                                           "vkDestroyDebugUtilsMessengerEXT"
 #define __C_ENG_VULKAN_CORE_FUNCTION_NAME_ENUMERATE_PHYSICAL_DEVICE_QUEUE_FAMILY_PERFORMANCE_QUERY_COUNTERS "vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR"
 
+#if defined ( __C_ENG_USE_DEFENSIVE_PROGRAMMING ) || !defined(NDEBUG)
+
+#define __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED true
+
+#else
+
+#define __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED false
+
+#endif
+
 #endif //__C_ENG_VULKAN_CORE_CONFIG_HPP__

@@ -118,6 +118,11 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
                 __C_ENG_TYPE ( PhysicalDeviceFeatures ) *
         ) noexcept -> __C_ENG_TYPE ( Result );
 
+        __C_ENG_NO_DISCARD extern auto getPhysicalDeviceFeatures (
+                __C_ENG_TYPE ( PhysicalDeviceHandle ),
+                __C_ENG_TYPE ( PhysicalDeviceExtendedFeatures ) *
+        ) noexcept -> __C_ENG_TYPE ( Result );
+
         __C_ENG_NO_DISCARD extern auto getPhysicalDeviceDetails (
                 __C_ENG_TYPE ( PhysicalDeviceHandle ),
                 __C_ENG_TYPE ( PhysicalDeviceDetails ) *

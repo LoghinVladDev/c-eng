@@ -1168,7 +1168,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #if __C_ENG_VULKAN_API_EXTENSION_INTEL_SHADER_INTEGER_FUNCTIONS_AVAILABLE
 
-            Field ( PhysicalDeviceShaderIntegerFunctionFeaturesIntel,                      VkStructureType :: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INTEGER_FUNCTIONS_2_FEATURES_INTEL ),
+            Field ( PhysicalDeviceShaderIntegerFunctionsFeaturesIntel,                     VkStructureType :: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INTEGER_FUNCTIONS_2_FEATURES_INTEL ),
 
 #endif
 
@@ -1290,6 +1290,12 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PRESENT_ID_AVAILABLE
+
+            Field ( PhysicalDevicePresentIDFeatures,                                        VkStructureType :: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENT_ID_FEATURES_KHR ),
+
+#endif
+
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PRESENT_WAIT_AVAILABLE
 
             Field ( PhysicalDevicePresentWaitFeatures,                                     VkStructureType :: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENT_WAIT_FEATURES_KHR ),
@@ -1391,6 +1397,12 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #if __C_ENG_VULKAN_API_EXTENSION_SHADER_ATOMIC_FLOAT_2_AVAILABLE
 
             Field ( PhysicalDeviceShaderAtomicFloat2Features,                              VkStructureType :: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_FLOAT_2_FEATURES_EXT ),
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_SHADER_IMAGE_ATOMIC_INT64_AVAILABLE
+
+            Field ( PhysicalDeviceShaderImageAtomicInt64Features,                          VkStructureType :: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_IMAGE_ATOMIC_INT64_FEATURES_EXT ),
 
 #endif
 
@@ -4960,7 +4972,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
             __C_ENG_TYPE ( StructureType )                      structureType;
             __C_ENG_TYPE ( GenericStructure )                 * pNext;
             __C_ENG_TYPE ( Bool )                               customBorderColors;
-            __C_ENG_TYPE ( Bool )                               customBorderColorsWithoutFormat;
+            __C_ENG_TYPE ( Bool )                               customBorderColorWithoutFormat;
         };
 
 #define C_ENG_MAP_END
@@ -5595,7 +5607,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #endif
 
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PORTABILITY_SUBSET_AVAILABLE
+#if __C_ENG_VULKAN_BETA_EXTENSIONS_ENABLED && __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PORTABILITY_SUBSET_AVAILABLE
 
 #define C_ENG_MAP_START     STRUCT ( PhysicalDevicePortabilitySubsetFeatures, NO_PARENT )
 #include <ObjectMapping.hpp>
@@ -6678,7 +6690,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PORTABILITY_SUBSET_AVAILABLE
+#if __C_ENG_VULKAN_BETA_EXTENSIONS_ENABLED && __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PORTABILITY_SUBSET_AVAILABLE
 
             __C_ENG_TYPE ( PhysicalDevicePortabilitySubsetProperties )                      portabilitySubsetProperties;
             __C_ENG_TYPE ( PhysicalDevicePortabilitySubsetFeatures )                        portabilitySubsetFeatures;
@@ -7228,7 +7240,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PORTABILITY_SUBSET_AVAILABLE
+#if __C_ENG_VULKAN_BETA_EXTENSIONS_ENABLED && __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PORTABILITY_SUBSET_AVAILABLE
 
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDevicePortabilitySubsetProperties ) const & ) noexcept -> cds :: String;
 
@@ -7648,7 +7660,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PORTABILITY_SUBSET_AVAILABLE
+#if __C_ENG_VULKAN_BETA_EXTENSIONS_ENABLED && __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PORTABILITY_SUBSET_AVAILABLE
 
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDevicePortabilitySubsetFeatures ) const & ) noexcept -> cds :: String;
 

@@ -1073,7 +1073,7 @@ auto vulkan :: toString (
 
 #if __C_ENG_VULKAN_API_EXTENSION_INTEL_SHADER_INTEGER_FUNCTIONS_AVAILABLE
 
-        case StructureTypePhysicalDeviceShaderIntegerFunctionFeaturesIntel:                      { asString = "StructureTypePhysicalDeviceShaderIntegerFunctionFeaturesIntel";                      break; }
+        case StructureTypePhysicalDeviceShaderIntegerFunctionsFeaturesIntel:                     { asString = "StructureTypePhysicalDeviceShaderIntegerFunctionsFeaturesIntel";                     break; }
 
 #endif
 
@@ -1192,6 +1192,18 @@ auto vulkan :: toString (
 #if __C_ENG_VULKAN_API_EXTENSION_VALIDATION_FEATURES_AVAILABLE
 
         case StructureTypeValidationFeatures:                                                    { asString = "StructureTypeValidationFeatures";                                                    break; }
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PRESENT_ID_AVAILABLE
+
+        case StructureTypePhysicalDevicePresentIDFeatures:                                       { asString = "StructureTypePhysicalDevicePresentIDFeatures";                                       break; }
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_SHADER_IMAGE_ATOMIC_INT64_AVAILABLE
+
+        case StructureTypePhysicalDeviceShaderImageAtomicInt64Features:                          { asString = "StructureTypePhysicalDeviceShaderImageAtomicInt64Features";                          break; }
 
 #endif
 
@@ -5269,7 +5281,7 @@ auto vulkan :: toString (
            "{ type = "_s                                                + toString ( features.structureType ) +
            ", pNext = "                                                 + :: toString ( features.pNext ) +
            ", customBorderColors = "                                    + ( features.customBorderColors == VK_TRUE ? "true" : "false" ) +
-           ", customBorderColorsWithoutFormat = "                       + ( features.customBorderColorsWithoutFormat == VK_TRUE ? "true" : "false" ) +
+           ", customBorderColorWithoutFormat = "                        + ( features.customBorderColorWithoutFormat == VK_TRUE ? "true" : "false" ) +
            " }";
 }
 
