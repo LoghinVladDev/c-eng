@@ -541,7 +541,7 @@ auto vulkan :: toString (
 
 #if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_CORNER_SAMPLED_IMAGE_AVAILABLE
 
-        case StructureTypePhysicalDeviceCornerSampledImageFeatures:                              { asString = "StructureTypePhysicalDeviceCornerSampledImageFeatures";                              break; }
+        case StructureTypePhysicalDeviceCornerSampledImageFeaturesNVidia:                        { asString = "StructureTypePhysicalDeviceCornerSampledImageFeatures";                              break; }
 
 #endif
 
@@ -4368,7 +4368,7 @@ auto vulkan :: toString (
 
 #if __C_ENG_VULKAN_API_EXTENSION_VERTEX_INPUT_DYNAMIC_STATE_AVAILABLE
 
-            ", vertexInputDynamicState = "                          + toString ( details.vertexInputDynamicState ) +
+            ", vertexInputDynamicState = "                          + toString ( details.vertexInputDynamicStateFeatures ) +
 
 #endif
 

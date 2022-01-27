@@ -8,6 +8,7 @@
 #include <VulkanCore.hpp>
 #include <VulkanAPIExceptions.hpp>
 #include <Window.hpp>
+#include <VulkanAPICallsValidUsage.hpp>
 
 
 using namespace cds; // NOLINT(clion-misra-cpp2008-7-3-4)
@@ -197,8 +198,24 @@ auto vulkan :: Self :: refreshLayers() noexcept (false) -> Self & {
     return * this;
 }
 
+static inline auto extraValidationCallback (
+        vulkan :: ExtraValidationCallbackData const & data
+) noexcept -> void {
+
+    (void) __C_ENG_TYPE ( Logger ) :: instance().warning (
+            String :: f (
+                    "[PRE-LAYER CALLBACK] : %s",
+                    data.message
+            )
+    );
+}
+
 auto vulkan :: Self :: init () noexcept (false) -> Self & {
     return this->refreshLayers();
+
+    if ( this->debugLayerEnabled() ) {
+        vulkan :: setExtraValidationCallback ( & extraValidationCallback );
+    }
 }
 
 auto vulkan :: Self :: enabledLayerNames() noexcept -> LayerNames {

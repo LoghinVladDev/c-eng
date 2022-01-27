@@ -624,7 +624,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_CORNER_SAMPLED_IMAGE_AVAILABLE
 
-            Field ( PhysicalDeviceCornerSampledImageFeatures,                              VkStructureType :: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_CORNER_SAMPLED_IMAGE_FEATURES_NV ),
+            Field ( PhysicalDeviceCornerSampledImageFeaturesNVidia,                        VkStructureType :: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_CORNER_SAMPLED_IMAGE_FEATURES_NV ),
 
 #endif
 
@@ -2870,7 +2870,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
         Struct {
             __C_ENG_TYPE ( StructureType )                      structureType;
-            __C_ENG_TYPE ( GenericStructure )                 * pNext;
+            __C_ENG_TYPE ( GenericStructure )           const * pNext;
             __C_ENG_TYPE ( DeviceCreateFlags )                  flags;
             cds :: uint32                                       queueCreateInfoCount;
             __C_ENG_TYPE ( DeviceQueueCreateInfo )      const * pQueueCreateInfos;
@@ -6913,7 +6913,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #if __C_ENG_VULKAN_API_EXTENSION_VERTEX_INPUT_DYNAMIC_STATE_AVAILABLE
 
-            __C_ENG_TYPE ( PhysicalDeviceVertexInputDynamicStateFeatures )                  vertexInputDynamicState;
+            __C_ENG_TYPE ( PhysicalDeviceVertexInputDynamicStateFeatures )                  vertexInputDynamicStateFeatures;
 
 #endif
 
