@@ -4710,6 +4710,32 @@ auto vulkan :: toString (
 #if __C_ENG_VULKAN_API_EXTENSION_DEVICE_MEMORY_REPORT_AVAILABLE
 
 auto vulkan :: toString (
+        __C_ENG_TYPE ( DeviceMemoryReportFlag ) flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    return asString;
+}
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( DeviceMemoryReportEventType ) eventType
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( eventType ) {
+        case DeviceMemoryReportEventTypeAllocate:           { asString = "Allocate";            break; }
+        case DeviceMemoryReportEventTypeFree:               { asString = "Free";                break; }
+        case DeviceMemoryReportEventTypeImport:             { asString = "Import";              break; }
+        case DeviceMemoryReportEventTypeUnimport:           { asString = "Unimport";            break; }
+        case DeviceMemoryReportEventTypeAllocationFailed:   { asString = "AllocationFailed";    break; }
+    }
+
+    return asString;
+}
+
+auto vulkan :: toString (
         __C_ENG_TYPE ( DeviceDeviceMemoryReportCreateInfo ) const & info
 ) noexcept -> String {
 
@@ -4844,7 +4870,7 @@ auto vulkan :: toString (
            ", variablePointersStorageBuffer = "             + ( features.variablePointersStorageBuffer == VK_TRUE ? "true" : "false" ) +
            ", variablePointers = "                          + ( features.variablePointers == VK_TRUE ? "true" : "false" ) +
            ", protectedMemory = "                           + ( features.protectedMemory == VK_TRUE ? "true" : "false" ) +
-           ", samplerYcbcrConversion = "                    + ( features.samplerYcbcrConversion == VK_TRUE ? "true" : "false" ) +
+           ", samplerYCBCRConversion = "                    + ( features.samplerYCBCRConversion == VK_TRUE ? "true" : "false" ) +
            ", shaderDrawParameters = "                      + ( features.shaderDrawParameters == VK_TRUE ? "true" : "false" ) +
            " }";
 }
@@ -6448,6 +6474,144 @@ auto vulkan :: toString (
            ", pNext = "                                                 + :: toString ( features.pNext ) +
            ", shaderZeroInitializeWorkgroupMemory = "                   + ( features.shaderZeroInitializeWorkgroupMemory == VK_TRUE ? "true" : "false" ) +
            " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( ObjectType ) objectType
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( objectType ) {
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+
+        case ObjectTypeSamplerYCBCRConversion:         { asString = "VkSamplerYcbcrConversion";         break; }
+        case ObjectTypeDescriptorUpdateTemplate:       { asString = "VkDescriptorUpdateTemplate";       break; }
+        case ObjectTypePrivateDataSlot:                { asString = "VkPrivateDataSlot";                break; }
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SURFACE_AVAILABLE
+
+        case ObjectTypeSurface:                        { asString = "VkSurfaceKHR";                     break; }
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SWAP_CHAIN_AVAILABLE
+
+        case ObjectTypeSwapchain:                      { asString = "VkSwapchainKHR";                   break; }
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DISPLAY_AVAILABLE
+
+        case ObjectTypeDisplay:                        { asString = "VkDisplayKHR";                     break; }
+        case ObjectTypeDisplayMode:                    { asString = "VkDisplayModeKHR";                 break; }
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_DEBUG_REPORT_AVAILABLE
+
+        case ObjectTypeDebugReportCallback:            { asString = "VkDebugReportCallbackEXT";         break; }
+
+#endif
+
+#if __C_ENG_VULKAN_BETA_EXTENSIONS_ENABLED && __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_QUEUE_AVAILABLE
+
+        case ObjectTypeVideoSession:                   { asString = "VkVideoSessionKHR";                break; }
+        case ObjectTypeVideoSessionParameters:         { asString = "VkVideoSessionParametersKHR";      break; }
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXPERIMENTAL_BINARY_IMPORT_AVAILABLE
+
+        case ObjectTypeCUModuleNVidia:                 { asString = "VkCuModuleNVX";                    break; }
+        case ObjectTypeCUFunctionNVidia:               { asString = "VkCuFunctionNVX";                  break; }
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_DEBUG_UTILS_AVAILABLE
+
+        case ObjectTypeDebugUtilsMessenger:            { asString = "VkDebugUtilsMessengerEXT";         break; }
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+
+        case ObjectTypeAccelerationStructure:          { asString = "VkAccelerationStructureKHR";       break; }
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VALIDATION_CACHE_AVAILABLE
+
+        case ObjectTypeValidationCache:                { asString = "VkValidationCacheEXT";             break; }
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+
+        case ObjectTypeAccelerationStructureNVidia:    { asString = "VkAccelerationStructureNV";        break; }
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_INTEL_PERFORMANCE_QUERY_AVAILABLE
+
+        case ObjectTypePerformanceConfigurationIntel:  { asString = "VkPerformanceConfigurationINTEL";  break; }
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DEFERRED_HOST_OPERATIONS_AVAILABLE
+
+        case ObjectTypeDeferredOperation:              { asString = "VkDeferredOperationKHR";           break; }
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEVICE_GENERATED_COMMANDS_AVAILABLE
+
+        case ObjectTypeIndirectCommandsLayoutNVidia:   { asString = "VkIndirectCommandsLayoutNV";       break; }
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_GOOGLE_FUCHSIA_BUFFER_COLLECTION_AVAILABLE
+
+        case ObjectTypeBufferCollectionGoogle:         { asString = "VkBufferCollectionFUCHSIA";        break; }
+
+#endif
+
+        case ObjectTypeUnknown:                        { asString = "Unknown/Undefined Handle";         break; }
+        case ObjectTypeInstance:                       { asString = "VkInstance";                       break; }
+        case ObjectTypePhysicalDevice:                 { asString = "VkPhysicalDevice";                 break; }
+        case ObjectTypeDevice:                         { asString = "VkDevice";                         break; }
+        case ObjectTypeQueue:                          { asString = "VkQueue";                          break; }
+        case ObjectTypeSemaphore:                      { asString = "VkSemaphore";                      break; }
+        case ObjectTypeCommandBuffer:                  { asString = "VkCommandBuffer";                  break; }
+        case ObjectTypeFence:                          { asString = "VkFence";                          break; }
+        case ObjectTypeDeviceMemory:                   { asString = "VkDeviceMemory";                   break; }
+        case ObjectTypeBuffer:                         { asString = "VkBuffer";                         break; }
+        case ObjectTypeImage:                          { asString = "VkImage";                          break; }
+        case ObjectTypeEvent:                          { asString = "VkEvent";                          break; }
+        case ObjectTypeQueryPool:                      { asString = "VkQueryPool";                      break; }
+        case ObjectTypeBufferView:                     { asString = "VkBufferView";                     break; }
+        case ObjectTypeImageView:                      { asString = "VkImageView";                      break; }
+        case ObjectTypeShaderModule:                   { asString = "VkShaderModule";                   break; }
+        case ObjectTypePipelineCache:                  { asString = "VkPipelineCache";                  break; }
+        case ObjectTypePipelineLayout:                 { asString = "VkPipelineLayout";                 break; }
+        case ObjectTypeRenderPass:                     { asString = "VkRenderPass";                     break; }
+        case ObjectTypePipeline:                       { asString = "VkPipeline";                       break; }
+        case ObjectTypeDescriptorSetLayout:            { asString = "VkDescriptorSetLayout";            break; }
+        case ObjectTypeSampler:                        { asString = "VkSampler";                        break; }
+        case ObjectTypeDescriptorPool:                 { asString = "VkDescriptorPool";                 break; }
+        case ObjectTypeDescriptorSet:                  { asString = "VkDescriptorSet";                  break; }
+        case ObjectTypeFramebuffer:                    { asString = "VkFramebuffer";                    break; }
+        case ObjectTypeCommandPool:                    { asString = "VkCommandPool";                    break; }
+    }
+
+    return asString;
 }
 
 #endif

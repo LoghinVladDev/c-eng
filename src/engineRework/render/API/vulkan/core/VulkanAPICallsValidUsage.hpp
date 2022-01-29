@@ -5,6 +5,7 @@
 #ifndef __C_ENG_VULKAN_API_CALLS_VALID_USAGE_HPP__
 #define __C_ENG_VULKAN_API_CALLS_VALID_USAGE_HPP__
 
+#include <VulkanCoreConfig.hpp>
 #include <CDS/HashSet>
 
 namespace engine { // NOLINT(modernize-concat-nested-namespaces)
@@ -21,6 +22,19 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
             static inline bool portabilitySubsetQueried = false;
             static inline bool portabilitySubsetExists = false;
+
+            static inline bool                                      deviceGroupQueried = false;
+            static inline VkPhysicalDeviceGroupProperties const *   pQueriedDeviceGroupProperties = nullptr;
+            static inline cds :: uint32                             queriedDeviceGroupCount = 0U;
+        }
+
+        static inline auto saveQueriedDeviceGroupInfo (
+                cds :: uint32                           count,
+                VkPhysicalDeviceGroupProperties const * pGroupProperties
+        ) noexcept -> void {
+            hidden :: queriedDeviceGroupCount         = count;
+            hidden :: pQueriedDeviceGroupProperties   = pGroupProperties;
+            hidden :: deviceGroupQueried              = true;
         }
 
         static inline auto reportError (
@@ -43,8 +57,226 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         }
 
         static inline auto validateImplicit (
+                __C_ENG_TYPE ( DeviceGroupDeviceCreateInfo ) const * pCreateInfo
+        ) noexcept -> bool {
+
+            if ( pCreateInfo->structureType != StructureTypeDeviceGroupDeviceCreateInfo ) {
+                reportError ( "VUID-VkDeviceGroupDeviceCreateInfo-sType-sType: "
+                              "sType must be VK_STRUCTURE_TYPE_DEVICE_GROUP_DEVICE_CREATE_INFO" );
+
+                return false;
+            }
+
+            if ( pCreateInfo->physicalDeviceCount != 0U && pCreateInfo->pPhysicalDevices == nullptr ) {
+                reportError ( "VUID-VkDeviceGroupDeviceCreateInfo-pPhysicalDevices-parameter: "
+                              "If physicalDeviceCount is not 0, pPhysicalDevices must be a valid pointer "
+                              "to an array of physicalDeviceCount valid VkPhysicalDevice handles" );
+
+                return false;
+            }
+
+            return true;
+        }
+
+        static inline auto validate (
+                __C_ENG_TYPE ( DeviceGroupDeviceCreateInfo ) const * pCreateInfo
+        ) noexcept -> bool {
+
+            using namespace cds; // NOLINT(clion-misra-cpp2008-7-3-4)
+
+            if ( ! hidden :: deviceGroupQueried ) {
+                reportError ( "ExtendedLayer-VkDeviceCreateInfo-VkDeviceGroupDeviceCreateInfo-00002: "
+                              "If DeviceGroupDeviceCreateInfo is used in device creation, "
+                              "enumeratePhysicalDeviceGroups must be called first to validate the devices in same group" );
+
+                return false;
+            }
+
+            if ( pCreateInfo->physicalDeviceCount == 0U ) {
+                reportError ( "ExtendedLayer-VkDeviceCreateInfo-VkDeviceGroupDeviceCreateInfo-00003: "
+                              "Chain DeviceGroupDeviceCreateInfo to DeviceCreateInfo only if creating said device group. "
+                              "The physicalDeviceCount should not be 0" );
+
+                return true; /// valid, as is just a warning
+            }
+
+            cds :: uint32 occurredDeviceCount = 0U;
+            __C_ENG_TYPE ( PhysicalDeviceHandle ) occurredDevices [ __C_ENG_VULKAN_CORE_PHYSICAL_DEVICE_GROUP_MAX_COUNT ];
+
+            for ( cds :: uint32 i = 0U; i < pCreateInfo->physicalDeviceCount; ++ i ) {
+                for ( cds :: uint32 j = 0U; j < occurredDeviceCount; ++ j ) {
+                    if ( occurredDevices[j] == pCreateInfo->pPhysicalDevices[i] ) {
+                        reportError ( "VUID-VkDeviceGroupDeviceCreateInfo-pPhysicalDevices-00375: "
+                                      "Each element of pPhysicalDevices must be unique" );
+
+                        return false;
+                    }
+                }
+
+                occurredDevices[occurredDeviceCount ++] = pCreateInfo->pPhysicalDevices[i];
+            }
+
+            bool devicesGroupedOk = false;
+            for ( cds :: uint32 i = 0U; i < hidden :: queriedDeviceGroupCount; ++ i ) {
+                auto pCurrentGroup = & hidden :: pQueriedDeviceGroupProperties [i];
+                bool allInCurrentGroup = true;
+
+                for ( cds :: uint32 j = 0U; j < pCurrentGroup->physicalDeviceCount; ++ j ) {
+                    bool deviceInCurrentGroup = false;
+
+                    for ( cds :: uint32 k = 0U; k < pCreateInfo->physicalDeviceCount; ++ k ) {
+                        if ( pCreateInfo->pPhysicalDevices[k] == pCurrentGroup->physicalDevices[j] ) {
+                            deviceInCurrentGroup = true;
+                            break;
+                        }
+                    }
+
+                    if ( ! deviceInCurrentGroup ) {
+                        allInCurrentGroup = false;
+                        break;
+                    }
+                }
+
+                if ( allInCurrentGroup ) {
+                    devicesGroupedOk = true;
+                }
+            }
+
+            if ( ! devicesGroupedOk ) {
+                reportError ( "VUID-VkDeviceGroupDeviceCreateInfo-pPhysicalDevices-00376: "
+                              "All elements of pPhysicalDevices must be in the same device group "
+                              "as enumerated by vkEnumeratePhysicalDeviceGroups" );
+
+                return false;
+            }
+
+            return validateImplicit ( pCreateInfo );
+        }
+
+        static inline auto validateImplicit (
+                __C_ENG_TYPE ( DeviceMemoryOverallocationCreateInfoAMD ) const * pCreateInfo
+        ) noexcept -> bool {
+
+            if ( pCreateInfo->structureType != StructureTypeDeviceMemoryOverAllocationCreateInfoAMD ) {
+                reportError ( "VUID-VkDeviceMemoryOverallocationCreateInfoAMD-sType-sType: "
+                              "sType must be VK_STRUCTURE_TYPE_DEVICE_MEMORY_OVERALLOCATION_CREATE_INFO_AMD" );
+
+                return false;
+            }
+
+            if (
+                    pCreateInfo->overallocationBehavior == MemoryOverallocationBehaviorAMDDefault ||
+                    pCreateInfo->overallocationBehavior == MemoryOverallocationBehaviorAMDAllowed ||
+                    pCreateInfo->overallocationBehavior == MemoryOverallocationBehaviorAMDDisallowed
+            ) {
+                reportError ( "VUID-VkDeviceMemoryOverallocationCreateInfoAMD-overallocationBehavior-parameter: "
+                              "overallocationBehavior must be a valid VkMemoryOverallocationBehaviorAMD value" );
+
+                return false;
+            }
+
+            return true;
+        }
+
+        static inline auto validate (
+                __C_ENG_TYPE ( DeviceMemoryOverallocationCreateInfoAMD ) const * pCreateInfo
+        ) noexcept -> bool {
+            return validateImplicit ( pCreateInfo );
+        }
+
+        static inline auto validateImplicit (
+                __C_ENG_TYPE ( DeviceDiagnosticsConfigCreateInfoNVidia ) const * pCreateInfo
+        ) noexcept -> bool {
+
+            using namespace cds; // NOLINT(clion-misra-cpp2008-7-3-4)
+
+            if ( pCreateInfo->structureType != StructureTypeDeviceDiagnosticsConfigCreateInfoNVidia ) {
+                reportError ( "VUID-VkDeviceDiagnosticsConfigCreateInfoNV-sType-sType: "
+                              "sType must be VK_STRUCTURE_TYPE_DEVICE_DIAGNOSTICS_CONFIG_CREATE_INFO_NV" );
+
+                return false;
+            }
+
+            constexpr uint32 flagsMask =
+                    static_cast < uint32 > ( DeviceDiagnosticsConfigFlagNVidiaEnableShaderDebugInfo )      |
+                    static_cast < uint32 > ( DeviceDiagnosticsConfigFlagNVidiaEnableResourceTracking )     |
+                    static_cast < uint32 > ( DeviceDiagnosticsConfigFlagNVidiaEnableAutomaticCheckpoints ) ;
+
+            if ( ( pCreateInfo->flags & flagsMask ) != pCreateInfo->flags ) {
+                reportError ( "VUID-VkDeviceDiagnosticsConfigCreateInfoNV-flags-parameter: "
+                              "flags must be a valid combination of VkDeviceDiagnosticsConfigFlagBitsNV values" );
+
+                return false;
+            }
+
+            return true;
+        }
+
+        static inline auto validate (
+                __C_ENG_TYPE ( DeviceDiagnosticsConfigCreateInfoNVidia ) const * pCreateInfo
+        ) noexcept -> bool {
+            return validateImplicit ( pCreateInfo );
+        }
+
+        static inline auto validateImplicit (
+                __C_ENG_TYPE ( DeviceDeviceMemoryReportCreateInfo ) const * pCreateInfo
+        ) noexcept -> bool {
+
+            if ( pCreateInfo->structureType != StructureTypeDeviceDeviceMemoryReportCreateInfo ) {
+                reportError ( "VUID-VkDeviceDeviceMemoryReportCreateInfoEXT-sType-sType: "
+                              "sType must be VK_STRUCTURE_TYPE_DEVICE_DEVICE_MEMORY_REPORT_CREATE_INFO_EXT" );
+
+                return false;
+            }
+
+            if ( pCreateInfo->flags != 0U ) {
+                reportError ( "VUID-VkDeviceDeviceMemoryReportCreateInfoEXT-flags-zerobitmask: "
+                              "flags must be 0" );
+
+                return false;
+            }
+
+            if ( pCreateInfo->callback == nullptr ) {
+                reportError ( "VUID-VkDeviceDeviceMemoryReportCreateInfoEXT-pfnUserCallback-parameter: "
+                              "pfnUserCallback must be a valid PFN_vkDeviceMemoryReportCallbackEXT value" );
+
+                return false;
+            }
+
+            return true;
+        }
+
+        static inline auto validate (
+                __C_ENG_TYPE ( DeviceDeviceMemoryReportCreateInfo ) const * pCreateInfo
+        ) noexcept -> bool {
+            return validateImplicit ( pCreateInfo );
+        }
+
+        static inline auto validateImplicit (
+                __C_ENG_TYPE ( DevicePrivateDataCreateInfo ) const * pCreateInfo
+        ) noexcept -> bool {
+
+            if ( pCreateInfo->structureType != StructureTypeDevicePrivateDataCreateInfo ) {
+                reportError ( "VUID-VkDevicePrivateDataCreateInfo-sType-sType: "
+                              "sType must be VK_STRUCTURE_TYPE_DEVICE_PRIVATE_DATA_CREATE_INFO" );
+
+                return false;
+            }
+
+            return true;
+        }
+
+        static inline auto validate (
+                __C_ENG_TYPE ( DevicePrivateDataCreateInfo ) const * pCreateInfo
+        ) noexcept -> bool {
+            return validateImplicit ( pCreateInfo );
+        }
+
+        static inline auto validateImplicit (
                 __C_ENG_TYPE ( DeviceCreateInfo ) const * pCreateInfo
         ) noexcept -> bool {
+
+            using namespace cds; // NOLINT(clion-misra-cpp2008-7-3-4)
 
             __C_ENG_TYPE ( StructureType ) acceptedStructureTypesInChain [] = {
 
@@ -447,7 +679,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
                 return false;
             }
 
-            cds :: HashSet < __C_ENG_TYPE ( StructureType ) > occurrences;
+            HashSet < __C_ENG_TYPE ( StructureType ) > occurrences;
 
             auto chainElement = reinterpret_cast < __C_ENG_TYPE ( GenericInStructure ) const * > ( pCreateInfo->pNext );
             while ( chainElement != nullptr ) {
@@ -576,15 +808,11 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         }
 
         static inline auto validate (
-                __C_ENG_TYPE ( DeviceCreateInfo ) const * pCreateInfo
+                __C_ENG_TYPE ( DeviceCreateInfo )       const * pCreateInfo,
+                __C_ENG_TYPE ( PhysicalDeviceHandle )           physicalDeviceHandle = nullptr
         ) noexcept -> bool {
 
             using namespace cds; // NOLINT(clion-misra-cpp2008-7-3-4)
-            using namespace engine; // NOLINT(clion-misra-cpp2008-7-3-4)
-
-#ifdef NDEBUG
-            return true;
-#endif
 
             struct QueueInfoWithProtected {
                 uint32  index;
@@ -906,6 +1134,85 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+
+                if ( chainElement->structureType == vulkan :: StructureTypeDeviceGroupDeviceCreateInfo ) {
+                    auto deviceGroupCreateInfo = reinterpret_cast < __C_ENG_TYPE ( DeviceGroupDeviceCreateInfo ) const * > ( chainElement );
+
+                    if ( ! validate ( deviceGroupCreateInfo ) ) {
+                        return false;
+                    }
+
+                    if ( deviceGroupCreateInfo->physicalDeviceCount != 0U ) {
+                        bool createdDeviceIsInGroup = false;
+
+                        for ( uint32 i = 0U; i < deviceGroupCreateInfo->physicalDeviceCount; ++ i ) {
+                            if ( deviceGroupCreateInfo->pPhysicalDevices[i] == physicalDeviceHandle ) {
+                                createdDeviceIsInGroup = true;
+                                break;
+                            }
+                        }
+
+                        if ( ! createdDeviceIsInGroup ) {
+                            reportError ( "VUID-VkDeviceGroupDeviceCreateInfo-physicalDeviceCount-00377: "
+                                          "If physicalDeviceCount is not 0, the physicalDevice parameter of vkCreateDevice "
+                                          "must be an element of pPhysicalDevices" );
+
+                            return false;
+                        }
+                    }
+                }
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_AMD_MEMORY_OVERALLOCATION_BEHAVIOUR_AVAILABLE
+
+                if ( chainElement->structureType == vulkan :: StructureTypeDeviceMemoryOverAllocationCreateInfoAMD ) {
+                    auto overAllocationCreateInfo = reinterpret_cast < __C_ENG_TYPE ( DeviceMemoryOverallocationCreateInfoAMD ) const * > ( chainElement );
+
+                    if ( ! validate ( overAllocationCreateInfo ) ) {
+                        return false;
+                    }
+                }
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEVICE_DIAGNOSTICS_CONFIG_AVAILABLE
+
+                if ( chainElement->structureType == vulkan :: StructureTypeDeviceDiagnosticsConfigCreateInfoNVidia ) {
+                    auto diagnosticsCreateInfo = reinterpret_cast < __C_ENG_TYPE ( DeviceDiagnosticsConfigCreateInfoNVidia ) const * > ( chainElement );
+
+                    if ( ! validate ( diagnosticsCreateInfo ) ) {
+                        return false;
+                    }
+                }
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_DEVICE_MEMORY_REPORT_AVAILABLE
+
+                if ( chainElement->structureType == vulkan :: StructureTypeDeviceDeviceMemoryReportCreateInfo ) {
+                    auto memoryReportCreateInfo = reinterpret_cast < __C_ENG_TYPE ( DeviceDeviceMemoryReportCreateInfo ) const * > ( chainElement );
+
+                    if ( ! validate ( memoryReportCreateInfo ) ) {
+                        return false;
+                    }
+                }
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_PRIVATE_DATA_AVAILABLE
+
+                if ( chainElement->structureType == vulkan :: StructureTypeDevicePrivateDataCreateInfo ) {
+                    auto privateDataCreateInfo = reinterpret_cast < __C_ENG_TYPE ( DevicePrivateDataCreateInfo ) const * > ( chainElement );
+
+                    if ( ! validate ( privateDataCreateInfo ) ) {
+                        return false;
+                    }
+                }
+
+#endif
+
                 chainElement = chainElement->pNext;
             }
 
@@ -1051,6 +1358,14 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
                               "and the pNext chain includes a VkPhysicalDeviceVulkan12Features structure, "
                               "then VkPhysicalDeviceVulkan12Features::shaderOutputViewportIndex and "
                               "VkPhysicalDeviceVulkan12Features::shaderOutputLayer must both be VK_TRUE" );
+
+                return false;
+            }
+
+            if ( ! hidden :: portabilitySubsetQueried && portabilitySubsetKHRPresent ) {
+                reportError ( "ExtendedLayer-VkDeviceCreateInfo-pProperties-00001: "
+                              "If \"VK_KHR_portability_subset\" is included in the ppEnabledExtensionNames, "
+                              "vkEnumerateDeviceExtensionProperties must be called beforehand to query the extension support" );
 
                 return false;
             }

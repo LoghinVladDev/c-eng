@@ -2328,6 +2328,143 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 
+#define C_ENG_MAP_START     ENUM ( ObjectType, TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+
+            Field ( SamplerYCBCRConversion,         VkObjectType :: VK_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION ),
+            Field ( DescriptorUpdateTemplate,       VkObjectType :: VK_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE ),
+            Field ( PrivateDataSlot,                VkObjectType :: VK_OBJECT_TYPE_PRIVATE_DATA_SLOT_EXT ),
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SURFACE_AVAILABLE
+
+            Field ( Surface,                        VkObjectType :: VK_OBJECT_TYPE_SURFACE_KHR ),
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SWAP_CHAIN_AVAILABLE
+
+            Field ( Swapchain,                      VkObjectType :: VK_OBJECT_TYPE_SWAPCHAIN_KHR ),
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DISPLAY_AVAILABLE
+
+            Field ( Display,                        VkObjectType :: VK_OBJECT_TYPE_DISPLAY_KHR ),
+            Field ( DisplayMode,                    VkObjectType :: VK_OBJECT_TYPE_DISPLAY_MODE_KHR ),
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_DEBUG_REPORT_AVAILABLE
+
+            Field ( DebugReportCallback,            VkObjectType :: VK_OBJECT_TYPE_DEBUG_REPORT_CALLBACK_EXT ),
+
+#endif
+
+#if __C_ENG_VULKAN_BETA_EXTENSIONS_ENABLED && __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_QUEUE_AVAILABLE
+
+            Field ( VideoSession,                   VkObjectType :: VK_OBJECT_TYPE_VIDEO_SESSION_KHR ),
+            Field ( VideoSessionParameters,         VkObjectType :: VK_OBJECT_TYPE_VIDEO_SESSION_PARAMETERS_KHR ),
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXPERIMENTAL_BINARY_IMPORT_AVAILABLE
+
+            Field ( CUModuleNVidia,                 VkObjectType :: VK_OBJECT_TYPE_CU_MODULE_NVX ),
+            Field ( CUFunctionNVidia,               VkObjectType :: VK_OBJECT_TYPE_CU_FUNCTION_NVX ),
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_DEBUG_UTILS_AVAILABLE
+
+            Field ( DebugUtilsMessenger,            VkObjectType :: VK_OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT ),
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+
+            Field ( AccelerationStructure,          VkObjectType :: VK_OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR ),
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VALIDATION_CACHE_AVAILABLE
+
+            Field ( ValidationCache,                VkObjectType :: VK_OBJECT_TYPE_VALIDATION_CACHE_EXT ),
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+
+            Field ( AccelerationStructureNVidia,    VkObjectType :: VK_OBJECT_TYPE_ACCELERATION_STRUCTURE_NV ),
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_INTEL_PERFORMANCE_QUERY_AVAILABLE
+
+            Field ( PerformanceConfigurationIntel,  VkObjectType :: VK_OBJECT_TYPE_PERFORMANCE_CONFIGURATION_INTEL ),
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DEFERRED_HOST_OPERATIONS_AVAILABLE
+
+            Field ( DeferredOperation,              VkObjectType :: VK_OBJECT_TYPE_DEFERRED_OPERATION_KHR ),
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEVICE_GENERATED_COMMANDS_AVAILABLE
+
+            Field ( IndirectCommandsLayoutNVidia,   VkObjectType :: VK_OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NV ),
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_GOOGLE_FUCHSIA_BUFFER_COLLECTION_AVAILABLE
+
+            Field ( BufferCollectionGoogle,         VkObjectType :: VK_OBJECT_TYPE_BUFFER_COLLECTION_FUCHSIA ),
+
+#endif
+
+            Field ( Unknown,                        VkObjectType :: VK_OBJECT_TYPE_UNKNOWN ),
+            Field ( Instance,                       VkObjectType :: VK_OBJECT_TYPE_INSTANCE ),
+            Field ( PhysicalDevice,                 VkObjectType :: VK_OBJECT_TYPE_PHYSICAL_DEVICE ),
+            Field ( Device,                         VkObjectType :: VK_OBJECT_TYPE_DEVICE ),
+            Field ( Queue,                          VkObjectType :: VK_OBJECT_TYPE_QUEUE ),
+            Field ( Semaphore,                      VkObjectType :: VK_OBJECT_TYPE_SEMAPHORE ),
+            Field ( CommandBuffer,                  VkObjectType :: VK_OBJECT_TYPE_COMMAND_BUFFER ),
+            Field ( Fence,                          VkObjectType :: VK_OBJECT_TYPE_FENCE ),
+            Field ( DeviceMemory,                   VkObjectType :: VK_OBJECT_TYPE_DEVICE_MEMORY ),
+            Field ( Buffer,                         VkObjectType :: VK_OBJECT_TYPE_BUFFER ),
+            Field ( Image,                          VkObjectType :: VK_OBJECT_TYPE_IMAGE ),
+            Field ( Event,                          VkObjectType :: VK_OBJECT_TYPE_EVENT ),
+            Field ( QueryPool,                      VkObjectType :: VK_OBJECT_TYPE_QUERY_POOL ),
+            Field ( BufferView,                     VkObjectType :: VK_OBJECT_TYPE_BUFFER_VIEW ),
+            Field ( ImageView,                      VkObjectType :: VK_OBJECT_TYPE_IMAGE_VIEW ),
+            Field ( ShaderModule,                   VkObjectType :: VK_OBJECT_TYPE_SHADER_MODULE ),
+            Field ( PipelineCache,                  VkObjectType :: VK_OBJECT_TYPE_PIPELINE_CACHE ),
+            Field ( PipelineLayout,                 VkObjectType :: VK_OBJECT_TYPE_PIPELINE_LAYOUT ),
+            Field ( RenderPass,                     VkObjectType :: VK_OBJECT_TYPE_RENDER_PASS ),
+            Field ( Pipeline,                       VkObjectType :: VK_OBJECT_TYPE_PIPELINE ),
+            Field ( DescriptorSetLayout,            VkObjectType :: VK_OBJECT_TYPE_DESCRIPTOR_SET_LAYOUT ),
+            Field ( Sampler,                        VkObjectType :: VK_OBJECT_TYPE_SAMPLER ),
+            Field ( DescriptorPool,                 VkObjectType :: VK_OBJECT_TYPE_DESCRIPTOR_POOL ),
+            Field ( DescriptorSet,                  VkObjectType :: VK_OBJECT_TYPE_DESCRIPTOR_SET ),
+            Field ( Framebuffer,                    VkObjectType :: VK_OBJECT_TYPE_FRAMEBUFFER ),
+            Field ( CommandPool,                    VkObjectType :: VK_OBJECT_TYPE_COMMAND_POOL )
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+
         __C_ENG_ALIAS ( Offset2D,   VkOffset2D );
         __C_ENG_ALIAS ( Offset3D,   VkOffset3D );
 
@@ -4286,6 +4423,31 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #if __C_ENG_VULKAN_API_EXTENSION_DEVICE_MEMORY_REPORT_AVAILABLE
 
+#define C_ENG_MAP_START     ENUM ( DeviceMemoryReportFlag,  TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START     ENUM ( DeviceMemoryReportEventType,  TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( Allocate,           VkDeviceMemoryReportEventTypeEXT :: VK_DEVICE_MEMORY_REPORT_EVENT_TYPE_ALLOCATE_EXT ),
+            Field ( Free,               VkDeviceMemoryReportEventTypeEXT :: VK_DEVICE_MEMORY_REPORT_EVENT_TYPE_FREE_EXT ),
+            Field ( Import,             VkDeviceMemoryReportEventTypeEXT :: VK_DEVICE_MEMORY_REPORT_EVENT_TYPE_IMPORT_EXT ),
+            Field ( Unimport,           VkDeviceMemoryReportEventTypeEXT :: VK_DEVICE_MEMORY_REPORT_EVENT_TYPE_UNIMPORT_EXT ),
+            Field ( AllocationFailed,   VkDeviceMemoryReportEventTypeEXT :: VK_DEVICE_MEMORY_REPORT_EVENT_TYPE_ALLOCATION_FAILED_EXT )
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+
 #define C_ENG_MAP_START     STRUCT ( DeviceDeviceMemoryReportCreateInfo,    NO_PARENT )
 #include <ObjectMapping.hpp>
 
@@ -4494,7 +4656,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
             __C_ENG_TYPE ( Bool )                               variablePointersStorageBuffer;
             __C_ENG_TYPE ( Bool )                               variablePointers;
             __C_ENG_TYPE ( Bool )                               protectedMemory;
-            __C_ENG_TYPE ( Bool )                               samplerYcbcrConversion;
+            __C_ENG_TYPE ( Bool )                               samplerYCBCRConversion;
             __C_ENG_TYPE ( Bool )                               shaderDrawParameters;
         };
 
@@ -6978,6 +7140,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( QueueFlag ) ) noexcept -> cds :: StringLiteral;
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PipelineStageFlag ) ) noexcept -> cds :: StringLiteral;
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( DeviceQueueCreateFlag ) ) noexcept -> cds :: StringLiteral;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( ObjectType ) ) noexcept -> cds :: StringLiteral;
 
 #endif
 
@@ -7884,6 +8047,8 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #if __C_ENG_VULKAN_API_EXTENSION_DEVICE_MEMORY_REPORT_AVAILABLE
 
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( DeviceMemoryReportFlag ) ) noexcept -> cds :: StringLiteral;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( DeviceMemoryReportEventType ) ) noexcept -> cds :: StringLiteral;
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( DeviceDeviceMemoryReportCreateInfo ) const & ) noexcept -> cds :: String;
 
 #endif

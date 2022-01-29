@@ -211,11 +211,13 @@ static inline auto extraValidationCallback (
 }
 
 auto vulkan :: Self :: init () noexcept (false) -> Self & {
-    return this->refreshLayers();
+    (void) this->refreshLayers();
 
     if ( this->debugLayerEnabled() ) {
         vulkan :: setExtraValidationCallback ( & extraValidationCallback );
     }
+
+    return * this;
 }
 
 auto vulkan :: Self :: enabledLayerNames() noexcept -> LayerNames {

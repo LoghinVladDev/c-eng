@@ -20,6 +20,22 @@
 namespace engine {
 
     Class {
+        /**
+         * Logger class extras:
+         *      - log regex match : ^\[time\s*=\s([^\]]*)\]\[level\s*=\s*([\w]*)\]\[engine state\s*=\s*([\w\s]*)\]\s*:\s*(.+)$
+         *
+         *      levels :
+         *          ^\s*f(orced)?\s*$       -   LogHighlightingPattern(enabled=true, pattern=^\s*f(orced)?\s*$, action=HIGHLIGHT_LINE, fgRgb=-393219, bgRgb=-65523, bold=true, italic=false, showOnStripe=true)
+         *          ^\s*s(ystem)?\s*$       -   LogHighlightingPattern(enabled=true, pattern=^\s*s(ystem)?\s*$, action=HIGHLIGHT_LINE, fgRgb=-13701, bgRgb=null, bold=true, italic=false, showOnStripe=false)
+         *          ^\s*fa(tal)?\s*$        -   LogHighlightingPattern(enabled=true, pattern=^\s*fa(tal)?\s*$, action=HIGHLIGHT_LINE, fgRgb=-65524, bgRgb=null, bold=true, italic=false, showOnStripe=true)
+         *          ^\s*c(ritical)?\s*$     -   LogHighlightingPattern(enabled=true, pattern=^\s*c(ritical)?\s*$, action=HIGHLIGHT_FIELD, fgRgb=-65535, bgRgb=null, bold=false, italic=false, showOnStripe=true)
+         *          ^\s*e(rror)?\s*$        -   LogHighlightingPattern(enabled=true, pattern=^\s*e(rror)?\s*$, action=HIGHLIGHT_FIELD, fgRgb=-39680, bgRgb=null, bold=false, italic=false, showOnStripe=true)
+         *          ^\s*w(arn(ing)?)?\s*$   -   LogHighlightingPattern(enabled=true, pattern=^\s*w(arn(ing)?)?\s*$, action=HIGHLIGHT_FIELD, fgRgb=-8960, bgRgb=null, bold=false, italic=false, showOnStripe=true)
+         *          ^\s*d(ebug)?\s*$        -   LogHighlightingPattern(enabled=true, pattern=^\s*d(ebug)?\s*$, action=HIGHLIGHT_LINE, fgRgb=-6030593, bgRgb=null, bold=false, italic=true, showOnStripe=false)
+         *          ^\s*i(nfo)?\s*$         -   LogHighlightingPattern(enabled=true, pattern=^\s*i(nfo)?\s*$, action=HIGHLIGHT_FIELD, fgRgb=-8454289, bgRgb=null, bold=false, italic=false, showOnStripe=false)
+         *
+         */
+
         Const ( PRIMITIVE_TYPE ( bool ),            defaultMirrorToConsole, VALUE ( false ) )
         Const ( ENGINE_PRIMITIVE_TYPE ( LogLevel ), defaultLogLevel,        VALUE ( LogLevelInfo ) )
         Const ( PRIMITIVE_TYPE ( cds :: uint32 ),   defaultTimeBufferSize,  VALUE ( 256 ) )
