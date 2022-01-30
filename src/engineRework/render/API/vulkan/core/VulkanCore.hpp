@@ -66,6 +66,12 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+
+            Field ( PipelineCompileRequired,                   VkResult :: VK_PIPELINE_COMPILE_REQUIRED ),
+
+#endif
+
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SURFACE_AVAILABLE
 
             Field ( ErrorSurfaceLost,                          VkResult :: VK_ERROR_SURFACE_LOST_KHR ),
@@ -118,7 +124,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_PIPELINE_CREATION_CACHE_CONTROL_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_PIPELINE_CREATION_CACHE_CONTROL_AVAILABLE && ! __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
             Field ( PipelineCompileRequired,                   VkResult :: VK_PIPELINE_COMPILE_REQUIRED_EXT ),
 
@@ -386,6 +392,79 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+
+            Field ( PhysicalDeviceVulkan_1_3_Features,                                     VkStructureType :: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_3_FEATURES ),
+            Field ( PhysicalDeviceVulkan_1_3_Properties,                                   VkStructureType :: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_3_PROPERTIES ),
+
+            Field ( PipelineCreationFeedbackCreateInfo,                                    VkStructureType :: VK_STRUCTURE_TYPE_PIPELINE_CREATION_FEEDBACK_CREATE_INFO ),
+            Field ( PhysicalDeviceShaderTerminateInvocationFeatures,                       VkStructureType :: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_TERMINATE_INVOCATION_FEATURES ),
+            Field ( PhysicalDeviceToolProperties,                                          VkStructureType :: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TOOL_PROPERTIES ),
+            Field ( PhysicalDeviceShaderDemoteToHelperInvocationFeatures,                  VkStructureType :: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DEMOTE_TO_HELPER_INVOCATION_FEATURES ),
+
+            Field ( PhysicalDevicePrivateDataFeatures,                                     VkStructureType :: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PRIVATE_DATA_FEATURES ),
+            Field ( DevicePrivateDataCreateInfo,                                           VkStructureType :: VK_STRUCTURE_TYPE_DEVICE_PRIVATE_DATA_CREATE_INFO ),
+            Field ( PrivateDataSlotCreateInfo,                                             VkStructureType :: VK_STRUCTURE_TYPE_PRIVATE_DATA_SLOT_CREATE_INFO ),
+
+            Field ( PhysicalDevicePipelineCreationCacheControlFeatures,                    VkStructureType :: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_CREATION_CACHE_CONTROL_FEATURES ),
+
+            Field ( MemoryBarrier2,                                                        VkStructureType :: VK_STRUCTURE_TYPE_MEMORY_BARRIER_2 ),
+            Field ( BufferMemoryBarrier2,                                                  VkStructureType :: VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER_2 ),
+            Field ( ImageMemoryBarrier2,                                                   VkStructureType :: VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2 ),
+            Field ( DependencyInfo,                                                        VkStructureType :: VK_STRUCTURE_TYPE_DEPENDENCY_INFO ),
+            Field ( SubmitInfo2,                                                           VkStructureType :: VK_STRUCTURE_TYPE_SUBMIT_INFO_2 ),
+            Field ( SemaphoreSubmitInfo,                                                   VkStructureType :: VK_STRUCTURE_TYPE_SEMAPHORE_SUBMIT_INFO ),
+            Field ( CommandBufferSubmitInfo,                                               VkStructureType :: VK_STRUCTURE_TYPE_COMMAND_BUFFER_SUBMIT_INFO ),
+            Field ( PhysicalDeviceSynchronizationFeatures,                                 VkStructureType :: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SYNCHRONIZATION_2_FEATURES ),
+
+            Field ( PhysicalDeviceZeroInitializeWorkgroupMemoryFeatures,                   VkStructureType :: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ZERO_INITIALIZE_WORKGROUP_MEMORY_FEATURES ),
+
+            Field ( PhysicalDeviceImageRobustnessFeatures,                                 VkStructureType :: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_ROBUSTNESS_FEATURES ),
+
+            Field ( CopyBufferInfo,                                                        VkStructureType :: VK_STRUCTURE_TYPE_COPY_BUFFER_INFO_2 ),
+            Field ( CopyImageInfo,                                                         VkStructureType :: VK_STRUCTURE_TYPE_COPY_IMAGE_INFO_2 ),
+            Field ( CopyBufferToImageInfo,                                                 VkStructureType :: VK_STRUCTURE_TYPE_COPY_BUFFER_TO_IMAGE_INFO_2 ),
+            Field ( CopyImageToBufferInfo,                                                 VkStructureType :: VK_STRUCTURE_TYPE_COPY_IMAGE_TO_BUFFER_INFO_2 ),
+            Field ( BlitImageInfo,                                                         VkStructureType :: VK_STRUCTURE_TYPE_BLIT_IMAGE_INFO_2 ),
+            Field ( ResolveImageInfo,                                                      VkStructureType :: VK_STRUCTURE_TYPE_RESOLVE_IMAGE_INFO_2 ),
+            Field ( BufferCopy,                                                            VkStructureType :: VK_STRUCTURE_TYPE_BUFFER_COPY_2 ),
+            Field ( ImageCopy,                                                             VkStructureType :: VK_STRUCTURE_TYPE_IMAGE_COPY_2 ),
+            Field ( ImageBlit,                                                             VkStructureType :: VK_STRUCTURE_TYPE_IMAGE_BLIT_2 ),
+            Field ( BufferImageCopy,                                                       VkStructureType :: VK_STRUCTURE_TYPE_BUFFER_IMAGE_COPY_2 ),
+            Field ( ImageResolve,                                                          VkStructureType :: VK_STRUCTURE_TYPE_IMAGE_RESOLVE_2 ),
+
+            Field ( PhysicalDeviceSubgroupSizeControlFeatures,                             VkStructureType :: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_SIZE_CONTROL_PROPERTIES ),
+            Field ( PhysicalDeviceSubgroupSizeControlProperties,                           VkStructureType :: VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_REQUIRED_SUBGROUP_SIZE_CREATE_INFO ),
+            Field ( PipelineShaderStageRequiredSubgroupSizeCreateInfo,                     VkStructureType :: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_SIZE_CONTROL_FEATURES ),
+
+            Field ( PhysicalDeviceInlineUniformBlockFeatures,                              VkStructureType :: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_INLINE_UNIFORM_BLOCK_FEATURES ),
+            Field ( PhysicalDeviceInlineUniformBlockProperties,                            VkStructureType :: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_INLINE_UNIFORM_BLOCK_PROPERTIES ),
+            Field ( WriteDescriptorSetInlineUniformBlock,                                  VkStructureType :: VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_INLINE_UNIFORM_BLOCK ),
+            Field ( DescriptorPoolInlineUniformBlockCreateInfo,                            VkStructureType :: VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_INLINE_UNIFORM_BLOCK_CREATE_INFO ),
+
+            Field ( PhysicalDeviceTextureCompressionASTCHDRFeatures,                       VkStructureType :: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXTURE_COMPRESSION_ASTC_HDR_FEATURES ),
+
+            Field ( RenderingInfo,                                                         VkStructureType :: VK_STRUCTURE_TYPE_RENDERING_INFO ),
+            Field ( RenderingAttachmentInfo,                                               VkStructureType :: VK_STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO ),
+            Field ( PipelineRenderingCreateInfo,                                           VkStructureType :: VK_STRUCTURE_TYPE_PIPELINE_RENDERING_CREATE_INFO ),
+            Field ( PhysicalDeviceDynamicRenderingFeatures,                                VkStructureType :: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_FEATURES ),
+            Field ( CommandBufferInheritanceRenderingInfo,                                 VkStructureType :: VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_RENDERING_INFO ),
+
+            Field ( PhysicalDeviceShaderIntegerDotProductFeatures,                         VkStructureType :: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INTEGER_DOT_PRODUCT_FEATURES ),
+            Field ( PhysicalDeviceShaderIntegerDotProductProperties,                       VkStructureType :: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INTEGER_DOT_PRODUCT_PROPERTIES ),
+
+            Field ( PhysicalDeviceTexelBufferAlignmentFeatures,                            VkStructureType :: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXEL_BUFFER_ALIGNMENT_FEATURES ),
+            Field ( PhysicalDeviceTexelBufferAlignmentProperties,                          VkStructureType :: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXEL_BUFFER_ALIGNMENT_PROPERTIES ),
+
+            Field ( FormatProperties3,                                                     VkStructureType :: VK_STRUCTURE_TYPE_FORMAT_PROPERTIES_3 ),
+
+            Field ( PhysicalDeviceMaintenance4Features,                                    VkStructureType :: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_4_FEATURES ),
+            Field ( PhysicalDeviceMaintenance4Properties,                                  VkStructureType :: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_4_PROPERTIES ),
+            Field ( PhysicalDeviceBufferMemoryRequirements,                                VkStructureType :: VK_STRUCTURE_TYPE_DEVICE_BUFFER_MEMORY_REQUIREMENTS ),
+            Field ( PhysicalDeviceImageMemoryRequirements,                                 VkStructureType :: VK_STRUCTURE_TYPE_DEVICE_IMAGE_MEMORY_REQUIREMENTS ),
+
+#endif
+
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SWAP_CHAIN_AVAILABLE
 
             Field ( SwapchainCreateInfo,                                                   VkStructureType :: VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR ),
@@ -581,7 +660,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE && ! __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
             Field ( RenderingInfo,                                                         VkStructureType :: VK_STRUCTURE_TYPE_RENDERING_INFO_KHR ),
             Field ( RenderingAttachmentInfo,                                               VkStructureType :: VK_STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO_KHR ),
@@ -660,7 +739,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_TEXTURE_COMPRESSION_ASTC_HDR_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_TEXTURE_COMPRESSION_ASTC_HDR_AVAILABLE && ! __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
             Field ( PhysicalDeviceTextureCompressionASTCHDRFeatures,                       VkStructureType :: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXTURE_COMPRESSION_ASTC_HDR_FEATURES_EXT ),
 
@@ -884,7 +963,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_INLINE_UNIFORM_BLOCK_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_INLINE_UNIFORM_BLOCK_AVAILABLE && ! __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
             Field ( PhysicalDeviceInlineUniformBlockFeatures,                              VkStructureType :: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_INLINE_UNIFORM_BLOCK_FEATURES_EXT ),
             Field ( PhysicalDeviceInlineUniformBlockProperties,                            VkStructureType :: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_INLINE_UNIFORM_BLOCK_PROPERTIES_EXT ),
@@ -1121,7 +1200,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_PIPELINE_CREATION_FEEDBACK_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_PIPELINE_CREATION_FEEDBACK_AVAILABLE && ! __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
             Field ( PipelineCreationFeedbackCreateInfo,                                    VkStructureType :: VK_STRUCTURE_TYPE_PIPELINE_CREATION_FEEDBACK_CREATE_INFO_EXT ),
 
@@ -1202,7 +1281,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_TERMINATE_INVOCATION_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_TERMINATE_INVOCATION_AVAILABLE && ! __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
             Field ( PhysicalDeviceShaderTerminateInvocationFeatures,                       VkStructureType :: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_TERMINATE_INVOCATION_FEATURES_KHR ),
 
@@ -1222,7 +1301,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_SUBGROUP_SIZE_CONTROL_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_SUBGROUP_SIZE_CONTROL_AVAILABLE && ! __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
             Field ( PhysicalDeviceSubgroupSizeControlFeatures,                             VkStructureType :: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_SIZE_CONTROL_FEATURES_EXT ),
             Field ( PhysicalDeviceSubgroupSizeControlProperties,                           VkStructureType :: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_SIZE_CONTROL_PROPERTIES_EXT ),
@@ -1278,7 +1357,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_TOOLING_INFO_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_TOOLING_INFO_AVAILABLE && ! __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
             Field ( PhysicalDeviceToolProperties,                                          VkStructureType :: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TOOL_PROPERTIES_EXT ),
 
@@ -1406,7 +1485,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_SHADER_DEMOTE_TO_HELPER_INVOCATION_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_SHADER_DEMOTE_TO_HELPER_INVOCATION_AVAILABLE && ! __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
             Field ( PhysicalDeviceShaderDemoteToHelperInvocationFeatures,                  VkStructureType :: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DEMOTE_TO_HELPER_INVOCATION_FEATURES_EXT ),
 
@@ -1432,14 +1511,14 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_INTEGER_DOT_PRODUCT_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_INTEGER_DOT_PRODUCT_AVAILABLE && ! __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
             Field ( PhysicalDeviceShaderIntegerDotProductFeatures,                         VkStructureType :: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INTEGER_DOT_PRODUCT_FEATURES_KHR ),
             Field ( PhysicalDeviceShaderIntegerDotProductProperties,                       VkStructureType :: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INTEGER_DOT_PRODUCT_PROPERTIES_KHR ),
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_TEXEL_BUFFER_ALIGNMENT_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_TEXEL_BUFFER_ALIGNMENT_AVAILABLE && ! __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
             Field ( PhysicalDeviceTexelBufferAlignmentFeatures,                            VkStructureType :: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXEL_BUFFER_ALIGNMENT_FEATURES_EXT ),
             Field ( PhysicalDeviceTexelBufferAlignmentProperties,                          VkStructureType :: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXEL_BUFFER_ALIGNMENT_PROPERTIES_EXT ),
@@ -1489,7 +1568,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_PRIVATE_DATA_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_PRIVATE_DATA_AVAILABLE && ! __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
             Field ( PhysicalDevicePrivateDataFeatures,                                     VkStructureType :: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PRIVATE_DATA_FEATURES_EXT ),
             Field ( DevicePrivateDataCreateInfo,                                           VkStructureType :: VK_STRUCTURE_TYPE_DEVICE_PRIVATE_DATA_CREATE_INFO_EXT ),
@@ -1497,7 +1576,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_PIPELINE_CREATION_CACHE_CONTROL_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_PIPELINE_CREATION_CACHE_CONTROL_AVAILABLE && ! __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
             Field ( PhysicalDevicePipelineCreationCacheControlFeatures,                    VkStructureType :: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_CREATION_CACHE_CONTROL_FEATURES_EXT ),
 
@@ -1518,7 +1597,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE && ! __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
             Field ( MemoryBarrier2,                                                        VkStructureType :: VK_STRUCTURE_TYPE_MEMORY_BARRIER_2_KHR ),
             Field ( BufferMemoryBarrier2,                                                  VkStructureType :: VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER_2_KHR ),
@@ -1544,7 +1623,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ZERO_INITIALIZE_WORKGROUP_MEMORY_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ZERO_INITIALIZE_WORKGROUP_MEMORY_AVAILABLE && ! __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
             Field ( PhysicalDeviceZeroInitializeWorkgroupMemoryFeatures,                   VkStructureType :: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ZERO_INITIALIZE_WORKGROUP_MEMORY_FEATURES_KHR ),
 
@@ -1585,7 +1664,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_IMAGE_ROBUSTNESS_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_IMAGE_ROBUSTNESS_AVAILABLE && ! __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
             Field ( PhysicalDeviceImageRobustnessFeatures,                                 VkStructureType :: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_ROBUSTNESS_FEATURES_EXT ),
 
@@ -1597,7 +1676,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_COPY_COMMANDS_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_COPY_COMMANDS_AVAILABLE && ! __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
             Field ( CopyBufferInfo,                                                        VkStructureType :: VK_STRUCTURE_TYPE_COPY_BUFFER_INFO_2_KHR ),
             Field ( CopyImageInfo,                                                         VkStructureType :: VK_STRUCTURE_TYPE_COPY_IMAGE_INFO_2_KHR ),
@@ -1671,7 +1750,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_FORMAT_FEATURE_FLAGS_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_FORMAT_FEATURE_FLAGS_AVAILABLE && ! __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
             Field ( FormatProperties3,                                                     VkStructureType :: VK_STRUCTURE_TYPE_FORMAT_PROPERTIES_3_KHR ),
 
@@ -1781,7 +1860,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_MAINTENANCE_4_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_MAINTENANCE_4_AVAILABLE && ! __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
             Field ( PhysicalDeviceMaintenance4Features,                                    VkStructureType :: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_4_FEATURES_KHR ),
             Field ( PhysicalDeviceMaintenance4Properties,                                  VkStructureType :: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_4_PROPERTIES_KHR ),
@@ -3406,6 +3485,93 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #endif
 
 
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceVulkan13Properties,  NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )      structureType;
+            __C_ENG_TYPE ( GenericStructure ) * pNext;
+            cds :: uint32                       minSubgroupSize;
+            cds :: uint32                       maxSubgroupSize;
+            cds :: uint32                       maxComputeWorkgroupSubgroups;
+            __C_ENG_TYPE ( ShaderStageFlags )   requiredSubgroupSizeStages;
+            cds :: uint32                       maxInlineUniformBlockSize;
+            cds :: uint32                       maxPerStageDescriptorInlineUniformBlocks;
+            cds :: uint32                       maxPerStageDescriptorUpdateAfterBindInlineUniformBlocks;
+            cds :: uint32                       maxDescriptorSetInlineUniformBlocks;
+            cds :: uint32                       maxDescriptorSetUpdateAfterBindInlineUniformBlocks;
+            cds :: uint32                       maxInlineUniformTotalSize;
+            __C_ENG_TYPE ( Bool )               integerDotProduct8BitUnsignedAccelerated;
+            __C_ENG_TYPE ( Bool )               integerDotProduct8BitSignedAccelerated;
+            __C_ENG_TYPE ( Bool )               integerDotProduct8BitMixedSignednessAccelerated;
+            __C_ENG_TYPE ( Bool )               integerDotProduct4x8BitPackedUnsignedAccelerated;
+            __C_ENG_TYPE ( Bool )               integerDotProduct4x8BitPackedSignedAccelerated;
+            __C_ENG_TYPE ( Bool )               integerDotProduct4x8BitPackedMixedSignednessAccelerated;
+            __C_ENG_TYPE ( Bool )               integerDotProduct16BitUnsignedAccelerated;
+            __C_ENG_TYPE ( Bool )               integerDotProduct16BitSignedAccelerated;
+            __C_ENG_TYPE ( Bool )               integerDotProduct16BitMixedSignednessAccelerated;
+            __C_ENG_TYPE ( Bool )               integerDotProduct32BitUnsignedAccelerated;
+            __C_ENG_TYPE ( Bool )               integerDotProduct32BitSignedAccelerated;
+            __C_ENG_TYPE ( Bool )               integerDotProduct32BitMixedSignednessAccelerated;
+            __C_ENG_TYPE ( Bool )               integerDotProduct64BitUnsignedAccelerated;
+            __C_ENG_TYPE ( Bool )               integerDotProduct64BitSignedAccelerated;
+            __C_ENG_TYPE ( Bool )               integerDotProduct64BitMixedSignednessAccelerated;
+            __C_ENG_TYPE ( Bool )               integerDotProductAccumulatingSaturating8BitUnsignedAccelerated;
+            __C_ENG_TYPE ( Bool )               integerDotProductAccumulatingSaturating8BitSignedAccelerated;
+            __C_ENG_TYPE ( Bool )               integerDotProductAccumulatingSaturating8BitMixedSignednessAccelerated;
+            __C_ENG_TYPE ( Bool )               integerDotProductAccumulatingSaturating4x8BitPackedUnsignedAccelerated;
+            __C_ENG_TYPE ( Bool )               integerDotProductAccumulatingSaturating4x8BitPackedSignedAccelerated;
+            __C_ENG_TYPE ( Bool )               integerDotProductAccumulatingSaturating4x8BitPackedMixedSignednessAccelerated;
+            __C_ENG_TYPE ( Bool )               integerDotProductAccumulatingSaturating16BitUnsignedAccelerated;
+            __C_ENG_TYPE ( Bool )               integerDotProductAccumulatingSaturating16BitSignedAccelerated;
+            __C_ENG_TYPE ( Bool )               integerDotProductAccumulatingSaturating16BitMixedSignednessAccelerated;
+            __C_ENG_TYPE ( Bool )               integerDotProductAccumulatingSaturating32BitUnsignedAccelerated;
+            __C_ENG_TYPE ( Bool )               integerDotProductAccumulatingSaturating32BitSignedAccelerated;
+            __C_ENG_TYPE ( Bool )               integerDotProductAccumulatingSaturating32BitMixedSignednessAccelerated;
+            __C_ENG_TYPE ( Bool )               integerDotProductAccumulatingSaturating64BitUnsignedAccelerated;
+            __C_ENG_TYPE ( Bool )               integerDotProductAccumulatingSaturating64BitSignedAccelerated;
+            __C_ENG_TYPE ( Bool )               integerDotProductAccumulatingSaturating64BitMixedSignednessAccelerated;
+            __C_ENG_TYPE ( DeviceSize )         storageTexelBufferOffsetAlignmentBytes;
+            __C_ENG_TYPE ( Bool )               storageTexelBufferOffsetSingleTexelAlignment;
+            __C_ENG_TYPE ( DeviceSize )         uniformTexelBufferOffsetAlignmentBytes;
+            __C_ENG_TYPE ( Bool )               uniformTexelBufferOffsetSingleTexelAlignment;
+            __C_ENG_TYPE ( DeviceSize )         maxBufferSize;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceVulkan13Features,    NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )      structureType;
+            __C_ENG_TYPE ( GenericStructure ) * pNext;
+            __C_ENG_TYPE ( Bool )               robustImageAccess;
+            __C_ENG_TYPE ( Bool )               inlineUniformBlock;
+            __C_ENG_TYPE ( Bool )               descriptorBindingInlineUniformBlockUpdateAfterBind;
+            __C_ENG_TYPE ( Bool )               pipelineCreationCacheControl;
+            __C_ENG_TYPE ( Bool )               privateData;
+            __C_ENG_TYPE ( Bool )               shaderDemoteToHelperInvocation;
+            __C_ENG_TYPE ( Bool )               shaderTerminateInvocation;
+            __C_ENG_TYPE ( Bool )               subgroupSizeControl;
+            __C_ENG_TYPE ( Bool )               computeFullSubgroups;
+            __C_ENG_TYPE ( Bool )               synchronization2;
+            __C_ENG_TYPE ( Bool )               textureCompressionASTC_HDR;
+            __C_ENG_TYPE ( Bool )               shaderZeroInitializeWorkgroupMemory;
+            __C_ENG_TYPE ( Bool )               dynamicRendering;
+            __C_ENG_TYPE ( Bool )               shaderIntegerDotProduct;
+            __C_ENG_TYPE ( Bool )               maintenance4;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
 #if __C_ENG_VULKAN_API_EXTENSION_PCI_BUS_INFO_AVAILABLE
 
 #define C_ENG_MAP_START     STRUCT ( PhysicalDevicePCIBusInfoProperties,    NO_PARENT )
@@ -3762,7 +3928,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #endif
 
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_MAINTENANCE_4_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_MAINTENANCE_4_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
 #define C_ENG_MAP_START     STRUCT ( PhysicalDeviceMaintenance4Properties,  NO_PARENT )
 #include <ObjectMapping.hpp>
@@ -4115,7 +4281,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #endif
 
 
-#if __C_ENG_VULKAN_API_EXTENSION_SUBGROUP_SIZE_CONTROL_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_SUBGROUP_SIZE_CONTROL_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
 #define C_ENG_MAP_START     STRUCT ( PhysicalDeviceSubgroupSizeControlProperties,  NO_PARENT )
 #include <ObjectMapping.hpp>
@@ -4152,7 +4318,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #endif
 
 
-#if __C_ENG_VULKAN_API_EXTENSION_TEXEL_BUFFER_ALIGNMENT_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_TEXEL_BUFFER_ALIGNMENT_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
 #define C_ENG_MAP_START     STRUCT ( PhysicalDeviceTexelBufferAlignmentProperties,  NO_PARENT )
 #include <ObjectMapping.hpp>
@@ -4215,7 +4381,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #endif
 
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_INTEGER_DOT_PRODUCT_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_INTEGER_DOT_PRODUCT_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
 #define C_ENG_MAP_START     STRUCT ( PhysicalDeviceShaderIntegerDotProductProperties,   NO_PARENT )
 #include <ObjectMapping.hpp>
@@ -4543,7 +4709,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #endif
 
 
-#if __C_ENG_VULKAN_API_EXTENSION_PRIVATE_DATA_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_PRIVATE_DATA_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
 #define C_ENG_MAP_START     STRUCT ( DevicePrivateDataCreateInfo, NO_PARENT )
 #include <ObjectMapping.hpp>
@@ -5245,7 +5411,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #endif
 
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
 #define C_ENG_MAP_START     STRUCT ( PhysicalDeviceDynamicRenderingFeatures, NO_PARENT )
 #include <ObjectMapping.hpp>
@@ -5472,7 +5638,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #endif
 
 
-#if __C_ENG_VULKAN_API_EXTENSION_IMAGE_ROBUSTNESS_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_IMAGE_ROBUSTNESS_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
 #define C_ENG_MAP_START     STRUCT ( PhysicalDeviceImageRobustnessFeatures, NO_PARENT )
 #include <ObjectMapping.hpp>
@@ -5540,7 +5706,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #endif
 
 
-#if __C_ENG_VULKAN_API_EXTENSION_INLINE_UNIFORM_BLOCK_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_INLINE_UNIFORM_BLOCK_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
 #define C_ENG_MAP_START     STRUCT ( PhysicalDeviceInlineUniformBlockFeatures, NO_PARENT )
 #include <ObjectMapping.hpp>
@@ -5614,7 +5780,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #endif
 
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_MAINTENANCE_4_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_MAINTENANCE_4_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
 #define C_ENG_MAP_START     STRUCT ( PhysicalDeviceMaintenance4Features, NO_PARENT )
 #include <ObjectMapping.hpp>
@@ -5735,7 +5901,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #endif
 
 
-#if __C_ENG_VULKAN_API_EXTENSION_PIPELINE_CREATION_CACHE_CONTROL_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_PIPELINE_CREATION_CACHE_CONTROL_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
 #define C_ENG_MAP_START     STRUCT ( PhysicalDevicePipelineCreationCacheControlFeatures, NO_PARENT )
 #include <ObjectMapping.hpp>
@@ -5852,7 +6018,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #endif
 
 
-#if __C_ENG_VULKAN_API_EXTENSION_PRIVATE_DATA_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_PRIVATE_DATA_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
 #define C_ENG_MAP_START     STRUCT ( PhysicalDevicePrivateDataFeatures, NO_PARENT )
 #include <ObjectMapping.hpp>
@@ -6089,7 +6255,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #endif
 
 
-#if __C_ENG_VULKAN_API_EXTENSION_SHADER_DEMOTE_TO_HELPER_INVOCATION_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_SHADER_DEMOTE_TO_HELPER_INVOCATION_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
 #define C_ENG_MAP_START     STRUCT ( PhysicalDeviceShaderDemoteToHelperInvocationFeatures, NO_PARENT )
 #include <ObjectMapping.hpp>
@@ -6141,7 +6307,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #endif
 
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_INTEGER_DOT_PRODUCT_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_INTEGER_DOT_PRODUCT_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
 #define C_ENG_MAP_START     STRUCT ( PhysicalDeviceShaderIntegerDotProductFeatures, NO_PARENT )
 #include <ObjectMapping.hpp>
@@ -6209,7 +6375,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #endif
 
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_TERMINATE_INVOCATION_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_TERMINATE_INVOCATION_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
 #define C_ENG_MAP_START     STRUCT ( PhysicalDeviceShaderTerminateInvocationFeatures, NO_PARENT )
 #include <ObjectMapping.hpp>
@@ -6244,7 +6410,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #endif
 
 
-#if __C_ENG_VULKAN_API_EXTENSION_SUBGROUP_SIZE_CONTROL_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_SUBGROUP_SIZE_CONTROL_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
 #define C_ENG_MAP_START     STRUCT ( PhysicalDeviceSubgroupSizeControlFeatures, NO_PARENT )
 #include <ObjectMapping.hpp>
@@ -6279,7 +6445,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #endif
 
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
 #define C_ENG_MAP_START     STRUCT ( PhysicalDeviceSynchronizationFeatures, NO_PARENT )
 #include <ObjectMapping.hpp>
@@ -6296,7 +6462,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #endif
 
 
-#if __C_ENG_VULKAN_API_EXTENSION_TEXEL_BUFFER_ALIGNMENT_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_TEXEL_BUFFER_ALIGNMENT_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
 #define C_ENG_MAP_START     STRUCT ( PhysicalDeviceTexelBufferAlignmentFeatures, NO_PARENT )
 #include <ObjectMapping.hpp>
@@ -6313,7 +6479,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #endif
 
 
-#if __C_ENG_VULKAN_API_EXTENSION_TEXTURE_COMPRESSION_ASTC_HDR_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_TEXTURE_COMPRESSION_ASTC_HDR_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
 #define C_ENG_MAP_START     STRUCT ( PhysicalDeviceTextureCompressionASTCHDRFeatures, NO_PARENT )
 #include <ObjectMapping.hpp>
@@ -6437,7 +6603,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #endif
 
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ZERO_INITIALIZE_WORKGROUP_MEMORY_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ZERO_INITIALIZE_WORKGROUP_MEMORY_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
 #define C_ENG_MAP_START     STRUCT ( PhysicalDeviceZeroInitializeWorkgroupMemoryFeatures, NO_PARENT )
 #include <ObjectMapping.hpp>
@@ -6508,6 +6674,14 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
             __C_ENG_TYPE ( PhysicalDeviceTimelineSemaphoreFeatures )                        timelineSemaphoreFeatures;
             __C_ENG_TYPE ( PhysicalDeviceUniformBufferStandardLayoutFeatures )              uniformBufferStandardLayoutFeatures;
             __C_ENG_TYPE ( PhysicalDeviceVulkanMemoryModelFeatures )                        vulkanMemoryModelFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+
+            __C_ENG_TYPE ( PhysicalDeviceVulkan13Properties )                               vulkan13Properties;
+
+            __C_ENG_TYPE ( PhysicalDeviceVulkan13Features )                                 vulkan13Features;
 
 #endif
 
@@ -6654,7 +6828,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
             __C_ENG_TYPE ( PhysicalDeviceDynamicRenderingFeatures )                         dynamicRenderingFeatures;
 
@@ -6738,7 +6912,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_IMAGE_ROBUSTNESS_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_IMAGE_ROBUSTNESS_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
             __C_ENG_TYPE ( PhysicalDeviceImageRobustnessFeatures )                          imageRobustnessFeatures;
 
@@ -6762,7 +6936,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_INLINE_UNIFORM_BLOCK_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_INLINE_UNIFORM_BLOCK_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
             __C_ENG_TYPE ( PhysicalDeviceInlineUniformBlockProperties )                     inlineUniformBlockProperties;
             __C_ENG_TYPE ( PhysicalDeviceInlineUniformBlockFeatures )                       inlineUniformBlockFeatures;
@@ -6788,7 +6962,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_MAINTENANCE_4_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_MAINTENANCE_4_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
             __C_ENG_TYPE ( PhysicalDeviceMaintenance4Properties )                           maintenance4Properties;
             __C_ENG_TYPE ( PhysicalDeviceMaintenance4Features )                             maintenance4Features;
@@ -6840,7 +7014,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_PIPELINE_CREATION_CACHE_CONTROL_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_PIPELINE_CREATION_CACHE_CONTROL_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
             __C_ENG_TYPE ( PhysicalDevicePipelineCreationCacheControlFeatures )             pipelineCreationCacheControlFeatures;
 
@@ -6877,7 +7051,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_PRIVATE_DATA_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_PRIVATE_DATA_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
             __C_ENG_TYPE ( PhysicalDevicePrivateDataFeatures )                              privateDataFeatures;
 
@@ -6982,7 +7156,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_SHADER_DEMOTE_TO_HELPER_INVOCATION_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_SHADER_DEMOTE_TO_HELPER_INVOCATION_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
             __C_ENG_TYPE ( PhysicalDeviceShaderDemoteToHelperInvocationFeatures )           shaderDemoteToHelperInvocationFeatures;
 
@@ -7013,7 +7187,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_TERMINATE_INVOCATION_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_TERMINATE_INVOCATION_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
             __C_ENG_TYPE ( PhysicalDeviceShaderTerminateInvocationFeatures )                shaderTerminateInvocationFeatures;
 
@@ -7026,7 +7200,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_SUBGROUP_SIZE_CONTROL_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_SUBGROUP_SIZE_CONTROL_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
             __C_ENG_TYPE ( PhysicalDeviceSubgroupSizeControlProperties )                    subgroupSizeControlProperties;
             __C_ENG_TYPE ( PhysicalDeviceSubgroupSizeControlFeatures )                      subgroupSizeControlFeatures;
@@ -7040,20 +7214,20 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
             __C_ENG_TYPE ( PhysicalDeviceSynchronizationFeatures )                          synchronizationFeatures;
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_TEXEL_BUFFER_ALIGNMENT_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_TEXEL_BUFFER_ALIGNMENT_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
             __C_ENG_TYPE ( PhysicalDeviceTexelBufferAlignmentProperties )                   texelBufferAlignmentProperties;
             __C_ENG_TYPE ( PhysicalDeviceTexelBufferAlignmentFeatures )                     texelBufferAlignmentFeatures;
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_TEXTURE_COMPRESSION_ASTC_HDR_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_TEXTURE_COMPRESSION_ASTC_HDR_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
             __C_ENG_TYPE ( PhysicalDeviceTextureCompressionASTCHDRFeatures )                textureCompressionASTCHDRFeatures;
 
@@ -7079,7 +7253,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_INTEGER_DOT_PRODUCT_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_INTEGER_DOT_PRODUCT_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
             __C_ENG_TYPE ( PhysicalDeviceShaderIntegerDotProductProperties )                shaderIntegerDotProductProperties;
             __C_ENG_TYPE ( PhysicalDeviceShaderIntegerDotProductFeatures )                  shaderIntegerDotProductFeatures;
@@ -7110,7 +7284,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ZERO_INITIALIZE_WORKGROUP_MEMORY_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ZERO_INITIALIZE_WORKGROUP_MEMORY_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
             __C_ENG_TYPE ( PhysicalDeviceZeroInitializeWorkgroupMemoryFeatures )            zeroInitializeWorkgroupMemoryFeatures;
 
@@ -7273,6 +7447,14 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceVulkan13Properties ) const & ) noexcept -> cds :: String;
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceVulkan13Features ) const & ) noexcept -> cds :: String;
+
+#endif
+
 #if __C_ENG_VULKAN_API_EXTENSION_PCI_BUS_INFO_AVAILABLE
 
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDevicePCIBusInfoProperties ) const & ) noexcept -> cds :: String;
@@ -7379,7 +7561,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_MAINTENANCE_4_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_MAINTENANCE_4_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceMaintenance4Properties ) const & ) noexcept -> cds :: String;
 
@@ -7469,7 +7651,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_SUBGROUP_SIZE_CONTROL_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_SUBGROUP_SIZE_CONTROL_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceSubgroupSizeControlProperties ) const & ) noexcept -> cds :: String;
 
@@ -7481,7 +7663,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_TEXEL_BUFFER_ALIGNMENT_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_TEXEL_BUFFER_ALIGNMENT_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceTexelBufferAlignmentProperties ) const & ) noexcept -> cds :: String;
 
@@ -7499,7 +7681,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_INTEGER_DOT_PRODUCT_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_INTEGER_DOT_PRODUCT_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceShaderIntegerDotProductProperties ) const & ) noexcept -> cds :: String;
 
@@ -7552,7 +7734,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_PRIVATE_DATA_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_PRIVATE_DATA_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( DevicePrivateDataCreateInfo ) const & ) noexcept -> cds :: String;
 
@@ -7648,7 +7830,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceDynamicRenderingFeatures ) const & ) noexcept -> cds :: String;
 
@@ -7721,7 +7903,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_IMAGE_ROBUSTNESS_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_IMAGE_ROBUSTNESS_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceImageRobustnessFeatures ) const & ) noexcept -> cds :: String;
 
@@ -7745,7 +7927,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_INLINE_UNIFORM_BLOCK_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_INLINE_UNIFORM_BLOCK_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceInlineUniformBlockFeatures ) const & ) noexcept -> cds :: String;
 
@@ -7769,7 +7951,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_MAINTENANCE_4_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_MAINTENANCE_4_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceMaintenance4Features ) const & ) noexcept -> cds :: String;
 
@@ -7811,7 +7993,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_PIPELINE_CREATION_CACHE_CONTROL_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_PIPELINE_CREATION_CACHE_CONTROL_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDevicePipelineCreationCacheControlFeatures ) const & ) noexcept -> cds :: String;
 
@@ -7847,7 +8029,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_PRIVATE_DATA_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_PRIVATE_DATA_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDevicePrivateDataFeatures ) const & ) noexcept -> cds :: String;
 
@@ -7919,7 +8101,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_SHADER_DEMOTE_TO_HELPER_INVOCATION_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_SHADER_DEMOTE_TO_HELPER_INVOCATION_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceShaderDemoteToHelperInvocationFeatures ) const & ) noexcept -> cds :: String;
 
@@ -7937,7 +8119,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_INTEGER_DOT_PRODUCT_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_INTEGER_DOT_PRODUCT_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceShaderIntegerDotProductFeatures ) const & ) noexcept -> cds :: String;
 
@@ -7961,7 +8143,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_TERMINATE_INVOCATION_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_TERMINATE_INVOCATION_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceShaderTerminateInvocationFeatures ) const & ) noexcept -> cds :: String;
 
@@ -7973,7 +8155,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_SUBGROUP_SIZE_CONTROL_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_SUBGROUP_SIZE_CONTROL_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceSubgroupSizeControlFeatures ) const & ) noexcept -> cds :: String;
 
@@ -7985,19 +8167,19 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceSynchronizationFeatures ) const & ) noexcept -> cds :: String;
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_TEXEL_BUFFER_ALIGNMENT_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_TEXEL_BUFFER_ALIGNMENT_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceTexelBufferAlignmentFeatures ) const & ) noexcept -> cds :: String;
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_TEXTURE_COMPRESSION_ASTC_HDR_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_TEXTURE_COMPRESSION_ASTC_HDR_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceTextureCompressionASTCHDRFeatures ) const & ) noexcept -> cds :: String;
 
@@ -8039,7 +8221,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ZERO_INITIALIZE_WORKGROUP_MEMORY_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ZERO_INITIALIZE_WORKGROUP_MEMORY_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceZeroInitializeWorkgroupMemoryFeatures ) const & ) noexcept -> cds :: String;
 

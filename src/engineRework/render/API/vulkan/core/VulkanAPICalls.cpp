@@ -93,6 +93,55 @@ static VkPhysicalDeviceVulkanMemoryModelFeatures                        deviceVu
 #endif
 
 
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+using VkPhysicalDeviceShaderTerminateInvocationFeatures_t             = VkPhysicalDeviceShaderTerminateInvocationFeatures;
+using VkPhysicalDeviceShaderDemoteToHelperInvocationFeatures_t        = VkPhysicalDeviceShaderDemoteToHelperInvocationFeatures;
+using VkPhysicalDevicePrivateDataFeatures_t                           = VkPhysicalDevicePrivateDataFeatures;
+using VkDevicePrivateDataCreateInfo_t                                 = VkDevicePrivateDataCreateInfo;
+using VkPhysicalDevicePipelineCreationCacheControlFeatures_t          = VkPhysicalDevicePipelineCreationCacheControlFeatures;
+using VkPhysicalDeviceSynchronization2Features_t                      = VkPhysicalDeviceSynchronization2Features;
+using VkPhysicalDeviceZeroInitializeWorkgroupMemoryFeatures_t         = VkPhysicalDeviceZeroInitializeWorkgroupMemoryFeatures;
+using VkPhysicalDeviceImageRobustnessFeatures_t                       = VkPhysicalDeviceImageRobustnessFeatures;
+using VkPhysicalDeviceSubgroupSizeControlProperties_t                 = VkPhysicalDeviceSubgroupSizeControlProperties;
+using VkPhysicalDeviceSubgroupSizeControlFeatures_t                   = VkPhysicalDeviceSubgroupSizeControlFeatures;
+using VkPhysicalDeviceInlineUniformBlockProperties_t                  = VkPhysicalDeviceInlineUniformBlockProperties;
+using VkPhysicalDeviceInlineUniformBlockFeatures_t                    = VkPhysicalDeviceInlineUniformBlockFeatures;
+using VkPhysicalDeviceTextureCompressionASTCHDRFeatures_t             = VkPhysicalDeviceTextureCompressionASTCHDRFeatures;
+using VkPhysicalDeviceDynamicRenderingFeatures_t                      = VkPhysicalDeviceDynamicRenderingFeatures;
+using VkPhysicalDeviceShaderIntegerDotProductProperties_t             = VkPhysicalDeviceShaderIntegerDotProductProperties;
+using VkPhysicalDeviceShaderIntegerDotProductFeatures_t               = VkPhysicalDeviceShaderIntegerDotProductFeatures;
+using VkPhysicalDeviceTexelBufferAlignmentProperties_t                = VkPhysicalDeviceTexelBufferAlignmentProperties;
+using VkPhysicalDeviceTexelBufferAlignmentFeatures_t                  = VkPhysicalDeviceTexelBufferAlignmentFeatures;
+using VkPhysicalDeviceMaintenance4Properties_t                        = VkPhysicalDeviceMaintenance4Properties;
+using VkPhysicalDeviceMaintenance4Features_t                          = VkPhysicalDeviceMaintenance4Features;
+
+static VkPhysicalDeviceVulkan13Properties_t                             deviceVulkan13Properties;
+static VkPhysicalDeviceSubgroupSizeControlProperties_t                  deviceSubgroupSizeControlProperties;
+static VkPhysicalDeviceInlineUniformBlockProperties_t                   deviceInlineUniformBlockProperties;
+static VkPhysicalDeviceShaderIntegerDotProductProperties_t              deviceShaderIntegerDotProductProperties;
+static VkPhysicalDeviceTexelBufferAlignmentProperties_t                 deviceTexelBufferAlignmentProperties;
+static VkPhysicalDeviceMaintenance4Properties_t                         deviceMaintenance4Properties;
+
+static VkPhysicalDeviceVulkan13Features_t                               deviceVulkan13Features;
+static VkPhysicalDeviceShaderTerminateInvocationFeatures_t              deviceShaderTerminateInvocationFeatures;
+static VkPhysicalDeviceShaderDemoteToHelperInvocationFeatures_t         deviceShaderDemoteToHelperInvocationFeatures;
+static VkPhysicalDevicePrivateDataFeatures_t                            devicePrivateDataFeatures;
+static VkPhysicalDevicePipelineCreationCacheControlFeatures_t           devicePipelineCreationCacheControlFeatures;
+static VkPhysicalDeviceSynchronization2Features_t                       deviceSynchronization2Features;
+static VkPhysicalDeviceZeroInitializeWorkgroupMemoryFeatures_t          deviceZeroInitializeWorkgroupMemoryFeatures;
+static VkPhysicalDeviceImageRobustnessFeatures_t                        deviceImageRobustnessFeatures;
+static VkPhysicalDeviceSubgroupSizeControlFeatures_t                    deviceSubgroupSizeControlFeatures;
+static VkPhysicalDeviceInlineUniformBlockFeatures_t                     deviceInlineUniformBlockFeatures;
+static VkPhysicalDeviceTextureCompressionASTCHDRFeatures_t              deviceTextureCompressionASTCHDRFeatures;
+static VkPhysicalDeviceDynamicRenderingFeatures_t                       deviceDynamicRenderingFeatures;
+static VkPhysicalDeviceShaderIntegerDotProductFeatures_t                deviceShaderIntegerDotProductFeatures;
+static VkPhysicalDeviceTexelBufferAlignmentFeatures_t                   deviceTexelBufferAlignmentFeatures;
+static VkPhysicalDeviceMaintenance4Features_t                           deviceMaintenance4Features;
+
+static VkDevicePrivateDataCreateInfo_t                                  devicePrivateDataCreateInfo;
+#endif
+
+
 /**
  * --------------------------------------------------------
  * --------------------------------------------------------
@@ -177,8 +226,10 @@ static VkPhysicalDeviceFragmentShaderInterlockFeaturesEXT               deviceFr
 static VkPhysicalDeviceGlobalPriorityQueryFeaturesEXT                   deviceGlobalPriorityQueryFeatures;
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_IMAGE_ROBUSTNESS_AVAILABLE
-static VkPhysicalDeviceImageRobustnessFeaturesEXT                       deviceImageRobustnessFeatures;
+#if __C_ENG_VULKAN_API_EXTENSION_IMAGE_ROBUSTNESS_AVAILABLE && ! __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+using VkPhysicalDeviceImageRobustnessFeatures_t                       = VkPhysicalDeviceImageRobustnessFeaturesEXT;
+
+static VkPhysicalDeviceImageRobustnessFeatures_t                        deviceImageRobustnessFeatures;
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_IMAGE_VIEW_MIN_LOD_AVAILABLE
@@ -189,9 +240,12 @@ static VkPhysicalDeviceImageViewMinLodFeaturesEXT                       deviceIm
 static VkPhysicalDeviceIndexTypeUint8FeaturesEXT                        deviceIndexTypeUInt8Features;
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_INLINE_UNIFORM_BLOCK_AVAILABLE
-static VkPhysicalDeviceInlineUniformBlockPropertiesEXT                  deviceInlineUniformBlockProperties;
-static VkPhysicalDeviceInlineUniformBlockFeaturesEXT                    deviceInlineUniformBlockFeatures;
+#if __C_ENG_VULKAN_API_EXTENSION_INLINE_UNIFORM_BLOCK_AVAILABLE && ! __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+using VkPhysicalDeviceInlineUniformBlockProperties_t                  = VkPhysicalDeviceInlineUniformBlockPropertiesEXT;
+using VkPhysicalDeviceInlineUniformBlockFeatures_t                    = VkPhysicalDeviceInlineUniformBlockFeaturesEXT;
+
+static VkPhysicalDeviceInlineUniformBlockProperties_t                   deviceInlineUniformBlockProperties;
+static VkPhysicalDeviceInlineUniformBlockFeatures_t                     deviceInlineUniformBlockFeatures;
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_LINE_RASTERIZATION_AVAILABLE
@@ -212,8 +266,10 @@ static VkPhysicalDeviceMultiDrawPropertiesEXT                           deviceMu
 static VkPhysicalDeviceMultiDrawFeaturesEXT                             deviceMultiDrawFeatures;
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_PIPELINE_CREATION_CACHE_CONTROL_AVAILABLE
-static VkPhysicalDevicePipelineCreationCacheControlFeaturesEXT          devicePipelineCreationCacheControlFeatures;
+#if __C_ENG_VULKAN_API_EXTENSION_PIPELINE_CREATION_CACHE_CONTROL_AVAILABLE && ! __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+using VkPhysicalDevicePipelineCreationCacheControlFeatures_t          = VkPhysicalDevicePipelineCreationCacheControlFeaturesEXT;
+
+static VkPhysicalDevicePipelineCreationCacheControlFeatures_t           devicePipelineCreationCacheControlFeatures;
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_PCI_BUS_INFO_AVAILABLE
@@ -224,8 +280,10 @@ static VkPhysicalDevicePCIBusInfoPropertiesEXT                          devicePc
 static VkPhysicalDevicePrimitiveTopologyListRestartFeaturesEXT          devicePrimitiveTopologyListRestartFeatures;
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_PRIVATE_DATA_AVAILABLE
-static VkPhysicalDevicePrivateDataFeaturesEXT                           devicePrivateDataFeatures;
+#if __C_ENG_VULKAN_API_EXTENSION_PRIVATE_DATA_AVAILABLE && ! __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+using VkPhysicalDevicePrivateDataFeatures_t                           = VkPhysicalDevicePrivateDataFeaturesEXT;
+
+static VkPhysicalDevicePrivateDataFeatures_t                            devicePrivateDataFeatures;
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_PHYSICAL_DEVICE_DRM_AVAILABLE
@@ -258,26 +316,36 @@ static VkPhysicalDeviceShaderAtomicFloatFeaturesEXT                     deviceSh
 static VkPhysicalDeviceShaderAtomicFloat2FeaturesEXT                    deviceShaderAtomicFloat2Features;
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_SHADER_DEMOTE_TO_HELPER_INVOCATION_AVAILABLE
-static VkPhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT        deviceShaderDemoteToHelperInvocationFeatures;
+#if __C_ENG_VULKAN_API_EXTENSION_SHADER_DEMOTE_TO_HELPER_INVOCATION_AVAILABLE && ! __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+using VkPhysicalDeviceShaderDemoteToHelperInvocationFeatures_t        = VkPhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT;
+
+static VkPhysicalDeviceShaderDemoteToHelperInvocationFeatures_t         deviceShaderDemoteToHelperInvocationFeatures;
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_SHADER_IMAGE_ATOMIC_INT64_AVAILABLE
 static VkPhysicalDeviceShaderImageAtomicInt64FeaturesEXT                deviceShaderImageAtomicInt64Features;
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_SUBGROUP_SIZE_CONTROL_AVAILABLE
-static VkPhysicalDeviceSubgroupSizeControlPropertiesEXT                 deviceSubgroupSizeControlProperties;
-static VkPhysicalDeviceSubgroupSizeControlFeaturesEXT                   deviceSubgroupSizeControlFeatures;
+#if __C_ENG_VULKAN_API_EXTENSION_SUBGROUP_SIZE_CONTROL_AVAILABLE && ! __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+using VkPhysicalDeviceSubgroupSizeControlProperties_t                 = VkPhysicalDeviceSubgroupSizeControlPropertiesEXT;
+using VkPhysicalDeviceSubgroupSizeControlFeatures_t                   = VkPhysicalDeviceSubgroupSizeControlFeaturesEXT;
+
+static VkPhysicalDeviceSubgroupSizeControlProperties_t                  deviceSubgroupSizeControlProperties;
+static VkPhysicalDeviceSubgroupSizeControlFeatures_t                    deviceSubgroupSizeControlFeatures;
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_TEXEL_BUFFER_ALIGNMENT_AVAILABLE
-static VkPhysicalDeviceTexelBufferAlignmentPropertiesEXT                deviceTexelBufferAlignmentProperties;
-static VkPhysicalDeviceTexelBufferAlignmentFeaturesEXT                  deviceTexelBufferAlignmentFeatures;
+#if __C_ENG_VULKAN_API_EXTENSION_TEXEL_BUFFER_ALIGNMENT_AVAILABLE && ! __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+using VkPhysicalDeviceTexelBufferAlignmentProperties_t                = VkPhysicalDeviceTexelBufferAlignmentPropertiesEXT;
+using VkPhysicalDeviceTexelBufferAlignmentFeatures_t                  = VkPhysicalDeviceTexelBufferAlignmentFeaturesEXT;
+
+static VkPhysicalDeviceTexelBufferAlignmentProperties_t                 deviceTexelBufferAlignmentProperties;
+static VkPhysicalDeviceTexelBufferAlignmentFeatures_t                   deviceTexelBufferAlignmentFeatures;
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_TEXTURE_COMPRESSION_ASTC_HDR_AVAILABLE
-static VkPhysicalDeviceTextureCompressionASTCHDRFeaturesEXT             deviceTextureCompressionASTCHDRFeatures;
+#if __C_ENG_VULKAN_API_EXTENSION_TEXTURE_COMPRESSION_ASTC_HDR_AVAILABLE && ! __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+using VkPhysicalDeviceTextureCompressionASTCHDRFeatures_t             = VkPhysicalDeviceTextureCompressionASTCHDRFeaturesEXT;
+
+static VkPhysicalDeviceTextureCompressionASTCHDRFeatures_t              deviceTextureCompressionASTCHDRFeatures;
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_TRANSFORM_FEEDBACK_AVAILABLE
@@ -315,8 +383,10 @@ static VkPhysicalDeviceAccelerationStructurePropertiesKHR               deviceAc
 static VkPhysicalDeviceAccelerationStructureFeaturesKHR                 deviceAccelerationStructureFeatures;
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE
-static VkPhysicalDeviceDynamicRenderingFeaturesKHR                      deviceDynamicRenderingFeatures;
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE && ! __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+using VkPhysicalDeviceDynamicRenderingFeatures_t                      = VkPhysicalDeviceDynamicRenderingFeaturesKHR;
+
+static VkPhysicalDeviceDynamicRenderingFeatures_t                       deviceDynamicRenderingFeatures;
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_FRAGMENT_SHADING_RATE_AVAILABLE
@@ -324,9 +394,12 @@ static VkPhysicalDeviceFragmentShadingRatePropertiesKHR                 deviceFr
 static VkPhysicalDeviceFragmentShadingRateFeaturesKHR                   deviceFragmentShadingRateFeatures;
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_MAINTENANCE_4_AVAILABLE
-static VkPhysicalDeviceMaintenance4PropertiesKHR                        deviceMaintenance4Properties;
-static VkPhysicalDeviceMaintenance4FeaturesKHR                          deviceMaintenance4Features;
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_MAINTENANCE_4_AVAILABLE && ! __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+using VkPhysicalDeviceMaintenance4Properties_t                        = VkPhysicalDeviceMaintenance4PropertiesKHR;
+using VkPhysicalDeviceMaintenance4Features_t                          = VkPhysicalDeviceMaintenance4FeaturesKHR;
+
+static VkPhysicalDeviceMaintenance4Properties_t                         deviceMaintenance4Properties;
+static VkPhysicalDeviceMaintenance4Features_t                           deviceMaintenance4Features;
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PERFORMANCE_QUERY_AVAILABLE
@@ -372,25 +445,34 @@ static VkPhysicalDeviceRayTracingPipelineFeaturesKHR                    deviceRa
 static VkPhysicalDeviceShaderSubgroupUniformControlFlowFeaturesKHR      deviceShaderSubgroupUniformControlFlowFeatures;
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_TERMINATE_INVOCATION_AVAILABLE
-static VkPhysicalDeviceShaderTerminateInvocationFeaturesKHR             deviceShaderTerminateInvocationFeatures;
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_TERMINATE_INVOCATION_AVAILABLE && ! __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+using VkPhysicalDeviceShaderTerminateInvocationFeatures_t             = VkPhysicalDeviceShaderTerminateInvocationFeaturesKHR;
+
+static VkPhysicalDeviceShaderTerminateInvocationFeatures_t              deviceShaderTerminateInvocationFeatures;
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
-static VkPhysicalDeviceSynchronization2FeaturesKHR                      deviceSynchronization2Features;
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE && ! __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+using VkPhysicalDeviceSynchronization2Features_t                      = VkPhysicalDeviceSynchronization2FeaturesKHR;
+
+static VkPhysicalDeviceSynchronization2Features_t                       deviceSynchronization2Features;
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_INTEGER_DOT_PRODUCT_AVAILABLE
-static VkPhysicalDeviceShaderIntegerDotProductPropertiesKHR             deviceShaderIntegerDotProductProperties;
-static VkPhysicalDeviceShaderIntegerDotProductFeaturesKHR               deviceShaderIntegerDotProductFeatures;
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_INTEGER_DOT_PRODUCT_AVAILABLE && ! __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+using VkPhysicalDeviceShaderIntegerDotProductProperties_t             = VkPhysicalDeviceShaderIntegerDotProductPropertiesKHR;
+using VkPhysicalDeviceShaderIntegerDotProductFeatures_t               = VkPhysicalDeviceShaderIntegerDotProductFeaturesKHR;
+
+static VkPhysicalDeviceShaderIntegerDotProductProperties_t              deviceShaderIntegerDotProductProperties;
+static VkPhysicalDeviceShaderIntegerDotProductFeatures_t                deviceShaderIntegerDotProductFeatures;
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_WORKGROUP_MEMORY_EXPLICIT_LAYOUT_AVAILABLE
 static VkPhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR         deviceWorkgroupMemoryExplicitLayoutFeatures;
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ZERO_INITIALIZE_WORKGROUP_MEMORY_AVAILABLE
-static VkPhysicalDeviceZeroInitializeWorkgroupMemoryFeaturesKHR         deviceZeroInitializeWorkgroupMemoryFeatures;
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ZERO_INITIALIZE_WORKGROUP_MEMORY_AVAILABLE && ! __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+using VkPhysicalDeviceZeroInitializeWorkgroupMemoryFeatures_t         = VkPhysicalDeviceZeroInitializeWorkgroupMemoryFeaturesKHR;
+
+static VkPhysicalDeviceZeroInitializeWorkgroupMemoryFeatures_t          deviceZeroInitializeWorkgroupMemoryFeatures;
 #endif
 
 
@@ -487,7 +569,7 @@ static VkPhysicalDeviceShadingRateImagePropertiesNV                     deviceSh
 static VkPhysicalDeviceShadingRateImageFeaturesNV                       deviceShadingRateImageFeatures;
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE && __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXPERIMENTAL_MULTIVIEW_PER_VIEW_ATTRIBUTES_AVAILABLE
+#if ( __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE ) && __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXPERIMENTAL_MULTIVIEW_PER_VIEW_ATTRIBUTES_AVAILABLE
 static VkPhysicalDeviceMultiviewPerViewAttributesPropertiesNVX          deviceMultiviewPerViewAttributesProperties;
 #endif
 
@@ -638,8 +720,10 @@ static VkDeviceGroupDeviceCreateInfo                                deviceGroupD
 static VkDeviceMemoryOverallocationCreateInfoAMD                    deviceMemoryOverallocationCreateInfo;
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_PRIVATE_DATA_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_PRIVATE_DATA_AVAILABLE && ! __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 static VkDevicePrivateDataCreateInfoEXT                             devicePrivateDataCreateInfo;
+
+using VkDevicePrivateDataCreateInfo_t                             = VkDevicePrivateDataCreateInfoEXT;
 #endif
 
 
@@ -1921,7 +2005,151 @@ static inline auto toVulkanFormat (
 /**
  * ---------------------------------------------------------
  * ---------------------------------------------------------
- * ---- Vulkan Extensions Device Properties Converters -----
+ * -------- Vulkan 1.3 Device Properties Convertors --------
+ * ---------------------------------------------------------
+ * ---------------------------------------------------------
+ */
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+
+static inline auto fromVulkanFormat (
+        vulkan :: __C_ENG_TYPE ( PhysicalDeviceVulkan13Properties ) * pDestination,
+        VkPhysicalDeviceVulkan13Properties_t                  const * pSource
+) noexcept -> void {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if (
+            pDestination    == nullptr ||
+            pSource         == nullptr
+    ) {
+        return;
+    }
+
+#endif
+
+    pDestination->structureType = StructureTypePhysicalDeviceVulkan_1_3_Properties;
+    pDestination->pNext         = nullptr;
+
+    pDestination->minSubgroupSize                                                               = pSource->minSubgroupSize;
+    pDestination->maxSubgroupSize                                                               = pSource->maxSubgroupSize;
+    pDestination->maxComputeWorkgroupSubgroups                                                  = pSource->maxComputeWorkgroupSubgroups;
+    pDestination->requiredSubgroupSizeStages                                                    = pSource->requiredSubgroupSizeStages;
+    pDestination->maxInlineUniformBlockSize                                                     = pSource->maxInlineUniformBlockSize;
+    pDestination->maxPerStageDescriptorInlineUniformBlocks                                      = pSource->maxPerStageDescriptorInlineUniformBlocks;
+    pDestination->maxPerStageDescriptorUpdateAfterBindInlineUniformBlocks                       = pSource->maxPerStageDescriptorUpdateAfterBindInlineUniformBlocks;
+    pDestination->maxDescriptorSetInlineUniformBlocks                                           = pSource->maxDescriptorSetInlineUniformBlocks;
+    pDestination->maxDescriptorSetUpdateAfterBindInlineUniformBlocks                            = pSource->maxDescriptorSetUpdateAfterBindInlineUniformBlocks;
+    pDestination->maxInlineUniformTotalSize                                                     = pSource->maxInlineUniformTotalSize;
+    pDestination->integerDotProduct8BitUnsignedAccelerated                                      = pSource->integerDotProduct8BitUnsignedAccelerated;
+    pDestination->integerDotProduct8BitSignedAccelerated                                        = pSource->integerDotProduct8BitSignedAccelerated;
+    pDestination->integerDotProduct8BitMixedSignednessAccelerated                               = pSource->integerDotProduct8BitMixedSignednessAccelerated;
+    pDestination->integerDotProduct4x8BitPackedUnsignedAccelerated                              = pSource->integerDotProduct4x8BitPackedUnsignedAccelerated;
+    pDestination->integerDotProduct4x8BitPackedSignedAccelerated                                = pSource->integerDotProduct4x8BitPackedSignedAccelerated;
+    pDestination->integerDotProduct4x8BitPackedMixedSignednessAccelerated                       = pSource->integerDotProduct4x8BitPackedMixedSignednessAccelerated;
+    pDestination->integerDotProduct16BitUnsignedAccelerated                                     = pSource->integerDotProduct16BitUnsignedAccelerated;
+    pDestination->integerDotProduct16BitSignedAccelerated                                       = pSource->integerDotProduct16BitSignedAccelerated;
+    pDestination->integerDotProduct16BitMixedSignednessAccelerated                              = pSource->integerDotProduct16BitMixedSignednessAccelerated;
+    pDestination->integerDotProduct32BitUnsignedAccelerated                                     = pSource->integerDotProduct32BitUnsignedAccelerated;
+    pDestination->integerDotProduct32BitSignedAccelerated                                       = pSource->integerDotProduct32BitSignedAccelerated;
+    pDestination->integerDotProduct32BitMixedSignednessAccelerated                              = pSource->integerDotProduct32BitMixedSignednessAccelerated;
+    pDestination->integerDotProduct64BitUnsignedAccelerated                                     = pSource->integerDotProduct64BitUnsignedAccelerated;
+    pDestination->integerDotProduct64BitSignedAccelerated                                       = pSource->integerDotProduct64BitSignedAccelerated;
+    pDestination->integerDotProduct64BitMixedSignednessAccelerated                              = pSource->integerDotProduct64BitMixedSignednessAccelerated;
+    pDestination->integerDotProductAccumulatingSaturating8BitUnsignedAccelerated                = pSource->integerDotProductAccumulatingSaturating8BitUnsignedAccelerated;
+    pDestination->integerDotProductAccumulatingSaturating8BitSignedAccelerated                  = pSource->integerDotProductAccumulatingSaturating8BitSignedAccelerated;
+    pDestination->integerDotProductAccumulatingSaturating8BitMixedSignednessAccelerated         = pSource->integerDotProductAccumulatingSaturating8BitMixedSignednessAccelerated;
+    pDestination->integerDotProductAccumulatingSaturating4x8BitPackedUnsignedAccelerated        = pSource->integerDotProductAccumulatingSaturating4x8BitPackedUnsignedAccelerated;
+    pDestination->integerDotProductAccumulatingSaturating4x8BitPackedSignedAccelerated          = pSource->integerDotProductAccumulatingSaturating4x8BitPackedSignedAccelerated;
+    pDestination->integerDotProductAccumulatingSaturating4x8BitPackedMixedSignednessAccelerated = pSource->integerDotProductAccumulatingSaturating4x8BitPackedMixedSignednessAccelerated;
+    pDestination->integerDotProductAccumulatingSaturating16BitUnsignedAccelerated               = pSource->integerDotProductAccumulatingSaturating16BitUnsignedAccelerated;
+    pDestination->integerDotProductAccumulatingSaturating16BitSignedAccelerated                 = pSource->integerDotProductAccumulatingSaturating16BitSignedAccelerated;
+    pDestination->integerDotProductAccumulatingSaturating16BitMixedSignednessAccelerated        = pSource->integerDotProductAccumulatingSaturating16BitMixedSignednessAccelerated;
+    pDestination->integerDotProductAccumulatingSaturating32BitUnsignedAccelerated               = pSource->integerDotProductAccumulatingSaturating32BitUnsignedAccelerated;
+    pDestination->integerDotProductAccumulatingSaturating32BitSignedAccelerated                 = pSource->integerDotProductAccumulatingSaturating32BitSignedAccelerated;
+    pDestination->integerDotProductAccumulatingSaturating32BitMixedSignednessAccelerated        = pSource->integerDotProductAccumulatingSaturating32BitMixedSignednessAccelerated;
+    pDestination->integerDotProductAccumulatingSaturating64BitUnsignedAccelerated               = pSource->integerDotProductAccumulatingSaturating64BitUnsignedAccelerated;
+    pDestination->integerDotProductAccumulatingSaturating64BitSignedAccelerated                 = pSource->integerDotProductAccumulatingSaturating64BitSignedAccelerated;
+    pDestination->integerDotProductAccumulatingSaturating64BitMixedSignednessAccelerated        = pSource->integerDotProductAccumulatingSaturating64BitMixedSignednessAccelerated;
+    pDestination->storageTexelBufferOffsetAlignmentBytes                                        = pSource->storageTexelBufferOffsetAlignmentBytes;
+    pDestination->storageTexelBufferOffsetSingleTexelAlignment                                  = pSource->storageTexelBufferOffsetSingleTexelAlignment;
+    pDestination->uniformTexelBufferOffsetAlignmentBytes                                        = pSource->uniformTexelBufferOffsetAlignmentBytes;
+    pDestination->uniformTexelBufferOffsetSingleTexelAlignment                                  = pSource->uniformTexelBufferOffsetSingleTexelAlignment;
+    pDestination->maxBufferSize                                                                 = pSource->maxBufferSize;
+}
+
+static inline auto fromVulkanFormat (
+        vulkan :: __C_ENG_TYPE ( PhysicalDeviceVulkan13Features ) * pDestination,
+        VkPhysicalDevice13Features_t                        const * pSource
+) noexcept -> void {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( pSource == nullptr || pDestination == nullptr ) {
+        return;
+    }
+
+#endif
+
+    pDestination->structureType                                         = StructureTypePhysicalDeviceVulkan_1_3_Features;
+    pDestination->pNext                                                 = nullptr;
+
+    pDestination->robustImageAccess                                     = pSource->robustImageAccess;
+    pDestination->inlineUniformBlock                                    = pSource->inlineUniformBlock;
+    pDestination->descriptorBindingInlineUniformBlockUpdateAfterBind    = pSource->descriptorBindingInlineUniformBlockUpdateAfterBind;
+    pDestination->pipelineCreationCacheControl                          = pSource->pipelineCreationCacheControl;
+    pDestination->privateData                                           = pSource->privateData;
+    pDestination->shaderDemoteToHelperInvocation                        = pSource->shaderDemoteToHelperInvocation;
+    pDestination->shaderTerminateInvocation                             = pSource->shaderTerminateInvocation;
+    pDestination->subgroupSizeControl                                   = pSource->subgroupSizeControl;
+    pDestination->computeFullSubgroups                                  = pSource->computeFullSubgroups;
+    pDestination->synchronization2                                      = pSource->synchronization2;
+    pDestination->textureCompressionASTC_HDR                            = pSource->textureCompressionASTC_HDR;
+    pDestination->shaderZeroInitializeWorkgroupMemory                   = pSource->shaderZeroInitializeWorkgroupMemory;
+    pDestination->dynamicRendering                                      = pSource->dynamicRendering;
+    pDestination->shaderIntegerDotProduct                               = pSource->shaderIntegerDotProduct;
+    pDestination->maintenance4                                          = pSource->maintenance4;
+}
+
+static inline auto toVulkanFormat (
+        VkPhysicalDevice13Features_t                                    * pSource,
+        vulkan :: __C_ENG_TYPE ( PhysicalDeviceVulkan13Features ) const * pDestination
+) noexcept -> void {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( pSource == nullptr || pDestination == nullptr ) {
+        return;
+    }
+
+#endif
+
+    pDestination->sType                                                 = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_3_FEATURES;
+    pDestination->pNext                                                 = nullptr;
+
+    pDestination->robustImageAccess                                     = pSource->robustImageAccess;
+    pDestination->inlineUniformBlock                                    = pSource->inlineUniformBlock;
+    pDestination->descriptorBindingInlineUniformBlockUpdateAfterBind    = pSource->descriptorBindingInlineUniformBlockUpdateAfterBind;
+    pDestination->pipelineCreationCacheControl                          = pSource->pipelineCreationCacheControl;
+    pDestination->privateData                                           = pSource->privateData;
+    pDestination->shaderDemoteToHelperInvocation                        = pSource->shaderDemoteToHelperInvocation;
+    pDestination->shaderTerminateInvocation                             = pSource->shaderTerminateInvocation;
+    pDestination->subgroupSizeControl                                   = pSource->subgroupSizeControl;
+    pDestination->computeFullSubgroups                                  = pSource->computeFullSubgroups;
+    pDestination->synchronization2                                      = pSource->synchronization2;
+    pDestination->textureCompressionASTC_HDR                            = pSource->textureCompressionASTC_HDR;
+    pDestination->shaderZeroInitializeWorkgroupMemory                   = pSource->shaderZeroInitializeWorkgroupMemory;
+    pDestination->dynamicRendering                                      = pSource->dynamicRendering;
+    pDestination->shaderIntegerDotProduct                               = pSource->shaderIntegerDotProduct;
+    pDestination->maintenance4                                          = pSource->maintenance4;
+}
+
+#endif
+
+
+/**
+ * ---------------------------------------------------------
+ * ---------------------------------------------------------
+ * ---- Vulkan Extensions Device Properties Convertors -----
  * ---------------------------------------------------------
  * ---------------------------------------------------------
  */
@@ -2517,11 +2745,11 @@ inline static auto toVulkanFormat (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_IMAGE_ROBUSTNESS_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_IMAGE_ROBUSTNESS_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
 inline static auto fromVulkanFormat (
         vulkan :: __C_ENG_TYPE ( PhysicalDeviceImageRobustnessFeatures ) * pDestination,
-        VkPhysicalDeviceImageRobustnessFeaturesEXT                 const * pSource
+        VkPhysicalDeviceImageRobustnessFeatures_t                  const * pSource
 ) noexcept -> void {
 
 #if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
@@ -2536,7 +2764,7 @@ inline static auto fromVulkanFormat (
 }
 
 inline static auto toVulkanFormat (
-        VkPhysicalDeviceImageRobustnessFeaturesEXT                             * pDestination,
+        VkPhysicalDeviceImageRobustnessFeatures_t                              * pDestination,
         vulkan :: __C_ENG_TYPE ( PhysicalDeviceImageRobustnessFeatures ) const * pSource
 ) noexcept -> void {
 
@@ -2625,11 +2853,11 @@ inline static auto toVulkanFormat (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_INLINE_UNIFORM_BLOCK_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_INLINE_UNIFORM_BLOCK_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
 inline static auto fromVulkanFormat (
         vulkan :: __C_ENG_TYPE ( PhysicalDeviceInlineUniformBlockFeatures ) * pDestination,
-        VkPhysicalDeviceInlineUniformBlockFeaturesEXT                 const * pSource
+        VkPhysicalDeviceInlineUniformBlockFeatures_t                  const * pSource
 ) noexcept -> void {
 
 #if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
@@ -2645,7 +2873,7 @@ inline static auto fromVulkanFormat (
 }
 
 inline static auto toVulkanFormat (
-        VkPhysicalDeviceInlineUniformBlockFeaturesEXT                             * pDestination,
+        VkPhysicalDeviceInlineUniformBlockFeatures_t                              * pDestination,
         vulkan :: __C_ENG_TYPE ( PhysicalDeviceInlineUniformBlockFeatures ) const * pSource
 ) noexcept -> void {
 
@@ -2817,11 +3045,11 @@ inline static auto toVulkanFormat (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_PIPELINE_CREATION_CACHE_CONTROL_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_PIPELINE_CREATION_CACHE_CONTROL_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
 inline static auto fromVulkanFormat (
         vulkan :: __C_ENG_TYPE ( PhysicalDevicePipelineCreationCacheControlFeatures ) * pDestination,
-        VkPhysicalDevicePipelineCreationCacheControlFeaturesEXT                 const * pSource
+        VkPhysicalDevicePipelineCreationCacheControlFeatures_t                  const * pSource
 ) noexcept -> void {
 
 #if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
@@ -2836,7 +3064,7 @@ inline static auto fromVulkanFormat (
 }
 
 inline static auto toVulkanFormat (
-        VkPhysicalDevicePipelineCreationCacheControlFeaturesEXT                             * pDestination,
+        VkPhysicalDevicePipelineCreationCacheControlFeatures_t                             * pDestination,
         vulkan :: __C_ENG_TYPE ( PhysicalDevicePipelineCreationCacheControlFeatures ) const * pSource
 ) noexcept -> void {
 
@@ -2891,11 +3119,11 @@ inline static auto toVulkanFormat (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_PRIVATE_DATA_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_PRIVATE_DATA_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
 inline static auto fromVulkanFormat (
         vulkan :: __C_ENG_TYPE ( PhysicalDevicePrivateDataFeatures ) * pDestination,
-        VkPhysicalDevicePrivateDataFeaturesEXT                 const * pSource
+        VkPhysicalDevicePrivateDataFeatures_t                  const * pSource
 ) noexcept -> void {
 
 #if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
@@ -2910,7 +3138,7 @@ inline static auto fromVulkanFormat (
 }
 
 inline static auto toVulkanFormat (
-        VkPhysicalDevicePrivateDataFeaturesEXT                             * pDestination,
+        VkPhysicalDevicePrivateDataFeatures_t                              * pDestination,
         vulkan :: __C_ENG_TYPE ( PhysicalDevicePrivateDataFeatures ) const * pSource
 ) noexcept -> void {
 
@@ -3157,11 +3385,11 @@ inline static auto toVulkanFormat (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_SHADER_DEMOTE_TO_HELPER_INVOCATION_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_SHADER_DEMOTE_TO_HELPER_INVOCATION_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
 inline static auto fromVulkanFormat (
         vulkan :: __C_ENG_TYPE ( PhysicalDeviceShaderDemoteToHelperInvocationFeatures ) * pDestination,
-        VkPhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT                 const * pSource
+        VkPhysicalDeviceShaderDemoteToHelperInvocationFeatures_t                  const * pSource
 ) noexcept -> void {
 
 #if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
@@ -3176,7 +3404,7 @@ inline static auto fromVulkanFormat (
 }
 
 inline static auto toVulkanFormat (
-        VkPhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT                             * pDestination,
+        VkPhysicalDeviceShaderDemoteToHelperInvocationFeatures_t                              * pDestination,
         vulkan :: __C_ENG_TYPE ( PhysicalDeviceShaderDemoteToHelperInvocationFeatures ) const * pSource
 ) noexcept -> void {
 
@@ -3231,11 +3459,11 @@ inline static auto toVulkanFormat (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_SUBGROUP_SIZE_CONTROL_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_SUBGROUP_SIZE_CONTROL_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
 inline static auto fromVulkanFormat (
         vulkan :: __C_ENG_TYPE ( PhysicalDeviceSubgroupSizeControlFeatures ) * pDestination,
-        VkPhysicalDeviceSubgroupSizeControlFeaturesEXT                 const * pSource
+        VkPhysicalDeviceSubgroupSizeControlFeatures_t                  const * pSource
 ) noexcept -> void {
 
 #if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
@@ -3251,7 +3479,7 @@ inline static auto fromVulkanFormat (
 }
 
 inline static auto toVulkanFormat (
-        VkPhysicalDeviceSubgroupSizeControlFeaturesEXT                             * pDestination,
+        VkPhysicalDeviceSubgroupSizeControlFeatures_t                              * pDestination,
         vulkan :: __C_ENG_TYPE ( PhysicalDeviceSubgroupSizeControlFeatures ) const * pSource
 ) noexcept -> void {
 
@@ -3269,11 +3497,11 @@ inline static auto toVulkanFormat (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_TEXEL_BUFFER_ALIGNMENT_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_TEXEL_BUFFER_ALIGNMENT_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
 inline static auto fromVulkanFormat (
         vulkan :: __C_ENG_TYPE ( PhysicalDeviceTexelBufferAlignmentFeatures ) * pDestination,
-        VkPhysicalDeviceTexelBufferAlignmentFeaturesEXT                 const * pSource
+        VkPhysicalDeviceTexelBufferAlignmentFeatures_t                  const * pSource
 ) noexcept -> void {
 
 #if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
@@ -3288,7 +3516,7 @@ inline static auto fromVulkanFormat (
 }
 
 inline static auto toVulkanFormat (
-        VkPhysicalDeviceTexelBufferAlignmentFeaturesEXT                             * pDestination,
+        VkPhysicalDeviceTexelBufferAlignmentFeatures_t                              * pDestination,
         vulkan :: __C_ENG_TYPE ( PhysicalDeviceTexelBufferAlignmentFeatures ) const * pSource
 ) noexcept -> void {
 
@@ -3305,11 +3533,11 @@ inline static auto toVulkanFormat (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_TEXTURE_COMPRESSION_ASTC_HDR_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_TEXTURE_COMPRESSION_ASTC_HDR_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
 inline static auto fromVulkanFormat (
         vulkan :: __C_ENG_TYPE ( PhysicalDeviceTextureCompressionASTCHDRFeatures ) * pDestination,
-        VkPhysicalDeviceTextureCompressionASTCHDRFeaturesEXT                 const * pSource
+        VkPhysicalDeviceTextureCompressionASTCHDRFeatures_t                  const * pSource
 ) noexcept -> void {
 
 #if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
@@ -3324,7 +3552,7 @@ inline static auto fromVulkanFormat (
 }
 
 inline static auto toVulkanFormat (
-        VkPhysicalDeviceTextureCompressionASTCHDRFeaturesEXT                             * pDestination,
+        VkPhysicalDeviceTextureCompressionASTCHDRFeatures_t                              * pDestination,
         vulkan :: __C_ENG_TYPE ( PhysicalDeviceTextureCompressionASTCHDRFeatures ) const * pSource
 ) noexcept -> void {
 
@@ -3683,11 +3911,11 @@ inline static auto fromVulkanFormat (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_INLINE_UNIFORM_BLOCK_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_INLINE_UNIFORM_BLOCK_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
 inline static auto fromVulkanFormat (
         vulkan :: __C_ENG_TYPE ( PhysicalDeviceInlineUniformBlockProperties ) * pOut,
-        VkPhysicalDeviceInlineUniformBlockPropertiesEXT                 const * pIn
+        VkPhysicalDeviceInlineUniformBlockProperties_t                  const * pIn
 ) noexcept -> void {
 
 #if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
@@ -3863,11 +4091,11 @@ inline static auto fromVulkanFormat (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_SUBGROUP_SIZE_CONTROL_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_SUBGROUP_SIZE_CONTROL_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
 inline static auto fromVulkanFormat (
         vulkan :: __C_ENG_TYPE ( PhysicalDeviceSubgroupSizeControlProperties ) * pOut,
-        VkPhysicalDeviceSubgroupSizeControlPropertiesEXT                 const * pIn
+        VkPhysicalDeviceSubgroupSizeControlProperties_t                  const * pIn
 ) noexcept -> void {
 
 #if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
@@ -3886,11 +4114,11 @@ inline static auto fromVulkanFormat (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_TEXEL_BUFFER_ALIGNMENT_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_TEXEL_BUFFER_ALIGNMENT_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
 inline static auto fromVulkanFormat (
         vulkan :: __C_ENG_TYPE ( PhysicalDeviceTexelBufferAlignmentProperties ) * pOut,
-        VkPhysicalDeviceTexelBufferAlignmentPropertiesEXT                 const * pIn
+        VkPhysicalDeviceTexelBufferAlignmentProperties_t                  const * pIn
 ) noexcept -> void {
 
 #if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
@@ -4032,11 +4260,11 @@ inline static auto fromVulkanFormat (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_MAINTENANCE_4_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_MAINTENANCE_4_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
 inline static auto fromVulkanFormat (
         vulkan :: __C_ENG_TYPE ( PhysicalDeviceMaintenance4Properties ) * pOut,
-        VkPhysicalDeviceMaintenance4PropertiesKHR                 const * pIn
+        VkPhysicalDeviceMaintenance4Properties_t                  const * pIn
 ) noexcept -> void {
 
 #if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
@@ -4139,11 +4367,11 @@ inline static auto fromVulkanFormat (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_INTEGER_DOT_PRODUCT_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_INTEGER_DOT_PRODUCT_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
 inline static auto fromVulkanFormat (
         vulkan :: __C_ENG_TYPE ( PhysicalDeviceShaderIntegerDotProductProperties ) * pOut,
-        VkPhysicalDeviceShaderIntegerDotProductPropertiesKHR                 const * pIn
+        VkPhysicalDeviceShaderIntegerDotProductProperties_t                  const * pIn
 ) noexcept -> void {
 
 #if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
@@ -4241,11 +4469,11 @@ inline static auto toVulkanFormat (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
 inline static auto fromVulkanFormat (
         vulkan :: __C_ENG_TYPE ( PhysicalDeviceDynamicRenderingFeatures ) * pDestination,
-        VkPhysicalDeviceDynamicRenderingFeaturesKHR                 const * pSource
+        VkPhysicalDeviceDynamicRenderingFeatures_t                  const * pSource
 ) noexcept -> void {
 
 #if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
@@ -4260,7 +4488,7 @@ inline static auto fromVulkanFormat (
 }
 
 inline static auto toVulkanFormat (
-        VkPhysicalDeviceDynamicRenderingFeaturesKHR                             * pDestination,
+        VkPhysicalDeviceDynamicRenderingFeatures_t                              * pDestination,
         vulkan :: __C_ENG_TYPE ( PhysicalDeviceDynamicRenderingFeatures ) const * pSource
 ) noexcept -> void {
 
@@ -4317,11 +4545,11 @@ inline static auto toVulkanFormat (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_MAINTENANCE_4_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_MAINTENANCE_4_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
 inline static auto fromVulkanFormat (
         vulkan :: __C_ENG_TYPE ( PhysicalDeviceMaintenance4Features ) * pDestination,
-        VkPhysicalDeviceMaintenance4FeaturesKHR                 const * pSource
+        VkPhysicalDeviceMaintenance4Features_t                  const * pSource
 ) noexcept -> void {
 
 #if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
@@ -4336,7 +4564,7 @@ inline static auto fromVulkanFormat (
 }
 
 inline static auto toVulkanFormat (
-        VkPhysicalDeviceMaintenance4FeaturesKHR                             * pDestination,
+        VkPhysicalDeviceMaintenance4Features_t                              * pDestination,
         vulkan :: __C_ENG_TYPE ( PhysicalDeviceMaintenance4Features ) const * pSource
 ) noexcept -> void {
 
@@ -4653,11 +4881,11 @@ inline static auto toVulkanFormat (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_TERMINATE_INVOCATION_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_TERMINATE_INVOCATION_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
 inline static auto fromVulkanFormat (
         vulkan :: __C_ENG_TYPE ( PhysicalDeviceShaderTerminateInvocationFeatures ) * pDestination,
-        VkPhysicalDeviceShaderTerminateInvocationFeaturesKHR                 const * pSource
+        VkPhysicalDeviceShaderTerminateInvocationFeatures_t                  const * pSource
 ) noexcept -> void {
 
 #if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
@@ -4672,7 +4900,7 @@ inline static auto fromVulkanFormat (
 }
 
 inline static auto toVulkanFormat (
-        VkPhysicalDeviceShaderTerminateInvocationFeaturesKHR                             * pDestination,
+        VkPhysicalDeviceShaderTerminateInvocationFeatures_t                              * pDestination,
         vulkan :: __C_ENG_TYPE ( PhysicalDeviceShaderTerminateInvocationFeatures ) const * pSource
 ) noexcept -> void {
 
@@ -4689,11 +4917,11 @@ inline static auto toVulkanFormat (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
 inline static auto fromVulkanFormat (
         vulkan :: __C_ENG_TYPE ( PhysicalDeviceSynchronizationFeatures )  * pDestination,
-        VkPhysicalDeviceSynchronization2FeaturesKHR                 const * pSource
+        VkPhysicalDeviceSynchronization2Features_t                  const * pSource
 ) noexcept -> void {
 
 #if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
@@ -4708,7 +4936,7 @@ inline static auto fromVulkanFormat (
 }
 
 inline static auto toVulkanFormat (
-        VkPhysicalDeviceSynchronization2FeaturesKHR                            * pDestination,
+        VkPhysicalDeviceSynchronization2Features_t                             * pDestination,
         vulkan :: __C_ENG_TYPE ( PhysicalDeviceSynchronizationFeatures ) const * pSource
 ) noexcept -> void {
 
@@ -4725,11 +4953,11 @@ inline static auto toVulkanFormat (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_INTEGER_DOT_PRODUCT_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_INTEGER_DOT_PRODUCT_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
 inline static auto fromVulkanFormat (
         vulkan :: __C_ENG_TYPE ( PhysicalDeviceShaderIntegerDotProductFeatures ) * pDestination,
-        VkPhysicalDeviceShaderIntegerDotProductFeaturesKHR                 const * pSource
+        VkPhysicalDeviceShaderIntegerDotProductFeatures_t                  const * pSource
 ) noexcept -> void {
 
 #if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
@@ -4744,7 +4972,7 @@ inline static auto fromVulkanFormat (
 }
 
 inline static auto toVulkanFormat (
-        VkPhysicalDeviceShaderIntegerDotProductFeaturesKHR                             * pDestination,
+        VkPhysicalDeviceShaderIntegerDotProductFeatures_t                              * pDestination,
         vulkan :: __C_ENG_TYPE ( PhysicalDeviceShaderIntegerDotProductFeatures ) const * pSource
 ) noexcept -> void {
 
@@ -4803,11 +5031,11 @@ inline static auto toVulkanFormat (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ZERO_INITIALIZE_WORKGROUP_MEMORY_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ZERO_INITIALIZE_WORKGROUP_MEMORY_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
 inline static auto fromVulkanFormat (
         vulkan :: __C_ENG_TYPE ( PhysicalDeviceZeroInitializeWorkgroupMemoryFeatures ) * pDestination,
-        VkPhysicalDeviceZeroInitializeWorkgroupMemoryFeaturesKHR                 const * pSource
+        VkPhysicalDeviceZeroInitializeWorkgroupMemoryFeatures_t                  const * pSource
 ) noexcept -> void {
 
 #if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
@@ -4822,7 +5050,7 @@ inline static auto fromVulkanFormat (
 }
 
 inline static auto toVulkanFormat (
-        VkPhysicalDeviceZeroInitializeWorkgroupMemoryFeaturesKHR                             * pDestination,
+        VkPhysicalDeviceZeroInitializeWorkgroupMemoryFeatures_t                              * pDestination,
         vulkan :: __C_ENG_TYPE ( PhysicalDeviceZeroInitializeWorkgroupMemoryFeatures ) const * pSource
 ) noexcept -> void {
 
@@ -7062,7 +7290,13 @@ static inline auto toVulkanFormat (
             case engine :: vulkan :: StructureTypePhysicalDeviceSamplerFilterMinMaxProperties:                          { currentInVkChain->pNext = reinterpret_cast < VkBaseOutStructure * > ( & deviceSamplerFilterMinmaxProperties );        break; }
             case engine :: vulkan :: StructureTypePhysicalDeviceTimelineSemaphoreProperties:                            { currentInVkChain->pNext = reinterpret_cast < VkBaseOutStructure * > ( & deviceTimelineSemaphoreProperties );          break; }
                                                                                                                         
-#endif                                                                                                                  
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+
+            case engine :: vulkan :: StructureTypePhysicalDeviceVulkan_1_3_Properties:                                  { currentInVkChain->pNext = reinterpret_cast < VkBaseOutStructure * > ( & deviceVulkan13Properties );                   break; }
+
+#endif
                                                                                                                         
 #if __C_ENG_VULKAN_API_EXTENSION_BLEND_OPERATION_ADVANCED_AVAILABLE                                                     
                                                                                                                         
@@ -7106,7 +7340,7 @@ static inline auto toVulkanFormat (
                                                                                                                         
 #endif                                                                                                                  
                                                                                                                         
-#if __C_ENG_VULKAN_API_EXTENSION_INLINE_UNIFORM_BLOCK_AVAILABLE                                                         
+#if __C_ENG_VULKAN_API_EXTENSION_INLINE_UNIFORM_BLOCK_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
                                                                                                                         
             case engine :: vulkan :: StructureTypePhysicalDeviceInlineUniformBlockProperties:                           { currentInVkChain->pNext = reinterpret_cast < VkBaseOutStructure * > ( & deviceInlineUniformBlockProperties );         break; }
                                                                                                                         
@@ -7154,13 +7388,13 @@ static inline auto toVulkanFormat (
                                                                                                                         
 #endif                                                                                                                  
                                                                                                                         
-#if __C_ENG_VULKAN_API_EXTENSION_SUBGROUP_SIZE_CONTROL_AVAILABLE                                                        
+#if __C_ENG_VULKAN_API_EXTENSION_SUBGROUP_SIZE_CONTROL_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
                                                                                                                         
             case engine :: vulkan :: StructureTypePhysicalDeviceSubgroupSizeControlProperties:                          { currentInVkChain->pNext = reinterpret_cast < VkBaseOutStructure * > ( & deviceSubgroupSizeControlProperties );        break; }
                                                                                                                         
 #endif                                                                                                                  
                                                                                                                         
-#if __C_ENG_VULKAN_API_EXTENSION_TEXEL_BUFFER_ALIGNMENT_AVAILABLE                                                       
+#if __C_ENG_VULKAN_API_EXTENSION_TEXEL_BUFFER_ALIGNMENT_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
                                                                                                                         
             case engine :: vulkan :: StructureTypePhysicalDeviceTexelBufferAlignmentProperties:                         { currentInVkChain->pNext = reinterpret_cast < VkBaseOutStructure * > ( & deviceTexelBufferAlignmentProperties );       break; }
                                                                                                                         
@@ -7190,7 +7424,7 @@ static inline auto toVulkanFormat (
                                                                                                                         
 #endif                                                                                                                  
                                                                                                                         
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_MAINTENANCE_4_AVAILABLE                                                        
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_MAINTENANCE_4_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
                                                                                                                         
             case engine :: vulkan :: StructureTypePhysicalDeviceMaintenance4Properties:                                 { currentInVkChain->pNext = reinterpret_cast < VkBaseOutStructure * > ( & deviceMaintenance4Properties );               break; }
                                                                                                                         
@@ -7220,7 +7454,7 @@ static inline auto toVulkanFormat (
                                                                                                                         
 #endif                                                                                                                  
                                                                                                                         
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_INTEGER_DOT_PRODUCT_AVAILABLE                                           
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_INTEGER_DOT_PRODUCT_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
                                                                                                                         
             case engine :: vulkan :: StructureTypePhysicalDeviceShaderIntegerDotProductProperties:                      { currentInVkChain->pNext = reinterpret_cast < VkBaseOutStructure * > ( & deviceShaderIntegerDotProductProperties );    break; }
                                                                                                                         
@@ -7272,7 +7506,7 @@ static inline auto toVulkanFormat (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE && __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXPERIMENTAL_MULTIVIEW_PER_VIEW_ATTRIBUTES_AVAILABLE
+#if ( __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE ) && __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXPERIMENTAL_MULTIVIEW_PER_VIEW_ATTRIBUTES_AVAILABLE
 
             case engine :: vulkan :: StructureTypePhysicalDeviceMultiviewPerViewAttributesPropertiesNVidiaExperimental: { currentInVkChain->pNext = reinterpret_cast < VkBaseOutStructure * > ( & deviceMultiviewPerViewAttributesProperties ); break; }
 
@@ -7376,6 +7610,13 @@ static auto fromVulkanFormat (
             case engine :: vulkan :: StructureTypePhysicalDeviceTimelineSemaphoreProperties:                            { fromVulkanFormat ( reinterpret_cast < vulkan :: __C_ENG_TYPE ( PhysicalDeviceTimelineSemaphoreProperties ) * > ( currentInChain ), & deviceTimelineSemaphoreProperties );                             break; }
 
 #endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+
+            case engine :: vulkan :: StructureTypePhysicalDeviceVulkan_1_3_Properties:                                  { fromVulkanFormat ( reinterpret_cast < vulkan :: __C_ENG_TYPE ( PhysicalDeviceVulkan13Properties ) * > ( currentInChain ), & deviceVulkan13Properties );                                                   break; }
+
+#endif
+
 #if __C_ENG_VULKAN_API_EXTENSION_BLEND_OPERATION_ADVANCED_AVAILABLE
 
             case engine :: vulkan :: StructureTypePhysicalDeviceBlendOperationAdvancedProperties:                       { fromVulkanFormat ( reinterpret_cast < vulkan :: __C_ENG_TYPE ( PhysicalDeviceBlendOperationAdvancedProperties ) * > ( currentInChain ), & deviceBlendOperationAdvancedProperties );                   break; }
@@ -7418,7 +7659,7 @@ static auto fromVulkanFormat (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_INLINE_UNIFORM_BLOCK_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_INLINE_UNIFORM_BLOCK_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
             case engine :: vulkan :: StructureTypePhysicalDeviceInlineUniformBlockProperties:                           { fromVulkanFormat ( reinterpret_cast < vulkan :: __C_ENG_TYPE ( PhysicalDeviceInlineUniformBlockProperties ) * > ( currentInChain ), & deviceInlineUniformBlockProperties );                           break; }
 
@@ -7466,13 +7707,13 @@ static auto fromVulkanFormat (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_SUBGROUP_SIZE_CONTROL_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_SUBGROUP_SIZE_CONTROL_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
             case engine :: vulkan :: StructureTypePhysicalDeviceSubgroupSizeControlProperties:                          { fromVulkanFormat ( reinterpret_cast < vulkan :: __C_ENG_TYPE ( PhysicalDeviceSubgroupSizeControlProperties ) * > ( currentInChain ), & deviceSubgroupSizeControlProperties );                         break; }
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_TEXEL_BUFFER_ALIGNMENT_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_TEXEL_BUFFER_ALIGNMENT_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
             case engine :: vulkan :: StructureTypePhysicalDeviceTexelBufferAlignmentProperties:                         { fromVulkanFormat ( reinterpret_cast < vulkan :: __C_ENG_TYPE ( PhysicalDeviceTexelBufferAlignmentProperties ) * > ( currentInChain ), & deviceTexelBufferAlignmentProperties );                       break; }
 
@@ -7502,7 +7743,7 @@ static auto fromVulkanFormat (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_MAINTENANCE_4_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_MAINTENANCE_4_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
             case engine :: vulkan :: StructureTypePhysicalDeviceMaintenance4Properties:                                 { fromVulkanFormat ( reinterpret_cast < vulkan :: __C_ENG_TYPE ( PhysicalDeviceMaintenance4Properties ) * > ( currentInChain ), & deviceMaintenance4Properties );                                       break; }
 
@@ -7532,7 +7773,7 @@ static auto fromVulkanFormat (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_INTEGER_DOT_PRODUCT_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_INTEGER_DOT_PRODUCT_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
             case engine :: vulkan :: StructureTypePhysicalDeviceShaderIntegerDotProductProperties:                      { fromVulkanFormat ( reinterpret_cast < vulkan :: __C_ENG_TYPE ( PhysicalDeviceShaderIntegerDotProductProperties ) * > ( currentInChain ), & deviceShaderIntegerDotProductProperties );                 break; }
 
@@ -7580,7 +7821,7 @@ static auto fromVulkanFormat (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE && __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXPERIMENTAL_MULTIVIEW_PER_VIEW_ATTRIBUTES_AVAILABLE
+#if ( __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE ) && __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXPERIMENTAL_MULTIVIEW_PER_VIEW_ATTRIBUTES_AVAILABLE
 
             case engine :: vulkan :: StructureTypePhysicalDeviceMultiviewPerViewAttributesPropertiesNVidiaExperimental: { fromVulkanFormat ( reinterpret_cast < vulkan :: __C_ENG_TYPE ( PhysicalDeviceMultiviewPerViewAttributesPropertiesNVidia ) * > ( currentInChain ), & deviceMultiviewPerViewAttributesProperties );                 break; }
 
@@ -7710,6 +7951,12 @@ static inline auto toVulkanFormat (
 
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+
+            case vulkan :: StructureTypePhysicalDeviceVulkan_1_3_Features:                              { currentInVkChain->pNext = reinterpret_cast < VkBaseOutStructure * > ( & deviceVulkan13Features );                             break; }
+
+#endif
+
 #if __C_ENG_VULKAN_API_EXTENSION_4444_FORMATS_AVAILABLE
 
             case vulkan :: StructureTypePhysicalDevice4444FormatsFeatures:                              { currentInVkChain->pNext = reinterpret_cast < VkBaseOutStructure * > ( & device4444FormatsFeatures );                          break; }
@@ -7824,7 +8071,7 @@ static inline auto toVulkanFormat (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
             case vulkan :: StructureTypePhysicalDeviceDynamicRenderingFeatures:                         { currentInVkChain->pNext = reinterpret_cast < VkBaseOutStructure * > ( & deviceDynamicRenderingFeatures );                     break; }
 
@@ -7897,7 +8144,7 @@ static inline auto toVulkanFormat (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_IMAGE_ROBUSTNESS_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_IMAGE_ROBUSTNESS_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
             case vulkan :: StructureTypePhysicalDeviceImageRobustnessFeatures:                          { currentInVkChain->pNext = reinterpret_cast < VkBaseOutStructure * > ( & deviceImageRobustnessFeatures );                      break; }
 
@@ -7921,7 +8168,7 @@ static inline auto toVulkanFormat (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_INLINE_UNIFORM_BLOCK_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_INLINE_UNIFORM_BLOCK_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
             case vulkan :: StructureTypePhysicalDeviceInlineUniformBlockFeatures:                       { currentInVkChain->pNext = reinterpret_cast < VkBaseOutStructure * > ( & deviceInlineUniformBlockFeatures );                   break; }
 
@@ -7945,7 +8192,7 @@ static inline auto toVulkanFormat (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_MAINTENANCE_4_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_MAINTENANCE_4_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
             case vulkan :: StructureTypePhysicalDeviceMaintenance4Features:                             { currentInVkChain->pNext = reinterpret_cast < VkBaseOutStructure * > ( & deviceMaintenance4Features );                         break; }
 
@@ -7987,7 +8234,7 @@ static inline auto toVulkanFormat (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_PIPELINE_CREATION_CACHE_CONTROL_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_PIPELINE_CREATION_CACHE_CONTROL_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
             case vulkan :: StructureTypePhysicalDevicePipelineCreationCacheControlFeatures:             { currentInVkChain->pNext = reinterpret_cast < VkBaseOutStructure * > ( & devicePipelineCreationCacheControlFeatures );         break; }
 
@@ -8023,7 +8270,7 @@ static inline auto toVulkanFormat (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_PRIVATE_DATA_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_PRIVATE_DATA_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
             case vulkan :: StructureTypePhysicalDevicePrivateDataFeatures:                              { currentInVkChain->pNext = reinterpret_cast < VkBaseOutStructure * > ( & devicePrivateDataFeatures );                          break; }
 
@@ -8095,7 +8342,7 @@ static inline auto toVulkanFormat (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_SHADER_DEMOTE_TO_HELPER_INVOCATION_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_SHADER_DEMOTE_TO_HELPER_INVOCATION_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
             case vulkan :: StructureTypePhysicalDeviceShaderDemoteToHelperInvocationFeatures:           { currentInVkChain->pNext = reinterpret_cast < VkBaseOutStructure * > ( & deviceShaderDemoteToHelperInvocationFeatures );       break; }
 
@@ -8125,7 +8372,7 @@ static inline auto toVulkanFormat (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_TERMINATE_INVOCATION_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_TERMINATE_INVOCATION_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
             case vulkan :: StructureTypePhysicalDeviceShaderTerminateInvocationFeatures:                { currentInVkChain->pNext = reinterpret_cast < VkBaseOutStructure * > ( & deviceShaderTerminateInvocationFeatures );            break; }
 
@@ -8137,7 +8384,7 @@ static inline auto toVulkanFormat (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_SUBGROUP_SIZE_CONTROL_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_SUBGROUP_SIZE_CONTROL_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
             case vulkan :: StructureTypePhysicalDeviceSubgroupSizeControlFeatures:                      { currentInVkChain->pNext = reinterpret_cast < VkBaseOutStructure * > ( & deviceSubgroupSizeControlFeatures );                  break; }
 
@@ -8149,19 +8396,19 @@ static inline auto toVulkanFormat (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
             case vulkan :: StructureTypePhysicalDeviceSynchronizationFeatures:                          { currentInVkChain->pNext = reinterpret_cast < VkBaseOutStructure * > ( & deviceSynchronization2Features );                     break; }
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_TEXEL_BUFFER_ALIGNMENT_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_TEXEL_BUFFER_ALIGNMENT_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
             case vulkan :: StructureTypePhysicalDeviceTexelBufferAlignmentFeatures:                     { currentInVkChain->pNext = reinterpret_cast < VkBaseOutStructure * > ( & deviceTexelBufferAlignmentFeatures );                 break; }
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_TEXTURE_COMPRESSION_ASTC_HDR_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_TEXTURE_COMPRESSION_ASTC_HDR_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
             case vulkan :: StructureTypePhysicalDeviceTextureCompressionASTCHDRFeatures:                { currentInVkChain->pNext = reinterpret_cast < VkBaseOutStructure * > ( & deviceTextureCompressionASTCHDRFeatures );            break; }
 
@@ -8185,7 +8432,7 @@ static inline auto toVulkanFormat (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_INTEGER_DOT_PRODUCT_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_INTEGER_DOT_PRODUCT_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
             case vulkan :: StructureTypePhysicalDeviceShaderIntegerDotProductFeatures:                  { currentInVkChain->pNext = reinterpret_cast < VkBaseOutStructure * > ( & deviceShaderIntegerDotProductFeatures );              break; }
 
@@ -8215,7 +8462,7 @@ static inline auto toVulkanFormat (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ZERO_INITIALIZE_WORKGROUP_MEMORY_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ZERO_INITIALIZE_WORKGROUP_MEMORY_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
             case vulkan :: StructureTypePhysicalDeviceZeroInitializeWorkgroupMemoryFeatures:            { currentInVkChain->pNext = reinterpret_cast < VkBaseOutStructure * > ( & deviceZeroInitializeWorkgroupMemoryFeatures );        break; }
 
@@ -8296,10 +8543,16 @@ static auto fromVulkanFormat (
             case vulkan :: StructureTypePhysicalDeviceSeparateDepthStencilLayoutsFeatures:              { fromVulkanFormat ( reinterpret_cast < vulkan :: __C_ENG_TYPE ( PhysicalDeviceSeparateDepthStencilLayoutsFeatures ) * > ( currentInChain ), & deviceSeparateDepthStencilLayoutsFeatures );                 break; }
             case vulkan :: StructureTypePhysicalDeviceShaderAtomicInt64Features:                        { fromVulkanFormat ( reinterpret_cast < vulkan :: __C_ENG_TYPE ( PhysicalDeviceShaderAtomicInt64Features ) * > ( currentInChain ), & deviceShaderAtomicInt64Features );                                     break; }
             case vulkan :: StructureTypePhysicalDeviceShaderFloat16Int8Features:                        { fromVulkanFormat ( reinterpret_cast < vulkan :: __C_ENG_TYPE ( PhysicalDeviceShaderFloat16Int8Features ) * > ( currentInChain ), & deviceShaderFloat16Int8Features );                                     break; }
-            case vulkan :: StructureTypePhysicalDeviceShaderSubgroupExtendedTypesFeatures:              { fromVulkanFormat ( reinterpret_cast < vulkan :: __C_ENG_TYPE ( PhysicalDeviceShaderSubgroupExtendedTypesFeatures ) * > ( currentInChain ), & deviceShaderSubgroupExtendedTypesFeatures );            break; }
+            case vulkan :: StructureTypePhysicalDeviceShaderSubgroupExtendedTypesFeatures:              { fromVulkanFormat ( reinterpret_cast < vulkan :: __C_ENG_TYPE ( PhysicalDeviceShaderSubgroupExtendedTypesFeatures ) * > ( currentInChain ), & deviceShaderSubgroupExtendedTypesFeatures );                 break; }
             case vulkan :: StructureTypePhysicalDeviceTimelineSemaphoreFeatures:                        { fromVulkanFormat ( reinterpret_cast < vulkan :: __C_ENG_TYPE ( PhysicalDeviceTimelineSemaphoreFeatures ) * > ( currentInChain ), & deviceTimelineSemaphoreFeatures );                                     break; }
             case vulkan :: StructureTypePhysicalDeviceUniformBufferStandardLayoutFeatures:              { fromVulkanFormat ( reinterpret_cast < vulkan :: __C_ENG_TYPE ( PhysicalDeviceUniformBufferStandardLayoutFeatures ) * > ( currentInChain ), & deviceUniformBufferStandardLayoutFeatures );                 break; }
             case vulkan :: StructureTypePhysicalDeviceVulkanMemoryModelFeatures:                        { fromVulkanFormat ( reinterpret_cast < vulkan :: __C_ENG_TYPE ( PhysicalDeviceVulkanMemoryModelFeatures ) * > ( currentInChain ), & deviceVulkanMemoryModelFeatures );                                     break; }
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+
+            case vulkan :: StructureTypePhysicalDeviceVulkan_1_3_Features:                              { fromVulkanFormat ( reinterpret_cast < vulkan :: __C_ENG_TYPE ( PhysicalDeviceVulkan13Features ) * > ( currentInChain ), & deviceVulkan13Features );                                                                   break; }
 
 #endif
 
@@ -8417,7 +8670,7 @@ static auto fromVulkanFormat (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
             case vulkan :: StructureTypePhysicalDeviceDynamicRenderingFeatures:                         { fromVulkanFormat ( reinterpret_cast < vulkan :: __C_ENG_TYPE ( PhysicalDeviceDynamicRenderingFeatures ) * > ( currentInChain ), & deviceDynamicRenderingFeatures );                                       break; }
 
@@ -8490,7 +8743,7 @@ static auto fromVulkanFormat (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_IMAGE_ROBUSTNESS_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_IMAGE_ROBUSTNESS_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
             case vulkan :: StructureTypePhysicalDeviceImageRobustnessFeatures:                          { fromVulkanFormat ( reinterpret_cast < vulkan :: __C_ENG_TYPE ( PhysicalDeviceImageRobustnessFeatures ) * > ( currentInChain ), & deviceImageRobustnessFeatures );                                         break; }
 
@@ -8514,7 +8767,7 @@ static auto fromVulkanFormat (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_INLINE_UNIFORM_BLOCK_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_INLINE_UNIFORM_BLOCK_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
             case vulkan :: StructureTypePhysicalDeviceInlineUniformBlockFeatures:                       { fromVulkanFormat ( reinterpret_cast < vulkan :: __C_ENG_TYPE ( PhysicalDeviceInlineUniformBlockFeatures ) * > ( currentInChain ), & deviceInlineUniformBlockFeatures );                                   break; }
 
@@ -8538,7 +8791,7 @@ static auto fromVulkanFormat (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_MAINTENANCE_4_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_MAINTENANCE_4_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
             case vulkan :: StructureTypePhysicalDeviceMaintenance4Features:                             { fromVulkanFormat ( reinterpret_cast < vulkan :: __C_ENG_TYPE ( PhysicalDeviceMaintenance4Features ) * > ( currentInChain ), & deviceMaintenance4Features );                                               break; }
 
@@ -8580,7 +8833,7 @@ static auto fromVulkanFormat (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_PIPELINE_CREATION_CACHE_CONTROL_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_PIPELINE_CREATION_CACHE_CONTROL_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
             case vulkan :: StructureTypePhysicalDevicePipelineCreationCacheControlFeatures:             { fromVulkanFormat ( reinterpret_cast < vulkan :: __C_ENG_TYPE ( PhysicalDevicePipelineCreationCacheControlFeatures ) * > ( currentInChain ), & devicePipelineCreationCacheControlFeatures );               break; }
 
@@ -8616,7 +8869,7 @@ static auto fromVulkanFormat (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_PRIVATE_DATA_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_PRIVATE_DATA_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
             case vulkan :: StructureTypePhysicalDevicePrivateDataFeatures:                              { fromVulkanFormat ( reinterpret_cast < vulkan :: __C_ENG_TYPE ( PhysicalDevicePrivateDataFeatures ) * > ( currentInChain ), & devicePrivateDataFeatures );                                                 break; }
 
@@ -8688,7 +8941,7 @@ static auto fromVulkanFormat (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_SHADER_DEMOTE_TO_HELPER_INVOCATION_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_SHADER_DEMOTE_TO_HELPER_INVOCATION_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
             case vulkan :: StructureTypePhysicalDeviceShaderDemoteToHelperInvocationFeatures:           { fromVulkanFormat ( reinterpret_cast < vulkan :: __C_ENG_TYPE ( PhysicalDeviceShaderDemoteToHelperInvocationFeatures ) * > ( currentInChain ), & deviceShaderDemoteToHelperInvocationFeatures );           break; }
 
@@ -8718,7 +8971,7 @@ static auto fromVulkanFormat (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_TERMINATE_INVOCATION_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_TERMINATE_INVOCATION_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
             case vulkan :: StructureTypePhysicalDeviceShaderTerminateInvocationFeatures:                { fromVulkanFormat ( reinterpret_cast < vulkan :: __C_ENG_TYPE ( PhysicalDeviceShaderTerminateInvocationFeatures ) * > ( currentInChain ), & deviceShaderTerminateInvocationFeatures );                     break; }
 
@@ -8730,7 +8983,7 @@ static auto fromVulkanFormat (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_SUBGROUP_SIZE_CONTROL_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_SUBGROUP_SIZE_CONTROL_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
             case vulkan :: StructureTypePhysicalDeviceSubgroupSizeControlFeatures:                      { fromVulkanFormat ( reinterpret_cast < vulkan :: __C_ENG_TYPE ( PhysicalDeviceSubgroupSizeControlFeatures ) * > ( currentInChain ), & deviceSubgroupSizeControlFeatures );                                 break; }
 
@@ -8742,19 +8995,19 @@ static auto fromVulkanFormat (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
             case vulkan :: StructureTypePhysicalDeviceSynchronizationFeatures:                          { fromVulkanFormat ( reinterpret_cast < vulkan :: __C_ENG_TYPE ( PhysicalDeviceSynchronizationFeatures ) * > ( currentInChain ), & deviceSynchronization2Features );                                        break; }
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_TEXEL_BUFFER_ALIGNMENT_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_TEXEL_BUFFER_ALIGNMENT_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
             case vulkan :: StructureTypePhysicalDeviceTexelBufferAlignmentFeatures:                     { fromVulkanFormat ( reinterpret_cast < vulkan :: __C_ENG_TYPE ( PhysicalDeviceTexelBufferAlignmentFeatures ) * > ( currentInChain ), & deviceTexelBufferAlignmentFeatures );                               break; }
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_TEXTURE_COMPRESSION_ASTC_HDR_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_TEXTURE_COMPRESSION_ASTC_HDR_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
             case vulkan :: StructureTypePhysicalDeviceTextureCompressionASTCHDRFeatures:                { fromVulkanFormat ( reinterpret_cast < vulkan :: __C_ENG_TYPE ( PhysicalDeviceTextureCompressionASTCHDRFeatures ) * > ( currentInChain ), & deviceTextureCompressionASTCHDRFeatures );                     break; }
 
@@ -8778,7 +9031,7 @@ static auto fromVulkanFormat (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_INTEGER_DOT_PRODUCT_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_INTEGER_DOT_PRODUCT_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
             case vulkan :: StructureTypePhysicalDeviceShaderIntegerDotProductFeatures:                  { fromVulkanFormat ( reinterpret_cast < vulkan :: __C_ENG_TYPE ( PhysicalDeviceShaderIntegerDotProductFeatures ) * > ( currentInChain ), & deviceShaderIntegerDotProductFeatures );                         break; }
 
@@ -8808,7 +9061,7 @@ static auto fromVulkanFormat (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ZERO_INITIALIZE_WORKGROUP_MEMORY_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ZERO_INITIALIZE_WORKGROUP_MEMORY_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
             case vulkan :: StructureTypePhysicalDeviceZeroInitializeWorkgroupMemoryFeatures:            { fromVulkanFormat ( reinterpret_cast < vulkan :: __C_ENG_TYPE ( PhysicalDeviceZeroInitializeWorkgroupMemoryFeatures ) * > ( currentInChain ), & deviceZeroInitializeWorkgroupMemoryFeatures );             break; }
 
@@ -8932,6 +9185,13 @@ static auto createChain (
 
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+
+    currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: __C_ENG_TYPE ( GenericOutStructure ) * > ( & details->vulkan13Properties ); // NOLINT(clion-misra-cpp2008-6-2-1)
+    currentInChain->structureType = engine :: vulkan :: StructureTypePhysicalDeviceVulkan_1_3_Properties;
+
+#endif
+
 #if __C_ENG_VULKAN_API_EXTENSION_PCI_BUS_INFO_AVAILABLE
 
     currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: __C_ENG_TYPE ( GenericOutStructure ) * > ( & details->pciBusInfoProperties ); // NOLINT(clion-misra-cpp2008-6-2-1)
@@ -9030,7 +9290,7 @@ static auto createChain (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_INLINE_UNIFORM_BLOCK_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_INLINE_UNIFORM_BLOCK_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
     currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: __C_ENG_TYPE ( GenericOutStructure ) * > ( & details->inlineUniformBlockProperties ); // NOLINT(clion-misra-cpp2008-6-2-1)
     currentInChain->structureType = engine :: vulkan :: StructureTypePhysicalDeviceInlineUniformBlockProperties;
@@ -9044,7 +9304,7 @@ static auto createChain (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_MAINTENANCE_4_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_MAINTENANCE_4_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
     currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: __C_ENG_TYPE ( GenericOutStructure ) * > ( & details->maintenance4Properties ); // NOLINT(clion-misra-cpp2008-6-2-1)
     currentInChain->structureType = engine :: vulkan :: StructureTypePhysicalDeviceMaintenance4Properties;
@@ -9065,7 +9325,7 @@ static auto createChain (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE && __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXPERIMENTAL_MULTIVIEW_PER_VIEW_ATTRIBUTES_AVAILABLE
+#if ( __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE ) && __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXPERIMENTAL_MULTIVIEW_PER_VIEW_ATTRIBUTES_AVAILABLE
 
     currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: __C_ENG_TYPE ( GenericOutStructure ) * > ( & details->multiviewPerViewAttributesPropertiesNVidia ); // NOLINT(clion-misra-cpp2008-6-2-1)
     currentInChain->structureType = engine :: vulkan :: StructureTypePhysicalDeviceMultiviewPerViewAttributesPropertiesNVidiaExperimental;
@@ -9149,7 +9409,7 @@ static auto createChain (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_SUBGROUP_SIZE_CONTROL_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_SUBGROUP_SIZE_CONTROL_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
     currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: __C_ENG_TYPE ( GenericOutStructure ) * > ( & details->subgroupSizeControlProperties ); // NOLINT(clion-misra-cpp2008-6-2-1)
     currentInChain->structureType = engine :: vulkan :: StructureTypePhysicalDeviceSubgroupSizeControlProperties;
@@ -9163,7 +9423,7 @@ static auto createChain (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_TEXEL_BUFFER_ALIGNMENT_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_TEXEL_BUFFER_ALIGNMENT_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
     currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: __C_ENG_TYPE ( GenericOutStructure ) * > ( & details->texelBufferAlignmentProperties ); // NOLINT(clion-misra-cpp2008-6-2-1)
     currentInChain->structureType = engine :: vulkan :: StructureTypePhysicalDeviceTexelBufferAlignmentProperties;
@@ -9191,7 +9451,7 @@ static auto createChain (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_INTEGER_DOT_PRODUCT_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_INTEGER_DOT_PRODUCT_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
     currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: __C_ENG_TYPE ( GenericOutStructure ) * > ( & details->shaderIntegerDotProductProperties ); // NOLINT(clion-misra-cpp2008-6-2-1)
     currentInChain->structureType = engine :: vulkan :: StructureTypePhysicalDeviceShaderIntegerDotProductProperties;
@@ -9273,6 +9533,13 @@ static auto createChain (
 
     currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: __C_ENG_TYPE ( GenericOutStructure ) * > ( & details->vulkanMemoryModelFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
     currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceVulkanMemoryModelFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+
+    currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: __C_ENG_TYPE ( GenericOutStructure ) * > ( & details->vulkan13Features ); // NOLINT(clion-misra-cpp2008-6-2-1)
+    currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceVulkan_1_3_Features;
 
 #endif
 
@@ -9409,7 +9676,7 @@ static auto createChain (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE
+#if ( __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE ) || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
     currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: __C_ENG_TYPE ( GenericOutStructure ) * > ( & details->dynamicRenderingFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
     currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceDynamicRenderingFeatures;
@@ -9496,7 +9763,7 @@ static auto createChain (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_IMAGE_ROBUSTNESS_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_IMAGE_ROBUSTNESS_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
     currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: __C_ENG_TYPE ( GenericOutStructure ) * > ( & details->imageRobustnessFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
     currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceImageRobustnessFeatures;
@@ -9524,7 +9791,7 @@ static auto createChain (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_INLINE_UNIFORM_BLOCK_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_INLINE_UNIFORM_BLOCK_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
     currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: __C_ENG_TYPE ( GenericOutStructure ) * > ( & details->inlineUniformBlockFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
     currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceInlineUniformBlockFeatures;
@@ -9552,7 +9819,7 @@ static auto createChain (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_MAINTENANCE_4_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_MAINTENANCE_4_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
     currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: __C_ENG_TYPE ( GenericOutStructure ) * > ( & details->maintenance4Features ); // NOLINT(clion-misra-cpp2008-6-2-1)
     currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceMaintenance4Features;
@@ -9601,7 +9868,7 @@ static auto createChain (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_PIPELINE_CREATION_CACHE_CONTROL_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_PIPELINE_CREATION_CACHE_CONTROL_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
     currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: __C_ENG_TYPE ( GenericOutStructure ) * > ( & details->pipelineCreationCacheControlFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
     currentInChain->structureType = vulkan :: StructureTypePhysicalDevicePipelineCreationCacheControlFeatures;
@@ -9643,7 +9910,7 @@ static auto createChain (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_PRIVATE_DATA_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_PRIVATE_DATA_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
     currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: __C_ENG_TYPE ( GenericOutStructure ) * > ( & details->privateDataFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
     currentInChain->structureType = vulkan :: StructureTypePhysicalDevicePrivateDataFeatures;
@@ -9727,7 +9994,7 @@ static auto createChain (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_SHADER_DEMOTE_TO_HELPER_INVOCATION_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_SHADER_DEMOTE_TO_HELPER_INVOCATION_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
     currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: __C_ENG_TYPE ( GenericOutStructure ) * > ( & details->shaderDemoteToHelperInvocationFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
     currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceShaderDemoteToHelperInvocationFeatures;
@@ -9762,7 +10029,7 @@ static auto createChain (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_TERMINATE_INVOCATION_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_TERMINATE_INVOCATION_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
     currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: __C_ENG_TYPE ( GenericOutStructure ) * > ( & details->shaderTerminateInvocationFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
     currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceShaderTerminateInvocationFeatures;
@@ -9776,7 +10043,7 @@ static auto createChain (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_SUBGROUP_SIZE_CONTROL_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_SUBGROUP_SIZE_CONTROL_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
     currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: __C_ENG_TYPE ( GenericOutStructure ) * > ( & details->subgroupSizeControlFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
     currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceSubgroupSizeControlFeatures;
@@ -9790,21 +10057,21 @@ static auto createChain (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
     currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: __C_ENG_TYPE ( GenericOutStructure ) * > ( & details->synchronizationFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
     currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceSynchronizationFeatures;
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_TEXEL_BUFFER_ALIGNMENT_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_TEXEL_BUFFER_ALIGNMENT_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
     currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: __C_ENG_TYPE ( GenericOutStructure ) * > ( & details->texelBufferAlignmentFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
     currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceTexelBufferAlignmentFeatures;
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_TEXTURE_COMPRESSION_ASTC_HDR_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_TEXTURE_COMPRESSION_ASTC_HDR_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
     currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: __C_ENG_TYPE ( GenericOutStructure ) * > ( & details->textureCompressionASTCHDRFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
     currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceTextureCompressionASTCHDRFeatures;
@@ -9832,7 +10099,7 @@ static auto createChain (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_INTEGER_DOT_PRODUCT_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_INTEGER_DOT_PRODUCT_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
     currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: __C_ENG_TYPE ( GenericOutStructure ) * > ( & details->shaderIntegerDotProductFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
     currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceShaderIntegerDotProductFeatures;
@@ -9867,7 +10134,7 @@ static auto createChain (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ZERO_INITIALIZE_WORKGROUP_MEMORY_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ZERO_INITIALIZE_WORKGROUP_MEMORY_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
     currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: __C_ENG_TYPE ( GenericOutStructure ) * > ( & details->zeroInitializeWorkgroupMemoryFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
     currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceZeroInitializeWorkgroupMemoryFeatures;
@@ -10811,10 +11078,10 @@ static inline auto toVulkanFormat (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_PRIVATE_DATA_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_PRIVATE_DATA_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
 static inline auto toVulkanFormat (
-        VkDevicePrivateDataCreateInfoEXT                             * pDestination,
+        VkDevicePrivateDataCreateInfo_t                              * pDestination,
         vulkan :: __C_ENG_TYPE ( DevicePrivateDataCreateInfo ) const * pSource
 ) noexcept -> void {
 
@@ -10940,7 +11207,7 @@ auto toVulkanFormat (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_PRIVATE_DATA_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_PRIVATE_DATA_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
                 case StructureTypeDevicePrivateDataCreateInfo:                                    { nextInVkChain = reinterpret_cast < VkBaseOutStructure * > ( & devicePrivateDataCreateInfo );                        toVulkanFormat ( & devicePrivateDataCreateInfo,                         reinterpret_cast < __C_ENG_TYPE ( DevicePrivateDataCreateInfo ) const * > ( currentInChain ) );                                     break; }
 
@@ -10978,6 +11245,12 @@ auto toVulkanFormat (
                 case StructureTypePhysicalDeviceTimelineSemaphoreFeatures:                        { nextInVkChain = reinterpret_cast < VkBaseOutStructure * > ( & deviceTimelineSemaphoreFeatures );                    toVulkanFormat ( & deviceTimelineSemaphoreFeatures,                     reinterpret_cast < __C_ENG_TYPE ( PhysicalDeviceTimelineSemaphoreFeatures ) const * > ( currentInChain ) );                         break; }
                 case StructureTypePhysicalDeviceUniformBufferStandardLayoutFeatures:              { nextInVkChain = reinterpret_cast < VkBaseOutStructure * > ( & deviceUniformBufferStandardLayoutFeatures );          toVulkanFormat ( & deviceUniformBufferStandardLayoutFeatures,           reinterpret_cast < __C_ENG_TYPE ( PhysicalDeviceUniformBufferStandardLayoutFeatures ) const * > ( currentInChain ) );               break; }
                 case StructureTypePhysicalDeviceVulkanMemoryModelFeatures:                        { nextInVkChain = reinterpret_cast < VkBaseOutStructure * > ( & deviceVulkanMemoryModelFeatures );                    toVulkanFormat ( & deviceVulkanMemoryModelFeatures,                     reinterpret_cast < __C_ENG_TYPE ( PhysicalDeviceVulkanMemoryModelFeatures ) const * > ( currentInChain ) );                         break; }
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+
+                case StructureTypePhysicalDeviceVulkan_1_3_Features:                              { nextInVkChain = reinterpret_cast < VkBaseOutStructure * > ( & deviceVulkan13Features );                             toVulkanFormat ( & deviceVulkan13Features,                              reinterpret_cast < __C_ENG_TYPE ( PhysicalDeviceVulkan13Features ) const * > ( currentInChain ) );                                  break; }
 
 #endif
 
@@ -11095,7 +11368,7 @@ auto toVulkanFormat (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
                 case StructureTypePhysicalDeviceDynamicRenderingFeatures:                         { nextInVkChain = reinterpret_cast < VkBaseOutStructure * > ( & deviceDynamicRenderingFeatures );                     toVulkanFormat ( & deviceDynamicRenderingFeatures,                      reinterpret_cast < __C_ENG_TYPE ( PhysicalDeviceDynamicRenderingFeatures ) const * > ( currentInChain ) );                          break; }
 
@@ -11168,7 +11441,7 @@ auto toVulkanFormat (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_IMAGE_ROBUSTNESS_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_IMAGE_ROBUSTNESS_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
                 case StructureTypePhysicalDeviceImageRobustnessFeatures:                          { nextInVkChain = reinterpret_cast < VkBaseOutStructure * > ( & deviceImageRobustnessFeatures );                      toVulkanFormat ( & deviceImageRobustnessFeatures,                       reinterpret_cast < __C_ENG_TYPE ( PhysicalDeviceImageRobustnessFeatures ) const * > ( currentInChain ) );                           break; }
 
@@ -11192,7 +11465,7 @@ auto toVulkanFormat (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_INLINE_UNIFORM_BLOCK_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_INLINE_UNIFORM_BLOCK_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
                 case StructureTypePhysicalDeviceInlineUniformBlockFeatures:                       { nextInVkChain = reinterpret_cast < VkBaseOutStructure * > ( & deviceInlineUniformBlockFeatures );                   toVulkanFormat ( & deviceInlineUniformBlockFeatures,                    reinterpret_cast < __C_ENG_TYPE ( PhysicalDeviceInlineUniformBlockFeatures ) const * > ( currentInChain ) );                        break; }
 
@@ -11216,7 +11489,7 @@ auto toVulkanFormat (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_MAINTENANCE_4_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_MAINTENANCE_4_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
                 case StructureTypePhysicalDeviceMaintenance4Features:                             { nextInVkChain = reinterpret_cast < VkBaseOutStructure * > ( & deviceMaintenance4Features );                         toVulkanFormat ( & deviceMaintenance4Features,                          reinterpret_cast < __C_ENG_TYPE ( PhysicalDeviceMaintenance4Features ) const * > ( currentInChain ) );                              break; }
 
@@ -11258,7 +11531,7 @@ auto toVulkanFormat (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_PIPELINE_CREATION_CACHE_CONTROL_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_PIPELINE_CREATION_CACHE_CONTROL_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
                 case StructureTypePhysicalDevicePipelineCreationCacheControlFeatures:             { nextInVkChain = reinterpret_cast < VkBaseOutStructure * > ( & devicePipelineCreationCacheControlFeatures );         toVulkanFormat ( & devicePipelineCreationCacheControlFeatures,          reinterpret_cast < __C_ENG_TYPE ( PhysicalDevicePipelineCreationCacheControlFeatures ) const * > ( currentInChain ) );              break; }
 
@@ -11294,7 +11567,7 @@ auto toVulkanFormat (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_PRIVATE_DATA_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_PRIVATE_DATA_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
                 case StructureTypePhysicalDevicePrivateDataFeatures:                              { nextInVkChain = reinterpret_cast < VkBaseOutStructure * > ( & devicePrivateDataFeatures );                          toVulkanFormat ( & devicePrivateDataFeatures,                           reinterpret_cast < __C_ENG_TYPE ( PhysicalDevicePrivateDataFeatures ) const * > ( currentInChain ) );                               break; }
 
@@ -11366,7 +11639,7 @@ auto toVulkanFormat (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_SHADER_DEMOTE_TO_HELPER_INVOCATION_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_SHADER_DEMOTE_TO_HELPER_INVOCATION_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
                 case StructureTypePhysicalDeviceShaderDemoteToHelperInvocationFeatures:           { nextInVkChain = reinterpret_cast < VkBaseOutStructure * > ( & deviceShaderDemoteToHelperInvocationFeatures );       toVulkanFormat ( & deviceShaderDemoteToHelperInvocationFeatures,        reinterpret_cast < __C_ENG_TYPE ( PhysicalDeviceShaderDemoteToHelperInvocationFeatures ) const * > ( currentInChain ) );            break; }
 
@@ -11396,7 +11669,7 @@ auto toVulkanFormat (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_TERMINATE_INVOCATION_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_TERMINATE_INVOCATION_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
                 case StructureTypePhysicalDeviceShaderTerminateInvocationFeatures:                { nextInVkChain = reinterpret_cast < VkBaseOutStructure * > ( & deviceShaderTerminateInvocationFeatures );            toVulkanFormat ( & deviceShaderTerminateInvocationFeatures,             reinterpret_cast < __C_ENG_TYPE ( PhysicalDeviceShaderTerminateInvocationFeatures ) const * > ( currentInChain ) );                 break; }
 
@@ -11408,7 +11681,7 @@ auto toVulkanFormat (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_SUBGROUP_SIZE_CONTROL_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_SUBGROUP_SIZE_CONTROL_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
                 case StructureTypePhysicalDeviceSubgroupSizeControlFeatures:                      { nextInVkChain = reinterpret_cast < VkBaseOutStructure * > ( & deviceSubgroupSizeControlFeatures );                  toVulkanFormat ( & deviceSubgroupSizeControlFeatures,                   reinterpret_cast < __C_ENG_TYPE ( PhysicalDeviceSubgroupSizeControlFeatures ) const * > ( currentInChain ) );                       break; }
 
@@ -11420,19 +11693,19 @@ auto toVulkanFormat (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
                 case StructureTypePhysicalDeviceSynchronizationFeatures:                          { nextInVkChain = reinterpret_cast < VkBaseOutStructure * > ( & deviceSynchronization2Features );                     toVulkanFormat ( & deviceSynchronization2Features,                      reinterpret_cast < __C_ENG_TYPE ( PhysicalDeviceSynchronizationFeatures ) const * > ( currentInChain ) );                           break; }
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_TEXEL_BUFFER_ALIGNMENT_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_TEXEL_BUFFER_ALIGNMENT_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
                 case StructureTypePhysicalDeviceTexelBufferAlignmentFeatures:                     { nextInVkChain = reinterpret_cast < VkBaseOutStructure * > ( & deviceTexelBufferAlignmentFeatures );                 toVulkanFormat ( & deviceTexelBufferAlignmentFeatures,                  reinterpret_cast < __C_ENG_TYPE ( PhysicalDeviceTexelBufferAlignmentFeatures ) const * > ( currentInChain ) );                      break; }
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_TEXTURE_COMPRESSION_ASTC_HDR_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_TEXTURE_COMPRESSION_ASTC_HDR_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
                 case StructureTypePhysicalDeviceTextureCompressionASTCHDRFeatures:                { nextInVkChain = reinterpret_cast < VkBaseOutStructure * > ( & deviceTextureCompressionASTCHDRFeatures );            toVulkanFormat ( & deviceTextureCompressionASTCHDRFeatures,             reinterpret_cast < __C_ENG_TYPE ( PhysicalDeviceTextureCompressionASTCHDRFeatures ) const * > ( currentInChain ) );                 break; }
 
@@ -11456,7 +11729,7 @@ auto toVulkanFormat (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_INTEGER_DOT_PRODUCT_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_INTEGER_DOT_PRODUCT_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
                 case StructureTypePhysicalDeviceShaderIntegerDotProductFeatures:                  { nextInVkChain = reinterpret_cast < VkBaseOutStructure * > ( & deviceShaderIntegerDotProductFeatures );              toVulkanFormat ( & deviceShaderIntegerDotProductFeatures,               reinterpret_cast < __C_ENG_TYPE ( PhysicalDeviceShaderIntegerDotProductFeatures ) const * > ( currentInChain ) );                   break; }
 
@@ -11486,7 +11759,7 @@ auto toVulkanFormat (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ZERO_INITIALIZE_WORKGROUP_MEMORY_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ZERO_INITIALIZE_WORKGROUP_MEMORY_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
                 case StructureTypePhysicalDeviceZeroInitializeWorkgroupMemoryFeatures:            { nextInVkChain = reinterpret_cast < VkBaseOutStructure * > ( & deviceZeroInitializeWorkgroupMemoryFeatures );        toVulkanFormat ( & deviceZeroInitializeWorkgroupMemoryFeatures,         reinterpret_cast < __C_ENG_TYPE ( PhysicalDeviceZeroInitializeWorkgroupMemoryFeatures ) const * > ( currentInChain ) );             break; }
 

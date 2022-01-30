@@ -106,14 +106,14 @@ auto vulkan :: toString (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_PIPELINE_CREATION_CACHE_CONTROL_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_PIPELINE_CREATION_CACHE_CONTROL_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
         case vulkan :: __C_ENG_TYPE ( Result ) :: ResultPipelineCompileRequired:                     { asString = "Requested Pipeline Creation would have required compilation, but the application requested that compilation not be performed";                                                                                   break; }
 
 #endif
 
-        case vulkan :: __C_ENG_TYPE ( Result ) :: ResultErrorInvalidUsage:                           { asString = "Invalid Usage of Vulkan Function";                                                                                                                                                                              break; }
-        case vulkan :: __C_ENG_TYPE ( Result ) :: ResultErrorFunctionNotSupportedICD:                { asString = "Vulkan ICD does not support the requested function call";                                                                                                                                                                              break; }
+        case vulkan :: __C_ENG_TYPE ( Result ) :: ResultErrorInvalidUsage:                           { asString = "Invalid Usage of Vulkan Function";                                                                                                                                                                               break; }
+        case vulkan :: __C_ENG_TYPE ( Result ) :: ResultErrorFunctionNotSupportedICD:                { asString = "Vulkan ICD does not support the requested function call";                                                                                                                                                        break; }
         case vulkan :: __C_ENG_TYPE ( Result ) :: ResultErrorIncompatibleVersion:                    { asString = "API Version does not support call";                                                                                                                                                                              break; }
         case vulkan :: __C_ENG_TYPE ( Result ) :: ResultErrorConfigurationArraySizeSmall:            { asString = "Array Size too Small, check 'VulkanCoreConfig.hpp'";                                                                                                                                                             break; }
         case vulkan :: __C_ENG_TYPE ( Result ) :: ResultErrorFunctionHandleNotFound:                 { asString = "Function Requested not Present";                                                                                                                                                                                 break; }
@@ -311,6 +311,13 @@ auto vulkan :: toString (
 
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+
+        case StructureTypePhysicalDeviceVulkan_1_3_Features:                                        { asString = "StructureTypePhysicalDeviceVulkan_1_3_Features";                                  break; }
+        case StructureTypePhysicalDeviceVulkan_1_3_Properties:                                      { asString = "StructureTypePhysicalDeviceVulkan_1_3_Properties";                                break; }
+
+#endif
+
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SWAP_CHAIN_AVAILABLE
 
         case StructureTypeSwapchainCreateInfo:                                                      { asString = "StructureTypeSwapchainCreateInfo";                                                break; }
@@ -498,7 +505,7 @@ auto vulkan :: toString (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
         case StructureTypeRenderingInfo:                                                         { asString = "StructureTypeRenderingInfo";                                                         break; }
         case StructureTypeRenderingAttachmentInfo:                                               { asString = "StructureTypeRenderingAttachmentInfo";                                               break; }
@@ -577,7 +584,7 @@ auto vulkan :: toString (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_TEXTURE_COMPRESSION_ASTC_HDR_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_TEXTURE_COMPRESSION_ASTC_HDR_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
         case StructureTypePhysicalDeviceTextureCompressionASTCHDRFeatures:                       { asString = "StructureTypePhysicalDeviceTextureCompressionASTCHDRFeatures";                       break; }
 
@@ -799,7 +806,7 @@ auto vulkan :: toString (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_INLINE_UNIFORM_BLOCK_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_INLINE_UNIFORM_BLOCK_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
         case StructureTypePhysicalDeviceInlineUniformBlockFeatures:                              { asString = "StructureTypePhysicalDeviceInlineUniformBlockFeatures";                              break; }
         case StructureTypePhysicalDeviceInlineUniformBlockProperties:                            { asString = "StructureTypePhysicalDeviceInlineUniformBlockProperties";                            break; }
@@ -1026,7 +1033,7 @@ auto vulkan :: toString (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_PIPELINE_CREATION_FEEDBACK_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_PIPELINE_CREATION_FEEDBACK_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
         case StructureTypePipelineCreationFeedbackCreateInfo:                                    { asString = "StructureTypePipelineCreationFeedbackCreateInfo";                                    break; }
 
@@ -1107,7 +1114,7 @@ auto vulkan :: toString (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_TERMINATE_INVOCATION_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_TERMINATE_INVOCATION_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
         case StructureTypePhysicalDeviceShaderTerminateInvocationFeatures:                       { asString = "StructureTypePhysicalDeviceShaderTerminateInvocationFeatures";                       break; }
 
@@ -1127,7 +1134,7 @@ auto vulkan :: toString (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_SUBGROUP_SIZE_CONTROL_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_SUBGROUP_SIZE_CONTROL_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
         case StructureTypePhysicalDeviceSubgroupSizeControlFeatures:                             { asString = "StructureTypePhysicalDeviceSubgroupSizeControlFeatures";                             break; }
         case StructureTypePhysicalDeviceSubgroupSizeControlProperties:                           { asString = "StructureTypePhysicalDeviceSubgroupSizeControlProperties";                           break; }
@@ -1183,7 +1190,7 @@ auto vulkan :: toString (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_TOOLING_INFO_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_TOOLING_INFO_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
         case StructureTypePhysicalDeviceToolProperties:                                          { asString = "StructureTypePhysicalDeviceToolProperties";                                          break; }
 
@@ -1311,7 +1318,7 @@ auto vulkan :: toString (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_SHADER_DEMOTE_TO_HELPER_INVOCATION_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_SHADER_DEMOTE_TO_HELPER_INVOCATION_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
         case StructureTypePhysicalDeviceShaderDemoteToHelperInvocationFeatures:                  { asString = "StructureTypePhysicalDeviceShaderDemoteToHelperInvocationFeatures";                  break; }
 
@@ -1337,14 +1344,14 @@ auto vulkan :: toString (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_INTEGER_DOT_PRODUCT_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_INTEGER_DOT_PRODUCT_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
         case StructureTypePhysicalDeviceShaderIntegerDotProductFeatures:                         { asString = "StructureTypePhysicalDeviceShaderIntegerDotProductFeatures";                         break; }
         case StructureTypePhysicalDeviceShaderIntegerDotProductProperties:                       { asString = "StructureTypePhysicalDeviceShaderIntegerDotProductProperties";                       break; }
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_TEXEL_BUFFER_ALIGNMENT_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_TEXEL_BUFFER_ALIGNMENT_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
         case StructureTypePhysicalDeviceTexelBufferAlignmentFeatures:                            { asString = "StructureTypePhysicalDeviceTexelBufferAlignmentFeatures";                            break; }
         case StructureTypePhysicalDeviceTexelBufferAlignmentProperties:                          { asString = "StructureTypePhysicalDeviceTexelBufferAlignmentProperties";                          break; }
@@ -1394,7 +1401,7 @@ auto vulkan :: toString (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_PRIVATE_DATA_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_PRIVATE_DATA_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
         case StructureTypePhysicalDevicePrivateDataFeatures:                                     { asString = "StructureTypePhysicalDevicePrivateDataFeatures";                                     break; }
         case StructureTypeDevicePrivateDataCreateInfo:                                           { asString = "StructureTypeDevicePrivateDataCreateInfo";                                           break; }
@@ -1402,7 +1409,7 @@ auto vulkan :: toString (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_PIPELINE_CREATION_CACHE_CONTROL_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_PIPELINE_CREATION_CACHE_CONTROL_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
         case StructureTypePhysicalDevicePipelineCreationCacheControlFeatures:                    { asString = "StructureTypePhysicalDevicePipelineCreationCacheControlFeatures";                    break; }
 
@@ -1423,7 +1430,7 @@ auto vulkan :: toString (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
         case StructureTypeMemoryBarrier2:                                                        { asString = "StructureTypeMemoryBarrier2";                                                        break; }
         case StructureTypeBufferMemoryBarrier2:                                                  { asString = "StructureTypeBufferMemoryBarrier2";                                                  break; }
@@ -1449,7 +1456,7 @@ auto vulkan :: toString (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ZERO_INITIALIZE_WORKGROUP_MEMORY_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ZERO_INITIALIZE_WORKGROUP_MEMORY_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
         case StructureTypePhysicalDeviceZeroInitializeWorkgroupMemoryFeatures:                   { asString = "StructureTypePhysicalDeviceZeroInitializeWorkgroupMemoryFeatures";                   break; }
 
@@ -1490,7 +1497,7 @@ auto vulkan :: toString (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_IMAGE_ROBUSTNESS_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_IMAGE_ROBUSTNESS_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
         case StructureTypePhysicalDeviceImageRobustnessFeatures:                                 { asString = "StructureTypePhysicalDeviceImageRobustnessFeatures";                                 break; }
 
@@ -1502,7 +1509,7 @@ auto vulkan :: toString (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_COPY_COMMANDS_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_COPY_COMMANDS_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
         case StructureTypeCopyBufferInfo:                                                        { asString = "StructureTypeCopyBufferInfo";                                                        break; }
         case StructureTypeCopyImageInfo:                                                         { asString = "StructureTypeCopyImageInfo";                                                         break; }
@@ -1576,7 +1583,7 @@ auto vulkan :: toString (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_FORMAT_FEATURE_FLAGS_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_FORMAT_FEATURE_FLAGS_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
         case StructureTypeFormatProperties3:                                                     { asString = "StructureTypeFormatProperties3";                                                     break; }
 
@@ -1686,7 +1693,7 @@ auto vulkan :: toString (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_MAINTENANCE_4_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_MAINTENANCE_4_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
         case StructureTypePhysicalDeviceMaintenance4Features:                                    { asString = "StructureTypePhysicalDeviceMaintenance4Features";                                    break; }
         case StructureTypePhysicalDeviceMaintenance4Properties:                                  { asString = "StructureTypePhysicalDeviceMaintenance4Properties";                                  break; }
@@ -3199,7 +3206,7 @@ auto vulkan :: toString (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_INLINE_UNIFORM_BLOCK_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_INLINE_UNIFORM_BLOCK_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
 auto vulkan :: toString (
         __C_ENG_TYPE ( PhysicalDeviceInlineUniformBlockProperties ) const & properties
@@ -3233,7 +3240,7 @@ auto vulkan :: toString (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_MAINTENANCE_4_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_MAINTENANCE_4_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
 auto vulkan :: toString (
         __C_ENG_TYPE ( PhysicalDeviceMaintenance4Properties ) const & properties
@@ -3550,7 +3557,7 @@ auto vulkan :: toString (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_SUBGROUP_SIZE_CONTROL_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_SUBGROUP_SIZE_CONTROL_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
 auto vulkan :: toString (
         __C_ENG_TYPE ( PhysicalDeviceSubgroupSizeControlProperties ) const & properties
@@ -3583,7 +3590,7 @@ auto vulkan :: toString (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_TEXEL_BUFFER_ALIGNMENT_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_TEXEL_BUFFER_ALIGNMENT_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
 auto vulkan :: toString (
         __C_ENG_TYPE ( PhysicalDeviceTexelBufferAlignmentProperties ) const & properties
@@ -3640,7 +3647,7 @@ auto vulkan :: toString (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_INTEGER_DOT_PRODUCT_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_INTEGER_DOT_PRODUCT_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
 auto vulkan :: toString (
         __C_ENG_TYPE ( PhysicalDeviceShaderIntegerDotProductProperties ) const & properties
@@ -3801,6 +3808,14 @@ auto vulkan :: toString (
             ", timelineSemaphoreFeatures = "                        + toString ( details.timelineSemaphoreFeatures ) +
             ", uniformBufferStandardLayoutFeatures = "              + toString ( details.uniformBufferStandardLayoutFeatures ) +
             ", vulkanMemoryModelFeatures = "                        + toString ( details.vulkanMemoryModelFeatures ) +
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+
+            ", vulkan13Properties = "                               + toString ( details.vulkan13Properties ) +
+
+            ", vulkan13Features = "                                 + toString ( details.vulkan13Features ) +
 
 #endif
 
@@ -4692,7 +4707,7 @@ auto vulkan :: toString (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_PRIVATE_DATA_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_PRIVATE_DATA_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
 auto vulkan :: toString (
         __C_ENG_TYPE ( DevicePrivateDataCreateInfo ) const & info
@@ -5403,7 +5418,7 @@ auto vulkan :: toString (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
 auto vulkan :: toString (
         __C_ENG_TYPE ( PhysicalDeviceDynamicRenderingFeatures ) const & features
@@ -5604,7 +5619,7 @@ auto vulkan :: toString (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_IMAGE_ROBUSTNESS_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_IMAGE_ROBUSTNESS_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
 auto vulkan :: toString (
         __C_ENG_TYPE ( PhysicalDeviceImageRobustnessFeatures ) const & features
@@ -5664,7 +5679,7 @@ auto vulkan :: toString (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_INLINE_UNIFORM_BLOCK_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_INLINE_UNIFORM_BLOCK_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
 auto vulkan :: toString (
         __C_ENG_TYPE ( PhysicalDeviceInlineUniformBlockFeatures ) const & features
@@ -5730,7 +5745,7 @@ auto vulkan :: toString (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_MAINTENANCE_4_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_MAINTENANCE_4_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
 auto vulkan :: toString (
         __C_ENG_TYPE ( PhysicalDeviceMaintenance4Features ) const & features
@@ -5837,7 +5852,7 @@ auto vulkan :: toString (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_PIPELINE_CREATION_CACHE_CONTROL_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_PIPELINE_CREATION_CACHE_CONTROL_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
 auto vulkan :: toString (
         __C_ENG_TYPE ( PhysicalDevicePipelineCreationCacheControlFeatures ) const & features
@@ -5942,7 +5957,7 @@ auto vulkan :: toString (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_PRIVATE_DATA_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_PRIVATE_DATA_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
 auto vulkan :: toString (
         __C_ENG_TYPE ( PhysicalDevicePrivateDataFeatures ) const & features
@@ -6155,7 +6170,7 @@ auto vulkan :: toString (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_SHADER_DEMOTE_TO_HELPER_INVOCATION_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_SHADER_DEMOTE_TO_HELPER_INVOCATION_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
 auto vulkan :: toString (
         __C_ENG_TYPE ( PhysicalDeviceShaderDemoteToHelperInvocationFeatures ) const & features
@@ -6201,7 +6216,7 @@ auto vulkan :: toString (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_INTEGER_DOT_PRODUCT_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_INTEGER_DOT_PRODUCT_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
 auto vulkan :: toString (
         __C_ENG_TYPE ( PhysicalDeviceShaderIntegerDotProductFeatures ) const & features
@@ -6261,7 +6276,7 @@ auto vulkan :: toString (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_TERMINATE_INVOCATION_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_TERMINATE_INVOCATION_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
 auto vulkan :: toString (
         __C_ENG_TYPE ( PhysicalDeviceShaderTerminateInvocationFeatures ) const & features
@@ -6292,7 +6307,7 @@ auto vulkan :: toString (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_SUBGROUP_SIZE_CONTROL_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_SUBGROUP_SIZE_CONTROL_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
 auto vulkan :: toString (
         __C_ENG_TYPE ( PhysicalDeviceSubgroupSizeControlFeatures ) const & features
@@ -6323,7 +6338,7 @@ auto vulkan :: toString (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
 auto vulkan :: toString (
         __C_ENG_TYPE ( PhysicalDeviceSynchronizationFeatures ) const & features
@@ -6338,7 +6353,7 @@ auto vulkan :: toString (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_TEXEL_BUFFER_ALIGNMENT_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_TEXEL_BUFFER_ALIGNMENT_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
 auto vulkan :: toString (
         __C_ENG_TYPE ( PhysicalDeviceTexelBufferAlignmentFeatures ) const & features
@@ -6353,7 +6368,7 @@ auto vulkan :: toString (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_TEXTURE_COMPRESSION_ASTC_HDR_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_TEXTURE_COMPRESSION_ASTC_HDR_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
 auto vulkan :: toString (
         __C_ENG_TYPE ( PhysicalDeviceTextureCompressionASTCHDRFeatures ) const & features
@@ -6463,7 +6478,7 @@ auto vulkan :: toString (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ZERO_INITIALIZE_WORKGROUP_MEMORY_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ZERO_INITIALIZE_WORKGROUP_MEMORY_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
 auto vulkan :: toString (
         __C_ENG_TYPE ( PhysicalDeviceZeroInitializeWorkgroupMemoryFeatures ) const & features
@@ -6612,6 +6627,90 @@ auto vulkan :: toString (
     }
 
     return asString;
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceVulkan13Properties ) const & properties
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceVulkan13Properties ) ) " "
+           "{ type = "_s                                                                        + toString ( properties.structureType ) +
+           ", pNext = "                                                                         + :: toString ( properties.pNext ) +
+           ", minSubgroupSize = "                                                               + properties.minSubgroupSize +
+           ", maxSubgroupSize = "                                                               + properties.maxSubgroupSize +
+           ", maxComputeWorkgroupSubgroups = "                                                  + properties.maxComputeWorkgroupSubgroups +
+           ", requiredSubgroupSizeStages = "                                                    + "0b" + Long ( properties.requiredSubgroupSizeStages ).toString(2) +
+           ", maxInlineUniformBlockSize = "                                                     + properties.maxInlineUniformBlockSize +
+           ", maxPerStageDescriptorInlineUniformBlocks = "                                      + properties.maxPerStageDescriptorInlineUniformBlocks +
+           ", maxPerStageDescriptorUpdateAfterBindInlineUniformBlocks = "                       + properties.maxPerStageDescriptorUpdateAfterBindInlineUniformBlocks +
+           ", maxDescriptorSetInlineUniformBlocks = "                                           + properties.maxDescriptorSetInlineUniformBlocks +
+           ", maxDescriptorSetUpdateAfterBindInlineUniformBlocks = "                            + properties.maxDescriptorSetUpdateAfterBindInlineUniformBlocks +
+           ", maxInlineUniformTotalSize = "                                                     + properties.maxInlineUniformTotalSize +
+           ", integerDotProduct8BitUnsignedAccelerated = "                                      + ( properties.integerDotProduct8BitUnsignedAccelerated == VK_TRUE ? "true" : "false" ) +
+           ", integerDotProduct8BitSignedAccelerated = "                                        + ( properties.integerDotProduct8BitSignedAccelerated == VK_TRUE ? "true" : "false" ) +
+           ", integerDotProduct8BitMixedSignednessAccelerated = "                               + ( properties.integerDotProduct8BitMixedSignednessAccelerated == VK_TRUE ? "true" : "false" ) +
+           ", integerDotProduct4x8BitPackedUnsignedAccelerated = "                              + ( properties.integerDotProduct4x8BitPackedUnsignedAccelerated == VK_TRUE ? "true" : "false" ) +
+           ", integerDotProduct4x8BitPackedSignedAccelerated = "                                + ( properties.integerDotProduct4x8BitPackedSignedAccelerated == VK_TRUE ? "true" : "false" ) +
+           ", integerDotProduct4x8BitPackedMixedSignednessAccelerated = "                       + ( properties.integerDotProduct4x8BitPackedMixedSignednessAccelerated == VK_TRUE ? "true" : "false" ) +
+           ", integerDotProduct16BitUnsignedAccelerated = "                                     + ( properties.integerDotProduct16BitUnsignedAccelerated == VK_TRUE ? "true" : "false" ) +
+           ", integerDotProduct16BitSignedAccelerated = "                                       + ( properties.integerDotProduct16BitSignedAccelerated == VK_TRUE ? "true" : "false" ) +
+           ", integerDotProduct16BitMixedSignednessAccelerated = "                              + ( properties.integerDotProduct16BitMixedSignednessAccelerated == VK_TRUE ? "true" : "false" ) +
+           ", integerDotProduct32BitUnsignedAccelerated = "                                     + ( properties.integerDotProduct32BitUnsignedAccelerated == VK_TRUE ? "true" : "false" ) +
+           ", integerDotProduct32BitSignedAccelerated = "                                       + ( properties.integerDotProduct32BitSignedAccelerated == VK_TRUE ? "true" : "false" ) +
+           ", integerDotProduct32BitMixedSignednessAccelerated = "                              + ( properties.integerDotProduct32BitMixedSignednessAccelerated == VK_TRUE ? "true" : "false" ) +
+           ", integerDotProduct64BitUnsignedAccelerated = "                                     + ( properties.integerDotProduct64BitUnsignedAccelerated == VK_TRUE ? "true" : "false" ) +
+           ", integerDotProduct64BitSignedAccelerated = "                                       + ( properties.integerDotProduct64BitSignedAccelerated == VK_TRUE ? "true" : "false" ) +
+           ", integerDotProduct64BitMixedSignednessAccelerated = "                              + ( properties.integerDotProduct64BitMixedSignednessAccelerated == VK_TRUE ? "true" : "false" ) +
+           ", integerDotProductAccumulatingSaturating8BitUnsignedAccelerated = "                + ( properties.integerDotProductAccumulatingSaturating8BitUnsignedAccelerated == VK_TRUE ? "true" : "false" ) +
+           ", integerDotProductAccumulatingSaturating8BitSignedAccelerated = "                  + ( properties.integerDotProductAccumulatingSaturating8BitSignedAccelerated == VK_TRUE ? "true" : "false" ) +
+           ", integerDotProductAccumulatingSaturating8BitMixedSignednessAccelerated = "         + ( properties.integerDotProductAccumulatingSaturating8BitMixedSignednessAccelerated == VK_TRUE ? "true" : "false" ) +
+           ", integerDotProductAccumulatingSaturating4x8BitPackedUnsignedAccelerated = "        + ( properties.integerDotProductAccumulatingSaturating4x8BitPackedUnsignedAccelerated == VK_TRUE ? "true" : "false" ) +
+           ", integerDotProductAccumulatingSaturating4x8BitPackedSignedAccelerated = "          + ( properties.integerDotProductAccumulatingSaturating4x8BitPackedSignedAccelerated == VK_TRUE ? "true" : "false" ) +
+           ", integerDotProductAccumulatingSaturating4x8BitPackedMixedSignednessAccelerated = " + ( properties.integerDotProductAccumulatingSaturating4x8BitPackedMixedSignednessAccelerated == VK_TRUE ? "true" : "false" ) +
+           ", integerDotProductAccumulatingSaturating16BitUnsignedAccelerated = "               + ( properties.integerDotProductAccumulatingSaturating16BitUnsignedAccelerated == VK_TRUE ? "true" : "false" ) +
+           ", integerDotProductAccumulatingSaturating16BitSignedAccelerated = "                 + ( properties.integerDotProductAccumulatingSaturating16BitSignedAccelerated == VK_TRUE ? "true" : "false" ) +
+           ", integerDotProductAccumulatingSaturating16BitMixedSignednessAccelerated = "        + ( properties.integerDotProductAccumulatingSaturating16BitMixedSignednessAccelerated == VK_TRUE ? "true" : "false" ) +
+           ", integerDotProductAccumulatingSaturating32BitUnsignedAccelerated = "               + ( properties.integerDotProductAccumulatingSaturating32BitUnsignedAccelerated == VK_TRUE ? "true" : "false" ) +
+           ", integerDotProductAccumulatingSaturating32BitSignedAccelerated = "                 + ( properties.integerDotProductAccumulatingSaturating32BitSignedAccelerated == VK_TRUE ? "true" : "false" ) +
+           ", integerDotProductAccumulatingSaturating32BitMixedSignednessAccelerated = "        + ( properties.integerDotProductAccumulatingSaturating32BitMixedSignednessAccelerated == VK_TRUE ? "true" : "false" ) +
+           ", integerDotProductAccumulatingSaturating64BitUnsignedAccelerated = "               + ( properties.integerDotProductAccumulatingSaturating64BitUnsignedAccelerated == VK_TRUE ? "true" : "false" ) +
+           ", integerDotProductAccumulatingSaturating64BitSignedAccelerated = "                 + ( properties.integerDotProductAccumulatingSaturating64BitSignedAccelerated == VK_TRUE ? "true" : "false" ) +
+           ", integerDotProductAccumulatingSaturating64BitMixedSignednessAccelerated = "        + ( properties.integerDotProductAccumulatingSaturating64BitMixedSignednessAccelerated == VK_TRUE ? "true" : "false" ) +
+           ", storageTexelBufferOffsetAlignmentBytes = "                                        + :: toString ( properties.storageTexelBufferOffsetAlignmentBytes ) +
+           ", storageTexelBufferOffsetSingleTexelAlignment = "                                  + ( properties.storageTexelBufferOffsetSingleTexelAlignment == VK_TRUE ? "true" : "false" ) +
+           ", uniformTexelBufferOffsetAlignmentBytes = "                                        + :: toString ( properties.uniformTexelBufferOffsetAlignmentBytes ) +
+           ", uniformTexelBufferOffsetSingleTexelAlignment = "                                  + ( properties.uniformTexelBufferOffsetSingleTexelAlignment == VK_TRUE ? "true" : "false" ) +
+           ", maxBufferSize = "                                                                 + :: toString ( properties.maxBufferSize ) +
+           " }";
+}
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceVulkan13Features ) const & features
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceVulkan13Features ) ) " "
+           "{ type = "_s                                                + toString ( features.structureType ) +
+           ", pNext = "                                                 + :: toString ( features.pNext ) +
+           ", robustImageAccess = "                                     + ( features.robustImageAccess == VK_TRUE ? "true" : "false" ) +
+           ", inlineUniformBlock = "                                    + ( features.inlineUniformBlock == VK_TRUE ? "true" : "false" ) +
+           ", descriptorBindingInlineUniformBlockUpdateAfterBind = "    + ( features.descriptorBindingInlineUniformBlockUpdateAfterBind == VK_TRUE ? "true" : "false" ) +
+           ", pipelineCreationCacheControl = "                          + ( features.pipelineCreationCacheControl == VK_TRUE ? "true" : "false" ) +
+           ", privateData = "                                           + ( features.privateData == VK_TRUE ? "true" : "false" ) +
+           ", shaderDemoteToHelperInvocation = "                        + ( features.shaderDemoteToHelperInvocation == VK_TRUE ? "true" : "false" ) +
+           ", shaderTerminateInvocation = "                             + ( features.shaderTerminateInvocation == VK_TRUE ? "true" : "false" ) +
+           ", subgroupSizeControl = "                                   + ( features.subgroupSizeControl == VK_TRUE ? "true" : "false" ) +
+           ", computeFullSubgroups = "                                  + ( features.computeFullSubgroups == VK_TRUE ? "true" : "false" ) +
+           ", synchronization2 = "                                      + ( features.synchronization2 == VK_TRUE ? "true" : "false" ) +
+           ", textureCompressionASTC_HDR = "                            + ( features.textureCompressionASTC_HDR == VK_TRUE ? "true" : "false" ) +
+           ", shaderZeroInitializeWorkgroupMemory = "                   + ( features.shaderZeroInitializeWorkgroupMemory == VK_TRUE ? "true" : "false" ) +
+           ", dynamicRendering = "                                      + ( features.dynamicRendering == VK_TRUE ? "true" : "false" ) +
+           ", shaderIntegerDotProduct = "                               + ( features.shaderIntegerDotProduct == VK_TRUE ? "true" : "false" ) +
+           ", maintenance4 = "                                          + ( features.maintenance4 == VK_TRUE ? "true" : "false" ) +
+           " }";
 }
 
 #endif
