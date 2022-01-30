@@ -1,0 +1,40 @@
+@startuml
+
+!includesub ../../../../../doc/dependencies/primitive/object.puml!OBJECT
+!includesub ../event.puml!EVENT
+
+!startsub KEY
+
+namespace engine {
+
+    abstract class KeyEvent
+
+    Event <|-- KeyEvent
+
+    abstract class KeyEvent {
+        - _key : Key
+        - _modifiers : KeyModifiers
+        # KeyEvent ( Window, Key, KeyModifiers )
+        + Key key () const
+        + KeyModifiers () const
+    }
+
+    class KeyPressEvent
+    class KeyReleaseEvent
+
+    KeyEvent <|--- KeyPressEvent
+    KeyEvent <|-- KeyReleaseEvent
+
+    class KeyPressEvent {
+        + KeyPressEvent ( Window, Key, KeyModifiers )
+    }
+
+    class KeyReleaseEvent {
+        + KeyReleaseEvent ( Window, Key, KeyModifiers )
+    }
+
+}
+
+!endsub
+
+@enduml

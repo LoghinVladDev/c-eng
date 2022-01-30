@@ -15,17 +15,17 @@
 namespace engine {
 
     Class {
-        Field ( PRIMITIVE_TYPE ( cds :: uint32 ),   axisCount,      DEFAULT_VALUE ( 0 ),        GET_DEFAULT, SET_NONE )
-        Field ( PRIMITIVE_TYPE ( float * ),         axes,           DEFAULT_VALUE ( nullptr ),  GET_DEFAULT, SET_NONE )
-        Field ( PRIMITIVE_TYPE ( cds :: uint32 ),   buttonCount,    DEFAULT_VALUE ( 0 ),        GET_DEFAULT, SET_NONE )
-        Field ( PRIMITIVE_TYPE ( bool * ),          buttons,        DEFAULT_VALUE ( nullptr ),  GET_DEFAULT, SET_NONE )
-        Field ( PRIMITIVE_TYPE ( cds :: uint32 ),   hatCount,       DEFAULT_VALUE ( 0 ),        GET_DEFAULT, SET_NONE )
-        Field ( PRIMITIVE_TYPE ( cds :: uint8 * ),  hats,           DEFAULT_VALUE ( nullptr ),  GET_DEFAULT, SET_NONE )
+        Field ( PRIMITIVE_TYPE ( cds :: uint32 ),   axisCount,      DEFAULT_VALUE ( 0 ),        GET_NONE, SET_NONE )
+        Field ( PRIMITIVE_TYPE ( float * ),         axes,           DEFAULT_VALUE ( nullptr ),  GET_NONE, SET_NONE )
+        Field ( PRIMITIVE_TYPE ( cds :: uint32 ),   buttonCount,    DEFAULT_VALUE ( 0 ),        GET_NONE, SET_NONE )
+        Field ( PRIMITIVE_TYPE ( bool * ),          buttons,        DEFAULT_VALUE ( nullptr ),  GET_NONE, SET_NONE )
+        Field ( PRIMITIVE_TYPE ( cds :: uint32 ),   hatCount,       DEFAULT_VALUE ( 0 ),        GET_NONE, SET_NONE )
+        Field ( PRIMITIVE_TYPE ( cds :: uint8 * ),  hats,           DEFAULT_VALUE ( nullptr ),  GET_NONE, SET_NONE )
 
         auto update () noexcept -> void override;
 
     public:
-        constexpr auto isGamepad () noexcept -> bool override {
+        __C_ENG_NO_DISCARD constexpr auto isGamepad () const noexcept -> bool override {
             return false;
         };
 

@@ -1,0 +1,28 @@
+@startuml
+
+!includesub ../../../../../../../doc/dependencies/primitive/object.puml!OBJECT
+
+!startsub ALLOCATOR
+
+namespace engine {
+
+    namespace vulkan {
+
+        class Allocator
+
+        cds.Object <|-- Allocator
+
+        class Allocator <<(S, #FF7700)>> {
+            - _callbacks : AllocationCallbacks
+            - Allocator ()
+            + AllocationCallbacks callbacks () const
+            + {static} Allocator instance ()
+        }
+
+    }
+
+}
+
+!endsub
+
+@enduml

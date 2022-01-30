@@ -1,0 +1,76 @@
+@startuml
+
+!includesub ../../../../../doc/dependencies/primitive/object.puml!OBJECT
+!includesub ../event.puml!EVENT
+
+!startsub MOUSE
+
+namespace engine {
+
+    abstract class MouseEvent
+
+    Event <|-- MouseEvent
+
+    abstract class MouseEvent {
+        - _position : Position
+        # MouseEvent ( Window, Position )
+        + Position position () const
+    }
+
+    class MouseEnterEvent
+    class MouseLeaveEvent
+    class MouseMoveEvent
+    class MousePressEvent
+    class MouseReleaseEvent
+    class MouseScrollEvent
+
+    MouseEvent <|--- MouseEnterEvent
+    MouseEvent <|-- MouseLeaveEvent
+    MouseEvent <|--- MouseMoveEvent
+    MouseEvent <|-- MousePressEvent
+    MouseEvent <|--- MouseReleaseEvent
+    MouseEvent <|-- MouseScrollEvent
+
+    class MouseEnterEvent {
+        + MouseEnterEvent ( Window, Position )
+    }
+
+    class MouseLeaveEvent {
+        + MouseLeaveEvent ( Window, Position )
+    }
+
+    class MouseMoveEvent {
+        - _oldPosition : Position
+        + MouseMoveEvent ( Window, Position, Position )
+        + Position oldPosition () const
+    }
+
+    class MousePressEvent {
+        - _button : MouseButton
+        - _modifiers : KeyModifiers
+        + MousePressEvent ( Window, Position, MouseButton, KeyModifiers )
+        + MouseButton button () const
+        + KeyModifiers modifiers () const
+    }
+
+    class MouseReleaseEvent {
+        - _button : MouseButton
+        - _modifiers : KeyModifiers
+        + MouseReleaseEvent ( Window, Position, MouseButton, KeyModifiers )
+        + MouseButton button () const
+        + KeyModifiers modifiers () const
+    }
+
+    class MouseScrollEvent {
+        - _xOffset : double
+        - _yOffset : double
+        + MouseScrollEvent ( Window, Position, double, double )
+        + double xOffset () const
+        + double yOffset () const
+    }
+
+}
+
+!endsub
+
+@enduml

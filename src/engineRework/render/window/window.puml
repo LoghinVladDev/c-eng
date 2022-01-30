@@ -1,0 +1,98 @@
+@startuml
+
+!includesub monitor.puml!MONITOR
+!includesub ../../../../doc/dependencies/primitive/object.puml!OBJECT
+!includesub ../../utility/simpleeventqueue.puml!SIMPLEEVENTQUEUE
+
+!startsub WINDOW
+
+namespace engine {
+
+    class Window
+
+    cds.Object <|-- Window
+
+    Window "1" *-- "4" engine.utility.SimpleEventQueue : uses
+
+    class Window {
+        .. constants ..
+        + {static} defaultWindowTitle : StringLiteral
+        + {static} defaultFlags : WindowFlags
+        .. fields ..
+        - _title : String
+        - _handle : Handle
+        - _flags : WindowFlags
+        - _position : Position
+        - _size : Size
+        - _mousePosition : Position
+        - _minimumSize : Size
+        - _maximumSize : Size
+        - _refreshRate : uint32
+        - _engine : Engine
+        - _monitor : Monitor
+        - _type : WindowType
+        ..window events..
+        - _customWindowEvents : SimpleEventQueue < WindowEvent >
+        - _customMouseEvents : SimpleEventQueue < MouseEvent >
+        - _customKeyEvents : SimpleEventQueue < MouseEvent >
+        - _customEvents : SimpleEventQueue < Event >
+        .. private functions ..
+        - void applyFlagHints ()
+        - void updateWindowLimits ()
+        .. getters ..
+        + String title () const
+        + Handle handle () const
+        + WindowFlags flags () const
+        + Position position () const
+        + Size size () const
+        + Position mousePosition () const
+        + Size minimumSize () const
+        + Size maximumSize () const
+        + uint32 refreshRate () const
+        + Engine engine () const
+        + Monitor monitor () const
+        + WindowType windowType () const
+        .. setters ..
+        + setTitle ( String )
+        + setMinimumSize ( Size )
+        + setMaximumSize ( Size )
+        + setEngine ( Engine )
+        + setWindowType ( WindowType, Monitor = null )
+        .. public functions ..
+        + Window init ()
+        + Window clear ()
+        + Window ( WindowFlags )
+        + bool shouldClose () const
+        + Window pollEvents ()
+        .. event functions ..
+        + Window handleEvent ( WindowEvent )
+        + Window handleEvent ( MouseEvent )
+        + Window handleEvent ( KeyEvent )
+        + Window handleEvent ( Event )
+        + Window monitorDisconnectEvent ()
+        .. control functions ..
+        + Window makeWindowed ()
+        + Window makeFullscreen ( Monitor = null )
+        + Window makeWindowed ( Monitor = null )
+        + Window move ( Position )
+        + Window resize ( Size )
+        + Window maximize ()
+        + Window minimize ()
+        + Window hide ()
+        + Window show ()
+        + Window grabInputFocus ()
+        + Window requestAttention ()
+        + Window grabMouseCursor ()
+        + Window releaseMouseCursor ()
+        .. extra control functions ..
+        + Window move ( uint32, uint32 )
+        + Window resize ( uint32, uint32 )
+        + Window setMinimumSize ( uint32, uint32 )
+        + Window setMaximumSize ( uint32, uint32 )
+    }
+
+}
+
+!endsub
+
+@enduml

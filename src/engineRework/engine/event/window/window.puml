@@ -1,0 +1,108 @@
+@startuml
+
+!includesub ../../../../../doc/dependencies/primitive/object.puml!OBJECT
+!includesub ../event.puml!EVENT
+
+!startsub WINDOW
+
+namespace engine {
+
+    abstract class WindowEvent
+
+    Event <|-- WindowEvent
+
+    abstract class WindowEvent {
+        # WindowEvent ( Window )
+    }
+
+    class WindowCloseEvent
+    class WindowContentScaleEvent
+    class WindowFrameBufferResizeEvent
+    class WindowGainFocusEvent
+    class WindowLoseFocusEvent
+    class WindowMaximizeEvent
+    class WindowMinimizeEvent
+    class WindowMoveEvent
+    class WindowRefreshRequestEvent
+    class WindowResizeEvent
+    class WindowRestoreEvent
+
+
+    WindowEvent <|---- WindowCloseEvent
+    WindowEvent <|--- WindowContentScaleEvent
+    WindowEvent <|-- WindowFrameBufferResizeEvent
+    WindowEvent <|---- WindowGainFocusEvent
+    WindowEvent <|--- WindowLoseFocusEvent
+    WindowEvent <|-- WindowMaximizeEvent
+    WindowEvent <|---- WindowMinimizeEvent
+    WindowEvent <|--- WindowMoveEvent
+    WindowEvent <|-- WindowRefreshRequestEvent
+    WindowEvent <|---- WindowResizeEvent
+    WindowEvent <|--- WindowRestoreEvent
+
+    class WindowCloseEvent {
+        - _cancelClose : bool
+        + WindowCloseEvent ( Window )
+        + bool cancelClose () const
+        + bool & cancelClose ()
+    }
+
+    class WindowContentScaleEvent {
+        - _scale : WindowContentScale
+        + WindowContentScaleEvent ( Window, WindowContentScale )
+        + WindowContentScale scale () const
+    }
+
+    class WindowFrameBufferResizeEvent {
+        - _size : Size
+        - _oldSize : Size
+        + WindowFrameBufferResizeEvent ( Window, Size, Size )
+        + Size size () const
+        + Size oldSize () const
+    }
+
+    class WindowGainFocusEvent {
+        + WindowGainFocusEvent ( Window )
+    }
+
+    class WindowLoseFocusEvent {
+        + WindowLoseFocusEvent ( Window )
+    }
+
+    class WindowMaximizeEvent {
+        + WindowMaximizeEvent ( Window )
+    }
+
+    class WindowMinimizeEvent {
+        + WindowMinimizeEvent ( Window )
+    }
+
+    class WindowMoveEvent {
+        - _position : Position
+        - _oldPosition : Position
+        + WindowMoveEvent ( Window, Position, Position )
+        + Position position () const
+        + Position oldPosition () const
+    }
+
+    class WindowRefreshRequestEvent {
+        + WindowRefreshRequestEvent ( Window )
+    }
+
+    class WindowResizeEvent {
+        - _size : Size
+        - _oldSize : Size
+        + WindowResizeEvent ( Window, Size, Size )
+        + Size size () const
+        + Size oldSize () const
+    }
+
+    class WindowRestoreEvent {
+        + WindowRestoreEvent ( Window )
+    }
+
+}
+
+!endsub
+
+@enduml

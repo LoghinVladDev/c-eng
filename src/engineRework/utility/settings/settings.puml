@@ -1,0 +1,49 @@
+@startuml
+
+!includesub ../../../../doc/dependencies/primitive/object.puml!OBJECT
+
+!startsub SETTINGS
+
+namespace engine {
+
+    class Settings
+
+    cds.Object <|-- Settings
+
+    class Settings <<(S, #FF7700)>> {
+        .. constants ..
+        + defaultPath : StringLiteral
+        .. constants - keys ..
+        + keyUseValidationLayers : Key
+        + keyLogToConsole : Key
+        + keyPeriodicCacheReconstructionInterval : Key
+        + keyMouseCursorEnabled : Key
+        + keyShowFramesPerSecond : Key
+        + keyResolution : Key
+        + keyFieldOfView : Key
+        + keyDrawDistance : Key
+        .. constants - default values ..
+        + defaultUseValidationLayers : Value
+        + defaultLogToConsole : Value
+        + defaultPeriodicCacheReconstructionInterval : Value
+        + defaultMouseCursorEnabled : Value
+        + defaultShowFramesPerSecond : Value
+        + defaultResolution : Value
+        + defaultFieldOfView : Value
+        + defaultDrawDistance : Value
+        .. fields & getters ..
+        - _settings : HashMap < String, Value >
+        - _initialized : bool
+        + bool initialized () const
+        .. functions ..
+        + {static} Settings instance ()
+        + Value get ( Key )
+        + Settings set ( Key, Value )
+        + {static} Value defaultForKey ( Key )
+    }
+
+}
+
+!endsub
+
+@enduml

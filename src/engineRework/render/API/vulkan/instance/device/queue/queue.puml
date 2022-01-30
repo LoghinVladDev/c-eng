@@ -1,0 +1,35 @@
+@startuml
+
+!includesub ../../../../../../../../doc/dependencies/primitive/object.puml!OBJECT
+
+!startsub QUEUE
+
+namespace engine {
+
+    namespace vulkan {
+
+        class QueueFamily
+
+        cds.Object <|-- QueueFamily
+
+        class QueueFamily {
+            - _details : QueueFamilyDetails
+            - _performanceCounterProperties : Array < PerformanceCounterProperties >
+            - _familyIndex : uint32
+            - _physicalDevice : PhysicalDevice
+            .. getters ..
+            + QueueFamilyDetails details () const
+            + Array < PerformanceCounterProperties > performanceCounterProperties () const
+            + uint32 familyIndex () const
+            + PhysicalDevice physicalDevice () const
+            .. functions ..
+            + QueueFamily init ( PhysicalDevice, QueueFamilyDetails )
+        }
+
+    }
+
+}
+
+!endsub
+
+@enduml

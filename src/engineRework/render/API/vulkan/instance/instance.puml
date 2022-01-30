@@ -1,0 +1,78 @@
+@startuml
+
+!includesub ../../../../../../doc/dependencies/primitive/object.puml!OBJECT
+!includesub validation/layerhandler.puml!LAYERHANDLER
+
+!startsub INSTANCE
+
+namespace engine {
+
+    namespace vulkan {
+
+        class Instance
+
+        cds.Object <|-- Instance
+
+        class Instance {
+            .. constants ..
+            + {static} defaultMessageSeverityFlags : DebugMessageSeverityFlags
+            + {static} defaultMessageTypeFlags : DebugMessageTypeFlags
+            + {static} defaultEnabledValidationFeatures : Array < ValidationFeatureEnable >
+            + {static} defaultDisabledValidationFeatures : Array < ValidationFeatureDisable >
+            .. fields ..
+            - _version : Version
+            - _layerHandler : LayerHandler
+            - _debugMessageSeverityFlags : DebugMessageSeverityFlags
+            - _debugMessageTypeFlags : DebugMessageTypeFlags
+            - _handle : InstanceHandle
+            - _debugMessengerHandle : DebugMessengerHandle,
+            - _enabledValidationFeatures : Array < ValidationFeatureEnable >
+            - _disabledValidationFeatures : Array < ValidationFeatureDisable >
+            .. getters ..
+            + Version version () const
+            + LayerHandler layerHandler () const
+            + DebugMessageSeverityFlags debugMessageSeverityFlags () const
+            + DebugMessageTypeFlags debugMessageTypeFlags () const
+            + InstanceHandle handle () const
+            + DebugMessengerHandle debugMessengerHandle () const
+            + Array < ValidationFeatureEnable > enabledValidationFeatures () const
+            + Array < ValidationFeatureDisable > disabledValidationFeatures () const
+            .. functions ..
+            + Version supportedVulkanVersion ()
+            + Instance ()
+        }
+
+        Instance "1" *-- "1" LayerHandler
+        Instance "1" *--- "1.." LayerHandler::ValidationEnabledFeatures
+        Instance "1" *--- "1.." LayerHandler::ValidationDisabledFeatures
+
+    }
+
+}
+
+!endsub
+
+!startsub PRIVATE
+
+namespace engine {
+
+    namespace vulkan {
+
+        class Instance::Builder {
+            - _version : Version
+            - _debugMessageSeverityFlags : DebugMessageSeverityFlags
+            - _debugMessageTypeFlags : DebugMessageTypeFlags
+            - _enabledValidationFeatures : Array < ValidationFeatureEnable >
+            - _disabledValidationFeatures : Array < ValidationFeatureDisable >
+            + Instance build ()
+        }
+
+        Instance::Builder - Instance : builder of
+
+    }
+
+}
+
+!endsub
+
+@enduml

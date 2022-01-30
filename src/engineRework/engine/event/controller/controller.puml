@@ -1,0 +1,79 @@
+@startuml
+
+!includesub ../../../../../doc/dependencies/primitive/object.puml!OBJECT
+!includesub ../event.puml!EVENT
+!includesub ../../input/controller/controller.puml!CONTROLLER
+
+!startsub CONTROLLER
+
+namespace engine {
+
+    abstract class ControllerEvent
+
+    Event <|-- ControllerEvent
+
+    ControllerEvent "1.." o- "1" Controller : originates from
+
+    abstract class ControllerEvent {
+        - _controller : Controller
+        # ControllerEvent (Controller)
+        + Controller controller () const
+    }
+
+    class ControllerAxisEvent
+    class ControllerButtonPressEvent
+    class ControllerButtonReleaseEvent
+    class ControllerConnectEvent
+    class ControllerDisconnectEvent
+    class ControllerHatEvent
+
+    ControllerEvent <|--- ControllerAxisEvent
+    ControllerEvent <|-- ControllerButtonPressEvent
+    ControllerEvent <|--- ControllerButtonReleaseEvent
+    ControllerEvent <|-- ControllerConnectEvent
+    ControllerEvent <|--- ControllerDisconnectEvent
+    ControllerEvent <|-- ControllerHatEvent
+
+    class ControllerAxisEvent {
+        - _axis : uint16
+        - _value : float
+        - _oldValue : float
+        + ControllerAxisEvent ( Controller, uint16, float, float )
+        + uint16 axis () const
+        + float value () const
+        + float oldValue () const
+    }
+
+    class ControllerButtonPressEvent {
+        - _button : uint16
+        + ControllerButtonPressEvent ( Controller, uint16 )
+        + uint16 button () const
+    }
+
+    class ControllerButtonReleaseEvent {
+        - _button : uint16
+        + ControllerButtonReleaseEvent ( Controller, uint16 )
+        + uint16 button () const
+    }
+
+    class ControllerConnectEvent {
+        + ControllerConnectEvent ( Controller )
+    }
+
+    class ControllerDisconnectEvent {
+        + ControllerDisconnectEvent ( Controller )
+    }
+
+    class ControllerHatEvent {
+        - _hat : uint16
+        - _state : ControllerHatState
+        + ControllerHatEvent ( Controller, uint16, ControllerHatState )
+        + uint16 hat () const
+        + ControllerHatState state () const
+    }
+
+}
+
+!endsub
+
+@enduml

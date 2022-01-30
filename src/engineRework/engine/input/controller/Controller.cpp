@@ -304,7 +304,7 @@ auto __C_ENG_TYPE ( Joystick ) :: update () noexcept -> void {
     readButtons = glfwGetJoystickButtons ( this->handle(), & readButtonCount );
     readHats = glfwGetJoystickHats ( this->handle(), & readHatCount );
 
-    if ( static_cast < uint32 > ( readAxisCount ) != this->axisCount() ) {
+    if ( static_cast < uint32 > ( readAxisCount ) != this->_axisCount ) {
         delete[] this->_axes;
 
         this->_axisCount = static_cast < uint32 > ( readAxisCount );
@@ -331,7 +331,7 @@ auto __C_ENG_TYPE ( Joystick ) :: update () noexcept -> void {
 
     }
 
-    if ( static_cast < uint32 > ( readButtonCount ) != this->buttonCount() ) {
+    if ( static_cast < uint32 > ( readButtonCount ) != this->_buttonCount ) {
         delete[] this->_buttons;
 
         this->_buttonCount = static_cast < uint32 > ( readButtonCount );
@@ -368,7 +368,7 @@ auto __C_ENG_TYPE ( Joystick ) :: update () noexcept -> void {
 
     }
 
-    if ( static_cast < uint32 > ( readHatCount ) != this->hatCount() ) {
+    if ( static_cast < uint32 > ( readHatCount ) != this->_hatCount ) {
         delete[] this->_hats;
 
         this->_hatCount = static_cast < uint32 > ( readHatCount );

@@ -1,0 +1,71 @@
+@startuml
+
+!includesub ../../../../doc/dependencies/primitive/object.puml!OBJECT
+!includesub ../../render/window/window.puml!WINDOW
+!includesub controller/controller.puml!CONTROLLER
+!includesub key/key.puml!KEY
+!includesub mouse/mouse.puml!MOUSE
+!includesub window/window.puml!WINDOW
+
+!startsub EVENT
+
+namespace engine {
+
+    cds.Object <|-- Event
+
+    Event "1.." o-- "1" Window : originates from
+
+    abstract class Event {
+        - _window : Window
+        # Event ( Window )
+        + EventType type () const
+        + Window window () const
+    }
+
+    class EventHandler
+
+    EventHandler "1" - "many" Event : dispatches
+
+    class EventHandler {
+        .. generic events ..
+        + EventHandler customEvent ( Event ) const
+        .. generic events with root ..
+        + EventHandler controllerCustomEvent ( ControllerEvent ) const
+        + EventHandler keyCustomEvent ( KeyCustomEvent ) const
+        + EventHandler mouseCustomEvent ( MouseCustomEvent ) const
+        + EventHandler windowCustomEvent ( WindowCustomEvent ) const
+        .. controller events ..
+        + controllerAxisEvent ( ControllerAxisEvent ) const
+        + controllerButtonPressEvent ( ControllerButtonPressEvent ) const
+        + controllerButtonReleaseEvent ( ControllerButtonReleaseEvent ) const
+        + controllerConnectEvent ( ControllerConnectEvent ) const
+        + controllerDisconnectEvent ( ControllerDisconnectEvent ) const
+        + controllerHatEvent ( ControllerHatEvent ) const
+        .. key events ..
+        + keyPressEvent ( KeyPressEvent ) const
+        + keyReleaseEvent ( KeyReleaseEvent ) const
+        .. mouse events ..
+        + mouseMoveEvent ( MouseMoveEvent ) const
+        + mousePressEvent ( MousePressEvent ) const
+        + mouseReleaseEvent ( MouseReleaseEvent ) const
+        + mouseEnterEvent ( MouseEnterEvent ) const
+        + mouseLeaveEvent ( MouseLeaveEvent ) const
+        + mouseScrollEvent ( MouseScrollEvent ) const
+        .. window events ..
+        + windowResizeEvent ( WindowResizeEvent ) const
+        + windowCloseEvent ( WindowCloseEvent ) const
+        + windowFrameBufferResizeEvent ( WindowFrameBufferResizeEvent ) const
+        + windowContentScaleEvent ( WindowContentScaleEvent ) const
+        + windowMoveEvent ( WindowMoveEvent ) const
+        + windowRestoreEvent ( WindowRestoreEvent ) const
+        + windowMinimizeEvent ( WindowMinimizeEvent ) const
+        + windowMaximizeEvent ( WindowMaximizeEvent ) const
+        + windowGainFocusEvent ( WindowGainFocusEvent ) const
+        + windowLoseFocusEvent ( WindowLoseFocusEvent ) const
+        + windowRefreshRequestEvent ( WindowRefreshRequestEvent ) const
+    }
+}
+
+!endsub
+
+@enduml

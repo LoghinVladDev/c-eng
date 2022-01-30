@@ -9,6 +9,8 @@
 #include <SettingsSharedContainer.hpp>
 #include <SettingOptionGraphics.hpp>
 
+using namespace cds;
+
 constexpr uint32 MAX_FRAMES_IN_FLIGHT = 2U;
 const char* engine::VulkanTriangleApplication::DEFAULT_TITLE = "Vulkan Application";
 

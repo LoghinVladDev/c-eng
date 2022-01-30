@@ -1,0 +1,47 @@
+@startuml
+
+!includesub ../../../../doc/dependencies/primitive/object.puml!OBJECT
+
+!startsub LOGGER
+
+namespace engine {
+
+    class Logger
+
+    cds.Object <|-- Logger
+
+    class Logger <<(S, #FF7700)>> {
+        .. constants ..
+        + {static} defaultMirrorToConsole : bool
+        + {static} defaultLogLevel : LogLevel
+        + {static} defaultTimeBufferSize : uint32
+        .. fields ..
+        - _outputBuffer : std :: fstream
+        - _mirrorToConsole : bool
+        - _logLevel : LogLevel
+        .. getters ..
+        + bool mirrorToConsole () const
+        + LogLevel logLevel () const
+        .. setters ..
+        + bool & mirrorToConsole ()
+        + LogLevel & logLevel ()
+        .. static functions ..
+        + {static} Logger instance ()
+        + {static} StringLiteral currentTime ()
+        .. functions ..
+        + Logger log ( String, LogLevel )
+        + Logger forced ( String )
+        + Logger system ( String )
+        + Logger fatal ( String )
+        + Logger critical ( String )
+        + Logger error ( String )
+        + Logger warning ( String )
+        + Logger debug ( String )
+        + Logger info ( String )
+    }
+
+}
+
+!endsub
+
+@enduml

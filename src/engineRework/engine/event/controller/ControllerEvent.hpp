@@ -19,7 +19,7 @@ namespace engine {
     Class {
         Field ( ENGINE_PRIMITIVE_TYPE ( Controller * ), controller, DEFAULT_VALUE ( nullptr ), GET_DEFAULT, SET_NONE )
 
-    public:
+    protected:
         explicit Constructor (
                 __C_ENG_TYPE ( Controller ) * controller
         ) noexcept :
@@ -27,6 +27,8 @@ namespace engine {
                 _controller ( controller ) {
 
         }
+
+    public:
 
         Destructor () noexcept override = default;
 

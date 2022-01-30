@@ -1,0 +1,24 @@
+@startuml
+
+!includesub ../../../../doc/dependencies/primitive/object.puml!OBJECT
+
+!startsub RENDERENGINE
+
+namespace engine {
+
+    cds.Object <|-- RenderEngine
+
+    abstract class RenderEngine {
+        - _renderInstanceSurfaceCallbacks : RenderInstanceSurfaceCallbacks
+        # RenderInstanceSurfaceCallbacks renderInstanceSurfaceCallbacks () const
+        + RenderEngine setRenderSurfaceCallbacks ( RenderInstanceSurfaceCallbacks )
+        + {abstract} StringLiteral name () const
+        + {abstract} RenderEngine init ()
+        + {abstract} RenderEngine clear ()
+    }
+
+}
+
+!endsub
+
+@enduml

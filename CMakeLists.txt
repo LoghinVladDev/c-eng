@@ -795,6 +795,9 @@ if(Vulkan_FOUND)
 
             src/engineRework/render/API/vulkan/instance/device/PhysicalDevice.cpp
             src/engineRework/render/API/vulkan/instance/device/PhysicalDevice.hpp
+
+            src/engineRework/render/API/vulkan/instance/device/Device.cpp
+            src/engineRework/render/API/vulkan/instance/device/Device.hpp
     )
 
     set (

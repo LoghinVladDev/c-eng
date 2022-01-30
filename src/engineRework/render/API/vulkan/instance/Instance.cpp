@@ -65,12 +65,13 @@ static VKAPI_ATTR auto VKAPI_CALL debugMessengerCallback (
         return asString.removeSuffix(", ");
     };
 
-    (void) __C_ENG_TYPE ( Logger ) :: instance().info (
+    (void) __C_ENG_TYPE ( Logger ) :: instance().log (
             String :: f (
                     "[LAYER CALLBACK][type = %s] : %s",
                     typeFlagsToString ( messageTypeFlags ).cStr(),
                     pCallbackData->pMessage
-            )
+            ),
+            logLevel
     );
 
     if ( basicNotifyCallback != nullptr ) {
@@ -310,12 +311,16 @@ auto vulkan :: Self :: init () noexcept (false) -> Self & {
 
     if ( this->layerHandler().debugLayerEnabled() ) {
 
-        result = vulkan :: createDebugMessenger(
+        result = vulkan :: createDebugMessenger (
                 this->handle(),
                 & debugMessengerCreateInfo,
                 __C_ENG_TYPE (Allocator)::instance().callbacks(),
                 & this->_debugMessengerHandle
         );
+
+        if ( result != ResultSuccess ) {
+            __C_ENG_LOG_AND_THROW_DETAILED_API_CALL_EXCEPTION ( error, "createDebugMessenger", result );
+        }
     }
 
     return * this;

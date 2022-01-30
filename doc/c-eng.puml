@@ -1,0 +1,29 @@
+@startuml
+
+!includesub dependencies/primitive/object.puml!OBJECT
+
+!includesub ../src/engineRework/engine/event/controller/controller.puml!CONTROLLER
+!includesub ../src/engineRework/engine/event/key/key.puml!KEY
+!includesub ../src/engineRework/engine/event/mouse/mouse.puml!MOUSE
+!includesub ../src/engineRework/engine/event/window/window.puml!WINDOW
+!includesub ../src/engineRework/engine/event/event.puml!EVENT
+
+!includesub ../src/engineRework/engine/input/controller/controller.puml!CONTROLLER
+
+!includesub ../src/engineRework/engine/engine.puml!ENGINE
+
+!includesub ../src/engineRework/render/window/monitor.puml!MONITOR
+!includesub ../src/engineRework/render/window/window.puml!WINDOW
+!includesub ../src/engineRework/render/API/renderengine.puml!RENDERENGINE
+!includesub ../src/engineRework/render/API/vulkan/vulkan.puml!VULKAN
+!includesub ../src/engineRework/render/API/vulkan/instance/instance.puml!INSTANCE
+!includesub ../src/engineRework/render/API/vulkan/instance/validation/layerhandler.puml!LAYERHANDLER
+!includesub ../src/engineRework/render/API/vulkan/instance/allocator/allocator.puml!ALLOCATOR
+!includesub ../src/engineRework/render/API/vulkan/instance/device/device.puml!DEVICE
+!includesub ../src/engineRework/render/API/vulkan/instance/device/queue/queue.puml!QUEUE
+
+!includesub ../src/engineRework/utility/logger/logger.puml!LOGGER
+!includesub ../src/engineRework/utility/settings/settings.puml!SETTINGS
+!includesub ../src/engineRework/utility/simpleeventqueue.puml!SIMPLEEVENTQUEUE
+
+@enduml

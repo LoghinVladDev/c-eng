@@ -27,7 +27,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
             Field ( TYPE ( cds :: Array < PerformanceCounterProperties > ), performanceCounterProperties,   NO_INIT,                            GET_DEFAULT, SET_NONE )
 
             Field ( PRIMITIVE_TYPE ( cds :: uint32 ),                       familyIndex,                    DEFAULT_VALUE ( 0U ),               GET_DEFAULT, SET_NONE )
-            Field ( ENGINE_PRIMITIVE_TYPE ( PhysicalDevice const * ),             physicalDevice,                 DEFAULT_VALUE ( nullptr ),    GET_DEFAULT, SET_NONE )
+            Field ( ENGINE_PRIMITIVE_TYPE ( PhysicalDevice const * ),       physicalDevice,                 DEFAULT_VALUE ( nullptr ),          GET_DEFAULT, SET_NONE )
 
         public:
             auto init ( __C_ENG_TYPE ( PhysicalDevice ) const *, cds :: uint32, __C_ENG_TYPE ( QueueFamilyDetails ) const & ) noexcept (false) -> Self &;

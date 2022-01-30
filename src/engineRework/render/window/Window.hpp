@@ -34,7 +34,7 @@ namespace engine {
         Const ( ENGINE_PRIMITIVE_TYPE ( WindowFlags ),      defaultFlags,       VALUE ( WindowFlagResizable | WindowFlagGrabFocusOnOpen | WindowFlagGrabFocusOnRaise ) ) // NOLINT(clion-misra-cpp2008-4-5-2)
 
     private:
-        Field ( TYPE ( cds :: String ),                                                     title,                          DEFAULT_VALUE ( defaultWindowTitle ),                                   GET_DEFAULT,    SET_NONE )
+        Field ( TYPE ( cds :: String ),                                                     title,                          DEFAULT_VALUE ( defaultWindowTitle ),                                   GET_DEFAULT,    SET ( setTitle ) )
 
         Field ( TYPE ( utility :: SimpleEventQueue < __C_ENG_TYPE ( WindowEvent ) * > ),    customWindowEvents,             NO_INIT,                                                                GET_NONE,       SET_NONE )
         Field ( TYPE ( utility :: SimpleEventQueue < __C_ENG_TYPE ( MouseEvent ) * > ),     customMouseEvents,              NO_INIT,                                                                GET_NONE,       SET_NONE )
@@ -121,8 +121,6 @@ namespace engine {
         __C_ENG_MAYBE_UNUSED inline auto setMaximumSize ( cds :: uint32 width, cds :: uint32 height ) noexcept -> Self & {
             return this->setMaximumSize ( { width, height } );
         }
-
-        __C_ENG_MAYBE_UNUSED auto setTitle ( cds :: String const & ) noexcept -> Self &;
 
         auto grabMouseCursor () noexcept -> Self &;
         auto releaseMouseCursor () noexcept -> Self &;

@@ -1,0 +1,55 @@
+@startuml
+
+!includesub window.puml!WINDOW
+!includesub ../../../../doc/dependencies/primitive/object.puml!OBJECT
+
+!startsub MONITOR
+
+namespace engine {
+
+    class Monitor
+
+    cds.Object <|-- Monitor
+
+    Window "1..." o-- "1" Monitor : is on
+
+    class Monitor {
+        - _handle : GLFWmonitor
+        - _availableVideoModes : Array < MonitorVideoModeProperties >
+        - _properties : MonitorProperties
+        - _windowOnMonitor : Window
+        ..getters..
+        + Window windowOnMonitor () const
+        ..
+        + {static} Array < Monitor > monitors ()
+        + {static} Monitor primaryMonitor ()
+        + {static} void initMonitorHandler ()
+        ..
+        + setGamma (float)
+    }
+
+}
+
+!endsub
+
+!startsub PRIVATE
+
+namespace engine {
+
+    class MonitorContainer <<(S, #FF7700)>> {
+        + monitorsQueried : bool
+        + monitors : Array < Monitor >
+        + primaryMonitor : Monitor
+        MonitorContainer ()
+        void queryProperties ( Monitor )
+        void query ()
+        void logMonitorQueryRequest ()
+        void addMonitor ( Monitor::Handle )
+    }
+
+    MonitorContainer "1" *-- "1.." Monitor
+}
+
+!endsub
+
+@enduml

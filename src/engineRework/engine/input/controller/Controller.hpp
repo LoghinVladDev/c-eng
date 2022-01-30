@@ -32,7 +32,7 @@ namespace engine {
         virtual auto update () noexcept -> void = 0;
 
     public:
-        __C_ENG_MAYBE_UNUSED virtual auto isGamepad () noexcept -> bool = 0;
+        __C_ENG_NO_DISCARD __C_ENG_MAYBE_UNUSED virtual auto isGamepad () const noexcept -> bool = 0;
 
         static auto setEngine ( __C_ENG_TYPE ( Engine ) * ) noexcept -> void;
 

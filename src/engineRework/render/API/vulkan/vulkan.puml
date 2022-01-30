@@ -1,0 +1,39 @@
+@startuml
+
+!includesub ../../../../../doc/dependencies/primitive/object.puml!OBJECT
+!includesub ../renderengine.puml!RENDERENGINE
+!includesub instance/instance.puml!INSTANCE
+
+!startsub VULKAN
+
+namespace engine {
+
+    namespace vulkan {
+
+        class VulkanRenderEngine
+
+        engine.RenderEngine <|-- VulkanRenderEngine
+
+        class VulkanRenderEngine {
+            - _desiredVersion : Version
+            - _surfaceHandle : SurfaceHandle
+            - _instance : Instance
+            .. getters ..
+            + Version desiredVersion () const
+            + SurfaceHandle surfaceHandle () const
+            + Instance instance () const
+            .. setters ..
+            + VulkanRenderEngine setDesiredVersion ( Version )
+            .. private functions ..
+            - Version acquireSuitableAPIVersion ()
+        }
+
+        VulkanRenderEngine "1" *- Instance
+
+    }
+
+}
+
+!endsub
+
+@enduml

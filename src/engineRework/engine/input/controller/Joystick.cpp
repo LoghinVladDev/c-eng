@@ -50,8 +50,8 @@ auto Self :: toString () const noexcept -> String {
 
     return __C_ENG_STRINGIFY ( Self ) " "
            "{ base = "      + this-> Parent :: toString() +
-           ", axes = "      + axesToString ( this->axes(), this->axisCount() ) +
-           ", buttons = "   + buttonsToString ( this->buttons(), this->buttonCount() ) +
-           ", hats = "      + hatsToString ( this->hats(), this->hatCount() ) +
+           ", axes = "      + axesToString ( this->_axes, this->_axisCount ) +
+           ", buttons = "   + buttonsToString ( this->_buttons, this->_buttonCount ) +
+           ", hats = "      + hatsToString ( this->_hats, this->_hatCount ) +
            " }";
 }

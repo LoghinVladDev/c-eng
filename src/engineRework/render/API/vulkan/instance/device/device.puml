@@ -1,0 +1,44 @@
+@startuml
+
+!includesub ../../../../../../../doc/dependencies/primitive/object.puml!OBJECT
+!includesub ../instance.puml!INSTANCE
+!includesub queue/queue.puml!QUEUE
+
+!startsub DEVICE
+
+namespace engine {
+
+    namespace vulkan {
+
+        class PhysicalDevice
+
+        cds.Object <|-- PhysicalDevice
+
+        class PhysicalDevice {
+            - _handle : PhysicalDeviceHandle
+            - _details : PhysicalDeviceDetails
+            - _queueFamilies : Array < QueueFamily >
+            - _instance : Instance
+            .. getters ..
+            + PhysicalDeviceHandle handle () const
+            + PhysicalDeviceDetails details () const
+            + Array < QueueFamily > queueFamilies () const
+            + Instance instance () const
+            .. functions ..
+            - PhysicalDevice ()
+            - PhysicalDevice refreshQueueFamilies ()
+            + {static} void refreshPhysicalDevices ()
+            + {static} Array < PhysicalDevice > physicalDevices ()
+            + uint32 renderScore () const
+        }
+
+        PhysicalDevice "1.." o-- "1" Instance : use
+        PhysicalDevice "1" *-- "1.." QueueFamily : has
+
+    }
+
+}
+
+!endsub
+
+@enduml

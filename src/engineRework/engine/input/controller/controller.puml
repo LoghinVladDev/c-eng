@@ -1,0 +1,76 @@
+@startuml
+
+!includesub ../../../../../doc/dependencies/primitive/object.puml!OBJECT
+!includesub ../../event/controller/controller.puml!CONTROLLER
+
+!startsub CONTROLLER
+
+namespace engine {
+
+    abstract class Controller {
+        + {static} controllerCapacity : uint32
+        - _handle : sint32
+        - _name : StringLiteral
+        + bool isGamepad () const
+        + sint32 handle () const
+        + StringLiteral name () const
+        + {static} uint32 connectedControllerCount ()
+        + {static} Controller [] connectedControllers ()
+        .. controller event handling ..
+        # {abstract} void update ()
+        + {static} void setEngine ( Engine )
+        + {static} void handleEvent ( ControllerEvent )
+        + {static} void updateEvents ()
+        + {static} void pollEvents ()
+    }
+
+    class Gamepad
+    class Joystick
+
+    Controller <|-- Gamepad
+    Controller <|-- Joystick
+
+    class Gamepad {
+        + {static} axesCount : uint8
+        + {static} buttonCount : uint8
+        - _gamepadName : StringLiteral
+        - _firstUpdate : bool
+        - _axes : float[axesCount]
+        - _buttonCount : bool[buttonCount]
+        + StringLiteral gamepadName () const
+    }
+
+    class Joystick {
+        - _axisCount : uint32
+        - _axes : float[]
+        - _buttonCount : uint32
+        - _buttons : bool[]
+        - _hatCount : uint32
+        - _hats : uint8[]
+    }
+
+}
+
+!endsub
+
+!startsub PRIVATE
+
+namespace engine {
+
+    class ControllerHandler
+
+    ControllerHandler "1" *-- "Controller.controllerCapacity" Controller
+
+    class ControllerHandler <<(S, #FF7700)>> {
+        + connectedControllers [ Controller.controllerCapacity ] : Controller
+        + connectedControllerCount : uint32
+        + void connectController ( sint32 )
+        + void disconnectController ( sint32 )
+        + ControllerHandler ()
+    }
+
+}
+
+!endsub
+
+@enduml

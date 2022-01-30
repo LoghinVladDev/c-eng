@@ -271,3 +271,19 @@ auto vulkan :: Self :: physicalDevices (
 
     return :: physicalDevices;
 }
+
+auto vulkan :: Self :: renderScore () const noexcept -> uint32 {
+    uint32 score = 0U;
+
+    if ( this->details().basicFeatures.geometryShader == VK_FALSE ) {
+        return 0U;
+    }
+
+    if ( this->details().basicProperties.deviceType == PhysicalDeviceTypeDedicatedGPU ) {
+        score += dedicatedGPUBias;
+    }
+
+    score += this->details().basicProperties.limits.maxImageDimension2D;
+
+    return score;
+}

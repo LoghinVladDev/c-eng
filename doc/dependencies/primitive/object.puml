@@ -1,0 +1,21 @@
+@startuml
+
+!startsub OBJECT
+
+namespace cds #dddddd {
+
+    abstract class Object {
+        + {abstract} String toString() const
+        + {abstract} bool equals (Object) const
+        + {abstract} Index hash () const
+        + {abstract} Object * copy () const
+        ..overloaded operators..
+        + {static} operator << (std::ostream, Object)
+        operator String () const
+    }
+
+}
+
+!endsub
+
+@enduml

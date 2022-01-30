@@ -45,7 +45,18 @@ auto vulkan :: Self :: init () noexcept (false) -> Self & {
         }
     }
 
-    __C_ENG_TYPE ( PhysicalDevice ) :: refreshPhysicalDevices ( & this->_instance );
+    __C_ENG_TYPE ( PhysicalDevice ) const * pPhysicalDeviceToUse = nullptr;
+    uint32 maxPhysicalDeviceScore = 0U;
+
+    /// insert logic to use last physical device used later
+
+    for ( auto & physicalDevice : __C_ENG_TYPE ( PhysicalDevice ) :: physicalDevices ( & this->_instance ) ) {
+        auto currentDeviceScore = physicalDevice.renderScore();
+        if ( currentDeviceScore > maxPhysicalDeviceScore ) {
+            pPhysicalDeviceToUse = & physicalDevice;
+            maxPhysicalDeviceScore = currentDeviceScore;
+        }
+    }
 
     return * this;
 }

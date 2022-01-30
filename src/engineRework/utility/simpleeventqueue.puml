@@ -1,0 +1,20 @@
+@startuml
+
+!startsub SIMPLEEVENTQUEUE
+
+namespace engine {
+    namespace utility {
+        class SimpleEventQueue < T > {
+            - pHead : Node
+            - pBack : Node
+            + bool empty () : const
+            + void push (T)
+            + T pop ()
+            + String toString () const
+        }
+    }
+}
+
+!endsub
+
+@enduml

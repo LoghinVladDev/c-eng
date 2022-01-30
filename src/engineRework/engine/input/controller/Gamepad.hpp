@@ -29,7 +29,7 @@ namespace engine {
         auto update () noexcept -> void override;
 
     public:
-        constexpr auto isGamepad () noexcept -> bool override {
+        __C_ENG_NO_DISCARD constexpr auto isGamepad () const noexcept -> bool override {
             return true;
         };
 

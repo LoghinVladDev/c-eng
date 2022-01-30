@@ -7,6 +7,7 @@
 
 #include <RenderEngine.hpp>
 #include <Instance.hpp>
+#include <Device.hpp>
 
 
 #define C_ENG_MAP_START     CLASS ( VulkanRenderEngine, ENGINE_PARENT ( RenderEngine ) )
@@ -19,6 +20,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
             Field ( ENGINE_TYPE ( Version ),                    desiredVersion, DEFAULT_VALUE ( versionConstants :: nullVersion ),  GET_DEFAULT, SET_INLINE ( setDesiredVersion ) ) // NOLINT(clion-misra-cpp2008-5-0-4,clion-misra-cpp2008-5-0-6)
             Field ( ENGINE_PRIMITIVE_TYPE ( SurfaceHandle ),    surfaceHandle,  DEFAULT_VALUE ( nullptr ),                          GET_DEFAULT, SET_NONE )
             Field ( ENGINE_TYPE ( Instance ),                   instance,       NO_INIT,                                            GET_DEFAULT, SET_NONE )
+            Field ( ENGINE_TYPE ( Device ),                     device,         NO_INIT,                                            GET_DEFAULT, SET_NONE )
 
         private:
             __C_ENG_NO_DISCARD auto acquireSuitableAPIVersion () const noexcept (false) -> __C_ENG_TYPE ( Version );

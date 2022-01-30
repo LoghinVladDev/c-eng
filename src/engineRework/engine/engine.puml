@@ -1,0 +1,87 @@
+@startuml
+
+!includesub ../../../doc/dependencies/primitive/object.puml!OBJECT
+!includesub ../render/window/window.puml!WINDOW
+!includesub ../render/API/renderengine.puml!RENDERENGINE
+!includesub event/event.puml!EVENT
+
+!startsub ENGINE
+
+namespace engine {
+
+    enum EngineState {
+        Inactive
+        Startup
+        StartupAcquiringSettings
+        StartupInitializingRenderEngine
+        Running
+        Shutdown
+    }
+
+    class Engine
+
+    cds.Object <|-- Engine
+
+    class Engine <<(S, #FF7700)>> {
+        + {static} versionVariant : uint8
+        + {static} versionMajor : uint8
+        + {static} versionMinor : uint8
+        + {static} versionPatch : uint8
+        - _state : EngineState
+        - _window : Window
+        - _renderEngine : RenderEngine
+        - _externalRenderEngine : bool
+        - _logFPSToConsole : bool
+        - _fpsUpdateFrameTime : uint64
+        - _showFpsEveryTick : uint64
+        - _frameDeltaTime : double
+        - _frameCount : uint64
+        - _fps : double
+        - _eventHandler : EventHandler
+        .. getters ..
+        + EngineState state () const
+        + Window window () const
+        + RenderEngine renderEngine () const
+        + bool externalRenderEngine () const
+        + bool logFPSToConsole () const
+        + uint64 fpsUpdateFrameTime () const
+        + uint64 showFpsEveryTick () const
+        + double frameDeltaTime () const
+        + uint64 frameCount () const
+        + double fps () const
+        + EventHandler eventHandler () const
+        .. setters ..
+        + Engine setWindow ( Window )
+        + Engine setRenderEngine ( RenderEngine )
+        + bool & logFPSToConsole ()
+        + uint64 & fpsUpdateFrameTime ()
+        + uint64 & showFpsEveryTick ()
+        .. internal functions ..
+        - Engine initializeSettings ()
+        - Engine initializeRenderEngine ()
+        - Engine startup ()
+        - Engine run ()
+        - Engine shutdown ()
+        - Engine ()
+        - void setState ( EngineState )
+        .. public functions ..
+        + {static} Engine instance ()
+        + Engine start ()
+        + bool shutdownRequested
+    }
+
+    Engine "1" *- "1" EventHandler
+    Engine "1" o- "1" Window
+    Engine "1" *- "1" EngineState
+
+    diamond engine.d
+
+    engine.Engine "1" - engine.d
+    engine.d *-- "externalRenderEngine == false" engine.RenderEngine
+    engine.d o-- "externalRenderEngine == true" engine.RenderEngine
+
+}
+
+!endsub
+
+@enduml
