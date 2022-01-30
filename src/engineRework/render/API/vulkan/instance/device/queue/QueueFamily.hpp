@@ -6,10 +6,11 @@
 #define __C_ENG_QUEUE_FAMILY_HPP__
 
 #include <Preprocess.hpp>
+#include <VulkanRenderObject.hpp>
 #include <VulkanCore.hpp>
 #include <CDS/Array>
 
-#define C_ENG_MAP_START     CLASS ( QueueFamily,    PARENT ( cds :: Object ) )
+#define C_ENG_MAP_START     CLASS ( QueueFamily,    ENGINE_PARENT ( VulkanRenderObject ) )
 #include <ObjectMapping.hpp>
 
 namespace engine { // NOLINT(modernize-concat-nested-namespaces)
@@ -31,6 +32,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
         public:
             auto init ( __C_ENG_TYPE ( PhysicalDevice ) const *, cds :: uint32, __C_ENG_TYPE ( QueueFamilyDetails ) const & ) noexcept (false) -> Self &;
+            auto clear () noexcept -> Self & override;
         };
 
     }

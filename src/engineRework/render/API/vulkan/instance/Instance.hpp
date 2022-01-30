@@ -6,14 +6,14 @@
 #define __C_ENG_INSTANCE_HPP__
 
 #include <Preprocess.hpp>
-#include <CDS/Object>
+#include <VulkanRenderObject.hpp>
 
 #include <VulkanCore.hpp>
 #include <LayerHandler.hpp>
 #include <CDS/Array>
 
 
-#define C_ENG_MAP_START     CLASS ( Instance, PARENT ( cds :: Object ) )
+#define C_ENG_MAP_START     CLASS ( Instance, ENGINE_PARENT ( VulkanRenderObject ) )
 #include <ObjectMapping.hpp>
 
 namespace engine { // NOLINT(modernize-concat-nested-namespaces)
@@ -103,7 +103,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #endif
 
             auto init () noexcept (false) -> Self &;
-            auto clear () noexcept (false) -> Self &;
+            auto clear () noexcept (false) -> Self & override;
             Constructor () noexcept = default;
             Destructor () noexcept override;
 

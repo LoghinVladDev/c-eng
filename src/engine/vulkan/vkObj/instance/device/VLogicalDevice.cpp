@@ -153,7 +153,7 @@ static inline auto populateDeviceCreateInfoStructure (
     };
 }
 
-auto engine::VLogicalDevice::Factory::createSwapChainToSurface(
+auto engine::VLogicalDevice::Factory::createSwapChainToSurface (
         VSurface const * surface
 ) noexcept -> Factory & {
     if( surface == nullptr ) /// do nothing if given invalid surface

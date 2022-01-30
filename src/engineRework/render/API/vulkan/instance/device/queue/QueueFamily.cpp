@@ -80,3 +80,7 @@ auto vulkan :: Self :: init (
 
     return * this;
 }
+
+auto vulkan :: Self :: clear () noexcept -> Self & {
+    return * this;
+}

@@ -360,7 +360,7 @@ auto vulkan :: Self :: clear () noexcept (false) -> Self & {
 }
 
 vulkan :: Self :: Destructor () noexcept {
-    (void) this->clear();
+    (void) this-> Self :: clear();
 }
 
 #define C_ENG_MAP_END

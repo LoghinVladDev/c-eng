@@ -228,11 +228,17 @@ auto vulkan :: Self :: enabledExtensionNames() noexcept -> ExtensionNames {
     return { this->_enabledExtensionNames, this->_enabledExtensionCount };
 }
 
-vulkan :: Self :: Destructor () noexcept {
+auto vulkan :: Self :: clear () noexcept -> Self & {
     for ( auto & l : this->layers() ) {
         delete[] l.pExtensions;
     }
 
     delete [] this->_enabledLayerNames;
     delete [] this->_enabledExtensionNames;
+
+    return * this;
+}
+
+vulkan :: Self :: Destructor () noexcept {
+    (void) this-> Self :: clear();
 }

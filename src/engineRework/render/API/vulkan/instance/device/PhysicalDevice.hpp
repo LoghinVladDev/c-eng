@@ -9,8 +9,9 @@
 #include <CDS/Array>
 #include <VulkanCore.hpp>
 #include <QueueFamily.hpp>
+#include <VulkanRenderObject.hpp>
 
-#define C_ENG_MAP_START     CLASS ( PhysicalDevice,     PARENT ( cds :: Object ) )
+#define C_ENG_MAP_START     CLASS ( PhysicalDevice,     ENGINE_PARENT ( VulkanRenderObject ) )
 #include <ObjectMapping.hpp>
 
 namespace engine { // NOLINT(modernize-concat-nested-namespaces)
@@ -36,6 +37,10 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
             static auto physicalDevices ( __C_ENG_TYPE ( Instance ) const * = nullptr ) noexcept (false) -> cds :: Array < Self > const &;
 
             __C_ENG_NO_DISCARD auto renderScore () const noexcept -> cds :: uint32;
+
+            auto clear () noexcept -> Self & override {
+                return * this;
+            }
         };
 
     }

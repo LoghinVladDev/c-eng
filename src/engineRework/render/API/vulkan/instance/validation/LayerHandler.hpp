@@ -6,11 +6,12 @@
 #define __C_ENG_LAYER_HANDLER_HPP__
 
 #include <Preprocess.hpp>
+#include <VulkanRenderObject.hpp>
 #include <CDS/Array>
 #include <VulkanCore.hpp>
 
 
-#define C_ENG_MAP_START     CLASS ( LayerHandler, PARENT ( cds :: Object ) )
+#define C_ENG_MAP_START     CLASS ( LayerHandler, ENGINE_PARENT ( VulkanRenderObject ) )
 #include <ObjectMapping.hpp>
 
 namespace engine { // NOLINT(modernize-concat-nested-namespaces)
@@ -65,6 +66,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
             };
 
             auto init () noexcept (false) -> Self &;
+            auto clear () noexcept -> Self & override;
             auto refreshLayers () noexcept (false) -> Self &;
             auto enabledLayerNames () noexcept -> LayerNames;
             auto enabledExtensionNames () noexcept -> ExtensionNames;

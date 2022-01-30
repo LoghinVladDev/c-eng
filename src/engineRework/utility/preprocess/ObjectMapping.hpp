@@ -527,6 +527,7 @@
 #define Field                                                                       __C_ENG_OBJECT_MAP_META_CALL(__C_ENG_OBJECT_MAP_FIELD_,           C_ENG_MAP_START)
 #define Const                                                                       __C_ENG_OBJECT_MAP_META_CALL(__C_ENG_OBJECT_MAP_CONST_,           C_ENG_MAP_START)
 #define Nester                                                                      __C_ENG_OBJECT_MAP_META_CALL(__C_ENG_OBJECT_MAP_NESTER_,          C_ENG_MAP_START)
+#define Type                                                                        __C_ENG_TYPE
 
 
 #elif defined(C_ENG_MAP_END) && defined(C_ENG_MAP_START)
@@ -805,6 +806,7 @@
 #undef Field
 #undef Const
 #undef Nester
+#undef Type
 
 
 #undef C_ENG_MAP_END

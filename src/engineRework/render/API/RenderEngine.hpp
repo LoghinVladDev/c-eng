@@ -6,11 +6,11 @@
 #define __C_ENG_RENDER_ENGINE_HPP__
 
 #include <Preprocess.hpp>
-#include <CDS/Object>
+#include <RenderObject.hpp>
 #include <Core.hpp>
 
 
-#define C_ENG_MAP_START     CLASS ( RenderEngine, PARENT ( cds :: Object ) )
+#define C_ENG_MAP_START     CLASS ( RenderEngine, ENGINE_PARENT ( RenderObject ) )
 #include <ObjectMapping.hpp>
 
 namespace engine {
@@ -21,7 +21,7 @@ namespace engine {
     public:
         __C_ENG_NO_DISCARD virtual auto name () const noexcept -> cds :: StringLiteral = 0;
         virtual auto init () noexcept (false) -> Self & = 0;
-        virtual auto clear () noexcept (false) -> Self & = 0;
+        auto clear () noexcept (false) -> Self & override = 0;
         Destructor () noexcept override = default;
     };
 

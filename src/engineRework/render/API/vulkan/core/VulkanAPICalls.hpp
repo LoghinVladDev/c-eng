@@ -163,6 +163,13 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
                 void **
         ) noexcept -> __C_ENG_TYPE ( Result );
 
+        namespace utility {
+            extern auto chainFeaturesFromDetails (
+                    __C_ENG_TYPE ( PhysicalDeviceExtendedFeatures )       *,
+                    __C_ENG_TYPE ( PhysicalDeviceDetails )          const *
+            ) noexcept -> void;
+        }
+
     }
 
 }

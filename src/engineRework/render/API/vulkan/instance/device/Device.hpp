@@ -2,23 +2,39 @@
 // Created by loghin on 30.01.2022.
 //
 
-#ifndef C_ENG_DEVICE_HPP
-#define C_ENG_DEVICE_HPP
+#ifndef __C_ENG_DEVICE_HPP__
+#define __C_ENG_DEVICE_HPP__
 
 #include <Preprocess.hpp>
-#include <CDS/Object>
+#include <VulkanRenderObject.hpp>
 #include <VulkanCore.hpp>
+#include <CDS/Array>
 
 
-#define C_ENG_MAP_START     CLASS ( Device, PARENT ( cds :: Object ) )
+#define C_ENG_MAP_START     CLASS ( Device, ENGINE_PARENT ( VulkanRenderObject ) )
 #include <ObjectMapping.hpp>
 
 namespace engine { // NOLINT(modernize-concat-nested-namespaces)
     namespace vulkan {
 
+        __C_ENG_PRE_DECLARE_CLASS ( Instance );
+        __C_ENG_PRE_DECLARE_CLASS ( PhysicalDevice );
+        __C_ENG_PRE_DECLARE_CLASS ( PhysicalDeviceGroup );
+
         Class {
+            Field ( ENGINE_PRIMITIVE_TYPE ( DeviceHandle ),     handle,         DEFAULT_VALUE ( nullptr ),  GET_DEFAULT,    SET_NONE )
+
+            Field ( ENGINE_PRIMITIVE_TYPE ( SurfaceHandle ),    surfaceHandle,  DEFAULT_VALUE ( nullptr ),  GET_DEFAULT,    SET_NONE )
+            Field ( ENGINE_TYPE ( PhysicalDevice const * ),     physicalDevice, DEFAULT_VALUE ( nullptr ),  GET_DEFAULT,    SET_NONE )
+
         public:
             class Builder;
+
+            Constructor () noexcept = default;
+            Constructor ( Self && ) noexcept;
+
+            auto clear () noexcept -> Self & override;
+            Destructor () noexcept override;
         };
 
     }
@@ -34,17 +50,24 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 namespace engine { // NOLINT(modernize-concat-nested-namespaces)
     namespace vulkan {
 
-        __C_ENG_PRE_DECLARE_CLASS ( Instance );
-        __C_ENG_PRE_DECLARE_CLASS ( PhysicalDevice );
-
         Class {
-            Field ( ENGINE_PRIMITIVE_TYPE ( Instance const * ),         instance,                   DEFAULT_VALUE ( nullptr ),      GET_NONE,   SET_INLINE ( usingInstance ) )
-            Field ( ENGINE_PRIMITIVE_TYPE ( PhysicalDevice const * ),   physicalDevice,             DEFAULT_VALUE ( nullptr ),      GET_NONE,   SET_INLINE ( fromDevice ) )
-            Field ( ENGINE_PRIMITIVE_TYPE ( SurfaceHandle const * ),    surfaceHandle,              DEFAULT_VALUE ( nullptr ),      GET_NONE,   SET_INLINE ( toSurface ) )
-            Field ( PRIMITIVE_TYPE ( bool ),                            preferExclusiveOperations,  DEFAULT_VALUE ( false ),        GET_NONE,   SET_INLINE ( setPreferExclusiveOperations ) )
-            Field ( PRIMITIVE_TYPE ( float ),                           maxQueuePriority,           DEFAULT_VALUE ( 1.0f ),         GET_NONE,   SET_INLINE ( setMaxQueuePriority ) )
-            Field ( PRIMITIVE_TYPE ( float ),                           minQueuePriority,           DEFAULT_VALUE ( 1.0f ),         GET_NONE,   SET_INLINE ( setMinQueuePriority ) )
-            Field ( PRIMITIVE_TYPE ( cds :: uint32 ),                   queueOperatingGroupCount,   DEFAULT_VALUE ( 1U ),           GET_NONE,   SET_INLINE ( setQueueOperatingGroupCount ) )
+            Field ( ENGINE_PRIMITIVE_TYPE ( PhysicalDevice const * ),       physicalDevice,                 DEFAULT_VALUE ( nullptr ),      GET_NONE,   SET_INLINE ( fromDevice ) )
+            Field ( ENGINE_PRIMITIVE_TYPE ( PhysicalDeviceGroup const * ),  physicalDeviceGroup,            DEFAULT_VALUE ( nullptr ),      GET_NONE,   SET_INLINE ( fromDeviceGroup ) )
+            Field ( ENGINE_PRIMITIVE_TYPE ( SurfaceHandle ),                surfaceHandle,                  DEFAULT_VALUE ( nullptr ),      GET_NONE,   SET_INLINE ( toSurface ) )
+
+            Field ( PRIMITIVE_TYPE ( bool ),                                preferExclusiveOperations,      DEFAULT_VALUE ( false ),        GET_NONE,   SET_INLINE ( setPreferExclusiveOperations ) )
+            Field ( PRIMITIVE_TYPE ( float ),                               maxQueuePriority,               DEFAULT_VALUE ( 1.0f ),         GET_NONE,   SET_INLINE ( setMaxQueuePriority ) )
+            Field ( PRIMITIVE_TYPE ( float ),                               minQueuePriority,               DEFAULT_VALUE ( 1.0f ),         GET_NONE,   SET_INLINE ( setMinQueuePriority ) )
+            Field ( PRIMITIVE_TYPE ( cds :: uint32 ),                       queueOperatingGroupCount,       DEFAULT_VALUE ( 1U ),           GET_NONE,   SET_INLINE ( setPreferredNumberOfQueues ) )
+            Field ( PRIMITIVE_TYPE ( float ),                               queueOperatingGroupPercentage,  DEFAULT_VALUE ( 0.0f ),         GET_NONE,   SET_INLINE ( setPreferredPercentageOfQueues ) )
+
+            Field ( TYPE ( cds :: Array < cds :: String > ),                extensionNames,                 NO_INIT,                        GET_NONE,   SET_INLINE ( setExtensionNames ) )
+            Field ( PRIMITIVE_TYPE ( bool ),                                onlyBasicFeatures,              DEFAULT_VALUE ( true ),         GET_NONE,   SET_INLINE ( setUseOnlyBasicFeatures ) )
+            Field ( PRIMITIVE_TYPE ( bool ),                                allFeatures,                    DEFAULT_VALUE ( false ),        GET_NONE,   SET_INLINE ( setUseAllFeatures ) )
+            Field ( TYPE ( cds :: Array < Type ( GenericStructure * ) > ),  featureSets,                    NO_INIT,                        GET_NONE,   SET_INLINE ( setFeatureSets ) )
+
+        private:
+            __C_ENG_NO_DISCARD auto buildSingleDeviceToSurface () noexcept (false) -> Nester;
 
         public:
             __C_ENG_NO_DISCARD auto build () noexcept (false) -> Nester;
@@ -57,4 +80,4 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #include <ObjectMapping.hpp>
 
 
-#endif //C_ENG_DEVICE_HPP
+#endif //__C_ENG_DEVICE_HPP__
