@@ -8,7 +8,7 @@
 #include <Preprocess.hpp>
 #include <VulkanRenderObject.hpp>
 #include <VulkanCore.hpp>
-#include <CDS/Array>
+#include <CDS/HashSet>
 
 
 #define C_ENG_MAP_START     CLASS ( Device, ENGINE_PARENT ( VulkanRenderObject ) )
@@ -54,20 +54,20 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
     namespace vulkan {
 
         Class {
-            Field ( ENGINE_PRIMITIVE_TYPE ( PhysicalDevice const * ),               physicalDevice,                 DEFAULT_VALUE ( nullptr ),      GET_NONE,   SET_INLINE ( fromDevice ) )
-            Field ( ENGINE_PRIMITIVE_TYPE ( PhysicalDeviceGroup const * ),          physicalDeviceGroup,            DEFAULT_VALUE ( nullptr ),      GET_NONE,   SET_INLINE ( fromDeviceGroup ) )
-            Field ( ENGINE_PRIMITIVE_TYPE ( SurfaceHandle ),                        surfaceHandle,                  DEFAULT_VALUE ( nullptr ),      GET_NONE,   SET_INLINE ( toSurface ) )
+            Field ( ENGINE_PRIMITIVE_TYPE ( PhysicalDevice const * ),                   physicalDevice,                 DEFAULT_VALUE ( nullptr ),      GET_NONE,   SET_INLINE ( fromDevice ) )
+            Field ( ENGINE_PRIMITIVE_TYPE ( PhysicalDeviceGroup const * ),              physicalDeviceGroup,            DEFAULT_VALUE ( nullptr ),      GET_NONE,   SET_INLINE ( fromDeviceGroup ) )
+            Field ( ENGINE_PRIMITIVE_TYPE ( SurfaceHandle ),                            surfaceHandle,                  DEFAULT_VALUE ( nullptr ),      GET_NONE,   SET_INLINE ( toSurface ) )
 
-            Field ( PRIMITIVE_TYPE ( bool ),                                        preferExclusiveOperations,      DEFAULT_VALUE ( false ),        GET_NONE,   SET_INLINE ( setPreferExclusiveOperations ) )
-            Field ( PRIMITIVE_TYPE ( float ),                                       maxQueuePriority,               DEFAULT_VALUE ( 1.0f ),         GET_NONE,   SET_INLINE ( setMaxQueuePriority ) )
-            Field ( PRIMITIVE_TYPE ( float ),                                       minQueuePriority,               DEFAULT_VALUE ( 1.0f ),         GET_NONE,   SET_INLINE ( setMinQueuePriority ) )
-            Field ( PRIMITIVE_TYPE ( cds :: uint32 ),                               queueOperatingGroupCount,       DEFAULT_VALUE ( 1U ),           GET_NONE,   SET_INLINE ( setPreferredNumberOfQueues ) )
-            Field ( PRIMITIVE_TYPE ( float ),                                       queueOperatingGroupPercentage,  DEFAULT_VALUE ( 0.0f ),         GET_NONE,   SET_INLINE ( setPreferredPercentageOfQueues ) )
+            Field ( PRIMITIVE_TYPE ( bool ),                                            preferExclusiveOperations,      DEFAULT_VALUE ( false ),        GET_NONE,   SET_INLINE ( setPreferExclusiveOperations ) )
+            Field ( PRIMITIVE_TYPE ( float ),                                           maxQueuePriority,               DEFAULT_VALUE ( 1.0f ),         GET_NONE,   SET_INLINE ( setMaxQueuePriority ) )
+            Field ( PRIMITIVE_TYPE ( float ),                                           minQueuePriority,               DEFAULT_VALUE ( 1.0f ),         GET_NONE,   SET_INLINE ( setMinQueuePriority ) )
+            Field ( PRIMITIVE_TYPE ( cds :: uint32 ),                                   queueOperatingGroupCount,       DEFAULT_VALUE ( 1U ),           GET_NONE,   SET_INLINE ( setPreferredNumberOfQueues ) )
+            Field ( PRIMITIVE_TYPE ( float ),                                           queueOperatingGroupPercentage,  DEFAULT_VALUE ( 0.0f ),         GET_NONE,   SET_INLINE ( setPreferredPercentageOfQueues ) )
 
-            Field ( TYPE ( cds :: Array < cds :: String > ),                        extensionNames,                 NO_INIT,                        GET_NONE,   SET_INLINE ( setExtensionNames ) )
-            Field ( PRIMITIVE_TYPE ( bool ),                                        onlyBasicFeatures,              DEFAULT_VALUE ( true ),         GET_NONE,   SET_INLINE ( setUseOnlyBasicFeatures ) )
-            Field ( PRIMITIVE_TYPE ( bool ),                                        allFeatures,                    DEFAULT_VALUE ( false ),        GET_NONE,   SET_INLINE ( setUseAllFeatures ) )
-            Field ( TYPE ( cds :: Array < Type ( GenericInStructure const * ) > ),  featureSets,                    NO_INIT,                        GET_NONE,   SET_INLINE ( setFeatureSets ) )
+            Field ( TYPE ( cds :: HashSet < cds :: String > ),                          extensionNames,                 NO_INIT,                        GET_NONE,   SET_INLINE ( setExtensionNames ) )
+            Field ( PRIMITIVE_TYPE ( bool ),                                            onlyBasicFeatures,              DEFAULT_VALUE ( true ),         GET_NONE,   SET_INLINE ( setUseOnlyBasicFeatures ) )
+            Field ( PRIMITIVE_TYPE ( bool ),                                            allFeatures,                    DEFAULT_VALUE ( false ),        GET_NONE,   SET_INLINE ( setUseAllFeatures ) )
+            Field ( TYPE ( cds :: HashSet < Type ( GenericInStructure const * ) > ),    featureSets,                    NO_INIT,                        GET_NONE,   SET_INLINE ( setFeatureSets ) )
 
         private:
             __C_ENG_NO_DISCARD auto buildSingleDeviceToSurface () noexcept (false) -> Nester;

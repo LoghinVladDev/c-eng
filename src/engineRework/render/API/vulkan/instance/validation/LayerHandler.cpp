@@ -70,9 +70,9 @@ auto vulkan :: Self :: refreshLayers() noexcept (false) -> Self & {
                 uint32              newExtensionCount;
 
                 result = vulkan :: enumerateInstanceExtensionProperties (
-                            newLayers[layerIndex].properties.layerName,
-                            & layerExtensionPropertiesCount
-                    );
+                        newLayers[layerIndex].properties.layerName,
+                        & layerExtensionPropertiesCount
+                );
 
                 if ( result != ResultSuccess ) {
                     __C_ENG_LOG_AND_THROW_DETAILED_API_CALL_EXCEPTION ( warning, "enumerateInstanceExtensionProperties", result );
@@ -120,12 +120,12 @@ auto vulkan :: Self :: refreshLayers() noexcept (false) -> Self & {
 
                             pNewExtensions[extensionIndex].enabled  = true;
                             (void) __C_ENG_TYPE ( Settings ) :: instance().set (
-                                        (
-                                                "Validation_Layer_"_s + newLayers[layerIndex].properties.layerName +
-                                                "_Extension_" + pNewExtensions[ extensionIndex ].properties.name +
-                                                "_enabled"
-                                        ).cStr(),
-                                        1U
+                                    (
+                                            "Validation_Layer_"_s + newLayers[layerIndex].properties.layerName +
+                                            "_Extension_" + pNewExtensions[ extensionIndex ].properties.name +
+                                            "_enabled"
+                                    ).cStr(),
+                                    1U
                             );
                         }
                     }

@@ -63,7 +63,11 @@ namespace engine {
 
         static auto instance () noexcept -> Self &;
 
-        auto get ( Key ) noexcept -> Value;
+        __C_ENG_NO_DISCARD auto get ( Key ) noexcept -> Value;
+        __C_ENG_NO_DISCARD inline auto get ( cds :: String const & key ) noexcept -> Value {
+            return this->get(key.cStr());
+        }
+
         auto set ( Key, Value ) noexcept -> Self &;
 
         static auto defaultForKey ( Key ) noexcept -> Value;

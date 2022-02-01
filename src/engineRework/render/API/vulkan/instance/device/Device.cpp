@@ -1423,10 +1423,10 @@ static inline auto deviceCreateInfoAddOnlyBasicFeatures (
 }
 
 static inline auto deviceCreateInfoAddFeatureSets (
-        Type ( DeviceCreateInfo )                           * pCreateInfo,
-        Type ( PhysicalDevice )                       const * pPhysicalDevice,
-        Array < Type ( GenericInStructure ) const * > const & featureSets,
-        bool                                                * pProtectedMemoryEnabled
+        Type ( DeviceCreateInfo )                                 * pCreateInfo,
+        Type ( PhysicalDevice )                             const * pPhysicalDevice,
+        Collection < Type ( GenericInStructure ) const * >  const & featureSets,
+        bool                                                      * pProtectedMemoryEnabled
 ) noexcept -> void {
 
 #if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
@@ -1488,9 +1488,7 @@ static inline auto deviceCreateInfoAddFeatureSets (
 }
 
 auto Self :: build () noexcept (false) -> Nester {
-    if ( this->_surfaceHandle != nullptr && ! this->_extensionNames.contains ( VK_KHR_SWAPCHAIN_EXTENSION_NAME ) ) {
-        this->_extensionNames.add ( VK_KHR_SWAPCHAIN_EXTENSION_NAME );
-    }
+    this->_extensionNames.add ( VK_KHR_SWAPCHAIN_EXTENSION_NAME );
 
     LockGuard deviceCreationGuard ( deviceCreationLock );
 
@@ -1524,11 +1522,17 @@ auto Self :: buildSingleDeviceToSurface () noexcept (false) -> Nester {
     }
 
     if ( this->_allFeatures ) {
-        deviceCreateInfoAddAllFeatures ( & deviceCreateInfo, device._physicalDevice, & protectedMemoryEnabled );
+        deviceCreateInfoAddAllFeatures ( & deviceCreateInfo, device.physicalDevice(), & protectedMemoryEnabled );
     } else if ( ! this->_featureSets.empty() ) {
-        deviceCreateInfoAddFeatureSets ( & deviceCreateInfo, device._physicalDevice, this->_featureSets, & protectedMemoryEnabled );
+        deviceCreateInfoAddFeatureSets ( & deviceCreateInfo, device.physicalDevice(), this->_featureSets, & protectedMemoryEnabled );
     } else {
-        deviceCreateInfoAddOnlyBasicFeatures ( & deviceCreateInfo, device._physicalDevice, & protectedMemoryEnabled );
+        deviceCreateInfoAddOnlyBasicFeatures ( & deviceCreateInfo, device.physicalDevice(), & protectedMemoryEnabled );
+    }
+
+    for ( uint32 i = 0U; i < device.physicalDevice()->extensions().count; ++ i ) {
+        if ( device.physicalDevice()->extensions().pExtensions[i].enabled ) {
+            this->_extensionNames.add ( device.physicalDevice()->extensions().pExtensions[i].properties.name );
+        }
     }
 
     return device;

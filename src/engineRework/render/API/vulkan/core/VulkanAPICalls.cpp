@@ -6729,9 +6729,9 @@ auto vulkan :: enumerateInstanceExtensionProperties (
     if ( pProperties == nullptr ) {
         return static_cast < __C_ENG_TYPE ( Result ) > (
                 pVkEnumerateInstanceExtensionProperties (
-                    layerName,
-                    pPropertyCount,
-                    nullptr
+                        layerName,
+                        pPropertyCount,
+                        nullptr
             )
         );
     }
@@ -6919,12 +6919,14 @@ auto vulkan :: createDebugMessenger (
             & messengerCreateInfo
     );
 
-    return static_cast < __C_ENG_TYPE ( Result ) > ( pVkCreateDebugUtilsMessenger (
-            instanceHandle,
-            & messengerCreateInfo,
-            pUsedAllocationCallbacks,
-            pHandle
-    ));
+    return static_cast < __C_ENG_TYPE ( Result ) > (
+            pVkCreateDebugUtilsMessenger (
+                    instanceHandle,
+                    & messengerCreateInfo,
+                    pUsedAllocationCallbacks,
+                    pHandle
+            )
+    );
 }
 
 auto vulkan :: destroyDebugMessenger (
@@ -12085,12 +12087,12 @@ auto vulkan :: enumeratePhysicalDeviceExtensionProperties (
 
     if ( pExtensions == nullptr ) {
         return static_cast < __C_ENG_TYPE ( Result ) > (
-            pVkEnumerateDeviceExtensionProperties (
-                    handle,
-                    layerName,
-                    pExtensionCount,
-                    nullptr
-            )
+                pVkEnumerateDeviceExtensionProperties (
+                        handle,
+                        layerName,
+                        pExtensionCount,
+                        nullptr
+                )
         );
     }
 

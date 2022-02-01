@@ -20,6 +20,17 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_PRE_DECLARE_CLASS ( Instance );
 
         Class { // NOLINT(cppcoreguidelines-pro-type-member-init)
+        public:
+            struct DeviceExtension {
+                Type ( ExtensionProperties )    properties;
+                bool                            enabled;
+            };
+
+            struct DeviceExtensionArray {
+                DeviceExtension   * pExtensions;
+                cds :: uint32       count;
+            };
+
             Const ( PRIMITIVE_TYPE ( cds :: uint32 ),                               dedicatedGPUBias,   VALUE ( 10000U ) )
 
             Field ( ENGINE_PRIMITIVE_TYPE ( PhysicalDeviceHandle ),                 handle,             DEFAULT_VALUE ( nullptr ),  GET_DEFAULT,    SET_NONE )
@@ -41,6 +52,9 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
             auto clear () noexcept -> Self & override {
                 return * this;
             }
+
+            __C_ENG_NO_DISCARD auto extensions () const noexcept (false) -> DeviceExtensionArray const &;
+            auto refreshExtensions () noexcept (false) -> Self &;
         };
 
     }
