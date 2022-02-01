@@ -4092,7 +4092,7 @@ auto vulkan :: toString (
 
 #if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_LINEAR_COLOR_ATTACHMENT_AVAILABLE
 
-            ", linearColorAttahmentFeaturesNVidia = "               + toString ( details.linearColorAttahmentFeaturesNVidia ) +
+            ", linearColorAttachmentFeaturesNVidia = "              + toString ( details.linearColorAttachmentFeaturesNVidia ) +
 
 #endif
 

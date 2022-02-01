@@ -6958,7 +6958,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_LINEAR_COLOR_ATTACHMENT_AVAILABLE
 
-            __C_ENG_TYPE ( PhysicalDeviceLinearColorAttachmentFeaturesNVidia )              linearColorAttahmentFeaturesNVidia;
+            __C_ENG_TYPE ( PhysicalDeviceLinearColorAttachmentFeaturesNVidia )              linearColorAttachmentFeaturesNVidia;
 
 #endif
 

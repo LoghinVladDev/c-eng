@@ -7,9 +7,52 @@
 #include <VulkanCoreConfig.hpp>
 #include <VulkanAPICallsValidUsage.hpp>
 
-/**
- * VkPhysicalDeviceVertexAttributeDivisorPropertiesEXT
- */
+
+#define __C_ENG_CREATE_FUNCTION_NAME(_fName) __C_ENG_VULKAN_CORE_FUNCTION_NAME_ ## _fName
+
+#define __C_ENG_LOOKUP_VULKAN_FUNCTION(_handle, _fName)                     \
+    if ( _handle == nullptr ) {                                             \
+                                                                            \
+        auto lResult = vulkan :: getFunctionAddress (                       \
+                __C_ENG_CREATE_FUNCTION_NAME(_fName),                       \
+                reinterpret_cast < FunctionHandleAddress > ( & _handle )    \
+        );                                                                  \
+                                                                            \
+        if ( lResult != vulkan :: ResultSuccess ) {                         \
+            return lResult;                                                 \
+        }                                                                   \
+    }
+
+#define __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION(_instance, _handle, _fName) \
+    if ( _handle == nullptr ) {                                             \
+                                                                            \
+        auto lResult = vulkan :: getInstanceFunctionAddress (               \
+                _instance,                                                  \
+                __C_ENG_CREATE_FUNCTION_NAME(_fName),                       \
+                reinterpret_cast < FunctionHandleAddress > ( & _handle )    \
+        );                                                                  \
+                                                                            \
+        if ( lResult != vulkan :: ResultSuccess ) {                         \
+            return lResult;                                                 \
+        }                                                                   \
+    }
+
+#define __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION(_device, _handle, _fName)     \
+    if ( _handle == nullptr ) {                                             \
+                                                                            \
+        auto lResult = vulkan :: getDeviceFunctionAddress (                 \
+                _device,                                                    \
+                __C_ENG_CREATE_FUNCTION_NAME(_fName),                       \
+                reinterpret_cast < FunctionHandleAddress > ( & _handle )    \
+        );                                                                  \
+                                                                            \
+        if ( lResult != vulkan :: ResultSuccess ) {                         \
+            return lResult;                                                 \
+        }                                                                   \
+    }
+
+
+
 using namespace cds; // NOLINT(clion-misra-cpp2008-7-3-4)
 using namespace engine; // NOLINT(clion-misra-cpp2008-7-3-4)
 
@@ -727,9 +770,38 @@ using VkDevicePrivateDataCreateInfo_t                             = VkDevicePriv
 #endif
 
 
-static PFN_vkCreateDebugUtilsMessengerEXT                                   pVkInstanceProcessCreateDebugMessenger                                       = nullptr;
-static PFN_vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR  pVkInstanceProcessEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCounters = nullptr;
+static VkInstance lastCreatedInstance;
 
+using FunctionHandleAddress = void **;
+
+
+static PFN_vkEnumerateInstanceVersion                                       pVkEnumerateInstanceVersion;
+static PFN_vkEnumerateInstanceLayerProperties                               pVkEnumerateInstanceLayerProperties;
+static PFN_vkEnumerateInstanceExtensionProperties                           pVkEnumerateInstanceExtensionProperties;
+static PFN_vkCreateInstance                                                 pVkCreateInstance;
+static PFN_vkDestroyInstance                                                pVkDestroyInstance;
+
+static PFN_vkGetDeviceProcAddr                                              pVkGetDeviceProcAddr;
+static PFN_vkEnumeratePhysicalDevices                                       pVkEnumeratePhysicalDevices;
+static PFN_vkGetPhysicalDeviceProperties                                    pVkGetPhysicalDeviceProperties;
+static PFN_vkGetPhysicalDeviceProperties2                                   pVkGetPhysicalDeviceProperties2;
+static PFN_vkGetPhysicalDeviceFeatures                                      pVkGetPhysicalDeviceFeatures;
+static PFN_vkGetPhysicalDeviceFeatures2                                     pVkGetPhysicalDeviceFeatures2;
+static PFN_vkEnumerateDeviceLayerProperties                                 pVkEnumerateDeviceLayerProperties;
+static PFN_vkEnumerateDeviceExtensionProperties                             pVkEnumerateDeviceExtensionProperties;
+
+static PFN_vkEnumeratePhysicalDeviceGroups                                  pVkEnumeratePhysicalDeviceGroups;
+
+static PFN_vkCreateDebugUtilsMessengerEXT                                   pVkCreateDebugUtilsMessenger;
+static PFN_vkDestroyDebugUtilsMessengerEXT                                  pVkDestroyDebugUtilsMessenger;
+
+static PFN_vkGetPhysicalDeviceQueueFamilyProperties                         pVkGetPhysicalDeviceQueueFamilyProperties;
+static PFN_vkGetPhysicalDeviceQueueFamilyProperties2                        pVkGetPhysicalDeviceQueueFamilyProperties2;
+static PFN_vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR  pVkInstanceProcessEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCounters;
+
+static PFN_vkDestroySurfaceKHR                                              pVkDestroySurface;
+
+static PFN_vkCreateDevice                                                   pVkCreateDevice;
 
 /**
  * ---------------------------------------------------------
@@ -6507,7 +6579,16 @@ auto vulkan :: enumerateInstanceVersion (
 
 #endif
 
-    return static_cast < vulkan :: __C_ENG_TYPE ( Result ) > ( vkEnumerateInstanceVersion ( pOutRawVersion ) );
+    __C_ENG_LOOKUP_VULKAN_FUNCTION (
+            pVkEnumerateInstanceVersion,
+            ENUMERATE_INSTANCE_VERSION
+    )
+
+    return static_cast < vulkan :: __C_ENG_TYPE ( Result ) > (
+            pVkEnumerateInstanceVersion (
+                    pOutRawVersion
+            )
+    );
 }
 
 auto vulkan :: enumerateInstanceLayerProperties (
@@ -6523,11 +6604,18 @@ auto vulkan :: enumerateInstanceLayerProperties (
 
 #endif
 
+    __C_ENG_LOOKUP_VULKAN_FUNCTION (
+            pVkEnumerateInstanceLayerProperties,
+            ENUMERATE_INSTANCE_LAYER_PROPERTIES
+    )
+
     if ( pProperties == nullptr ) {
-        return static_cast < __C_ENG_TYPE ( Result ) > ( vkEnumerateInstanceLayerProperties (
-                pLayerPropertiesCount,
-                nullptr
-        ));
+        return static_cast < __C_ENG_TYPE ( Result ) > (
+                pVkEnumerateInstanceLayerProperties (
+                    pLayerPropertiesCount,
+                    nullptr
+                )
+        );
     }
 
 #if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
@@ -6538,7 +6626,7 @@ auto vulkan :: enumerateInstanceLayerProperties (
 
 #endif
 
-    result = vkEnumerateInstanceLayerProperties (
+    result = pVkEnumerateInstanceLayerProperties (
             pLayerPropertiesCount,
             & layerProperties[0]
     );
@@ -6557,7 +6645,7 @@ auto vulkan :: enumerateInstanceLayerProperties (
     return __C_ENG_TYPE ( Result ) :: ResultSuccess;
 }
 
-__C_ENG_MAYBE_UNUSED auto vulkan :: enumerateDeviceLayerProperties (
+__C_ENG_MAYBE_UNUSED auto vulkan :: enumeratePhysicalDeviceLayerProperties (
         __C_ENG_TYPE ( PhysicalDeviceHandle )   handle,
         uint32                                * pLayerPropertiesCount,
         __C_ENG_TYPE ( LayerProperties )      * pProperties
@@ -6574,13 +6662,20 @@ __C_ENG_MAYBE_UNUSED auto vulkan :: enumerateDeviceLayerProperties (
 
 #endif
 
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION (
+            lastCreatedInstance,
+            pVkEnumerateDeviceLayerProperties,
+            ENUMERATE_DEVICE_LAYER_PROPERTIES
+    )
+
     if ( pProperties == nullptr ) {
         return static_cast < __C_ENG_TYPE ( Result ) > (
-                vkEnumerateDeviceLayerProperties (
+                pVkEnumerateDeviceLayerProperties (
                         handle,
                         pLayerPropertiesCount,
                         nullptr
-        ));
+                )
+        );
     }
 
 #if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
@@ -6591,7 +6686,7 @@ __C_ENG_MAYBE_UNUSED auto vulkan :: enumerateDeviceLayerProperties (
 
 #endif
 
-    result = vkEnumerateDeviceLayerProperties (
+    result = pVkEnumerateDeviceLayerProperties (
             handle,
             pLayerPropertiesCount,
             & layerProperties[0]
@@ -6602,8 +6697,8 @@ __C_ENG_MAYBE_UNUSED auto vulkan :: enumerateDeviceLayerProperties (
     }
 
     for ( uint32 i = 0U; i < * pLayerPropertiesCount; ++ i ) {
-        (void) std :: memcpy ( pProperties[i].layerName,   layerProperties[i].layerName,   VK_MAX_EXTENSION_NAME_SIZE ); // NOLINT(clion-misra-cpp2008-5-2-12)
-        (void) std :: memcpy ( pProperties[i].description, layerProperties[i].description, VK_MAX_DESCRIPTION_SIZE ); // NOLINT(clion-misra-cpp2008-5-2-12)
+        (void) std :: memcpy ( & pProperties[i].layerName[0],   & layerProperties[i].layerName[0],   VK_MAX_EXTENSION_NAME_SIZE );
+        (void) std :: memcpy ( & pProperties[i].description[0], & layerProperties[i].description[0], VK_MAX_DESCRIPTION_SIZE );
         pProperties[i].implementationVersion    = layerProperties[i].implementationVersion;
         pProperties[i].specVersion              = uInt32ToInstanceVersion ( layerProperties[i].specVersion );
     }
@@ -6625,12 +6720,20 @@ auto vulkan :: enumerateInstanceExtensionProperties (
 
 #endif
 
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION (
+            lastCreatedInstance,
+            pVkEnumerateInstanceExtensionProperties,
+            ENUMERATE_INSTANCE_EXTENSION_PROPERTIES
+    )
+
     if ( pProperties == nullptr ) {
-        return static_cast < __C_ENG_TYPE ( Result ) > ( vkEnumerateInstanceExtensionProperties (
-                layerName,
-                pPropertyCount,
-                nullptr
-        ));
+        return static_cast < __C_ENG_TYPE ( Result ) > (
+                pVkEnumerateInstanceExtensionProperties (
+                    layerName,
+                    pPropertyCount,
+                    nullptr
+            )
+        );
     }
 
 #if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
@@ -6641,7 +6744,7 @@ auto vulkan :: enumerateInstanceExtensionProperties (
 
 #endif
 
-    result = vkEnumerateInstanceExtensionProperties(
+    result = pVkEnumerateInstanceExtensionProperties (
             layerName,
             pPropertyCount,
             & extensionProperties[0]
@@ -6675,6 +6778,11 @@ auto vulkan :: createInstance (
     }
 
 #endif
+
+    __C_ENG_LOOKUP_VULKAN_FUNCTION (
+            pVkCreateInstance,
+            CREATE_INSTANCE
+    )
 
     VkAllocationCallbacks             * pUsedAllocationCallbacks = nullptr;
     VkBaseInStructure                 * pPreviousInChain = nullptr;
@@ -6730,13 +6838,20 @@ auto vulkan :: createInstance (
     toVulkanFormat ( pCreateInfo->pApplicationInfo, & applicationInfo );
     toVulkanFormat ( pCreateInfo, & instanceCreateInfo, & applicationInfo, pInstanceNext );
 
-    return static_cast < __C_ENG_TYPE ( Result ) > (
-            vkCreateInstance (
+    auto lResult = static_cast < __C_ENG_TYPE ( Result ) > (
+            pVkCreateInstance (
                     & instanceCreateInfo,
                     pUsedAllocationCallbacks,
                     pInstanceHandle
             )
     );
+
+    if ( lResult != ResultSuccess ) {
+        return lResult;
+    }
+
+    lastCreatedInstance = * pInstanceHandle;
+    return ResultSuccess;
 }
 
 auto vulkan :: destroyInstance (
@@ -6752,6 +6867,12 @@ auto vulkan :: destroyInstance (
 
 #endif
 
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION (
+            handle,
+            pVkDestroyInstance,
+            DESTROY_INSTANCE
+    )
+
     VkAllocationCallbacks * pUsedCallbacks = nullptr;
 
     if ( pAllocatorCallbacks != nullptr ) {
@@ -6759,7 +6880,9 @@ auto vulkan :: destroyInstance (
         toVulkanFormat ( pAllocatorCallbacks, pUsedCallbacks );
     }
 
-    vkDestroyInstance ( handle, pUsedCallbacks );
+    pVkDestroyInstance ( handle, pUsedCallbacks );
+    lastCreatedInstance = nullptr;
+
     return ResultSuccess;
 }
 
@@ -6778,16 +6901,13 @@ auto vulkan :: createDebugMessenger (
 
 #endif
 
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION (
+            instanceHandle,
+            pVkCreateDebugUtilsMessenger,
+            CREATE_DEBUG_UTILS_MESSENGER
+    )
+
     VkAllocationCallbacks             * pUsedAllocationCallbacks = nullptr;
-
-    if ( pVkInstanceProcessCreateDebugMessenger == nullptr ) {
-
-        auto lResult = vulkan :: getInstanceFunctionAddress (
-                instanceHandle,
-                __C_ENG_VULKAN_CORE_FUNCTION_NAME_CREATE_DEBUG_MESSENGER,
-                reinterpret_cast < void ** > ( & pVkInstanceProcessCreateDebugMessenger )
-        );
-    }
 
     if ( pAllocationCallbacks != nullptr ) {
         pUsedAllocationCallbacks = & allocationCallbacks;
@@ -6799,7 +6919,7 @@ auto vulkan :: createDebugMessenger (
             & messengerCreateInfo
     );
 
-    return static_cast < __C_ENG_TYPE ( Result ) > ( pVkInstanceProcessCreateDebugMessenger (
+    return static_cast < __C_ENG_TYPE ( Result ) > ( pVkCreateDebugUtilsMessenger (
             instanceHandle,
             & messengerCreateInfo,
             pUsedAllocationCallbacks,
@@ -6821,23 +6941,20 @@ auto vulkan :: destroyDebugMessenger (
 
 #endif
 
-    PFN_vkDestroyDebugUtilsMessengerEXT function = nullptr;
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION (
+            instanceHandle,
+            pVkDestroyDebugUtilsMessenger,
+            DESTROY_DEBUG_UTILS_MESSENGER
+    )
+
     VkAllocationCallbacks             * pUsedCallbacks = nullptr;
-
-    function = reinterpret_cast < PFN_vkDestroyDebugUtilsMessengerEXT > (
-            vkGetInstanceProcAddr ( instanceHandle, __C_ENG_VULKAN_CORE_FUNCTION_NAME_DESTROY_DEBUG_MESSENGER )
-    );
-
-    if ( function == nullptr ) {
-        return ResultErrorFunctionHandleNotFound;
-    }
 
     if ( pAllocationCallbacks != nullptr ) {
         pUsedCallbacks = & allocationCallbacks;
         toVulkanFormat ( pAllocationCallbacks, pUsedCallbacks );
     }
 
-    function ( instanceHandle, debugMessengerHandle, pUsedCallbacks );
+    pVkDestroyDebugUtilsMessenger ( instanceHandle, debugMessengerHandle, pUsedCallbacks );
     return ResultSuccess;
 }
 
@@ -6855,8 +6972,14 @@ auto vulkan :: enumeratePhysicalDevices (
 
 #endif
 
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION (
+            handle,
+            pVkEnumeratePhysicalDevices,
+            ENUMERATE_PHYSICAL_DEVICES
+    )
+
     if ( pPhysicalDevices == nullptr ) {
-        return static_cast < __C_ENG_TYPE ( Result ) > ( vkEnumeratePhysicalDevices (
+        return static_cast < __C_ENG_TYPE ( Result ) > ( pVkEnumeratePhysicalDevices (
                 handle,
                 pPhysicalDeviceCount,
                 nullptr
@@ -6871,7 +6994,7 @@ auto vulkan :: enumeratePhysicalDevices (
 
 #endif
 
-    result = vkEnumeratePhysicalDevices (
+    result = pVkEnumeratePhysicalDevices (
             handle,
             pPhysicalDeviceCount,
             & physicalDevices[0]
@@ -6938,13 +7061,19 @@ auto vulkan :: destroySurface (
 
 #endif
 
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION (
+            instanceHandle,
+            pVkDestroySurface,
+            DESTROY_SURFACE
+    )
+
     VkAllocationCallbacks * pUsedCallbacks = nullptr;
     if ( pAllocationCallbacks != nullptr ) {
         pUsedCallbacks = & allocationCallbacks;
         toVulkanFormat ( pAllocationCallbacks, pUsedCallbacks );
     }
 
-    vkDestroySurfaceKHR (
+    pVkDestroySurface (
             instanceHandle,
             surfaceHandle,
             pUsedCallbacks
@@ -7212,7 +7341,13 @@ __C_ENG_MAYBE_UNUSED auto vulkan :: getPhysicalDeviceProperties (
 
 #endif
 
-    vkGetPhysicalDeviceProperties (
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION (
+            lastCreatedInstance,
+            pVkGetPhysicalDeviceProperties,
+            GET_PHYSICAL_DEVICE_PROPERTIES
+    )
+
+    pVkGetPhysicalDeviceProperties (
         handle,
         & deviceProperties
     );
@@ -7238,7 +7373,13 @@ auto vulkan :: getPhysicalDeviceFeatures (
 
 #endif
 
-    vkGetPhysicalDeviceFeatures (
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION (
+            lastCreatedInstance,
+            pVkGetPhysicalDeviceFeatures,
+            GET_PHYSICAL_DEVICE_FEATURES
+    )
+
+    pVkGetPhysicalDeviceFeatures (
             physicalDeviceHandle,
             & deviceFeatures
     );
@@ -7874,7 +8015,19 @@ auto vulkan :: getPhysicalDeviceProperties (
 
 #endif
 
-    vkGetPhysicalDeviceProperties (
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION (
+            lastCreatedInstance,
+            pVkGetPhysicalDeviceProperties,
+            GET_PHYSICAL_DEVICE_PROPERTIES
+    )
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION (
+            lastCreatedInstance,
+            pVkGetPhysicalDeviceProperties2,
+            GET_PHYSICAL_DEVICE_PROPERTIES_2
+    )
+
+    pVkGetPhysicalDeviceProperties (
             handle,
             & deviceProperties
     );
@@ -7890,7 +8043,7 @@ auto vulkan :: getPhysicalDeviceProperties (
 
     toVulkanFormat ( pProperties );
 
-    vkGetPhysicalDeviceProperties2 (
+    pVkGetPhysicalDeviceProperties2 (
         handle,
         & deviceExtendedProperties
     );
@@ -9092,7 +9245,19 @@ auto vulkan :: getPhysicalDeviceFeatures (
 
 #endif
 
-    vkGetPhysicalDeviceProperties (
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION (
+            lastCreatedInstance,
+            pVkGetPhysicalDeviceProperties,
+            GET_PHYSICAL_DEVICE_PROPERTIES
+    )
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION (
+            lastCreatedInstance,
+            pVkGetPhysicalDeviceFeatures2,
+            GET_PHYSICAL_DEVICE_FEATURES_2
+    )
+
+    pVkGetPhysicalDeviceProperties (
             handle,
             & deviceProperties
     );
@@ -9108,7 +9273,7 @@ auto vulkan :: getPhysicalDeviceFeatures (
 
     toVulkanFormat ( pExtendedFeatures );
 
-    vkGetPhysicalDeviceFeatures2 (
+    pVkGetPhysicalDeviceFeatures2 (
             handle,
             & deviceExtendedFeatures
     );
@@ -9820,7 +9985,7 @@ static auto createChain (
 
 #if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_LINEAR_COLOR_ATTACHMENT_AVAILABLE
 
-        currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: __C_ENG_TYPE ( GenericOutStructure ) * > ( & details->linearColorAttahmentFeaturesNVidia ); // NOLINT(clion-misra-cpp2008-6-2-1)
+        currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: __C_ENG_TYPE ( GenericOutStructure ) * > ( & details->linearColorAttachmentFeaturesNVidia ); // NOLINT(clion-misra-cpp2008-6-2-1)
         currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceLinearColorAttachmentFeaturesNVidia;
 
 #endif
@@ -10233,8 +10398,14 @@ __C_ENG_MAYBE_UNUSED auto vulkan :: getPhysicalDeviceQueueFamilyProperties (
 
 #endif
 
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION (
+            lastCreatedInstance,
+            pVkGetPhysicalDeviceQueueFamilyProperties,
+            GET_PHYSICAL_DEVICE_QUEUE_FAMILY_PROPERTIES
+    )
+
     if ( pQueueFamilyProperties == nullptr ) {
-        vkGetPhysicalDeviceQueueFamilyProperties (
+        pVkGetPhysicalDeviceQueueFamilyProperties (
                 handle,
                 pQueueFamilyPropertyCount,
                 nullptr
@@ -10251,7 +10422,7 @@ __C_ENG_MAYBE_UNUSED auto vulkan :: getPhysicalDeviceQueueFamilyProperties (
 
 #endif
 
-    vkGetPhysicalDeviceQueueFamilyProperties (
+    pVkGetPhysicalDeviceQueueFamilyProperties (
             handle,
             pQueueFamilyPropertyCount,
             & queueFamilyProperties[0]
@@ -10488,8 +10659,20 @@ auto vulkan :: getPhysicalDeviceQueueFamilyProperties (
 
 #endif
 
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION (
+            lastCreatedInstance,
+            pVkGetPhysicalDeviceProperties,
+            GET_PHYSICAL_DEVICE_PROPERTIES
+    )
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION (
+            lastCreatedInstance,
+            pVkGetPhysicalDeviceQueueFamilyProperties2,
+            GET_PHYSICAL_DEVICE_QUEUE_FAMILY_PROPERTIES_2
+    )
+
     if ( pQueueFamilyProperties == nullptr ) {
-        vkGetPhysicalDeviceQueueFamilyProperties2 (
+        pVkGetPhysicalDeviceQueueFamilyProperties2 (
                 handle,
                 pQueueFamilyPropertyCount,
                 nullptr
@@ -10498,7 +10681,7 @@ auto vulkan :: getPhysicalDeviceQueueFamilyProperties (
         return ResultSuccess;
     }
 
-    vkGetPhysicalDeviceProperties (
+    pVkGetPhysicalDeviceProperties (
             handle,
             & deviceProperties
     );
@@ -10518,7 +10701,7 @@ auto vulkan :: getPhysicalDeviceQueueFamilyProperties (
 
     toVulkanFormat ( * pQueueFamilyPropertyCount, pQueueFamilyProperties );
 
-    vkGetPhysicalDeviceQueueFamilyProperties2 (
+    pVkGetPhysicalDeviceQueueFamilyProperties2 (
             handle,
             pQueueFamilyPropertyCount,
             & queueFamilyExtendedProperties[0]
@@ -10591,8 +10774,14 @@ auto vulkan :: getPhysicalDeviceQueueFamilyDetails (
 
 #endif
 
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION (
+            lastCreatedInstance,
+            pVkGetPhysicalDeviceQueueFamilyProperties2,
+            GET_PHYSICAL_DEVICE_QUEUE_FAMILY_PROPERTIES_2
+    )
+
     if ( pQueueFamilyDetails == nullptr ) {
-        vkGetPhysicalDeviceQueueFamilyProperties2 (
+        pVkGetPhysicalDeviceQueueFamilyProperties2 (
                 handle,
                 pQueueFamilyCount,
                 nullptr
@@ -10656,18 +10845,11 @@ __C_ENG_MAYBE_UNUSED auto vulkan :: enumeratePhysicalDeviceQueueFamilyPerformanc
 
 #endif
 
-    if ( pVkInstanceProcessEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCounters == nullptr ) {
-
-        auto lResult = vulkan ::getInstanceFunctionAddress (
-                instanceHandle,
-                __C_ENG_VULKAN_CORE_FUNCTION_NAME_ENUMERATE_PHYSICAL_DEVICE_QUEUE_FAMILY_PERFORMANCE_QUERY_COUNTERS,
-                reinterpret_cast < void ** > ( & pVkInstanceProcessEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCounters )
-        );
-
-        if ( lResult != ResultSuccess ) {
-            return lResult;
-        }
-    }
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION (
+            lastCreatedInstance,
+            pVkInstanceProcessEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCounters,
+            ENUMERATE_PHYSICAL_DEVICE_QUEUE_FAMILY_PERFORMANCE_QUERY_COUNTERS
+    )
 
     if ( pCounters == nullptr && pCounterDescriptions == nullptr ) {
 
@@ -10726,21 +10908,21 @@ __C_ENG_MAYBE_UNUSED auto vulkan :: enumeratePhysicalDeviceQueueFamilyPerformanc
 #endif
 
 __C_ENG_MAYBE_UNUSED auto vulkan :: getFunctionAddress (
-        StringLiteral   functionName,
-        void         ** ppFunction
+        StringLiteral           functionName,
+        FunctionHandleAddress   pFunctionHandle
 ) noexcept -> __C_ENG_TYPE ( Result ) {
 
 #if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
 
-    if ( ppFunction == nullptr ) {
+    if ( pFunctionHandle == nullptr ) {
         return ResultErrorIllegalArgument;
     }
 
 #endif
 
-    * ppFunction = reinterpret_cast < void * > ( vkGetInstanceProcAddr ( nullptr, functionName ) );
+    * pFunctionHandle = reinterpret_cast < void * > ( vkGetInstanceProcAddr ( nullptr, functionName ) );
 
-    if ( * ppFunction == nullptr ) {
+    if ( * pFunctionHandle == nullptr ) {
         return ResultErrorFunctionHandleNotFound;
     }
 
@@ -10750,20 +10932,20 @@ __C_ENG_MAYBE_UNUSED auto vulkan :: getFunctionAddress (
 auto vulkan :: getInstanceFunctionAddress (
         __C_ENG_TYPE ( InstanceHandle ) instanceHandle,
         StringLiteral                   functionName,
-        void                         ** ppFunction
+        FunctionHandleAddress           pFunctionHandle
 ) noexcept -> __C_ENG_TYPE ( Result ) {
 
 #if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
 
-    if ( ppFunction == nullptr ) {
+    if ( pFunctionHandle == nullptr ) {
         return ResultErrorIllegalArgument;
     }
 
 #endif
 
-    * ppFunction = reinterpret_cast < void * > ( vkGetInstanceProcAddr ( instanceHandle, functionName ) );
+    * pFunctionHandle = reinterpret_cast < void * > ( vkGetInstanceProcAddr ( instanceHandle, functionName ) );
 
-    if ( * ppFunction == nullptr ) {
+    if ( * pFunctionHandle == nullptr ) {
         return ResultErrorFunctionHandleNotFound;
     }
 
@@ -10773,20 +10955,26 @@ auto vulkan :: getInstanceFunctionAddress (
 auto vulkan :: getDeviceFunctionAddress (
         __C_ENG_TYPE ( DeviceHandle )   deviceHandle,
         StringLiteral                   functionName,
-        void                         ** ppFunction
+        FunctionHandleAddress           pFunctionHandle
 ) noexcept -> __C_ENG_TYPE ( Result ) {
 
 #if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
 
-    if ( ppFunction == nullptr ) {
+    if ( pFunctionHandle == nullptr ) {
         return ResultErrorIllegalArgument;
     }
 
 #endif
 
-    * ppFunction = reinterpret_cast < void * > ( vkGetDeviceProcAddr ( deviceHandle, functionName ) );
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION (
+            lastCreatedInstance,
+            pVkGetDeviceProcAddr,
+            GET_DEVICE_PROC_ADDR
+    )
 
-    if ( * ppFunction == nullptr ) {
+    * pFunctionHandle = reinterpret_cast < void * > ( pVkGetDeviceProcAddr ( deviceHandle, functionName ) );
+
+    if ( * pFunctionHandle == nullptr ) {
         return ResultErrorFunctionHandleNotFound;
     }
 
@@ -10830,9 +11018,15 @@ __C_ENG_NO_DISCARD __C_ENG_MAYBE_UNUSED auto vulkan :: enumeratePhysicalDeviceGr
 
 #endif
 
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION (
+            instanceHandle,
+            pVkEnumeratePhysicalDeviceGroups,
+            ENUMERATE_PHYSICAL_DEVICE_GROUPS
+    )
+
     if ( pPhysicalDeviceGroupProperties == nullptr ) {
         return static_cast < __C_ENG_TYPE ( Result ) > (
-                vkEnumeratePhysicalDeviceGroups (
+                pVkEnumeratePhysicalDeviceGroups (
                         instanceHandle,
                         pPhysicalDeviceGroupCount,
                         nullptr
@@ -10848,7 +11042,7 @@ __C_ENG_NO_DISCARD __C_ENG_MAYBE_UNUSED auto vulkan :: enumeratePhysicalDeviceGr
 
 #endif
 
-    result = vkEnumeratePhysicalDeviceGroups (
+    result = pVkEnumeratePhysicalDeviceGroups (
             instanceHandle,
             pPhysicalDeviceGroupCount,
             & physicalDeviceGroupProperties[0]
@@ -11817,6 +12011,12 @@ auto vulkan :: createDevice (
 
 #endif
 
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION (
+            lastCreatedInstance,
+            pVkCreateDevice,
+            CREATE_DEVICE
+    )
+
     VkAllocationCallbacks * pUsedAllocationCallback = nullptr;
 
     if ( pAllocationCallbacks != nullptr ) {
@@ -11827,7 +12027,7 @@ auto vulkan :: createDevice (
     toVulkanFormat ( & deviceCreateInfo, pDeviceCreateInfo );
 
     return static_cast < __C_ENG_TYPE ( Result ) > (
-            vkCreateDevice (
+            pVkCreateDevice (
                     physicalDeviceHandle,
                     & deviceCreateInfo,
                     pUsedAllocationCallback,
@@ -11842,3 +12042,83 @@ auto vulkan :: utility :: chainFeaturesFromDetails (
 ) noexcept -> void {
     createChain ( const_cast < __C_ENG_TYPE ( PhysicalDeviceDetails ) * > ( pDetails ), nullptr, pExtendedFeatures ); // NOLINT(clion-misra-cpp2008-5-2-5)
 }
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+
+auto vulkan :: enumeratePhysicalDeviceExtensionProperties (
+        __C_ENG_TYPE ( PhysicalDeviceHandle )   handle,
+        uint32                                * pExtensionCount,
+        __C_ENG_TYPE ( ExtensionProperties )  * pExtensions
+) noexcept -> __C_ENG_TYPE ( Result ) {
+
+    return enumeratePhysicalDeviceExtensionProperties (
+            handle,
+            nullptr,
+            pExtensionCount,
+            pExtensions
+    );
+}
+
+auto vulkan :: enumeratePhysicalDeviceExtensionProperties (
+        __C_ENG_TYPE ( PhysicalDeviceHandle )   handle,
+        StringLiteral                           layerName,
+        uint32                                * pExtensionCount,
+        __C_ENG_TYPE ( ExtensionProperties )  * pExtensions
+) noexcept -> __C_ENG_TYPE ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if (
+            handle          == nullptr ||
+            pExtensionCount == nullptr
+    ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION (
+            lastCreatedInstance,
+            pVkEnumerateDeviceExtensionProperties,
+            ENUMERATE_DEVICE_EXTENSION_PROPERTIES
+    )
+
+    if ( pExtensions == nullptr ) {
+        return static_cast < __C_ENG_TYPE ( Result ) > (
+            pVkEnumerateDeviceExtensionProperties (
+                    handle,
+                    layerName,
+                    pExtensionCount,
+                    nullptr
+            )
+        );
+    }
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( * pExtensionCount > __C_ENG_VULKAN_CORE_LAYER_EXTENSION_MAX_COUNT ) {
+        return ResultErrorConfigurationArraySizeSmall;
+    }
+
+#endif
+
+    result = pVkEnumerateDeviceExtensionProperties (
+            handle,
+            layerName,
+            pExtensionCount,
+            & extensionProperties[0]
+    );
+
+    if ( result != VkResult :: VK_SUCCESS ) {
+        return static_cast < __C_ENG_TYPE ( Result ) > ( result );
+    }
+
+    for ( uint32 i = 0U; i < * pExtensionCount; ++ i ) {
+        (void) std :: memcpy ( & pExtensions[i].name[0], & extensionProperties[i].extensionName[0], sizeof ( extensionProperties[i].extensionName[0] ) * VK_MAX_EXTENSION_NAME_SIZE );
+        pExtensions[i].specVersion = extensionProperties[i].specVersion;
+    }
+
+    return ResultSuccess;
+}
+
+#endif

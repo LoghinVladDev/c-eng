@@ -189,7 +189,7 @@ auto vulkan :: Self :: refreshPhysicalDevices (
             device._handle      = physicalDeviceHandles[i];
             device._instance    = pInstance;
 
-            result = vulkan :: getPhysicalDeviceDetails(
+            result = vulkan :: getPhysicalDeviceDetails (
                     device.handle(),
                     & device._details
             );

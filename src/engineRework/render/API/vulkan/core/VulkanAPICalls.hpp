@@ -18,7 +18,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
                 __C_ENG_TYPE ( LayerProperties ) * = nullptr
         ) noexcept -> __C_ENG_TYPE ( Result );
 
-        __C_ENG_NO_DISCARD __C_ENG_MAYBE_UNUSED extern auto enumerateDeviceLayerProperties (
+        __C_ENG_NO_DISCARD __C_ENG_MAYBE_UNUSED extern auto enumeratePhysicalDeviceLayerProperties (
                 __C_ENG_TYPE ( PhysicalDeviceHandle ),
                 cds :: uint32 *,
                 __C_ENG_TYPE ( LayerProperties ) * = nullptr
@@ -55,6 +55,23 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
                 __C_ENG_TYPE ( InstanceHandle ),
                 cds :: uint32                                   *,
                 __C_ENG_TYPE ( PhysicalDeviceGroupProperties )  * = nullptr
+        ) noexcept -> __C_ENG_TYPE ( Result );
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+
+        __C_ENG_NO_DISCARD __C_ENG_MAYBE_UNUSED extern auto enumeratePhysicalDeviceExtensionProperties (
+                __C_ENG_TYPE ( PhysicalDeviceHandle ),
+                cds :: StringLiteral,
+                cds :: uint32                           *,
+                __C_ENG_TYPE ( ExtensionProperties )    * = nullptr
+        ) noexcept -> __C_ENG_TYPE ( Result );
+
+        __C_ENG_NO_DISCARD __C_ENG_MAYBE_UNUSED extern auto enumeratePhysicalDeviceExtensionProperties (
+                __C_ENG_TYPE ( PhysicalDeviceHandle ),
+                cds :: uint32                           *,
+                __C_ENG_TYPE ( ExtensionProperties )    * = nullptr
         ) noexcept -> __C_ENG_TYPE ( Result );
 
 #endif

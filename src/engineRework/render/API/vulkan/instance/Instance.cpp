@@ -181,7 +181,7 @@ static inline auto populateValidationFeatures (
 auto vulkan :: Self :: supportedVulkanVersion () noexcept (false) -> __C_ENG_TYPE ( Version ) {
     uint32                      rawInstanceVersion;
 
-    auto result = enumerateInstanceVersion( & rawInstanceVersion );
+    auto result = enumerateInstanceVersion ( & rawInstanceVersion );
     if ( result != ResultSuccess ) {
         __C_ENG_LOG_AND_THROW_DETAILED_API_CALL_EXCEPTION(warning, "enumerateInstanceVersion", result);
     }

@@ -6,6 +6,7 @@
 #include <VulkanAPIExceptions.hpp>
 #include <Logger.hpp>
 #include <PhysicalDevice.hpp>
+#include <Device.hpp>
 
 using namespace cds; // NOLINT(clion-misra-cpp2008-7-3-4)
 using namespace engine; // NOLINT(clion-misra-cpp2008-7-3-4)
@@ -57,6 +58,13 @@ auto vulkan :: Self :: init () noexcept (false) -> Self & {
             maxPhysicalDeviceScore = currentDeviceScore;
         }
     }
+
+    Type ( Device ) :: Builder deviceBuilder;
+
+    this->_device = deviceBuilder
+        .fromDevice ( pPhysicalDeviceToUse )
+        .toSurface ( this->_surfaceHandle )
+        .build();
 
     return * this;
 }
