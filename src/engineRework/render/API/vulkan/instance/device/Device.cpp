@@ -9,6 +9,7 @@
 #include <VulkanCoreConfig.hpp>
 #include <CDS/Mutex>
 #include <CDS/LockGuard>
+#include <CDS/HashMap>
 
 
 using namespace cds; // NOLINT(clion-misra-cpp2008-7-3-4)
@@ -1364,6 +1365,14 @@ static StructureWithSize deviceCreationStructures [] = {
 static __C_ENG_TYPE ( PhysicalDeviceDetails ) physicalDeviceDetails;
 
 static Mutex deviceCreationLock;
+static StringLiteral    extensionNames [ __C_ENG_VULKAN_CORE_LAYER_EXTENSION_MAX_COUNT ];
+static uint32           extensionCount;
+
+struct QueueCountAndFamily {
+    vulkan :: __C_ENG_TYPE ( QueueFlag )    queueType;
+    int                                     count;
+    int                                     familyIndex;
+};
 
 #define C_ENG_MAP_START     NESTED_CLASS ( Builder, ENGINE_TYPE ( Device ), PARENT ( cds :: Object ) )
 #include <ObjectMapping.hpp>
@@ -1502,15 +1511,21 @@ auto Self :: build () noexcept (false) -> Nester {
     throw Type ( VulkanAPIException ) ( "Unable to build device from given objects" );
 }
 
-auto Self :: buildSingleDeviceToSurface () noexcept (false) -> Nester {
-    Nester device;
+auto Self :: deviceCreateInfoAddFeatures (
+        Type ( DeviceCreateInfo ) * pCreateInfo,
+        bool                      * pProtectedMemoryEnabled
+) noexcept (false) -> Self & {
 
-    device._physicalDevice  = this->_physicalDevice;
-    device._surfaceHandle   = this->_surfaceHandle;
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
 
-    Type ( DeviceCreateInfo ) deviceCreateInfo {};
+    if (
+            pCreateInfo             == nullptr ||
+            pProtectedMemoryEnabled == nullptr
+    ) {
+        return * this;
+    }
 
-    bool protectedMemoryEnabled = false;
+#endif
 
     uint32 featureOptionCount =
             (this->_allFeatures ? 1U : 0U) +
@@ -1522,20 +1537,132 @@ auto Self :: buildSingleDeviceToSurface () noexcept (false) -> Nester {
     }
 
     if ( this->_allFeatures ) {
-        deviceCreateInfoAddAllFeatures ( & deviceCreateInfo, device.physicalDevice(), & protectedMemoryEnabled );
+        deviceCreateInfoAddAllFeatures ( pCreateInfo, this->_physicalDevice, pProtectedMemoryEnabled );
     } else if ( ! this->_featureSets.empty() ) {
-        deviceCreateInfoAddFeatureSets ( & deviceCreateInfo, device.physicalDevice(), this->_featureSets, & protectedMemoryEnabled );
+        deviceCreateInfoAddFeatureSets ( pCreateInfo, this->_physicalDevice, this->_featureSets,  pProtectedMemoryEnabled );
     } else {
-        deviceCreateInfoAddOnlyBasicFeatures ( & deviceCreateInfo, device.physicalDevice(), & protectedMemoryEnabled );
+        deviceCreateInfoAddOnlyBasicFeatures ( pCreateInfo, this->_physicalDevice, pProtectedMemoryEnabled );
     }
 
-    for ( uint32 i = 0U; i < device.physicalDevice()->extensions().count; ++ i ) {
-        if ( device.physicalDevice()->extensions().pExtensions[i].enabled ) {
-            this->_extensionNames.add ( device.physicalDevice()->extensions().pExtensions[i].properties.name );
+    return * this;
+}
+
+auto Self :: deviceCreateInfoAddExtensions (
+        Type ( DeviceCreateInfo ) * pCreateInfo
+) noexcept (false) -> Self & {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( pCreateInfo == nullptr ) {
+        return * this;
+    }
+
+#endif
+
+    for ( auto const & extensionName : this->_extensionNames ) {
+        extensionNames[ extensionCount ++ ] = extensionName.cStr();
+    }
+
+    pCreateInfo->enabledExtensionCount  = extensionCount;
+    pCreateInfo->pEnabledExtensionNames = & extensionNames[0];
+
+    return * this;
+}
+
+auto Self :: deviceCreateInfoAddQueueCreateInfos (
+        Type ( DeviceCreateInfo ) * pCreateInfo,
+        bool                        protectedMemoryEnabled,
+        bool                        preferExclusivity
+) noexcept (false) -> Self & {
+
+    HashMap < Type ( QueueFlag ), Array < uint32 > > typeFamilies;
+    HashMap < Type ( QueueFlag ), Array < Pair < uint32, uint32 > > > countsFromFamilies;
+
+    for ( auto const & family : this->_physicalDevice->queueFamilies() ) {
+        auto familyFlags = family.getQueueFlags ( this->_surfaceHandle );
+
+        for ( auto type : Array { QueueFlagGraphics, QueueFlagTransfer, QueueFlagPresent } ) {
+            if ( ( familyFlags & static_cast < uint32 > ( type ) ) != 0U ) {
+                typeFamilies [ type ].add ( family.familyIndex() );
+            }
         }
     }
 
+    typeFamilies
+        .sequence()
+        .sortedBy([]( auto const & families ){ return families.second().size(); })
+        .forEach([]( auto & queueWithFamilies ) {
+            /// compute by ratio
+        });
+
+    return * this;
+}
+
+auto Self :: buildSingleDeviceToSurface () noexcept (false) -> Nester {
+    Nester device;
+
+    device._physicalDevice  = this->_physicalDevice;
+    device._surfaceHandle   = this->_surfaceHandle;
+
+    Type ( DeviceCreateInfo ) deviceCreateInfo {
+        .structureType  = StructureTypeDeviceCreateInfo,
+        .pNext          = nullptr
+    };
+
+    bool protectedMemoryEnabled = false;
+
+    (void) this->addImplicitDeviceExtensions();
+    (void) this->filterUnsupportedExtensions();
+
+    (void) this->deviceCreateInfoAddFeatures ( & deviceCreateInfo, & protectedMemoryEnabled );
+    (void) this->deviceCreateInfoAddExtensions ( & deviceCreateInfo );
+
+    (void) this->deviceCreateInfoAddQueueCreateInfos (
+            & deviceCreateInfo,
+            protectedMemoryEnabled,
+            this->_preferExclusiveOperations
+    );
+
     return device;
+}
+
+auto Self :: addImplicitDeviceExtensions () noexcept (false) -> Self & {
+    if ( this->_useImplicitExtensions ) {
+        for ( uint32 i = 0U; i < this->_physicalDevice->extensions().count; ++ i ) {
+            if ( this->_physicalDevice->extensions().pExtensions[i].enabled ) {
+                this->_extensionNames.add ( this->_physicalDevice->extensions().pExtensions[i].properties.name );
+            }
+        }
+    }
+
+    return * this;
+}
+
+auto Self :: filterUnsupportedExtensions ( Collection < String > const & mandatoryExtensions ) noexcept (false) -> Self & {
+    HashSet < String > newExtensions;
+
+    for ( auto & extensionName : this->_extensionNames ) {
+        bool supported = false;
+
+        for ( uint32 i = 0U; i < this->_physicalDevice->extensions().count; ++i ) {
+            if ( extensionName == this->_physicalDevice->extensions().pExtensions[i].properties.name ) {
+                supported = true;
+                break;
+            }
+        }
+
+        if ( supported ) {
+            newExtensions.insert ( extensionName );
+        } else if ( mandatoryExtensions.contains ( extensionName ) ) {
+            throw Type ( VulkanAPIException ( "Device requires '" + extensionName + "' extension, but it is not supported" ) );
+        } else {
+            /* do nothing */
+        }
+    }
+
+    this->_extensionNames = std :: move ( newExtensions );
+
+    return * this;
 }
 
 #define C_ENG_MAP_END

@@ -801,6 +801,8 @@ static PFN_vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR  pVkI
 
 static PFN_vkDestroySurfaceKHR                                              pVkDestroySurface;
 
+static PFN_vkGetPhysicalDeviceSurfaceSupportKHR                             pVkGetPhysicalDeviceSurfaceSupport;
+
 static PFN_vkCreateDevice                                                   pVkCreateDevice;
 
 /**
@@ -11351,12 +11353,11 @@ auto toVulkanFormat (
 
 #endif
 
-    pDestination->sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
+    pDestination->sType                     = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
+    pDestination->flags                     = pSource->flags;
 
-    pDestination->flags = pSource->flags;
-    pDestination->queueCreateInfoCount  = pSource->queueCreateInfoCount;
-    pDestination->enabledExtensionCount = pSource->enabledExtensionCount;
-
+    pDestination->queueCreateInfoCount      = pSource->queueCreateInfoCount;
+    pDestination->enabledExtensionCount     = pSource->enabledExtensionCount;
     pDestination->ppEnabledExtensionNames   = pSource->pEnabledExtensionNames;
 
     if ( pSource->pEnabledFeatures != nullptr ) {
@@ -12124,3 +12125,46 @@ auto vulkan :: enumeratePhysicalDeviceExtensionProperties (
 }
 
 #endif
+
+auto vulkan :: getPhysicalDeviceSurfaceSupport (
+        __C_ENG_TYPE ( PhysicalDeviceHandle )   deviceHandle,
+        cds :: uint32                           queueFamilyIndex,
+        __C_ENG_TYPE ( SurfaceHandle )          surfaceHandle,
+        bool                                  * pSupport
+) noexcept -> __C_ENG_TYPE ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if (
+            deviceHandle    == nullptr ||
+            surfaceHandle   == nullptr ||
+            pSupport        == nullptr
+    ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION (
+            lastCreatedInstance,
+            pVkGetPhysicalDeviceSurfaceSupport,
+            GET_PHYSICAL_DEVICE_SURFACE_SUPPORT
+    )
+
+    __C_ENG_TYPE ( Bool ) support = VK_FALSE;
+
+    result = pVkGetPhysicalDeviceSurfaceSupport (
+            deviceHandle,
+            queueFamilyIndex,
+            surfaceHandle,
+            & support
+    );
+
+    if ( result != VK_SUCCESS ) {
+        return static_cast < __C_ENG_TYPE ( Result ) > ( result );
+    }
+
+    * pSupport = support == VK_TRUE;
+
+    return ResultSuccess;
+}

@@ -2094,6 +2094,7 @@ auto vulkan :: toString (
         case __C_ENG_TYPE ( QueueFlag ) :: QueueFlagTransfer:       { asString = "Transfer";        break; }
         case __C_ENG_TYPE ( QueueFlag ) :: QueueFlagSparseBinding:  { asString = "Sparse Binding";  break; }
         case __C_ENG_TYPE ( QueueFlag ) :: QueueFlagProtected:      { asString = "Protected";       break; }
+        case __C_ENG_TYPE ( QueueFlag ) :: QueueFlagPresent:        { asString = "Present";         break; }
 
 #if __C_ENG_VULKAN_BETA_EXTENSIONS_ENABLED && __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_DECODE_QUEUE_AVAILABLE
 

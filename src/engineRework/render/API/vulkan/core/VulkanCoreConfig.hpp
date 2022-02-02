@@ -45,6 +45,8 @@
 
 #define __C_ENG_VULKAN_CORE_FUNCTION_NAME_DESTROY_SURFACE                                                   "vkDestroySurfaceKHR"
 
+#define __C_ENG_VULKAN_CORE_FUNCTION_NAME_GET_PHYSICAL_DEVICE_SURFACE_SUPPORT                               "vkGetPhysicalDeviceSurfaceSupportKHR"
+
 #define __C_ENG_VULKAN_CORE_FUNCTION_NAME_CREATE_DEVICE                                                     "vkCreateDevice"
 
 #if defined ( __C_ENG_USE_DEFENSIVE_PROGRAMMING ) || !defined(NDEBUG)

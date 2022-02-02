@@ -2181,6 +2181,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
             Field ( Transfer,       VkQueueFlagBits :: VK_QUEUE_TRANSFER_BIT ),
             Field ( SparseBinding,  VkQueueFlagBits :: VK_QUEUE_SPARSE_BINDING_BIT ),
             Field ( Protected,      VkQueueFlagBits :: VK_QUEUE_PROTECTED_BIT ),
+            Field ( Present,        VkQueueFlagBits :: VK_QUEUE_PROTECTED_BIT * 2U ),
 
 #if __C_ENG_VULKAN_BETA_EXTENSIONS_ENABLED && __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_DECODE_QUEUE_AVAILABLE
 

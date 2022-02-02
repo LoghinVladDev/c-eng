@@ -33,6 +33,8 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         public:
             auto init ( __C_ENG_TYPE ( PhysicalDevice ) const *, cds :: uint32, __C_ENG_TYPE ( QueueFamilyDetails ) const & ) noexcept (false) -> Self &;
             auto clear () noexcept -> Self & override;
+
+            auto getQueueFlags ( Type ( SurfaceHandle ) ) const noexcept (false) -> Type ( QueueFlags );
         };
 
     }

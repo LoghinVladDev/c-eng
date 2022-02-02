@@ -180,6 +180,13 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
                 void **
         ) noexcept -> __C_ENG_TYPE ( Result );
 
+        __C_ENG_NO_DISCARD __C_ENG_MAYBE_UNUSED extern auto getPhysicalDeviceSurfaceSupport (
+                __C_ENG_TYPE ( PhysicalDeviceHandle ),
+                cds :: uint32,
+                __C_ENG_TYPE ( SurfaceHandle ),
+                bool                                    *
+        ) noexcept -> __C_ENG_TYPE ( Result );
+
         namespace utility {
             extern auto chainFeaturesFromDetails (
                     __C_ENG_TYPE ( PhysicalDeviceExtendedFeatures )       *,

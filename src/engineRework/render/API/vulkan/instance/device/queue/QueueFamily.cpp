@@ -84,3 +84,28 @@ auto vulkan :: Self :: init (
 auto vulkan :: Self :: clear () noexcept -> Self & {
     return * this;
 }
+
+auto vulkan :: Self :: getQueueFlags (
+        Type ( SurfaceHandle ) surfaceHandle
+) const noexcept (false) -> Type ( QueueFlags ) {
+
+    bool surfaceCapable = VK_FALSE;
+
+    auto result = vulkan :: getPhysicalDeviceSurfaceSupport (
+            this->_physicalDevice->handle(),
+            this->_familyIndex,
+            surfaceHandle,
+            & surfaceCapable
+    );
+
+    if ( result != vulkan :: ResultSuccess ) {
+        __C_ENG_LOG_AND_THROW_DETAILED_API_CALL_EXCEPTION ( debug, "getPhysicalDeviceSurfaceSupport", result );
+    }
+
+    auto flags = this->_details.properties.queueFlags;
+    if ( surfaceCapable ) {
+        flags |= static_cast < uint32 > ( vulkan :: QueueFlagPresent );
+    }
+
+    return flags;
+}
