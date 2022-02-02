@@ -7,6 +7,8 @@
 #include <PhysicalDevice.hpp>
 #include <VulkanCore.hpp>
 #include <VulkanCoreConfig.hpp>
+#include <Allocator.hpp>
+#include <Logger.hpp>
 #include <CDS/Mutex>
 #include <CDS/LockGuard>
 #include <CDS/HashMap>
@@ -1362,17 +1364,19 @@ static StructureWithSize deviceCreationStructures [] = {
 
 };
 
+using QueueFamilyIndex = uint32;
+
 static __C_ENG_TYPE ( PhysicalDeviceDetails ) physicalDeviceDetails;
 
 static Mutex deviceCreationLock;
 static StringLiteral    extensionNames [ __C_ENG_VULKAN_CORE_LAYER_EXTENSION_MAX_COUNT ];
 static uint32           extensionCount;
 
-struct QueueCountAndFamily {
-    vulkan :: __C_ENG_TYPE ( QueueFlag )    queueType;
-    int                                     count;
-    int                                     familyIndex;
-};
+static HashMap < vulkan :: __C_ENG_TYPE ( QueueFlag ), HashMap < QueueFamilyIndex, uint32 > > typeFamilyCount;
+
+static vulkan :: __C_ENG_TYPE ( DeviceQueueCreateInfo ) queueCreateInfos [ __C_ENG_VULKAN_CORE_QUEUE_FAMILY_MAX_COUNT ];
+static float                                            queuePriorities [ __C_ENG_VULKAN_CORE_QUEUE_FAMILY_MAX_COUNT ][ __C_ENG_VULKAN_CORE_QUEUE_FAMILY_QUEUE_MAX_COUNT ];
+static uint32                                           queueCreateInfoCount;
 
 #define C_ENG_MAP_START     NESTED_CLASS ( Builder, ENGINE_TYPE ( Device ), PARENT ( cds :: Object ) )
 #include <ObjectMapping.hpp>
@@ -1559,8 +1563,10 @@ auto Self :: deviceCreateInfoAddExtensions (
 
 #endif
 
+    extensionCount = 0U;
+
     for ( auto const & extensionName : this->_extensionNames ) {
-        extensionNames[ extensionCount ++ ] = extensionName.cStr();
+        extensionNames [ extensionCount ++ ] = extensionName.cStr();
     }
 
     pCreateInfo->enabledExtensionCount  = extensionCount;
@@ -1570,30 +1576,129 @@ auto Self :: deviceCreateInfoAddExtensions (
 }
 
 auto Self :: deviceCreateInfoAddQueueCreateInfos (
-        Type ( DeviceCreateInfo ) * pCreateInfo,
-        bool                        protectedMemoryEnabled,
-        bool                        preferExclusivity
+        Type ( DeviceCreateInfo )                                   * pCreateInfo,
+        bool                                                          protectedMemoryEnabled,
+        bool                                                          preferExclusivity
 ) noexcept (false) -> Self & {
 
-    HashMap < Type ( QueueFlag ), Array < uint32 > > typeFamilies;
-    HashMap < Type ( QueueFlag ), Array < Pair < uint32, uint32 > > > countsFromFamilies;
+    HashMap < Type ( QueueFlag ), uint32 > requiredQueueCounts;
+    HashMap < QueueFamilyIndex, Type ( QueueFlags ) > queueFamilyFlags;
+    HashMap < QueueFamilyIndex, uint32 > totalFamilyCounts;
+    HashMap < QueueFamilyIndex, uint32 > usedFamilyCounts;
+
+    typeFamilyCount.clear();
+
+    requiredQueueCounts [ QueueFlagGraphics ]   = this->_graphicsQueueCount;
+    requiredQueueCounts [ QueueFlagTransfer ]   = this->_transferQueueCount;
+    requiredQueueCounts [ QueueFlagPresent ]    = this->_presentQueueCount;
 
     for ( auto const & family : this->_physicalDevice->queueFamilies() ) {
-        auto familyFlags = family.getQueueFlags ( this->_surfaceHandle );
+        queueFamilyFlags [ family.familyIndex() ] = family.query()
+                .select < Type ( QueueFlags ) > ()
+                .withSurface ( this->_surfaceHandle )
+                .execute();
 
-        for ( auto type : Array { QueueFlagGraphics, QueueFlagTransfer, QueueFlagPresent } ) {
-            if ( ( familyFlags & static_cast < uint32 > ( type ) ) != 0U ) {
-                typeFamilies [ type ].add ( family.familyIndex() );
+        totalFamilyCounts [ family.familyIndex() ] = family.details().properties.queueCount;
+    }
+
+    for ( auto type : Array { QueueFlagGraphics, QueueFlagTransfer, QueueFlagPresent } ) {
+
+        HashMap < uint32, uint32 > familyCounts;
+        uint32 totalCount = 0U;
+
+        for ( auto const & family : this->_physicalDevice->queueFamilies() ) {
+            if ( ( queueFamilyFlags [ family.familyIndex() ] & static_cast < uint32 > ( type ) ) != 0U ) {
+                totalCount += family.details().properties.queueCount;
+                familyCounts [ family.familyIndex() ] = family.details().properties.queueCount;
+            }
+        }
+
+        uint32 totalForType = 0U;
+
+        for ( auto const & familyCount : familyCounts ) {
+            auto ratio = static_cast < float > ( familyCount.second() ) / static_cast < float > ( totalCount );
+            typeFamilyCount [ type ] [ familyCount.first() ] = static_cast < uint32 > ( ratio * static_cast < float > ( requiredQueueCounts [ type ] ) );
+            totalForType += typeFamilyCount [ type ] [ familyCount.first() ];
+        }
+
+        if ( totalForType < requiredQueueCounts [ type ] ) {
+            familyCounts.sequence()
+                .maxBy( []( auto const & familyCount ){ return familyCount.second(); } )
+                .ifPresent ( [type, & requiredQueueCounts, & totalForType] ( auto & familyCount ) {
+                    typeFamilyCount [ type ] [ familyCount.first() ] += requiredQueueCounts [ type ] - totalForType;
+                    totalForType = requiredQueueCounts [ type ];
+                });
+        }
+    }
+
+    for ( auto & familyCounts : typeFamilyCount ) {
+        uint32 carryToOtherFamily = 0U;
+
+        for ( auto & familyCount : familyCounts.second() ) {
+            if ( usedFamilyCounts [ familyCount.first() ] + familyCount.second() <= totalFamilyCounts [ familyCount.first() ] ) {
+                usedFamilyCounts [ familyCount.first() ] += familyCount.second();
+            } else {
+
+                uint32 ableToUse = totalFamilyCounts [ familyCount.first() ] - usedFamilyCounts [ familyCount.first() ];
+                usedFamilyCounts [ familyCount.first() ] = totalFamilyCounts [ familyCount.first() ];
+
+                uint32 remainingOutside = familyCount.second() - ableToUse;
+                familyCount.second() = ableToUse;
+
+                carryToOtherFamily += remainingOutside;
+            }
+        }
+
+        for ( auto & familyCount : familyCounts.second() ) {
+            if ( usedFamilyCounts [ familyCount.first() ] < totalFamilyCounts [ familyCount.first() ] ) {
+
+                uint32 ableToFit = totalFamilyCounts [ familyCount.first() ] - usedFamilyCounts [ familyCount.first() ];
+
+                if ( ableToFit >= carryToOtherFamily ) {
+                    ableToFit = carryToOtherFamily;
+                    carryToOtherFamily = 0U;
+                } else {
+                    carryToOtherFamily -= ableToFit;
+                }
+
+                usedFamilyCounts [ familyCount.first() ] += ableToFit;
+                familyCount.second() += ableToFit;
+
+                if ( carryToOtherFamily == 0U ) {
+                    break;
+                }
             }
         }
     }
 
-    typeFamilies
-        .sequence()
-        .sortedBy([]( auto const & families ){ return families.second().size(); })
-        .forEach([]( auto & queueWithFamilies ) {
-            /// compute by ratio
-        });
+
+    queueCreateInfoCount = 0U;
+    for ( auto & usedFamilyCount : usedFamilyCounts ) {
+
+        if ( usedFamilyCount.second() > __C_ENG_VULKAN_CORE_QUEUE_FAMILY_QUEUE_MAX_COUNT ) {
+            throw Type ( VulkanAPIException ) ( "Too many queues reserved from family '"_s + usedFamilyCount.first() + "'. Increase capacity in configuration" );
+        }
+
+        if ( usedFamilyCount.second() == 0U ) {
+            continue;
+        }
+
+        for ( uint32 i = 0U; i < usedFamilyCount.second(); ++ i ) {
+            queuePriorities [ usedFamilyCount.first() ][ i ] = 1.0F; // temp value
+        }
+
+        queueCreateInfos [ queueCreateInfoCount ++ ] = {
+                .structureType      = StructureTypeDeviceQueueCreateInfo,
+                .pNext              = nullptr,
+                .flags              = 0U,
+                .queueFamilyIndex   = usedFamilyCount.first(),
+                .queueCount         = usedFamilyCount.second(),
+                .pQueuePriorities   = & queuePriorities [ usedFamilyCount.first() ][0]
+        };
+    }
+
+    pCreateInfo->queueCreateInfoCount   = queueCreateInfoCount;
+    pCreateInfo->pQueueCreateInfos      = & queueCreateInfos[0];
 
     return * this;
 }
@@ -1606,7 +1711,8 @@ auto Self :: buildSingleDeviceToSurface () noexcept (false) -> Nester {
 
     Type ( DeviceCreateInfo ) deviceCreateInfo {
         .structureType  = StructureTypeDeviceCreateInfo,
-        .pNext          = nullptr
+        .pNext          = nullptr,
+        .flags          = 0U
     };
 
     bool protectedMemoryEnabled = false;
@@ -1622,6 +1728,23 @@ auto Self :: buildSingleDeviceToSurface () noexcept (false) -> Nester {
             protectedMemoryEnabled,
             this->_preferExclusiveOperations
     );
+
+
+    auto result = vulkan :: createDevice (
+            this->_physicalDevice->handle(),
+            & deviceCreateInfo,
+            Type ( Allocator ) :: instance().callbacks(),
+            & device._handle
+    );
+
+    if ( result != ResultSuccess ) {
+        __C_ENG_LOG_AND_THROW_DETAILED_API_CALL_EXCEPTION ( error, "createDevice", result );
+    } else {
+        (void) Type ( Logger ) :: instance ().info (
+                "Created Logical Device with handle '"_s + :: toString ( device._handle ) +
+                "' from Physical Device " + this->_physicalDevice->details().basicProperties.deviceName
+        );
+    }
 
     return device;
 }
@@ -1672,7 +1795,22 @@ auto Self :: filterUnsupportedExtensions ( Collection < String > const & mandato
 #define C_ENG_MAP_START     CLASS ( Device, ENGINE_PARENT ( VulkanRenderObject ) )
 #include <ObjectMapping.hpp>
 
-auto Self :: clear () noexcept -> Self & {
+auto Self :: clear () noexcept (false) -> Self & {
+
+    if ( this->_handle != nullptr ) {
+
+        auto result = vulkan :: destroyDevice (
+                this->_handle,
+                Type ( Allocator ) :: instance().callbacks()
+        );
+
+        if ( result != ResultSuccess ) {
+            __C_ENG_LOG_AND_THROW_DETAILED_API_CALL_EXCEPTION ( warning, "destroyDevice", result );
+        }
+
+        this->_handle = nullptr;
+    }
+
     return * this;
 }
 

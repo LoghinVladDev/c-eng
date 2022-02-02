@@ -804,6 +804,7 @@ static PFN_vkDestroySurfaceKHR                                              pVkD
 static PFN_vkGetPhysicalDeviceSurfaceSupportKHR                             pVkGetPhysicalDeviceSurfaceSupport;
 
 static PFN_vkCreateDevice                                                   pVkCreateDevice;
+static PFN_vkDestroyDevice                                                  pVkDestroyDevice;
 
 /**
  * ---------------------------------------------------------
@@ -12037,6 +12038,40 @@ auto vulkan :: createDevice (
                     pDeviceHandle
             )
     );
+}
+
+auto vulkan :: destroyDevice (
+        __C_ENG_TYPE ( DeviceHandle )                handle,
+        __C_ENG_TYPE ( AllocationCallbacks ) const * pAllocationCallbacks
+) noexcept -> __C_ENG_TYPE ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( handle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION (
+            lastCreatedInstance,
+            pVkDestroyDevice,
+            DESTROY_DEVICE
+    )
+
+    VkAllocationCallbacks * pUsedAllocationCallback = nullptr;
+
+    if ( pAllocationCallbacks != nullptr ) {
+        pUsedAllocationCallback = & allocationCallbacks;
+        toVulkanFormat ( pAllocationCallbacks, pUsedAllocationCallback );
+    }
+
+    pVkDestroyDevice (
+            handle,
+            pUsedAllocationCallback
+    );
+
+    return ResultSuccess;
 }
 
 auto vulkan :: utility :: chainFeaturesFromDetails (

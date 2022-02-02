@@ -71,6 +71,8 @@ auto vulkan :: Self :: init () noexcept (false) -> Self & {
 
 auto vulkan :: Self :: clear () noexcept (false) -> Self & {
 
+    (void) this->_device.clear();
+
     if ( this->_surfaceHandle != nullptr ) {
 
         if ( this->renderInstanceSurfaceCallbacks().detachCallback == nullptr ) {

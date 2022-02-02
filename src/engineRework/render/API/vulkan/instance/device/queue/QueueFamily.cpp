@@ -85,7 +85,7 @@ auto vulkan :: Self :: clear () noexcept -> Self & {
     return * this;
 }
 
-auto vulkan :: Self :: getQueueFlags (
+auto vulkan :: Self :: getQueueFlagsWithPresent (
         Type ( SurfaceHandle ) surfaceHandle
 ) const noexcept (false) -> Type ( QueueFlags ) {
 

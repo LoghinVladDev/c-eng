@@ -120,6 +120,11 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
                 __C_ENG_TYPE ( AllocationCallbacks ) const *
         ) noexcept -> __C_ENG_TYPE ( Result );
 
+        __C_ENG_NO_DISCARD extern auto destroyDevice (
+                __C_ENG_TYPE ( DeviceHandle ),
+                __C_ENG_TYPE ( AllocationCallbacks ) const *
+        ) noexcept -> __C_ENG_TYPE ( Result );
+
         __C_ENG_NO_DISCARD __C_ENG_MAYBE_UNUSED extern auto getPhysicalDeviceProperties (
                 __C_ENG_TYPE ( PhysicalDeviceHandle ),
                 __C_ENG_TYPE ( PhysicalDeviceProperties ) *

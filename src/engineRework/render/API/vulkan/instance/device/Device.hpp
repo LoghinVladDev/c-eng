@@ -37,7 +37,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
             auto operator = ( Self const & ) noexcept -> Self & = delete;
             auto operator = ( Self && ) noexcept -> Self &;
 
-            auto clear () noexcept -> Self & override;
+            auto clear () noexcept (false) -> Self & override;
             Destructor () noexcept override;
         };
 
@@ -75,7 +75,12 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
             Field ( PRIMITIVE_TYPE ( bool ),                                            useImplicitExtensions,          DEFAULT_VALUE ( true ),         GET_NONE,   SET_INLINE ( useImplicitExtensions ) )
 
         private:
-            auto deviceCreateInfoAddQueueCreateInfos ( Type ( DeviceCreateInfo * ), bool, bool ) noexcept (false) -> Self &;
+            auto deviceCreateInfoAddQueueCreateInfos (
+                    Type ( DeviceCreateInfo )   *,
+                    bool,
+                    bool
+            ) noexcept (false) -> Self &;
+
             auto deviceCreateInfoAddFeatures ( Type ( DeviceCreateInfo ) *, bool * ) noexcept (false) -> Self &;
             auto deviceCreateInfoAddExtensions ( Type ( DeviceCreateInfo ) * ) noexcept (false) -> Self &;
 
