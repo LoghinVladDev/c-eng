@@ -2,6 +2,7 @@
 
 !includesub ../../../../../../doc/dependencies/primitive/object.puml!OBJECT
 !includesub validation/layerhandler.puml!LAYERHANDLER
+!includesub ../vulkan.puml!VULKAN
 
 !startsub INSTANCE
 
@@ -11,7 +12,7 @@ namespace engine {
 
         class Instance
 
-        cds.Object <|-- Instance
+        VulkanRenderObject <|-- Instance
 
         class Instance {
             .. constants ..
@@ -40,11 +41,12 @@ namespace engine {
             .. functions ..
             + Version supportedVulkanVersion ()
             + Instance ()
+            + Instance init ()
         }
 
         Instance "1" *-- "1" LayerHandler
-        Instance "1" *--- "1.." LayerHandler::ValidationEnabledFeatures
-        Instance "1" *--- "1.." LayerHandler::ValidationDisabledFeatures
+        Instance "1" *--- "1.." "LayerHandler::ValidationEnabledFeatures"
+        Instance "1" *--- "1.." "LayerHandler::ValidationDisabledFeatures"
 
     }
 
@@ -58,7 +60,7 @@ namespace engine {
 
     namespace vulkan {
 
-        class Instance::Builder {
+        class "Instance::Builder" {
             - _version : Version
             - _debugMessageSeverityFlags : DebugMessageSeverityFlags
             - _debugMessageTypeFlags : DebugMessageTypeFlags
@@ -67,7 +69,9 @@ namespace engine {
             + Instance build ()
         }
 
-        Instance::Builder - Instance : builder of
+        cds.Object <|-- "Instance::Builder"
+
+        "Instance::Builder" - Instance : builder of
 
     }
 

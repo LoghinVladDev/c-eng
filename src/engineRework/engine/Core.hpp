@@ -6,6 +6,11 @@
 #define __C_ENG_CORE_HPP__
 
 #include <CDS/Types>
+#include <string>
+
+namespace cds {
+    class String;
+}
 
 namespace engine {
 

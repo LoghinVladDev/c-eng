@@ -3,6 +3,7 @@
 !includesub ../../../../../../../doc/dependencies/primitive/object.puml!OBJECT
 !includesub ../instance.puml!INSTANCE
 !includesub queue/queue.puml!QUEUE
+!includesub ../../vulkan.puml!VULKAN
 
 !startsub DEVICE
 
@@ -12,9 +13,20 @@ namespace engine {
 
         class PhysicalDevice
 
-        cds.Object <|-- PhysicalDevice
+        VulkanRenderObject <|-- PhysicalDevice
+
+        class DeviceExtension {
+            + properties : ExtensionProperties
+            + enabled : bool
+        }
+
+        class DeviceExtensionArray {
+            + pExtensions : DeviceExtensionArray[]
+            + count : uint32
+        }
 
         class PhysicalDevice {
+            + {static} dedicatedGPUBias : uint32
             - _handle : PhysicalDeviceHandle
             - _details : PhysicalDeviceDetails
             - _queueFamilies : Array < QueueFamily >
@@ -30,10 +42,97 @@ namespace engine {
             + {static} void refreshPhysicalDevices ()
             + {static} Array < PhysicalDevice > physicalDevices ()
             + uint32 renderScore () const
+            + DeviceExtensionArray extensions () const
+            + PhysicalDevice refreshExtensions ()
+        }
+
+        VulkanRenderObject <|-- PhysicalDeviceGroup
+
+        class PhysicalDeviceGroup {
+
         }
 
         PhysicalDevice "1.." o-- "1" Instance : use
         PhysicalDevice "1" *-- "1.." QueueFamily : has
+
+        PhysicalDevice -- "nested in" DeviceExtensionArray
+        PhysicalDevice -- "nested in" DeviceExtension
+
+        VulkanRenderObject <|-- Device
+
+        class Device {
+            - _handle : DeviceHandle
+            - _surfaceHandle : SurfaceHandle
+            - _physicalDevice : PhysicalDevice
+            - _queues : Array < Queue >
+            .. getters ..
+            + DeviceHandle handle () const
+            + SurfaceHandle surfaceHandle () const
+            + PhysicalDevice physicalDevice () const
+            + Array < Queue > queues () const
+            .. public functions ..
+            + Device ()
+            + Device ( Device && )
+            + Device operator = ( Device && )
+        }
+
+        diamond engine.vulkan.deviceOwner
+
+        Device "1" -- engine.vulkan.deviceOwner
+        engine.vulkan.deviceOwner "either" o-- "1" PhysicalDevice
+        engine.vulkan.deviceOwner o-- "1" PhysicalDeviceGroup
+
+        Device "1" *-- "many" Queue: has
+
+        class "Device::Builder" {
+            .. input, output ..
+            - _physicalDevice : PhysicalDevice
+            - _physicalDeviceGroup : PhysicalDeviceGroup
+            - _surfaceHandle : SurfaceHandle
+            + Builder fromDevice ( PhysicalDevice )
+            + Builder fromDeviceGroup ( PhysicalDeviceGroup )
+            + Builder toSurface ( SurfaceHandle )
+            .. queue behavior ..
+            - _preferExclusiveOperations : bool
+            - _maxQueuePriority : float
+            - _minQueuePriority : float
+            + Builder setPreferExclusiveOperations ( bool )
+            + Builder setMaxQueuePriority ( float )
+            + Builder setMinQueuePriority ( float )
+            .. queue reservation parameters ..
+            - _graphicsQueueCount : uint32
+            - _transferQueueCount : uint32
+            - _presentQueueCount : uint32
+            + Builder setGraphicsQueueCount ( uint32 )
+            + Builder setTransferQueueCount ( uint32 )
+            + Builder setPresentQueueCount ( uint32 )
+            .. extensions ..
+            - _extensionNames : HashSet < String >
+            - _useImplicitExtensions : bool
+            + Builder setExtensionNames ( HashSet < String > )
+            + Builder useImplicitExtensions ( bool )
+            .. features ..
+            - _onlyBasicFeatures : bool
+            - _allFeatures : bool
+            - _featureSets : HashSet < GenericInStructure >
+            + Builder setUseOnlyBasicFeatures ( bool )
+            + Builder setUseAllFeatures ( bool )
+            + Builder setFeatureSets ( HashSet < GenericInStructure > )
+            .. private functions - create device to surface ..
+            - Builder deviceCreateInfoAddQueueCreateInfos ( DeviceCreateInfo, bool, bool )
+            - Builder deviceCreateInfoAddFeatures ( DeviceCreateInfo, bool * )
+            - Builder deviceCreateInfoAddExtensions ( DeviceCreateInfo )
+            - Device buildSingleDeviceToSurface ()
+            .. private functions - others ..
+            - Builder addImplicitDeviceExtensions ()
+            - Builder filterUnsupportedExtensions ( Collection < String > )
+            .. public functions ..
+            + Device build ()
+        }
+
+        cds.Object <|--- "Device::Builder"
+
+        "Device::Builder" "builder for" -- Device
 
     }
 

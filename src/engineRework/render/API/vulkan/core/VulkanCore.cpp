@@ -4,6 +4,7 @@
 
 #include "VulkanCore.hpp"
 
+#include <CDS/String>
 #include <Func.hpp>
 
 using namespace cds; // NOLINT(clion-misra-cpp2008-7-3-4)
@@ -6785,7 +6786,7 @@ auto vulkan :: instanceVersionToUInt32 (
 
 auto vulkan :: versionReadableFormat (
         __C_ENG_TYPE ( Version ) const & version
-) noexcept -> cds :: String {
+) noexcept -> String {
     return String :: f (
             "%d.%d.%d",
             static_cast < sint32 > ( version.major ),
@@ -6793,3 +6794,118 @@ auto vulkan :: versionReadableFormat (
             static_cast < sint32 > ( version.patch )
     );
 }
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SURFACE_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( SurfaceTransformFlag ) flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case SurfaceTransformFlagIdentity:          { asString = "Identity";        break; }
+        case SurfaceTransformFlagRotate90:          { asString = "Rotate90";        break; }
+        case SurfaceTransformFlagRotate180:         { asString = "Rotate180";       break; }
+        case SurfaceTransformFlagRotate270:         { asString = "Rotate270";       break; }
+        case SurfaceTransformFlagMirror:            { asString = "Mirror";          break; }
+        case SurfaceTransformFlagMirrorRotate90:    { asString = "MirrorRotate90";  break; }
+        case SurfaceTransformFlagMirrorRotate180:   { asString = "MirrorRotate180"; break; }
+        case SurfaceTransformFlagMirrorRotate270:   { asString = "MirrorRotate270"; break; }
+        case SurfaceTransformFlagInherit:           { asString = "Inherit";         break; }
+    }
+
+    return asString;
+}
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( CompositeAlphaFlag ) flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case CompositeAlphaFlagOpaque:          { asString = "Opaque";          break; }
+        case CompositeAlphaFlagPreMultiplied:   { asString = "PreMultiplied";   break; }
+        case CompositeAlphaFlagPostMultiplied:  { asString = "PostMultiplied";  break; }
+        case CompositeAlphaFlagInherit:         { asString = "Inherit";         break; }
+    }
+
+    return asString;
+}
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PresentMode ) mode
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( mode ) {
+        case PresentModeImmediate:                  { asString = "Immediate";               break; }
+        case PresentModeMailbox:                    { asString = "Mailbox";                 break; }
+        case PresentModeFifo:                       { asString = "Fifo";                    break; }
+        case PresentModeFifoRelaxed:                { asString = "FifoRelaxed";             break; }
+        case PresentModeSharedDemandRefresh:        { asString = "SharedDemandRefresh";     break; }
+        case PresentModeSharedContinuousRefresh:    { asString = "SharedContinuousRefresh"; break; }
+    }
+
+    return asString;
+}
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( SurfaceCapabilities ) const & capabilities
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( SurfaceCapabilities ) ) " "
+            "{ minImageCount = "_s          + capabilities.minImageCount +
+            ", maxImageCount = "            + capabilities.maxImageCount +
+            ", currentExtent = "            + toString ( capabilities.currentExtent ) +
+            ", minImageExtent = "           + toString ( capabilities.minImageExtent ) +
+            ", maxImageExtent = "           + toString ( capabilities.maxImageExtent ) +
+            ", maxImageArrayLayers = "      + toString ( capabilities.maxImageArrayLayers ) +
+            ", supportedTransforms = "      + "0b" + Long ( capabilities.supportedTransforms ).toString(2) +
+            ", currentTransform = "         + toString ( capabilities.currentTransform ) +
+            ", supportedCompositeAlpha = "  + "0b" + Long ( capabilities.supportedCompositeAlpha ).toString(2) +
+            ", supportedUsageFlags = "      + "0b" + Long ( capabilities.supportedUsageFlags ).toString(2) +
+            " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_DISPLAY_SURFACE_COUNTER_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( SurfaceCounterFlag ) flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case SurfaceCounterFlagVBlank:  { asString = "VBlank";  break; }
+    }
+
+    return asString;
+}
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( SurfaceCapabilities2 ) const & capabilities
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( SurfaceCapabilities2 ) ) " "
+           "{ structureType = "_s          + toString ( capabilities.structureType ) +
+           ", pNext = "                    + :: toString ( capabilities.pNext ) +
+           ", minImageCount = "            + capabilities.minImageCount +
+           ", maxImageCount = "            + capabilities.maxImageCount +
+           ", currentExtent = "            + toString ( capabilities.currentExtent ) +
+           ", minImageExtent = "           + toString ( capabilities.minImageExtent ) +
+           ", maxImageExtent = "           + toString ( capabilities.maxImageExtent ) +
+           ", maxImageArrayLayers = "      + toString ( capabilities.maxImageArrayLayers ) +
+           ", supportedTransforms = "      + "0b" + Long ( capabilities.supportedTransforms ).toString(2) +
+           ", currentTransform = "         + toString ( capabilities.currentTransform ) +
+           ", supportedCompositeAlpha = "  + "0b" + Long ( capabilities.supportedCompositeAlpha ).toString(2) +
+           ", supportedUsageFlags = "      + "0b" + Long ( capabilities.supportedUsageFlags ).toString(2) +
+           ", supportedSurfaceCounters = " + "0b" + Long ( capabilities.supportedSurfaceCounters ).toString(2) +
+           " }";
+}
+
+#endif

@@ -13,11 +13,11 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
     namespace vulkan {
 
         __C_ENG_PRE_DECLARE_CLASS ( Device );
-        __C_ENG_PRE_DECLARE_CLASS ( QueueFamily )
+        __C_ENG_PRE_DECLARE_CLASS ( QueueFamily );
 
         Class {
             Field ( ENGINE_PRIMITIVE_TYPE ( QueueHandle ),          handle,         DEFAULT_VALUE ( nullptr ),  GET_DEFAULT, SET_NONE )
-            Field ( ENGINE_PRIMITIVE_TYPE ( QueueFamily ) const *,  queueFamily,    DEFAULT_VALUE ( nullptr ),  GET_DEFAULT, SET_NONE )
+            Field ( ENGINE_PRIMITIVE_TYPE ( QueueFamily const * ),  queueFamily,    DEFAULT_VALUE ( nullptr ),  GET_DEFAULT, SET_NONE )
             Field ( PRIMITIVE_TYPE ( cds :: uint32 ),               index,          DEFAULT_VALUE ( 0U ),       GET_DEFAULT, SET_NONE )
             Field ( ENGINE_PRIMITIVE_TYPE ( QueueFlag ),            type,           NO_INIT,                    GET_DEFAULT, SET_NONE )
 
@@ -27,10 +27,10 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
                 Type ( QueueFamily )    const *,
                 cds :: uint32,
                 Type ( QueueFlag )
-            ) noexcept ( false ) -> Self &;
+            ) noexcept (false) -> Self &;
 
-            auto clear () noexcept false -> Self &;
-        }
+            auto clear () noexcept -> Self & override;
+        };
 
     }
 }

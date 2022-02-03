@@ -6,9 +6,7 @@
 #define __C_ENG_VULKAN_CORE_HPP__
 
 #include <Preprocess.hpp>
-#include <CDS/Types>
 #include <CDS/Limits>
-#include <CDS/Exception>
 
 #include <VulkanAPIDetails.hpp>
 
@@ -2169,6 +2167,68 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+
+#define C_ENG_MAP_START     ENUM ( ImageUsageFlag, TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( TransferSource,                 VkImageUsageFlagBits :: VK_IMAGE_USAGE_TRANSFER_SRC_BIT ),
+            Field ( TransferDestination,            VkImageUsageFlagBits :: VK_IMAGE_USAGE_TRANSFER_DST_BIT ),
+            Field ( Sampled,                        VkImageUsageFlagBits :: VK_IMAGE_USAGE_SAMPLED_BIT ),
+            Field ( Storage,                        VkImageUsageFlagBits :: VK_IMAGE_USAGE_STORAGE_BIT ),
+            Field ( ColorAttachment,                VkImageUsageFlagBits :: VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT ),
+            Field ( DepthStencilAttachment,         VkImageUsageFlagBits :: VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT ),
+            Field ( TransientAttachment,            VkImageUsageFlagBits :: VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT ),
+            Field ( InputAttachment,                VkImageUsageFlagBits :: VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT ),
+
+#if __C_ENG_VULKAN_BETA_EXTENSIONS_ENABLED && __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_DECODE_QUEUE_AVAILABLE
+
+            Field ( VideoDecodeDestination,         VkImageUsageFlagBits :: VK_IMAGE_USAGE_VIDEO_DECODE_DST_BIT_KHR ),
+            Field ( VideoDecodeSource,              VkImageUsageFlagBits :: VK_IMAGE_USAGE_VIDEO_DECODE_SRC_BIT_KHR ),
+            Field ( VideoDecodeDPB,                 VkImageUsageFlagBits :: VK_IMAGE_USAGE_VIDEO_DECODE_DPB_BIT_KHR ),
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_FRAGMENT_DENSITY_MAP_AVAILABLE
+
+            Field ( FragmentDensityMap,             VkImageUsageFlagBits :: VK_IMAGE_USAGE_FRAGMENT_DENSITY_MAP_BIT_EXT ),
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_FRAGMENT_SHADING_RATE_AVAILABLE
+
+            Field ( FragmentShadingRateAttachment,  VkImageUsageFlagBits :: VK_IMAGE_USAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR ),
+
+#endif
+
+#if __C_ENG_VULKAN_BETA_EXTENSIONS_ENABLED && __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_ENCODE_QUEUE_AVAILABLE
+
+            Field ( VideoEncodeDestination,         VkImageUsageFlagBits :: VK_IMAGE_USAGE_VIDEO_ENCODE_DST_BIT_KHR ),
+            Field ( VideoEncodeSource,              VkImageUsageFlagBits :: VK_IMAGE_USAGE_VIDEO_ENCODE_SRC_BIT_KHR ),
+            Field ( VideoEncodeDPB,                 VkImageUsageFlagBits :: VK_IMAGE_USAGE_VIDEO_ENCODE_DPB_BIT_KHR ),
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_HUAWEI_INVOCATION_MASK_AVAILABLE
+
+            Field ( InvocationMaskHuawei,           VkImageUsageFlagBits :: VK_IMAGE_USAGE_INVOCATION_MASK_BIT_HUAWEI ),
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SHADING_RATE_IMAGE_AVAILABLE
+
+            Field ( ShadingRateImageNVidia,         VkImageUsageFlagBits :: VK_IMAGE_USAGE_SHADING_RATE_IMAGE_BIT_NV ),
+
+#endif
+
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
 
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 
@@ -2542,6 +2602,77 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #endif
 
 
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SURFACE_AVAILABLE
+
+#define C_ENG_MAP_START     ENUM ( SurfaceTransformFlag,    TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( Identity,           VkSurfaceTransformFlagBitsKHR :: VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR ),
+            Field ( Rotate90,           VkSurfaceTransformFlagBitsKHR :: VK_SURFACE_TRANSFORM_ROTATE_90_BIT_KHR ),
+            Field ( Rotate180,          VkSurfaceTransformFlagBitsKHR :: VK_SURFACE_TRANSFORM_ROTATE_180_BIT_KHR ),
+            Field ( Rotate270,          VkSurfaceTransformFlagBitsKHR :: VK_SURFACE_TRANSFORM_ROTATE_270_BIT_KHR ),
+            Field ( Mirror,             VkSurfaceTransformFlagBitsKHR :: VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_BIT_KHR ),
+            Field ( MirrorRotate90,     VkSurfaceTransformFlagBitsKHR :: VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_90_BIT_KHR ),
+            Field ( MirrorRotate180,    VkSurfaceTransformFlagBitsKHR :: VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_180_BIT_KHR ),
+            Field ( MirrorRotate270,    VkSurfaceTransformFlagBitsKHR :: VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_270_BIT_KHR ),
+            Field ( Inherit,            VkSurfaceTransformFlagBitsKHR :: VK_SURFACE_TRANSFORM_INHERIT_BIT_KHR )
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START     ENUM ( CompositeAlphaFlag,  TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( Opaque,         VkCompositeAlphaFlagBitsKHR :: VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR ),
+            Field ( PreMultiplied,  VkCompositeAlphaFlagBitsKHR :: VK_COMPOSITE_ALPHA_PRE_MULTIPLIED_BIT_KHR ),
+            Field ( PostMultiplied, VkCompositeAlphaFlagBitsKHR :: VK_COMPOSITE_ALPHA_POST_MULTIPLIED_BIT_KHR ),
+            Field ( Inherit,        VkCompositeAlphaFlagBitsKHR :: VK_COMPOSITE_ALPHA_INHERIT_BIT_KHR )
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START     ENUM ( PresentMode,  TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( Immediate,                  VkPresentModeKHR :: VK_PRESENT_MODE_IMMEDIATE_KHR ),
+            Field ( Mailbox,                    VkPresentModeKHR :: VK_PRESENT_MODE_MAILBOX_KHR ),
+            Field ( Fifo,                       VkPresentModeKHR :: VK_PRESENT_MODE_FIFO_KHR ),
+            Field ( FifoRelaxed,                VkPresentModeKHR :: VK_PRESENT_MODE_FIFO_RELAXED_KHR ),
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHARED_PRESENTABLE_IMAGE_AVAILABLE
+
+            Field ( SharedDemandRefresh,        VkPresentModeKHR :: VK_PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR ),
+            Field ( SharedContinuousRefresh,    VkPresentModeKHR :: VK_PRESENT_MODE_SHARED_CONTINUOUS_REFRESH_KHR ),
+
+#endif
+
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_DISPLAY_SURFACE_COUNTER_AVAILABLE
+
+#define C_ENG_MAP_START     ENUM ( SurfaceCounterFlag,  TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( VBlank, VkSurfaceCounterFlagBitsEXT :: VK_SURFACE_COUNTER_VBLANK_BIT_EXT )
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
 
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 
@@ -2559,9 +2690,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_ALIAS ( GenericStructure, void );
 
         __C_ENG_ALIAS ( InstanceHandle,                 VkInstance );
-        __C_ENG_ALIAS ( DebugMessengerHandle,           VkDebugUtilsMessengerEXT );
         __C_ENG_ALIAS ( PhysicalDeviceHandle,           VkPhysicalDevice );
-        __C_ENG_ALIAS ( SurfaceHandle,                  VkSurfaceKHR );
         __C_ENG_ALIAS ( DeviceHandle,                   VkDevice );
         __C_ENG_ALIAS ( QueueHandle,                    VkQueue );
 
@@ -2573,16 +2702,37 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_ALIAS ( ShaderStageFlags,               VkShaderStageFlags );
         __C_ENG_ALIAS ( QueueFlags,                     VkQueueFlags );
         __C_ENG_ALIAS ( PipelineStageFlags,             VkPipelineStageFlags );
-
-        __C_ENG_ALIAS ( DebugMessageSeverityFlags,      VkDebugUtilsMessageSeverityFlagsEXT );
-        __C_ENG_ALIAS ( DebugMessageTypeFlags,          VkDebugUtilsMessageTypeFlagsEXT );
-        __C_ENG_ALIAS ( DebugMessengerCallback,         PFN_vkDebugUtilsMessengerCallbackEXT );
+        __C_ENG_ALIAS ( ImageUsageFlags,                VkImageUsageFlags );
 
         __C_ENG_ALIAS ( AllocationFunction,             PFN_vkAllocationFunction );
         __C_ENG_ALIAS ( ReallocationFunction,           PFN_vkReallocationFunction );
         __C_ENG_ALIAS ( FreeFunction,                   PFN_vkFreeFunction );
         __C_ENG_ALIAS ( InternalAllocationNotification, PFN_vkInternalAllocationNotification );
         __C_ENG_ALIAS ( InternalFreeNotification,       PFN_vkInternalFreeNotification );
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_DEBUG_UTILS_AVAILABLE
+
+        __C_ENG_ALIAS ( DebugMessengerHandle,           VkDebugUtilsMessengerEXT );
+
+        __C_ENG_ALIAS ( DebugMessageSeverityFlags,      VkDebugUtilsMessageSeverityFlagsEXT );
+        __C_ENG_ALIAS ( DebugMessageTypeFlags,          VkDebugUtilsMessageTypeFlagsEXT );
+        __C_ENG_ALIAS ( DebugMessengerCallback,         PFN_vkDebugUtilsMessengerCallbackEXT );
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SURFACE_AVAILABLE
+
+        __C_ENG_ALIAS ( SurfaceHandle,                  VkSurfaceKHR );
+        __C_ENG_ALIAS ( SurfaceTransformFlags,          VkSurfaceTransformFlagsKHR );
+        __C_ENG_ALIAS ( CompositeAlphaFlags,            VkCompositeAlphaFlagsKHR );
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_DISPLAY_SURFACE_COUNTER_AVAILABLE
+
+        __C_ENG_ALIAS ( SurfaceCounterFlags,            VkSurfaceCounterFlagsEXT );
 
 #endif
 
@@ -3566,6 +3716,56 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
             __C_ENG_TYPE ( Bool )               dynamicRendering;
             __C_ENG_TYPE ( Bool )               shaderIntegerDotProduct;
             __C_ENG_TYPE ( Bool )               maintenance4;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SURFACE_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( SurfaceCapabilities,   NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            cds :: uint32                   minImageCount;
+            cds :: uint32                   maxImageCount;
+            Type ( Extent2D )               currentExtent;
+            Type ( Extent2D )               minImageExtent;
+            Type ( Extent2D )               maxImageExtent;
+            cds :: uint32                   maxImageArrayLayers;
+            Type ( SurfaceTransformFlags )  supportedTransforms;
+            Type ( SurfaceTransformFlag )   currentTransform;
+            Type ( CompositeAlphaFlags )    supportedCompositeAlpha;
+            Type ( ImageUsageFlags )        supportedUsageFlags;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_DISPLAY_SURFACE_COUNTER_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( SurfaceCapabilities2,  NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )          structureType;
+            Type ( GenericStructure )     * pNext;
+            cds :: uint32                   minImageCount;
+            cds :: uint32                   maxImageCount;
+            Type ( Extent2D )               currentExtent;
+            Type ( Extent2D )               minImageExtent;
+            Type ( Extent2D )               maxImageExtent;
+            cds :: uint32                   maxImageArrayLayers;
+            Type ( SurfaceTransformFlags )  supportedTransforms;
+            Type ( SurfaceTransformFlag )   currentTransform;
+            Type ( CompositeAlphaFlags )    supportedCompositeAlpha;
+            Type ( ImageUsageFlags )        supportedUsageFlags;
+            Type ( SurfaceCounterFlags )    supportedSurfaceCounters;
         };
 
 #define C_ENG_MAP_END
@@ -7336,6 +7536,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PipelineStageFlag ) ) noexcept -> cds :: StringLiteral;
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( DeviceQueueCreateFlag ) ) noexcept -> cds :: StringLiteral;
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( ObjectType ) ) noexcept -> cds :: StringLiteral;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( ImageUsageFlag ) ) noexcept -> cds :: StringLiteral;
 
 #endif
 
@@ -7350,6 +7551,15 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( DriverID ) ) noexcept -> cds :: StringLiteral;
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( ShaderFloatControlsIndependence ) ) noexcept -> cds :: StringLiteral;
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( ResolveModeFlag ) ) noexcept -> cds :: StringLiteral;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SURFACE_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( SurfaceTransformFlag ) ) noexcept -> cds :: StringLiteral;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( CompositeAlphaFlag ) ) noexcept -> cds :: StringLiteral;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PresentMode ) ) noexcept -> cds :: StringLiteral;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( SurfaceCapabilities ) const & ) noexcept -> cds :: String;
 
 #endif
 
@@ -7377,6 +7587,13 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PerformanceCounterScope ) ) noexcept -> cds :: StringLiteral;
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PerformanceCounterStorage ) ) noexcept -> cds :: StringLiteral;
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PerformanceCounterDescriptionFlag ) ) noexcept -> cds :: StringLiteral;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_DISPLAY_SURFACE_COUNTER_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( SurfaceCapabilities2 ) const & ) noexcept -> cds :: String;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( SurfaceCounterFlag ) ) noexcept -> cds :: StringLiteral;
 
 #endif
 

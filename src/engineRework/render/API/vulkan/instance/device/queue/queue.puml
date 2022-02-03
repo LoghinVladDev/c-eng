@@ -1,6 +1,7 @@
 @startuml
 
 !includesub ../../../../../../../../doc/dependencies/primitive/object.puml!OBJECT
+!includesub ../../../vulkan.puml!VULKAN
 
 !startsub QUEUE
 
@@ -10,7 +11,7 @@ namespace engine {
 
         class QueueFamily
 
-        cds.Object <|-- QueueFamily
+        VulkanRenderObject <|-- QueueFamily
 
         class QueueFamily {
             - _details : QueueFamilyDetails
@@ -24,7 +25,33 @@ namespace engine {
             + PhysicalDevice physicalDevice () const
             .. functions ..
             + QueueFamily init ( PhysicalDevice, QueueFamilyDetails )
+            + Query < Undefined > query () const
         }
+
+        class "QueueFamily::Query" < QueryResult > {
+            - _surface : SurfaceHandle
+            - _pQueueFamily : QueueFamily
+            - Query ( QueueFamily )
+            + Query ( Query )
+            + Query < R > select ()
+            + QueryResult execute ()
+            + Query < R > withSurface ( SurfaceHandle )
+        }
+
+        cds.Object <|-- "QueueFamily::Query"
+        "QueueFamily::Query" "query object for" -- QueueFamily
+
+        class Queue {
+            - _handle : QueueHandle
+            - _queueFamily : QueueFamily
+            - _index : uint32
+            - _type : QueueFlag
+            + Queue init ( Device, QueueFamily, uint32, QueueFlag )
+        }
+
+        VulkanRenderObject <|-- Queue
+
+        Queue "many" o-- "1" QueueFamily
 
     }
 

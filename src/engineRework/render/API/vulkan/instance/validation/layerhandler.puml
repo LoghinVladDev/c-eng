@@ -1,6 +1,6 @@
 @startuml
 
-!includesub ../../../../../../../doc/dependencies/primitive/object.puml!OBJECT
+!includesub ../../vulkan.puml!VULKAN
 
 !startsub LAYERHANDLER
 
@@ -10,36 +10,36 @@ namespace engine {
 
         class LayerHandler
 
-        cds.Object <|-- LayerHandler
+        VulkanRenderObject <|-- LayerHandler
 
-        class LayerHandler::LayerExtension {
+        class "LayerHandler::LayerExtension" {
             + properties : ExtensionProperties
             + enabled : bool
         }
 
-        class LayerHandler::Layer {
+        class "LayerHandler::Layer" {
             + properties : LayerProperties
             + enabled : bool
             + pExtensions : LayerExtension[]
             + extensionCount : uint32
         }
 
-        class LayerHandler::LayerNames {
+        class "LayerHandler::LayerNames" {
             + names : StringLiteral[]
             + count : uint32
         }
 
-        class LayerHandler::ExtensionNames {
+        class "LayerHandler::ExtensionNames" {
             + names : StringLiteral[]
             + count : uint32
         }
 
-        class LayerHandler::ValidationEnabledFeatures {
+        class "LayerHandler::ValidationEnabledFeatures" {
             + pFeatures : ValidationFeatureEnable []
             + count : uint32
         }
 
-        class LayerHandler::ValidationDisabledFeatures {
+        class "LayerHandler::ValidationDisabledFeatures" {
             + pFeatures : ValidationFeatureDisable []
             + count : uint32
         }
@@ -64,12 +64,12 @@ namespace engine {
             + ExtensionNames enabledExtensionNames ()
         }
 
-        LayerHandler::Layer "1" *-- "1.." LayerHandler::LayerExtension : has
-        LayerHandler "1" *-- "1.." LayerHandler::Layer : has
-        LayerHandler "1" *-- "1.." LayerHandler::LayerNames : produces
-        LayerHandler "1" *-- "1.." LayerHandler::ExtensionNames : produces
-        LayerHandler --- LayerHandler::ValidationEnabledFeatures : is nested in
-        LayerHandler --- LayerHandler::ValidationDisabledFeatures : is nested in
+        "LayerHandler::Layer" "1" *-- "1.." "LayerHandler::LayerExtension" : has
+        LayerHandler "1" *-- "1.." "LayerHandler::Layer" : has
+        LayerHandler "1" *-- "1.." "LayerHandler::LayerNames" : produces
+        LayerHandler "1" *-- "1.." "LayerHandler::ExtensionNames" : produces
+        LayerHandler --- "LayerHandler::ValidationEnabledFeatures" : is nested in
+        LayerHandler --- "LayerHandler::ValidationDisabledFeatures" : is nested in
 
     }
 

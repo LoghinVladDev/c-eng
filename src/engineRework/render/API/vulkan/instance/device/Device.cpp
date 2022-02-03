@@ -1756,10 +1756,10 @@ auto Self :: buildSingleDeviceToSurface () noexcept (false) -> Nester {
 
     for ( auto const & type : typeFamilyCount ) {
         for ( auto const & familyAndCounts : type.second() ) {
-            for ( uint32 queueIndex = 0U; queueIndex < familyAndCounts; ++ queueIndex ) {
-                device._queues [ static_cast < Index > ( currentQueueIndex ) ].init (
+            for ( uint32 queueIndex = 0U; queueIndex < familyAndCounts.second(); ++ queueIndex ) {
+                (void) device._queues [ static_cast < Index > ( currentQueueIndex ++ ) ].init (
                     & device,
-                    & this->_physicalDevice->queueFamilies() [ familyAndCounts.first() ],
+                    & this->_physicalDevice->queueFamilies() [ static_cast < Index > ( familyAndCounts.first() ) ],
                     queueIndex + usedSoFar [ familyAndCounts.first() ],
                     type.first()
                 );
@@ -1767,6 +1767,16 @@ auto Self :: buildSingleDeviceToSurface () noexcept (false) -> Nester {
 
             usedSoFar [ familyAndCounts.first() ] += familyAndCounts.second();
         }
+    }
+
+    (void) Type ( Logger ) :: instance().debug (
+            "Using "_s + totalUsedQueues + " queues: "
+    );
+
+    for ( auto const & queue : device.queues() ) {
+        (void) Type ( Logger ) :: instance().debug (
+            "Queue -> index = "_s + queue.index() + ", type = " + :: toString ( queue.type() ) + ", family = " + queue.queueFamily()->familyIndex()
+        );
     }
 
     return device;

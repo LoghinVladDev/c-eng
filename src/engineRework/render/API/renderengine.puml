@@ -6,7 +6,13 @@
 
 namespace engine {
 
-    cds.Object <|-- RenderEngine
+    cds.Object <|-- RenderObject
+
+    abstract class RenderObject {
+        + {abstract} RenderObject clear ()
+    }
+
+    RenderObject <|-- RenderEngine
 
     abstract class RenderEngine {
         - _renderInstanceSurfaceCallbacks : RenderInstanceSurfaceCallbacks
@@ -14,7 +20,6 @@ namespace engine {
         + RenderEngine setRenderSurfaceCallbacks ( RenderInstanceSurfaceCallbacks )
         + {abstract} StringLiteral name () const
         + {abstract} RenderEngine init ()
-        + {abstract} RenderEngine clear ()
     }
 
 }

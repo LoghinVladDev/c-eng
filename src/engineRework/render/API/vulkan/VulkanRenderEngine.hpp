@@ -8,6 +8,7 @@
 #include <RenderEngine.hpp>
 #include <Instance.hpp>
 #include <Device.hpp>
+#include <PresentHandler.hpp>
 
 
 #define C_ENG_MAP_START     CLASS ( VulkanRenderEngine, ENGINE_PARENT ( RenderEngine ) )
@@ -21,6 +22,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
             Field ( ENGINE_PRIMITIVE_TYPE ( SurfaceHandle ),    surfaceHandle,  DEFAULT_VALUE ( nullptr ),                          GET_DEFAULT, SET_NONE )
             Field ( ENGINE_TYPE ( Instance ),                   instance,       NO_INIT,                                            GET_DEFAULT, SET_NONE )
             Field ( ENGINE_TYPE ( Device ),                     device,         NO_INIT,                                            GET_DEFAULT, SET_NONE )
+            Field ( ENGINE_TYPE ( PresentHandler ),             presentHandler, NO_INIT,                                            GET_DEFAULT, SET_NONE )
 
         private:
             __C_ENG_NO_DISCARD auto acquireSuitableAPIVersion () const noexcept (false) -> __C_ENG_TYPE ( Version );

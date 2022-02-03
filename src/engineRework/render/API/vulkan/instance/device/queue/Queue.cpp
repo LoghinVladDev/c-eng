@@ -2,10 +2,11 @@
 #include <QueueFamily.hpp>
 #include <Device.hpp>
 #include <VulkanAPI.hpp>
+#include <Logger.hpp>
 
 
-using namespace cds;
-using namespace engine;
+using namespace cds; // NOLINT(clion-misra-cpp2008-7-3-4)
+using namespace engine; // NOLINT(clion-misra-cpp2008-7-3-4)
 
 
 #define C_ENG_MAP_START     CLASS ( Queue, ENGINE_PARENT ( VulkanRenderObject ) )
@@ -16,11 +17,11 @@ auto vulkan :: Self :: init (
     Type ( QueueFamily )    const * pQueueFamily,
     uint32                          queueIndex,
     Type ( QueueFlag )              type
-) noexcept -> Self & {
+) noexcept (false) -> Self & {
 
     auto result = vulkan :: getDeviceQueue (
         pDevice->handle(),
-        pQueueFamily->familyIndex()
+        pQueueFamily->familyIndex(),
         queueIndex,
         & this->_handle
     );
@@ -33,6 +34,10 @@ auto vulkan :: Self :: init (
     this->_index        = queueIndex;
     this->_queueFamily  = pQueueFamily;
 
+    return * this;
+}
+
+auto vulkan :: Self :: clear () noexcept -> Self & {
     return * this;
 }
 

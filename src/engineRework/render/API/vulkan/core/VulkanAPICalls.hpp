@@ -224,6 +224,26 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
             ) noexcept -> void;
         }
 
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SURFACE_AVAILABLE
+
+        __C_ENG_NO_DISCARD __C_ENG_MAYBE_UNUSED extern auto getPhysicalDeviceSurfaceCapabilities (
+                __C_ENG_TYPE ( PhysicalDeviceHandle ),
+                __C_ENG_TYPE ( SurfaceHandle ),
+                __C_ENG_TYPE ( SurfaceCapabilities ) *
+        ) noexcept -> __C_ENG_TYPE ( Result );
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_DISPLAY_SURFACE_COUNTER_AVAILABLE
+
+        __C_ENG_NO_DISCARD __C_ENG_MAYBE_UNUSED extern auto getPhysicalDeviceSurfaceCapabilities (
+                __C_ENG_TYPE ( PhysicalDeviceHandle ),
+                __C_ENG_TYPE ( SurfaceHandle ),
+                __C_ENG_TYPE ( SurfaceCapabilities2 ) *
+        ) noexcept -> __C_ENG_TYPE ( Result );
+
+#endif
+
     }
 
 }

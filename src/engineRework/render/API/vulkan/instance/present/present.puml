@@ -1,0 +1,23 @@
+@startuml
+
+!includesub ../../vulkan.puml!VULKAN
+
+!startsub PUBLIC
+
+namespace engine {
+    namespace vulkan {
+
+        class PresentHandler
+
+        VulkanRenderObject <|-- PresentHandler
+
+        class PresentHandler {
+
+        }
+
+    }
+}
+
+!endsub
+
+@enduml

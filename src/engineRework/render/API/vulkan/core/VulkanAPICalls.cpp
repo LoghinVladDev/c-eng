@@ -813,6 +813,20 @@ static PFN_vkDestroyDevice                                                  pVkD
 static PFN_vkGetDeviceQueue                                                 pVkGetDeviceQueue;
 static PFN_vkGetDeviceQueue2                                                pVkGetDeviceQueue2;
 
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SURFACE_AVAILABLE
+
+static PFN_vkGetPhysicalDeviceSurfaceCapabilitiesKHR                        pVkGetPhysicalDeviceSurfaceCapabilities;
+static VkSurfaceCapabilitiesKHR                                             surfaceCapabilities;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_DISPLAY_SURFACE_COUNTER_AVAILABLE
+
+static PFN_vkGetPhysicalDeviceSurfaceCapabilities2EXT                       pVkGetPhysicalDeviceSurfaceCapabilities2;
+static VkSurfaceCapabilities2EXT                                            surfaceCapabilities2;
+
+#endif
+
 /**
  * ---------------------------------------------------------
  * ---------------------------------------------------------
@@ -12240,8 +12254,8 @@ auto vulkan :: getDeviceQueue (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION (
-            handle,
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION (
+            lastCreatedInstance,
             pVkGetDeviceQueue,
             GET_DEVICE_QUEUE
     )
@@ -12318,6 +12332,157 @@ auto vulkan :: getDeviceQueue (
             & deviceQueueInfo,
             pQueueHandle
     );
+
+    return ResultSuccess;
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SURFACE_AVAILABLE
+
+static inline auto fromVulkanFormat (
+        vulkan :: __C_ENG_TYPE ( SurfaceCapabilities ) * pDestination,
+        VkSurfaceCapabilitiesKHR                 const * pSource
+) noexcept -> void {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if (
+            pDestination            == nullptr ||
+            pSource                 == nullptr
+    ) {
+        return;
+    }
+
+#endif
+
+    pDestination->minImageCount             = pSource->minImageCount;
+    pDestination->maxImageCount             = pSource->maxImageCount;
+    pDestination->currentExtent.width       = pSource->currentExtent.width;
+    pDestination->currentExtent.height      = pSource->currentExtent.height;
+    pDestination->minImageExtent.width      = pSource->minImageExtent.width;
+    pDestination->minImageExtent.height     = pSource->minImageExtent.height;
+    pDestination->maxImageExtent.width      = pSource->maxImageExtent.width;
+    pDestination->maxImageExtent.height     = pSource->maxImageExtent.height;
+    pDestination->maxImageArrayLayers       = pSource->maxImageArrayLayers;
+    pDestination->supportedTransforms       = static_cast < vulkan :: __C_ENG_TYPE ( SurfaceTransformFlags ) > ( pSource->supportedTransforms );
+    pDestination->currentTransform          = static_cast < vulkan :: __C_ENG_TYPE ( SurfaceTransformFlag ) > ( pSource->currentTransform );
+    pDestination->supportedCompositeAlpha   = static_cast < vulkan :: __C_ENG_TYPE ( CompositeAlphaFlags ) > ( pSource->supportedCompositeAlpha );
+    pDestination->supportedUsageFlags       = static_cast < vulkan :: __C_ENG_TYPE ( ImageUsageFlags ) > ( pSource->supportedUsageFlags );
+}
+
+auto vulkan :: getPhysicalDeviceSurfaceCapabilities (
+        __C_ENG_TYPE ( PhysicalDeviceHandle )   deviceHandle,
+        __C_ENG_TYPE ( SurfaceHandle )          surfaceHandle,
+        __C_ENG_TYPE ( SurfaceCapabilities )  * pSurfaceCapabilities
+) noexcept -> __C_ENG_TYPE ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if (
+            deviceHandle            == nullptr ||
+            surfaceHandle           == nullptr ||
+            pSurfaceCapabilities    == nullptr
+    ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION (
+            lastCreatedInstance,
+            pVkGetPhysicalDeviceSurfaceCapabilities,
+            GET_PHYSICAL_DEVICE_SURFACE_CAPABILITIES
+    )
+
+    result = pVkGetPhysicalDeviceSurfaceCapabilities (
+            deviceHandle,
+            surfaceHandle,
+            & surfaceCapabilities
+    );
+
+    if ( result != VK_SUCCESS ) {
+        return static_cast < __C_ENG_TYPE ( Result ) > ( result );
+    }
+
+    fromVulkanFormat ( pSurfaceCapabilities, & surfaceCapabilities );
+
+    return ResultSuccess;
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_DISPLAY_SURFACE_COUNTER_AVAILABLE
+
+static inline auto fromVulkanFormat (
+        vulkan :: __C_ENG_TYPE ( SurfaceCapabilities2 ) * pDestination,
+        VkSurfaceCapabilities2EXT                 const * pSource
+) noexcept -> void {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if (
+            pDestination            == nullptr ||
+            pSource                 == nullptr
+    ) {
+        return;
+    }
+
+#endif
+
+    pDestination->structureType             = engine::vulkan::StructureTypeSurfaceCapabilities2;
+    pDestination->pNext                     = nullptr;
+    pDestination->minImageCount             = pSource->minImageCount;
+    pDestination->maxImageCount             = pSource->maxImageCount;
+    pDestination->currentExtent.width       = pSource->currentExtent.width;
+    pDestination->currentExtent.height      = pSource->currentExtent.height;
+    pDestination->minImageExtent.width      = pSource->minImageExtent.width;
+    pDestination->minImageExtent.height     = pSource->minImageExtent.height;
+    pDestination->maxImageExtent.width      = pSource->maxImageExtent.width;
+    pDestination->maxImageExtent.height     = pSource->maxImageExtent.height;
+    pDestination->maxImageArrayLayers       = pSource->maxImageArrayLayers;
+    pDestination->supportedTransforms       = static_cast < vulkan :: __C_ENG_TYPE ( SurfaceTransformFlags ) > ( pSource->supportedTransforms );
+    pDestination->currentTransform          = static_cast < vulkan :: __C_ENG_TYPE ( SurfaceTransformFlag ) > ( pSource->currentTransform );
+    pDestination->supportedCompositeAlpha   = static_cast < vulkan :: __C_ENG_TYPE ( CompositeAlphaFlags ) > ( pSource->supportedCompositeAlpha );
+    pDestination->supportedUsageFlags       = static_cast < vulkan :: __C_ENG_TYPE ( ImageUsageFlags ) > ( pSource->supportedUsageFlags );
+    pDestination->supportedSurfaceCounters  = static_cast < vulkan :: __C_ENG_TYPE ( SurfaceCounterFlags ) > ( pSource->supportedSurfaceCounters );
+}
+
+auto vulkan :: getPhysicalDeviceSurfaceCapabilities (
+        __C_ENG_TYPE ( PhysicalDeviceHandle )   deviceHandle,
+        __C_ENG_TYPE ( SurfaceHandle )          surfaceHandle,
+        __C_ENG_TYPE ( SurfaceCapabilities2 ) * pSurfaceCapabilities
+) noexcept -> __C_ENG_TYPE ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if (
+            deviceHandle            == nullptr ||
+            surfaceHandle           == nullptr ||
+            pSurfaceCapabilities    == nullptr
+    ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION (
+            lastCreatedInstance,
+            pVkGetPhysicalDeviceSurfaceCapabilities2,
+            GET_PHYSICAL_DEVICE_SURFACE_CAPABILITIES_2
+    )
+
+    result = pVkGetPhysicalDeviceSurfaceCapabilities2 (
+            deviceHandle,
+            surfaceHandle,
+            & surfaceCapabilities2
+    );
+
+    if ( result != VK_SUCCESS ) {
+        return static_cast < __C_ENG_TYPE ( Result ) > ( result );
+    }
+
+    fromVulkanFormat ( pSurfaceCapabilities, & surfaceCapabilities2 );
 
     return ResultSuccess;
 }

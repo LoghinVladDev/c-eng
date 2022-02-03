@@ -18,6 +18,7 @@
 !includesub ../src/engineRework/render/API/vulkan/vulkan.puml!VULKAN
 !includesub ../src/engineRework/render/API/vulkan/instance/instance.puml!INSTANCE
 !includesub ../src/engineRework/render/API/vulkan/instance/validation/layerhandler.puml!LAYERHANDLER
+!includesub ../src/engineRework/render/API/vulkan/instance/present/present.puml!PUBLIC
 !includesub ../src/engineRework/render/API/vulkan/instance/allocator/allocator.puml!ALLOCATOR
 !includesub ../src/engineRework/render/API/vulkan/instance/device/device.puml!DEVICE
 !includesub ../src/engineRework/render/API/vulkan/instance/device/queue/queue.puml!QUEUE

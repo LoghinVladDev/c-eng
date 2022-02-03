@@ -29,7 +29,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
             Field ( ENGINE_PRIMITIVE_TYPE ( SurfaceHandle ),    surfaceHandle,  DEFAULT_VALUE ( nullptr ),  GET_DEFAULT,    SET_NONE )
             Field ( ENGINE_TYPE ( PhysicalDevice const * ),     physicalDevice, DEFAULT_VALUE ( nullptr ),  GET_DEFAULT,    SET_NONE )
-            Field ( Type ( cds :: Array < Type ( Queue ) > ),   queues,         NO_INIT,                    GET_DEFAULT,    SET_NONE )
+            Field ( TYPE ( cds :: Array < Type ( Queue ) > ),   queues,         NO_INIT,                    GET_DEFAULT,    SET_NONE )
 
         public:
             class Builder;
@@ -71,11 +71,12 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
             Field ( PRIMITIVE_TYPE ( cds :: uint32 ),                                   transferQueueCount,             DEFAULT_VALUE ( 2U ),           GET_NONE,   SET_INLINE ( setTransferQueueCount ) )
 
             Field ( TYPE ( cds :: HashSet < cds :: String > ),                          extensionNames,                 NO_INIT,                        GET_NONE,   SET_INLINE ( setExtensionNames ) )
+            Field ( PRIMITIVE_TYPE ( bool ),                                            useImplicitExtensions,          DEFAULT_VALUE ( true ),         GET_NONE,   SET_INLINE ( useImplicitExtensions ) )
+
             Field ( PRIMITIVE_TYPE ( bool ),                                            onlyBasicFeatures,              DEFAULT_VALUE ( true ),         GET_NONE,   SET_INLINE ( setUseOnlyBasicFeatures ) )
             Field ( PRIMITIVE_TYPE ( bool ),                                            allFeatures,                    DEFAULT_VALUE ( false ),        GET_NONE,   SET_INLINE ( setUseAllFeatures ) )
             Field ( TYPE ( cds :: HashSet < Type ( GenericInStructure const * ) > ),    featureSets,                    NO_INIT,                        GET_NONE,   SET_INLINE ( setFeatureSets ) )
 
-            Field ( PRIMITIVE_TYPE ( bool ),                                            useImplicitExtensions,          DEFAULT_VALUE ( true ),         GET_NONE,   SET_INLINE ( useImplicitExtensions ) )
 
         private:
             auto deviceCreateInfoAddQueueCreateInfos (

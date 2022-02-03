@@ -3,6 +3,8 @@
 !includesub ../../../../../doc/dependencies/primitive/object.puml!OBJECT
 !includesub ../renderengine.puml!RENDERENGINE
 !includesub instance/instance.puml!INSTANCE
+!includesub instance/device/device.puml!DEVICE
+!includesub instance/present/present.puml!PUBLIC
 
 !startsub VULKAN
 
@@ -11,24 +13,30 @@ namespace engine {
     namespace vulkan {
 
         class VulkanRenderEngine
+        abstract class VulkanRenderObject
 
         engine.RenderEngine <|-- VulkanRenderEngine
+        engine.RenderObject <|-- VulkanRenderObject
 
         class VulkanRenderEngine {
             - _desiredVersion : Version
             - _surfaceHandle : SurfaceHandle
             - _instance : Instance
+            - _device : Device
             .. getters ..
             + Version desiredVersion () const
             + SurfaceHandle surfaceHandle () const
             + Instance instance () const
+            + Device device () const
             .. setters ..
             + VulkanRenderEngine setDesiredVersion ( Version )
             .. private functions ..
             - Version acquireSuitableAPIVersion ()
         }
 
-        VulkanRenderEngine "1" *- Instance
+        VulkanRenderEngine "1" *-- Instance
+        VulkanRenderEngine "1" *-- Device
+        VulkanRenderEngine "1" *-- PresentHandler
 
     }
 
