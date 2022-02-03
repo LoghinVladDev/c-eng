@@ -6716,6 +6716,23 @@ auto vulkan :: toString (
 
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( DeviceQueueInfo ) const & info
+) noexcept -> cds :: String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( DeviceQueueInfo ) ) " "
+            "{ type = "_s           + toString ( info.structureType ) +
+            ", pNext = "            + :: toString ( info.pNext ) +
+            ", flags = "            + "0b" + Long ( info.flags ).toString(2) +
+            ", queueFamilyIndex = " + info.queueFamilyIndex +
+            ", queueIndex = "       + info.queueIndex +
+            " }";
+}
+
+#endif
+
 auto vulkan :: compare (
         __C_ENG_TYPE ( Version ) const & left,
         __C_ENG_TYPE ( Version ) const & right

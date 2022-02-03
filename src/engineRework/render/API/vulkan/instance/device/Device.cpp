@@ -5,8 +5,7 @@
 #include "Device.hpp"
 #include <VulkanAPIExceptions.hpp>
 #include <PhysicalDevice.hpp>
-#include <VulkanCore.hpp>
-#include <VulkanCoreConfig.hpp>
+#include <VulkanAPI.hpp>
 #include <Allocator.hpp>
 #include <Logger.hpp>
 #include <CDS/Mutex>

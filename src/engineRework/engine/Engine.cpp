@@ -3,9 +3,7 @@
 //
 
 #include "Engine.hpp"
-
-using namespace cds; // NOLINT(clion-misra-cpp2008-7-3-4)
-using namespace engine; // NOLINT(clion-misra-cpp2008-7-3-4)
+#include <VulkanAPI.hpp>
 
 #include <Logger.hpp>
 #include <CDS/Long>
@@ -17,6 +15,9 @@ using namespace engine; // NOLINT(clion-misra-cpp2008-7-3-4)
 
 #include <VulkanCore.hpp>
 #include <Allocator.hpp>
+
+using namespace cds; // NOLINT(clion-misra-cpp2008-7-3-4)
+using namespace engine; // NOLINT(clion-misra-cpp2008-7-3-4)
 
 static auto renderSurfaceAttachCallback (
         __C_ENG_TYPE ( RenderInstanceSurfaceAttachData ) const * pCallbackData

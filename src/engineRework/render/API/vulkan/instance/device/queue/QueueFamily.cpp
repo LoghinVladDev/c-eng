@@ -6,7 +6,7 @@
 #include <Logger.hpp>
 #include <PhysicalDevice.hpp>
 #include <Instance.hpp>
-#include <VulkanAPIExceptions.hpp>
+#include <VulkanAPI.hpp>
 
 using namespace cds; // NOLINT(clion-misra-cpp2008-7-3-4)
 using namespace engine; // NOLINT(clion-misra-cpp2008-7-3-4)

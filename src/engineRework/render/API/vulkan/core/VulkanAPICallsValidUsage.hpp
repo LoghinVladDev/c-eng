@@ -24,8 +24,12 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
             static inline bool portabilitySubsetExists = false;
 
             static inline bool                                      deviceGroupQueried = false;
-            static inline VkPhysicalDeviceGroupProperties const *   pQueriedDeviceGroupProperties = nullptr;
+            static inline VkPhysicalDeviceGroupProperties   const * pQueriedDeviceGroupProperties = nullptr;
             static inline cds :: uint32                             queriedDeviceGroupCount = 0U;
+
+            static inline bool                                      deviceCreated = false;
+            static inline VkDeviceQueueCreateInfo           const * pDeviceQueueCreateInfos = nullptr;
+            static inline cds :: uint32                             deviceQueueCreateInfoCount = 0U;
         }
 
         static inline auto saveQueriedDeviceGroupInfo (
@@ -35,6 +39,15 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
             hidden :: queriedDeviceGroupCount         = count;
             hidden :: pQueriedDeviceGroupProperties   = pGroupProperties;
             hidden :: deviceGroupQueried              = true;
+        }
+
+        static inline auto saveUsedDeviceQueueCreateInfos (
+                cds :: uint32                   count,
+                VkDeviceQueueCreateInfo const * pInfos
+        ) noexcept -> void {
+            hidden :: deviceCreated                 = true;
+            hidden :: pDeviceQueueCreateInfos       = pInfos;
+            hidden :: deviceQueueCreateInfoCount    = count;
         }
 
         static inline auto reportError (
@@ -1449,6 +1462,97 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
             }
 
             return validateImplicit ( pCreateInfo );
+        }
+
+        static inline auto validateImplicit (
+                __C_ENG_TYPE ( DeviceQueueInfo ) const * pQueueInfo
+        ) noexcept -> bool {
+
+            if ( pQueueInfo->structureType != StructureTypeDeviceQueueInfo ) {
+                reportError ( "VUID-VkDeviceQueueInfo2-sType-sType: "
+                              "sType must be VK_STRUCTURE_TYPE_DEVICE_QUEUE_INFO_2" );
+
+                return false;
+            }
+
+            if ( pQueueInfo->pNext != nullptr ) {
+                reportError ( "VUID-VkDeviceQueueInfo2-pNext-pNext: "
+                              "pNext must be NULL" );
+
+                return false;
+            }
+
+            constexpr __C_ENG_TYPE ( DeviceQueueCreateFlags ) mask =
+                    DeviceQueueCreateFlagProtected;
+
+            if ( ( pQueueInfo->flags & mask ) != pQueueInfo->flags ) {
+                reportError ( "VUID-VkDeviceQueueInfo2-flags-parameter: "
+                              "flags must be a valid combination of VkDeviceQueueCreateFlagBits values" );
+
+                return false;
+            }
+
+            return true;
+        }
+
+        static inline auto validate (
+                __C_ENG_TYPE ( DeviceQueueInfo ) const * pQueueInfo
+        ) noexcept -> bool {
+
+            using namespace cds; // NOLINT(clion-misra-cpp2008-7-3-4)
+
+            if ( ! hidden :: deviceCreated ) {
+                reportError ( "ExtendedLayer-VkDeviceQueueInfo2-device-00004: "
+                              "If calling vkGetDeviceQueue2, a device has to be created previously" );
+
+                return false;
+            }
+
+            bool queueFamilyValid = false;
+            bool queueIndexValid = false;
+            bool flagsValid = false;
+
+            for ( uint32 i = 0U; i < hidden :: deviceQueueCreateInfoCount; ++ i ) {
+                if ( pQueueInfo->queueFamilyIndex == hidden :: pDeviceQueueCreateInfos[i].queueFamilyIndex ) {
+                    queueFamilyValid = true;
+
+                    if ( hidden :: pDeviceQueueCreateInfos[i].queueCount > pQueueInfo->queueIndex ) {
+                        queueIndexValid = true;
+                    }
+
+                    if ( hidden :: pDeviceQueueCreateInfos[i].flags == pQueueInfo->flags ) {
+                        flagsValid = true;
+                    }
+
+                    break;
+                }
+            }
+
+            if ( ! queueFamilyValid ) {
+                reportError ( "VUID-VkDeviceQueueInfo2-queueFamilyIndex-01842: "
+                              "queueFamilyIndex must be one of the queue family indices specified when device was"
+                              "created, via the VkDeviceQueueCreateInfo structure" );
+
+                return false;
+            }
+
+            if ( ! flagsValid ) {
+                reportError ( "VUID-VkDeviceQueueInfo2-flags-06225: "
+                              "flags must be equal to VkDeviceQueueCreateInfo::flags for a VkDeviceQueueCreateInfo"
+                              "structure for the queue family indicated by queueFamilyIndex when device was created" );
+
+                return false;
+            }
+
+            if ( ! queueIndexValid ) {
+                reportError ( "VUID-VkDeviceQueueInfo2-queueIndex-01843: "
+                              "queueIndex must be less than VkDeviceQueueCreateInfo::queueCount for the corresponding"
+                              "queue family and flags indicated by queueFamilyIndex and flags when device was created" );
+
+                return false;
+            }
+
+            return validateImplicit ( pQueueInfo );
         }
 
     }

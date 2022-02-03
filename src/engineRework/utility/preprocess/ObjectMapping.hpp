@@ -516,7 +516,6 @@
 #define __C_ENG_OBJECT_MAP_FIELD_CLASS_GEN_SETTER_ACCESS_MODIFIER_SET(...)                  public:
 
 
-
 #define Class                                                                       __C_ENG_OBJECT_MAP_META_CALL(__C_ENG_OBJECT_MAP_DECLARATION_,     C_ENG_MAP_START)
 #define Struct                                                                      __C_ENG_OBJECT_MAP_META_CALL(__C_ENG_OBJECT_MAP_DECLARATION_,     C_ENG_MAP_START)
 #define Enum                                                                        __C_ENG_OBJECT_MAP_META_CALL(__C_ENG_OBJECT_MAP_DECLARATION_,     C_ENG_MAP_START)

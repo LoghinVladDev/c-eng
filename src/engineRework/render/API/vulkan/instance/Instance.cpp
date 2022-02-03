@@ -3,12 +3,10 @@
 //
 
 #include "Instance.hpp"
-#include <VulkanAPIExceptions.hpp>
 #include <Logger.hpp>
-#include <VulkanCore.hpp>
 #include <Engine.hpp>
 #include <Allocator.hpp>
-#include <VulkanCoreConfig.hpp>
+#include <VulkanAPI.hpp>
 
 
 using namespace cds; // NOLINT(clion-misra-cpp2008-7-3-4)

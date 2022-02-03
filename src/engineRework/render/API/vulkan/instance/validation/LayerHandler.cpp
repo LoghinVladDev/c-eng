@@ -5,8 +5,7 @@
 #include "LayerHandler.hpp"
 #include <Settings.hpp>
 #include <Logger.hpp>
-#include <VulkanCore.hpp>
-#include <VulkanAPIExceptions.hpp>
+#include <VulkanAPI.hpp>
 #include <Window.hpp>
 #include <VulkanAPICallsValidUsage.hpp>
 

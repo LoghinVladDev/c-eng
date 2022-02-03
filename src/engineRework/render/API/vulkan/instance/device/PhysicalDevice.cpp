@@ -6,8 +6,7 @@
 
 #include <CDS/Array>
 #include <Instance.hpp>
-#include <VulkanCoreConfig.hpp>
-#include <VulkanAPIExceptions.hpp>
+#include <VulkanAPI.hpp>
 #include <Logger.hpp>
 #include <CDS/Mutex>
 #include <CDS/LockGuard>

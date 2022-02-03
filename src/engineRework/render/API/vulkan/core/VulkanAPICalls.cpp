@@ -770,6 +770,11 @@ using VkDevicePrivateDataCreateInfo_t                             = VkDevicePriv
 #endif
 
 
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+static VkDeviceQueueInfo2                                           deviceQueueInfo;
+#endif
+
+
 static VkInstance lastCreatedInstance;
 
 using FunctionHandleAddress = void **;
@@ -805,6 +810,8 @@ static PFN_vkGetPhysicalDeviceSurfaceSupportKHR                             pVkG
 
 static PFN_vkCreateDevice                                                   pVkCreateDevice;
 static PFN_vkDestroyDevice                                                  pVkDestroyDevice;
+static PFN_vkGetDeviceQueue                                                 pVkGetDeviceQueue;
+static PFN_vkGetDeviceQueue2                                                pVkGetDeviceQueue2;
 
 /**
  * ---------------------------------------------------------
@@ -12030,6 +12037,15 @@ auto vulkan :: createDevice (
 
     toVulkanFormat ( & deviceCreateInfo, pDeviceCreateInfo );
 
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    saveUsedDeviceQueueCreateInfos (
+            deviceCreateInfo.queueCreateInfoCount,
+            deviceCreateInfo.pQueueCreateInfos
+    );
+
+#endif
+
     return static_cast < __C_ENG_TYPE ( Result ) > (
             pVkCreateDevice (
                     physicalDeviceHandle,
@@ -12203,3 +12219,107 @@ auto vulkan :: getPhysicalDeviceSurfaceSupport (
 
     return ResultSuccess;
 }
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+
+auto vulkan :: getDeviceQueue (
+        __C_ENG_TYPE ( DeviceHandle )   handle,
+        cds :: uint32                   queueFamilyIndex,
+        cds :: uint32                   queueIndex,
+        __C_ENG_TYPE ( QueueHandle )  * pQueueHandle
+) noexcept -> __C_ENG_TYPE ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if (
+            handle          == nullptr ||
+            pQueueHandle    == nullptr
+    ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION (
+            handle,
+            pVkGetDeviceQueue,
+            GET_DEVICE_QUEUE
+    )
+
+    pVkGetDeviceQueue (
+            handle,
+            queueFamilyIndex,
+            queueIndex,
+            pQueueHandle
+    );
+
+    return ResultSuccess;
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+
+static inline auto toVulkanFormat (
+        VkDeviceQueueInfo2                               * pDestination,
+        vulkan :: __C_ENG_TYPE ( DeviceQueueInfo ) const * pSource
+) noexcept -> void {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if (
+            pDestination    == nullptr ||
+            pSource         == nullptr
+    ) {
+        return;
+    }
+
+#endif
+
+    pDestination->sType             = VK_STRUCTURE_TYPE_DEVICE_QUEUE_INFO_2;
+    pDestination->pNext             = nullptr;
+    pDestination->flags             = static_cast < VkDeviceQueueCreateFlags > ( pSource->flags );
+    pDestination->queueFamilyIndex  = pSource->queueFamilyIndex;
+    pDestination->queueIndex        = pSource->queueIndex;
+}
+
+auto vulkan :: getDeviceQueue (
+        __C_ENG_TYPE ( DeviceHandle )             handle,
+        __C_ENG_TYPE ( DeviceQueueInfo )  const * pQueueInfo,
+        __C_ENG_TYPE ( QueueHandle )            * pQueueHandle
+) noexcept -> __C_ENG_TYPE ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if (
+            handle          == nullptr ||
+            pQueueHandle    == nullptr ||
+            pQueueInfo      == nullptr
+    ) {
+        return ResultErrorIllegalArgument;
+    }
+
+    if ( ! validate ( pQueueInfo ) ) {
+        return ResultErrorValidationFailed;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION (
+            handle,
+            pVkGetDeviceQueue2,
+            GET_DEVICE_QUEUE_2
+    )
+
+    toVulkanFormat ( & deviceQueueInfo, pQueueInfo );
+
+    pVkGetDeviceQueue2 (
+            handle,
+            & deviceQueueInfo,
+            pQueueHandle
+    );
+
+    return ResultSuccess;
+}
+
+#endif

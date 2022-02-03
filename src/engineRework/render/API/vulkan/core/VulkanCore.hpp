@@ -2181,7 +2181,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
             Field ( Transfer,       VkQueueFlagBits :: VK_QUEUE_TRANSFER_BIT ),
             Field ( SparseBinding,  VkQueueFlagBits :: VK_QUEUE_SPARSE_BINDING_BIT ),
             Field ( Protected,      VkQueueFlagBits :: VK_QUEUE_PROTECTED_BIT ),
-            Field ( Present,        VkQueueFlagBits :: VK_QUEUE_PROTECTED_BIT * 2U ),
+            Field ( Present,        VkQueueFlagBits :: VK_QUEUE_PROTECTED_BIT * 2U ), // NOLINT(clion-misra-cpp2008-4-5-2)
 
 #if __C_ENG_VULKAN_BETA_EXTENSIONS_ENABLED && __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_DECODE_QUEUE_AVAILABLE
 
@@ -2563,6 +2563,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_ALIAS ( PhysicalDeviceHandle,           VkPhysicalDevice );
         __C_ENG_ALIAS ( SurfaceHandle,                  VkSurfaceKHR );
         __C_ENG_ALIAS ( DeviceHandle,                   VkDevice );
+        __C_ENG_ALIAS ( QueueHandle,                    VkQueue );
 
         __C_ENG_ALIAS ( InstanceCreateFlags,            VkInstanceCreateFlags );
         __C_ENG_ALIAS ( DebugMessengerCreateFlags,      VkDebugUtilsMessengerCreateFlagsEXT );
@@ -7299,6 +7300,25 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #endif
 
 
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( DeviceQueueInfo,   NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            __C_ENG_TYPE ( StructureType )              structureType;
+            __C_ENG_TYPE ( GenericStructure )         * pNext;
+            __C_ENG_TYPE ( DeviceQueueCreateFlags )     flags;
+            cds :: uint32                               queueFamilyIndex;
+            cds :: uint32                               queueIndex;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( Result ) ) noexcept -> cds :: StringLiteral;
@@ -7417,6 +7437,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceVariablePointersFeatures ) const & ) noexcept -> cds :: String;
 
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( DeviceGroupDeviceCreateInfo ) const & ) noexcept -> cds :: String;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( DeviceQueueInfo ) const & ) noexcept -> cds :: String;
 
 #endif
 
@@ -8253,7 +8274,5 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
     }
 }
-
-#include <VulkanAPICalls.hpp>
 
 #endif //__C_ENG_VULKAN_CORE_HPP__

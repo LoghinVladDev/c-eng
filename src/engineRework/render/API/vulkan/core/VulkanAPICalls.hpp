@@ -5,6 +5,10 @@
 #ifndef __C_ENG_VULKAN_API_CALLS_HPP__
 #define __C_ENG_VULKAN_API_CALLS_HPP__
 
+#include <Preprocess.hpp>
+#include <CDS/Types>
+#include <VulkanCore.hpp>
+
 namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
     namespace vulkan {
@@ -191,6 +195,27 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
                 __C_ENG_TYPE ( SurfaceHandle ),
                 bool                                    *
         ) noexcept -> __C_ENG_TYPE ( Result );
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+
+        __C_ENG_NO_DISCARD __C_ENG_MAYBE_UNUSED extern auto getDeviceQueue (
+                __C_ENG_TYPE ( DeviceHandle ),
+                cds :: uint32,
+                cds :: uint32,
+                __C_ENG_TYPE ( QueueHandle ) *
+        ) noexcept -> __C_ENG_TYPE ( Result );
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+
+        __C_ENG_NO_DISCARD __C_ENG_MAYBE_UNUSED extern auto getDeviceQueue (
+                __C_ENG_TYPE ( DeviceHandle ),
+                __C_ENG_TYPE ( DeviceQueueInfo )  const *,
+                __C_ENG_TYPE ( QueueHandle )            *
+        ) noexcept -> __C_ENG_TYPE ( Result );
+
+#endif
 
         namespace utility {
             extern auto chainFeaturesFromDetails (

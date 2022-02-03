@@ -50,6 +50,8 @@
 
 #define __C_ENG_VULKAN_CORE_FUNCTION_NAME_CREATE_DEVICE                                                     "vkCreateDevice"
 #define __C_ENG_VULKAN_CORE_FUNCTION_NAME_DESTROY_DEVICE                                                    "vkDestroyDevice"
+#define __C_ENG_VULKAN_CORE_FUNCTION_NAME_GET_DEVICE_QUEUE                                                  "vkGetDeviceQueue"
+#define __C_ENG_VULKAN_CORE_FUNCTION_NAME_GET_DEVICE_QUEUE_2                                                "vkGetDeviceQueue2"
 
 #if defined ( __C_ENG_USE_DEFENSIVE_PROGRAMMING ) || !defined(NDEBUG)
 
