@@ -171,7 +171,7 @@ static inline auto populateValidationFeatures (
     };
 }
 
-#define C_ENG_MAP_START     CLASS ( Instance, EXTERNAL_PARENT ( Object ) )
+#define C_ENG_MAP_START     CLASS ( Instance, ENGINE_PARENT ( VulkanRenderObject ) )
 #include <ObjectMapping.hpp>
 
 #if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE

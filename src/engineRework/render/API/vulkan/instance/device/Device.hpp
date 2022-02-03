@@ -10,6 +10,8 @@
 #include <VulkanCore.hpp>
 #include <CDS/HashSet>
 #include <CDS/Pair>
+#include <CDS/Array>
+#include <Queue.hpp>
 
 
 #define C_ENG_MAP_START     CLASS ( Device, ENGINE_PARENT ( VulkanRenderObject ) )
@@ -27,6 +29,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
             Field ( ENGINE_PRIMITIVE_TYPE ( SurfaceHandle ),    surfaceHandle,  DEFAULT_VALUE ( nullptr ),  GET_DEFAULT,    SET_NONE )
             Field ( ENGINE_TYPE ( PhysicalDevice const * ),     physicalDevice, DEFAULT_VALUE ( nullptr ),  GET_DEFAULT,    SET_NONE )
+            Field ( Type ( cds :: Array < Type ( Queue ) > ),   queues,         NO_INIT,                    GET_DEFAULT,    SET_NONE )
 
         public:
             class Builder;

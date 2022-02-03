@@ -14,7 +14,7 @@ using namespace cds; // NOLINT(clion-misra-cpp2008-7-3-4)
 using namespace engine; // NOLINT(clion-misra-cpp2008-7-3-4)
 
 
-#define C_ENG_MAP_START     CLASS ( LayerHandler, PARENT ( cds :: Object ) )
+#define C_ENG_MAP_START     CLASS ( LayerHandler, ENGINE_PARENT ( VulkanRenderObject ) )
 #include <ObjectMapping.hpp>
 
 auto vulkan :: Self :: refreshLayers() noexcept (false) -> Self & {

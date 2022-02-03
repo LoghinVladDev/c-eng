@@ -1728,7 +1728,6 @@ auto Self :: buildSingleDeviceToSurface () noexcept (false) -> Nester {
             this->_preferExclusiveOperations
     );
 
-
     auto result = vulkan :: createDevice (
             this->_physicalDevice->handle(),
             & deviceCreateInfo,
@@ -1743,6 +1742,31 @@ auto Self :: buildSingleDeviceToSurface () noexcept (false) -> Nester {
                 "Created Logical Device with handle '"_s + :: toString ( device._handle ) +
                 "' from Physical Device " + this->_physicalDevice->details().basicProperties.deviceName
         );
+    }
+
+    uint32 totalUsedQueues = 0U;
+    for ( uint32 i = 0U; i < queueCreateInfoCount; ++ i ) {
+        totalUsedQueues += queueCreateInfos[i].queueCount;
+    }
+
+    (void) device._queues.resize ( totalUsedQueues );
+    uint32 currentQueueIndex = 0U;
+
+    HashMap < QueueFamilyIndex, uint32 > usedSoFar;  
+
+    for ( auto const & type : typeFamilyCount ) {
+        for ( auto const & familyAndCounts : type.second() ) {
+            for ( uint32 queueIndex = 0U; queueIndex < familyAndCounts; ++ queueIndex ) {
+                device._queues [ static_cast < Index > ( currentQueueIndex ) ].init (
+                    & device,
+                    & this->_physicalDevice->queueFamilies() [ familyAndCounts.first() ],
+                    queueIndex + usedSoFar [ familyAndCounts.first() ],
+                    type.first()
+                );
+            }
+
+            usedSoFar [ familyAndCounts.first() ] += familyAndCounts.second();
+        }
     }
 
     return device;
@@ -1808,6 +1832,7 @@ auto Self :: clear () noexcept (false) -> Self & {
         }
 
         this->_handle = nullptr;
+        this->_queues.clear();
     }
 
     return * this;
@@ -1822,7 +1847,8 @@ Self :: Constructor (
 ) noexcept :
         _handle ( exchange ( deviceRef._handle, nullptr ) ),
         _surfaceHandle ( exchange ( deviceRef._surfaceHandle, nullptr ) ),
-        _physicalDevice ( exchange ( deviceRef._physicalDevice, nullptr ) ) {
+        _physicalDevice ( exchange ( deviceRef._physicalDevice, nullptr ) ),
+        _queues ( std :: move ( deviceRef._queues ) ) {
 
 }
 
@@ -1837,6 +1863,7 @@ auto Self :: operator = (
     this->_handle           = exchange ( deviceRef._handle, nullptr );
     this->_surfaceHandle    = exchange ( deviceRef._surfaceHandle, nullptr );
     this->_physicalDevice   = exchange ( deviceRef._physicalDevice, nullptr );
+    this->_queues           = std :: move ( deviceRef._queues );
 
     return * this;
 }
