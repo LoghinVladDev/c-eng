@@ -154,9 +154,11 @@ using VkPhysicalDeviceDynamicRenderingFeatures_t                      = VkPhysic
 using VkPhysicalDeviceShaderIntegerDotProductProperties_t             = VkPhysicalDeviceShaderIntegerDotProductProperties;
 using VkPhysicalDeviceShaderIntegerDotProductFeatures_t               = VkPhysicalDeviceShaderIntegerDotProductFeatures;
 using VkPhysicalDeviceTexelBufferAlignmentProperties_t                = VkPhysicalDeviceTexelBufferAlignmentProperties;
-using VkPhysicalDeviceTexelBufferAlignmentFeatures_t                  = VkPhysicalDeviceTexelBufferAlignmentFeatures;
+using VkPhysicalDeviceTexelBufferAlignmentFeatures_t                  = VkPhysicalDeviceTexelBufferAlignmentFeaturesEXT;
 using VkPhysicalDeviceMaintenance4Properties_t                        = VkPhysicalDeviceMaintenance4Properties;
 using VkPhysicalDeviceMaintenance4Features_t                          = VkPhysicalDeviceMaintenance4Features;
+using VkPhysicalDeviceVulkan13Properties_t                            = VkPhysicalDeviceVulkan13Properties;
+using VkPhysicalDeviceVulkan13Features_t                              = VkPhysicalDeviceVulkan13Features;
 
 static VkPhysicalDeviceVulkan13Properties_t                             deviceVulkan13Properties;
 static VkPhysicalDeviceSubgroupSizeControlProperties_t                  deviceSubgroupSizeControlProperties;
@@ -2145,7 +2147,7 @@ static inline auto fromVulkanFormat (
 
 #endif
 
-    pDestination->structureType = StructureTypePhysicalDeviceVulkan_1_3_Properties;
+    pDestination->structureType = vulkan :: StructureTypePhysicalDeviceVulkan_1_3_Properties;
     pDestination->pNext         = nullptr;
 
     pDestination->minSubgroupSize                                                               = pSource->minSubgroupSize;
@@ -2197,7 +2199,7 @@ static inline auto fromVulkanFormat (
 
 static inline auto fromVulkanFormat (
         vulkan :: __C_ENG_TYPE ( PhysicalDeviceVulkan13Features ) * pDestination,
-        VkPhysicalDevice13Features_t                        const * pSource
+        VkPhysicalDeviceVulkan13Features_t                  const * pSource
 ) noexcept -> void {
 
 #if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
@@ -2208,7 +2210,7 @@ static inline auto fromVulkanFormat (
 
 #endif
 
-    pDestination->structureType                                         = StructureTypePhysicalDeviceVulkan_1_3_Features;
+    pDestination->structureType                                         = vulkan :: StructureTypePhysicalDeviceVulkan_1_3_Features;
     pDestination->pNext                                                 = nullptr;
 
     pDestination->robustImageAccess                                     = pSource->robustImageAccess;
@@ -2229,8 +2231,8 @@ static inline auto fromVulkanFormat (
 }
 
 static inline auto toVulkanFormat (
-        VkPhysicalDevice13Features_t                                    * pSource,
-        vulkan :: __C_ENG_TYPE ( PhysicalDeviceVulkan13Features ) const * pDestination
+        VkPhysicalDeviceVulkan13Features_t                              * pDestination,
+        vulkan :: __C_ENG_TYPE ( PhysicalDeviceVulkan13Features ) const * pSource
 ) noexcept -> void {
 
 #if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED

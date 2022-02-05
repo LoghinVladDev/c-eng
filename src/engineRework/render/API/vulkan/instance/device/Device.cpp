@@ -852,7 +852,7 @@ static StructureWithSize deviceCreationStructures [] = {
 
 #if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
-        { .pStructure = reinterpret_cast < __C_ENG_TYPE ( GenericOutStructure ) * ) > ( & vulkan13Features ),                                                   .size = static_cast < uint32 > ( sizeof ( vulkan13Features ) ) },
+        { .pStructure = reinterpret_cast < __C_ENG_TYPE ( GenericOutStructure ) * > ( & vulkan13Features ),                                                   .size = static_cast < uint32 > ( sizeof ( vulkan13Features ) ) },
 
 #endif
 
