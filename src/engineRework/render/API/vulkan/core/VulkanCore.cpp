@@ -6870,6 +6870,55 @@ auto vulkan :: toString (
             " }";
 }
 
+auto vulkan :: toString (
+        __C_ENG_TYPE ( ColorSpace ) colorSpace
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( colorSpace ) {
+        case ColorSpaceSRGBNonLinear:                   { asString = "SRGB Non Linear";             break; }
+
+#if __C_ENG_VULKAN_API_EXTENSION_SWAP_CHAIN_COLOR_SPACE_AVAILABLE
+
+        case ColorSpaceDisplayP3NonLinear:              { asString = "Display P3 Non Linear";       break; }
+        case ColorSpaceExtendedSRGBLinear:              { asString = "Extended SRGB Linear";        break; }
+        case ColorSpaceDisplayP3Linear:                 { asString = "Display P3 Linear";           break; }
+        case ColorSpaceDCIP3NonLinear:                  { asString = "DCI P3 Non Linear";           break; }
+        case ColorSpaceBT709Linear:                     { asString = "BT 709 Linear";               break; }
+        case ColorSpaceBT709NonLinear:                  { asString = "BT 709 Non Linear";           break; }
+        case ColorSpaceBT2020Linear:                    { asString = "BT 2020 Linear";              break; }
+        case ColorSpaceHDR10ST2084:                     { asString = "HDR 10 ST 2084";              break; }
+        case ColorSpaceDolbyVision:                     { asString = "Dolby Vision";                break; }
+        case ColorSpaceHDR10HLG:                        { asString = "HDR 10 HLG";                  break; }
+        case ColorSpaceAdobeRGBLinear:                  { asString = "Adobe RGB Linear";            break; }
+        case ColorSpaceAdobeRGBNonLinear:               { asString = "Adobe RGB Non Linear";        break; }
+        case ColorSpacePassThrough:                     { asString = "Pass Through";                break; }
+        case ColorSpaceExtendedSRGBNonLinear:           { asString = "Extended SRGB Non Linear";    break; }
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_AMD_DISPLAY_NATIVE_HDR_AVAILABLE
+
+        case ColorSpaceDisplayNativeAMD:                { asString = "Display Native AMD";          break; }
+
+#endif
+
+    }
+
+    return asString;
+}
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( SurfaceFormat ) const & format
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( SurfaceFormat ) ) " "
+            "{ format = "_s     + toString ( format.format ) +
+            ", colorSpace = "   + toString ( format.colorSpace ) +
+            " }";
+}
+
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_DISPLAY_SURFACE_COUNTER_AVAILABLE
@@ -6906,6 +6955,326 @@ auto vulkan :: toString (
            ", supportedUsageFlags = "      + "0b" + Long ( capabilities.supportedUsageFlags ).toString(2) +
            ", supportedSurfaceCounters = " + "0b" + Long ( capabilities.supportedSurfaceCounters ).toString(2) +
            " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( Format ) format
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( format ) {
+        case FormatUndefined:                                   { asString = "Unspecified Format";                                                                                      break; }
+        case Format_R4_G4_UNorm_Pack8:                          { asString = "[[7..4]r[3..0]g]:u,n";                                                                                    break; }
+        case Format_R4_G4_B4_A4_UNorm_Pack16:                   { asString = "[[15..12]r[11..8]g[7..4]b[3..0]a]:u,n";                                                                   break; }
+        case Format_B4_G4_R4_A4_UNorm_Pack16:                   { asString = "[[15..12]b[11..8]g[7..4]r[3..0]a]:u,n";                                                                   break; }
+        case Format_R5_G6_B5_UNorm_Pack16:                      { asString = "[[15..11]r[10..5]g[4..0]b]:u,n";                                                                          break; }
+        case Format_B5_G6_R5_UNorm_Pack16:                      { asString = "[[15..11]b[10..5]g[4..0]r]:u,n";                                                                          break; }
+        case Format_R5_G5_B5_A1_UNorm_Pack16:                   { asString = "[[15..11]r[10..6]g[5..1]b[0]a]:u,n";                                                                      break; }
+        case Format_B5_G5_R5_A1_UNorm_Pack16:                   { asString = "[[15..11]b[10..6]g[5..1]r[0]a]:u,n";                                                                      break; }
+        case Format_A1_R5_G5_B5_UNorm_Pack16:                   { asString = "[[15]a[14..10]r[9..5]g[4..0]b]:u,n";                                                                      break; }
+        case Format_R8_UNorm:                                   { asString = "[[7..0]r]:u,n";                                                                                           break; }
+        case Format_R8_SNorm:                                   { asString = "[[7..0]r]:s,n";                                                                                           break; }
+        case Format_R8_UScaled:                                 { asString = "[[7..0]r]:u,s";                                                                                           break; }
+        case Format_R8_SScaled:                                 { asString = "[[7..0]r]:s,s";                                                                                           break; }
+        case Format_R8_UInt:                                    { asString = "[[7..0]r]:u,i";                                                                                           break; }
+        case Format_R8_SInt:                                    { asString = "[[7..0]r]:s,i";                                                                                           break; }
+        case Format_R8_SRGB:                                    { asString = "[[7..0]r]:sRGBnl";                                                                                        break; }
+        case Format_R8_G8_UNorm:                                { asString = "[[15..8]r[7..0]g]:u,n";                                                                                   break; }
+        case Format_R8_G8_SNorm:                                { asString = "[[15..8]r[7..0]g]:s,n";                                                                                   break; }
+        case Format_R8_G8_UScaled:                              { asString = "[[15..8]r[7..0]g]:u,s";                                                                                   break; }
+        case Format_R8_G8_SScaled:                              { asString = "[[15..8]r[7..0]g]:s,s";                                                                                   break; }
+        case Format_R8_G8_UInt:                                 { asString = "[[15..8]r[7..0]g]:u,i";                                                                                   break; }
+        case Format_R8_G8_SInt:                                 { asString = "[[15..8]r[7..0]g]:s,i";                                                                                   break; }
+        case Format_R8_G8_SRGB:                                 { asString = "[[15..8]r[7..0]g]:sRGBnl";                                                                                break; }
+        case Format_R8_G8_B8_UNorm:                             { asString = "[[23..16]r[15..8]g[7..0]b]:u,n";                                                                          break; }
+        case Format_R8_G8_B8_SNorm:                             { asString = "[[23..16]r[15..8]g[7..0]b]:s,n";                                                                          break; }
+        case Format_R8_G8_B8_UScaled:                           { asString = "[[23..16]r[15..8]g[7..0]b]:u,s";                                                                          break; }
+        case Format_R8_G8_B8_SScaled:                           { asString = "[[23..16]r[15..8]g[7..0]b]:s,s";                                                                          break; }
+        case Format_R8_G8_B8_UInt:                              { asString = "[[23..16]r[15..8]g[7..0]b]:u,i";                                                                          break; }
+        case Format_R8_G8_B8_SInt:                              { asString = "[[23..16]r[15..8]g[7..0]b]:s,i";                                                                          break; }
+        case Format_R8_G8_B8_SRGB:                              { asString = "[[23..16]r[15..8]g[7..0]b]:sRGBnl";                                                                       break; }
+        case Format_B8_G8_R8_UNorm:                             { asString = "[[23..16]b[15..8]g[7..0]r]:u,n";                                                                          break; }
+        case Format_B8_G8_R8_SNorm:                             { asString = "[[23..16]b[15..8]g[7..0]r]:s,n";                                                                          break; }
+        case Format_B8_G8_R8_UScaled:                           { asString = "[[23..16]b[15..8]g[7..0]r]:u,s";                                                                          break; }
+        case Format_B8_G8_R8_SScaled:                           { asString = "[[23..16]b[15..8]g[7..0]r]:s,s";                                                                          break; }
+        case Format_B8_G8_R8_UInt:                              { asString = "[[23..16]b[15..8]g[7..0]r]:u,i";                                                                          break; }
+        case Format_B8_G8_R8_SInt:                              { asString = "[[23..16]b[15..8]g[7..0]r]:s,i";                                                                          break; }
+        case Format_B8_G8_R8_SRGB:                              { asString = "[[23..16]b[15..8]g[7..0]r]:sRGBnl";                                                                       break; }
+        case Format_R8_G8_B8_A8_UNorm:                          { asString = "[[31..24]r[23..16]g[16..8]b[7..0]a]:u,n";                                                                 break; }
+        case Format_R8_G8_B8_A8_SNorm:                          { asString = "[[31..24]r[23..16]g[16..8]b[7..0]a]:s,n";                                                                 break; }
+        case Format_R8_G8_B8_A8_UScaled:                        { asString = "[[31..24]r[23..16]g[16..8]b[7..0]a]:u,s";                                                                 break; }
+        case Format_R8_G8_B8_A8_SScaled:                        { asString = "[[31..24]r[23..16]g[16..8]b[7..0]a]:s,s";                                                                 break; }
+        case Format_R8_G8_B8_A8_UInt:                           { asString = "[[31..24]r[23..16]g[16..8]b[7..0]a]:u,i";                                                                 break; }
+        case Format_R8_G8_B8_A8_SInt:                           { asString = "[[31..24]r[23..16]g[16..8]b[7..0]a]:s,i";                                                                 break; }
+        case Format_R8_G8_B8_A8_SRGB:                           { asString = "[[31..24]r[23..16]g[16..8]b[7..0]a]:sRGBnl";                                                              break; }
+        case Format_B8_G8_R8_A8_UNorm:                          { asString = "[[31..24]b[23..16]g[16..8]r[7..0]a]:u,n";                                                                 break; }
+        case Format_B8_G8_R8_A8_SNorm:                          { asString = "[[31..24]b[23..16]g[16..8]r[7..0]a]:s,n";                                                                 break; }
+        case Format_B8_G8_R8_A8_UScaled:                        { asString = "[[31..24]b[23..16]g[16..8]r[7..0]a]:u,s";                                                                 break; }
+        case Format_B8_G8_R8_A8_SScaled:                        { asString = "[[31..24]b[23..16]g[16..8]r[7..0]a]:s,s";                                                                 break; }
+        case Format_B8_G8_R8_A8_UInt:                           { asString = "[[31..24]b[23..16]g[16..8]r[7..0]a]:u,i";                                                                 break; }
+        case Format_B8_G8_R8_A8_SInt:                           { asString = "[[31..24]b[23..16]g[16..8]r[7..0]a]:s,i";                                                                 break; }
+        case Format_B8_G8_R8_A8_SRGB:                           { asString = "[[31..24]b[23..16]g[16..8]r[7..0]a]:sRGBnl";                                                              break; }
+        case Format_A8_B8_G8_R8_UNorm_Pack32:                   { asString = "[[31..24]a[23..16]b[16..8]g[7..0]r]:u,n";                                                                 break; }
+        case Format_A8_B8_G8_R8_SNorm_Pack32:                   { asString = "[[31..24]a[23..16]b[16..8]g[7..0]r]:s,n";                                                                 break; }
+        case Format_A8_B8_G8_R8_UScaled_Pack32:                 { asString = "[[31..24]a[23..16]b[16..8]g[7..0]r]:u,s";                                                                 break; }
+        case Format_A8_B8_G8_R8_SScaled_Pack32:                 { asString = "[[31..24]a[23..16]b[16..8]g[7..0]r]:s,s";                                                                 break; }
+        case Format_A8_B8_G8_R8_UInt_Pack32:                    { asString = "[[31..24]a[23..16]b[16..8]g[7..0]r]:u,i";                                                                 break; }
+        case Format_A8_B8_G8_R8_SInt_Pack32:                    { asString = "[[31..24]a[23..16]b[16..8]g[7..0]r]:s,i";                                                                 break; }
+        case Format_A8_B8_G8_R8_SRGB_Pack32:                    { asString = "[[31..24]a[23..16]b[16..8]g[7..0]r]:sRGBnl";                                                              break; }
+        case Format_A2_R10_G10_B10_UNorm_Pack32:                { asString = "[[31..30]a[29..20]r[19..10]g[9..0]b]:u,n";                                                                break; }
+        case Format_A2_R10_G10_B10_SNorm_Pack32:                { asString = "[[31..30]a[29..20]r[19..10]g[9..0]b]:s,n";                                                                break; }
+        case Format_A2_R10_G10_B10_UScaled_Pack32:              { asString = "[[31..30]a[29..20]r[19..10]g[9..0]b]:u,s";                                                                break; }
+        case Format_A2_R10_G10_B10_SScaled_Pack32:              { asString = "[[31..30]a[29..20]r[19..10]g[9..0]b]:s,s";                                                                break; }
+        case Format_A2_R10_G10_B10_UInt_Pack32:                 { asString = "[[31..30]a[29..20]r[19..10]g[9..0]b]:u,i";                                                                break; }
+        case Format_A2_R10_G10_B10_SInt_Pack32:                 { asString = "[[31..30]a[29..20]r[19..10]g[9..0]b]:s,i";                                                                break; }
+        case Format_A2_B10_G10_R10_UNorm_Pack32:                { asString = "[[31..30]a[29..20]b[19..10]g[9..0]r]:u,n";                                                                break; }
+        case Format_A2_B10_G10_R10_SNorm_Pack32:                { asString = "[[31..30]a[29..20]b[19..10]g[9..0]r]:s,n";                                                                break; }
+        case Format_A2_B10_G10_R10_UScaled_Pack32:              { asString = "[[31..30]a[29..20]b[19..10]g[9..0]r]:u,s";                                                                break; }
+        case Format_A2_B10_G10_R10_SScaled_Pack32:              { asString = "[[31..30]a[29..20]b[19..10]g[9..0]r]:s,s";                                                                break; }
+        case Format_A2_B10_G10_R10_UInt_Pack32:                 { asString = "[[31..30]a[29..20]b[19..10]g[9..0]r]:u,i";                                                                break; }
+        case Format_A2_B10_G10_R10_SInt_Pack32:                 { asString = "[[31..30]a[29..20]b[19..10]g[9..0]r]:s,i";                                                                break; }
+        case Format_R16_UNorm:                                  { asString = "[[15..0]r]:u,n";                                                                                          break; }
+        case Format_R16_SNorm:                                  { asString = "[[15..0]r]:s,n";                                                                                          break; }
+        case Format_R16_UScaled:                                { asString = "[[15..0]r]:u,s";                                                                                          break; }
+        case Format_R16_SScaled:                                { asString = "[[15..0]r]:s,s";                                                                                          break; }
+        case Format_R16_UInt:                                   { asString = "[[15..0]r]:u,i";                                                                                          break; }
+        case Format_R16_SInt:                                   { asString = "[[15..0]r]:s,i";                                                                                          break; }
+        case Format_R16_SFloat:                                 { asString = "[[15..0]r]:s,f";                                                                                          break; }
+        case Format_R16_G16_UNorm:                              { asString = "[[31..16]r[15..0]g]:u,n";                                                                                 break; }
+        case Format_R16_G16_SNorm:                              { asString = "[[31..16]r[15..0]g]:s,n";                                                                                 break; }
+        case Format_R16_G16_UScaled:                            { asString = "[[31..16]r[15..0]g]:u,s";                                                                                 break; }
+        case Format_R16_G16_SScaled:                            { asString = "[[31..16]r[15..0]g]:s,s";                                                                                 break; }
+        case Format_R16_G16_UInt:                               { asString = "[[31..16]r[15..0]g]:u,i";                                                                                 break; }
+        case Format_R16_G16_SInt:                               { asString = "[[31..16]r[15..0]g]:s,i";                                                                                 break; }
+        case Format_R16_G16_SFloat:                             { asString = "[[31..16]r[15..0]g]:s,f";                                                                                 break; }
+        case Format_R16_G16_B16_UNorm:                          { asString = "[[47..32]r[31..16]g[15..0]b]:u,n";                                                                        break; }
+        case Format_R16_G16_B16_SNorm:                          { asString = "[[47..32]r[31..16]g[15..0]b]:s,n";                                                                        break; }
+        case Format_R16_G16_B16_UScaled:                        { asString = "[[47..32]r[31..16]g[15..0]b]:u,s";                                                                        break; }
+        case Format_R16_G16_B16_SScaled:                        { asString = "[[47..32]r[31..16]g[15..0]b]:s,s";                                                                        break; }
+        case Format_R16_G16_B16_UInt:                           { asString = "[[47..32]r[31..16]g[15..0]b]:u,i";                                                                        break; }
+        case Format_R16_G16_B16_SInt:                           { asString = "[[47..32]r[31..16]g[15..0]b]:s,i";                                                                        break; }
+        case Format_R16_G16_B16_SFloat:                         { asString = "[[47..32]r[31..16]g[15..0]b]:s,f";                                                                        break; }
+        case Format_R16_G16_B16_A16_UNorm:                      { asString = "[[63..48]r[47..32]g[31..16]b[15..0]a]:u,n";                                                               break; }
+        case Format_R16_G16_B16_A16_SNorm:                      { asString = "[[63..48]r[47..32]g[31..16]b[15..0]a]:s,n";                                                               break; }
+        case Format_R16_G16_B16_A16_UScaled:                    { asString = "[[63..48]r[47..32]g[31..16]b[15..0]a]:u,s";                                                               break; }
+        case Format_R16_G16_B16_A16_SScaled:                    { asString = "[[63..48]r[47..32]g[31..16]b[15..0]a]:s,s";                                                               break; }
+        case Format_R16_G16_B16_A16_UInt:                       { asString = "[[63..48]r[47..32]g[31..16]b[15..0]a]:u,i";                                                               break; }
+        case Format_R16_G16_B16_A16_SInt:                       { asString = "[[63..48]r[47..32]g[31..16]b[15..0]a]:s,i";                                                               break; }
+        case Format_R16_G16_B16_A16_SFloat:                     { asString = "[[63..48]r[47..32]g[31..16]b[15..0]a]:s,f";                                                               break; }
+        case Format_R32_UInt:                                   { asString = "[[31..0]r]:u,i";                                                                                          break; }
+        case Format_R32_SInt:                                   { asString = "[[31..0]r]:s,i";                                                                                          break; }
+        case Format_R32_SFloat:                                 { asString = "[[31..0]r]:s,f";                                                                                          break; }
+        case Format_R32_G32_UInt:                               { asString = "[[63..32]r[31..0]b]:u,i";                                                                                 break; }
+        case Format_R32_G32_SInt:                               { asString = "[[63..32]r[31..0]b]:s,i";                                                                                 break; }
+        case Format_R32_G32_SFloat:                             { asString = "[[63..32]r[31..0]b]:s,f";                                                                                 break; }
+        case Format_R32_G32_B32_UInt:                           { asString = "[[95..64]r[63..32]g[31..0]b]:u,i";                                                                        break; }
+        case Format_R32_G32_B32_SInt:                           { asString = "[[95..64]r[63..32]g[31..0]b]:s,i";                                                                        break; }
+        case Format_R32_G32_B32_SFloat:                         { asString = "[[95..64]r[63..32]g[31..0]b]:s,f";                                                                        break; }
+        case Format_R32_G32_B32_A32_UInt:                       { asString = "[[127..96]r[95..64]g[63..32]b[31..0]a]:u,i";                                                              break; }
+        case Format_R32_G32_B32_A32_SInt:                       { asString = "[[127..96]r[95..64]g[63..32]b[31..0]a]:s,i";                                                              break; }
+        case Format_R32_G32_B32_A32_SFloat:                     { asString = "[[127..96]r[95..64]g[63..32]b[31..0]a]:s,f";                                                              break; }
+        case Format_R64_UInt:                                   { asString = "[[63..0]r]:u,i";                                                                                          break; }
+        case Format_R64_SInt:                                   { asString = "[[63..0]r]:s,i";                                                                                          break; }
+        case Format_R64_SFloat:                                 { asString = "[[63..0]r]:s,f";                                                                                          break; }
+        case Format_R64_G64_UInt:                               { asString = "[[127..64]r[63..0]b]:u,i";                                                                                break; }
+        case Format_R64_G64_SInt:                               { asString = "[[127..64]r[63..0]b]:s,i";                                                                                break; }
+        case Format_R64_G64_SFloat:                             { asString = "[[127..64]r[63..0]b]:s,f";                                                                                break; }
+        case Format_R64_G64_B64_UInt:                           { asString = "[[191..128]r[127..64]g[63..0]b]:u,i";                                                                     break; }
+        case Format_R64_G64_B64_SInt:                           { asString = "[[191..128]r[127..64]g[63..0]b]:s,i";                                                                     break; }
+        case Format_R64_G64_B64_SFloat:                         { asString = "[[191..128]r[127..64]g[63..0]b]:s,f";                                                                     break; }
+        case Format_R64_G64_B64_A64_UInt:                       { asString = "[[255..192]r[191..128]g[127..64]b[63..0]a]:u,i";                                                          break; }
+        case Format_R64_G64_B64_A64_SInt:                       { asString = "[[255..192]r[191..128]g[127..64]b[63..0]a]:s,i";                                                          break; }
+        case Format_R64_G64_B64_A64_SFloat:                     { asString = "[[255..192]r[191..128]g[127..64]b[63..0]a]:s,f";                                                          break; }
+        case Format_B10_G11_R11_UFloat_Pack32:                  { asString = "[[31..22]b[21..11]g[10..0]r]:u,f";                                                                        break; } // float10, float11 -> https://www.khronos.org/registry/DataFormat/specs/1.3/dataformat.1.3.html
+        case Format_E5_B9_G9_R9_UFloat_Pack32:                  { asString = "[[31..27]<exp>[26..18]b<man>[17..9]g<man>[8..0]r<man>:u,f]";                                              break; } // <exp> is shared exponent for all 3 r,g,b mantisas ( <man> )
+        case Format_D16_UNorm:                                  { asString = "[[15..0]depth]:u,n";                                                                                      break; }
+        case Format_X8_D24_UNorm_Pack32:                        { asString = "[[31..24]unused[23..0]depth]:u,n";                                                                        break; }
+        case Format_D32_SFloat:                                 { asString = "[[31..0]depth]:s,f";                                                                                      break; }
+        case Format_S8_UInt:                                    { asString = "[[7..0]stencil]:u,i";                                                                                     break; }
+        case Format_D16_UNorm_S8_UInt:                          { asString = "[[23..16]depth:u,n[7..0]stencil:u,i]";                                                                    break; }
+        case Format_D24_UNorm_S8_UInt:                          { asString = "[[31..16]depth:u,n[7..0]stencil:u,i]";                                                                    break; }
+        case Format_D32_SFloat_S8_UInt:                         { asString = "[[63..40]unused[39..8]depth:s,f[7..0]stencil:u,i]";                                                       break; }
+        case Format_BC1_RGB_UNorm_Block:                        { asString = "[[191..128]c1[127..64]c2[63..0]c3]:u,nRGB,4x4,BC,t=(c1,c2,c3)";                                           break; }
+        case Format_BC1_RGB_SRGB_Block:                         { asString = "[[191..128]c1[127..64]c2[63..0]c3]:u,sRGBnl,4x4,BC,t=(c1,c2,c3)";                                         break; }
+        case Format_BC1_RGBA_UNorm_Block:                       { asString = "[[255..192]c1[191..128]c2[127..64]c3[63..0]c4]:u,nRGBA,4x4,BC,t=(c1,c2,c3,c4)";                           break; }
+        case Format_BC1_RGBA_SRGB_Block:                        { asString = "[[255..192]c1[191..128]c2[127..64]c3[63..0]c4]:u,sRGBAnl,4x4,BC,t=(c1,c2,c3,c4)";                         break; }
+        case Format_BC2_UNorm_Block:
+        case Format_BC3_UNorm_Block:                            { asString = "[[511..384]c1[383..256]c2[255..128]c3[127..0]c4]:u,nRGBA,4x4,BC,t=(c1,c2,c3,c4)";                         break; }
+        case Format_BC2_SRGB_Block:
+        case Format_BC3_SRGB_Block:                             { asString = "[[511..384]c1[383..256]c2[255..128]c3[127..0]c4]:u,sRGBAnl,4x4,BC,t=(c1,c2,c3,c4)";                       break; }
+        case Format_BC4_UNorm_Block:                            { asString = "[[63..0]c]:u,nR,4x4,BC,t=(c)";                                                                            break; }
+        case Format_BC4_SNorm_Block:                            { asString = "[[63..0]c]:s,nR,4x4,BC,t=(c)";                                                                            break; }
+        case Format_BC5_UNorm_Block:                            { asString = "[[255..128]c1[127..0]c2]:u,nRG,4x4,BC,t=(c1,c2)";                                                         break; }
+        case Format_BC5_SNorm_Block:                            { asString = "[[255..128]c1[127..0]c2]:s,nRG,4x4,BC,t=(c1,c2)";                                                         break; }
+        case Format_BC6H_UFloat_Block:                          { asString = "[[383..256]c1[255..128]c2[127..0]c3]:u,fRGB,4x4,BC,t=(c1,c2,c3)";                                         break; }
+        case Format_BC6H_SFloat_Block:                          { asString = "[[383..256]c1[255..128]c2[127..0]c3]:s,fRGB,4x4,BC,t=(c1,c2,c3)";                                         break; }
+        case Format_BC7_UNorm_Block:                            { asString = "[[511..384]c1[383..256]c2[255..128]c3[127..0]c4]:u,nRGBA,4x4,BC,t=(c1,c2,c3,c4)";                         break; }
+        case Format_BC7_SRGB_Block:                             { asString = "[[511..384]c1[383..256]c2[255..128]c3[127..0]c4]:s,sRGBAnl,4x4,BC,t=(c1,c2,c3,c4)";                       break; }
+        case Format_ETC2_R8_G8_B8_UNorm_Block:                  { asString = "[[191..128]c1[127..64]c2[63..0]c3]:u,nRGB,4x4,ETC2,t=(c1,c2,c3)";                                         break; }
+        case Format_ETC2_R8_G8_B8_SRGB_Block:                   { asString = "[[191..128]c1[127..64]c2[63..0]c3]:u,sRGBnl,4x4,ETC2,t=(c1,c2,c3)";                                       break; }
+        case Format_ETC2_R8_G8_B8_A1_UNorm_Block:               { asString = "[[255..192]c1[191..128]c2[127..64]c3[63..0]c4]:u,nRGB,4x4,ETC2,t=(c1,c2,c3,c4)";                          break; }
+        case Format_ETC2_R8_G8_B8_A1_SRGB_Block:                { asString = "[[255..192]c1[191..128]c2[127..64]c3[63..0]c4]:u,sRGBnl,4x4,ETC2,t=(c1,c2,c3,c4)";                        break; }
+        case Format_ETC2_R8_G8_B8_A8_UNorm_Block:               { asString = "[[511..384]c1[383..256]c2[255..128]c3[127..0]c4]:u,nRGB,4x4,ETC2,t=(c1,c2,c3,c4)";                        break; }
+        case Format_ETC2_R8_G8_B8_A8_SRGB_Block:                { asString = "[[511..384]c1[383..256]c2[255..128]c3[127..0]c4]:u,sRGBnl,4x4,ETC2,t=(c1,c2,c3,c4)";                      break; }
+        case Format_EAC_R11_UNorm_Block:                        { asString = "[[63..0]c1]:u,nR,4x4,ETC2,t=(c1)";                                                                        break; }
+        case Format_EAC_R11_SNorm_Block:                        { asString = "[[63..0]c1]:u,sR,4x4,ETC2,t=(c1)";                                                                        break; }
+        case Format_EAC_R11_G11_UNorm_Block:                    { asString = "[[127..64]c1[63..0]c2]:u,nRG,4x4,ETC2,t=(c1,c2)";                                                         break; }
+        case Format_EAC_R11_G11_SNorm_Block:                    { asString = "[[127..64]c1[63..0]c2]:u,sRG,4x4,ETC2,t=(c1,c2)";                                                         break; }
+        case Format_ASTC_4x4_UNorm_Block:                       { asString = "[[511..384]c1[383..256]c2[255..128]c3[127..0]c4]:u,nRGBA,4x4,ASTC,t=(c1,c2,c3,c4)";                       break; }
+        case Format_ASTC_4x4_SRGB_Block:                        { asString = "[[511..384]c1[383..256]c2[255..128]c3[127..0]c4]:u,sRGBAnl,4x4,ASTC,t=(c1,c2,c3,c4)";                     break; }
+        case Format_ASTC_5x4_UNorm_Block:                       { asString = "[[511..384]c1[383..256]c2[255..128]c3[127..0]c4]:u,nRGBA,5x4,ASTC,t=(c1,c2,c3,c4)";                       break; }
+        case Format_ASTC_5x4_SRGB_Block:                        { asString = "[[511..384]c1[383..256]c2[255..128]c3[127..0]c4]:u,sRGBAnl,5x4,ASTC,t=(c1,c2,c3,c4)";                     break; }
+        case Format_ASTC_5x5_UNorm_Block:                       { asString = "[[511..384]c1[383..256]c2[255..128]c3[127..0]c4]:u,nRGBA,5x5,ASTC,t=(c1,c2,c3,c4)";                       break; }
+        case Format_ASTC_5x5_SRGB_Block:                        { asString = "[[511..384]c1[383..256]c2[255..128]c3[127..0]c4]:u,sRGBAnl,5x5,ASTC,t=(c1,c2,c3,c4)";                     break; }
+        case Format_ASTC_6x5_UNorm_Block:                       { asString = "[[511..384]c1[383..256]c2[255..128]c3[127..0]c4]:u,nRGBA,6x5,ASTC,t=(c1,c2,c3,c4)";                       break; }
+        case Format_ASTC_6x5_SRGB_Block:                        { asString = "[[511..384]c1[383..256]c2[255..128]c3[127..0]c4]:u,sRGBAnl,6x5,ASTC,t=(c1,c2,c3,c4)";                     break; }
+        case Format_ASTC_6x6_UNorm_Block:                       { asString = "[[511..384]c1[383..256]c2[255..128]c3[127..0]c4]:u,nRGBA,6x6,ASTC,t=(c1,c2,c3,c4)";                       break; }
+        case Format_ASTC_6x6_SRGB_Block:                        { asString = "[[511..384]c1[383..256]c2[255..128]c3[127..0]c4]:u,sRGBAnl,6x6,ASTC,t=(c1,c2,c3,c4)";                     break; }
+        case Format_ASTC_8x5_UNorm_Block:                       { asString = "[[511..384]c1[383..256]c2[255..128]c3[127..0]c4]:u,nRGBA,8x5,ASTC,t=(c1,c2,c3,c4)";                       break; }
+        case Format_ASTC_8x5_SRGB_Block:                        { asString = "[[511..384]c1[383..256]c2[255..128]c3[127..0]c4]:u,sRGBAnl,8x5,ASTC,t=(c1,c2,c3,c4)";                     break; }
+        case Format_ASTC_8x6_UNorm_Block:                       { asString = "[[511..384]c1[383..256]c2[255..128]c3[127..0]c4]:u,nRGBA,8x6,ASTC,t=(c1,c2,c3,c4)";                       break; }
+        case Format_ASTC_8x6_SRGB_Block:                        { asString = "[[511..384]c1[383..256]c2[255..128]c3[127..0]c4]:u,sRGBAnl,8x6,ASTC,t=(c1,c2,c3,c4)";                     break; }
+        case Format_ASTC_8x8_UNorm_Block:                       { asString = "[[511..384]c1[383..256]c2[255..128]c3[127..0]c4]:u,nRGBA,8x8,ASTC,t=(c1,c2,c3,c4)";                       break; }
+        case Format_ASTC_8x8_SRGB_Block:                        { asString = "[[511..384]c1[383..256]c2[255..128]c3[127..0]c4]:u,sRGBAnl,8x8,ASTC,t=(c1,c2,c3,c4)";                     break; }
+        case Format_ASTC_10x5_UNorm_Block:                      { asString = "[[511..384]c1[383..256]c2[255..128]c3[127..0]c4]:u,nRGBA,10x5,ASTC,t=(c1,c2,c3,c4)";                      break; }
+        case Format_ASTC_10x5_SRGB_Block:                       { asString = "[[511..384]c1[383..256]c2[255..128]c3[127..0]c4]:u,sRGBAnl,10x5,ASTC,t=(c1,c2,c3,c4)";                    break; }
+        case Format_ASTC_10x6_UNorm_Block:                      { asString = "[[511..384]c1[383..256]c2[255..128]c3[127..0]c4]:u,nRGBA,10x6,ASTC,t=(c1,c2,c3,c4)";                      break; }
+        case Format_ASTC_10x6_SRGB_Block:                       { asString = "[[511..384]c1[383..256]c2[255..128]c3[127..0]c4]:u,sRGBAnl,10x6,ASTC,t=(c1,c2,c3,c4)";                    break; }
+        case Format_ASTC_10x8_UNorm_Block:                      { asString = "[[511..384]c1[383..256]c2[255..128]c3[127..0]c4]:u,nRGBA,10x8,ASTC,t=(c1,c2,c3,c4)";                      break; }
+        case Format_ASTC_10x8_SRGB_Block:                       { asString = "[[511..384]c1[383..256]c2[255..128]c3[127..0]c4]:u,sRGBAnl,10x8,ASTC,t=(c1,c2,c3,c4)";                    break; }
+        case Format_ASTC_10x10_UNorm_Block:                     { asString = "[[511..384]c1[383..256]c2[255..128]c3[127..0]c4]:u,nRGBA,10x10,ASTC,t=(c1,c2,c3,c4)";                     break; }
+        case Format_ASTC_10x10_SRGB_Block:                      { asString = "[[511..384]c1[383..256]c2[255..128]c3[127..0]c4]:u,sRGBAnl,10x10,ASTC,t=(c1,c2,c3,c4)";                   break; }
+        case Format_ASTC_12x10_UNorm_Block:                     { asString = "[[511..384]c1[383..256]c2[255..128]c3[127..0]c4]:u,nRGBA,12x10,ASTC,t=(c1,c2,c3,c4)";                     break; }
+        case Format_ASTC_12x10_SRGB_Block:                      { asString = "[[511..384]c1[383..256]c2[255..128]c3[127..0]c4]:u,sRGBAnl,12x10,ASTC,t=(c1,c2,c3,c4)";                   break; }
+        case Format_ASTC_12x12_UNorm_Block:                     { asString = "[[511..384]c1[383..256]c2[255..128]c3[127..0]c4]:u,nRGBA,12x12,ASTC,t=(c1,c2,c3,c4)";                     break; }
+        case Format_ASTC_12x12_SRGB_Block:                      { asString = "[[511..384]c1[383..256]c2[255..128]c3[127..0]c4]:u,sRGBAnl,12x12,ASTC,t=(c1,c2,c3,c4)";                   break; }
+        case Format_G8_B8_G8_R8_422_UNorm:                      { asString = "[[31..24]g1[23..16]b[15..8]g2[7..0]r]:u,n,g=(g1,g2)";                                                     break; }
+        case Format_B8_G8_R8_G8_G22_UNorm:                      { asString = "[[31..24]b[23..16]g1[15..8]r[7..0]g2]:u,n,g=(g1,g2)";                                                     break; }
+        case Format_G8_B8_R8_3Plane_422_UNorm:
+        case Format_G8_B8_R8_3Plane_420_UNorm:                  { asString = "[[23..16]g[15..8]b[7..0]r]:u,n,plane0=g,plane1=b,plane2=r";                                               break; }
+        case Format_G8_B8_R8_3Plane_444_UNorm:
+        case Format_G8_B8R8_2Plane_422_UNorm:
+        case Format_G8_B8R8_2Plane_420_UNorm:                   { asString = "[[23..16]g[15..8]b[7..0]r]:u,n,plane0=g,plane1=br";                                                       break; }
+        case Format_R10x6_UNorm_Pack16:                         { asString = "[[15..10]unused[9..0]r]:u,n";                                                                             break; }
+        case Format_R10x6_G10x6_Unorm_2Pack16:                  { asString = "[[31..26]unused[25..16]r[15..10]unused[9..0]g]:u,n";                                                      break; }
+        case Format_R10x6_G10x6_B10x6_A10x6_UNorm_4Pack16:      { asString = "[[63..58]unused[57..48]r[47..42]unused[41..32]g[41..26]unused[25..16]r[15..10]unused[9..0]a]:u,n";        break; }
+        case Format_G10x6_B10x6_G10x6_R10x6_422_UNorm_4Pack16:  { asString = "[[63..58]unused[57..48]g[47..42]unused[41..32]b[41..26]unused[25..16]g[15..10]unused[9..0]r]:u,n";        break; }
+        case Format_B10x6_G10x6_R10x6_G10x6_422_UNorm_4Pack16:  { asString = "[[63..58]unused[57..48]b[47..42]unused[41..32]g[41..26]unused[25..16]r[15..10]unused[9..0]g]:u,n";        break; }
+        case Format_G10x6_B10x6_R10x6_3Plane_444_UNorm_3Pack16:
+        case Format_G10x6_B10x6_R10x6_3Plane_422_UNorm_3Pack16:
+        case Format_G10x6_B10x6_R10x6_3Plane_420_UNorm_3Pack16: { asString = "[[47..42]unused[41..32]g[41..26]unused[25..16]b[15..10]unused[9..0]r]:u,n,plane0=g,plane1=b,plane3=r";    break; }
+        case Format_G10x6_B10x6R10x6_2Plane_444_UNorm_3Pack16:
+        case Format_G10x6_B10x6R10x6_2Plane_422_UNorm_3Pack16:
+        case Format_G10x6_B10x6R10x6_2Plane_420_UNorm_3Pack16:  { asString = "[[47..42]unused[41..32]g[41..26]unused[25..16]b[15..10]unused[9..0]r]:u,n,plane0=g,plane1=br";            break; }
+        case Format_R12x4_UNorm_Pack16:                         { asString = "[[15..12]unused[11..0]r]:u,n";                                                                            break; }
+        case Format_R12x4_G12x4_UNorm_2Pack16:                  { asString = "[[31..28]unused[27..16]r[15..12]unused[11..0]g]:u,n";                                                     break; }
+        case Format_R12x4_G12x4_B12x4_A12x4_UNorm_4Pack16:      { asString = "[[63..60]unused[59..48]r[47..44]unused[43..32]g[41..28]unused[27..16]r[15..12]unused[10..0]a]:u,n";       break; }
+        case Format_G12x4_B12x4_G12x4_R12x4_422_UNorm_4Pack16:  { asString = "[[63..60]unused[59..48]g[47..44]unused[43..32]b[41..28]unused[27..16]g[15..12]unused[10..0]r]:u,n";       break; }
+        case Format_B12x4_G12x4_R12x4_G12x4_422_UNorm_4Pack16:  { asString = "[[63..60]unused[59..48]b[47..44]unused[43..32]g[41..28]unused[27..16]r[15..12]unused[10..0]g]:u,n";       break; }
+        case Format_G12x4_B12x4_R12x4_3Plane_444_UNorm_3Pack16:
+        case Format_G12x4_B12x4_R12x4_3Plane_422_UNorm_3Pack16:
+        case Format_G12x4_B12x4_R12x4_3Plane_420_UNorm_3Pack16: { asString = "[[47..44]unused[43..32]g[41..28]unused[27..16]b[15..12]unused[11..0]r]:u,n,plane0=g,plane1=b,plane3=r";   break; }
+        case Format_G12x4_B12x4R12x4_2Plane_444_UNorm_3Pack16:
+        case Format_G12x4_B12x4R12x4_2Plane_422_UNorm_3Pack16:
+        case Format_G12x4_B12x4R12x4_2Plane_420_UNorm_3Pack16:  { asString = "[[47..44]unused[43..32]g[41..28]unused[27..16]b[15..12]unused[11..0]r]:u,n,plane0=g,plane1=br";           break; }
+        case Format_G16_B16_G16_R16_422_UNorm:                  { asString = "[[63..48]g[47..32]b[41..16]g[15..0]r]:u,n";                                                               break; }
+        case Format_B16_G16_R16_G16_422_UNorm:                  { asString = "[[63..48]b[47..32]g[41..16]r[15..0]g]:u,n";                                                               break; }
+        case Format_G16_B16_R16_3Plane_444_UNorm:
+        case Format_G16_B16_R16_3Plane_422_UNorm:
+        case Format_G16_B16_R16_3Plane_420_UNorm:               { asString = "[[47..32]g[41..16]b[15..0]r]:u,n,plane0=g,plane1=b,plane3=r";                                             break; }
+        case Format_G16_B16R16_2Plane_444_UNorm:
+        case Format_G16_B16R16_2Plane_422_UNorm:
+        case Format_G16_B16R16_2Plane_420_UNorm:                { asString = "[[47..32]g[41..16]b[15..0]r]:u,n,plane0=g,plane1=br";                                                     break; }
+        case Format_G8_B8R8_2Plane_444_UNorm:                   { asString = "[[23..16]g[15..8]b[7..0]r]:u,n,plane0=g,plane1=br";                                                       break; }
+        case Format_A4_R4_G4_B4_UNorm_Pack16:                   { asString = "[[15..12]a[11..8]r[7..4]g[3..0]b:u,n]";                                                                   break; }
+        case Format_A4_B4_G4_R4_UNorm_Pack16:                   { asString = "[[15..12]a[11..8]b[7..4]g[3..0]r:u,n]";                                                                   break; }
+        case Format_ASTC_4x4_SFloat_Block:                      { asString = "[[511..384]c1[383..256]c2[255..128]c3[127..0]c4]:s,fRGBA,4x4,ASTC,t=(c1,c2,c3,c4)";                       break; }
+        case Format_ASTC_5x4_SFloat_Block:                      { asString = "[[511..384]c1[383..256]c2[255..128]c3[127..0]c4]:s,fRGBA,5x4,ASTC,t=(c1,c2,c3,c4)";                       break; }
+        case Format_ASTC_5x5_SFloat_Block:                      { asString = "[[511..384]c1[383..256]c2[255..128]c3[127..0]c4]:s,fRGBA,5x5,ASTC,t=(c1,c2,c3,c4)";                       break; }
+        case Format_ASTC_6x5_SFloat_Block:                      { asString = "[[511..384]c1[383..256]c2[255..128]c3[127..0]c4]:s,fRGBA,6x5,ASTC,t=(c1,c2,c3,c4)";                       break; }
+        case Format_ASTC_6x6_SFloat_Block:                      { asString = "[[511..384]c1[383..256]c2[255..128]c3[127..0]c4]:s,fRGBA,6x6,ASTC,t=(c1,c2,c3,c4)";                       break; }
+        case Format_ASTC_8x5_SFloat_Block:                      { asString = "[[511..384]c1[383..256]c2[255..128]c3[127..0]c4]:s,fRGBA,8x5,ASTC,t=(c1,c2,c3,c4)";                       break; }
+        case Format_ASTC_8x6_SFloat_Block:                      { asString = "[[511..384]c1[383..256]c2[255..128]c3[127..0]c4]:s,fRGBA,8x6,ASTC,t=(c1,c2,c3,c4)";                       break; }
+        case Format_ASTC_8x8_SFloat_Block:                      { asString = "[[511..384]c1[383..256]c2[255..128]c3[127..0]c4]:s,fRGBA,8x8,ASTC,t=(c1,c2,c3,c4)";                       break; }
+        case Format_ASTC_10x5_SFloat_Block:                     { asString = "[[511..384]c1[383..256]c2[255..128]c3[127..0]c4]:s,fRGBA,10x5,ASTC,t=(c1,c2,c3,c4)";                      break; }
+        case Format_ASTC_10x6_SFloat_Block:                     { asString = "[[511..384]c1[383..256]c2[255..128]c3[127..0]c4]:s,fRGBA,10x6,ASTC,t=(c1,c2,c3,c4)";                      break; }
+        case Format_ASTC_10x8_SFloat_Block:                     { asString = "[[511..384]c1[383..256]c2[255..128]c3[127..0]c4]:s,fRGBA,10x8,ASTC,t=(c1,c2,c3,c4)";                      break; }
+        case Format_ASTC_10x10_SFloat_Block:                    { asString = "[[511..384]c1[383..256]c2[255..128]c3[127..0]c4]:s,fRGBA,10x10,ASTC,t=(c1,c2,c3,c4)";                     break; }
+        case Format_ASTC_12x10_SFloat_Block:                    { asString = "[[511..384]c1[383..256]c2[255..128]c3[127..0]c4]:s,fRGBA,12x10,ASTC,t=(c1,c2,c3,c4)";                     break; }
+        case Format_ASTC_12x12_SFloat_Block:                    { asString = "[[511..384]c1[383..256]c2[255..128]c3[127..0]c4]:s,fRGBA,12x12,ASTC,t=(c1,c2,c3,c4)";                     break; }
+        case Format_PVRTC2_2BPP_UNorm_Block_PowerVR:
+        case Format_PVRTC1_2BPP_UNorm_Block_PowerVR:            { asString = "[[255..192]c1[192..128]c2[127..64]c3[63..0]c4]:u,nRGBA,8x4,PVRTC,t=(c1,c2,c3,c4)";                        break; }
+        case Format_PVRTC2_4BPP_UNorm_Block_PowerVR:
+        case Format_PVRTC1_4BPP_UNorm_Block_PowerVR:            { asString = "[[255..192]c1[192..128]c2[127..64]c3[63..0]c4]:u,nRGBA,4x4,PVRTC,t=(c1,c2,c3,c4)";                        break; }
+        case Format_PVRTC1_2BPP_SRGB_Block_PowerVR:
+        case Format_PVRTC2_2BPP_SRGB_Block_PowerVR:             { asString = "[[255..192]c1[192..128]c2[127..64]c3[63..0]c4]:u,sRGBAnl,8x4,PVRTC,t=(c1,c2,c3,c4)";                      break; }
+        case Format_PVRTC1_4BPP_SRGB_Block_PowerVR:
+        case Format_PVRTC2_4BPP_SRGB_Block_PowerVR:             { asString = "[[255..192]c1[192..128]c2[127..64]c3[63..0]c4]:u,sRGBAnl,4x4,PVRTC,t=(c1,c2,c3,c4)";                      break; }
+    }
+
+    return asString;
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_GET_SURFACE_CAPABILITIES_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( SurfaceFormat2 ) const & format
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( SurfaceFormat2 ) ) " "
+            "{ structureType = "_s      + toString ( format.structureType ) +
+            ", pNext = "                + :: toString ( format.pNext ) +
+            ", surfaceFormat = "        + toString ( format.surfaceFormat ) +
+            " }";
+}
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceSurfaceInfo ) const & format
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalSurfaceSurfaceInfo ) ) " "
+            "{ structureType = "_s      + toString ( format.structureType ) +
+            ", pNext = "                + :: toString ( format.pNext ) +
+            ", surface = "              + :: toString ( format.surface ) +
+            " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_FULL_SCREEN_EXCLUSIVE_AVAILABLE
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( FullScreenExclusive )    exclusive
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( exclusive ) {
+        case FullScreenExclusiveDefault:                { asString = "Default";                 break; }
+        case FullScreenExclusiveAllowed:                { asString = "Allowed";                 break; }
+        case FullScreenExclusiveDisallowed:             { asString = "Disallowed";              break; }
+        case FullScreenExclusiveApplicationControlled:  { asString = "ApplicationControlled";   break; }
+    }
+
+    return asString;
+}
+
+auto vulkan :: toString (
+        __C_ENG_TYPE ( SurfaceFullScreenExclusiveInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( SurfaceFullScreenExclusiveInfo ) ) " "
+            "{ structureType = "_s      + toString ( format.structureType ) +
+            ", pNext = "                + :: toString ( format.pNext ) +
+            ", fullScreenExclusive = "  + toString ( format.fullScreenExclusive ) +
+            " }";
 }
 
 #endif

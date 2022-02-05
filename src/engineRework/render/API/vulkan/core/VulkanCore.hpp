@@ -2227,6 +2227,344 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #define C_ENG_MAP_END
 #include <ObjectMapping.hpp>
 
+#define C_ENG_MAP_START     ENUM ( Format, TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( Undefined,                                      VkFormat :: VK_FORMAT_UNDEFINED ),
+
+            Field ( _R4_G4_UNorm_Pack8,                             VkFormat :: VK_FORMAT_R4G4_UNORM_PACK8 ),
+            Field ( _R4_G4_B4_A4_UNorm_Pack16,                      VkFormat :: VK_FORMAT_R4G4B4A4_UNORM_PACK16 ),
+            Field ( _B4_G4_R4_A4_UNorm_Pack16,                      VkFormat :: VK_FORMAT_B4G4R4A4_UNORM_PACK16 ),
+            Field ( _R5_G6_B5_UNorm_Pack16,                         VkFormat :: VK_FORMAT_R5G6B5_UNORM_PACK16 ),
+            Field ( _B5_G6_R5_UNorm_Pack16,                         VkFormat :: VK_FORMAT_B5G6R5_UNORM_PACK16 ),
+            Field ( _R5_G5_B5_A1_UNorm_Pack16,                      VkFormat :: VK_FORMAT_R5G5B5A1_UNORM_PACK16 ),
+            Field ( _B5_G5_R5_A1_UNorm_Pack16,                      VkFormat :: VK_FORMAT_B5G5R5A1_UNORM_PACK16 ),
+            Field ( _A1_R5_G5_B5_UNorm_Pack16,                      VkFormat :: VK_FORMAT_A1R5G5B5_UNORM_PACK16 ),
+
+            Field ( _R8_UNorm,                                      VkFormat :: VK_FORMAT_R8_UNORM ),
+            Field ( _R8_SNorm,                                      VkFormat :: VK_FORMAT_R8_SNORM ),
+            Field ( _R8_UScaled,                                    VkFormat :: VK_FORMAT_R8_USCALED ),
+            Field ( _R8_SScaled,                                    VkFormat :: VK_FORMAT_R8_SSCALED ),
+            Field ( _R8_UInt,                                       VkFormat :: VK_FORMAT_R8_UINT ),
+            Field ( _R8_SInt,                                       VkFormat :: VK_FORMAT_R8_SINT ),
+            Field ( _R8_SRGB,                                       VkFormat :: VK_FORMAT_R8_SRGB ),
+
+            Field ( _R8_G8_UNorm,                                   VkFormat :: VK_FORMAT_R8G8_UNORM ),
+            Field ( _R8_G8_SNorm,                                   VkFormat :: VK_FORMAT_R8G8_SNORM ),
+            Field ( _R8_G8_UScaled,                                 VkFormat :: VK_FORMAT_R8G8_USCALED ),
+            Field ( _R8_G8_SScaled,                                 VkFormat :: VK_FORMAT_R8G8_SSCALED ),
+            Field ( _R8_G8_UInt,                                    VkFormat :: VK_FORMAT_R8G8_UINT ),
+            Field ( _R8_G8_SInt,                                    VkFormat :: VK_FORMAT_R8G8_SINT ),
+            Field ( _R8_G8_SRGB,                                    VkFormat :: VK_FORMAT_R8G8_SRGB ),
+
+            Field ( _R8_G8_B8_UNorm,                                VkFormat :: VK_FORMAT_R8G8B8_UNORM ),
+            Field ( _R8_G8_B8_SNorm,                                VkFormat :: VK_FORMAT_R8G8B8_SNORM ),
+            Field ( _R8_G8_B8_UScaled,                              VkFormat :: VK_FORMAT_R8G8B8_USCALED ),
+            Field ( _R8_G8_B8_SScaled,                              VkFormat :: VK_FORMAT_R8G8B8_SSCALED ),
+            Field ( _R8_G8_B8_UInt,                                 VkFormat :: VK_FORMAT_R8G8B8_UINT ),
+            Field ( _R8_G8_B8_SInt,                                 VkFormat :: VK_FORMAT_R8G8B8_SINT ),
+            Field ( _R8_G8_B8_SRGB,                                 VkFormat :: VK_FORMAT_R8G8B8_SRGB ),
+
+            Field ( _B8_G8_R8_UNorm,                                VkFormat :: VK_FORMAT_B8G8R8_UNORM ),
+            Field ( _B8_G8_R8_SNorm,                                VkFormat :: VK_FORMAT_B8G8R8_SNORM ),
+            Field ( _B8_G8_R8_UScaled,                              VkFormat :: VK_FORMAT_B8G8R8_USCALED ),
+            Field ( _B8_G8_R8_SScaled,                              VkFormat :: VK_FORMAT_B8G8R8_SSCALED ),
+            Field ( _B8_G8_R8_UInt,                                 VkFormat :: VK_FORMAT_B8G8R8_UINT ),
+            Field ( _B8_G8_R8_SInt,                                 VkFormat :: VK_FORMAT_B8G8R8_SINT ),
+            Field ( _B8_G8_R8_SRGB,                                 VkFormat :: VK_FORMAT_B8G8R8_SRGB ),
+
+            Field ( _R8_G8_B8_A8_UNorm,                             VkFormat :: VK_FORMAT_R8G8B8A8_UNORM ),
+            Field ( _R8_G8_B8_A8_SNorm,                             VkFormat :: VK_FORMAT_R8G8B8A8_SNORM ),
+            Field ( _R8_G8_B8_A8_UScaled,                           VkFormat :: VK_FORMAT_R8G8B8A8_USCALED ),
+            Field ( _R8_G8_B8_A8_SScaled,                           VkFormat :: VK_FORMAT_R8G8B8A8_SSCALED ),
+            Field ( _R8_G8_B8_A8_UInt,                              VkFormat :: VK_FORMAT_R8G8B8A8_UINT ),
+            Field ( _R8_G8_B8_A8_SInt,                              VkFormat :: VK_FORMAT_R8G8B8A8_SINT ),
+            Field ( _R8_G8_B8_A8_SRGB,                              VkFormat :: VK_FORMAT_R8G8B8A8_SRGB ),
+
+            Field ( _B8_G8_R8_A8_UNorm,                             VkFormat :: VK_FORMAT_B8G8R8A8_UNORM ),
+            Field ( _B8_G8_R8_A8_SNorm,                             VkFormat :: VK_FORMAT_B8G8R8A8_SNORM ),
+            Field ( _B8_G8_R8_A8_UScaled,                           VkFormat :: VK_FORMAT_B8G8R8A8_USCALED ),
+            Field ( _B8_G8_R8_A8_SScaled,                           VkFormat :: VK_FORMAT_B8G8R8A8_SSCALED ),
+            Field ( _B8_G8_R8_A8_UInt,                              VkFormat :: VK_FORMAT_B8G8R8A8_UINT ),
+            Field ( _B8_G8_R8_A8_SInt,                              VkFormat :: VK_FORMAT_B8G8R8A8_SINT ),
+            Field ( _B8_G8_R8_A8_SRGB,                              VkFormat :: VK_FORMAT_B8G8R8A8_SRGB ),
+
+            Field ( _A8_B8_G8_R8_UNorm_Pack32,                      VkFormat :: VK_FORMAT_A8B8G8R8_UNORM_PACK32 ),
+            Field ( _A8_B8_G8_R8_SNorm_Pack32,                      VkFormat :: VK_FORMAT_A8B8G8R8_SNORM_PACK32 ),
+            Field ( _A8_B8_G8_R8_UScaled_Pack32,                    VkFormat :: VK_FORMAT_A8B8G8R8_USCALED_PACK32 ),
+            Field ( _A8_B8_G8_R8_SScaled_Pack32,                    VkFormat :: VK_FORMAT_A8B8G8R8_SSCALED_PACK32 ),
+            Field ( _A8_B8_G8_R8_UInt_Pack32,                       VkFormat :: VK_FORMAT_A8B8G8R8_UINT_PACK32 ),
+            Field ( _A8_B8_G8_R8_SInt_Pack32,                       VkFormat :: VK_FORMAT_A8B8G8R8_SINT_PACK32 ),
+            Field ( _A8_B8_G8_R8_SRGB_Pack32,                       VkFormat :: VK_FORMAT_A8B8G8R8_SRGB_PACK32 ),
+
+            Field ( _A2_R10_G10_B10_UNorm_Pack32,                   VkFormat :: VK_FORMAT_A2R10G10B10_UNORM_PACK32 ),
+            Field ( _A2_R10_G10_B10_SNorm_Pack32,                   VkFormat :: VK_FORMAT_A2R10G10B10_SNORM_PACK32 ),
+            Field ( _A2_R10_G10_B10_UScaled_Pack32,                 VkFormat :: VK_FORMAT_A2R10G10B10_USCALED_PACK32 ),
+            Field ( _A2_R10_G10_B10_SScaled_Pack32,                 VkFormat :: VK_FORMAT_A2R10G10B10_SSCALED_PACK32 ),
+            Field ( _A2_R10_G10_B10_UInt_Pack32,                    VkFormat :: VK_FORMAT_A2R10G10B10_UINT_PACK32 ),
+            Field ( _A2_R10_G10_B10_SInt_Pack32,                    VkFormat :: VK_FORMAT_A2R10G10B10_SINT_PACK32 ),
+
+            Field ( _A2_B10_G10_R10_UNorm_Pack32,                   VkFormat :: VK_FORMAT_A2B10G10R10_UNORM_PACK32 ),
+            Field ( _A2_B10_G10_R10_SNorm_Pack32,                   VkFormat :: VK_FORMAT_A2B10G10R10_SNORM_PACK32 ),
+            Field ( _A2_B10_G10_R10_UScaled_Pack32,                 VkFormat :: VK_FORMAT_A2B10G10R10_USCALED_PACK32 ),
+            Field ( _A2_B10_G10_R10_SScaled_Pack32,                 VkFormat :: VK_FORMAT_A2B10G10R10_SSCALED_PACK32 ),
+            Field ( _A2_B10_G10_R10_UInt_Pack32,                    VkFormat :: VK_FORMAT_A2B10G10R10_UINT_PACK32 ),
+            Field ( _A2_B10_G10_R10_SInt_Pack32,                    VkFormat :: VK_FORMAT_A2B10G10R10_SINT_PACK32 ),
+
+            Field ( _R16_UNorm,                                     VkFormat :: VK_FORMAT_R16_UNORM ),
+            Field ( _R16_SNorm,                                     VkFormat :: VK_FORMAT_R16_SNORM ),
+            Field ( _R16_UScaled,                                   VkFormat :: VK_FORMAT_R16_USCALED ),
+            Field ( _R16_SScaled,                                   VkFormat :: VK_FORMAT_R16_SSCALED ),
+            Field ( _R16_UInt,                                      VkFormat :: VK_FORMAT_R16_UINT ),
+            Field ( _R16_SInt,                                      VkFormat :: VK_FORMAT_R16_SINT ),
+            Field ( _R16_SFloat,                                    VkFormat :: VK_FORMAT_R16_SFLOAT ),
+
+            Field ( _R16_G16_UNorm,                                 VkFormat :: VK_FORMAT_R16G16_UNORM ),
+            Field ( _R16_G16_SNorm,                                 VkFormat :: VK_FORMAT_R16G16_SNORM ),
+            Field ( _R16_G16_UScaled,                               VkFormat :: VK_FORMAT_R16G16_USCALED ),
+            Field ( _R16_G16_SScaled,                               VkFormat :: VK_FORMAT_R16G16_SSCALED ),
+            Field ( _R16_G16_UInt,                                  VkFormat :: VK_FORMAT_R16G16_UINT ),
+            Field ( _R16_G16_SInt,                                  VkFormat :: VK_FORMAT_R16G16_SINT ),
+            Field ( _R16_G16_SFloat,                                VkFormat :: VK_FORMAT_R16G16_SFLOAT ),
+
+            Field ( _R16_G16_B16_UNorm,                             VkFormat :: VK_FORMAT_R16G16B16_UNORM ),
+            Field ( _R16_G16_B16_SNorm,                             VkFormat :: VK_FORMAT_R16G16B16_SNORM ),
+            Field ( _R16_G16_B16_UScaled,                           VkFormat :: VK_FORMAT_R16G16B16_USCALED ),
+            Field ( _R16_G16_B16_SScaled,                           VkFormat :: VK_FORMAT_R16G16B16_SSCALED ),
+            Field ( _R16_G16_B16_UInt,                              VkFormat :: VK_FORMAT_R16G16B16_UINT ),
+            Field ( _R16_G16_B16_SInt,                              VkFormat :: VK_FORMAT_R16G16B16_SINT ),
+            Field ( _R16_G16_B16_SFloat,                            VkFormat :: VK_FORMAT_R16G16B16_SFLOAT ),
+
+            Field ( _R16_G16_B16_A16_UNorm,                         VkFormat :: VK_FORMAT_R16G16B16A16_UNORM ),
+            Field ( _R16_G16_B16_A16_SNorm,                         VkFormat :: VK_FORMAT_R16G16B16A16_SNORM ),
+            Field ( _R16_G16_B16_A16_UScaled,                       VkFormat :: VK_FORMAT_R16G16B16A16_USCALED ),
+            Field ( _R16_G16_B16_A16_SScaled,                       VkFormat :: VK_FORMAT_R16G16B16A16_SSCALED ),
+            Field ( _R16_G16_B16_A16_UInt,                          VkFormat :: VK_FORMAT_R16G16B16A16_UINT ),
+            Field ( _R16_G16_B16_A16_SInt,                          VkFormat :: VK_FORMAT_R16G16B16A16_SINT ),
+            Field ( _R16_G16_B16_A16_SFloat,                        VkFormat :: VK_FORMAT_R16G16B16A16_SFLOAT ),
+
+            Field ( _R32_UInt,                                      VkFormat :: VK_FORMAT_R32_UINT ),
+            Field ( _R32_SInt,                                      VkFormat :: VK_FORMAT_R32_SINT ),
+            Field ( _R32_SFloat,                                    VkFormat :: VK_FORMAT_R32_SFLOAT ),
+
+            Field ( _R32_G32_UInt,                                  VkFormat :: VK_FORMAT_R32G32_UINT ),
+            Field ( _R32_G32_SInt,                                  VkFormat :: VK_FORMAT_R32G32_SINT ),
+            Field ( _R32_G32_SFloat,                                VkFormat :: VK_FORMAT_R32G32_SFLOAT ),
+
+            Field ( _R32_G32_B32_UInt,                              VkFormat :: VK_FORMAT_R32G32B32_UINT ),
+            Field ( _R32_G32_B32_SInt,                              VkFormat :: VK_FORMAT_R32G32B32_SINT ),
+            Field ( _R32_G32_B32_SFloat,                            VkFormat :: VK_FORMAT_R32G32B32_SFLOAT ),
+
+            Field ( _R32_G32_B32_A32_UInt,                          VkFormat :: VK_FORMAT_R32G32B32A32_UINT ),
+            Field ( _R32_G32_B32_A32_SInt,                          VkFormat :: VK_FORMAT_R32G32B32A32_SINT ),
+            Field ( _R32_G32_B32_A32_SFloat,                        VkFormat :: VK_FORMAT_R32G32B32A32_SFLOAT ),
+
+            Field ( _R64_UInt,                                      VkFormat :: VK_FORMAT_R64_UINT ),
+            Field ( _R64_SInt,                                      VkFormat :: VK_FORMAT_R64_SINT ),
+            Field ( _R64_SFloat,                                    VkFormat :: VK_FORMAT_R64_SFLOAT ),
+
+            Field ( _R64_G64_UInt,                                  VkFormat :: VK_FORMAT_R64G64_UINT ),
+            Field ( _R64_G64_SInt,                                  VkFormat :: VK_FORMAT_R64G64_SINT ),
+            Field ( _R64_G64_SFloat,                                VkFormat :: VK_FORMAT_R64G64_SFLOAT ),
+
+            Field ( _R64_G64_B64_UInt,                              VkFormat :: VK_FORMAT_R64G64B64_UINT ),
+            Field ( _R64_G64_B64_SInt,                              VkFormat :: VK_FORMAT_R64G64B64_SINT ),
+            Field ( _R64_G64_B64_SFloat,                            VkFormat :: VK_FORMAT_R64G64B64_SFLOAT ),
+
+            Field ( _R64_G64_B64_A64_UInt,                          VkFormat :: VK_FORMAT_R64G64B64A64_UINT ),
+            Field ( _R64_G64_B64_A64_SInt,                          VkFormat :: VK_FORMAT_R64G64B64A64_SINT ),
+            Field ( _R64_G64_B64_A64_SFloat,                        VkFormat :: VK_FORMAT_R64G64B64A64_SFLOAT ),
+
+            Field ( _B10_G11_R11_UFloat_Pack32,                     VkFormat :: VK_FORMAT_B10G11R11_UFLOAT_PACK32 ),
+            Field ( _E5_B9_G9_R9_UFloat_Pack32,                     VkFormat :: VK_FORMAT_E5B9G9R9_UFLOAT_PACK32 ),
+
+            Field ( _D16_UNorm,                                     VkFormat :: VK_FORMAT_D16_UNORM ),
+            Field ( _X8_D24_UNorm_Pack32,                           VkFormat :: VK_FORMAT_X8_D24_UNORM_PACK32 ),
+            Field ( _D32_SFloat,                                    VkFormat :: VK_FORMAT_D32_SFLOAT ),
+            Field ( _S8_UInt,                                       VkFormat :: VK_FORMAT_S8_UINT ),
+
+            Field ( _D16_UNorm_S8_UInt,                             VkFormat :: VK_FORMAT_D16_UNORM_S8_UINT ),
+            Field ( _D24_UNorm_S8_UInt,                             VkFormat :: VK_FORMAT_D24_UNORM_S8_UINT ),
+            Field ( _D32_SFloat_S8_UInt,                            VkFormat :: VK_FORMAT_D32_SFLOAT_S8_UINT ),
+
+            Field ( _BC1_RGB_UNorm_Block,                           VkFormat :: VK_FORMAT_BC1_RGB_UNORM_BLOCK ),
+            Field ( _BC1_RGB_SRGB_Block,                            VkFormat :: VK_FORMAT_BC1_RGB_SRGB_BLOCK ),
+            Field ( _BC1_RGBA_UNorm_Block,                          VkFormat :: VK_FORMAT_BC1_RGBA_UNORM_BLOCK ),
+            Field ( _BC1_RGBA_SRGB_Block,                           VkFormat :: VK_FORMAT_BC1_RGBA_SRGB_BLOCK ),
+
+            Field ( _BC2_UNorm_Block,                               VkFormat :: VK_FORMAT_BC2_UNORM_BLOCK ),
+            Field ( _BC2_SRGB_Block,                                VkFormat :: VK_FORMAT_BC2_SRGB_BLOCK ),
+
+            Field ( _BC3_UNorm_Block,                               VkFormat :: VK_FORMAT_BC3_UNORM_BLOCK ),
+            Field ( _BC3_SRGB_Block,                                VkFormat :: VK_FORMAT_BC3_SRGB_BLOCK ),
+
+            Field ( _BC4_UNorm_Block,                               VkFormat :: VK_FORMAT_BC4_UNORM_BLOCK ),
+            Field ( _BC4_SNorm_Block,                               VkFormat :: VK_FORMAT_BC4_SNORM_BLOCK ),
+
+            Field ( _BC5_UNorm_Block,                               VkFormat :: VK_FORMAT_BC5_UNORM_BLOCK ),
+            Field ( _BC5_SNorm_Block,                               VkFormat :: VK_FORMAT_BC5_SNORM_BLOCK ),
+
+            Field ( _BC6H_UFloat_Block,                             VkFormat :: VK_FORMAT_BC6H_UFLOAT_BLOCK ),
+            Field ( _BC6H_SFloat_Block,                             VkFormat :: VK_FORMAT_BC6H_SFLOAT_BLOCK ),
+
+            Field ( _BC7_UNorm_Block,                               VkFormat :: VK_FORMAT_BC7_UNORM_BLOCK ),
+            Field ( _BC7_SRGB_Block,                                VkFormat :: VK_FORMAT_BC7_SRGB_BLOCK ),
+
+            Field ( _ETC2_R8_G8_B8_UNorm_Block,                     VkFormat :: VK_FORMAT_ETC2_R8G8B8_UNORM_BLOCK ),
+            Field ( _ETC2_R8_G8_B8_SRGB_Block,                      VkFormat :: VK_FORMAT_ETC2_R8G8B8_SRGB_BLOCK ),
+            Field ( _ETC2_R8_G8_B8_A1_UNorm_Block,                  VkFormat :: VK_FORMAT_ETC2_R8G8B8A1_UNORM_BLOCK ),
+            Field ( _ETC2_R8_G8_B8_A1_SRGB_Block,                   VkFormat :: VK_FORMAT_ETC2_R8G8B8A1_SRGB_BLOCK ),
+            Field ( _ETC2_R8_G8_B8_A8_UNorm_Block,                  VkFormat :: VK_FORMAT_ETC2_R8G8B8A8_UNORM_BLOCK ),
+            Field ( _ETC2_R8_G8_B8_A8_SRGB_Block,                   VkFormat :: VK_FORMAT_ETC2_R8G8B8A8_SRGB_BLOCK ),
+
+            Field ( _EAC_R11_UNorm_Block,                           VkFormat :: VK_FORMAT_EAC_R11_UNORM_BLOCK ),
+            Field ( _EAC_R11_SNorm_Block,                           VkFormat :: VK_FORMAT_EAC_R11_SNORM_BLOCK ),
+            Field ( _EAC_R11_G11_UNorm_Block,                       VkFormat :: VK_FORMAT_EAC_R11G11_UNORM_BLOCK ),
+            Field ( _EAC_R11_G11_SNorm_Block,                       VkFormat :: VK_FORMAT_EAC_R11G11_SNORM_BLOCK ),
+
+            Field ( _ASTC_4x4_UNorm_Block,                          VkFormat :: VK_FORMAT_ASTC_4x4_UNORM_BLOCK ),
+            Field ( _ASTC_4x4_SRGB_Block,                           VkFormat :: VK_FORMAT_ASTC_4x4_SRGB_BLOCK ),
+
+            Field ( _ASTC_5x4_UNorm_Block,                          VkFormat :: VK_FORMAT_ASTC_5x4_UNORM_BLOCK ),
+            Field ( _ASTC_5x4_SRGB_Block,                           VkFormat :: VK_FORMAT_ASTC_5x4_SRGB_BLOCK ),
+            Field ( _ASTC_5x5_UNorm_Block,                          VkFormat :: VK_FORMAT_ASTC_5x5_UNORM_BLOCK ),
+            Field ( _ASTC_5x5_SRGB_Block,                           VkFormat :: VK_FORMAT_ASTC_5x5_SRGB_BLOCK ),
+
+            Field ( _ASTC_6x5_UNorm_Block,                          VkFormat :: VK_FORMAT_ASTC_6x5_UNORM_BLOCK ),
+            Field ( _ASTC_6x5_SRGB_Block,                           VkFormat :: VK_FORMAT_ASTC_6x5_SRGB_BLOCK ),
+            Field ( _ASTC_6x6_UNorm_Block,                          VkFormat :: VK_FORMAT_ASTC_6x6_UNORM_BLOCK ),
+            Field ( _ASTC_6x6_SRGB_Block,                           VkFormat :: VK_FORMAT_ASTC_6x6_SRGB_BLOCK ),
+
+            Field ( _ASTC_8x5_UNorm_Block,                          VkFormat :: VK_FORMAT_ASTC_8x5_UNORM_BLOCK ),
+            Field ( _ASTC_8x5_SRGB_Block,                           VkFormat :: VK_FORMAT_ASTC_8x5_SRGB_BLOCK ),
+            Field ( _ASTC_8x6_UNorm_Block,                          VkFormat :: VK_FORMAT_ASTC_8x6_UNORM_BLOCK ),
+            Field ( _ASTC_8x6_SRGB_Block,                           VkFormat :: VK_FORMAT_ASTC_8x6_SRGB_BLOCK ),
+            Field ( _ASTC_8x8_UNorm_Block,                          VkFormat :: VK_FORMAT_ASTC_8x8_UNORM_BLOCK ),
+            Field ( _ASTC_8x8_SRGB_Block,                           VkFormat :: VK_FORMAT_ASTC_8x8_SRGB_BLOCK ),
+
+            Field ( _ASTC_10x5_UNorm_Block,                         VkFormat :: VK_FORMAT_ASTC_10x5_UNORM_BLOCK ),
+            Field ( _ASTC_10x5_SRGB_Block,                          VkFormat :: VK_FORMAT_ASTC_10x5_SRGB_BLOCK ),
+            Field ( _ASTC_10x6_UNorm_Block,                         VkFormat :: VK_FORMAT_ASTC_10x6_UNORM_BLOCK ),
+            Field ( _ASTC_10x6_SRGB_Block,                          VkFormat :: VK_FORMAT_ASTC_10x6_SRGB_BLOCK ),
+            Field ( _ASTC_10x8_UNorm_Block,                         VkFormat :: VK_FORMAT_ASTC_10x8_UNORM_BLOCK ),
+            Field ( _ASTC_10x8_SRGB_Block,                          VkFormat :: VK_FORMAT_ASTC_10x8_SRGB_BLOCK ),
+            Field ( _ASTC_10x10_UNorm_Block,                        VkFormat :: VK_FORMAT_ASTC_10x10_UNORM_BLOCK ),
+            Field ( _ASTC_10x10_SRGB_Block,                         VkFormat :: VK_FORMAT_ASTC_10x10_SRGB_BLOCK ),
+
+            Field ( _ASTC_12x10_UNorm_Block,                        VkFormat :: VK_FORMAT_ASTC_12x10_UNORM_BLOCK ),
+            Field ( _ASTC_12x10_SRGB_Block,                         VkFormat :: VK_FORMAT_ASTC_12x10_SRGB_BLOCK ),
+            Field ( _ASTC_12x12_UNorm_Block,                        VkFormat :: VK_FORMAT_ASTC_12x12_UNORM_BLOCK ),
+            Field ( _ASTC_12x12_SRGB_Block,                         VkFormat :: VK_FORMAT_ASTC_12x12_SRGB_BLOCK ),
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+
+            Field ( _G8_B8_G8_R8_422_UNorm,                         VkFormat :: VK_FORMAT_G8B8G8R8_422_UNORM ),
+            Field ( _B8_G8_R8_G8_G22_UNorm,                         VkFormat :: VK_FORMAT_B8G8R8G8_422_UNORM ),
+
+            Field ( _G8_B8_R8_3Plane_420_UNorm,                     VkFormat :: VK_FORMAT_G8_B8_R8_3PLANE_420_UNORM ),
+            Field ( _G8_B8R8_2Plane_420_UNorm,                      VkFormat :: VK_FORMAT_G8_B8R8_2PLANE_420_UNORM ),
+
+            Field ( _G8_B8_R8_3Plane_422_UNorm,                     VkFormat :: VK_FORMAT_G8_B8_R8_3PLANE_422_UNORM ),
+            Field ( _G8_B8R8_2Plane_422_UNorm,                      VkFormat :: VK_FORMAT_G8_B8R8_2PLANE_422_UNORM ),
+
+            Field ( _G8_B8_R8_3Plane_444_UNorm,                     VkFormat :: VK_FORMAT_G8_B8_R8_3PLANE_444_UNORM ),
+
+            Field ( _R10x6_UNorm_Pack16,                            VkFormat :: VK_FORMAT_R10X6_UNORM_PACK16 ),
+            Field ( _R10x6_G10x6_Unorm_2Pack16,                     VkFormat :: VK_FORMAT_R10X6G10X6_UNORM_2PACK16 ),
+            Field ( _R10x6_G10x6_B10x6_A10x6_UNorm_4Pack16,         VkFormat :: VK_FORMAT_R10X6G10X6B10X6A10X6_UNORM_4PACK16 ),
+
+            Field ( _G10x6_B10x6_G10x6_R10x6_422_UNorm_4Pack16,     VkFormat :: VK_FORMAT_G10X6B10X6G10X6R10X6_422_UNORM_4PACK16 ),
+            Field ( _B10x6_G10x6_R10x6_G10x6_422_UNorm_4Pack16,     VkFormat :: VK_FORMAT_B10X6G10X6R10X6G10X6_422_UNORM_4PACK16 ),
+
+            Field ( _G10x6_B10x6_R10x6_3Plane_420_UNorm_3Pack16,    VkFormat :: VK_FORMAT_G10X6_B10X6_R10X6_3PLANE_420_UNORM_3PACK16 ),
+            Field ( _G10x6_B10x6R10x6_2Plane_420_UNorm_3Pack16,     VkFormat :: VK_FORMAT_G10X6_B10X6R10X6_2PLANE_420_UNORM_3PACK16 ),
+
+            Field ( _G10x6_B10x6_R10x6_3Plane_422_UNorm_3Pack16,    VkFormat :: VK_FORMAT_G10X6_B10X6_R10X6_3PLANE_422_UNORM_3PACK16 ),
+            Field ( _G10x6_B10x6R10x6_2Plane_422_UNorm_3Pack16,     VkFormat :: VK_FORMAT_G10X6_B10X6R10X6_2PLANE_422_UNORM_3PACK16 ),
+
+            Field ( _G10x6_B10x6_R10x6_3Plane_444_UNorm_3Pack16,    VkFormat :: VK_FORMAT_G10X6_B10X6_R10X6_3PLANE_444_UNORM_3PACK16 ),
+
+            Field ( _R12x4_UNorm_Pack16,                            VkFormat :: VK_FORMAT_R12X4_UNORM_PACK16 ),
+            Field ( _R12x4_G12x4_UNorm_2Pack16,                     VkFormat :: VK_FORMAT_R12X4G12X4_UNORM_2PACK16 ),
+            Field ( _R12x4_G12x4_B12x4_A12x4_UNorm_4Pack16,         VkFormat :: VK_FORMAT_R12X4G12X4B12X4A12X4_UNORM_4PACK16 ),
+
+            Field ( _G12x4_B12x4_G12x4_R12x4_422_UNorm_4Pack16,     VkFormat :: VK_FORMAT_G12X4B12X4G12X4R12X4_422_UNORM_4PACK16 ),
+            Field ( _B12x4_G12x4_R12x4_G12x4_422_UNorm_4Pack16,     VkFormat :: VK_FORMAT_B12X4G12X4R12X4G12X4_422_UNORM_4PACK16 ),
+
+            Field ( _G12x4_B12x4_R12x4_3Plane_420_UNorm_3Pack16,    VkFormat :: VK_FORMAT_G12X4_B12X4_R12X4_3PLANE_420_UNORM_3PACK16 ),
+            Field ( _G12x4_B12x4R12x4_2Plane_420_UNorm_3Pack16,     VkFormat :: VK_FORMAT_G12X4_B12X4R12X4_2PLANE_420_UNORM_3PACK16 ),
+
+            Field ( _G12x4_B12x4_R12x4_3Plane_422_UNorm_3Pack16,    VkFormat :: VK_FORMAT_G12X4_B12X4_R12X4_3PLANE_422_UNORM_3PACK16 ),
+            Field ( _G12x4_B12x4R12x4_2Plane_422_UNorm_3Pack16,     VkFormat :: VK_FORMAT_G12X4_B12X4R12X4_2PLANE_422_UNORM_3PACK16 ),
+
+            Field ( _G12x4_B12x4_R12x4_3Plane_444_UNorm_3Pack16,    VkFormat :: VK_FORMAT_G12X4_B12X4_R12X4_3PLANE_444_UNORM_3PACK16 ),
+
+            Field ( _G16_B16_G16_R16_422_UNorm,                     VkFormat :: VK_FORMAT_G16B16G16R16_422_UNORM ),
+            Field ( _B16_G16_R16_G16_422_UNorm,                     VkFormat :: VK_FORMAT_B16G16R16G16_422_UNORM ),
+            Field ( _G16_B16_R16_3Plane_420_UNorm,                  VkFormat :: VK_FORMAT_G16_B16_R16_3PLANE_420_UNORM ),
+            Field ( _G16_B16R16_2Plane_420_UNorm,                   VkFormat :: VK_FORMAT_G16_B16R16_2PLANE_420_UNORM ),
+            Field ( _G16_B16_R16_3Plane_422_UNorm,                  VkFormat :: VK_FORMAT_G16_B16_R16_3PLANE_422_UNORM ),
+            Field ( _G16_B16R16_2Plane_422_UNorm,                   VkFormat :: VK_FORMAT_G16_B16R16_2PLANE_422_UNORM ),
+            Field ( _G16_B16_R16_3Plane_444_UNorm,                  VkFormat :: VK_FORMAT_G16_B16_R16_3PLANE_444_UNORM ),
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_YCBCR_2_PLANE_444_FORMATS_AVAILABLE
+
+            Field ( _G8_B8R8_2Plane_444_UNorm,                      VkFormat :: VK_FORMAT_G8_B8R8_2PLANE_444_UNORM_EXT ),
+            Field ( _G10x6_B10x6R10x6_2Plane_444_UNorm_3Pack16,     VkFormat :: VK_FORMAT_G10X6_B10X6R10X6_2PLANE_444_UNORM_3PACK16_EXT ),
+            Field ( _G12x4_B12x4R12x4_2Plane_444_UNorm_3Pack16,     VkFormat :: VK_FORMAT_G12X4_B12X4R12X4_2PLANE_444_UNORM_3PACK16_EXT ),
+            Field ( _G16_B16R16_2Plane_444_UNorm,                   VkFormat :: VK_FORMAT_G16_B16R16_2PLANE_444_UNORM_EXT ),
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SAMPLER_YCBCR_CONVERSION_AVAILABLE
+
+            Field ( _A4_R4_G4_B4_UNorm_Pack16,                      VkFormat :: VK_FORMAT_A4R4G4B4_UNORM_PACK16_EXT ),
+            Field ( _A4_B4_G4_R4_UNorm_Pack16,                      VkFormat :: VK_FORMAT_A4B4G4R4_UNORM_PACK16_EXT ),
+
+            Field ( _ASTC_4x4_SFloat_Block,                         VkFormat :: VK_FORMAT_ASTC_4x4_SFLOAT_BLOCK_EXT ),
+
+            Field ( _ASTC_5x4_SFloat_Block,                         VkFormat :: VK_FORMAT_ASTC_5x4_SFLOAT_BLOCK_EXT ),
+            Field ( _ASTC_5x5_SFloat_Block,                         VkFormat :: VK_FORMAT_ASTC_5x5_SFLOAT_BLOCK_EXT ),
+
+            Field ( _ASTC_6x5_SFloat_Block,                         VkFormat :: VK_FORMAT_ASTC_6x5_SFLOAT_BLOCK_EXT ),
+            Field ( _ASTC_6x6_SFloat_Block,                         VkFormat :: VK_FORMAT_ASTC_6x6_SFLOAT_BLOCK_EXT ),
+
+            Field ( _ASTC_8x5_SFloat_Block,                         VkFormat :: VK_FORMAT_ASTC_8x5_SFLOAT_BLOCK_EXT ),
+            Field ( _ASTC_8x6_SFloat_Block,                         VkFormat :: VK_FORMAT_ASTC_8x6_SFLOAT_BLOCK_EXT ),
+            Field ( _ASTC_8x8_SFloat_Block,                         VkFormat :: VK_FORMAT_ASTC_8x8_SFLOAT_BLOCK_EXT ),
+
+            Field ( _ASTC_10x5_SFloat_Block,                        VkFormat :: VK_FORMAT_ASTC_10x5_SFLOAT_BLOCK_EXT ),
+            Field ( _ASTC_10x6_SFloat_Block,                        VkFormat :: VK_FORMAT_ASTC_10x6_SFLOAT_BLOCK_EXT ),
+            Field ( _ASTC_10x8_SFloat_Block,                        VkFormat :: VK_FORMAT_ASTC_10x8_SFLOAT_BLOCK_EXT ),
+            Field ( _ASTC_10x10_SFloat_Block,                       VkFormat :: VK_FORMAT_ASTC_10x10_SFLOAT_BLOCK_EXT ),
+
+            Field ( _ASTC_12x10_SFloat_Block,                       VkFormat :: VK_FORMAT_ASTC_12x10_SFLOAT_BLOCK_EXT ),
+            Field ( _ASTC_12x12_SFloat_Block,                       VkFormat :: VK_FORMAT_ASTC_12x12_SFLOAT_BLOCK_EXT ),
+
+#endif
+
+#if __C_ENG_VULKAN_API_POWER_VR_IMAGE_FORMAT_AVAILABLE
+
+            Field ( _PVRTC1_2BPP_UNorm_Block_PowerVR,               VkFormat :: VK_FORMAT_PVRTC1_2BPP_UNORM_BLOCK_IMG ),
+            Field ( _PVRTC1_4BPP_UNorm_Block_PowerVR,               VkFormat :: VK_FORMAT_PVRTC1_4BPP_UNORM_BLOCK_IMG ),
+            Field ( _PVRTC2_2BPP_UNorm_Block_PowerVR,               VkFormat :: VK_FORMAT_PVRTC2_2BPP_UNORM_BLOCK_IMG ),
+            Field ( _PVRTC2_4BPP_UNorm_Block_PowerVR,               VkFormat :: VK_FORMAT_PVRTC2_4BPP_UNORM_BLOCK_IMG ),
+
+            Field ( _PVRTC1_2BPP_SRGB_Block_PowerVR,                VkFormat :: VK_FORMAT_PVRTC1_2BPP_SRGB_BLOCK_IMG ),
+            Field ( _PVRTC1_4BPP_SRGB_Block_PowerVR,                VkFormat :: VK_FORMAT_PVRTC1_4BPP_SRGB_BLOCK_IMG ),
+            Field ( _PVRTC2_2BPP_SRGB_Block_PowerVR,                VkFormat :: VK_FORMAT_PVRTC2_2BPP_SRGB_BLOCK_IMG ),
+            Field ( _PVRTC2_4BPP_SRGB_Block_PowerVR,                VkFormat :: VK_FORMAT_PVRTC2_4BPP_SRGB_BLOCK_IMG ),
+
+#endif
+
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
 #endif
 
 
@@ -2604,6 +2942,42 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SURFACE_AVAILABLE
 
+#define C_ENG_MAP_START     ENUM ( ColorSpace,  TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( SRGBNonLinear,              VkColorSpaceKHR :: VK_COLORSPACE_SRGB_NONLINEAR_KHR ),
+
+#if __C_ENG_VULKAN_API_EXTENSION_SWAP_CHAIN_COLOR_SPACE_AVAILABLE
+
+            Field ( DisplayP3NonLinear,         VkColorSpaceKHR :: VK_COLOR_SPACE_DISPLAY_P3_NONLINEAR_EXT ),
+            Field ( ExtendedSRGBLinear,         VkColorSpaceKHR :: VK_COLOR_SPACE_EXTENDED_SRGB_LINEAR_EXT ),
+            Field ( DisplayP3Linear,            VkColorSpaceKHR :: VK_COLOR_SPACE_DISPLAY_P3_LINEAR_EXT ),
+            Field ( DCIP3NonLinear,             VkColorSpaceKHR :: VK_COLOR_SPACE_DCI_P3_NONLINEAR_EXT ),
+            Field ( BT709Linear,                VkColorSpaceKHR :: VK_COLOR_SPACE_BT709_LINEAR_EXT ),
+            Field ( BT709NonLinear,             VkColorSpaceKHR :: VK_COLOR_SPACE_BT709_NONLINEAR_EXT ),
+            Field ( BT2020Linear,               VkColorSpaceKHR :: VK_COLOR_SPACE_BT2020_LINEAR_EXT ),
+            Field ( HDR10ST2084,                VkColorSpaceKHR :: VK_COLOR_SPACE_HDR10_ST2084_EXT ),
+            Field ( DolbyVision,                VkColorSpaceKHR :: VK_COLOR_SPACE_DOLBYVISION_EXT ),
+            Field ( HDR10HLG,                   VkColorSpaceKHR :: VK_COLOR_SPACE_HDR10_HLG_EXT ),
+            Field ( AdobeRGBLinear,             VkColorSpaceKHR :: VK_COLOR_SPACE_ADOBERGB_LINEAR_EXT ),
+            Field ( AdobeRGBNonLinear,          VkColorSpaceKHR :: VK_COLOR_SPACE_ADOBERGB_NONLINEAR_EXT ),
+            Field ( PassThrough,                VkColorSpaceKHR :: VK_COLOR_SPACE_PASS_THROUGH_EXT ),
+            Field ( ExtendedSRGBNonLinear,      VkColorSpaceKHR :: VK_COLOR_SPACE_EXTENDED_SRGB_NONLINEAR_EXT ),
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_AMD_DISPLAY_NATIVE_HDR_AVAILABLE
+
+            Field ( DisplayNativeAMD,           VkColorSpaceKHR :: VK_COLOR_SPACE_DISPLAY_NATIVE_AMD ),
+
+#endif
+
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
 #define C_ENG_MAP_START     ENUM ( SurfaceTransformFlag,    TYPE ( cds :: uint32 ) )
 #include <ObjectMapping.hpp>
 
@@ -2651,6 +3025,17 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START     STRUCT ( SurfaceFormat, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( Format )     format;
+            Type ( ColorSpace ) colorSpace;
         };
 
 #define C_ENG_MAP_END
@@ -3131,6 +3516,65 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #define C_ENG_MAP_END
 #include <ObjectMapping.hpp>
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_GET_SURFACE_CAPABILITIES_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( SurfaceFormat2,    NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )      structureType;
+            Type ( GenericStructure ) * pNext;
+            Type ( SurfaceFormat )      surfaceFormat;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceSurfaceInfo,    NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )              structureType;
+            Type ( GenericStructure )   const * pNext;
+            Type ( SurfaceHandle )              surface;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_FULL_SCREEN_EXCLUSIVE_AVAILABLE
+
+#define C_ENG_MAP_START     ENUM ( FullScreenExclusive,    TYPE ( cds :: uint8 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( Default,                VkFullScreenExclusiveEXT :: VK_FULL_SCREEN_EXCLUSIVE_DEFAULT_EXT ),
+            Field ( Allowed,                VkFullScreenExclusiveEXT :: VK_FULL_SCREEN_EXCLUSIVE_ALLOWED_EXT ),
+            Field ( Disallowed,             VkFullScreenExclusiveEXT :: VK_FULL_SCREEN_EXCLUSIVE_DISALLOWED_EXT ),
+            Field ( ApplicationControlled,  VkFullScreenExclusiveEXT :: VK_FULL_SCREEN_EXCLUSIVE_APPLICATION_CONTROLLED_EXT ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START     STRUCT ( SurfaceFullScreenExclusiveInfo,    NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )              structureType;
+            Type ( GenericStructure )   const * pNext;
+            Type ( FullScreenExclusive )        fullScreenExclusive
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
 
 
 #if __C_ENG_VULKAN_API_EXTENSION_GLOBAL_PRIORITY_AVAILABLE
@@ -7537,6 +7981,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( DeviceQueueCreateFlag ) ) noexcept -> cds :: StringLiteral;
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( ObjectType ) ) noexcept -> cds :: StringLiteral;
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( ImageUsageFlag ) ) noexcept -> cds :: StringLiteral;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( Format ) ) noexcept -> cds :: StringLiteral;
 
 #endif
 
@@ -7556,10 +8001,26 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SURFACE_AVAILABLE
 
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( ColorSpace ) ) noexcept -> cds :: StringLiteral;
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( SurfaceTransformFlag ) ) noexcept -> cds :: StringLiteral;
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( CompositeAlphaFlag ) ) noexcept -> cds :: StringLiteral;
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PresentMode ) ) noexcept -> cds :: StringLiteral;
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( SurfaceCapabilities ) const & ) noexcept -> cds :: String;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( SurfaceFormat ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_GET_SURFACE_CAPABILITIES_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( SurfaceFormat2 ) const & ) noexcept -> cds :: String;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceSurfaceInfo ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_FULL_SCREEN_EXCLUSIVE_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( FullScreenExclusive ) ) noexcept -> cds :: StringLiteral;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( SurfaceFullScreenExclusiveInfo ) const & ) noexcept -> cds :: String;
 
 #endif
 

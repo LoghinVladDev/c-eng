@@ -818,12 +818,34 @@ static PFN_vkGetDeviceQueue2                                                pVkG
 static PFN_vkGetPhysicalDeviceSurfaceCapabilitiesKHR                        pVkGetPhysicalDeviceSurfaceCapabilities;
 static VkSurfaceCapabilitiesKHR                                             surfaceCapabilities;
 
+static PFN_vkGetPhysicalDeviceSurfaceFormatsKHR                             pVkGetPhysicalDeviceSurfaceFormats;
+static VkSurfaceFormatKHR                                                   surfaceFormats [ __C_ENG_VULKAN_CORE_SURFACE_FORMAT_MAX_COUNT ];
+
+static PFN_vkGetPhysicalDeviceSurfacePresentModesKHR                        pVkGetPhysicalDeviceSurfacePresentModes;
+static VkPresentModeKHR                                                     presentModes [ __C_ENG_VULKAN_CORE_SURFACE_PRESENT_MODE_MAX_COUNT ];
+
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_DISPLAY_SURFACE_COUNTER_AVAILABLE
 
 static PFN_vkGetPhysicalDeviceSurfaceCapabilities2EXT                       pVkGetPhysicalDeviceSurfaceCapabilities2;
 static VkSurfaceCapabilities2EXT                                            surfaceCapabilities2;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_GET_SURFACE_CAPABILITIES_AVAILABLE
+
+static PFN_vkGetPhysicalDeviceSurfaceFormats2KHR                            pVkGetPhysicalDeviceSurfaceFormats2;
+static VkSurfaceFormat2KHR                                                  surfaceFormats2 [ __C_ENG_VULKAN_CORE_SURFACE_FORMAT_MAX_COUNT ];
+static VkPhysicalDeviceSurfaceInfo2KHR                                      surfaceInfo;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_FULL_SCREEN_EXCLUSIVE_AVAILABLE
+
+static VkSurfaceFullScreenExclusiveInfoEXT                                  fullScreenExclusiveInfo;
+
+static PFN_vkGetPhysicalDeviceSurfacePresentModes2KHR                       pVkGetPhysicalDeviceSurfacePresentModes2;
 
 #endif
 
@@ -12410,6 +12432,142 @@ auto vulkan :: getPhysicalDeviceSurfaceCapabilities (
     return ResultSuccess;
 }
 
+static inline auto fromVulkanFormat (
+        vulkan :: __C_ENG_TYPE ( SurfaceFormat ) * pDestination,
+        VkSurfaceFormatKHR                 const * pSource
+) noexcept -> void {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if (
+            pDestination    == nullptr ||
+            pSource         == nullptr
+    ) {
+        return;
+    }
+
+#endif
+
+    pDestination->colorSpace    = static_cast < vulkan :: __C_ENG_TYPE ( ColorSpace ) > ( pSource->colorSpace );
+    pDestination->format        = static_cast < vulkan :: __C_ENG_TYPE ( Format ) > ( pSource->format );
+}
+
+auto vulkan :: getPhysicalDeviceSurfaceFormats (
+        __C_ENG_TYPE ( PhysicalDeviceHandle )   physicalDeviceHandle,
+        __C_ENG_TYPE ( SurfaceHandle )          surfaceHandle,
+        cds :: uint32                         * pSurfaceFormatCount,
+        __C_ENG_TYPE ( SurfaceFormat )        * pSurfaceFormats
+) noexcept -> __C_ENG_TYPE ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if (
+            physicalDeviceHandle    == nullptr ||
+            surfaceHandle           == nullptr ||
+            pSurfaceFormatCount     == nullptr
+    ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION (
+            lastCreatedInstance,
+            pVkGetPhysicalDeviceSurfaceFormats,
+            GET_PHYSICAL_DEVICE_SURFACE_FORMATS
+    )
+
+    if ( pSurfaceFormats == nullptr ) {
+        return static_cast < __C_ENG_TYPE ( Result ) > (
+                pVkGetPhysicalDeviceSurfaceFormats (
+                        physicalDeviceHandle,
+                        surfaceHandle,
+                        pSurfaceFormatCount,
+                        nullptr
+                )
+        );
+    }
+
+    if ( * pSurfaceFormatCount > __C_ENG_VULKAN_CORE_SURFACE_FORMAT_MAX_COUNT ) {
+        return ResultErrorConfigurationArraySizeSmall;
+    }
+
+    result = pVkGetPhysicalDeviceSurfaceFormats (
+            physicalDeviceHandle,
+            surfaceHandle,
+            pSurfaceFormatCount,
+            & surfaceFormats [0]
+    );
+
+    if ( result != VK_SUCCESS ) {
+        return static_cast < __C_ENG_TYPE ( Result ) > ( result );
+    }
+
+    for ( uint32 i = 0U; i < * pSurfaceFormatCount; ++ i ) {
+        fromVulkanFormat ( & pSurfaceFormats[0], & surfaceFormats[0] );
+    }
+
+    return ResultSuccess;
+}
+
+auto vulkan :: getPhysicalDeviceSurfacePresentModes (
+        __C_ENG_TYPE ( PhysicalDeviceHandle )   physicalDeviceHandle,
+        __C_ENG_TYPE ( SurfaceHandle )          surfaceHandle,
+        cds :: uint32                         * pPresentModeCount,
+        __C_ENG_TYPE ( PresentMode )          * pPresentModes
+) noexcept -> __C_ENG_TYPE ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if (
+            physicalDeviceHandle    == nullptr ||
+            surfaceHandle           == nullptr ||
+            pPresentModeCount       == nullptr
+    ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION (
+            lastCreatedInstance,
+            pVkGetPhysicalDeviceSurfacePresentModes,
+            GET_PHYSICAL_DEVICE_SURFACE_PRESENT_MODES
+    )
+
+    if ( pPresentModes == nullptr ) {
+        return static_cast < __C_ENG_TYPE ( Result ) > (
+                pVkGetPhysicalDeviceSurfacePresentModes (
+                        physicalDeviceHandle,
+                        surfaceHandle,
+                        pPresentModeCount,
+                        nullptr
+                )
+        );
+    }
+
+    if ( * pPresentModeCount > __C_ENG_VULKAN_CORE_SURFACE_PRESENT_MODE_MAX_COUNT ) {
+        return ResultErrorConfigurationArraySizeSmall;
+    }
+
+    result = pVkGetPhysicalDeviceSurfacePresentModes (
+            physicalDeviceHandle,
+            surfaceHandle,
+            pPresentModeCount,
+            & presentModes [0]
+    );
+
+    if ( result != VK_SUCCESS ) {
+        return static_cast < __C_ENG_TYPE ( Result ) > ( result );
+    }
+
+    for ( uint32 i = 0U; i < * pPresentModeCount; ++ i ) {
+        pPresentModes[i] = static_cast < vulkan :: __C_ENG_TYPE ( PresentMode ) > ( presentModes[i] );
+    }
+
+    return ResultSuccess;
+}
+
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_DISPLAY_SURFACE_COUNTER_AVAILABLE
@@ -12483,6 +12641,221 @@ auto vulkan :: getPhysicalDeviceSurfaceCapabilities (
     }
 
     fromVulkanFormat ( pSurfaceCapabilities, & surfaceCapabilities2 );
+
+    return ResultSuccess;
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_FULL_SCREEN_EXCLUSIVE_AVAILABLE
+
+static inline auto toVulkanFormat (
+        VkSurfaceFullScreenExclusiveInfoEXT                             * pDestination,
+        vulkan :: __C_ENG_TYPE ( SurfaceFullScreenExclusiveInfo ) const * pSource
+) noexcept -> void {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if (
+            pDestination    == nullptr ||
+            pSource         == nullptr
+    ) {
+        return;
+    }
+
+#endif
+
+    pDestination->sType                 = VK_STRUCTURE_TYPE_SURFACE_FULL_SCREEN_EXCLUSIVE_INFO_EXT;
+    pDestination->pNext                 = nullptr;
+    pDestination->fullScreenExclusive   = static_cast < VkFullScreenExclusiveEXT > ( pSource->fullScreenExclusive );
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_GET_SURFACE_CAPABILITIES_AVAILABLE
+
+static inline auto toVulkanFormat (
+        VkPhysicalDeviceSurfaceInfo2KHR                            * pDestination,
+        vulkan :: __C_ENG_TYPE ( PhysicalDeviceSurfaceInfo ) const * pSource
+) noexcept -> void {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if (
+            pDestination    == nullptr ||
+            pSource         == nullptr
+    ) {
+        return;
+    }
+
+#endif
+
+    pDestination->sType     = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SURFACE_INFO_2_KHR;
+    pDestination->surface   = pSource->surface;
+
+    auto pCurrentInVkChain = reinterpret_cast < VkBaseOutStructure * > ( pDestination );
+    auto pCurrentInChain = reinterpret_cast < vulkan :: __C_ENG_TYPE ( GenericInStructure ) const * > ( pSource->pNext );
+
+    while ( pCurrentInChain != nullptr ) {
+
+        switch ( pCurrentInChain->structureType ) { // NOLINT(clion-misra-cpp2008-6-4-8)
+
+#if __C_ENG_VULKAN_API_EXTENSION_FULL_SCREEN_EXCLUSIVE_AVAILABLE
+
+                case StructureTypeSurfaceFullScreenExclusiveInfo:   { pCurrentInVkChain = pCurrentInVkChain->pNext = reinterpret_cast < VkBaseOutStructure * > ( & fullScreenExclusiveInfo );   toVulkanFormat ( & fullScreenExclusiveInfo, reinterpret_cast < vulkan :: __C_ENG_TYPE ( SurfaceFullScreenExclusiveInfo ) const * > ( pCurrentInChain ) );   break; }
+
+#endif
+
+            default: { break; }
+        }
+
+        pCurrentInChain = pCurrentInChain->pNext;
+    }
+
+    pCurrentInVkChain->pNext = nullptr;
+}
+
+static inline auto fromVulkanFormat (
+        vulkan :: __C_ENG_TYPE ( SurfaceFormat2 ) * pDestination,
+        VkSurfaceFormat2KHR                 const * pSource
+) noexcept -> void {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if (
+            pDestination    == nullptr ||
+            pSource         == nullptr
+            ) {
+        return;
+    }
+
+#endif
+
+    pDestination->structureType     = vulkan :: StructureTypeSurfaceFormat;
+    pDestination->pNext             = nullptr;
+    fromVulkanFormat ( & pDestination->surfaceFormat, & pSource->surfaceFormat );
+}
+
+auto vulkan :: getPhysicalDeviceSurfaceFormats (
+        __C_ENG_TYPE ( PhysicalDeviceHandle )              physicalDeviceHandle,
+        __C_ENG_TYPE ( PhysicalDeviceSurfaceInfo ) const * pSurfaceInfo,
+        cds :: uint32                                    * pSurfaceFormatCount,
+        __C_ENG_TYPE ( SurfaceFormat2 )                  * pSurfaceFormats
+) noexcept -> __C_ENG_TYPE ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if (
+            physicalDeviceHandle    == nullptr ||
+            pSurfaceInfo            == nullptr ||
+            pSurfaceFormatCount     == nullptr
+    ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION (
+            lastCreatedInstance,
+            pVkGetPhysicalDeviceSurfaceFormats2,
+            GET_PHYSICAL_DEVICE_SURFACE_FORMATS_2
+    )
+
+    toVulkanFormat ( & surfaceInfo, pSurfaceInfo );
+
+    if ( pSurfaceFormats == nullptr ) {
+        return static_cast < __C_ENG_TYPE ( Result ) > (
+                pVkGetPhysicalDeviceSurfaceFormats2 (
+                        physicalDeviceHandle,
+                        & surfaceInfo,
+                        pSurfaceFormatCount,
+                        nullptr
+                )
+        );
+    }
+
+    if ( * pSurfaceFormatCount > __C_ENG_VULKAN_CORE_SURFACE_FORMAT_MAX_COUNT ) {
+        return ResultErrorConfigurationArraySizeSmall;
+    }
+
+    result = pVkGetPhysicalDeviceSurfaceFormats2 (
+            physicalDeviceHandle,
+            & surfaceInfo,
+            pSurfaceFormatCount,
+            & surfaceFormats2 [0]
+    );
+
+    if ( result != VK_SUCCESS ) {
+        return static_cast < __C_ENG_TYPE ( Result ) > ( result );
+    }
+
+    for ( uint32 i = 0U; i < * pSurfaceFormatCount; ++ i ) {
+        fromVulkanFormat ( & pSurfaceFormats[0], & surfaceFormats2[0] );
+    }
+
+    return ResultSuccess;
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_FULL_SCREEN_EXCLUSIVE_AVAILABLE
+
+auto vulkan :: getPhysicalDeviceSurfacePresentModes (
+        __C_ENG_TYPE ( PhysicalDeviceHandle )              physicalDeviceHandle,
+        __C_ENG_TYPE ( PhysicalDeviceSurfaceInfo ) const * pSurfaceInfo,
+        cds :: uint32                                    * pPresentModeCount,
+        __C_ENG_TYPE ( PresentMode )                     * pPresentModes
+) noexcept -> __C_ENG_TYPE ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if (
+            physicalDeviceHandle    == nullptr ||
+            pSurfaceInfo            == nullptr ||
+            pPresentModeCount       == nullptr
+    ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION (
+            lastCreatedInstance,
+            pVkGetPhysicalDeviceSurfacePresentModes2,
+            GET_PHYSICAL_DEVICE_SURFACE_PRESENT_MODES_2
+    )
+
+    toVulkanFormat ( & surfaceInfo, pSurfaceInfo );
+
+    if ( pSurfaceFormats == nullptr ) {
+        return static_cast < __C_ENG_TYPE ( Result ) > (
+                pVkGetPhysicalDeviceSurfacePresentModes2 (
+                        physicalDeviceHandle,
+                        & surfaceInfo,
+                        pPresentModeCount,
+                        nullptr
+                )
+        );
+    }
+
+    if ( * pPresentModeCount > __C_ENG_VULKAN_CORE_SURFACE_PRESENT_MODE_MAX_COUNT ) {
+        return ResultErrorConfigurationArraySizeSmall;
+    }
+
+    result = pVkGetPhysicalDeviceSurfacePresentModes2 (
+            physicalDeviceHandle,
+            & surfaceInfo,
+            pPresentModeCount,
+            & presentModes [0]
+    );
+
+    if ( result != VK_SUCCESS ) {
+        return static_cast < __C_ENG_TYPE ( Result ) > ( result );
+    }
+
+    for ( uint32 i = 0U; i < * pPresentModeCount; ++ i ) {
+        pPresentModes [i] = static_cast < vulkan :: __C_ENG_TYPE ( PresentMode ) > ( presentModes[i] );
+    }
 
     return ResultSuccess;
 }

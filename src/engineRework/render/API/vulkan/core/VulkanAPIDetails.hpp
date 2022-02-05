@@ -97,6 +97,7 @@
 #include <VulkanAPIValveExtensionDetails.hpp>
 #include <VulkanAPIHuaweiExtensionDetails.hpp>
 #include <VulkanAPIBlackberryExtensionDetails.hpp>
+#include <VulkanAPIPowerVRExtensionDetails.hpp>
 
 
 #endif //__C_ENG_VULKAN_API_DETAILS_HPP__

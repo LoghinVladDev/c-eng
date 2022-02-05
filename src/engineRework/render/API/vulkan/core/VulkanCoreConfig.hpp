@@ -20,6 +20,9 @@
 #define __C_ENG_VULKAN_CORE_QUEUE_FAMILY_PERFORMANCE_COUNTER_MAX_COUNT 16U
 #define __C_ENG_VULKAN_CORE_DEVICE_QUEUE_FAMILY_CREATE_INFO_MAX_COUNT __C_ENG_VULKAN_CORE_QUEUE_FAMILY_MAX_COUNT
 
+#define __C_ENG_VULKAN_CORE_SURFACE_FORMAT_MAX_COUNT 512U
+#define __C_ENG_VULKAN_CORE_SURFACE_PRESENT_MODE_MAX_COUNT 16U
+
 #define __C_ENG_VULKAN_CORE_FUNCTION_NAME_ENUMERATE_INSTANCE_VERSION                                        "vkEnumerateInstanceVersion"
 #define __C_ENG_VULKAN_CORE_FUNCTION_NAME_ENUMERATE_INSTANCE_LAYER_PROPERTIES                               "vkEnumerateInstanceLayerProperties"
 #define __C_ENG_VULKAN_CORE_FUNCTION_NAME_ENUMERATE_INSTANCE_EXTENSION_PROPERTIES                           "vkEnumerateInstanceExtensionProperties"
@@ -49,6 +52,10 @@
 #define __C_ENG_VULKAN_CORE_FUNCTION_NAME_GET_PHYSICAL_DEVICE_SURFACE_SUPPORT                               "vkGetPhysicalDeviceSurfaceSupportKHR"
 #define __C_ENG_VULKAN_CORE_FUNCTION_NAME_GET_PHYSICAL_DEVICE_SURFACE_CAPABILITIES                          "vkGetPhysicalDeviceSurfaceCapabilitiesKHR"
 #define __C_ENG_VULKAN_CORE_FUNCTION_NAME_GET_PHYSICAL_DEVICE_SURFACE_CAPABILITIES_2                        "vkGetPhysicalDeviceSurfaceCapabilities2KHR"
+#define __C_ENG_VULKAN_CORE_FUNCTION_NAME_GET_PHYSICAL_DEVICE_SURFACE_FORMATS                               "vkGetPhysicalDeviceSurfaceFormats"
+#define __C_ENG_VULKAN_CORE_FUNCTION_NAME_GET_PHYSICAL_DEVICE_SURFACE_FORMATS_2                             "vkGetPhysicalDeviceSurfaceFormats2"
+#define __C_ENG_VULKAN_CORE_FUNCTION_NAME_GET_PHYSICAL_DEVICE_SURFACE_PRESENT_MODES                         "vkGetPhysicalDeviceSurfacePresentModes"
+#define __C_ENG_VULKAN_CORE_FUNCTION_NAME_GET_PHYSICAL_DEVICE_SURFACE_PRESENT_MODES_2                       "vkGetPhysicalDeviceSurfacePresentModes2"
 
 #define __C_ENG_VULKAN_CORE_FUNCTION_NAME_CREATE_DEVICE                                                     "vkCreateDevice"
 #define __C_ENG_VULKAN_CORE_FUNCTION_NAME_DESTROY_DEVICE                                                    "vkDestroyDevice"

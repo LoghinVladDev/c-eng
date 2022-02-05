@@ -232,6 +232,20 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
                 __C_ENG_TYPE ( SurfaceCapabilities ) *
         ) noexcept -> __C_ENG_TYPE ( Result );
 
+        __C_ENG_NO_DISCARD __C_ENG_MAYBE_UNUSED extern auto getPhysicalDeviceSurfaceFormats (
+                __C_ENG_TYPE ( PhysicalDeviceHandle ),
+                __C_ENG_TYPE ( SurfaceHandle ),
+                cds :: uint32                           *,
+                __C_ENG_TYPE ( SurfaceFormat )          * = nullptr
+        ) noexcept -> __C_ENG_TYPE ( Result );
+
+        __C_ENG_NO_DISCARD __C_ENG_MAYBE_UNUSED extern auto getPhysicalDeviceSurfacePresentModes (
+                __C_ENG_TYPE ( PhysicalDeviceHandle ),
+                __C_ENG_TYPE ( SurfaceHandle ),
+                cds :: uint32                           *,
+                __C_ENG_TYPE ( PresentMode )            * = nullptr
+        ) noexcept -> __C_ENG_TYPE ( Result );
+
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_DISPLAY_SURFACE_COUNTER_AVAILABLE
@@ -240,6 +254,28 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
                 __C_ENG_TYPE ( PhysicalDeviceHandle ),
                 __C_ENG_TYPE ( SurfaceHandle ),
                 __C_ENG_TYPE ( SurfaceCapabilities2 ) *
+        ) noexcept -> __C_ENG_TYPE ( Result );
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_GET_SURFACE_CAPABILITIES_AVAILABLE
+
+        __C_ENG_NO_DISCARD __C_ENG_MAYBE_UNUSED extern auto getPhysicalDeviceSurfaceFormats (
+                __C_ENG_TYPE ( PhysicalDeviceHandle ),
+                __C_ENG_TYPE ( PhysicalDeviceSurfaceInfo ) const *,
+                cds :: uint32                                    *,
+                __C_ENG_TYPE ( SurfaceFormat2 )                  * = nullptr
+        ) noexcept -> __C_ENG_TYPE ( Result );
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_FULL_SCREEN_EXCLUSIVE_AVAILABLE
+
+        __C_ENG_NO_DISCARD __C_ENG_MAYBE_UNUSED extern auto getPhysicalDeviceSurfacePresentModes (
+                __C_ENG_TYPE ( PhysicalDeviceHandle ),
+                __C_ENG_TYPE ( PhysicalDeviceSurfaceInfo ) const *,
+                cds :: uint32                                    *,
+                __C_ENG_TYPE ( PresentMode )                     * = nullptr
         ) noexcept -> __C_ENG_TYPE ( Result );
 
 #endif
