@@ -21,7 +21,7 @@ auto vulkan :: Self :: init (
 
     auto result = vulkan :: getDeviceQueue (
         pDevice->handle(),
-        pQueueFamily->familyIndex(),
+        pQueueFamily->index(),
         queueIndex,
         & this->_handle
     );

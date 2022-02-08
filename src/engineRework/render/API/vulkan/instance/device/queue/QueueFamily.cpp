@@ -74,7 +74,7 @@ auto vulkan :: Self :: init (
     }
 
     (void) std :: memcpy ( & this->_details, & details, sizeof ( details ) );
-    this->_familyIndex                  = index;
+    this->_index                        = index;
     this->_physicalDevice               = pPhysicalDevice;
 //    this->_performanceCounterProperties = std :: move ( newPerformanceCounterProperties );
 
@@ -93,7 +93,7 @@ auto vulkan :: Self :: getQueueFlagsWithPresent (
 
     auto result = vulkan :: getPhysicalDeviceSurfaceSupport (
             this->_physicalDevice->handle(),
-            this->_familyIndex,
+            this->index(),
             surfaceHandle,
             & surfaceCapable
     );

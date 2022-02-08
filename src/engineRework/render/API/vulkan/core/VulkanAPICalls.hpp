@@ -9,279 +9,304 @@
 #include <CDS/Types>
 #include <VulkanCore.hpp>
 
+
+#define C_ENG_MAP_START     HEADER
+#include <ObjectMapping.hpp>
+
 namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
     namespace vulkan {
 
-        __C_ENG_NO_DISCARD extern auto enumerateInstanceVersion (
+        NoDiscard extern auto enumerateInstanceVersion (
                 cds :: uint32 *
-        ) noexcept -> __C_ENG_TYPE ( Result );
+        ) noexcept -> Type ( Result );
 
-        __C_ENG_NO_DISCARD extern auto enumerateInstanceLayerProperties (
-                cds :: uint32                    *,
-                __C_ENG_TYPE ( LayerProperties ) * = nullptr
-        ) noexcept -> __C_ENG_TYPE ( Result );
+        NoDiscard extern auto enumerateInstanceLayerProperties (
+                cds :: uint32            *,
+                Type ( LayerProperties ) * = nullptr
+        ) noexcept -> Type ( Result );
 
-        __C_ENG_NO_DISCARD __C_ENG_MAYBE_UNUSED extern auto enumeratePhysicalDeviceLayerProperties (
-                __C_ENG_TYPE ( PhysicalDeviceHandle ),
-                cds :: uint32 *,
-                __C_ENG_TYPE ( LayerProperties ) * = nullptr
-        ) noexcept -> __C_ENG_TYPE ( Result );
+        NoDiscard MaybeUnused extern auto enumeratePhysicalDeviceLayerProperties (
+                Type ( PhysicalDeviceHandle ),
+                cds :: uint32                   *,
+                Type ( LayerProperties )        * = nullptr
+        ) noexcept -> Type ( Result );
 
-        __C_ENG_NO_DISCARD extern auto enumerateInstanceExtensionProperties (
+        NoDiscard extern auto enumerateInstanceExtensionProperties (
                 cds :: StringLiteral,
-                cds :: uint32                        *,
-                __C_ENG_TYPE ( ExtensionProperties ) * = nullptr
-        ) noexcept -> __C_ENG_TYPE ( Result );
+                cds :: uint32                *,
+                Type ( ExtensionProperties ) * = nullptr
+        ) noexcept -> Type ( Result );
 
-        __C_ENG_NO_DISCARD extern auto enumeratePhysicalDevices (
-                __C_ENG_TYPE ( InstanceHandle ),
-                cds :: uint32                         *,
-                __C_ENG_TYPE ( PhysicalDeviceHandle ) * = nullptr
-        ) noexcept -> __C_ENG_TYPE ( Result );
+        NoDiscard extern auto enumeratePhysicalDevices (
+                Type ( InstanceHandle ),
+                cds :: uint32                 *,
+                Type ( PhysicalDeviceHandle ) * = nullptr
+        ) noexcept -> Type ( Result );
 
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PERFORMANCE_QUERY_AVAILABLE
 
-        __C_ENG_NO_DISCARD __C_ENG_MAYBE_UNUSED extern auto enumeratePhysicalDeviceQueueFamilyPerformanceQueryCounters (
-                __C_ENG_TYPE ( InstanceHandle ),
-                __C_ENG_TYPE ( PhysicalDeviceHandle ),
+        NoDiscard MaybeUnused extern auto enumeratePhysicalDeviceQueueFamilyPerformanceQueryCounters (
+                Type ( InstanceHandle ),
+                Type ( PhysicalDeviceHandle ),
                 cds :: uint32,
-                cds :: uint32                                   *,
-                __C_ENG_TYPE ( PerformanceCounter )             * = nullptr,
-                __C_ENG_TYPE ( PerformanceCounterDescription )  * = nullptr
-        ) noexcept -> __C_ENG_TYPE ( Result );
+                cds :: uint32                           *,
+                Type ( PerformanceCounter )             * = nullptr,
+                Type ( PerformanceCounterDescription )  * = nullptr
+        ) noexcept -> Type ( Result );
 
 #endif
 
 #if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
 
-        __C_ENG_NO_DISCARD __C_ENG_MAYBE_UNUSED extern auto enumeratePhysicalDeviceGroups (
-                __C_ENG_TYPE ( InstanceHandle ),
-                cds :: uint32                                   *,
-                __C_ENG_TYPE ( PhysicalDeviceGroupProperties )  * = nullptr
-        ) noexcept -> __C_ENG_TYPE ( Result );
+        NoDiscard MaybeUnused extern auto enumeratePhysicalDeviceGroups (
+                Type ( InstanceHandle ),
+                cds :: uint32                           *,
+                Type ( PhysicalDeviceGroupProperties )  * = nullptr
+        ) noexcept -> Type ( Result );
 
 #endif
 
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 
-        __C_ENG_NO_DISCARD __C_ENG_MAYBE_UNUSED extern auto enumeratePhysicalDeviceExtensionProperties (
-                __C_ENG_TYPE ( PhysicalDeviceHandle ),
+        NoDiscard MaybeUnused extern auto enumeratePhysicalDeviceExtensionProperties (
+                Type ( PhysicalDeviceHandle ),
                 cds :: StringLiteral,
-                cds :: uint32                           *,
-                __C_ENG_TYPE ( ExtensionProperties )    * = nullptr
-        ) noexcept -> __C_ENG_TYPE ( Result );
+                cds :: uint32                   *,
+                Type ( ExtensionProperties )    * = nullptr
+        ) noexcept -> Type ( Result );
 
-        __C_ENG_NO_DISCARD __C_ENG_MAYBE_UNUSED extern auto enumeratePhysicalDeviceExtensionProperties (
-                __C_ENG_TYPE ( PhysicalDeviceHandle ),
-                cds :: uint32                           *,
-                __C_ENG_TYPE ( ExtensionProperties )    * = nullptr
-        ) noexcept -> __C_ENG_TYPE ( Result );
+        NoDiscard MaybeUnused extern auto enumeratePhysicalDeviceExtensionProperties (
+                Type ( PhysicalDeviceHandle ),
+                cds :: uint32                   *,
+                Type ( ExtensionProperties )    * = nullptr
+        ) noexcept -> Type ( Result );
 
 #endif
 
-        __C_ENG_NO_DISCARD extern auto createInstance (
-                __C_ENG_TYPE ( InstanceCreateInfo )     const *,
-                __C_ENG_TYPE ( AllocationCallbacks )    const *,
-                __C_ENG_TYPE ( InstanceHandle )               *
-        ) noexcept -> __C_ENG_TYPE ( Result );
+        NoDiscard extern auto createInstance (
+                Type ( InstanceCreateInfo )     const *,
+                Type ( AllocationCallbacks )    const *,
+                Type ( InstanceHandle )               *
+        ) noexcept -> Type ( Result );
 
-        __C_ENG_NO_DISCARD extern auto createDebugMessenger (
-                __C_ENG_TYPE ( InstanceHandle ),
-                __C_ENG_TYPE ( DebugMessengerCreateInfo )   const *,
-                __C_ENG_TYPE ( AllocationCallbacks )        const *,
-                __C_ENG_TYPE ( DebugMessengerHandle )             *
-        ) noexcept -> __C_ENG_TYPE ( Result );
+        NoDiscard extern auto createDebugMessenger (
+                Type ( InstanceHandle ),
+                Type ( DebugMessengerCreateInfo )   const *,
+                Type ( AllocationCallbacks )        const *,
+                Type ( DebugMessengerHandle )             *
+        ) noexcept -> Type ( Result );
 
-        __C_ENG_NO_DISCARD extern auto createSurface (
-                __C_ENG_TYPE ( InstanceHandle ),
-                GLFWwindow                                  *,
-                __C_ENG_TYPE ( AllocationCallbacks )  const *,
-                __C_ENG_TYPE ( SurfaceHandle )              *
-        ) noexcept -> __C_ENG_TYPE ( Result );
+        NoDiscard extern auto createSurface (
+                Type ( InstanceHandle ),
+                GLFWwindow                          *,
+                Type ( AllocationCallbacks )  const *,
+                Type ( SurfaceHandle )              *
+        ) noexcept -> Type ( Result );
 
-        __C_ENG_NO_DISCARD extern auto createDevice (
-                __C_ENG_TYPE ( PhysicalDeviceHandle ),
-                __C_ENG_TYPE ( DeviceCreateInfo )       const *,
-                __C_ENG_TYPE ( AllocationCallbacks )    const *,
-                __C_ENG_TYPE ( DeviceHandle )                 *
-        ) noexcept -> __C_ENG_TYPE ( Result );
+        NoDiscard extern auto createDevice (
+                Type ( PhysicalDeviceHandle ),
+                Type ( DeviceCreateInfo )       const *,
+                Type ( AllocationCallbacks )    const *,
+                Type ( DeviceHandle )                 *
+        ) noexcept -> Type ( Result );
 
-        __C_ENG_NO_DISCARD extern auto destroyInstance (
-                __C_ENG_TYPE ( InstanceHandle ),
-                __C_ENG_TYPE ( AllocationCallbacks ) const *
-        ) noexcept -> __C_ENG_TYPE ( Result );
+        NoDiscard extern auto destroyInstance (
+                Type ( InstanceHandle ),
+                Type ( AllocationCallbacks ) const *
+        ) noexcept -> Type ( Result );
 
-        __C_ENG_NO_DISCARD extern auto destroyDebugMessenger (
-                __C_ENG_TYPE ( InstanceHandle ),
-                __C_ENG_TYPE ( DebugMessengerHandle ),
-                __C_ENG_TYPE ( AllocationCallbacks ) const *
-        ) noexcept -> __C_ENG_TYPE ( Result );
+        NoDiscard extern auto destroyDebugMessenger (
+                Type ( InstanceHandle ),
+                Type ( DebugMessengerHandle ),
+                Type ( AllocationCallbacks ) const *
+        ) noexcept -> Type ( Result );
 
-        __C_ENG_NO_DISCARD extern auto destroySurface (
-                __C_ENG_TYPE ( InstanceHandle ),
-                __C_ENG_TYPE ( SurfaceHandle ),
-                __C_ENG_TYPE ( AllocationCallbacks ) const *
-        ) noexcept -> __C_ENG_TYPE ( Result );
+        NoDiscard extern auto destroySurface (
+                Type ( InstanceHandle ),
+                Type ( SurfaceHandle ),
+                Type ( AllocationCallbacks ) const *
+        ) noexcept -> Type ( Result );
 
-        __C_ENG_NO_DISCARD extern auto destroyDevice (
-                __C_ENG_TYPE ( DeviceHandle ),
-                __C_ENG_TYPE ( AllocationCallbacks ) const *
-        ) noexcept -> __C_ENG_TYPE ( Result );
+        NoDiscard extern auto destroyDevice (
+                Type ( DeviceHandle ),
+                Type ( AllocationCallbacks ) const *
+        ) noexcept -> Type ( Result );
 
-        __C_ENG_NO_DISCARD __C_ENG_MAYBE_UNUSED extern auto getPhysicalDeviceProperties (
-                __C_ENG_TYPE ( PhysicalDeviceHandle ),
-                __C_ENG_TYPE ( PhysicalDeviceProperties ) *
-        ) noexcept -> __C_ENG_TYPE ( Result );
+        NoDiscard MaybeUnused extern auto getPhysicalDeviceProperties (
+                Type ( PhysicalDeviceHandle ),
+                Type ( PhysicalDeviceProperties ) *
+        ) noexcept -> Type ( Result );
 
-        __C_ENG_NO_DISCARD extern auto getPhysicalDeviceProperties (
-                __C_ENG_TYPE ( PhysicalDeviceHandle ),
-                __C_ENG_TYPE ( PhysicalDeviceExtendedProperties ) *
-        ) noexcept -> __C_ENG_TYPE ( Result );
+        NoDiscard extern auto getPhysicalDeviceProperties (
+                Type ( PhysicalDeviceHandle ),
+                Type ( PhysicalDeviceExtendedProperties ) *
+        ) noexcept -> Type ( Result );
 
-        __C_ENG_NO_DISCARD extern auto getPhysicalDeviceFeatures (
-                __C_ENG_TYPE ( PhysicalDeviceHandle ),
-                __C_ENG_TYPE ( PhysicalDeviceFeatures ) *
-        ) noexcept -> __C_ENG_TYPE ( Result );
+        NoDiscard extern auto getPhysicalDeviceFeatures (
+                Type ( PhysicalDeviceHandle ),
+                Type ( PhysicalDeviceFeatures ) *
+        ) noexcept -> Type ( Result );
 
-        __C_ENG_NO_DISCARD extern auto getPhysicalDeviceFeatures (
-                __C_ENG_TYPE ( PhysicalDeviceHandle ),
-                __C_ENG_TYPE ( PhysicalDeviceExtendedFeatures ) *
-        ) noexcept -> __C_ENG_TYPE ( Result );
+        NoDiscard extern auto getPhysicalDeviceFeatures (
+                Type ( PhysicalDeviceHandle ),
+                Type ( PhysicalDeviceExtendedFeatures ) *
+        ) noexcept -> Type ( Result );
 
-        __C_ENG_NO_DISCARD extern auto getPhysicalDeviceDetails (
-                __C_ENG_TYPE ( PhysicalDeviceHandle ),
-                __C_ENG_TYPE ( PhysicalDeviceDetails ) *
-        ) noexcept -> __C_ENG_TYPE ( Result );
+        NoDiscard extern auto getPhysicalDeviceDetails (
+                Type ( PhysicalDeviceHandle ),
+                Type ( PhysicalDeviceDetails ) *
+        ) noexcept -> Type ( Result );
 
-        __C_ENG_NO_DISCARD __C_ENG_MAYBE_UNUSED extern auto getPhysicalDeviceQueueFamilyProperties (
-                __C_ENG_TYPE ( PhysicalDeviceHandle ),
+        NoDiscard MaybeUnused extern auto getPhysicalDeviceQueueFamilyProperties (
+                Type ( PhysicalDeviceHandle ),
+                cds :: uint32                   *,
+                Type ( QueueFamilyProperties )  * = nullptr
+        ) noexcept -> Type ( Result );
+
+        NoDiscard extern auto getPhysicalDeviceQueueFamilyProperties (
+                Type ( PhysicalDeviceHandle ),
                 cds :: uint32                           *,
-                __C_ENG_TYPE ( QueueFamilyProperties )  * = nullptr
-        ) noexcept -> __C_ENG_TYPE ( Result );
+                Type ( QueueFamilyExtendedProperties )  * = nullptr
+        ) noexcept -> Type ( Result );
 
-        __C_ENG_NO_DISCARD extern auto getPhysicalDeviceQueueFamilyProperties (
-                __C_ENG_TYPE ( PhysicalDeviceHandle ),
-                cds :: uint32                                   *,
-                __C_ENG_TYPE ( QueueFamilyExtendedProperties )  * = nullptr
-        ) noexcept -> __C_ENG_TYPE ( Result );
+        NoDiscard extern auto getPhysicalDeviceQueueFamilyDetails (
+                Type ( PhysicalDeviceHandle ),
+                cds :: uint32               *,
+                Type ( QueueFamilyDetails ) * = nullptr
+        ) noexcept -> Type ( Result );
 
-        __C_ENG_NO_DISCARD extern auto getPhysicalDeviceQueueFamilyDetails (
-                __C_ENG_TYPE ( PhysicalDeviceHandle ),
-                cds :: uint32                       *,
-                __C_ENG_TYPE ( QueueFamilyDetails ) * = nullptr
-        ) noexcept -> __C_ENG_TYPE ( Result );
-
-        __C_ENG_NO_DISCARD __C_ENG_MAYBE_UNUSED extern auto getFunctionAddress (
+        NoDiscard MaybeUnused extern auto getFunctionAddress (
                 cds :: StringLiteral,
                 void **
-        ) noexcept -> __C_ENG_TYPE ( Result );
+        ) noexcept -> Type ( Result );
 
-        __C_ENG_NO_DISCARD __C_ENG_MAYBE_UNUSED extern auto getInstanceFunctionAddress (
-                __C_ENG_TYPE ( InstanceHandle ),
+        NoDiscard MaybeUnused extern auto getInstanceFunctionAddress (
+                Type ( InstanceHandle ),
                 cds :: StringLiteral,
                 void **
-        ) noexcept -> __C_ENG_TYPE ( Result );
+        ) noexcept -> Type ( Result );
 
-        __C_ENG_NO_DISCARD __C_ENG_MAYBE_UNUSED extern auto getDeviceFunctionAddress (
-                __C_ENG_TYPE ( DeviceHandle ),
+        NoDiscard MaybeUnused extern auto getDeviceFunctionAddress (
+                Type ( DeviceHandle ),
                 cds :: StringLiteral,
                 void **
-        ) noexcept -> __C_ENG_TYPE ( Result );
+        ) noexcept -> Type ( Result );
 
-        __C_ENG_NO_DISCARD __C_ENG_MAYBE_UNUSED extern auto getPhysicalDeviceSurfaceSupport (
-                __C_ENG_TYPE ( PhysicalDeviceHandle ),
+        NoDiscard MaybeUnused extern auto getPhysicalDeviceSurfaceSupport (
+                Type ( PhysicalDeviceHandle ),
                 cds :: uint32,
-                __C_ENG_TYPE ( SurfaceHandle ),
-                bool                                    *
-        ) noexcept -> __C_ENG_TYPE ( Result );
+                Type ( SurfaceHandle ),
+                bool                            *
+        ) noexcept -> Type ( Result );
 
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 
-        __C_ENG_NO_DISCARD __C_ENG_MAYBE_UNUSED extern auto getDeviceQueue (
-                __C_ENG_TYPE ( DeviceHandle ),
+        NoDiscard MaybeUnused extern auto getDeviceQueue (
+                Type ( DeviceHandle ),
                 cds :: uint32,
                 cds :: uint32,
-                __C_ENG_TYPE ( QueueHandle ) *
-        ) noexcept -> __C_ENG_TYPE ( Result );
+                Type ( QueueHandle ) *
+        ) noexcept -> Type ( Result );
 
 #endif
 
 #if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
 
-        __C_ENG_NO_DISCARD __C_ENG_MAYBE_UNUSED extern auto getDeviceQueue (
-                __C_ENG_TYPE ( DeviceHandle ),
-                __C_ENG_TYPE ( DeviceQueueInfo )  const *,
-                __C_ENG_TYPE ( QueueHandle )            *
-        ) noexcept -> __C_ENG_TYPE ( Result );
+        NoDiscard MaybeUnused extern auto getDeviceQueue (
+                Type ( DeviceHandle ),
+                Type ( DeviceQueueInfo )  const *,
+                Type ( QueueHandle )            *
+        ) noexcept -> Type ( Result );
 
 #endif
 
         namespace utility {
             extern auto chainFeaturesFromDetails (
-                    __C_ENG_TYPE ( PhysicalDeviceExtendedFeatures )       *,
-                    __C_ENG_TYPE ( PhysicalDeviceDetails )          const *
+                    Type ( PhysicalDeviceExtendedFeatures )       *,
+                    Type ( PhysicalDeviceDetails )          const *
             ) noexcept -> void;
         }
 
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SURFACE_AVAILABLE
 
-        __C_ENG_NO_DISCARD __C_ENG_MAYBE_UNUSED extern auto getPhysicalDeviceSurfaceCapabilities (
-                __C_ENG_TYPE ( PhysicalDeviceHandle ),
-                __C_ENG_TYPE ( SurfaceHandle ),
-                __C_ENG_TYPE ( SurfaceCapabilities ) *
-        ) noexcept -> __C_ENG_TYPE ( Result );
+        NoDiscard MaybeUnused extern auto getPhysicalDeviceSurfaceCapabilities (
+                Type ( PhysicalDeviceHandle ),
+                Type ( SurfaceHandle ),
+                Type ( SurfaceCapabilities ) *
+        ) noexcept -> Type ( Result );
 
-        __C_ENG_NO_DISCARD __C_ENG_MAYBE_UNUSED extern auto getPhysicalDeviceSurfaceFormats (
-                __C_ENG_TYPE ( PhysicalDeviceHandle ),
-                __C_ENG_TYPE ( SurfaceHandle ),
-                cds :: uint32                           *,
-                __C_ENG_TYPE ( SurfaceFormat )          * = nullptr
-        ) noexcept -> __C_ENG_TYPE ( Result );
+        NoDiscard MaybeUnused extern auto getPhysicalDeviceSurfaceFormats (
+                Type ( PhysicalDeviceHandle ),
+                Type ( SurfaceHandle ),
+                cds :: uint32                   *,
+                Type ( SurfaceFormat )          * = nullptr
+        ) noexcept -> Type ( Result );
 
-        __C_ENG_NO_DISCARD __C_ENG_MAYBE_UNUSED extern auto getPhysicalDeviceSurfacePresentModes (
-                __C_ENG_TYPE ( PhysicalDeviceHandle ),
-                __C_ENG_TYPE ( SurfaceHandle ),
-                cds :: uint32                           *,
-                __C_ENG_TYPE ( PresentMode )            * = nullptr
-        ) noexcept -> __C_ENG_TYPE ( Result );
+        NoDiscard MaybeUnused extern auto getPhysicalDeviceSurfacePresentModes (
+                Type ( PhysicalDeviceHandle ),
+                Type ( SurfaceHandle ),
+                cds :: uint32                   *,
+                Type ( PresentMode )            * = nullptr
+        ) noexcept -> Type ( Result );
 
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_DISPLAY_SURFACE_COUNTER_AVAILABLE
 
-        __C_ENG_NO_DISCARD __C_ENG_MAYBE_UNUSED extern auto getPhysicalDeviceSurfaceCapabilities (
-                __C_ENG_TYPE ( PhysicalDeviceHandle ),
-                __C_ENG_TYPE ( SurfaceHandle ),
-                __C_ENG_TYPE ( SurfaceCapabilities2 ) *
-        ) noexcept -> __C_ENG_TYPE ( Result );
+        NoDiscard MaybeUnused extern auto getPhysicalDeviceSurfaceCapabilities (
+                Type ( PhysicalDeviceHandle ),
+                Type ( SurfaceHandle ),
+                Type ( SurfaceCapabilities2 ) *
+        ) noexcept -> Type ( Result );
 
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_GET_SURFACE_CAPABILITIES_AVAILABLE
 
-        __C_ENG_NO_DISCARD __C_ENG_MAYBE_UNUSED extern auto getPhysicalDeviceSurfaceFormats (
-                __C_ENG_TYPE ( PhysicalDeviceHandle ),
-                __C_ENG_TYPE ( PhysicalDeviceSurfaceInfo ) const *,
-                cds :: uint32                                    *,
-                __C_ENG_TYPE ( SurfaceFormat2 )                  * = nullptr
-        ) noexcept -> __C_ENG_TYPE ( Result );
+        NoDiscard MaybeUnused extern auto getPhysicalDeviceSurfaceFormats (
+                Type ( PhysicalDeviceHandle ),
+                Type ( PhysicalDeviceSurfaceInfo ) const *,
+                cds :: uint32                            *,
+                Type ( SurfaceFormat2 )                  * = nullptr
+        ) noexcept -> Type ( Result );
 
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_FULL_SCREEN_EXCLUSIVE_AVAILABLE
 
-        __C_ENG_NO_DISCARD __C_ENG_MAYBE_UNUSED extern auto getPhysicalDeviceSurfacePresentModes (
-                __C_ENG_TYPE ( PhysicalDeviceHandle ),
-                __C_ENG_TYPE ( PhysicalDeviceSurfaceInfo ) const *,
-                cds :: uint32                                    *,
-                __C_ENG_TYPE ( PresentMode )                     * = nullptr
-        ) noexcept -> __C_ENG_TYPE ( Result );
+        NoDiscard MaybeUnused extern auto getPhysicalDeviceSurfacePresentModes (
+                Type ( PhysicalDeviceHandle ),
+                Type ( PhysicalDeviceSurfaceInfo ) const *,
+                cds :: uint32                            *,
+                Type ( PresentMode )                     * = nullptr
+        ) noexcept -> Type ( Result );
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SWAP_CHAIN_AVAILABLE
+
+        NoDiscard MaybeUnused extern auto createSwapChain (
+                Type ( DeviceHandle ),
+                Type ( SwapChainCreateInfo )    const *,
+                Type ( AllocationCallbacks )    const *,
+                Type ( SwapChainHandle )              *
+        ) noexcept -> Type ( Result );
+
+        NoDiscard MaybeUnused extern auto destroySwapChain (
+                Type ( DeviceHandle ),
+                Type ( SwapChainHandle ),
+                Type ( AllocationCallbacks ) const *
+        ) noexcept -> Type ( Result );
 
 #endif
 
     }
 
 }
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
 
 #endif //__C_ENG_VULKAN_API_CALLS_HPP__

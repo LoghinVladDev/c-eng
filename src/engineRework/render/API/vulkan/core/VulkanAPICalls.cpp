@@ -56,6 +56,11 @@
 using namespace cds; // NOLINT(clion-misra-cpp2008-7-3-4)
 using namespace engine; // NOLINT(clion-misra-cpp2008-7-3-4)
 
+
+#define C_ENG_MAP_START     SOURCE
+#include <ObjectMapping.hpp>
+
+
 static VkResult                             result = VK_SUCCESS;
 
 static VkDebugUtilsMessengerCreateInfoEXT   messengerCreateInfo;
@@ -846,10 +851,31 @@ static VkPhysicalDeviceSurfaceInfo2KHR                                      surf
 #if __C_ENG_VULKAN_API_EXTENSION_FULL_SCREEN_EXCLUSIVE_AVAILABLE
 
 static VkSurfaceFullScreenExclusiveInfoEXT                                  fullScreenExclusiveInfo;
-
-static PFN_vkGetPhysicalDeviceSurfacePresentModes2KHR                       pVkGetPhysicalDeviceSurfacePresentModes2;
+static PFN_vkGetPhysicalDeviceSurfacePresentModes2EXT                       pVkGetPhysicalDeviceSurfacePresentModes2;
 
 #endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SWAP_CHAIN_AVAILABLE
+
+static PFN_vkCreateSwapchainKHR                                             pVkCreateSwapchain;
+static PFN_vkDestroySwapchainKHR                                            pVkDestroySwapchain;
+static VkSwapchainCreateInfoKHR                                             swapchainCreateInfo;
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+
+static VkImageFormatListCreateInfo                                          imageFormatListCreateInfo;
+static VkFormat                                                             viewFormats [ __C_ENG_VULKAN_CORE_VIEW_FORMAT_MAX_COUNT ];
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_WIN32_SURFACE_AVAILABLE && __C_ENG_VULKAN_API_EXTENSION_FULL_SCREEN_EXCLUSIVE_AVAILABLE
+
+static VkSurfaceFullScreenExclusiveWin32InfoEXT                             surfaceFullScreenExclusiveWin32Info;
+
+#endif
+
 
 /**
  * ---------------------------------------------------------
@@ -12858,6 +12884,222 @@ auto vulkan :: getPhysicalDeviceSurfacePresentModes (
     for ( uint32 i = 0U; i < * pPresentModeCount; ++ i ) {
         pPresentModes [i] = static_cast < vulkan :: __C_ENG_TYPE ( PresentMode ) > ( presentModes[i] );
     }
+
+    return ResultSuccess;
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+
+static inline auto toVulkanFormat (
+        VkImageFormatListCreateInfo                           * pDestination,
+        vulkan :: Type ( ImageFormatListCreateInfo )    const * pSource
+) noexcept -> void {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if (
+            pDestination    == nullptr ||
+            pSource         == nullptr
+    ) {
+        return;
+    }
+
+#endif
+
+    pDestination->sType             = VK_STRUCTURE_TYPE_IMAGE_FORMAT_LIST_CREATE_INFO;
+    pDestination->pNext             = nullptr;
+    pDestination->viewFormatCount   = pSource->viewFormatCount;
+    pDestination->pViewFormats      = & viewFormats [ 0 ];
+
+    for ( uint32 i = 0U; i < pSource->viewFormatCount; ++ i ) {
+        viewFormats[i] = static_cast < VkFormat > ( pSource->pViewFormats[i] );
+    }
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_WIN32_SURFACE_AVAILABLE && __C_ENG_VULKAN_API_EXTENSION_FULL_SCREEN_EXCLUSIVE_AVAILABLE
+
+static inline auto toVulkanFormat (
+        VkSurfaceFullScreenExclusiveWin32InfoEXT                      * pDestination,
+        vulkan :: Type ( SurfaceFullScreenExclusiveWin32Info )  const * pSource
+) noexcept -> void {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if (
+            pDestination    == nullptr ||
+            pSource         == nullptr
+    ) {
+        return;
+    }
+
+#endif
+
+    pDestination->sType             = VK_STRUCTURE_TYPE_SURFACE_FULL_SCREEN_EXCLUSIVE_WIN32_INFO_EXT;
+    pDestination->pNext             = nullptr;
+    pDestination->hmonitor          = pSource->monitorHandle;
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SWAP_CHAIN_AVAILABLE
+
+static inline auto toVulkanFormat (
+        VkSwapchainCreateInfoKHR                     * pDestination,
+        vulkan :: Type ( SwapChainCreateInfo ) const * pSource
+) noexcept -> void {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if (
+            pDestination    == nullptr ||
+            pSource         == nullptr
+    ) {
+        return;
+    }
+
+#endif
+
+    pDestination->sType                 = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
+    pDestination->pNext                 = nullptr;
+
+    pDestination->flags                 = static_cast < VkSwapchainCreateFlagsKHR > ( pSource->flags );
+    pDestination->surface               = pSource->surface;
+
+    pDestination->minImageCount         = pSource->minImageCount;
+    pDestination->imageFormat           = static_cast < VkFormat > ( pSource->imageFormat );
+    pDestination->imageColorSpace       = static_cast < VkColorSpaceKHR > ( pSource->imageColorSpace );
+    pDestination->imageExtent.width     = pSource->imageExtent.width;
+    pDestination->imageExtent.height    = pSource->imageExtent.height;
+    pDestination->imageArrayLayers      = pSource->imageArrayLayers;
+    pDestination->imageUsage            = static_cast < VkImageUsageFlags > ( pSource->imageUsage );
+    pDestination->imageSharingMode      = static_cast < VkSharingMode > ( pSource->imageSharingMode );
+
+    pDestination->queueFamilyIndexCount = pSource->queueFamilyIndexCount;
+    pDestination->pQueueFamilyIndices   = pSource->pQueueFamilyIndices;
+
+    pDestination->preTransform          = static_cast < VkSurfaceTransformFlagBitsKHR > ( pSource->preTransform );
+    pDestination->compositeAlpha        = static_cast < VkCompositeAlphaFlagBitsKHR > ( pSource->compositeAlpha );
+    pDestination->presentMode           = static_cast < VkPresentModeKHR > ( pSource->presentMode );
+
+    pDestination->clipped               = static_cast < VkBool32 > ( pSource->clipped );
+    pDestination->oldSwapchain          = pSource->oldSwapChain;
+
+    auto pCurrentInChain    = reinterpret_cast < vulkan :: Type ( GenericInStructure ) const * > ( pSource->pNext );
+    auto pCurrentInVkChain  = reinterpret_cast < VkBaseOutStructure * > ( pDestination );
+
+    while ( pCurrentInChain != nullptr ) {
+
+        switch ( pCurrentInChain->structureType ) {
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+
+                case vulkan :: StructureTypeImageFormatListCreateInfo:              { pCurrentInVkChain->pNext = reinterpret_cast < VkBaseOutStructure * > ( & imageFormatListCreateInfo );             toVulkanFormat ( & imageFormatListCreateInfo, reinterpret_cast < vulkan :: Type ( ImageFormatListCreateInfo ) const * > ( pCurrentInChain ) );                          break; }
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_WIN32_SURFACE_AVAILABLE && __C_ENG_VULKAN_API_EXTENSION_FULL_SCREEN_EXCLUSIVE_AVAILABLE
+
+                case vulkan :: StructureTypeSurfaceFullScreenExclusiveWin32Info:    { pCurrentInVkChain->pNext = reinterpret_cast < VkBaseOutStructure * > ( & surfaceFullScreenExclusiveWin32Info );   toVulkanFormat ( & surfaceFullScreenExclusiveWin32Info, reinterpret_cast < vulkan :: Type ( SurfaceFullScreenExclusiveWin32Info ) const * > ( pCurrentInChain ) );      break; }
+
+#endif
+
+                default:                                                            { break; }
+
+        }
+
+        if ( pCurrentInVkChain->pNext != nullptr ) {
+            pCurrentInVkChain = pCurrentInVkChain->pNext;
+        }
+
+        pCurrentInChain = pCurrentInChain->pNext;
+    }
+
+    pCurrentInVkChain->pNext = nullptr;
+}
+
+auto vulkan :: createSwapChain (
+        Type ( DeviceHandle )                   deviceHandle,
+        Type ( SwapChainCreateInfo )    const * pCreateInfo,
+        Type ( AllocationCallbacks )    const * pAllocationCallbacks,
+        Type ( SwapChainHandle )              * pHandle
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if (
+            deviceHandle    == nullptr ||
+            pCreateInfo     == nullptr ||
+            pHandle         == nullptr
+    ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION (
+            lastCreatedInstance,
+            pVkCreateSwapchain,
+            CREATE_SWAP_CHAIN
+    )
+
+    VkAllocationCallbacks   * pUsedAllocationCallbacks = nullptr;
+
+    if ( pAllocationCallbacks != nullptr ) {
+        pUsedAllocationCallbacks = & allocationCallbacks;
+        toVulkanFormat ( pAllocationCallbacks, pUsedAllocationCallbacks );
+    }
+
+    toVulkanFormat ( & swapchainCreateInfo, pCreateInfo );
+
+    return static_cast < Type ( Result ) > (
+            pVkCreateSwapchain (
+                    deviceHandle,
+                    & swapchainCreateInfo,
+                    pUsedAllocationCallbacks,
+                    pHandle
+            )
+    );
+}
+
+auto vulkan :: destroySwapChain (
+        Type ( DeviceHandle )                   deviceHandle,
+        Type ( SwapChainHandle )                handle,
+        Type ( AllocationCallbacks )    const * pAllocationCallbacks
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if (
+            deviceHandle    == nullptr ||
+            handle          == nullptr
+    ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION (
+            lastCreatedInstance,
+            pVkDestroySwapchain,
+            DESTROY_SWAP_CHAIN
+    )
+
+    VkAllocationCallbacks   * pUsedAllocationCallbacks = nullptr;
+
+    if ( pAllocationCallbacks != nullptr ) {
+        pUsedAllocationCallbacks = & allocationCallbacks;
+        toVulkanFormat ( pAllocationCallbacks, pUsedAllocationCallbacks );
+    }
+
+    pVkDestroySwapchain (
+            deviceHandle,
+            handle,
+            pUsedAllocationCallbacks
+    );
 
     return ResultSuccess;
 }

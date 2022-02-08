@@ -527,6 +527,8 @@
 #define Const                                                                       __C_ENG_OBJECT_MAP_META_CALL(__C_ENG_OBJECT_MAP_CONST_,           C_ENG_MAP_START)
 #define Nester                                                                      __C_ENG_OBJECT_MAP_META_CALL(__C_ENG_OBJECT_MAP_NESTER_,          C_ENG_MAP_START)
 #define Type                                                                        __C_ENG_TYPE
+#define NoDiscard                                                                   __C_ENG_NO_DISCARD
+#define MaybeUnused                                                                 __C_ENG_MAYBE_UNUSED
 
 
 #elif defined(C_ENG_MAP_END) && defined(C_ENG_MAP_START)
@@ -806,6 +808,8 @@
 #undef Const
 #undef Nester
 #undef Type
+#undef NoDiscard
+#undef MaybeUnused
 
 
 #undef C_ENG_MAP_END

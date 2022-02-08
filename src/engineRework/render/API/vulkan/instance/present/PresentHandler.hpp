@@ -10,6 +10,8 @@
 #include <VulkanRenderObject.hpp>
 #include <VulkanCore.hpp>
 
+#include <CDS/Pointer>
+
 
 #define C_ENG_MAP_START     CLASS ( PresentHandler, ENGINE_PARENT ( VulkanRenderObject ) )
 #include <ObjectMapping.hpp>
@@ -20,12 +22,40 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_PRE_DECLARE_CLASS ( Device );
 
         Class {
-            Field ( ENGINE_PRIMITIVE_TYPE ( SurfaceHandle const * ),    surface,    DEFAULT_VALUE ( nullptr ),  GET_DEFAULT, SET_NONE )
+        public:
+            struct SurfaceFormats {
+                Type ( SurfaceFormat )    * pFormats;
+                cds :: uint32               count;
+            };
+
+            struct PresentModes {
+                Type ( PresentMode )  * pPresentModes;
+                cds :: uint32           count;
+            };
+
+            struct SurfaceProperties {
+                Type ( SurfaceCapabilities )    surfaceCapabilities;
+                SurfaceFormats                  formats;
+                PresentModes                    presentModes;
+            };
+
+        private:
+            static auto deviceSupportsSurfacePresent ( Type ( Device ) const *, Type ( SurfaceHandle ) ) noexcept (false) -> bool;
+
+        protected:
+            static auto propertiesForDevice ( Type ( PhysicalDeviceHandle ), Type ( SurfaceHandle ) ) noexcept (false) -> SurfaceProperties const *;
 
         public:
-            auto init ( Type ( Device ) const * );
-            auto clear () noexcept -> Self & override;
-            Destructor () noexcept override;
+
+            virtual auto init ( Type ( Device ) const * ) noexcept (false) -> Self & = 0;
+            auto clear () noexcept -> Self & override = 0;
+
+            __C_ENG_NO_DISCARD static auto createSuitablePresentHandler (
+                    Type ( Device )         const *,
+                    Type ( SurfaceHandle )
+            ) noexcept -> cds :: UniquePointer < Type ( PresentHandler ) >;
+
+            Destructor () noexcept override = default;
         };
 
     }

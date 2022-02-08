@@ -10,7 +10,6 @@
 using namespace engine; // NOLINT(clion-misra-cpp2008-7-3-4)
 using namespace cds; // NOLINT(clion-misra-cpp2008-7-3-4)
 
-
 int main (
         int argumentCount,
         char ** arguments

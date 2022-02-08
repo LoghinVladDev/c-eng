@@ -8,6 +8,7 @@
 
 #include <Preprocess.hpp>
 #include <VulkanRenderObject.hpp>
+#include <VulkanCore.hpp>
 
 
 #define C_ENG_MAP_START     CLASS ( SwapChain,  ENGINE_PARENT ( VulkanRenderObject ) )
@@ -16,8 +17,17 @@
 namespace engine { // NOLINT(modernize-concat-nested-namespaces)
     namespace vulkan {
 
-        Class {
+        __C_ENG_PRE_DECLARE_CLASS ( Device );
 
+        Class {
+        private:
+            Field ( ENGINE_PRIMITIVE_TYPE ( SwapChainHandle ),  handle, DEFAULT_VALUE ( nullptr ),  GET_DEFAULT,    SET_NONE )
+            Field ( ENGINE_PRIMITIVE_TYPE ( Device const * ),   device, DEFAULT_VALUE ( nullptr ),  GET_DEFAULT,    SET_NONE )
+
+        public:
+            auto init ( Type ( Device ) const *, Type ( SurfaceHandle ) ) noexcept (false) -> Self &;
+            auto clear () noexcept -> Self & override;
+            Destructor () noexcept override;
         };
 
     }

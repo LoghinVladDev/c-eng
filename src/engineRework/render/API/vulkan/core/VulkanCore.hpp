@@ -465,7 +465,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SWAP_CHAIN_AVAILABLE
 
-            Field ( SwapchainCreateInfo,                                                   VkStructureType :: VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR ),
+            Field ( SwapChainCreateInfo,                                                   VkStructureType :: VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR ),
             Field ( PresentInfo,                                                           VkStructureType :: VK_STRUCTURE_TYPE_PRESENT_INFO_KHR ),
 
 #endif
@@ -2940,6 +2940,22 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #endif
 
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+
+#define C_ENG_MAP_START     ENUM ( SharingMode, TYPE ( cds :: uint8 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( Exclusive,  VkSharingMode :: VK_SHARING_MODE_EXCLUSIVE ),
+            Field ( Concurrent, VkSharingMode :: VK_SHARING_MODE_CONCURRENT ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SURFACE_AVAILABLE
 
 #define C_ENG_MAP_START     ENUM ( ColorSpace,  TYPE ( cds :: uint32 ) )
@@ -4184,6 +4200,72 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
             Type ( SurfaceTransformFlag )   currentTransform;
             Type ( CompositeAlphaFlags )    supportedCompositeAlpha;
             Type ( ImageUsageFlags )        supportedUsageFlags;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SWAP_CHAIN_AVAILABLE
+
+        __C_ENG_ALIAS ( SwapChainHandle,        VkSwapchainKHR );
+        __C_ENG_ALIAS ( SwapChainCreateFlags,   VkSwapchainCreateFlagsKHR );
+
+#define C_ENG_MAP_START     ENUM ( SwapChainCreateFlag,     TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DEVICE_GROUP_AVAILABLE
+
+            Field ( SplitInstanceBindRegions,   VkSwapchainCreateFlagBitsKHR :: VK_SWAPCHAIN_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT_KHR ),
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+
+            Field ( Protected,                  VkSwapchainCreateFlagBitsKHR :: VK_SWAPCHAIN_CREATE_PROTECTED_BIT_KHR ),
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SWAP_CHAIN_MUTABLE_FORMAT_AVAILABLE
+
+            Field ( MutableFormat,              VkSwapchainCreateFlagBitsKHR :: VK_SWAPCHAIN_CREATE_MUTABLE_FORMAT_BIT_KHR ),
+
+#endif
+
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START     STRUCT ( SwapChainCreateInfo,   NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )              structureType;
+            Type ( GenericStructure )   const * pNext;
+            Type ( SwapChainCreateFlags )       flags;
+            Type ( SurfaceHandle )              surface;
+
+            cds :: uint32                       minImageCount;
+            Type ( Format )                     imageFormat;
+            Type ( ColorSpace )                 imageColorSpace;
+            Type ( Extent2D )                   imageExtent;
+            cds :: uint32                       imageArrayLayers;
+            Type ( ImageUsageFlags )            imageUsage;
+            Type ( SharingMode )                imageSharingMode;
+
+            cds :: uint32                       queueFamilyIndexCount;
+            cds :: uint32               const * pQueueFamilyIndices;
+
+            Type ( SurfaceTransformFlag )       preTransform;
+            Type ( CompositeAlphaFlag )         compositeAlpha;
+            Type ( PresentMode )                presentMode;
+
+            Type ( Bool )                       clipped;
+            Type ( SwapChainHandle )            oldSwapChain;
         };
 
 #define C_ENG_MAP_END
@@ -5478,7 +5560,37 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #endif
 
 
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_WIN32_SURFACE_AVAILABLE && __C_ENG_VULKAN_API_EXTENSION_FULL_SCREEN_EXCLUSIVE_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( SurfaceFullScreenExclusiveWin32Info )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )              structureType;
+            Type ( GenericStructure )   const * pNext;
+            HMONITOR                            monitorHandle;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
 #if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( ImageFormatListCreateInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )              structureType;
+            Type ( GenericStructure )   const * pNext;
+            cds :: uint32                       viewFormatCount;
+            Type ( Format )             const * pViewFormats;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
 
 #define C_ENG_MAP_START     STRUCT ( PhysicalDevice8BitStorageFeatures, NO_PARENT )
 #include <ObjectMapping.hpp>
@@ -7982,6 +8094,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( ObjectType ) ) noexcept -> cds :: StringLiteral;
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( ImageUsageFlag ) ) noexcept -> cds :: StringLiteral;
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( Format ) ) noexcept -> cds :: StringLiteral;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( SharingMode ) ) noexcept -> cds :: StringLiteral;
 
 #endif
 
@@ -7997,6 +8110,8 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( ShaderFloatControlsIndependence ) ) noexcept -> cds :: StringLiteral;
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( ResolveModeFlag ) ) noexcept -> cds :: StringLiteral;
 
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( ImageFormatListCreateInfo ) const & ) noexcept -> cds :: String;
+
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SURFACE_AVAILABLE
@@ -8007,6 +8122,13 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PresentMode ) ) noexcept -> cds :: StringLiteral;
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( SurfaceCapabilities ) const & ) noexcept -> cds :: String;
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( SurfaceFormat ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SWAP_CHAIN_AVAILABLE
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( SwapChainCreateFlag ) ) noexcept -> cds :: StringLiteral;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( SwapChainCreateInfo ) const & ) noexcept -> cds :: String;
 
 #endif
 

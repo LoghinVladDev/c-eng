@@ -29,7 +29,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
             Field ( ENGINE_TYPE ( QueueFamilyDetails ),                     details,                        NO_INIT,                            GET_DEFAULT, SET_NONE )
             Field ( TYPE ( cds :: Array < PerformanceCounterProperties > ), performanceCounterProperties,   NO_INIT,                            GET_DEFAULT, SET_NONE )
 
-            Field ( PRIMITIVE_TYPE ( cds :: uint32 ),                       familyIndex,                    DEFAULT_VALUE ( 0U ),               GET_DEFAULT, SET_NONE )
+            Field ( PRIMITIVE_TYPE ( cds :: uint32 ),                       index,                          DEFAULT_VALUE ( 0U ),               GET_DEFAULT, SET_NONE )
             Field ( ENGINE_PRIMITIVE_TYPE ( PhysicalDevice const * ),       physicalDevice,                 DEFAULT_VALUE ( nullptr ),          GET_DEFAULT, SET_NONE )
 
             auto getQueueFlagsWithPresent ( Type ( SurfaceHandle ) ) const noexcept (false) -> Type ( QueueFlags );
@@ -39,7 +39,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
             auto clear () noexcept -> Self & override;
 
             __C_ENG_NO_DISCARD constexpr auto hash () const noexcept -> cds :: Index override {
-                return static_cast < cds :: Index > ( this->_familyIndex );
+                return static_cast < cds :: Index > ( this->_index );
             }
 
             template < typename QueryResult >

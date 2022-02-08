@@ -6,9 +6,13 @@
 
 #include <CDS/String>
 #include <Func.hpp>
+#include <CDS/Long>
 
 using namespace cds; // NOLINT(clion-misra-cpp2008-7-3-4)
 using namespace engine; // NOLINT(clion-misra-cpp2008-7-3-4)
+
+#define C_ENG_MAP_START     SOURCE
+#include <ObjectMapping.hpp>
 
 auto vulkan :: toString (
         vulkan :: __C_ENG_TYPE ( Result ) result
@@ -321,7 +325,7 @@ auto vulkan :: toString (
 
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SWAP_CHAIN_AVAILABLE
 
-        case StructureTypeSwapchainCreateInfo:                                                      { asString = "StructureTypeSwapchainCreateInfo";                                                break; }
+        case StructureTypeSwapChainCreateInfo:                                                      { asString = "StructureTypeSwapChainCreateInfo";                                                break; }
         case StructureTypePresentInfo:                                                              { asString = "StructureTypePresentInfo";                                                        break; }
 
 #endif
@@ -2305,7 +2309,6 @@ auto vulkan :: toString (
             " }";
 }
 
-#include <CDS/Long>
 auto vulkan :: toString (
         __C_ENG_TYPE ( DeviceSize ) deviceSize
 ) noexcept -> String {
@@ -7274,6 +7277,131 @@ auto vulkan :: toString (
             "{ structureType = "_s      + toString ( format.structureType ) +
             ", pNext = "                + :: toString ( format.pNext ) +
             ", fullScreenExclusive = "  + toString ( format.fullScreenExclusive ) +
+            " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+
+auto vulkan :: toString (
+        Type ( SharingMode ) sharingMode
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( sharingMode ) {
+        case SharingModeExclusive:  { asString = "Exclusive";   break; }
+        case SharingModeConcurrent: { asString = "Concurrent";  break; }
+    }
+
+    return asString;
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SWAP_CHAIN_AVAILABLE
+
+auto vulkan :: toString (
+        Type ( SwapChainCreateFlag ) flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DEVICE_GROUP_AVAILABLE
+
+        case SwapChainCreateFlagSplitInstanceBindRegions:   { asString = "SplitInstanceBindRegions";    break; }
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+
+        case SwapChainCreateFlagProtected:                  { asString = "Protected";                   break; }
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SWAP_CHAIN_MUTABLE_FORMAT_AVAILABLE
+
+        case SwapChainCreateFlagMutableFormat:              { asString = "MutableFormat";               break; }
+
+#endif
+
+    }
+
+    return asString;
+}
+
+auto vulkan :: toString (
+        Type ( SwapChainCreateInfo ) const & createInfo
+) noexcept -> String {
+
+    auto indicesAsString = [] ( uint32 count, uint32 const * pIndices ) {
+        String asString = "[ ";
+        for ( uint32 i = 0U; i < count; ++ i ) {
+            asString += pIndices[i] + ", "_s;
+        }
+        return asString.removeSuffix(", ") + " ]";
+    };
+
+    return __C_ENG_STRINGIFY ( Type ( SwapChainCreateInfo ) ) " "
+            "{ structureType = "_s          + toString ( createInfo.structureType ) +
+            ", pNext = "                    + :: toString ( createInfo.pNext ) +
+            ", flags = "                    + "0b" + Long ( createInfo.flags ).toString(2) +
+            ", minImageCount = "            + createInfo.minImageCount +
+            ", imageFormat = "              + toString ( createInfo.imageFormat ) +
+            ", imageColorSpace = "          + toString ( createInfo.imageColorSpace ) +
+            ", imageExtent = "              + toString ( createInfo.imageExtent ) +
+            ", imageArrayLayers = "         + createInfo.imageArrayLayers +
+            ", imageUsage = "               + "0b" + Long ( createInfo.imageUsage ).toString(2) +
+            ", imageSharingMode = "         + toString ( createInfo.imageSharingMode ) +
+            ", queueFamilyIndexCount = "    + createInfo.queueFamilyIndexCount +
+            ", queueFamilyIndices = "       + indicesAsString ( createInfo.queueFamilyIndexCount, createInfo.pQueueFamilyIndices ) +
+            ", preTransform = "             + toString ( createInfo.preTransform ) +
+            ", compositeAlpha = "           + toString ( createInfo.compositeAlpha ) +
+            ", presentMode = "              + toString ( createInfo.presentMode ) +
+            ", clipped = "                  + ( createInfo.clipped == VK_TRUE ? "true" : "false" ) +
+            ", oldSwapChain = "             + :: toString ( createInfo.oldSwapChain ) +
+            " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+
+auto vulkan :: toString (
+        Type ( ImageFormatListCreateInfo ) const & createInfo
+) noexcept -> String {
+
+    auto formatsAsString = [] ( uint32 count, Type ( Format ) const * pFormats ) {
+        String asString = "[ ";
+        for ( uint32 i = 0U; i < count; ++ i ) {
+            asString += toString ( pFormats[i] ) + ", "_s;
+        }
+        return asString.removeSuffix(", ") + " ]";
+    };
+
+    return __C_ENG_STRINGIFY ( Type ( ImageFormatListCreateInfo ) ) " "
+            "{ structureType = "_s          + toString ( createInfo.structureType ) +
+            ", pNext = "                    + :: toString ( createInfo.pNext ) +
+            ", viewFormatCount = "          + createInfo.viewFormatCount +
+            ", viewFormats = "              + formatsAsString ( createInfo.viewFormatCount, createInfo.pViewFormats ) +
+            " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_WIN32_SURFACE_AVAILABLE && __C_ENG_VULKAN_API_EXTENSION_FULL_SCREEN_EXCLUSIVE_AVAILABLE
+
+auto vulkan :: toString (
+        Type ( SurfaceFullScreenExclusiveWin32Info ) const & createInfo
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( SurfaceFullScreenExclusiveWin32Info ) ) " "
+            "{ structureType = "_s          + toString ( createInfo.structureType ) +
+            ", pNext = "                    + :: toString ( createInfo.pNext ) +
+            ", monitorHandle = "            + :: toString ( createInfo.monitorHandle ) +
             " }";
 }
 

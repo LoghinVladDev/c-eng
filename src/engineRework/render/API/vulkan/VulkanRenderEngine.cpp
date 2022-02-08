@@ -59,18 +59,24 @@ auto vulkan :: Self :: init () noexcept (false) -> Self & {
         }
     }
 
-    Type ( Device ) :: Builder deviceBuilder;
-
-    this->_device = deviceBuilder
+    this->_device = Type ( Device ) :: Builder ()
         .fromDevice ( pPhysicalDeviceToUse )
         .toSurface ( this->_surfaceHandle )
         .build();
+
+    this->_presentHandler = Type ( PresentHandler ) :: createSuitablePresentHandler (
+            & this->_device,
+            this->_surfaceHandle
+    );
+
+    (void) this->_presentHandler->init ( & this->_device );
 
     return * this;
 }
 
 auto vulkan :: Self :: clear () noexcept (false) -> Self & {
 
+    (void) this->_presentHandler->clear();
     (void) this->_device.clear();
 
     if ( this->_surfaceHandle != nullptr ) {

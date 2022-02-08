@@ -35,7 +35,7 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
     add_compile_options(--coverage)
     #Uncomment in case of linker errors
-    #link_libraries(gcov)
+#    link_libraries(gcov)
 endif ()
 
 
@@ -308,7 +308,19 @@ if(Vulkan_FOUND)
     )
 
     set (
+            RENDER_API_VULKAN_INSTANCE_PRESENT_SWAP_SOURCES
+
+            src/engineRework/render/API/vulkan/instance/present/swap/SwapChain.cpp
+            src/engineRework/render/API/vulkan/instance/present/swap/SwapChain.hpp
+    )
+
+    set (
             RENDER_API_VULKAN_INSTANCE_PRESENT_SOURCES
+
+            ${RENDER_API_VULKAN_INSTANCE_PRESENT_SWAP_SOURCES}
+
+            src/engineRework/render/API/vulkan/instance/present/SwapChainPresentHandler.cpp
+            src/engineRework/render/API/vulkan/instance/present/SwapChainPresentHandler.hpp
 
             src/engineRework/render/API/vulkan/instance/present/PresentHandler.cpp
             src/engineRework/render/API/vulkan/instance/present/PresentHandler.hpp
@@ -410,6 +422,7 @@ if(Vulkan_FOUND)
             src/engineRework/render/API/vulkan/instance
             src/engineRework/render/API/vulkan/instance/validation
             src/engineRework/render/API/vulkan/instance/present
+            src/engineRework/render/API/vulkan/instance/present/swap
             src/engineRework/render/API/vulkan/instance/allocator
             src/engineRework/render/API/vulkan/instance/device
             src/engineRework/render/API/vulkan/instance/device/queue

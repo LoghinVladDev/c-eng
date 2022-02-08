@@ -1592,23 +1592,23 @@ auto Self :: deviceCreateInfoAddQueueCreateInfos (
     requiredQueueCounts [ QueueFlagPresent ]    = this->_presentQueueCount;
 
     for ( auto const & family : this->_physicalDevice->queueFamilies() ) {
-        queueFamilyFlags [ family.familyIndex() ] = family.query()
+        queueFamilyFlags [ family.index() ] = family.query()
                 .select < Type ( QueueFlags ) > ()
                 .withSurface ( this->_surfaceHandle )
                 .execute();
 
-        totalFamilyCounts [ family.familyIndex() ] = family.details().properties.queueCount;
+        totalFamilyCounts [ family.index() ] = family.details().properties.queueCount;
     }
 
-    for ( auto type : Array { QueueFlagGraphics, QueueFlagTransfer, QueueFlagPresent } ) {
+    for ( auto type : Array < __C_ENG_TYPE ( QueueFlag ) > { QueueFlagGraphics, QueueFlagTransfer, QueueFlagPresent } ) {
 
         HashMap < uint32, uint32 > familyCounts;
         uint32 totalCount = 0U;
 
         for ( auto const & family : this->_physicalDevice->queueFamilies() ) {
-            if ( ( queueFamilyFlags [ family.familyIndex() ] & static_cast < uint32 > ( type ) ) != 0U ) {
+            if ( ( queueFamilyFlags [ family.index() ] & static_cast < uint32 > ( type ) ) != 0U ) {
                 totalCount += family.details().properties.queueCount;
-                familyCounts [ family.familyIndex() ] = family.details().properties.queueCount;
+                familyCounts [ family.index() ] = family.details().properties.queueCount;
             }
         }
 
@@ -1752,7 +1752,7 @@ auto Self :: buildSingleDeviceToSurface () noexcept (false) -> Nester {
     (void) device._queues.resize ( totalUsedQueues );
     uint32 currentQueueIndex = 0U;
 
-    HashMap < QueueFamilyIndex, uint32 > usedSoFar;  
+    HashMap < QueueFamilyIndex, uint32 > usedSoFar;
 
     for ( auto const & type : typeFamilyCount ) {
         for ( auto const & familyAndCounts : type.second() ) {
@@ -1775,7 +1775,7 @@ auto Self :: buildSingleDeviceToSurface () noexcept (false) -> Nester {
 
     for ( auto const & queue : device.queues() ) {
         (void) Type ( Logger ) :: instance().debug (
-            "Queue -> index = "_s + queue.index() + ", type = " + :: toString ( queue.type() ) + ", family = " + queue.queueFamily()->familyIndex()
+            "Queue -> index = "_s + queue.index() + ", type = " + :: toString ( queue.type() ) + ", family = " + queue.queueFamily()->index()
         );
     }
 
