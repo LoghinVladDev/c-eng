@@ -7578,3 +7578,93 @@ auto vulkan :: toString (
 }
 
 #endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+
+auto vulkan :: toString (
+        Type ( CommandPoolCreateFlag ) flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case CommandPoolCreateFlagTransient:            { asString = "Transient";           break; }
+        case CommandPoolCreateFlagResetCommandBuffer:   { asString = "ResetCommandBuffer";  break; }
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+
+        case CommandPoolCreateFlagProtected:            { asString = "Protected";           break; }
+
+#endif
+
+    }
+
+    return asString;
+}
+
+auto vulkan :: toString (
+        Type ( CommandBufferLevel ) flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case CommandBufferLevelPrimary:     { asString = "Primary";     break; }
+        case CommandBufferLevelSecondary:   { asString = "Secondary";   break; }
+    }
+
+    return asString;
+}
+
+auto vulkan :: toString (
+        Type ( CommandPoolResetFlag ) flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case CommandPoolResetFlagReleaseResources:  { asString = "ReleaseResources";   break; }
+    }
+
+    return asString;
+}
+
+auto vulkan :: toString (
+        Type ( CommandBufferResetFlag ) flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case CommandBufferResetFlagReleaseResources:  { asString = "ReleaseResources";   break; }
+    }
+
+    return asString;
+}
+
+auto vulkan :: toString (
+        Type ( CommandPoolCreateInfo ) const & createInfo
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( CommandPoolCreateInfo ) ) " "
+            "{ structureType = "_s  + toString ( createInfo.structureType ) +
+            ", pNext = "            + :: toString ( createInfo.pNext ) +
+            ", flags = "            + "0b" + Long ( createInfo.flags ).toString(2) +
+            ", queueFamilyIndex = " + createInfo.queueFamilyIndex +
+            " }";
+}
+
+auto vulkan :: toString (
+        Type ( CommandBufferAllocateInfo ) const & allocateInfo
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( CommandBufferAllocateInfo ) ) " "
+            "{ structureType = "_s      + toString ( allocateInfo.structureType ) +
+            ", pNext = "                + :: toString ( allocateInfo.pNext ) +
+            ", flags = "                + :: toString ( allocateInfo.commandPool ) +
+            ", level = "                + toString ( allocateInfo.level ) +
+            ", commandBufferCount = "   + allocateInfo.commandBufferCount +
+            " }";
+}
+
+#endif

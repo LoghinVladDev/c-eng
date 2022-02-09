@@ -3044,6 +3044,55 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #define C_ENG_MAP_END
 #include <ObjectMapping.hpp>
 
+#define C_ENG_MAP_START     ENUM ( CommandPoolCreateFlag, TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( Transient,          VkCommandPoolCreateFlagBits :: VK_COMMAND_POOL_CREATE_TRANSIENT_BIT ),
+            Field ( ResetCommandBuffer, VkCommandPoolCreateFlagBits :: VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT ),
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+
+            Field ( Protected,          VkCommandPoolCreateFlagBits :: VK_COMMAND_POOL_CREATE_PROTECTED_BIT ),
+
+#endif
+
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START     ENUM ( CommandPoolResetFlag, TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( ReleaseResources,   VkCommandPoolResetFlagBits :: VK_COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START     ENUM ( CommandBufferResetFlag, TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( ReleaseResources,   VkCommandBufferResetFlagBits :: VK_COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START     ENUM ( CommandBufferLevel, TYPE ( cds :: uint8 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( Primary,    VkCommandBufferLevel :: VK_COMMAND_BUFFER_LEVEL_PRIMARY ),
+            Field ( Secondary,  VkCommandBufferLevel :: VK_COMMAND_BUFFER_LEVEL_SECONDARY ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
 #endif
 
 
@@ -3187,6 +3236,8 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_ALIAS ( QueueHandle,                    VkQueue );
         __C_ENG_ALIAS ( ImageHandle,                    VkImage );
         __C_ENG_ALIAS ( ImageViewHandle,                VkImageView );
+        __C_ENG_ALIAS ( CommandBufferHandle,            VkCommandBuffer );
+        __C_ENG_ALIAS ( CommandPoolHandle,              VkCommandPool );
 
         __C_ENG_ALIAS ( InstanceCreateFlags,            VkInstanceCreateFlags );
         __C_ENG_ALIAS ( DebugMessengerCreateFlags,      VkDebugUtilsMessengerCreateFlagsEXT );
@@ -3199,6 +3250,9 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_ALIAS ( ImageUsageFlags,                VkImageUsageFlags );
         __C_ENG_ALIAS ( ImageViewCreateFlags,           VkImageViewCreateFlags );
         __C_ENG_ALIAS ( ImageAspectFlags,               VkImageAspectFlags );
+        __C_ENG_ALIAS ( CommandPoolCreateFlags,         VkCommandPoolCreateFlags );
+        __C_ENG_ALIAS ( CommandPoolResetFlags,          VkCommandPoolResetFlags );
+        __C_ENG_ALIAS ( CommandBufferResetFlags,        VkCommandBufferResetFlags );
 
         __C_ENG_ALIAS ( AllocationFunction,             PFN_vkAllocationFunction );
         __C_ENG_ALIAS ( ReallocationFunction,           PFN_vkReallocationFunction );
@@ -3211,6 +3265,13 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
 
         __C_ENG_ALIAS ( SamplerYCBCRConversion,         VkSamplerYcbcrConversion );
+        __C_ENG_ALIAS ( CommandPoolTrimFlags,           VkCommandPoolTrimFlags );
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_MAINTENANCE_AVAILABLE && ! __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+
+        __C_ENG_ALIAS ( CommandPoolTrimFlags,           VkCommandPoolTrimFlagsKHR );
 
 #endif
 
@@ -3292,20 +3353,22 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #include <ObjectMapping.hpp>
 
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+
 #define C_ENG_MAP_START     STRUCT ( ApplicationInfo, NO_PARENT )
 #include <ObjectMapping.hpp>
 
         Struct {
-            __C_ENG_TYPE ( StructureType )                  structureType;
-            __C_ENG_TYPE ( GenericStructure )             * pNext;
+            Type ( StructureType )      structureType;
+            Type ( GenericStructure ) * pNext;
 
-            cds :: StringLiteral                            name;
-            __C_ENG_TYPE ( Version )                        version;
+            cds :: StringLiteral        name;
+            Type ( Version )            version;
 
-            cds :: StringLiteral                            engineName;
-            __C_ENG_TYPE ( Version )                        engineVersion;
+            cds :: StringLiteral        engineName;
+            Type ( Version )            engineVersion;
 
-            __C_ENG_TYPE ( Version )                        apiVersion;
+            Type ( Version )            apiVersion;
         };
 
 #define C_ENG_MAP_END
@@ -3316,10 +3379,10 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #include <ObjectMapping.hpp>
 
         Struct {
-            char                        layerName [ VK_MAX_EXTENSION_NAME_SIZE ];
-            __C_ENG_TYPE ( Version )    specVersion;
-            cds :: uint32               implementationVersion;
-            char                        description [ VK_MAX_DESCRIPTION_SIZE ];
+            char                layerName [ VK_MAX_EXTENSION_NAME_SIZE ];
+            Type ( Version )    specVersion;
+            cds :: uint32       implementationVersion;
+            char                description [ VK_MAX_DESCRIPTION_SIZE ];
         };
 
 #define C_ENG_MAP_END
@@ -3330,8 +3393,8 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #include <ObjectMapping.hpp>
 
         Struct {
-            char                        name [ VK_MAX_EXTENSION_NAME_SIZE ];
-            cds :: uint32               specVersion;
+            char            name [ VK_MAX_EXTENSION_NAME_SIZE ];
+            cds :: uint32   specVersion;
         };
 
 #define C_ENG_MAP_END
@@ -3342,13 +3405,13 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #include <ObjectMapping.hpp>
 
         Struct {
-            __C_ENG_TYPE ( StructureType )                  structureType;
-            __C_ENG_TYPE ( GenericStructure )             * pNext;
-            __C_ENG_TYPE ( DebugMessengerCreateFlags )      flags;
-            __C_ENG_TYPE ( DebugMessageSeverityFlags )      messageSeverityFlags;
-            __C_ENG_TYPE ( DebugMessageTypeFlags )          messageTypeFlags;
-            __C_ENG_TYPE ( DebugMessengerCallback )         callback;
-            void                                          * pCallbackUserData;
+            Type ( StructureType )                  structureType;
+            Type ( GenericStructure )             * pNext;
+            Type ( DebugMessengerCreateFlags )      flags;
+            Type ( DebugMessageSeverityFlags )      messageSeverityFlags;
+            Type ( DebugMessageTypeFlags )          messageTypeFlags;
+            Type ( DebugMessengerCallback )         callback;
+            void                                  * pCallbackUserData;
         };
 
 #define C_ENG_MAP_END
@@ -3359,16 +3422,16 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #include <ObjectMapping.hpp>
 
         Struct {
-            __C_ENG_TYPE ( StructureType )                  structureType;
-            __C_ENG_TYPE ( GenericStructure )             * pNext;
-            __C_ENG_TYPE ( InstanceCreateFlags )            flags;
-            __C_ENG_TYPE ( ApplicationInfo )        const * pApplicationInfo;
+            Type ( StructureType )                  structureType;
+            Type ( GenericStructure )             * pNext;
+            Type ( InstanceCreateFlags )            flags;
+            Type ( ApplicationInfo )        const * pApplicationInfo;
 
-            cds :: uint32                                   enabledLayerCount;
-            cds :: StringLiteral                    const * pEnabledLayerNames;
+            cds :: uint32                           enabledLayerCount;
+            cds :: StringLiteral            const * pEnabledLayerNames;
 
-            cds :: uint32                                   enabledExtensionCount;
-            cds :: StringLiteral                    const * pEnabledExtensionNames;
+            cds :: uint32                           enabledExtensionCount;
+            cds :: StringLiteral            const * pEnabledExtensionNames;
         };
 
 #define C_ENG_MAP_END
@@ -3379,12 +3442,12 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #include <ObjectMapping.hpp>
 
         Struct {
-            void                                              * pUserData;
-            __C_ENG_TYPE ( AllocationFunction )                 allocationCallback;
-            __C_ENG_TYPE ( ReallocationFunction )               reallocationCallback;
-            __C_ENG_TYPE ( FreeFunction )                       freeCallback;
-            __C_ENG_TYPE ( InternalAllocationNotification )     internalAllocationNotificationCallback;
-            __C_ENG_TYPE ( InternalFreeNotification )           internalFreeNotificationCallback;
+            void                                      * pUserData;
+            Type ( AllocationFunction )                 allocationCallback;
+            Type ( ReallocationFunction )               reallocationCallback;
+            Type ( FreeFunction )                       freeCallback;
+            Type ( InternalAllocationNotification )     internalAllocationNotificationCallback;
+            Type ( InternalFreeNotification )           internalFreeNotificationCallback;
         };
 
 #define C_ENG_MAP_END
@@ -3395,12 +3458,12 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #include <ObjectMapping.hpp>
 
         Struct {
-            __C_ENG_TYPE ( StructureType )                      structureType;
-            __C_ENG_TYPE ( GenericStructure )                 * pNext;
-            cds :: uint32                                       enabledValidationFeatureCount;
-            __C_ENG_TYPE ( ValidationFeatureEnable )    const * pEnabledValidationFeatures;
-            cds :: uint32                                       disabledValidationFeatureCount;
-            __C_ENG_TYPE ( ValidationFeatureDisable )   const * pDisabledValidationFeatures;
+            Type ( StructureType )                      structureType;
+            Type ( GenericStructure )                 * pNext;
+            cds :: uint32                               enabledValidationFeatureCount;
+            Type ( ValidationFeatureEnable )    const * pEnabledValidationFeatures;
+            cds :: uint32                               disabledValidationFeatureCount;
+            Type ( ValidationFeatureDisable )   const * pDisabledValidationFeatures;
         };
 
 #define C_ENG_MAP_END
@@ -3434,8 +3497,8 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
             cds :: uint32                       maxMemoryAllocationCount;
             cds :: uint32                       maxSamplerAllocationCount;
 
-            __C_ENG_TYPE ( DeviceSize )         bufferImageGranularity;
-            __C_ENG_TYPE ( DeviceSize )         sparseAddressSpaceSize;
+            Type ( DeviceSize )                 bufferImageGranularity;
+            Type ( DeviceSize )                 sparseAddressSpaceSize;
 
             cds :: uint32                       maxBoundDescriptorSets;
 
@@ -3505,9 +3568,9 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
             cds :: Size                         minMemoryMapAlignment;
 
-            __C_ENG_TYPE ( DeviceSize )         minTexelBufferOffsetAlignment;
-            __C_ENG_TYPE ( DeviceSize )         minUniformBufferOffsetAlignment;
-            __C_ENG_TYPE ( DeviceSize )         minStorageBufferOffsetAlignment;
+            Type ( DeviceSize )                 minTexelBufferOffsetAlignment;
+            Type ( DeviceSize )                 minUniformBufferOffsetAlignment;
+            Type ( DeviceSize )                 minStorageBufferOffsetAlignment;
 
             cds :: sint32                       minTexelOffset;
             cds :: uint32                       maxTexelOffset;
@@ -3522,22 +3585,22 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
             cds :: uint32                       maxFramebufferHeight;
             cds :: uint32                       maxFramebufferLayers;
 
-            __C_ENG_TYPE ( SampleCountFlags )   framebufferColorSampleCounts;
-            __C_ENG_TYPE ( SampleCountFlags )   framebufferDepthSampleCounts;
-            __C_ENG_TYPE ( SampleCountFlags )   framebufferStencilSampleCounts;
-            __C_ENG_TYPE ( SampleCountFlags )   framebufferNoAttachmentsSampleCounts;
+            Type ( SampleCountFlags )           framebufferColorSampleCounts;
+            Type ( SampleCountFlags )           framebufferDepthSampleCounts;
+            Type ( SampleCountFlags )           framebufferStencilSampleCounts;
+            Type ( SampleCountFlags )           framebufferNoAttachmentsSampleCounts;
 
             cds :: uint32                       maxColorAttachments;
 
-            __C_ENG_TYPE ( SampleCountFlags )   sampledImageColorSampleCounts;
-            __C_ENG_TYPE ( SampleCountFlags )   sampledImageIntegerSampleCounts;
-            __C_ENG_TYPE ( SampleCountFlags )   sampledImageDepthSampleCounts;
-            __C_ENG_TYPE ( SampleCountFlags )   sampledImageStencilSampleCounts;
-            __C_ENG_TYPE ( SampleCountFlags )   storageImageSampleCounts;
+            Type ( SampleCountFlags )           sampledImageColorSampleCounts;
+            Type ( SampleCountFlags )           sampledImageIntegerSampleCounts;
+            Type ( SampleCountFlags )           sampledImageDepthSampleCounts;
+            Type ( SampleCountFlags )           sampledImageStencilSampleCounts;
+            Type ( SampleCountFlags )           storageImageSampleCounts;
 
             cds :: uint32                       maxSampleMaskWords;
 
-            __C_ENG_TYPE ( Bool )               timestampComputeAndGraphics;
+            Type ( Bool )                       timestampComputeAndGraphics;
             float                               timestampPeriod;
 
             cds :: uint32                       maxClipDistances;
@@ -3550,14 +3613,14 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
             float                               lineWidthRange[2];
             float                               pointSizeGranularity;
             float                               lineWidthGranularity;
-            __C_ENG_TYPE ( Bool )               strictLines;
+            Type ( Bool )                       strictLines;
 
-            __C_ENG_TYPE ( Bool )               standardSampleLocations;
+            Type ( Bool )                       standardSampleLocations;
 
-            __C_ENG_TYPE ( DeviceSize )         optimalBufferCopyOffsetAlignment;
-            __C_ENG_TYPE ( DeviceSize )         optimalBufferCopyRowPitchAlignment;
+            Type ( DeviceSize )                 optimalBufferCopyOffsetAlignment;
+            Type ( DeviceSize )                 optimalBufferCopyRowPitchAlignment;
 
-            __C_ENG_TYPE ( DeviceSize )         nonCoherentAtomSize;
+            Type ( DeviceSize )                 nonCoherentAtomSize;
         };
 
 #define C_ENG_MAP_END
@@ -3568,11 +3631,11 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #include <ObjectMapping.hpp>
 
         Struct {
-            __C_ENG_TYPE ( Bool ) residencyStandard2DBlockShape;
-            __C_ENG_TYPE ( Bool ) residencyStandard2DMultisampleBlockShape;
-            __C_ENG_TYPE ( Bool ) residencyStandard3DBlockShape;
-            __C_ENG_TYPE ( Bool ) residencyAlignedMipSize;
-            __C_ENG_TYPE ( Bool ) residencyNonResidentStrict;
+            Type ( Bool ) residencyStandard2DBlockShape;
+            Type ( Bool ) residencyStandard2DMultisampleBlockShape;
+            Type ( Bool ) residencyStandard3DBlockShape;
+            Type ( Bool ) residencyAlignedMipSize;
+            Type ( Bool ) residencyNonResidentStrict;
         };
 
 #define C_ENG_MAP_END
@@ -3583,15 +3646,15 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #include <ObjectMapping.hpp>
 
         Struct {
-            __C_ENG_TYPE ( Version )                        apiVersion;
-            cds :: uint32                                   driverVersion;
-            cds :: uint32                                   vendorID;
-            cds :: uint32                                   deviceID;
-            __C_ENG_TYPE ( PhysicalDeviceType )             deviceType;
-            char                                            deviceName [ VK_MAX_PHYSICAL_DEVICE_NAME_SIZE ];
-            cds :: uint8                                    pipelineCacheUUID [ VK_UUID_SIZE ];
-            __C_ENG_TYPE ( PhysicalDeviceLimits )           limits;
-            __C_ENG_TYPE ( PhysicalDeviceSparseProperties ) sparseProperties;
+            Type ( Version )                        apiVersion;
+            cds :: uint32                           driverVersion;
+            cds :: uint32                           vendorID;
+            cds :: uint32                           deviceID;
+            Type ( PhysicalDeviceType )             deviceType;
+            char                                    deviceName [ VK_MAX_PHYSICAL_DEVICE_NAME_SIZE ];
+            cds :: uint8                            pipelineCacheUUID [ VK_UUID_SIZE ];
+            Type ( PhysicalDeviceLimits )           limits;
+            Type ( PhysicalDeviceSparseProperties ) sparseProperties;
         };
 
 #define C_ENG_MAP_END
@@ -3602,9 +3665,9 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #include <ObjectMapping.hpp>
 
         Struct {
-            __C_ENG_TYPE ( StructureType )                  structureType;
-            __C_ENG_TYPE ( GenericStructure )             * pNext;
-            __C_ENG_TYPE ( PhysicalDeviceProperties )       properties;
+            Type ( StructureType )                  structureType;
+            Type ( GenericStructure )             * pNext;
+            Type ( PhysicalDeviceProperties )       properties;
         };
 
 #define C_ENG_MAP_END
@@ -3615,8 +3678,8 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #include <ObjectMapping.hpp>
 
         Struct {
-            __C_ENG_TYPE ( StructureType )                      structureType;
-            __C_ENG_TYPE ( GenericInStructure )         const * pNext;
+            Type ( StructureType )                      structureType;
+            Type ( GenericInStructure )         const * pNext;
         };
 
 #define C_ENG_MAP_END
@@ -3627,12 +3690,41 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #include <ObjectMapping.hpp>
 
         Struct {
-            __C_ENG_TYPE ( StructureType )                      structureType;
-            __C_ENG_TYPE ( GenericOutStructure )              * pNext;
+            Type ( StructureType )                      structureType;
+            Type ( GenericOutStructure )              * pNext;
         };
 
 #define C_ENG_MAP_END
 #include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START     STRUCT ( CommandPoolCreateInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )              structureType;
+            Type ( GenericInStructure ) const * pNext;
+            Type ( CommandPoolCreateFlags )     flags;
+            cds :: uint32                       queueFamilyIndex;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START     STRUCT ( CommandBufferAllocateInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )              structureType;
+            Type ( GenericInStructure ) const * pNext;
+            Type ( CommandPoolHandle )          commandPool;
+            Type ( CommandBufferLevel )         level;
+            cds :: uint32                       commandBufferCount;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
 
 
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_GET_SURFACE_CAPABILITIES_AVAILABLE
@@ -8249,6 +8341,10 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #endif
 
 
+#define C_ENG_MAP_START     HEADER
+#include <ObjectMapping.hpp>
+
+
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( Result ) ) noexcept -> cds :: StringLiteral;
@@ -8273,6 +8369,10 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( ImageViewType ) ) noexcept -> cds :: StringLiteral;
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( ComponentSwizzle ) ) noexcept -> cds :: StringLiteral;
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( ImageAspectFlag ) ) noexcept -> cds :: StringLiteral;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( CommandPoolCreateFlag ) ) noexcept -> cds :: StringLiteral;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( CommandPoolResetFlag ) ) noexcept -> cds :: StringLiteral;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( CommandBufferResetFlag ) ) noexcept -> cds :: StringLiteral;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( CommandBufferLevel ) ) noexcept -> cds :: StringLiteral;
 
 #endif
 
@@ -8394,6 +8494,9 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( ComponentMapping ) const & ) noexcept -> cds :: String;
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( ImageSubresourceRange ) const & ) noexcept -> cds :: String;
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( ImageViewCreateInfo ) const & ) noexcept -> cds :: String;
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( CommandPoolCreateInfo ) const & ) noexcept -> cds :: String;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( CommandBufferAllocateInfo ) const & ) noexcept -> cds :: String;
 
 #endif
 
@@ -9255,6 +9358,9 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
             constexpr static __C_ENG_TYPE ( Version ) const version12      __C_ENG_MAYBE_UNUSED = { .variant = 0U, .major = 1U, .minor = 2U, .patch = 0U };
 
         }
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
 
     }
 }

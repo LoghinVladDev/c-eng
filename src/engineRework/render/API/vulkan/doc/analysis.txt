@@ -94,3 +94,17 @@ Execution Model
 VkInstance
     -> VkDevice
         -> VkQueues for commands
+
+
+        Pipeline creation strategy:
+
+            - Incentive - Objects can have different shaders -> pipeline for shader ->
+                multiple pipelines
+
+            - Analyse both scene objects & Objects that possibly could be instantiated into the Scene!!!
+
+            - Group scene objects by shader used, sort by most used desc ( the GPU needs
+                to be busy in pipeline swaps )
+            - Allocate all buffer space in advance for ALL required command / render / transfer / ... buffers
+            - For each shader, compute a pipeline, record commands, bind and save
+            - at draw, bind each and execute

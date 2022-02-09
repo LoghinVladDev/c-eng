@@ -886,6 +886,22 @@ static VkImageViewCreateInfo                                                imag
 static VkImageViewUsageCreateInfo                                           imageViewUsageCreateInfo;
 static VkSamplerYcbcrConversionInfo                                         samplerYcbcrConversionInfo;
 
+static PFN_vkCreateCommandPool                                              pVkCreateCommandPool;
+static PFN_vkDestroyCommandPool                                             pVkDestroyCommandPool;
+static PFN_vkResetCommandPool                                               pVkResetCommandPool;
+static VkCommandPoolCreateInfo                                              commandPoolCreateInfo;
+
+static PFN_vkAllocateCommandBuffers                                         pVkAllocateCommandBuffers;
+static PFN_vkResetCommandBuffer                                             pVkResetCommandBuffer;
+static PFN_vkFreeCommandBuffers                                             pVkFreeCommandBuffers;
+static VkCommandBufferAllocateInfo                                          commandBufferAllocateInfo;
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+static PFN_vkTrimCommandPool                                                pVkTrimCommandPool;
+#elif __C_ENG_VULKAN_API_EXTENSION_KHRONOS_MAINTENANCE_AVAILABLE
+static PFN_vkTrimCommandPoolKHR                                             pVkTrimCommandPool;
 #endif
 
 
@@ -13359,6 +13375,301 @@ auto vulkan :: destroyImageView (
             deviceHandle,
             handle,
             pUsedAllocationCallbacks
+    );
+
+    return ResultSuccess;
+}
+
+static inline auto toVulkanFormat (
+        VkCommandPoolCreateInfo                           * pDestination,
+        vulkan :: Type ( CommandPoolCreateInfo )    const * pSource
+) noexcept -> void {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if (
+            pDestination    == nullptr ||
+            pSource         == nullptr
+    ) {
+        return;
+    }
+
+#endif
+
+    pDestination->sType             = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
+    pDestination->pNext             = nullptr;
+    pDestination->flags             = static_cast < decltype ( pDestination->flags ) > ( pSource->flags );
+    pDestination->queueFamilyIndex  = static_cast < decltype ( pDestination->queueFamilyIndex ) > ( pSource->queueFamilyIndex );
+}
+
+auto vulkan :: createCommandPool (
+        Type ( DeviceHandle )                   deviceHandle,
+        Type ( CommandPoolCreateInfo )  const * pCreateInfo,
+        Type ( AllocationCallbacks )    const * pAllocationCallbacks,
+        Type ( CommandPoolHandle )            * pHandle
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if (
+            deviceHandle    == nullptr ||
+            pCreateInfo     == nullptr ||
+            pHandle         == nullptr
+    ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION (
+            deviceHandle,
+            pVkCreateCommandPool,
+            CREATE_COMMAND_POOL
+    )
+
+    VkAllocationCallbacks * pUsedAllocationCallbacks = nullptr;
+
+    if ( pAllocationCallbacks != nullptr ) {
+        pUsedAllocationCallbacks = & allocationCallbacks;
+        toVulkanFormat ( pAllocationCallbacks, & allocationCallbacks );
+    }
+
+    toVulkanFormat ( & commandPoolCreateInfo, pCreateInfo );
+
+    return static_cast < Type ( Result ) > (
+            pVkCreateCommandPool (
+                    deviceHandle,
+                    & commandPoolCreateInfo,
+                    pUsedAllocationCallbacks,
+                    pHandle
+            )
+    );
+}
+
+auto vulkan :: destroyCommandPool (
+        Type ( DeviceHandle )                   deviceHandle,
+        Type ( CommandPoolHandle )              handle,
+        Type ( AllocationCallbacks )    const * pAllocationCallbacks
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if (
+            deviceHandle    == nullptr ||
+            handle          == nullptr
+    ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION (
+            deviceHandle,
+            pVkDestroyCommandPool,
+            DESTROY_COMMAND_POOL
+    )
+
+    VkAllocationCallbacks * pUsedAllocationCallbacks = nullptr;
+
+    if ( pAllocationCallbacks != nullptr ) {
+        pUsedAllocationCallbacks = & allocationCallbacks;
+        toVulkanFormat ( pAllocationCallbacks, & allocationCallbacks );
+    }
+
+    pVkDestroyCommandPool (
+            deviceHandle,
+            handle,
+            pUsedAllocationCallbacks
+    );
+
+    return ResultSuccess;
+}
+
+auto vulkan :: resetCommandPool (
+        Type ( DeviceHandle )                   deviceHandle,
+        Type ( CommandPoolHandle )              handle,
+        Type ( CommandPoolResetFlags )          flags
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if (
+            deviceHandle    == nullptr ||
+            handle          == nullptr
+    ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION (
+            deviceHandle,
+            pVkResetCommandPool,
+            RESET_COMMAND_POOL
+    )
+
+    return static_cast < Type ( Result ) > (
+            pVkResetCommandPool (
+                deviceHandle,
+                handle,
+                flags
+            )
+    );
+}
+
+static auto inline toVulkanFormat (
+        VkCommandBufferAllocateInfo                        * pDestination,
+        vulkan :: Type ( CommandBufferAllocateInfo ) const * pSource
+) noexcept -> void {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if (
+            pDestination    == nullptr ||
+            pSource         == nullptr
+    ) {
+        return;
+    }
+
+#endif
+
+    pDestination->sType                 = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+    pDestination->pNext                 = nullptr;
+    pDestination->commandPool           = static_cast < decltype ( pDestination->commandPool ) > ( pSource->commandPool );
+    pDestination->level                 = static_cast < decltype ( pDestination->level ) > ( pSource->level );
+    pDestination->commandBufferCount    = static_cast < decltype ( pDestination->commandBufferCount ) > ( pSource->commandBufferCount );
+}
+
+auto vulkan :: allocateCommandBuffers (
+        Type ( DeviceHandle )                       deviceHandle,
+        Type ( CommandBufferAllocateInfo )  const * pAllocateInfo,
+        Type ( CommandBufferHandle )              * pHandles
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if (
+            deviceHandle    == nullptr ||
+            pAllocateInfo   == nullptr ||
+            pHandles        == nullptr
+    ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION (
+            deviceHandle,
+            pVkAllocateCommandBuffers,
+            ALLOCATE_COMMAND_BUFFERS
+    )
+
+    toVulkanFormat ( & commandBufferAllocateInfo, pAllocateInfo );
+
+    return static_cast < Type ( Result ) > (
+            pVkAllocateCommandBuffers (
+                    deviceHandle,
+                    & commandBufferAllocateInfo,
+                    & pHandles [0]
+            )
+    );
+}
+
+auto vulkan :: resetCommandBuffer (
+        Type ( CommandBufferHandle )        handle,
+        Type ( CommandBufferResetFlags )    flags
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if (
+            handle    == nullptr
+    ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION (
+            lastCreatedInstance,
+            pVkResetCommandBuffer,
+            RESET_COMMAND_BUFFER
+    )
+
+    return static_cast < Type ( Result ) > (
+            pVkResetCommandBuffer (
+                    handle,
+                    flags
+            )
+    );
+}
+
+auto vulkan :: freeCommandBuffers (
+        Type ( DeviceHandle )           deviceHandle,
+        Type ( CommandPoolHandle )      commandPoolHandle,
+        cds :: uint32                   commandBufferCount,
+        Type ( CommandBufferHandle )  * pCommandBuffers
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if (
+            deviceHandle        == nullptr ||
+            commandPoolHandle   == nullptr ||
+            pCommandBuffers     == nullptr
+    ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION (
+            deviceHandle,
+            pVkFreeCommandBuffers,
+            FREE_COMMAND_BUFFERS
+    )
+
+    pVkFreeCommandBuffers (
+            deviceHandle,
+            commandPoolHandle,
+            commandBufferCount,
+            pCommandBuffers
+    );
+
+    return ResultSuccess;
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_MAINTENANCE_AVAILABLE
+
+auto vulkan :: trimCommandPool (
+        Type ( DeviceHandle )           deviceHandle,
+        Type ( CommandPoolHandle )      handle,
+        Type ( CommandPoolTrimFlags )   flags
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if (
+            deviceHandle    == nullptr ||
+            handle          == nullptr
+    ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION (
+            deviceHandle,
+            pVkTrimCommandPool,
+            TRIM_COMMAND_POOL
+    )
+
+    pVkTrimCommandPool (
+            deviceHandle,
+            handle,
+            flags
     );
 
     return ResultSuccess;

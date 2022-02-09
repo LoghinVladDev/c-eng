@@ -115,7 +115,7 @@ static inline auto choosePresentMode (
 
     for ( uint32 i = 0U; i < pProperties->presentModes.count; ++ i ) {
         if ( pProperties->presentModes.pPresentModes[i] == PresentModeMailbox ) {
-            return PresentModeImmediate;
+            return PresentModeMailbox;
         }
     }
 

@@ -323,6 +323,53 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
                 Type ( AllocationCallbacks )    const *
         ) noexcept -> Type ( Result );
 
+        NoDiscard MaybeUnused extern auto createCommandPool (
+                Type ( DeviceHandle ),
+                Type ( CommandPoolCreateInfo )  const *,
+                Type ( AllocationCallbacks )    const *,
+                Type ( CommandPoolHandle )            *
+        ) noexcept -> Type ( Result );
+
+        NoDiscard MaybeUnused extern auto destroyCommandPool (
+                Type ( DeviceHandle ),
+                Type ( CommandPoolHandle ),
+                Type ( AllocationCallbacks )    const *
+        ) noexcept -> Type ( Result );
+
+        NoDiscard MaybeUnused extern auto resetCommandPool (
+                Type ( DeviceHandle ),
+                Type ( CommandPoolHandle ),
+                Type ( CommandPoolResetFlags )
+        ) noexcept -> Type ( Result );
+
+        NoDiscard MaybeUnused extern auto allocateCommandBuffers (
+                Type ( DeviceHandle ),
+                Type ( CommandBufferAllocateInfo )  const *,
+                Type ( CommandBufferHandle )              *
+        ) noexcept -> Type ( Result );
+
+        NoDiscard MaybeUnused extern auto resetCommandBuffer (
+                Type ( CommandBufferHandle ),
+                Type ( CommandBufferResetFlags )
+        ) noexcept -> Type ( Result );
+
+        NoDiscard MaybeUnused extern auto freeCommandBuffers (
+                Type ( DeviceHandle ),
+                Type ( CommandPoolHandle ),
+                cds :: uint32,
+                Type ( CommandBufferHandle )    *
+        ) noexcept -> Type ( Result );
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_MAINTENANCE_AVAILABLE
+
+        NoDiscard MaybeUnused extern auto trimCommandPool (
+                Type ( DeviceHandle ),
+                Type ( CommandPoolHandle ),
+                Type ( CommandPoolTrimFlags )
+        ) noexcept -> Type ( Result );
+
 #endif
 
     }
