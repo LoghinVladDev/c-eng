@@ -10,6 +10,8 @@
 #include <Logger.hpp>
 #include <Settings.hpp>
 #include <Allocator.hpp>
+#include <CDS/Mutex>
+#include <CDS/LockGuard>
 
 
 using namespace cds; // NOLINT(clion-misra-cpp2008-7-3-4)
@@ -19,6 +21,15 @@ using namespace vulkan; // NOLINT(clion-misra-cpp2008-7-3-4)
 
 #define C_ENG_MAP_START     CLASS ( SwapChain,  ENGINE_PARENT ( VulkanRenderObject ) )
 #include <ObjectMapping.hpp>
+
+
+struct SwapChainImages {
+    Type ( ImageHandle )        imagesArray [ __C_ENG_VULKAN_CORE_SWAP_CHAIN_IMAGE_MAX_COUNT ];
+    Type ( SwapChainHandle )    swapChainHandle;
+};
+
+static SwapChainImages  swapChainImageAreas [ __C_ENG_VULKAN_CORE_PHYSICAL_DEVICE_MAX_COUNT * __C_ENG_VULKAN_CORE_PHYSICAL_DEVICE_SURFACE_MAX_COUNT ];
+static Mutex            areasLock;
 
 
 static inline auto chooseFormat (
@@ -287,13 +298,18 @@ auto Self :: init (
     }
 
     this->_device = pDevice;
+    this->_properties = {
+        .imageExtent    = createInfo.imageExtent,
+        .imageFormat    = createInfo.imageFormat
+    };
 
-    return * this;
+    return this->reserveAndAcquireImages ();
 }
 
 auto Self :: clear () noexcept -> Self & {
 
     if ( this->handle() != nullptr ) {
+        (void) this->freeImages ();
 
         auto result = destroySwapChain (
                 this->_device->handle(),
@@ -305,8 +321,80 @@ auto Self :: clear () noexcept -> Self & {
             __C_ENG_LOG_DETAILED_API_CALL_EXCEPTION ( error, "destroySwapChain", result );
         }
 
-        this->_handle = nullptr;
-        this->_device = nullptr;
+        this->_handle           = nullptr;
+        this->_device           = nullptr;
+    }
+
+    return * this;
+}
+
+auto Self :: reserveAndAcquireImages () noexcept(false) -> Self & {
+
+    SwapChainImages * pArea = nullptr;
+
+    LockGuard guard ( areasLock );
+
+    for ( auto & swapChainImageArea : swapChainImageAreas ) {
+        if ( swapChainImageArea.swapChainHandle == nullptr || swapChainImageArea.swapChainHandle == this->handle() ) {
+            pArea = & swapChainImageArea;
+            break;
+        }
+    }
+
+    if ( pArea == nullptr ) {
+        throw Type ( VulkanAPIException ) ( "No area to reserve images into. Check configuration size" );
+    }
+
+    uint32 imageCount = 0U;
+
+    auto result = getSwapChainImages (
+            this->device()->handle(),
+            this->handle(),
+            & imageCount
+    );
+
+    if ( result != ResultSuccess ) {
+        __C_ENG_LOG_AND_THROW_DETAILED_API_CALL_EXCEPTION ( error, "getSwapChainImages", result );
+    }
+
+    result = getSwapChainImages (
+            this->device()->handle(),
+            this->handle(),
+            & imageCount,
+            & pArea->imagesArray[0]
+    );
+
+    if ( result != ResultSuccess ) {
+        __C_ENG_LOG_AND_THROW_DETAILED_API_CALL_EXCEPTION ( error, "getSwapChainImages", result );
+    }
+
+    pArea->swapChainHandle = this->_handle;
+
+    this->_images.count     = imageCount;
+    this->_images.pImages   = & pArea->imagesArray[0];
+
+    return * this;
+}
+
+auto Self :: freeImages() noexcept -> VSwapChain & {
+    for ( auto & imageArea : swapChainImageAreas ) {
+        if ( imageArea.swapChainHandle == this->_handle ) {
+
+            imageArea.swapChainHandle = nullptr;
+            this->_images.count     = 0U;
+            this->_images.pImages   = nullptr;
+            return * this;
+        }
+    }
+
+    for ( auto & imageArea : swapChainImageAreas ) {
+        if ( imageArea.imagesArray == this->_images.pImages ) {
+
+            imageArea.swapChainHandle = nullptr;
+            this->_images.count     = 0U;
+            this->_images.pImages   = nullptr;
+            return * this;
+        }
     }
 
     return * this;

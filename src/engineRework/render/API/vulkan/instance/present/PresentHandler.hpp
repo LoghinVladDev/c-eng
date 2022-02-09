@@ -39,14 +39,22 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
                 PresentModes                    presentModes;
             };
 
+            struct ImageViews {
+                Type ( ImageViewHandle )  * pImageViews;
+                cds :: uint32               count;
+            };
+
+            Field ( TYPE ( ImageViews ),    imageViews, DEFAULT_VALUE ( nullptr, 0U ),  GET_DEFAULT,    SET_DEFAULT_PROTECTED )
+
         private:
             static auto deviceSupportsSurfacePresent ( Type ( Device ) const *, Type ( SurfaceHandle ) ) noexcept (false) -> bool;
 
         protected:
             static auto propertiesForDevice ( Type ( PhysicalDeviceHandle ), Type ( SurfaceHandle ) ) noexcept (false) -> SurfaceProperties const *;
+            auto acquireImageViews () noexcept -> Type ( ImageViewHandle ) *;
+            auto releaseImageViews () noexcept -> void;
 
         public:
-
             virtual auto init ( Type ( Device ) const * ) noexcept (false) -> Self & = 0;
             auto clear () noexcept -> Self & override = 0;
 

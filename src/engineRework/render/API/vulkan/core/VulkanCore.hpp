@@ -2565,6 +2565,97 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #define C_ENG_MAP_END
 #include <ObjectMapping.hpp>
 
+#define C_ENG_MAP_START     ENUM ( ImageViewCreateFlag,   TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+
+#if __C_ENG_VULKAN_API_EXTENSION_FRAGMENT_DENSITY_MAP_AVAILABLE
+
+            Field ( FragmentDensityMapDynamic,  VkImageViewCreateFlagBits :: VK_IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DYNAMIC_BIT_EXT ),
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_FRAGMENT_DENSITY_MAP_2_AVAILABLE
+
+            Field ( FragmentDensityMapDeferred, VkImageViewCreateFlagBits :: VK_IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DEFERRED_BIT_EXT ),
+
+#endif
+
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START     ENUM ( ImageViewType,   TYPE ( cds :: uint8 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( 1D,         VkImageViewType :: VK_IMAGE_VIEW_TYPE_1D ),
+            Field ( 2D,         VkImageViewType :: VK_IMAGE_VIEW_TYPE_2D ),
+            Field ( 3D,         VkImageViewType :: VK_IMAGE_VIEW_TYPE_3D ),
+            Field ( Cube,       VkImageViewType :: VK_IMAGE_VIEW_TYPE_CUBE ),
+            Field ( 1DArray,    VkImageViewType :: VK_IMAGE_VIEW_TYPE_1D_ARRAY ),
+            Field ( 2DArray,    VkImageViewType :: VK_IMAGE_VIEW_TYPE_2D_ARRAY ),
+            Field ( CubeArray,  VkImageViewType :: VK_IMAGE_VIEW_TYPE_CUBE_ARRAY ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START     ENUM ( ComponentSwizzle,   TYPE ( cds :: uint8 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( Identity,   VkComponentSwizzle :: VK_COMPONENT_SWIZZLE_IDENTITY ),
+            Field ( Zero,       VkComponentSwizzle :: VK_COMPONENT_SWIZZLE_ZERO ),
+            Field ( One,        VkComponentSwizzle :: VK_COMPONENT_SWIZZLE_ONE ),
+            Field ( R,          VkComponentSwizzle :: VK_COMPONENT_SWIZZLE_R ),
+            Field ( G,          VkComponentSwizzle :: VK_COMPONENT_SWIZZLE_G ),
+            Field ( B,          VkComponentSwizzle :: VK_COMPONENT_SWIZZLE_B ),
+            Field ( A,          VkComponentSwizzle :: VK_COMPONENT_SWIZZLE_A ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START     ENUM ( ImageAspectFlag,   TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( Color,          VkImageAspectFlagBits :: VK_IMAGE_ASPECT_COLOR_BIT ),
+            Field ( Depth,          VkImageAspectFlagBits :: VK_IMAGE_ASPECT_DEPTH_BIT ),
+            Field ( Stencil,        VkImageAspectFlagBits :: VK_IMAGE_ASPECT_STENCIL_BIT ),
+            Field ( Metadata,       VkImageAspectFlagBits :: VK_IMAGE_ASPECT_METADATA_BIT ),
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+
+            Field ( Plane0,         VkImageAspectFlagBits :: VK_IMAGE_ASPECT_PLANE_0_BIT ),
+            Field ( Plane1,         VkImageAspectFlagBits :: VK_IMAGE_ASPECT_PLANE_1_BIT ),
+            Field ( Plane2,         VkImageAspectFlagBits :: VK_IMAGE_ASPECT_PLANE_2_BIT ),
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_MAINTENANCE_4_AVAILABLE
+
+            Field ( None,           VkImageAspectFlagBits :: VK_IMAGE_ASPECT_NONE_KHR ),
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_IMAGE_DRM_FORMAT_MODIFIER_AVAILABLE
+
+            Field ( MemoryPlane0,   VkImageAspectFlagBits :: VK_IMAGE_ASPECT_MEMORY_PLANE_0_BIT_EXT ),
+            Field ( MemoryPlane1,   VkImageAspectFlagBits :: VK_IMAGE_ASPECT_MEMORY_PLANE_1_BIT_EXT ),
+            Field ( MemoryPlane2,   VkImageAspectFlagBits :: VK_IMAGE_ASPECT_MEMORY_PLANE_2_BIT_EXT ),
+            Field ( MemoryPlane3,   VkImageAspectFlagBits :: VK_IMAGE_ASPECT_MEMORY_PLANE_3_BIT_EXT ),
+
+#endif
+
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
 #endif
 
 
@@ -3094,6 +3185,8 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_ALIAS ( PhysicalDeviceHandle,           VkPhysicalDevice );
         __C_ENG_ALIAS ( DeviceHandle,                   VkDevice );
         __C_ENG_ALIAS ( QueueHandle,                    VkQueue );
+        __C_ENG_ALIAS ( ImageHandle,                    VkImage );
+        __C_ENG_ALIAS ( ImageViewHandle,                VkImageView );
 
         __C_ENG_ALIAS ( InstanceCreateFlags,            VkInstanceCreateFlags );
         __C_ENG_ALIAS ( DebugMessengerCreateFlags,      VkDebugUtilsMessengerCreateFlagsEXT );
@@ -3104,12 +3197,20 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_ALIAS ( QueueFlags,                     VkQueueFlags );
         __C_ENG_ALIAS ( PipelineStageFlags,             VkPipelineStageFlags );
         __C_ENG_ALIAS ( ImageUsageFlags,                VkImageUsageFlags );
+        __C_ENG_ALIAS ( ImageViewCreateFlags,           VkImageViewCreateFlags );
+        __C_ENG_ALIAS ( ImageAspectFlags,               VkImageAspectFlags );
 
         __C_ENG_ALIAS ( AllocationFunction,             PFN_vkAllocationFunction );
         __C_ENG_ALIAS ( ReallocationFunction,           PFN_vkReallocationFunction );
         __C_ENG_ALIAS ( FreeFunction,                   PFN_vkFreeFunction );
         __C_ENG_ALIAS ( InternalAllocationNotification, PFN_vkInternalAllocationNotification );
         __C_ENG_ALIAS ( InternalFreeNotification,       PFN_vkInternalFreeNotification );
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+
+        __C_ENG_ALIAS ( SamplerYCBCRConversion,         VkSamplerYcbcrConversion );
 
 #endif
 
@@ -8056,6 +8157,55 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #endif
 
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( ComponentMapping,  NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( ComponentSwizzle )   r;
+            Type ( ComponentSwizzle )   g;
+            Type ( ComponentSwizzle )   b;
+            Type ( ComponentSwizzle )   a;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START     STRUCT ( ImageSubresourceRange,  NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( ImageAspectFlags )   aspectMask;
+            cds :: uint32               baseMipLevel;
+            cds :: uint32               levelCount;
+            cds :: uint32               baseArrayLayer;
+            cds :: uint32               layerCount;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START     STRUCT ( ImageViewCreateInfo,   NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )              structureType;
+            Type ( GenericStructure )   const * pNext;
+            Type ( ImageViewCreateFlags )       flags;
+            Type ( ImageHandle )                image;
+            Type ( ImageViewType )              viewType;
+            Type ( Format )                     format;
+            Type ( ComponentMapping )           components;
+            Type ( ImageSubresourceRange )      subresourceRange;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
 #if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
 
 #define C_ENG_MAP_START     STRUCT ( DeviceQueueInfo,   NO_PARENT )
@@ -8067,6 +8217,30 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
             __C_ENG_TYPE ( DeviceQueueCreateFlags )     flags;
             cds :: uint32                               queueFamilyIndex;
             cds :: uint32                               queueIndex;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START     STRUCT ( ImageViewUsageCreateInfo,  NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )              structureType;
+            Type ( GenericStructure )   const * pNext;
+            Type ( ImageUsageFlags )            usage;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START     STRUCT ( SamplerYCBCRConversionInfo,    NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )              structureType;
+            Type ( GenericStructure )   const * pNext;
+            Type ( SamplerYCBCRConversion )     conversion;
         };
 
 #define C_ENG_MAP_END
@@ -8095,6 +8269,10 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( ImageUsageFlag ) ) noexcept -> cds :: StringLiteral;
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( Format ) ) noexcept -> cds :: StringLiteral;
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( SharingMode ) ) noexcept -> cds :: StringLiteral;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( ImageViewCreateFlag ) ) noexcept -> cds :: StringLiteral;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( ImageViewType ) ) noexcept -> cds :: StringLiteral;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( ComponentSwizzle ) ) noexcept -> cds :: StringLiteral;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( ImageAspectFlag ) ) noexcept -> cds :: StringLiteral;
 
 #endif
 
@@ -8213,6 +8391,10 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( DeviceCreateInfo ) const & ) noexcept -> cds :: String;
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( DeviceQueueCreateInfo ) const & ) noexcept -> cds :: String;
 
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( ComponentMapping ) const & ) noexcept -> cds :: String;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( ImageSubresourceRange ) const & ) noexcept -> cds :: String;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( ImageViewCreateInfo ) const & ) noexcept -> cds :: String;
+
 #endif
 
 #if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
@@ -8238,6 +8420,8 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( DeviceGroupDeviceCreateInfo ) const & ) noexcept -> cds :: String;
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( DeviceQueueInfo ) const & ) noexcept -> cds :: String;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( ImageViewUsageCreateInfo ) const & ) noexcept -> cds :: String;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( SamplerYCBCRConversionInfo ) const & ) noexcept -> cds :: String;
 
 #endif
 

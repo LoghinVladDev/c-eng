@@ -299,6 +299,30 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
                 Type ( AllocationCallbacks ) const *
         ) noexcept -> Type ( Result );
 
+        NoDiscard MaybeUnused extern auto getSwapChainImages (
+                Type ( DeviceHandle ),
+                Type ( SwapChainHandle ),
+                cds :: uint32               *,
+                Type ( ImageHandle )        * = nullptr
+        ) noexcept -> Type ( Result );
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+
+        NoDiscard MaybeUnused extern auto createImageView (
+                Type ( DeviceHandle ),
+                Type ( ImageViewCreateInfo )    const *,
+                Type ( AllocationCallbacks )    const *,
+                Type ( ImageViewHandle )              *
+        ) noexcept -> Type ( Result );
+
+        NoDiscard MaybeUnused extern auto destroyImageView (
+                Type ( DeviceHandle ),
+                Type ( ImageViewHandle ),
+                Type ( AllocationCallbacks )    const *
+        ) noexcept -> Type ( Result );
+
 #endif
 
     }

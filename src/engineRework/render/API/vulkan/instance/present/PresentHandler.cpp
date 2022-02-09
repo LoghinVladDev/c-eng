@@ -7,7 +7,6 @@
 #include <VulkanAPI.hpp>
 #include <CDS/Mutex>
 #include <CDS/LockGuard>
-#include <VulkanAPI.hpp>
 #include <Logger.hpp>
 #include <Device.hpp>
 #include <PhysicalDevice.hpp>
@@ -35,6 +34,16 @@ static DeviceSurfaceProperties properties [ __C_ENG_VULKAN_CORE_PHYSICAL_DEVICE_
 static uint32 propertyCount;
 
 static DeviceSurfaceProperties * pLastUsedDeviceProperties;
+
+
+struct ImageViewArea {
+    Type ( ImageViewHandle )    imageViewHandles [ __C_ENG_VULKAN_CORE_SWAP_CHAIN_IMAGE_MAX_COUNT ];
+    Self                const * pOwner;
+};
+
+static Mutex imageViewsLock;
+
+static ImageViewArea imageViewAreas [ __C_ENG_VULKAN_CORE_PHYSICAL_DEVICE_MAX_COUNT * __C_ENG_VULKAN_CORE_PHYSICAL_DEVICE_SURFACE_MAX_COUNT ];
 
 
 auto Self :: propertiesForDevice (
@@ -173,4 +182,30 @@ auto Self :: createSuitablePresentHandler (
     }
 
     return nullptr;
+}
+
+auto Self :: acquireImageViews () noexcept -> Type ( ImageViewHandle ) * {
+
+    LockGuard guard ( imageViewsLock );
+
+    for ( auto & area : imageViewAreas ) {
+        if ( area.pOwner == nullptr ) {
+            area.pOwner = this;
+            return area.imageViewHandles;
+        }
+    }
+
+    return nullptr;
+}
+
+auto Self :: releaseImageViews () noexcept -> void {
+
+    LockGuard guard ( imageViewsLock );
+
+    for ( auto & area : imageViewAreas ) {
+        if ( area.pOwner == this ) {
+            area.pOwner = nullptr;
+            return;
+        }
+    }
 }

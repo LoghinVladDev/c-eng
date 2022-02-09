@@ -2243,8 +2243,6 @@ auto vulkan :: toString (
 
 #endif
 
-#include <CDS/String>
-
 auto vulkan :: toString (
         __C_ENG_TYPE ( Offset2D ) const & offset
 ) noexcept -> String {
@@ -7403,6 +7401,180 @@ auto vulkan :: toString (
             ", pNext = "                    + :: toString ( createInfo.pNext ) +
             ", monitorHandle = "            + :: toString ( createInfo.monitorHandle ) +
             " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+
+auto vulkan :: toString (
+        Type ( ImageViewCreateFlag ) flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+
+#if __C_ENG_VULKAN_API_EXTENSION_FRAGMENT_DENSITY_MAP_AVAILABLE
+
+        case ImageViewCreateFlagFragmentDensityMapDynamic:  { asString = "DensityMapDynamic";   break; }
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_FRAGMENT_DENSITY_MAP_2_AVAILABLE
+
+        case ImageViewCreateFlagFragmentDensityMapDeferred: { asString = "DensityMapDeferred";  break; }
+
+#endif
+
+    }
+
+    return asString;
+}
+
+auto vulkan :: toString (
+        Type ( ImageViewType ) type
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( type ) {
+        case ImageViewType1D:           { asString = "1D";          break; }
+        case ImageViewType2D:           { asString = "2D";          break; }
+        case ImageViewType3D:           { asString = "3D";          break; }
+        case ImageViewTypeCube:         { asString = "Cube";        break; }
+        case ImageViewType1DArray:      { asString = "1DArray";     break; }
+        case ImageViewType2DArray:      { asString = "2DArray";     break; }
+        case ImageViewTypeCubeArray:    { asString = "CubeArray";   break; }
+    }
+
+    return asString;
+}
+
+auto vulkan :: toString (
+        Type ( ComponentSwizzle ) swizzle
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( swizzle ) {
+        case ComponentSwizzleIdentity:  { asString = "Identity";    break; }
+        case ComponentSwizzleZero:      { asString = "Zero";        break; }
+        case ComponentSwizzleOne:       { asString = "One";         break; }
+        case ComponentSwizzleR:         { asString = "R";           break; }
+        case ComponentSwizzleG:         { asString = "G";           break; }
+        case ComponentSwizzleB:         { asString = "B";           break; }
+        case ComponentSwizzleA:         { asString = "A";           break; }
+    }
+
+    return asString;
+}
+
+auto vulkan :: toString (
+        Type ( ImageAspectFlag ) flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case ImageAspectFlagColor:          { asString = "Color";           break; }
+        case ImageAspectFlagDepth:          { asString = "Depth";           break; }
+        case ImageAspectFlagStencil:        { asString = "Stencil";         break; }
+        case ImageAspectFlagMetadata:       { asString = "Metadata";        break; }
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+
+        case ImageAspectFlagPlane0:         { asString = "Plane0";          break; }
+        case ImageAspectFlagPlane1:         { asString = "Plane1";          break; }
+        case ImageAspectFlagPlane2:         { asString = "Plane2";          break; }
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_MAINTENANCE_4_AVAILABLE
+
+        case ImageAspectFlagNone:           { asString = "None";            break; }
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_IMAGE_DRM_FORMAT_MODIFIER_AVAILABLE
+
+        case ImageAspectFlagMemoryPlane0:   { asString = "MemoryPlane0";    break; }
+        case ImageAspectFlagMemoryPlane1:   { asString = "MemoryPlane1";    break; }
+        case ImageAspectFlagMemoryPlane2:   { asString = "MemoryPlane2";    break; }
+        case ImageAspectFlagMemoryPlane3:   { asString = "MemoryPlane3";    break; }
+
+#endif
+
+    }
+
+    return asString;
+}
+
+auto vulkan :: toString (
+        Type ( ComponentMapping ) const & mapping
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( ComponentMapping ) ) ""
+            "{ r = "_s  + toString ( mapping.r ) +
+            ", g = "    + toString ( mapping.g ) +
+            ", b = "    + toString ( mapping.b ) +
+            ", a = "    + toString ( mapping.a ) +
+            " }";
+}
+
+auto vulkan :: toString (
+        Type ( ImageSubresourceRange ) const & range
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( ImageSubresourceRange ) ) ""
+            "{ aspectMask = "_s     + "0b" + Long ( range.aspectMask ).toString(2) +
+            ", baseMipLevel = "     + range.baseMipLevel +
+            ", levelCount = "       + range.levelCount +
+            ", baseArrayLayer = "   + range.baseArrayLayer +
+            ", layerCount = "       + range.layerCount +
+            " }";
+}
+
+auto vulkan :: toString (
+        Type ( ImageViewCreateInfo ) const & createInfo
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( ImageViewCreateInfo ) ) ""
+            "{ structureType = "_s  + toString ( createInfo.structureType ) +
+            ", pNext = "            + :: toString ( createInfo.pNext ) +
+            ", flags = "            + "0b" + Long ( createInfo.flags ).toString(2) +
+            ", image = "            + :: toString ( createInfo.image ) +
+            ", viewType = "         + toString ( createInfo.viewType ) +
+            ", format = "           + toString ( createInfo.format ) +
+            ", components = "       + toString ( createInfo.components ) +
+            ", subresourceRange = " + toString ( createInfo.subresourceRange ) +
+            " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+
+auto vulkan :: toString (
+        Type ( ImageViewUsageCreateInfo ) const & createInfo
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( ImageViewUsageCreateInfo ) ) ""
+           "{ structureType = "_s  + toString ( createInfo.structureType ) +
+           ", pNext = "            + :: toString ( createInfo.pNext ) +
+           ", usage = "            + "0b" + Long ( createInfo.usage ).toString(2) +
+           " }";
+}
+
+auto vulkan :: toString (
+        Type ( SamplerYCBCRConversionInfo ) const & createInfo
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( SamplerYCBCRConversionInfo ) ) ""
+           "{ structureType = "_s  + toString ( createInfo.structureType ) +
+           ", pNext = "            + :: toString ( createInfo.pNext ) +
+           ", conversion = "       + :: toString ( createInfo.conversion ) +
+           " }";
 }
 
 #endif

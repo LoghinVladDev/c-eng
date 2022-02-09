@@ -859,7 +859,9 @@ static PFN_vkGetPhysicalDeviceSurfacePresentModes2EXT                       pVkG
 
 static PFN_vkCreateSwapchainKHR                                             pVkCreateSwapchain;
 static PFN_vkDestroySwapchainKHR                                            pVkDestroySwapchain;
+static PFN_vkGetSwapchainImagesKHR                                          pVkGetSwapchainImages;
 static VkSwapchainCreateInfoKHR                                             swapchainCreateInfo;
+static VkImage                                                              swapchainImages [ __C_ENG_VULKAN_CORE_SWAP_CHAIN_IMAGE_MAX_COUNT ];
 
 #endif
 
@@ -873,6 +875,16 @@ static VkFormat                                                             view
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_WIN32_SURFACE_AVAILABLE && __C_ENG_VULKAN_API_EXTENSION_FULL_SCREEN_EXCLUSIVE_AVAILABLE
 
 static VkSurfaceFullScreenExclusiveWin32InfoEXT                             surfaceFullScreenExclusiveWin32Info;
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+
+static PFN_vkCreateImageView                                                pVkCreateImageView;
+static PFN_vkDestroyImageView                                               pVkDestroyImageView;
+static VkImageViewCreateInfo                                                imageViewCreateInfo;
+static VkImageViewUsageCreateInfo                                           imageViewUsageCreateInfo;
+static VkSamplerYcbcrConversionInfo                                         samplerYcbcrConversionInfo;
 
 #endif
 
@@ -13096,6 +13108,254 @@ auto vulkan :: destroySwapChain (
     }
 
     pVkDestroySwapchain (
+            deviceHandle,
+            handle,
+            pUsedAllocationCallbacks
+    );
+
+    return ResultSuccess;
+}
+
+auto vulkan :: getSwapChainImages (
+        Type ( DeviceHandle )       deviceHandle,
+        Type ( SwapChainHandle )    swapChainHandle,
+        uint32                    * pImageCount,
+        Type ( ImageHandle )      * pImages
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if (
+            deviceHandle    == nullptr ||
+            swapChainHandle == nullptr ||
+            pImageCount     == nullptr
+    ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION (
+            lastCreatedInstance,
+            pVkGetSwapchainImages,
+            GET_SWAP_CHAIN_IMAGES
+    )
+
+    if ( pImages == nullptr ) {
+        return static_cast < Type ( Result ) > (
+                pVkGetSwapchainImages (
+                        deviceHandle,
+                        swapChainHandle,
+                        pImageCount,
+                        nullptr
+                )
+        );
+    }
+
+    if ( * pImageCount > __C_ENG_VULKAN_CORE_SWAP_CHAIN_IMAGE_MAX_COUNT ) {
+        return ResultErrorConfigurationArraySizeSmall;
+    }
+
+    result = pVkGetSwapchainImages (
+            deviceHandle,
+            swapChainHandle,
+            pImageCount,
+            & swapchainImages [0]
+    );
+
+    if ( result != VK_SUCCESS ) {
+        return static_cast < Type ( Result ) > ( result );
+    }
+
+    for ( uint32 i = 0U; i < * pImageCount; ++ i ) {
+        pImages[i] = static_cast < Type ( ImageHandle ) > ( swapchainImages [i] );
+    }
+
+    return ResultSuccess;
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+
+static inline auto toVulkanFormat (
+        VkImageViewUsageCreateInfo                        * pDestination,
+        vulkan :: Type ( ImageViewUsageCreateInfo ) const * pSource
+) noexcept -> void {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if (
+            pDestination    == nullptr ||
+            pSource         == nullptr
+    ) {
+        return;
+    }
+
+#endif
+
+    pDestination->sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_USAGE_CREATE_INFO;
+    pDestination->pNext = nullptr;
+    pDestination->usage = static_cast < decltype ( pDestination->usage ) > ( pSource->usage );
+}
+
+static inline auto toVulkanFormat (
+        VkSamplerYcbcrConversionInfo                        * pDestination,
+        vulkan :: Type ( SamplerYCBCRConversionInfo ) const * pSource
+) noexcept -> void {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if (
+            pDestination    == nullptr ||
+            pSource         == nullptr
+    ) {
+        return;
+    }
+
+#endif
+
+    pDestination->sType         = VK_STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_INFO;
+    pDestination->pNext         = nullptr;
+    pDestination->conversion    = static_cast < decltype ( pDestination->conversion ) > ( pSource->conversion );
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+
+static inline auto toVulkanFormat (
+        VkImageViewCreateInfo                        * pDestination,
+        vulkan :: Type ( ImageViewCreateInfo ) const * pSource
+) noexcept -> void {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if (
+            pDestination    == nullptr ||
+            pSource         == nullptr
+    ) {
+        return;
+    }
+
+#endif
+
+    pDestination->sType                             = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+    pDestination->pNext                             = nullptr;
+    pDestination->flags                             = static_cast < VkImageViewCreateFlags > ( pSource->flags );
+    pDestination->image                             = static_cast < VkImage > ( pSource->image );
+    pDestination->viewType                          = static_cast < VkImageViewType > ( pSource->viewType );
+    pDestination->format                            = static_cast < VkFormat > ( pSource->format );
+    pDestination->components.r                      = static_cast < VkComponentSwizzle > ( pSource->components.r );
+    pDestination->components.g                      = static_cast < VkComponentSwizzle > ( pSource->components.g );
+    pDestination->components.b                      = static_cast < VkComponentSwizzle > ( pSource->components.b );
+    pDestination->components.a                      = static_cast < VkComponentSwizzle > ( pSource->components.a );
+    pDestination->subresourceRange.aspectMask       = static_cast < VkImageAspectFlags > ( pSource->subresourceRange.aspectMask );
+    pDestination->subresourceRange.layerCount       = pSource->subresourceRange.layerCount;
+    pDestination->subresourceRange.baseMipLevel     = pSource->subresourceRange.baseMipLevel;
+    pDestination->subresourceRange.levelCount       = pSource->subresourceRange.levelCount;
+    pDestination->subresourceRange.baseArrayLayer   = pSource->subresourceRange.baseArrayLayer;
+
+    auto pCurrentInChain    = reinterpret_cast < vulkan :: Type ( GenericInStructure ) const * > ( pSource->pNext );
+    auto pCurrentInVkChain  = reinterpret_cast < VkBaseOutStructure * > ( pDestination );
+
+    while ( pCurrentInChain != nullptr ) {
+
+        switch ( pCurrentInChain->structureType ) {
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+
+                case vulkan :: StructureTypeImageViewUsageCreateInfo:   { pCurrentInVkChain->pNext = reinterpret_cast < VkBaseOutStructure * > ( & imageViewUsageCreateInfo );      toVulkanFormat ( & imageViewUsageCreateInfo, reinterpret_cast < vulkan :: Type ( ImageViewUsageCreateInfo ) const * > ( pCurrentInChain ) );        break; }
+                case vulkan :: StructureTypeSamplerYCBCRConversionInfo: { pCurrentInVkChain->pNext = reinterpret_cast < VkBaseOutStructure * > ( & samplerYcbcrConversionInfo );    toVulkanFormat ( & samplerYcbcrConversionInfo, reinterpret_cast < vulkan :: Type ( SamplerYCBCRConversionInfo ) const * > ( pCurrentInChain ) );    break; }
+
+#endif
+
+            default:    { break; }
+        }
+
+        if ( pCurrentInVkChain->pNext != nullptr ) {
+            pCurrentInVkChain = pCurrentInVkChain->pNext;
+        }
+
+        pCurrentInChain = pCurrentInChain->pNext;
+    }
+}
+
+auto vulkan :: createImageView (
+        Type ( DeviceHandle )                   deviceHandle,
+        Type ( ImageViewCreateInfo )    const * pCreateInfo,
+        Type ( AllocationCallbacks )    const * pAllocationCallbacks,
+        Type ( ImageViewHandle )              * pHandle
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if (
+            deviceHandle    == nullptr ||
+            pCreateInfo     == nullptr ||
+            pHandle         == nullptr
+    ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION (
+            lastCreatedInstance,
+            pVkCreateImageView,
+            CREATE_IMAGE_VIEW
+    )
+
+    VkAllocationCallbacks * pUsedAllocationCallbacks = nullptr;
+
+    if ( pAllocationCallbacks != nullptr ) {
+        pUsedAllocationCallbacks = & allocationCallbacks;
+        toVulkanFormat ( pAllocationCallbacks, & allocationCallbacks );
+    }
+
+    toVulkanFormat ( & imageViewCreateInfo, pCreateInfo );
+
+    return static_cast < Type ( Result ) > (
+            pVkCreateImageView (
+                    deviceHandle,
+                    & imageViewCreateInfo,
+                    pUsedAllocationCallbacks,
+                    pHandle
+            )
+    );
+}
+
+auto vulkan :: destroyImageView (
+        Type ( DeviceHandle )                   deviceHandle,
+        Type ( ImageViewHandle )                handle,
+        Type ( AllocationCallbacks )    const * pAllocationCallbacks
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if (
+            deviceHandle    == nullptr ||
+            handle          == nullptr
+    ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION (
+            lastCreatedInstance,
+            pVkDestroyImageView,
+            DESTROY_IMAGE_VIEW
+    )
+
+    VkAllocationCallbacks * pUsedAllocationCallbacks = nullptr;
+
+    if ( pAllocationCallbacks != nullptr ) {
+        pUsedAllocationCallbacks = & allocationCallbacks;
+        toVulkanFormat ( pAllocationCallbacks, & allocationCallbacks );
+    }
+
+    pVkDestroyImageView (
             deviceHandle,
             handle,
             pUsedAllocationCallbacks

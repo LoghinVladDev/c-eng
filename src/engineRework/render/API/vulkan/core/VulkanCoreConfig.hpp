@@ -26,6 +26,8 @@
 
 #define __C_ENG_VULKAN_CORE_VIEW_FORMAT_MAX_COUNT 16U
 
+#define __C_ENG_VULKAN_CORE_SWAP_CHAIN_IMAGE_MAX_COUNT 256U
+
 #define __C_ENG_VULKAN_CORE_FUNCTION_NAME_ENUMERATE_INSTANCE_VERSION                                        "vkEnumerateInstanceVersion"
 #define __C_ENG_VULKAN_CORE_FUNCTION_NAME_ENUMERATE_INSTANCE_LAYER_PROPERTIES                               "vkEnumerateInstanceLayerProperties"
 #define __C_ENG_VULKAN_CORE_FUNCTION_NAME_ENUMERATE_INSTANCE_EXTENSION_PROPERTIES                           "vkEnumerateInstanceExtensionProperties"
@@ -62,6 +64,10 @@
 
 #define __C_ENG_VULKAN_CORE_FUNCTION_NAME_CREATE_SWAP_CHAIN                                                 "vkCreateSwapchainKHR"
 #define __C_ENG_VULKAN_CORE_FUNCTION_NAME_DESTROY_SWAP_CHAIN                                                "vkDestroySwapchainKHR"
+#define __C_ENG_VULKAN_CORE_FUNCTION_NAME_GET_SWAP_CHAIN_IMAGES                                             "vkGetSwapchainImagesKHR"
+
+#define __C_ENG_VULKAN_CORE_FUNCTION_NAME_CREATE_IMAGE_VIEW                                                 "vkCreateImageView"
+#define __C_ENG_VULKAN_CORE_FUNCTION_NAME_DESTROY_IMAGE_VIEW                                                "vkDestroyImageView"
 
 #define __C_ENG_VULKAN_CORE_FUNCTION_NAME_CREATE_DEVICE                                                     "vkCreateDevice"
 #define __C_ENG_VULKAN_CORE_FUNCTION_NAME_DESTROY_DEVICE                                                    "vkDestroyDevice"
