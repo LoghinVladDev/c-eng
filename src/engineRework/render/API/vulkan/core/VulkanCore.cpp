@@ -540,7 +540,7 @@ auto vulkan :: toString (
 
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE && __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXPERIMENTAL_MULTIVIEW_PER_VIEW_ATTRIBUTES_AVAILABLE
 
-        case StructureTypeMutiviewPerViewAttributesInfoNVidiaExperimental:                       { asString = "StructureTypeMutiviewPerViewAttributesInfoNVidiaExperimental";                       break; }
+        case StructureTypeMultiviewPerViewAttributesInfoNVidiaExperimental:                      { asString = "StructureTypeMutiviewPerViewAttributesInfoNVidiaExperimental";                       break; }
         case StructureTypePhysicalDeviceMultiviewPerViewAttributesPropertiesNVidiaExperimental:  { asString = "StructureTypePhysicalDeviceMultiviewPerViewAttributesPropertiesNVidiaExperimental";  break; }
 
 #endif
@@ -1984,6 +1984,30 @@ auto vulkan :: toString (
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
 
         case __C_ENG_TYPE ( PipelineStageFlag ) :: PipelineStageFlagNone:                           { asString = "None";                                break; }
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
+
+        case PipelineStageFlagCopy:                                                                 { asString = "Copy";                                break; }
+        case PipelineStageFlagResolve:                                                              { asString = "Resolve";                             break; }
+        case PipelineStageFlagBlit:                                                                 { asString = "Blit";                                break; }
+        case PipelineStageFlagClear:                                                                { asString = "Clear";                               break; }
+        case PipelineStageFlagIndexInput:                                                           { asString = "Index Input";                         break; }
+        case PipelineStageFlagVertexAttributeInput:                                                 { asString = "Vertex Attribute Input";              break; }
+        case PipelineStageFlagPreRasterizationShaders:                                              { asString = "Pre Rasterization Shaders";           break; }
+
+#if __C_ENG_VULKAN_API_EXTENSION_HUAWEI_SUBPASS_SHADING_AVAILABLE
+
+        case PipelineStageFlagSubpassShadingHuawei:                                                 { asString = "Subpass Shading Huawei";              break; }
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_HUAWEI_INVOCATION_MASK_AVAILABLE
+
+        case PipelineStageFlagInvocationMaskHuawei:                                                 { asString = "Invocation Mask Huawei";              break; }
+
+#endif
 
 #endif
 
@@ -4498,7 +4522,7 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( QueueFamilyCheckpointPropertiesNVidia ) ) " "
            "{ type = "_s                        + toString ( properties.structureType ) +
            ", pNext = "                         + :: toString ( properties.pNext ) +
-           ", checkpointExecutionStageMask = "  + "0b" + Long ( properties.checkpointExecutionStageMask ).toString(2) +
+           ", checkpointExecutionStageMask = "  + "0b" + Long ( static_cast < uint64 > (properties.checkpointExecutionStageMask ) ).toString(2) +
            " }";
 }
 
@@ -7643,6 +7667,57 @@ auto vulkan :: toString (
 }
 
 auto vulkan :: toString (
+        Type ( CommandBufferUsageFlag ) flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case CommandBufferUsageFlagOneTimeSubmit:       { asString = "OneTimeSubmit";       break; }
+        case CommandBufferUsageFlagRenderPassContinue:  { asString = "RenderPassSubmit";    break; }
+        case CommandBufferUsageFlagSimultaneous:        { asString = "Simultaneous";        break; }
+    }
+
+    return asString;
+}
+
+auto vulkan :: toString (
+        Type ( QueryPipelineStatisticFlag ) flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case QueryPipelineStatisticFlagInputAssemblyVertices:                   { asString = "InputAssemblyVertices";                   break; }
+        case QueryPipelineStatisticFlagInputAssemblyPrimitives:                 { asString = "InputAssemblyPrimitives";                 break; }
+        case QueryPipelineStatisticFlagVertexShaderInvocations:                 { asString = "VertexShaderInvocations";                 break; }
+        case QueryPipelineStatisticFlagGeometryShaderInvocations:               { asString = "GeometryShaderInvocations";               break; }
+        case QueryPipelineStatisticFlagGeometryShaderPrimitives:                { asString = "GeometryShaderPrimitives";                break; }
+        case QueryPipelineStatisticFlagClippingInvocations:                     { asString = "ClippingInvocations";                     break; }
+        case QueryPipelineStatisticFlagClippingPrimitives:                      { asString = "ClippingPrimitives";                      break; }
+        case QueryPipelineStatisticFlagFragmentShaderInvocations:               { asString = "FragmentShaderInvocations";               break; }
+        case QueryPipelineStatisticFlagTessellationControlShaderPatches:        { asString = "TessellationControlShaderPatches";        break; }
+        case QueryPipelineStatisticFlagTessellationEvaluationShaderInvocations: { asString = "TessellationEvaluationShaderInvocations"; break; }
+        case QueryPipelineStatisticFlagComputeShaderInvocations:                { asString = "ComputeShaderInvocations";                break; }
+    }
+
+    return asString;
+}
+
+auto vulkan :: toString (
+        Type ( QueryControlFlag ) flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case QueryControlFlagPrecise:   { asString = "Precise"; break; }
+    }
+
+    return asString;
+}
+
+auto vulkan :: toString (
         Type ( CommandPoolCreateInfo ) const & createInfo
 ) noexcept -> String {
 
@@ -7661,10 +7736,436 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( Type ( CommandBufferAllocateInfo ) ) " "
             "{ structureType = "_s      + toString ( allocateInfo.structureType ) +
             ", pNext = "                + :: toString ( allocateInfo.pNext ) +
-            ", flags = "                + :: toString ( allocateInfo.commandPool ) +
+            ", commandPool = "          + :: toString ( allocateInfo.commandPool ) +
             ", level = "                + toString ( allocateInfo.level ) +
             ", commandBufferCount = "   + allocateInfo.commandBufferCount +
             " }";
+}
+
+auto vulkan :: toString (
+        Type ( CommandBufferBeginInfo ) const & beginInfo
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( CommandBufferBeginInfo ) ) " "
+           "{ structureType = "_s      + toString ( beginInfo.structureType ) +
+           ", pNext = "                + :: toString ( beginInfo.pNext ) +
+           ", flags = "                + "0b" + Long ( beginInfo.flags ).toString(2) +
+           ", pInheritanceInfo = "     + :: toString ( beginInfo.pInheritanceInfo ) +
+           " }";
+}
+
+auto vulkan :: toString (
+        Type ( CommandBufferInheritanceInfo ) const & inheritanceInfo
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( CommandBufferBeginInfo ) ) " "
+           "{ structureType = "_s      + toString ( inheritanceInfo.structureType ) +
+           ", pNext = "                + :: toString ( inheritanceInfo.pNext ) +
+           ", renderPass = "           + :: toString ( inheritanceInfo.renderPass ) +
+           ", subpass = "              + inheritanceInfo.subpass +
+           ", frameBuffer = "          + :: toString ( inheritanceInfo.frameBuffer ) +
+           ", occlusionQueryEnable"    + ( inheritanceInfo.occlusionQueryEnable == VK_TRUE ? "true" : "false" ) +
+           ", queryFlags = "           + "0b" + Long ( inheritanceInfo.queryFlags ).toString(2) +
+           ", pipelineStatistics = "   + "0b" + Long ( inheritanceInfo.pipelineStatistics ).toString(2) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DEVICE_GROUP_AVAILABLE
+
+auto vulkan :: toString (
+        Type ( DeviceGroupCommandBufferBeginInfo ) const & beginInfo
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( DeviceGroupCommandBufferBeginInfo ) ) " "
+           "{ structureType = "_s      + toString ( beginInfo.structureType ) +
+           ", pNext = "                + :: toString ( beginInfo.pNext ) +
+           ", deviceMask = "           + beginInfo.deviceMask +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+
+auto vulkan :: toString (
+        Type ( Viewport ) const & viewport
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( Viewport ) ) " "
+            "{ x = "_s      + viewport.x +
+            ", y = "        + viewport.y +
+            ", width = "    + viewport.width +
+            ", height = "   + viewport.height +
+            ", minDepth = " + viewport.minDepth +
+            ", maxDepth = " + viewport.maxDepth +
+            " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+
+auto vulkan :: toString (
+        Type ( RenderingFlag ) flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case RenderingFlagContentsSecondayCommandBuffers:   { asString = "ContentsSecondaryCommandBuffers"; break; }
+        case RenderingFlagSuspending:                       { asString = "Suspending";                      break; }
+        case RenderingFlagResuming:                         { asString = "Resuming";                        break; }
+    }
+
+    return asString;
+}
+
+auto vulkan :: toString (
+        Type ( CommandBufferInheritanceRenderingInfo ) const & info
+) noexcept -> String {
+
+    auto formatsToString = []( uint32 count, Type ( Format ) const * pFormats ) {
+        String asString = "[ ";
+        for ( uint32 i = 0U; i < count; ++ i ) {
+            asString += toString ( pFormats[i] ) + ", "_s;
+        }
+        return asString.removeSuffix(", ") + " ]";
+    };
+
+    return __C_ENG_STRINGIFY ( Type ( CommandBufferInheritanceRenderingInfo ) ) " "
+           "{ structureType = "_s                  + toString ( info.structureType ) +
+           ", pNext = "                            + :: toString ( info.pNext ) +
+           ", flags = "                            + "0b" + Long ( info.flags ).toString(2) +
+           ", viewMask = "                         + info.viewMask +
+           ", colorAttachmentCount = "             + info.colorAttachmentCount +
+           ", colorAttachments = "                 + formatsToString ( info.colorAttachmentCount, info.pColorAttachmentFormats ) +
+           ", depthAttachmentFormat = "            + toString ( info.depthAttachmentFormat ) +
+           ", stencilAttachmentFormat = "          + toString ( info.stencilAttachmentFormat ) +
+           ", rasterizationSamples = "             + toString ( info.rasterizationSamples ) +
+           " }";
+}
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_FRAMEBUFFER_MIXED_SAMPLES_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_AMD_MIXED_ATTACHMENT_SAMPLES_AVAILABLE
+
+auto vulkan :: toString (
+        hidden :: __AttachmentSampleCountInfo const & info
+) noexcept -> String {
+
+    auto attachmentsToString = []( uint32 count, Type ( SampleCountFlag ) const * pAttachments ) {
+        String asString = "[ ";
+        for ( uint32 i = 0U; i < count; ++ i ) {
+            asString += toString ( pAttachments[i] ) + ", "_s;
+        }
+        return asString.removeSuffix(", ") + " ]";
+    };
+
+    return __C_ENG_STRINGIFY ( Type ( AttachmentSampleCountInfo ) ) " "
+            "{ structureType = "_s                  + toString ( info.structureType ) +
+            ", pNext = "                            + :: toString ( info.pNext ) +
+            ", colorAttachmentCount = "             + info.colorAttachmentCount +
+            ", colorAttachments = "                 + attachmentsToString ( info.colorAttachmentCount, info.pColorAttachmentSamples ) +
+            ", depthStencilAttachmentSamples = "    + toString ( info.depthStencilAttachmentSamples ) +
+            " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXPERIMENTAL_MULTIVIEW_PER_VIEW_ATTRIBUTES_AVAILABLE
+
+auto vulkan :: toString (
+        Type ( MultiviewPerViewAttributesInfoNVidia ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( MultiviewPerViewAttributesInfoNVidia ) ) " "
+           "{ structureType = "_s                  + toString ( info.structureType ) +
+           ", pNext = "                            + :: toString ( info.pNext ) +
+           ", perViewAttributes = "                + ( info.perViewAttributes == VK_TRUE ? "true" : "false" ) +
+           ", perViewAttributesPositionXOnly = "   + ( info.perViewAttributesPositionXOnly == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_CONDITIONAL_RENDERING_AVAILABLE
+
+auto vulkan :: toString (
+        Type ( CommandBufferInheritanceConditionalRenderingInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( CommandBufferInheritanceConditionalRenderingInfo ) ) " "
+           "{ structureType = "_s                  + toString ( info.structureType ) +
+           ", pNext = "                            + :: toString ( info.pNext ) +
+           ", conditionalRenderingEnable = "       + ( info.conditionalRenderingEnable == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_QUALCOMM_RENDER_PASS_TRANSFORM_AVAILABLE
+
+auto vulkan :: toString (
+        Type ( CommandBufferInheritanceRenderPassTransformInfoQualcomm ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( CommandBufferInheritanceRenderPassTransformInfoQualcomm ) ) " "
+           "{ structureType = "_s                  + toString ( info.structureType ) +
+           ", pNext = "                            + :: toString ( info.pNext ) +
+           ", transform = "                        + toString ( info.transform ) +
+           ", renderArea = "                       + toString ( info.renderArea ) +
+           " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
+
+auto vulkan :: toString (
+        Type ( SubmitFlag ) flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case SubmitFlagProtected:   { asString = "Protected";   break; }
+    }
+
+    return asString;
+}
+
+auto vulkan :: toString (
+        Type ( SemaphoreSubmitInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( SemaphoreSubmitInfo ) ) " "
+            "{ structureType = "_s          + toString ( info.structureType ) +
+            ", pNext = "                    + :: toString ( info.pNext ) +
+            ", semaphore = "                + :: toString ( info.semaphore ) +
+            ", value = "                    + info.value +
+            ", stageMask = "                + "0b" + Long ( static_cast < uint64 > ( info.stageMask ) ).toString(2) +
+            ", deviceIndex = "              + info.deviceIndex +
+            " }";
+}
+
+auto vulkan :: toString (
+        Type ( CommandBufferSubmitInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( CommandBufferSubmitInfo ) ) " "
+            "{ structureType = "_s          + toString ( info.structureType ) +
+            ", pNext = "                    + :: toString ( info.pNext ) +
+            ", commandBuffer = "            + :: toString ( info.commandBuffer ) +
+            ", deviceMask = "               + info.deviceMask +
+            " }";
+}
+
+template < typename T >
+auto toStringVulkan ( uint32 count, T const * pElements ) noexcept -> String {
+    String asString = "[ ";
+
+    for ( uint32 i = 0U; i < count; ++ i ) {
+        asString += vulkan :: toString ( pElements[i] ) + ", "_s;
+    }
+
+    return asString.removeSuffix(", ") + " ]";
+}
+
+template < typename T >
+auto toStringEngine ( uint32 count, T const * pElements ) noexcept -> String {
+    String asString = "[ ";
+
+    for ( uint32 i = 0U; i < count; ++ i ) {
+        asString += engine :: toString ( pElements[i] ) + ", "_s;
+    }
+
+    return asString.removeSuffix(", ") + " ]";
+}
+
+template < typename T >
+auto toStringFlags ( uint32 count, T const * pElements ) noexcept -> String {
+    String asString = "[ ";
+
+    for ( uint32 i = 0U; i < count; ++ i ) {
+        asString += "0b" + Long ( static_cast < uint64 > ( pElements[i] ) ).toString(2) + ", "_s;
+    }
+
+    return asString.removeSuffix(", ") + " ]";
+}
+
+template < typename T >
+auto toStringRegular ( uint32 count, T const * pElements ) noexcept -> String {
+    String asString = "[ ";
+
+    for ( uint32 i = 0U; i < count; ++ i ) {
+        asString += String(pElements[i]) + ", "_s;
+    }
+
+    return asString.removeSuffix(", ") + " ]";
+}
+
+auto vulkan :: toString (
+        Type ( SubmitInfo2 ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( SubmitInfo2 ) ) " "
+            "{ structureType = "_s          + toString ( info.structureType ) +
+            ", pNext = "                    + engine :: toString ( info.pNext ) +
+            ", flags = "                    + "0b" + Long ( info.flags ).toString(2) +
+            ", waitSemaphoreInfoCount = "   + info.waitSemaphoreInfoCount +
+            ", waitSemaphoreInfos = "       + :: toStringVulkan ( info.waitSemaphoreInfoCount, info.pWaitSemaphoreInfos ) +
+            ", commandBufferInfoCount = "   + info.commandBufferInfoCount +
+            ", commandBufferInfos = "       + :: toStringVulkan ( info.commandBufferInfoCount, info.pCommandBufferInfos ) +
+            ", signalSemaphoreInfoCount = " + info.pSignalSemaphoreInfos +
+            ", signalSemaphoreInfos = "     + :: toStringVulkan ( info.signalSemaphoreInfoCount, info.pSignalSemaphoreInfos ) +
+            " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+
+auto vulkan :: toString (
+        Type ( SubmitInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( SubmitInfo ) ) " "
+            "{ structureType = "_s              + toString ( info.structureType ) +
+            ", pNext = "                        + engine :: toString ( info.pNext ) +
+            ", waitSemaphoreCount = "           + info.waitSemaphoreCount +
+            ", waitSemaphores = "               + :: toStringEngine ( info.waitSemaphoreCount, info.pWaitSemaphores ) +
+            ", waitDestinationStageMasks = "    + :: toStringFlags ( info.waitSemaphoreCount, info.pWaitDestinationStageMasks ) +
+            ", commandBufferCount = "           + info.commandBufferCount +
+            ", commandBuffers = "               + :: toStringEngine ( info.commandBufferCount, info.pCommandBuffers ) +
+            ", signalSemaphoreCount = "         + info.signalSemaphoreCount +
+            ", signalSemaphores = "             + :: toStringEngine ( info.signalSemaphoreCount, info.pSignalSemaphores ) +
+            " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+
+auto vulkan :: toString (
+        Type ( DeviceGroupSubmitInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( DeviceGroupSubmitInfo ) ) " "
+            "{ structureType = "_s              + toString ( info.structureType ) +
+            ", pNext = "                        + engine :: toString ( info.pNext ) +
+            ", waitSemaphoreCount = "           + info.waitSemaphoreCount +
+            ", waitSemaphores = "               + :: toStringRegular ( info.waitSemaphoreCount, info.pWaitSemaphoreDeviceIndices ) +
+            ", commandBufferCount = "           + info.commandBufferCount +
+            ", commandBufferDeviceMasks = "     + :: toStringRegular ( info.commandBufferCount, info.pCommandBufferDeviceMasks ) +
+            ", signalSemaphoreCount = "         + info.signalSemaphoreCount +
+            ", signalSemaphoreDeviceIndices = " + :: toStringRegular ( info.signalSemaphoreCount, info.pSignalSemaphoreDeviceIndices ) +
+            " }";
+}
+
+auto vulkan :: toString (
+        Type ( ProtectedSubmitInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( ProtectedSubmitInfo ) ) " "
+            "{ structureType = "_s              + toString ( info.structureType ) +
+            ", pNext = "                        + engine :: toString ( info.pNext ) +
+            ", protectedSubmit = "              + ( info.protectedSubmit == VK_TRUE ? "true" : "false" ) +
+            " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+
+auto vulkan :: toString (
+        Type ( TimelineSemaphoreSubmitInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( TimelineSemaphoreSubmitInfo ) ) " "
+            "{ structureType = "_s              + toString ( info.structureType ) +
+            ", pNext = "                        + engine :: toString ( info.pNext ) +
+            ", waitSemaphoreValueCount = "      + info.waitSemaphoreValueCount +
+            ", waitSemaphoreValues = "          + :: toStringRegular ( info.waitSemaphoreValueCount, info.pWaitSemaphoreValues ) +
+            ", signalSemaphoreValueCount = "    + info.signalSemaphoreValueCount +
+            ", signalSemaphoreValues = "        + :: toStringRegular ( info.signalSemaphoreValueCount, info.pSignalSemaphoreValues ) +
+            " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PERFORMANCE_QUERY_AVAILABLE
+
+auto vulkan :: toString (
+        Type ( PerformanceQuerySubmitInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( PerformanceQuerySubmitInfo ) ) " "
+            "{ structureType = "_s              + toString ( info.structureType ) +
+            ", pNext = "                        + engine :: toString ( info.pNext ) +
+            ", counterPassIndex = "             + info.counterPassIndex +
+            " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_WIN32_KEYED_MUTEX_AVAILABLE
+
+auto vulkan :: toString (
+        Type ( Win32KeyedMutexAcquireReleaseInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( Win32KeyedMutexAcquireReleaseInfo ) ) " "
+            "{ structureType = "_s              + toString ( info.structureType ) +
+            ", pNext = "                        + engine :: toString ( info.pNext ) +
+            ", acquireCount = "                 + info.acquireCount +
+            ", acquireSyncs = "                 + :: toStringVulkan ( info.acquireCount, info.pAcquireSyncs ) +
+            ", acquireKeys = "                  + :: toStringRegular ( info.acquireCount, info.pAcquireKeys ) +
+            ", acquireTimeouts = "              + :: toStringRegular ( info.acquireCount, info.pAcquireTimeouts ) +
+            ", releaseCount = "                 + info.releaseCount +
+            ", releaseSyncs = "                 + :: toStringVulkan ( info.releaseCount, info.pReleaseSyncs ) +
+            ", releaseKeys = "                  + :: toStringRegular ( info.releaseCount, info.pReleaseKeys ) +
+            " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_WIN32_KEYED_MUTEX_AVAILABLE
+
+auto vulkan :: toString (
+        Type ( Win32KeyedMutexAcquireReleaseInfoNVidia ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( Win32KeyedMutexAcquireReleaseInfoNVidia ) ) " "
+            "{ structureType = "_s              + toString ( info.structureType ) +
+            ", pNext = "                        + engine :: toString ( info.pNext ) +
+            ", acquireCount = "                 + info.acquireCount +
+            ", acquireSyncs = "                 + :: toStringVulkan ( info.acquireCount, info.pAcquireSyncs ) +
+            ", acquireKeys = "                  + :: toStringRegular ( info.acquireCount, info.pAcquireKeys ) +
+            ", acquireTimeouts (ms) = "         + :: toStringRegular ( info.acquireCount, info.pAcquireTimeoutsMilliseconds ) +
+            ", releaseCount = "                 + info.releaseCount +
+            ", releaseSyncs = "                 + :: toStringVulkan ( info.releaseCount, info.pReleaseSyncs ) +
+            ", releaseKeys = "                  + :: toStringRegular ( info.releaseCount, info.pReleaseKeys ) +
+            " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_SEMAPHORE_WIN32_AVAILABLE
+
+auto vulkan :: toString (
+        Type ( D3D12FenceSubmitInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( D3D12FenceSubmitInfo ) ) " "
+           "{ structureType = "_s              + toString ( info.structureType ) +
+           ", pNext = "                        + engine :: toString ( info.pNext ) +
+           ", waitSemaphoreValueCount = "      + info.waitSemaphoreValueCount +
+           ", waitSemaphoreValues = "          + :: toStringRegular ( info.waitSemaphoreValueCount, info.pWaitSemaphoreValues ) +
+           ", signalSemaphoreValueCount = "    + info.signalSemaphoreValueCount +
+           ", signalSemaphoreValues = "        + :: toStringRegular ( info.signalSemaphoreValueCount, info.pSignalSemaphoreValues ) +
+           " }";
 }
 
 #endif

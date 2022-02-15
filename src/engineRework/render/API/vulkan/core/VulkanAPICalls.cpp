@@ -11,11 +11,11 @@
 #define __C_ENG_CREATE_FUNCTION_NAME(_fName) __C_ENG_VULKAN_CORE_FUNCTION_NAME_ ## _fName
 
 #define __C_ENG_LOOKUP_VULKAN_FUNCTION(_handle, _fName)                     \
-    if ( _handle == nullptr ) {                                             \
+    if ( (_handle) == nullptr ) {                                           \
                                                                             \
         auto lResult = vulkan :: getFunctionAddress (                       \
                 __C_ENG_CREATE_FUNCTION_NAME(_fName),                       \
-                reinterpret_cast < FunctionHandleAddress > ( & _handle )    \
+                reinterpret_cast < FunctionHandleAddress > ( & (_handle) )  \
         );                                                                  \
                                                                             \
         if ( lResult != vulkan :: ResultSuccess ) {                         \
@@ -24,12 +24,12 @@
     }
 
 #define __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION(_instance, _handle, _fName) \
-    if ( _handle == nullptr ) {                                             \
+    if ( (_handle) == nullptr ) {                                           \
                                                                             \
         auto lResult = vulkan :: getInstanceFunctionAddress (               \
                 _instance,                                                  \
                 __C_ENG_CREATE_FUNCTION_NAME(_fName),                       \
-                reinterpret_cast < FunctionHandleAddress > ( & _handle )    \
+                reinterpret_cast < FunctionHandleAddress > ( & (_handle) )  \
         );                                                                  \
                                                                             \
         if ( lResult != vulkan :: ResultSuccess ) {                         \
@@ -37,18 +37,68 @@
         }                                                                   \
     }
 
+#define __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_2(_instance, _handle, _fName, _fName2)              \
+    if ( (_handle) == nullptr ) {                                                                   \
+                                                                                                    \
+        auto lResult = vulkan :: getInstanceFunctionAddress (                                       \
+                _instance,                                                                          \
+                __C_ENG_CREATE_FUNCTION_NAME(_fName),                                               \
+                reinterpret_cast < FunctionHandleAddress > ( & (_handle) )                          \
+        );                                                                                          \
+                                                                                                    \
+        if ( lResult == vulkan :: ResultErrorFunctionHandleNotFound ) {                             \
+                                                                                                    \
+            lResult = vulkan :: getInstanceFunctionAddress (                                        \
+                    _instance,                                                                      \
+                    __C_ENG_CREATE_FUNCTION_NAME(_fName2),                                          \
+                    reinterpret_cast < FunctionHandleAddress > ( & (_handle) )                      \
+            );                                                                                      \
+                                                                                                    \
+            if ( lResult != vulkan :: ResultSuccess ) {                                             \
+                return lResult;                                                                     \
+            }                                                                                       \
+        } else {                                                                                    \
+            return lResult;                                                                         \
+        }                                                                                           \
+    }
+
 #define __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION(_device, _handle, _fName)     \
-    if ( _handle == nullptr ) {                                             \
+    if ( (_handle) == nullptr ) {                                           \
                                                                             \
         auto lResult = vulkan :: getDeviceFunctionAddress (                 \
                 _device,                                                    \
                 __C_ENG_CREATE_FUNCTION_NAME(_fName),                       \
-                reinterpret_cast < FunctionHandleAddress > ( & _handle )    \
+                reinterpret_cast < FunctionHandleAddress > ( & (_handle) )  \
         );                                                                  \
                                                                             \
         if ( lResult != vulkan :: ResultSuccess ) {                         \
             return lResult;                                                 \
         }                                                                   \
+    }
+
+#define __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_2(_device, _handle, _fName, _fName2)                  \
+    if ( (_handle) == nullptr ) {                                                                   \
+                                                                                                    \
+        auto lResult = vulkan :: getDeviceFunctionAddress (                                         \
+                _device,                                                                            \
+                __C_ENG_CREATE_FUNCTION_NAME(_fName),                                               \
+                reinterpret_cast < FunctionHandleAddress > ( & (_handle) )                          \
+        );                                                                                          \
+                                                                                                    \
+        if ( lResult == vulkan :: ResultErrorFunctionHandleNotFound ) {                             \
+                                                                                                    \
+            lResult = vulkan :: getDeviceFunctionAddress (                                          \
+                    _device,                                                                        \
+                    __C_ENG_CREATE_FUNCTION_NAME(_fName2),                                          \
+                    reinterpret_cast < FunctionHandleAddress > ( & (_handle) )                      \
+            )                                                                                       \
+                                                                                                    \
+            if ( lResult != vulkan :: ResultSuccess ) {                                             \
+                return lResult;                                                                     \
+            }                                                                                       \
+        } else {                                                                                    \
+            return lResult;                                                                         \
+        }                                                                                           \
     }
 
 
@@ -894,7 +944,11 @@ static VkCommandPoolCreateInfo                                              comm
 static PFN_vkAllocateCommandBuffers                                         pVkAllocateCommandBuffers;
 static PFN_vkResetCommandBuffer                                             pVkResetCommandBuffer;
 static PFN_vkFreeCommandBuffers                                             pVkFreeCommandBuffers;
+static PFN_vkBeginCommandBuffer                                             pVkBeginCommandBuffer;
+static PFN_vkEndCommandBuffer                                               pVkEndCommandBuffer;
 static VkCommandBufferAllocateInfo                                          commandBufferAllocateInfo;
+static VkCommandBufferBeginInfo                                             commandBufferBeginInfo;
+static VkCommandBufferInheritanceInfo                                       commandBufferInheritanceInfo;
 
 #endif
 
@@ -902,6 +956,95 @@ static VkCommandBufferAllocateInfo                                          comm
 static PFN_vkTrimCommandPool                                                pVkTrimCommandPool;
 #elif __C_ENG_VULKAN_API_EXTENSION_KHRONOS_MAINTENANCE_AVAILABLE
 static PFN_vkTrimCommandPoolKHR                                             pVkTrimCommandPool;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+static VkDeviceGroupCommandBufferBeginInfo                                  deviceGroupCommandBufferBeginInfo;
+#elif __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DEVICE_GROUP_AVAILABLE
+static VkDeviceGroupCommandBufferBeginInfoKHR                               deviceGroupCommandBufferBeginInfo;
+#endif
+
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+using VkCommandBufferInheritanceRenderingInfo_t                           = VkCommandBufferInheritanceRenderingInfo;
+#elif __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE
+using VkCommandBufferInheritanceRenderingInfo_t                           = VkCommandBufferInheritanceRenderingInfoKHR;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+static VkCommandBufferInheritanceRenderingInfo_t                            commandBufferInheritanceRenderingInfo;
+static VkFormat                                                             renderingInfoFormats[ __C_ENG_VULKAN_CORE_RENDERING_INFO_FORMATS_MAX_COUNT ];
+#if __C_ENG_VULKAN_API_EXTENSION_AMD_MIXED_ATTACHMENT_SAMPLES_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_NVIDIA_FRAMEBUFFER_MIXED_SAMPLES_AVAILABLE
+static VkAttachmentSampleCountInfoAMD                                       attachmentSampleCountInfo;
+static VkSampleCountFlagBits                                                sampleCountAttachmentSamples[ __C_ENG_VULKAN_CORE_SAMPLE_COUNT_ATTACHMENT_SAMPLES_MAX_COUNT ];
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXPERIMENTAL_MULTIVIEW_PER_VIEW_ATTRIBUTES_AVAILABLE
+static VkMultiviewPerViewAttributesInfoNVX                                  multiviewPerViewAttributesInfo;
+#endif
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_CONDITIONAL_RENDERING_AVAILABLE
+static VkCommandBufferInheritanceConditionalRenderingInfoEXT                commandBufferInheritanceConditionalRenderingInfo;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_QUALCOMM_RENDER_PASS_TRANSFORM_AVAILABLE
+static VkCommandBufferInheritanceRenderPassTransformInfoQCOM                commandBufferInheritanceRenderPassTransformInfo;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_INHERITED_VIEWPORT_SCISSOR_AVAILABLE
+static VkCommandBufferInheritanceViewportScissorInfoNV                      commandBufferInheritanceViewportScissorInfo;
+static VkViewport                                                           viewportDepths[__C_ENG_VULKAN_CORE_VIEWPORT_DEPTH_MAX_COUNT];
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+static PFN_vkQueueSubmit                                                    pVkQueueSubmit;
+static VkSubmitInfo                                                         submitInfos [ __C_ENG_VULKAN_CORE_SUBMIT_INFO_MAX_COUNT ];
+static VkPipelineStageFlags                                                 pipelineStageFlags [ __C_ENG_VULKAN_CORE_SUBMIT_INFO_MAX_COUNT ][ __C_ENG_VULKAN_CORE_PIPELINE_STAGE_FLAGS_MAX_COUNT ];
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+static VkDeviceGroupSubmitInfo                                              deviceGroupSubmitInfos [ __C_ENG_VULKAN_CORE_SUBMIT_INFO_MAX_COUNT ];
+static VkProtectedSubmitInfo                                                protectedSubmitInfos [ __C_ENG_VULKAN_CORE_SUBMIT_INFO_MAX_COUNT ];
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+static VkTimelineSemaphoreSubmitInfo                                        timelineSemaphoreSubmitInfos [ __C_ENG_VULKAN_CORE_SUBMIT_INFO_MAX_COUNT ];
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PERFORMANCE_QUERY_AVAILABLE
+static VkPerformanceQuerySubmitInfoKHR                                      performanceQuerySubmitInfos [ __C_ENG_VULKAN_CORE_SUBMIT_INFO_MAX_COUNT ];
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_WIN32_KEYED_MUTEX_AVAILABLE
+static VkWin32KeyedMutexAcquireReleaseInfoKHR                               win32KeyedMutexAcquireReleaseInfos [ __C_ENG_VULKAN_CORE_SUBMIT_INFO_MAX_COUNT ];
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_WIN32_KEYED_MUTEX_AVAILABLE
+static VkWin32KeyedMutexAcquireReleaseInfoNV                                win32KeyedMutexAcquireReleaseInfosNVidia [ __C_ENG_VULKAN_CORE_SUBMIT_INFO_MAX_COUNT ];
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_SEMAPHORE_WIN32_AVAILABLE
+static VkD3D12FenceSubmitInfoKHR                                            d3d12FenceSubmitInfos [ __C_ENG_VULKAN_CORE_SUBMIT_INFO_MAX_COUNT ];
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+using PFN_vkQueueSubmit2_t                                                = PFN_vkQueueSubmit2;
+using VkSubmitInfo2_t                                                     = VkSubmitInfo2;
+using VkSemaphoreSubmitInfo_t                                             = VkSemaphoreSubmitInfo;
+using VkCommandBufferSubmitInfo_t                                         = VkCommandBufferSubmitInfo;
+#elif __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
+using PFN_vkQueueSubmit2_t                                                = PFN_vkQueueSubmit2KHR;
+using VkSubmitInfo2_t                                                     = VkSubmitInfo2KHR;
+using VkSemaphoreSubmitInfo_t                                             = VkSemaphoreSubmitInfoKHR;
+using VkCommandBufferSubmitInfo_t                                         = VkCommandBufferSubmitInfoKHR;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
+static PFN_vkQueueSubmit2_t                                                 pVkQueueSubmit2;
+static VkSubmitInfo2_t                                                      submitInfos2 [ __C_ENG_VULKAN_CORE_SUBMIT_INFO_MAX_COUNT ];
+static VkSemaphoreSubmitInfo                                                waitSemaphoreInfos [ __C_ENG_VULKAN_CORE_SUBMIT_INFO_MAX_COUNT ][ __C_ENG_VULKAN_CORE_SUBMIT_SEMAPHORE_INFO_MAX_COUNT ];
+static VkSemaphoreSubmitInfo                                                signalSemaphoreInfos [ __C_ENG_VULKAN_CORE_SUBMIT_INFO_MAX_COUNT ][ __C_ENG_VULKAN_CORE_SUBMIT_SEMAPHORE_INFO_MAX_COUNT ];
+static VkCommandBufferSubmitInfo                                            commandBufferSubmitInfos [ __C_ENG_VULKAN_CORE_SUBMIT_INFO_MAX_COUNT ][ __C_ENG_VULKAN_CORE_SUBMIT_COMMAND_BUFFER_INFO_MAX_COUNT ];
 #endif
 
 
@@ -10609,7 +10752,7 @@ static inline auto fromVulkanFormat (
 
 #endif
 
-    pDestination->checkpointExecutionStageMask  = pSource->checkpointExecutionStageMask;
+    pDestination->checkpointExecutionStageMask  = static_cast < decltype ( pDestination->checkpointExecutionStageMask ) > ( pSource->checkpointExecutionStageMask );
 }
 
 #endif
@@ -13639,6 +13782,408 @@ auto vulkan :: freeCommandBuffers (
     return ResultSuccess;
 }
 
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+
+static inline auto toVulkanFormat (
+        VkCommandBufferInheritanceRenderingInfo_t                      * pDestination,
+        vulkan :: Type ( CommandBufferInheritanceRenderingInfo ) const * pSource
+) noexcept -> void {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if (
+            pDestination    == nullptr ||
+            pSource         == nullptr
+    ) {
+        return;
+    }
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE
+    pDestination->sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_RENDERING_INFO_KHR;
+#elif __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+    pDestination->sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_RENDERING_INFO;
+#endif
+
+    pDestination->pNext                     = nullptr;
+    pDestination->flags                     = static_cast < decltype ( pDestination->flags ) > ( pSource->flags );
+    pDestination->viewMask                  = static_cast < decltype ( pDestination->viewMask ) > ( pSource->viewMask );
+    pDestination->colorAttachmentCount      = static_cast < decltype ( pDestination->colorAttachmentCount ) > ( pSource->colorAttachmentCount );
+    pDestination->pColorAttachmentFormats   = & renderingInfoFormats[0];
+    pDestination->depthAttachmentFormat     = static_cast < decltype ( pDestination->depthAttachmentFormat ) > ( pSource->depthAttachmentFormat );
+    pDestination->stencilAttachmentFormat   = static_cast < decltype ( pDestination->stencilAttachmentFormat ) > ( pSource->stencilAttachmentFormat );
+    pDestination->rasterizationSamples      = static_cast < decltype ( pDestination->rasterizationSamples ) > ( pSource->rasterizationSamples );
+
+    for ( uint32 i = 0U; i < pDestination->colorAttachmentCount; ++ i ) {
+        renderingInfoFormats[i] = static_cast < VkFormat > ( pSource->pColorAttachmentFormats[i] );
+    }
+}
+
+#if __C_ENG_VULKAN_API_EXTENSION_AMD_MIXED_ATTACHMENT_SAMPLES_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_NVIDIA_FRAMEBUFFER_MIXED_SAMPLES_AVAILABLE
+
+static inline auto toVulkanFormat (
+        VkAttachmentSampleCountInfoAMD                        * pDestination,
+        vulkan :: hidden :: __AttachmentSampleCountInfo const * pSource
+) noexcept -> void {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if (
+            pDestination    == nullptr ||
+            pSource         == nullptr
+    ) {
+        return;
+    }
+
+#endif
+
+    pDestination->sType                             = VK_STRUCTURE_TYPE_ATTACHMENT_SAMPLE_COUNT_INFO_AMD;
+    pDestination->pNext                             = nullptr;
+    pDestination->colorAttachmentCount              = static_cast < decltype ( pDestination->colorAttachmentCount ) > ( pSource->colorAttachmentCount );
+    pDestination->pColorAttachmentSamples           = & sampleCountAttachmentSamples[0];
+    pDestination->depthStencilAttachmentSamples     = static_cast < decltype ( pDestination->depthStencilAttachmentSamples ) > ( pSource->depthStencilAttachmentSamples );
+
+    for ( uint32 i = 0U; i < pDestination->colorAttachmentCount; ++ i ) {
+        sampleCountAttachmentSamples[i] = static_cast < VkSampleCountFlagBits > ( pSource->pColorAttachmentSamples[i] );
+    }
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXPERIMENTAL_MULTIVIEW_PER_VIEW_ATTRIBUTES_AVAILABLE
+
+static inline auto toVulkanFormat (
+        VkMultiviewPerViewAttributesInfoNVX                           * pDestination,
+        vulkan :: Type ( MultiviewPerViewAttributesInfoNVidia ) const * pSource
+) noexcept -> void {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if (
+            pDestination    == nullptr ||
+            pSource         == nullptr
+    ) {
+        return;
+    }
+
+#endif
+
+    pDestination->sType                             = VK_STRUCTURE_TYPE_MULTIVIEW_PER_VIEW_ATTRIBUTES_INFO_NVX;
+    pDestination->pNext                             = nullptr;
+    pDestination->perViewAttributes                 = static_cast < decltype ( pDestination->perViewAttributes ) > ( pSource->perViewAttributes );
+    pDestination->perViewAttributesPositionXOnly    = static_cast < decltype ( pDestination->perViewAttributesPositionXOnly ) > ( pSource->perViewAttributesPositionXOnly );
+}
+
+#endif
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_CONDITIONAL_RENDERING_AVAILABLE
+
+static inline auto toVulkanFormat (
+        VkCommandBufferInheritanceConditionalRenderingInfoEXT                     * pDestination,
+        vulkan :: Type ( CommandBufferInheritanceConditionalRenderingInfo ) const * pSource
+) noexcept -> void {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if (
+            pDestination    == nullptr ||
+            pSource         == nullptr
+    ) {
+        return;
+    }
+
+#endif
+
+    pDestination->sType                             = VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_CONDITIONAL_RENDERING_INFO_EXT;
+    pDestination->pNext                             = nullptr;
+    pDestination->conditionalRenderingEnable        = static_cast < decltype ( pDestination->conditionalRenderingEnable ) > ( pSource->conditionalRenderingEnable );
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_CONDITIONAL_RENDERING_AVAILABLE
+
+static inline auto toVulkanFormat (
+        VkCommandBufferInheritanceRenderPassTransformInfoQCOM                            * pDestination,
+        vulkan :: Type ( CommandBufferInheritanceRenderPassTransformInfoQualcomm ) const * pSource
+) noexcept -> void {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if (
+            pDestination    == nullptr ||
+            pSource         == nullptr
+    ) {
+        return;
+    }
+
+#endif
+
+    pDestination->sType                             = VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_RENDER_PASS_TRANSFORM_INFO_QCOM;
+    pDestination->pNext                             = nullptr;
+    pDestination->transform                         = static_cast < decltype ( pDestination->transform ) > ( pSource->transform );
+    pDestination->renderArea.offset.x               = static_cast < decltype ( pDestination->renderArea.offset.x ) > ( pSource->renderArea.offset.x );
+    pDestination->renderArea.offset.y               = static_cast < decltype ( pDestination->renderArea.offset.y ) > ( pSource->renderArea.offset.y );
+    pDestination->renderArea.extent.width           = static_cast < decltype ( pDestination->renderArea.extent.width ) > ( pSource->renderArea.extent.width );
+    pDestination->renderArea.extent.height          = static_cast < decltype ( pDestination->renderArea.extent.height ) > ( pSource->renderArea.extent.height );
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_INHERITED_VIEWPORT_SCISSOR_AVAILABLE
+
+static inline auto toVulkanFormat (
+        VkCommandBufferInheritanceViewportScissorInfoNV                            * pDestination,
+        vulkan :: Type ( CommandBufferInheritanceViewportScissorInfoNVidia ) const * pSource
+) noexcept -> void {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if (
+            pDestination    == nullptr ||
+            pSource         == nullptr
+    ) {
+        return;
+    }
+
+#endif
+
+    pDestination->sType                             = VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_VIEWPORT_SCISSOR_INFO_NV;
+    pDestination->pNext                             = nullptr;
+    pDestination->viewportScissor2D                 = static_cast < decltype ( pDestination->viewportScissor2D ) > ( pSource->viewportScissor2D );
+    pDestination->viewportDepthCount                = static_cast < decltype ( pDestination->viewportDepthCount ) > ( pSource->viewportDepthCount );
+    pDestination->pViewportDepths                   = & viewportDepths[0];
+
+    for ( uint32 i = 0U; i < pDestination->viewportDepthCount; ++ i ) {
+        viewportDepths[i].x         = static_cast < decltype ( viewportDepths[i].x ) > ( pSource->pViewportDepths[i].x );
+        viewportDepths[i].y         = static_cast < decltype ( viewportDepths[i].y ) > ( pSource->pViewportDepths[i].y );
+        viewportDepths[i].width     = static_cast < decltype ( viewportDepths[i].width ) > ( pSource->pViewportDepths[i].width );
+        viewportDepths[i].height    = static_cast < decltype ( viewportDepths[i].height ) > ( pSource->pViewportDepths[i].height );
+        viewportDepths[i].minDepth  = static_cast < decltype ( viewportDepths[i].minDepth ) > ( pSource->pViewportDepths[i].minDepth );
+        viewportDepths[i].maxDepth  = static_cast < decltype ( viewportDepths[i].maxDepth ) > ( pSource->pViewportDepths[i].maxDepth );
+    }
+}
+
+#endif
+
+static inline auto toVulkanFormat (
+        VkCommandBufferInheritanceInfo                        * pDestination,
+        vulkan :: Type ( CommandBufferInheritanceInfo ) const * pSource
+) noexcept -> void {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if (
+            pDestination    == nullptr ||
+            pSource         == nullptr
+    ) {
+        return;
+    }
+
+#endif
+
+    pDestination->sType                 = VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO;
+    pDestination->pNext                 = nullptr;
+    pDestination->renderPass            = static_cast < decltype ( pDestination->renderPass ) > ( pSource->renderPass );
+    pDestination->subpass               = static_cast < decltype ( pDestination->subpass ) > ( pSource->subpass );
+    pDestination->framebuffer           = static_cast < decltype ( pDestination->framebuffer ) > ( pSource->frameBuffer );
+    pDestination->occlusionQueryEnable  = static_cast < decltype ( pDestination->occlusionQueryEnable ) > ( pSource->occlusionQueryEnable );
+    pDestination->queryFlags            = static_cast < decltype ( pDestination->queryFlags ) > ( pSource->queryFlags );
+    pDestination->pipelineStatistics    = static_cast < decltype ( pDestination->pipelineStatistics ) > ( pSource->pipelineStatistics );
+
+    auto pCurrentInChain    = reinterpret_cast < vulkan :: Type ( GenericInStructure ) const * > ( pSource->pNext );
+    auto pCurrentInVkChain  = reinterpret_cast < VkBaseOutStructure * > ( pDestination );
+
+    while ( pCurrentInChain != nullptr ) {
+
+        switch ( pCurrentInChain->structureType ) {
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+
+#if __C_ENG_VULKAN_API_EXTENSION_AMD_MIXED_ATTACHMENT_SAMPLES_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_NVIDIA_FRAMEBUFFER_MIXED_SAMPLES_AVAILABLE
+
+            case vulkan :: StructureTypeAttachmentSampleCountInfoAMD:                               { pCurrentInVkChain->pNext = reinterpret_cast < VkBaseOutStructure * > ( & attachmentSampleCountInfo ); toVulkanFormat ( & attachmentSampleCountInfo, reinterpret_cast < vulkan :: Type ( AttachmentSampleCountInfoAMD ) const * > ( pCurrentInVkChain ) ); break; }
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXPERIMENTAL_MULTIVIEW_PER_VIEW_ATTRIBUTES_AVAILABLE
+
+            case vulkan :: StructureTypeMultiviewPerViewAttributesInfoNVidiaExperimental:           { pCurrentInVkChain->pNext = reinterpret_cast < VkBaseOutStructure * > ( & multiviewPerViewAttributesInfo ); toVulkanFormat ( & multiviewPerViewAttributesInfo, reinterpret_cast < vulkan :: Type ( MultiviewPerViewAttributesInfoNVidia ) const * > ( pCurrentInVkChain ) ); break; }
+
+#endif
+
+            case vulkan :: StructureTypeCommandBufferInheritanceRenderingInfo:                      { pCurrentInVkChain->pNext = reinterpret_cast < VkBaseOutStructure * > ( & commandBufferInheritanceRenderingInfo ); toVulkanFormat ( & commandBufferInheritanceRenderingInfo, reinterpret_cast < vulkan :: Type ( CommandBufferInheritanceRenderingInfo ) const * > ( pCurrentInVkChain ) ); break; }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_CONDITIONAL_RENDERING_AVAILABLE
+
+            case vulkan :: StructureTypeCommandBufferInheritanceConditionalRenderingInfo:           { pCurrentInVkChain->pNext = reinterpret_cast < VkBaseOutStructure * > ( & commandBufferInheritanceConditionalRenderingInfo ); toVulkanFormat ( & commandBufferInheritanceConditionalRenderingInfo, reinterpret_cast < vulkan :: Type ( CommandBufferInheritanceConditionalRenderingInfo ) const * > ( pCurrentInVkChain ) ); break; }
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_QUALCOMM_RENDER_PASS_TRANSFORM_AVAILABLE
+
+            case vulkan :: StructureTypeCommandBufferInheritanceRenderPassTransformInfoQualcomm:    { pCurrentInVkChain->pNext = reinterpret_cast < VkBaseOutStructure * > ( & commandBufferInheritanceRenderPassTransformInfo ); toVulkanFormat ( & commandBufferInheritanceRenderPassTransformInfo, reinterpret_cast < vulkan :: Type ( CommandBufferInheritanceRenderPassTransformInfoQualcomm ) const * > ( pCurrentInVkChain ) ); break; }
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_INHERITED_VIEWPORT_SCISSOR_AVAILABLE
+
+            case vulkan :: StructureTypeCommandBufferInheritanceViewportScissorInfoNVidia:    { pCurrentInVkChain->pNext = reinterpret_cast < VkBaseOutStructure * > ( & commandBufferInheritanceViewportScissorInfo ); toVulkanFormat ( & commandBufferInheritanceViewportScissorInfo, reinterpret_cast < vulkan :: Type ( CommandBufferInheritanceViewportScissorInfoNVidia ) const * > ( pCurrentInVkChain ) ); break; }
+
+#endif
+
+            default:    { break; }
+        }
+
+        if ( pCurrentInVkChain->pNext != nullptr ) {
+            pCurrentInVkChain = pCurrentInVkChain->pNext;
+        }
+
+        pCurrentInChain = pCurrentInChain->pNext;
+    }
+
+    pCurrentInVkChain->pNext = nullptr;
+}
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DEVICE_GROUP_AVAILABLE
+
+static inline auto toVulkanFormat (
+        VkDeviceGroupCommandBufferBeginInfo                           * pDestination,
+        vulkan :: Type ( DeviceGroupCommandBufferBeginInfo )    const * pSource
+) noexcept -> void {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if (
+            pDestination    == nullptr ||
+            pSource         == nullptr
+    ) {
+        return;
+    }
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    pDestination->sType = VK_STRUCTURE_TYPE_DEVICE_GROUP_COMMAND_BUFFER_BEGIN_INFO;
+#elif __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DEVICE_GROUP_AVAILABLE
+    pDestination->sType = VK_STRUCTURE_TYPE_DEVICE_GROUP_COMMAND_BUFFER_BEGIN_INFO_KHR;
+#endif
+
+    pDestination->pNext = nullptr;
+    pDestination->deviceMask = static_cast < decltype ( pDestination->deviceMask ) > ( pSource->deviceMask );
+}
+
+#endif
+
+static inline auto toVulkanFormat (
+        VkCommandBufferBeginInfo                          * pDestination,
+        vulkan :: Type ( CommandBufferBeginInfo )   const * pSource
+) noexcept -> void {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if (
+            pDestination    == nullptr ||
+            pSource         == nullptr
+    ) {
+        return;
+    }
+
+#endif
+
+    pDestination->sType             = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+    pDestination->pNext             = nullptr;
+    pDestination->flags             = static_cast < decltype ( pDestination->flags ) > ( pSource->flags );
+    pDestination->pInheritanceInfo  = nullptr;
+
+    if ( pSource->pInheritanceInfo != nullptr ) {
+        pDestination->pInheritanceInfo = & commandBufferInheritanceInfo;
+        toVulkanFormat ( & commandBufferInheritanceInfo, pSource->pInheritanceInfo );
+    }
+
+    auto pCurrentInChain    = reinterpret_cast < vulkan :: Type ( GenericInStructure ) const * > ( pSource->pNext );
+    auto pCurrentInVkChain  = reinterpret_cast < VkBaseOutStructure * > ( pDestination );
+
+    while ( pCurrentInChain != nullptr ) {
+
+        switch ( pCurrentInChain->structureType ) {
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DEVICE_GROUP_AVAILABLE
+
+            case vulkan :: StructureTypeDeviceGroupCommandBufferBeginInfo:  { pCurrentInVkChain->pNext = reinterpret_cast < VkBaseOutStructure * > ( & deviceGroupCommandBufferBeginInfo );   toVulkanFormat ( & deviceGroupCommandBufferBeginInfo,   reinterpret_cast < vulkan :: Type ( DeviceGroupCommandBufferBeginInfo ) const * > ( pCurrentInChain ) );    break; }
+
+#endif
+
+            default: { break; }
+        }
+
+        if ( pCurrentInVkChain->pNext != nullptr ) {
+            pCurrentInVkChain = pCurrentInVkChain->pNext;
+        }
+
+        pCurrentInChain = pCurrentInChain->pNext;
+    }
+
+    pCurrentInVkChain->pNext = nullptr;
+}
+
+auto vulkan :: beginCommandBuffer (
+        Type ( CommandBufferHandle )            commandBufferHandle,
+        Type ( CommandBufferBeginInfo ) const * pBeginInfo
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if (
+            commandBufferHandle == nullptr ||
+            pBeginInfo          == nullptr
+    ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION (
+            lastCreatedInstance,
+            pVkBeginCommandBuffer,
+            BEGIN_COMMAND_BUFFER
+    )
+
+    toVulkanFormat ( & commandBufferBeginInfo, pBeginInfo );
+
+    pVkBeginCommandBuffer (
+            commandBufferHandle,
+            & commandBufferBeginInfo
+    );
+
+    return ResultSuccess;
+}
+
+auto vulkan :: endCommandBuffer (
+        Type ( CommandBufferHandle )    commandBufferHandle
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( commandBufferHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION (
+            lastCreatedInstance,
+            pVkEndCommandBuffer,
+            END_COMMAND_BUFFER
+    )
+
+    return static_cast < Type ( Result ) > ( pVkEndCommandBuffer ( commandBufferHandle ) );
+}
+
 #endif
 
 #if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_MAINTENANCE_AVAILABLE
@@ -13673,6 +14218,553 @@ auto vulkan :: trimCommandPool (
     );
 
     return ResultSuccess;
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+
+static inline auto toVulkanFormat (
+        VkDeviceGroupSubmitInfo                        * pDestination,
+        vulkan :: Type ( DeviceGroupSubmitInfo ) const * pSource
+) noexcept -> void {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if (
+            pDestination    == nullptr ||
+            pSource         == nullptr
+    ) {
+        return;
+    }
+
+#endif
+
+    pDestination->sType                         = VK_STRUCTURE_TYPE_DEVICE_GROUP_SUBMIT_INFO;
+    pDestination->pNext                         = nullptr;
+    pDestination->waitSemaphoreCount            = pSource->waitSemaphoreCount;
+    pDestination->pWaitSemaphoreDeviceIndices   = pSource->pWaitSemaphoreDeviceIndices;
+    pDestination->commandBufferCount            = pSource->commandBufferCount;
+    pDestination->pCommandBufferDeviceMasks     = pSource->pCommandBufferDeviceMasks;
+    pDestination->signalSemaphoreCount          = pSource->signalSemaphoreCount;
+    pDestination->pSignalSemaphoreDeviceIndices = pSource->pSignalSemaphoreDeviceIndices;
+}
+
+static inline auto toVulkanFormat (
+        VkProtectedSubmitInfo                        * pDestination,
+        vulkan :: Type ( ProtectedSubmitInfo ) const * pSource
+) noexcept -> void {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if (
+            pDestination    == nullptr ||
+            pSource         == nullptr
+    ) {
+        return;
+    }
+
+#endif
+
+    pDestination->sType                         = VK_STRUCTURE_TYPE_PROTECTED_SUBMIT_INFO;
+    pDestination->pNext                         = nullptr;
+    pDestination->protectedSubmit               = pSource->protectedSubmit;
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+
+static inline auto toVulkanFormat (
+        VkTimelineSemaphoreSubmitInfo                        * pDestination,
+        vulkan :: Type ( TimelineSemaphoreSubmitInfo ) const * pSource
+) noexcept -> void {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if (
+            pDestination    == nullptr ||
+            pSource         == nullptr
+    ) {
+        return;
+    }
+
+#endif
+
+    pDestination->sType                         = VK_STRUCTURE_TYPE_TIMELINE_SEMAPHORE_SUBMIT_INFO;
+    pDestination->pNext                         = nullptr;
+    pDestination->waitSemaphoreValueCount       = pSource->waitSemaphoreValueCount;
+    pDestination->pWaitSemaphoreValues          = reinterpret_cast < decltype ( pDestination->pWaitSemaphoreValues ) > ( pSource->pWaitSemaphoreValues );
+    pDestination->signalSemaphoreValueCount     = pSource->signalSemaphoreValueCount;
+    pDestination->pSignalSemaphoreValues        = reinterpret_cast < decltype ( pDestination->pSignalSemaphoreValues ) > ( pSource->pSignalSemaphoreValues );
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PERFORMANCE_QUERY_AVAILABLE
+
+static inline auto toVulkanFormat (
+        VkPerformanceQuerySubmitInfoKHR                     * pDestination,
+        vulkan :: Type ( PerformanceQuerySubmitInfo ) const * pSource
+) noexcept -> void {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if (
+            pDestination    == nullptr ||
+            pSource         == nullptr
+    ) {
+        return;
+    }
+
+#endif
+
+    pDestination->sType                         = VK_STRUCTURE_TYPE_PERFORMANCE_QUERY_SUBMIT_INFO_KHR;
+    pDestination->pNext                         = nullptr;
+    pDestination->counterPassIndex              = pSource->counterPassIndex;
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_WIN32_KEYED_MUTEX_AVAILABLE
+
+static inline auto toVulkanFormat (
+        VkWin32KeyedMutexAcquireReleaseInfoKHR                     * pDestination,
+        vulkan :: Type ( Win32KeyedMutexAcquireReleaseInfo ) const * pSource
+) noexcept -> void {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if (
+            pDestination    == nullptr ||
+            pSource         == nullptr
+    ) {
+        return;
+    }
+
+#endif
+
+    pDestination->sType                         = VK_STRUCTURE_TYPE_WIN32_KEYED_MUTEX_ACQUIRE_RELEASE_INFO_KHR;
+    pDestination->pNext                         = nullptr;
+    pDestination->acquireCount                  = pSource->acquireCount;
+    pDestination->pAcquireSyncs                 = pSource->pAcquireSyncs;
+    pDestination->pAcquireKeys                  = reinterpret_cast < decltype ( pDestination->pAcquireKeys ) > ( pSource->pAcquireKeys );
+    pDestination->pAcquireTimeouts              = pSource->pAcquireTimeouts;
+    pDestination->releaseCount                  = pSource->releaseCount;
+    pDestination->pReleaseSyncs                 = pSource->pReleaseSyncs;
+    pDestination->pReleaseKeys                  = reinterpret_cast < decltype ( pDestination->pReleaseKeys ) > ( pSource->pReleaseKeys );
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_WIN32_KEYED_MUTEX_AVAILABLE
+
+static inline auto toVulkanFormat (
+        VkWin32KeyedMutexAcquireReleaseInfoNV                            * pDestination,
+        vulkan :: Type ( Win32KeyedMutexAcquireReleaseInfoNVidia ) const * pSource
+) noexcept -> void {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if (
+            pDestination    == nullptr ||
+            pSource         == nullptr
+    ) {
+        return;
+    }
+
+#endif
+
+    pDestination->sType                         = VK_STRUCTURE_TYPE_WIN32_KEYED_MUTEX_ACQUIRE_RELEASE_INFO_NV;
+    pDestination->pNext                         = nullptr;
+    pDestination->acquireCount                  = pSource->acquireCount;
+    pDestination->pAcquireSyncs                 = pSource->pAcquireSyncs;
+    pDestination->pAcquireKeys                  = reinterpret_cast < decltype ( pDestination->pAcquireKeys ) > ( pSource->pAcquireKeys );
+    pDestination->pAcquireTimeouts              = pSource->pAcquireTimeoutsMilliseconds;
+    pDestination->releaseCount                  = pSource->releaseCount;
+    pDestination->pReleaseSyncs                 = pSource->pReleaseSyncs;
+    pDestination->pReleaseKeys                  = reinterpret_cast < decltype ( pDestination->pReleaseKeys ) > ( pSource->pReleaseKeys );
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_SEMAPHORE_WIN32_AVAILABLE
+
+static inline auto toVulkanFormat (
+        VkD3D12FenceSubmitInfoKHR                     * pDestination,
+        vulkan :: Type ( D3D12FenceSubmitInfo ) const * pSource
+) noexcept -> void {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if (
+            pDestination    == nullptr ||
+            pSource         == nullptr
+            ) {
+        return;
+    }
+
+#endif
+
+    pDestination->sType                         = VK_STRUCTURE_TYPE_D3D12_FENCE_SUBMIT_INFO_KHR;
+    pDestination->pNext                         = nullptr;
+    pDestination->waitSemaphoreValueCount       = pSource->waitSemaphoreValueCount;
+    pDestination->pWaitSemaphoreValues          = reinterpret_cast < decltype ( pDestination->pWaitSemaphoreValues ) > ( pSource->pWaitSemaphoreValues );
+    pDestination->signalSemaphoreValueCount     = pSource->signalSemaphoreValueCount;
+    pDestination->pSignalSemaphoreValues        = reinterpret_cast < decltype ( pDestination->pSignalSemaphoreValues ) > ( pSource->pSignalSemaphoreValues );
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+
+static inline auto toVulkanFormat (
+        uint32                                  index,
+        VkSubmitInfo                          * pDestination,
+        vulkan :: Type ( SubmitInfo )   const * pSource
+) noexcept -> void {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if (
+            pDestination    == nullptr ||
+            pSource         == nullptr
+    ) {
+        return;
+    }
+
+#endif
+
+    pDestination->sType                 = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+    pDestination->pNext                 = nullptr;
+    pDestination->waitSemaphoreCount    = pSource->waitSemaphoreCount;
+    pDestination->pWaitSemaphores       = pSource->pWaitSemaphores;
+    pDestination->pWaitDstStageMask     = & pipelineStageFlags [index][0];
+    pDestination->commandBufferCount    = pSource->commandBufferCount;
+    pDestination->pCommandBuffers       = pSource->pCommandBuffers;
+    pDestination->signalSemaphoreCount  = pSource->signalSemaphoreCount;
+    pDestination->pSignalSemaphores     = pSource->pSignalSemaphores;
+
+    for ( uint32 i = 0U; i < pSource->waitSemaphoreCount; ++ i ) {
+        pipelineStageFlags [index][i] = static_cast < VkPipelineStageFlags > ( pSource->pWaitDestinationStageMasks[i] );
+    }
+
+    auto pCurrentInChain    = reinterpret_cast < vulkan :: Type ( GenericInStructure ) const * > ( pSource->pNext );
+    auto pCurrentInVkChain  = reinterpret_cast < VkBaseOutStructure * > ( pDestination );
+
+    while ( pCurrentInChain != nullptr ) {
+
+        switch ( pCurrentInChain->structureType ) {
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+
+            case vulkan :: StructureTypeDeviceGroupSubmitInfo:  {
+                pCurrentInVkChain->pNext = reinterpret_cast < VkBaseOutStructure * > ( & deviceGroupSubmitInfos [index] );
+                toVulkanFormat ( & deviceGroupSubmitInfos[index], reinterpret_cast < vulkan :: Type ( DeviceGroupSubmitInfo ) const * > ( pCurrentInChain ) );
+                break;
+            }
+
+            case vulkan :: StructureTypeProtectedSubmitInfo:  {
+                pCurrentInVkChain->pNext = reinterpret_cast < VkBaseOutStructure * > ( & protectedSubmitInfos [index] );
+                toVulkanFormat ( & protectedSubmitInfos[index], reinterpret_cast < vulkan :: Type ( ProtectedSubmitInfo ) const * > ( pCurrentInChain ) );
+                break;
+            }
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+
+            case vulkan :: StructureTypeSemaphoreSubmitInfo:  {
+                pCurrentInVkChain->pNext = reinterpret_cast < VkBaseOutStructure * > ( & timelineSemaphoreSubmitInfos [index] );
+                toVulkanFormat ( & timelineSemaphoreSubmitInfos[index], reinterpret_cast < vulkan :: Type ( TimelineSemaphoreSubmitInfo ) const * > ( pCurrentInChain ) );
+                break;
+            }
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PERFORMANCE_QUERY_AVAILABLE
+
+            case vulkan :: StructureTypePerformanceQuerySubmitInfo:  {
+                pCurrentInVkChain->pNext = reinterpret_cast < VkBaseOutStructure * > ( & performanceQuerySubmitInfos [index] );
+                toVulkanFormat ( & performanceQuerySubmitInfos[index], reinterpret_cast < vulkan :: Type ( PerformanceQuerySubmitInfo ) const * > ( pCurrentInChain ) );
+                break;
+            }
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_WIN32_KEYED_MUTEX_AVAILABLE
+
+            case vulkan :: StructureTypeWin32KeyedMutexAcquireReleaseInfo:  {
+                pCurrentInVkChain->pNext = reinterpret_cast < VkBaseOutStructure * > ( & win32KeyedMutexAcquireReleaseInfos [index] );
+                toVulkanFormat ( & win32KeyedMutexAcquireReleaseInfos[index], reinterpret_cast < vulkan :: Type ( Win32KeyedMutexAcquireReleaseInfo ) const * > ( pCurrentInChain ) );
+                break;
+            }
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_WIN32_KEYED_MUTEX_AVAILABLE
+
+            case vulkan :: StructureTypeWin32KeyedMutexAcquireReleaseInfoNVidia:  {
+                pCurrentInVkChain->pNext = reinterpret_cast < VkBaseOutStructure * > ( & win32KeyedMutexAcquireReleaseInfosNVidia [index] );
+                toVulkanFormat ( & win32KeyedMutexAcquireReleaseInfosNVidia[index], reinterpret_cast < vulkan :: Type ( Win32KeyedMutexAcquireReleaseInfoNVidia ) const * > ( pCurrentInChain ) );
+                break;
+            }
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_SEMAPHORE_WIN32_AVAILABLE
+
+            case vulkan :: StructureTypeD3D12FenceSubmitInfo:  {
+                pCurrentInVkChain->pNext = reinterpret_cast < VkBaseOutStructure * > ( & d3d12FenceSubmitInfos [index] );
+                toVulkanFormat ( & d3d12FenceSubmitInfos[index], reinterpret_cast < vulkan :: Type ( D3D12FenceSubmitInfo ) const * > ( pCurrentInChain ) );
+                break;
+            }
+
+#endif
+
+            default:    { break; }
+        }
+
+        if ( pCurrentInVkChain->pNext ) {
+            pCurrentInVkChain = pCurrentInVkChain->pNext;
+        }
+
+        pCurrentInChain = pCurrentInChain->pNext;
+    }
+}
+
+auto vulkan :: queueSubmit (
+        Type ( QueueHandle )        queueHandle,
+        cds :: uint32               submitCount,
+        Type ( SubmitInfo ) const * pSubmits,
+        Type ( FenceHandle )        fenceHandle
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if (
+            queueHandle == nullptr ||
+            pSubmits    == nullptr ||
+            submitCount == 0U
+    ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION (
+            lastCreatedInstance,
+            pVkQueueSubmit,
+            QUEUE_SUBMIT
+    )
+
+    if ( submitCount > __C_ENG_VULKAN_CORE_SUBMIT_INFO_MAX_COUNT ) {
+        return ResultErrorConfigurationArraySizeSmall;
+    }
+
+    for ( uint32 i = 0U; i < submitCount; ++ i ) {
+        toVulkanFormat ( i, & submitInfos [ i ], & pSubmits [ i ] );
+    }
+
+    return static_cast < Type ( Result ) > (
+            pVkQueueSubmit (
+                    queueHandle,
+                    submitCount,
+                    & submitInfos [0],
+                    fenceHandle
+            )
+    );
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
+
+static inline auto toVulkanFormat (
+        VkSemaphoreSubmitInfo_t                       * pDestination,
+        vulkan :: Type ( SemaphoreSubmitInfo )  const * pSource
+) noexcept -> void {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if (
+            pDestination    == nullptr ||
+            pSource         == nullptr
+    ) {
+        return;
+    }
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+    pDestination->sType         = VK_STRUCTURE_TYPE_SEMAPHORE_SUBMIT_INFO;
+#elif __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
+    pDestination->sType         = VK_STRUCTURE_TYPE_SEMAPHORE_SUBMIT_INFO_KHR;
+#endif
+
+    pDestination->pNext         = nullptr;
+    pDestination->semaphore     = pSource->semaphore;
+    pDestination->value         = pSource->value;
+    pDestination->stageMask     = pSource->stageMask;
+    pDestination->deviceIndex   = pSource->deviceIndex;
+}
+
+static inline auto toVulkanFormat (
+        VkCommandBufferSubmitInfo_t                       * pDestination,
+        vulkan :: Type ( CommandBufferSubmitInfo )  const * pSource
+) noexcept -> void {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if (
+            pDestination    == nullptr ||
+            pSource         == nullptr
+    ) {
+        return;
+    }
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+    pDestination->sType         = VK_STRUCTURE_TYPE_COMMAND_BUFFER_SUBMIT_INFO;
+#elif __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
+    pDestination->sType         = VK_STRUCTURE_TYPE_COMMAND_BUFFER_SUBMIT_INFO_KHR;
+#endif
+
+    pDestination->pNext         = nullptr;
+    pDestination->commandBuffer = pSource->commandBuffer;
+    pDestination->deviceMask    = pSource->deviceMask;
+}
+
+static inline auto toVulkanFormat (
+        uint32                                  index,
+        VkSubmitInfo2_t                       * pDestination,
+        vulkan :: Type ( SubmitInfo2 )  const * pSource
+) noexcept -> void {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if (
+            pDestination    == nullptr ||
+            pSource         == nullptr
+    ) {
+        return;
+    }
+
+#endif
+
+    pDestination->sType                     = VK_STRUCTURE_TYPE_SUBMIT_INFO_2;
+    pDestination->pNext                     = nullptr;
+    pDestination->flags                     = static_cast < decltype ( pDestination->flags ) > ( pSource->flags );
+    pDestination->waitSemaphoreInfoCount    = pSource->waitSemaphoreInfoCount;
+    pDestination->pWaitSemaphoreInfos       = & waitSemaphoreInfos [index][0];
+    pDestination->commandBufferInfoCount    = pSource->commandBufferInfoCount;
+    pDestination->pCommandBufferInfos       = & commandBufferSubmitInfos [index][0];
+    pDestination->signalSemaphoreInfoCount  = pSource->signalSemaphoreInfoCount;
+    pDestination->pSignalSemaphoreInfos     = & signalSemaphoreInfos [index][0];
+
+    for ( uint32 i = 0U; i < pDestination->waitSemaphoreInfoCount; ++ i ) {
+        toVulkanFormat ( & waitSemaphoreInfos[index][0], & pSource->pWaitSemaphoreInfos[0] );
+    }
+
+    for ( uint32 i = 0U; i < pDestination->commandBufferInfoCount; ++ i ) {
+        toVulkanFormat ( & commandBufferSubmitInfos[index][0], & pSource->pCommandBufferInfos[0] );
+    }
+
+    for ( uint32 i = 0U; i < pDestination->signalSemaphoreInfoCount; ++ i ) {
+        toVulkanFormat ( & signalSemaphoreInfos[index][0], & pSource->pSignalSemaphoreInfos[0] );
+    }
+
+    auto pCurrentInChain    = reinterpret_cast < vulkan :: Type ( GenericInStructure ) const * > ( pSource->pNext );
+    auto pCurrentInVkChain  = reinterpret_cast < VkBaseOutStructure * > ( pDestination );
+
+    while ( pCurrentInChain != nullptr ) {
+
+        switch ( pCurrentInChain->structureType ) {
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PERFORMANCE_QUERY_AVAILABLE
+
+            case vulkan :: StructureTypePerformanceQuerySubmitInfo:  {
+                pCurrentInVkChain->pNext = reinterpret_cast < VkBaseOutStructure * > ( & performanceQuerySubmitInfos [index] );
+                toVulkanFormat ( & performanceQuerySubmitInfos[index], reinterpret_cast < vulkan :: Type ( PerformanceQuerySubmitInfo ) const * > ( pCurrentInChain ) );
+                break;
+            }
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_WIN32_KEYED_MUTEX_AVAILABLE
+
+                case vulkan :: StructureTypeWin32KeyedMutexAcquireReleaseInfo:  {
+                pCurrentInVkChain->pNext = reinterpret_cast < VkBaseOutStructure * > ( & win32KeyedMutexAcquireReleaseInfos [index] );
+                toVulkanFormat ( & win32KeyedMutexAcquireReleaseInfos[index], reinterpret_cast < vulkan :: Type ( Win32KeyedMutexAcquireReleaseInfo ) const * > ( pCurrentInChain ) );
+                break;
+            }
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_WIN32_KEYED_MUTEX_AVAILABLE
+
+                case vulkan :: StructureTypeWin32KeyedMutexAcquireReleaseInfoNVidia:  {
+                pCurrentInVkChain->pNext = reinterpret_cast < VkBaseOutStructure * > ( & win32KeyedMutexAcquireReleaseInfosNVidia [index] );
+                toVulkanFormat ( & win32KeyedMutexAcquireReleaseInfosNVidia[index], reinterpret_cast < vulkan :: Type ( Win32KeyedMutexAcquireReleaseInfoNVidia ) const * > ( pCurrentInChain ) );
+                break;
+            }
+
+#endif
+
+            default:    { break; }
+        }
+
+        if ( pCurrentInVkChain->pNext ) {
+            pCurrentInVkChain = pCurrentInVkChain->pNext;
+        }
+
+        pCurrentInChain = pCurrentInChain->pNext;
+    }
+}
+
+auto vulkan :: queueSubmit (
+        Type ( QueueHandle )            queueHandle,
+        cds :: uint32                   submitCount,
+        Type ( SubmitInfo2 )    const * pSubmits,
+        Type ( FenceHandle )            fenceHandle
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if (
+            queueHandle == nullptr ||
+            pSubmits    == nullptr ||
+            submitCount == 0U
+    ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_2 (
+            lastCreatedInstance,
+            pVkQueueSubmit2,
+            QUEUE_SUBMIT_2,
+            QUEUE_SUBMIT_2_KHR
+    )
+
+    if ( submitCount > __C_ENG_VULKAN_CORE_SUBMIT_INFO_MAX_COUNT ) {
+        return ResultErrorConfigurationArraySizeSmall;
+    }
+
+    for ( uint32 i = 0U; i < submitCount; ++ i ) {
+        toVulkanFormat ( i, & submitInfos2 [ i ], & pSubmits [ i ] );
+    }
+
+    return static_cast < Type ( Result ) > (
+            pVkQueueSubmit2 (
+                    queueHandle,
+                    submitCount,
+                    & submitInfos2 [0],
+                    fenceHandle
+            )
+    );
 }
 
 #endif

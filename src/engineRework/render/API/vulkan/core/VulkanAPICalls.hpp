@@ -360,6 +360,15 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
                 Type ( CommandBufferHandle )    *
         ) noexcept -> Type ( Result );
 
+        NoDiscard MaybeUnused extern auto beginCommandBuffer (
+                Type ( CommandBufferHandle ),
+                Type ( CommandBufferBeginInfo ) const *
+        ) noexcept -> Type ( Result );
+
+        NoDiscard MaybeUnused extern auto endCommandBuffer (
+                Type ( CommandBufferHandle )
+        ) noexcept -> Type ( Result );
+
 #endif
 
 #if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_MAINTENANCE_AVAILABLE
@@ -368,6 +377,28 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
                 Type ( DeviceHandle ),
                 Type ( CommandPoolHandle ),
                 Type ( CommandPoolTrimFlags )
+        ) noexcept -> Type ( Result );
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+
+        NoDiscard MaybeUnused extern auto queueSubmit (
+                Type ( QueueHandle ),
+                cds :: uint32,
+                Type ( SubmitInfo ) const *,
+                Type ( FenceHandle )
+        ) noexcept -> Type ( Result );
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
+
+        NoDiscard MaybeUnused extern auto queueSubmit (
+                Type ( QueueHandle ),
+                cds :: uint32,
+                Type ( SubmitInfo2 ) const *,
+                Type ( FenceHandle )
         ) noexcept -> Type ( Result );
 
 #endif

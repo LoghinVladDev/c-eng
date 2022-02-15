@@ -686,9 +686,15 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE && __C_ENG_VULKAN_API_EXTENSION_NVIDIA_FRAMEBUFFER_MIXED_SAMPLES_AVAILABLE
+
+            Field ( AttachmentSampleCountInfoNVidia,                                       VkStructureType :: VK_STRUCTURE_TYPE_ATTACHMENT_SAMPLE_COUNT_INFO_NV ),
+
+#endif
+
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE && __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXPERIMENTAL_MULTIVIEW_PER_VIEW_ATTRIBUTES_AVAILABLE
 
-            Field ( MutiviewPerViewAttributesInfoNVidiaExperimental,                       VkStructureType :: VK_STRUCTURE_TYPE_MULTIVIEW_PER_VIEW_ATTRIBUTES_INFO_NVX ),
+            Field ( MultiviewPerViewAttributesInfoNVidiaExperimental,                      VkStructureType :: VK_STRUCTURE_TYPE_MULTIVIEW_PER_VIEW_ATTRIBUTES_INFO_NVX ),
             Field ( PhysicalDeviceMultiviewPerViewAttributesPropertiesNVidiaExperimental,  VkStructureType :: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PER_VIEW_ATTRIBUTES_PROPERTIES_NVX ),
 
 #endif
@@ -2690,7 +2696,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #include <ObjectMapping.hpp>
 
 
-#define C_ENG_MAP_START     ENUM ( PipelineStageFlag, TYPE ( cds :: uint32 ) )
+#define C_ENG_MAP_START     ENUM ( PipelineStageFlag, TYPE ( cds :: uint64 ) )
 #include <ObjectMapping.hpp>
 
         Enum {
@@ -2744,7 +2750,11 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+
+            Field ( None,                           VkPipelineStageFlagBits :: VK_PIPELINE_STAGE_NONE ),
+
+#elif __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
 
             Field ( None,                           VkPipelineStageFlagBits :: VK_PIPELINE_STAGE_NONE_KHR ),
 
@@ -2778,7 +2788,54 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
             Field ( BottomOfPipe,                   VkPipelineStageFlagBits :: VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT ),
             Field ( Host,                           VkPipelineStageFlagBits :: VK_PIPELINE_STAGE_HOST_BIT ),
             Field ( AllGraphics,                    VkPipelineStageFlagBits :: VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT ),
-            Field ( AllCommands,                    VkPipelineStageFlagBits :: VK_PIPELINE_STAGE_ALL_COMMANDS_BIT )
+            Field ( AllCommands,                    VkPipelineStageFlagBits :: VK_PIPELINE_STAGE_ALL_COMMANDS_BIT ),
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+
+            Field ( Copy,                           VK_PIPELINE_STAGE_2_COPY_BIT ),
+            Field ( Resolve,                        VK_PIPELINE_STAGE_2_RESOLVE_BIT ),
+            Field ( Blit,                           VK_PIPELINE_STAGE_2_BLIT_BIT ),
+            Field ( Clear,                          VK_PIPELINE_STAGE_2_CLEAR_BIT ),
+            Field ( IndexInput,                     VK_PIPELINE_STAGE_2_INDEX_INPUT_BIT ),
+            Field ( VertexAttributeInput,           VK_PIPELINE_STAGE_2_VERTEX_ATTRIBUTE_INPUT_BIT ),
+            Field ( PreRasterizationShaders,        VK_PIPELINE_STAGE_2_PRE_RASTERIZATION_SHADERS_BIT ),
+
+#if __C_ENG_VULKAN_API_EXTENSION_HUAWEI_SUBPASS_SHADING_AVAILABLE
+
+            Field ( SubpassShadingHuawei,           VK_PIPELINE_STAGE_2_SUBPASS_SHADING_BIT_HUAWEI ),
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_HUAWEI_INVOCATION_MASK_AVAILABLE
+
+            Field ( InvocationMaskHuawei,           VK_PIPELINE_STAGE_2_INVOCATION_MASK_BIT_HUAWEI ),
+
+#endif
+
+#elif __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
+
+            Field ( Copy,                           VK_PIPELINE_STAGE_2_COPY_BIT_KHR ),
+            Field ( Resolve,                        VK_PIPELINE_STAGE_2_RESOLVE_BIT_KHR ),
+            Field ( Blit,                           VK_PIPELINE_STAGE_2_BLIT_BIT_KHR ),
+            Field ( Clear,                          VK_PIPELINE_STAGE_2_CLEAR_BIT_KHR ),
+            Field ( IndexInput,                     VK_PIPELINE_STAGE_2_INDEX_INPUT_BIT_KHR ),
+            Field ( VertexAttributeInput,           VK_PIPELINE_STAGE_2_VERTEX_ATTRIBUTE_INPUT_BIT_KHR ),
+            Field ( PreRasterizationShaders,        VK_PIPELINE_STAGE_2_PRE_RASTERIZATION_SHADERS_BIT_KHR ),
+
+#if __C_ENG_VULKAN_API_EXTENSION_HUAWEI_SUBPASS_SHADING_AVAILABLE
+
+            Field ( SubpassShadingHuawei,           VK_PIPELINE_STAGE_2_SUBPASS_SHADING_BIT_HUAWEI ),
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_HUAWEI_INVOCATION_MASK_AVAILABLE
+
+            Field ( InvocationMaskHuawei,           VK_PIPELINE_STAGE_2_INVOCATION_MASK_BIT_HUAWEI ),
+
+#endif
+
+#endif
+
         };
 
 #define C_ENG_MAP_END
@@ -3093,6 +3150,48 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #define C_ENG_MAP_END
 #include <ObjectMapping.hpp>
 
+#define C_ENG_MAP_START     ENUM ( CommandBufferUsageFlag, TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( OneTimeSubmit,      VkCommandBufferUsageFlagBits :: VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT ),
+            Field ( RenderPassContinue, VkCommandBufferUsageFlagBits :: VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT ),
+            Field ( Simultaneous,       VkCommandBufferUsageFlagBits :: VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START     ENUM ( QueryPipelineStatisticFlag, TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( InputAssemblyVertices,                      VkQueryPipelineStatisticFlagBits :: VK_QUERY_PIPELINE_STATISTIC_INPUT_ASSEMBLY_VERTICES_BIT ),
+            Field ( InputAssemblyPrimitives,                    VkQueryPipelineStatisticFlagBits :: VK_QUERY_PIPELINE_STATISTIC_INPUT_ASSEMBLY_PRIMITIVES_BIT ),
+            Field ( VertexShaderInvocations,                    VkQueryPipelineStatisticFlagBits :: VK_QUERY_PIPELINE_STATISTIC_VERTEX_SHADER_INVOCATIONS_BIT ),
+            Field ( GeometryShaderInvocations,                  VkQueryPipelineStatisticFlagBits :: VK_QUERY_PIPELINE_STATISTIC_GEOMETRY_SHADER_INVOCATIONS_BIT ),
+            Field ( GeometryShaderPrimitives,                   VkQueryPipelineStatisticFlagBits :: VK_QUERY_PIPELINE_STATISTIC_GEOMETRY_SHADER_PRIMITIVES_BIT ),
+            Field ( ClippingInvocations,                        VkQueryPipelineStatisticFlagBits :: VK_QUERY_PIPELINE_STATISTIC_CLIPPING_INVOCATIONS_BIT ),
+            Field ( ClippingPrimitives,                         VkQueryPipelineStatisticFlagBits :: VK_QUERY_PIPELINE_STATISTIC_CLIPPING_PRIMITIVES_BIT ),
+            Field ( FragmentShaderInvocations,                  VkQueryPipelineStatisticFlagBits :: VK_QUERY_PIPELINE_STATISTIC_FRAGMENT_SHADER_INVOCATIONS_BIT ),
+            Field ( TessellationControlShaderPatches,           VkQueryPipelineStatisticFlagBits :: VK_QUERY_PIPELINE_STATISTIC_TESSELLATION_CONTROL_SHADER_PATCHES_BIT ),
+            Field ( TessellationEvaluationShaderInvocations,    VkQueryPipelineStatisticFlagBits :: VK_QUERY_PIPELINE_STATISTIC_TESSELLATION_EVALUATION_SHADER_INVOCATIONS_BIT ),
+            Field ( ComputeShaderInvocations,                   VkQueryPipelineStatisticFlagBits :: VK_QUERY_PIPELINE_STATISTIC_COMPUTE_SHADER_INVOCATIONS_BIT ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START     ENUM ( QueryControlFlag, TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( Precise,    VkQueryControlFlagBits :: VK_QUERY_CONTROL_PRECISE_BIT ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
 #endif
 
 
@@ -3214,6 +3313,37 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #endif
 
 
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+
+#define C_ENG_MAP_START     ENUM ( RenderingFlag,   TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( ContentsSecondayCommandBuffers,     VkRenderingFlagBits :: VK_RENDERING_CONTENTS_SECONDARY_COMMAND_BUFFERS_BIT ),
+            Field ( Suspending,                         VkRenderingFlagBits :: VK_RENDERING_SUSPENDING_BIT ),
+            Field ( Resuming,                           VkRenderingFlagBits :: VK_RENDERING_RESUMING_BIT ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#elif __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE
+
+#define C_ENG_MAP_START     ENUM ( RenderingFlag,   TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( ContentsSecondayCommandBuffers,     VkRenderingFlagBitsKHR :: VK_RENDERING_CONTENTS_SECONDARY_COMMAND_BUFFERS_BIT_KHR ),
+            Field ( Suspending,                         VkRenderingFlagBitsKHR :: VK_RENDERING_SUSPENDING_BIT_KHR ),
+            Field ( Resuming,                           VkRenderingFlagBitsKHR :: VK_RENDERING_RESUMING_BIT_KHR ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
 
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 
@@ -3238,6 +3368,10 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_ALIAS ( ImageViewHandle,                VkImageView );
         __C_ENG_ALIAS ( CommandBufferHandle,            VkCommandBuffer );
         __C_ENG_ALIAS ( CommandPoolHandle,              VkCommandPool );
+        __C_ENG_ALIAS ( FrameBufferHandle,              VkFramebuffer );
+        __C_ENG_ALIAS ( RenderPassHandle,               VkRenderPass );
+        __C_ENG_ALIAS ( SemaphoreHandle,                VkSemaphore );
+        __C_ENG_ALIAS ( FenceHandle,                    VkFence );
 
         __C_ENG_ALIAS ( InstanceCreateFlags,            VkInstanceCreateFlags );
         __C_ENG_ALIAS ( DebugMessengerCreateFlags,      VkDebugUtilsMessengerCreateFlagsEXT );
@@ -3246,13 +3380,16 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_ALIAS ( SampleCountFlags,               VkSampleCountFlags );
         __C_ENG_ALIAS ( ShaderStageFlags,               VkShaderStageFlags );
         __C_ENG_ALIAS ( QueueFlags,                     VkQueueFlags );
-        __C_ENG_ALIAS ( PipelineStageFlags,             VkPipelineStageFlags );
+        __C_ENG_ALIAS ( PipelineStageFlags,             VkFlags64 );
         __C_ENG_ALIAS ( ImageUsageFlags,                VkImageUsageFlags );
         __C_ENG_ALIAS ( ImageViewCreateFlags,           VkImageViewCreateFlags );
         __C_ENG_ALIAS ( ImageAspectFlags,               VkImageAspectFlags );
         __C_ENG_ALIAS ( CommandPoolCreateFlags,         VkCommandPoolCreateFlags );
         __C_ENG_ALIAS ( CommandPoolResetFlags,          VkCommandPoolResetFlags );
         __C_ENG_ALIAS ( CommandBufferResetFlags,        VkCommandBufferResetFlags );
+        __C_ENG_ALIAS ( CommandBufferUsageFlags,        VkCommandBufferUsageFlags );
+        __C_ENG_ALIAS ( QueryControlFlags,              VkQueryControlFlags );
+        __C_ENG_ALIAS ( QueryPipelineStatisticFlags,    VkQueryPipelineStatisticFlags );
 
         __C_ENG_ALIAS ( AllocationFunction,             PFN_vkAllocationFunction );
         __C_ENG_ALIAS ( ReallocationFunction,           PFN_vkReallocationFunction );
@@ -3272,6 +3409,16 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_MAINTENANCE_AVAILABLE && ! __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
 
         __C_ENG_ALIAS ( CommandPoolTrimFlags,           VkCommandPoolTrimFlagsKHR );
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+
+        __C_ENG_ALIAS ( RenderingFlags,                 VkRenderingFlags );
+
+#elif __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE
+
+        __C_ENG_ALIAS ( RenderingFlags,                 VkRenderingFlagsKHR );
 
 #endif
 
@@ -3354,6 +3501,21 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( Viewport,  NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            float   x;
+            float   y;
+            float   width;
+            float   height;
+            float   minDepth;
+            float   maxDepth;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
 
 #define C_ENG_MAP_START     STRUCT ( ApplicationInfo, NO_PARENT )
 #include <ObjectMapping.hpp>
@@ -3719,6 +3881,53 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
             Type ( CommandPoolHandle )          commandPool;
             Type ( CommandBufferLevel )         level;
             cds :: uint32                       commandBufferCount;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START     STRUCT ( CommandBufferInheritanceInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                          structureType;
+            Type ( GenericInStructure )             const * pNext;
+            Type ( RenderPassHandle )                       renderPass;
+            cds :: uint32                                   subpass;
+            Type ( FrameBufferHandle )                      frameBuffer;
+            Type ( Bool )                                   occlusionQueryEnable;
+            Type ( QueryControlFlags )                      queryFlags;
+            Type ( QueryPipelineStatisticFlags )            pipelineStatistics;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START     STRUCT ( CommandBufferBeginInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                          structureType;
+            Type ( GenericInStructure )             const * pNext;
+            Type ( CommandBufferUsageFlags )                flags;
+            Type ( CommandBufferInheritanceInfo )   const * pInheritanceInfo;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DEVICE_GROUP_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( DeviceGroupCommandBufferBeginInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )              structureType;
+            Type ( GenericInStructure ) const * pNext;
+            cds :: uint32                       deviceMask;
         };
 
 #define C_ENG_MAP_END
@@ -8340,6 +8549,373 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_FRAMEBUFFER_MIXED_SAMPLES_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_AMD_MIXED_ATTACHMENT_SAMPLES_AVAILABLE
+
+        namespace hidden {
+
+            struct __AttachmentSampleCountInfo { // NOLINT(bugprone-reserved-identifier)
+                __C_ENG_TYPE ( StructureType )              structureType;
+                __C_ENG_TYPE ( GenericStructure )   const * pNext;
+                cds :: uint32                               colorAttachmentCount;
+                __C_ENG_TYPE ( SampleCountFlag )    const * pColorAttachmentSamples;
+                __C_ENG_TYPE ( SampleCountFlag )            depthStencilAttachmentSamples;
+            };
+
+        }
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_FRAMEBUFFER_MIXED_SAMPLES_AVAILABLE
+
+        __C_ENG_ALIAS ( AttachmentSampleCountInfoNVidia,    hidden :: __AttachmentSampleCountInfo );
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_AMD_MIXED_ATTACHMENT_SAMPLES_AVAILABLE
+
+        __C_ENG_ALIAS ( AttachmentSampleCountInfoAMD,       hidden :: __AttachmentSampleCountInfo );
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXPERIMENTAL_MULTIVIEW_PER_VIEW_ATTRIBUTES_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( MultiviewPerViewAttributesInfoNVidia,  NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )              structureType;
+            Type ( GenericStructure )   const * pNext;
+            Type ( Bool )                       perViewAttributes;
+            Type ( Bool )                       perViewAttributesPositionXOnly;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_CONDITIONAL_RENDERING_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( CommandBufferInheritanceConditionalRenderingInfo,  NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )              structureType;
+            Type ( GenericStructure )   const * pNext;
+            Type ( Bool )                       conditionalRenderingEnable;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_QUALCOMM_RENDER_PASS_TRANSFORM_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( CommandBufferInheritanceRenderPassTransformInfoQualcomm,   NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )              structureType;
+            Type ( GenericStructure )   const * pNext;
+            Type ( SurfaceTransformFlag )       transform;
+            Type ( Rect )                       renderArea;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( CommandBufferInheritanceRenderingInfo,   NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )              structureType;
+            Type ( GenericStructure )   const * pNext;
+            Type ( RenderingFlags )             flags;
+            cds :: uint32                       viewMask;
+            cds :: uint32                       colorAttachmentCount;
+            Type ( Format )             const * pColorAttachmentFormats;
+            Type ( Format )                     depthAttachmentFormat;
+            Type ( Format )                     stencilAttachmentFormat;
+            Type ( SampleCountFlag )            rasterizationSamples;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_INHERITED_VIEWPORT_SCISSOR_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( CommandBufferInheritanceViewportScissorInfoNVidia,   NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )              structureType;
+            Type ( GenericStructure )   const * pNext;
+            Type ( Bool )                       viewportScissor2D;
+            cds :: uint32                       viewportDepthCount;
+            Type ( Viewport )           const * pViewportDepths;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+
+#define C_ENG_MAP_START     ENUM ( SubmitFlag,  TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( Protected, VkSubmitFlagBits :: VK_SUBMIT_PROTECTED_BIT ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+        __C_ENG_ALIAS ( SubmitFlags,    VkSubmitFlags );
+
+#elif __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
+
+#define C_ENG_MAP_START     ENUM ( SubmitFlag,  TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( Protected, VkSubmitFlagBitsKHR :: VK_SUBMIT_PROTECTED_BIT_KHR ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+        __C_ENG_ALIAS ( SubmitFlags,    VkSubmitFlagsKHR );
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( SemaphoreSubmitInfo,   NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                      structureType;
+            Type ( GenericStructure )           const * pNext;
+            Type ( SemaphoreHandle )                    semaphore;
+            cds :: uint64                               value;
+            Type ( PipelineStageFlags )                 stageMask;
+            cds :: uint32                               deviceIndex;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START     STRUCT ( CommandBufferSubmitInfo,   NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                      structureType;
+            Type ( GenericStructure )           const * pNext;
+            Type ( CommandBufferHandle )                commandBuffer;
+            cds :: uint32                               deviceMask;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START     STRUCT ( SubmitInfo2,    NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                      structureType;
+            Type ( GenericStructure )           const * pNext;
+            Type ( SubmitFlags )                        flags;
+            cds :: uint32                               waitSemaphoreInfoCount;
+            Type ( SemaphoreSubmitInfo )        const * pWaitSemaphoreInfos;
+            cds :: uint32                               commandBufferInfoCount;
+            Type ( CommandBufferSubmitInfo )    const * pCommandBufferInfos;
+            cds :: uint32                               signalSemaphoreInfoCount;
+            Type ( SemaphoreSubmitInfo )        const * pSignalSemaphoreInfos;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( SubmitInfo,    NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                      structureType;
+            Type ( GenericStructure )           const * pNext;
+            cds :: uint32                               waitSemaphoreCount;
+            Type ( SemaphoreHandle )            const * pWaitSemaphores;
+            Type ( PipelineStageFlags )         const * pWaitDestinationStageMasks;
+            cds :: uint32                               commandBufferCount;
+            Type ( CommandBufferHandle )        const * pCommandBuffers;
+            cds :: uint32                               signalSemaphoreCount;
+            Type ( SemaphoreHandle )            const * pSignalSemaphores;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( DeviceGroupSubmitInfo,    NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )              structureType;
+            Type ( GenericStructure )   const * pNext;
+            cds :: uint32                       waitSemaphoreCount;
+            cds :: uint32               const * pWaitSemaphoreDeviceIndices;
+            cds :: uint32                       commandBufferCount;
+            cds :: uint32               const * pCommandBufferDeviceMasks;
+            cds :: uint32                       signalSemaphoreCount;
+            cds :: uint32               const * pSignalSemaphoreDeviceIndices;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START     STRUCT ( ProtectedSubmitInfo,    NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )              structureType;
+            Type ( GenericStructure )   const * pNext;
+            Type ( Bool )                       protectedSubmit;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( TimelineSemaphoreSubmitInfo,    NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )              structureType;
+            Type ( GenericStructure )   const * pNext;
+            cds :: uint32                       waitSemaphoreValueCount;
+            cds :: uint64               const * pWaitSemaphoreValues;
+            cds :: uint32                       signalSemaphoreValueCount;
+            cds :: uint64               const * pSignalSemaphoreValues;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PERFORMANCE_QUERY_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( PerformanceQuerySubmitInfo,    NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )              structureType;
+            Type ( GenericStructure )   const * pNext;
+            cds :: uint32                       counterPassIndex;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_WIN32_KEYED_MUTEX_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( Win32KeyedMutexAcquireReleaseInfo,    NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )              structureType;
+            Type ( GenericStructure )   const * pNext;
+            cds :: uint32                       acquireCount;
+            Type ( DeviceMemory )       const * pAcquireSyncs;
+            cds :: uint64               const * pAcquireKeys;
+            cds :: uint32               const * pAcquireTimeouts;
+            cds :: uint32                       releaseCount;
+            Type ( DeviceMemory )       const * pReleaseSyncs;
+            cds :: uint64               const * pReleaseKeys;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_WIN32_KEYED_MUTEX_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( Win32KeyedMutexAcquireReleaseInfoNVidia,    NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )              structureType;
+            Type ( GenericStructure )   const * pNext;
+            cds :: uint32                       acquireCount;
+            Type ( DeviceMemory )       const * pAcquireSyncs;
+            cds :: uint64               const * pAcquireKeys;
+            cds :: uint32               const * pAcquireTimeoutsMilliseconds;
+            cds :: uint32                       releaseCount;
+            Type ( DeviceMemory )       const * pReleaseSyncs;
+            cds :: uint64               const * pReleaseKeys;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_SEMAPHORE_WIN32_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( D3D12FenceSubmitInfo,    NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )              structureType;
+            Type ( GenericStructure )   const * pNext;
+            cds :: uint32                       waitSemaphoreValuesCount;
+            cds :: uint64               const * pWaitSemaphoreValues;
+            cds :: uint32                       signalSemaphoreValuesCount;
+            cds :: uint64               const * pSignalSemaphoreValues;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
 
 #define C_ENG_MAP_START     HEADER
 #include <ObjectMapping.hpp>
@@ -8373,6 +8949,9 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( CommandPoolResetFlag ) ) noexcept -> cds :: StringLiteral;
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( CommandBufferResetFlag ) ) noexcept -> cds :: StringLiteral;
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( CommandBufferLevel ) ) noexcept -> cds :: StringLiteral;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( CommandBufferUsageFlag ) ) noexcept -> cds :: StringLiteral;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( QueryPipelineStatisticFlag ) ) noexcept -> cds :: StringLiteral;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( QueryControlFlag ) ) noexcept -> cds :: StringLiteral;
 
 #endif
 
@@ -8389,6 +8968,12 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( ResolveModeFlag ) ) noexcept -> cds :: StringLiteral;
 
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( ImageFormatListCreateInfo ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
+
+        NoDiscard auto toString ( Type ( SubmitFlag ) ) noexcept -> cds :: StringLiteral;
 
 #endif
 
@@ -8465,6 +9050,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( Extent2D ) const & ) noexcept -> cds :: String;
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( Extent3D ) const & ) noexcept -> cds :: String;
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( Rect ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( Viewport ) const & ) noexcept -> cds :: String;
 
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( Version ) const & ) noexcept -> cds :: String;
 
@@ -8497,6 +9083,10 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( CommandPoolCreateInfo ) const & ) noexcept -> cds :: String;
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( CommandBufferAllocateInfo ) const & ) noexcept -> cds :: String;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( CommandBufferBeginInfo ) const & ) noexcept -> cds :: String;
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( CommandBufferInheritanceInfo ) const & ) noexcept -> cds :: String;
+
+        NoDiscard auto toString ( Type ( SubmitInfo ) const & ) noexcept -> cds :: String;
 
 #endif
 
@@ -8526,7 +9116,17 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( ImageViewUsageCreateInfo ) const & ) noexcept -> cds :: String;
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( SamplerYCBCRConversionInfo ) const & ) noexcept -> cds :: String;
 
+        NoDiscard auto toString ( Type ( DeviceGroupSubmitInfo ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( ProtectedSubmitInfo ) const & ) noexcept -> cds :: String;
+
 #endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DEVICE_GROUP_AVAILABLE
+
+        NoDiscard auto toString ( Type ( DeviceGroupCommandBufferBeginInfo ) const & ) noexcept -> cds :: String;
+
+#endif
+
 
 #if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
 
@@ -8554,6 +9154,8 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceUniformBufferStandardLayoutFeatures ) const & ) noexcept -> cds :: String;
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceVulkanMemoryModelFeatures ) const & ) noexcept -> cds :: String;
 
+        NoDiscard auto toString ( Type ( TimelineSemaphoreSubmitInfo ) const & ) noexcept -> cds :: String;
+
 #endif
 
 #if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
@@ -8561,6 +9163,38 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceVulkan13Properties ) const & ) noexcept -> cds :: String;
 
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceVulkan13Features ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
+
+        NoDiscard auto toString ( Type ( SemaphoreSubmitInfo ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( CommandBufferSubmitInfo ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( SubmitInfo2 ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PERFORMANCE_QUERY_AVAILABLE
+
+        NoDiscard auto toString ( Type ( PerformanceQuerySubmitInfo ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_WIN32_KEYED_MUTEX_AVAILABLE
+
+        NoDiscard auto toString ( Type ( Win32KeyedMutexAcquireReleaseInfo ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_WIN32_KEYED_MUTEX_AVAILABLE
+
+        NoDiscard auto toString ( Type ( Win32KeyedMutexAcquireReleaseInfoNVidia ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_SEMAPHORE_WIN32_AVAILABLE
+
+        NoDiscard auto toString ( Type ( D3D12FenceSubmitInfo ) const & ) noexcept -> cds :: String;
 
 #endif
 
@@ -9341,6 +9975,37 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( DeviceMemoryReportFlag ) ) noexcept -> cds :: StringLiteral;
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( DeviceMemoryReportEventType ) ) noexcept -> cds :: StringLiteral;
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( DeviceDeviceMemoryReportCreateInfo ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+
+        NoDiscard auto toString ( Type ( RenderingFlag ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( CommandBufferInheritanceRenderingInfo ) const & ) noexcept -> cds :: String;
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_FRAMEBUFFER_MIXED_SAMPLES_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_AMD_MIXED_ATTACHMENT_SAMPLES_AVAILABLE
+
+        NoDiscard auto toString ( hidden :: __AttachmentSampleCountInfo const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXPERIMENTAL_MULTIVIEW_PER_VIEW_ATTRIBUTES_AVAILABLE
+
+        NoDiscard auto toString ( Type ( MultiviewPerViewAttributesInfoNVidia ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_CONDITIONAL_RENDERING_AVAILABLE
+
+        NoDiscard auto toString ( Type ( CommandBufferInheritanceConditionalRenderingInfo ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_QUALCOMM_RENDER_PASS_TRANSFORM_AVAILABLE
+
+        NoDiscard auto toString ( Type ( CommandBufferInheritanceRenderPassTransformInfoQualcomm ) const & ) noexcept -> cds :: String;
 
 #endif
 

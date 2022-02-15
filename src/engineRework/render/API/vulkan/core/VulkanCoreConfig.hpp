@@ -33,6 +33,15 @@
 
 #define __C_ENG_VULKAN_CORE_SWAP_CHAIN_IMAGE_MAX_COUNT 256U /* NOLINT(bugprone-reserved-identifier) */
 
+#define __C_ENG_VULKAN_CORE_RENDERING_INFO_FORMATS_MAX_COUNT 256U /* NOLINT(bugprone-reserved-identifier) */
+#define __C_ENG_VULKAN_CORE_SAMPLE_COUNT_ATTACHMENT_SAMPLES_MAX_COUNT 256U /* NOLINT(bugprone-reserved-identifier) */
+#define __C_ENG_VULKAN_CORE_VIEWPORT_DEPTH_MAX_COUNT 16U /* NOLINT(bugprone-reserved-identifier) */
+
+#define __C_ENG_VULKAN_CORE_SUBMIT_INFO_MAX_COUNT 32U /* NOLINT(bugprone-reserved-identifier) */
+#define __C_ENG_VULKAN_CORE_PIPELINE_STAGE_FLAGS_MAX_COUNT 64U /* NOLINT(bugprone-reserved-identifier) */
+#define __C_ENG_VULKAN_CORE_SUBMIT_SEMAPHORE_INFO_MAX_COUNT 16U /* NOLINT(bugprone-reserved-identifier) */
+#define __C_ENG_VULKAN_CORE_SUBMIT_COMMAND_BUFFER_INFO_MAX_COUNT 32U /* NOLINT(bugprone-reserved-identifier) */
+
 #define __C_ENG_VULKAN_CORE_FUNCTION_NAME_ENUMERATE_INSTANCE_VERSION                                        "vkEnumerateInstanceVersion" /* NOLINT(bugprone-reserved-identifier) */
 #define __C_ENG_VULKAN_CORE_FUNCTION_NAME_ENUMERATE_INSTANCE_LAYER_PROPERTIES                               "vkEnumerateInstanceLayerProperties" /* NOLINT(bugprone-reserved-identifier) */
 #define __C_ENG_VULKAN_CORE_FUNCTION_NAME_ENUMERATE_INSTANCE_EXTENSION_PROPERTIES                           "vkEnumerateInstanceExtensionProperties" /* NOLINT(bugprone-reserved-identifier) */
@@ -92,6 +101,12 @@
 #define __C_ENG_VULKAN_CORE_FUNCTION_NAME_ALLOCATE_COMMAND_BUFFERS                                          "vkAllocateCommandBuffers" /* NOLINT(bugprone-reserved-identifier) */
 #define __C_ENG_VULKAN_CORE_FUNCTION_NAME_RESET_COMMAND_BUFFER                                              "vkResetCommandBuffer" /* NOLINT(bugprone-reserved-identifier) */
 #define __C_ENG_VULKAN_CORE_FUNCTION_NAME_FREE_COMMAND_BUFFERS                                              "vkFreeCommandBuffers" /* NOLINT(bugprone-reserved-identifier) */
+#define __C_ENG_VULKAN_CORE_FUNCTION_NAME_BEGIN_COMMAND_BUFFER                                              "vkBeginCommandBuffer" /* NOLINT(bugprone-reserved-identifier) */
+#define __C_ENG_VULKAN_CORE_FUNCTION_NAME_END_COMMAND_BUFFER                                                "vkEndCommandBuffer" /* NOLINT(bugprone-reserved-identifier) */
+
+#define __C_ENG_VULKAN_CORE_FUNCTION_NAME_QUEUE_SUBMIT                                                      "vkQueueSubmit" /* NOLINT(bugprone-reserved-identifier) */
+#define __C_ENG_VULKAN_CORE_FUNCTION_NAME_QUEUE_SUBMIT_2                                                    "vkQueueSubmit2" /* NOLINT(bugprone-reserved-identifier) */
+#define __C_ENG_VULKAN_CORE_FUNCTION_NAME_QUEUE_SUBMIT_2_KHR                                                "vkQueueSubmit2KHR" /* NOLINT(bugprone-reserved-identifier) */
 
 #if defined ( __C_ENG_USE_DEFENSIVE_PROGRAMMING ) || !defined(NDEBUG)
 
