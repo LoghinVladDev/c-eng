@@ -27,13 +27,16 @@ auto Self :: instance () noexcept -> Self & {
 
 auto Self :: currentTime () noexcept -> StringLiteral {
     static char timeBuffer [ Self :: defaultTimeBufferSize ];
+    static tm timeStruct;
 
     auto time = std :: chrono :: system_clock :: to_time_t ( std :: chrono :: system_clock :: now() );
+
+    localtime_r ( & time, & timeStruct );
 
     (void) std :: strftime ( // NOLINT(clion-misra-cpp2008-18-0-4)
             timeBuffer, Self :: defaultTimeBufferSize, // NOLINT(clion-misra-cpp2008-5-2-12)
             "%d-%m-%Y-%H:%M:%S",
-            std :: localtime ( & time ) // NOLINT(clion-misra-cpp2008-18-0-4)
+            & timeStruct
     );
 
     return timeBuffer;

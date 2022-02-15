@@ -3,7 +3,7 @@
 //
 
 #ifndef __C_ENG_RENDER_ENGINE_TYPES_HPP__
-#define __C_ENG_RENDER_ENGINE_TYPES_HPP__
+#define __C_ENG_RENDER_ENGINE_TYPES_HPP__ /* NOLINT(bugprone-reserved-identifier) */
 
 
 #include <CDS/Exception>

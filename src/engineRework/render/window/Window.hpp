@@ -3,7 +3,7 @@
 //
 
 #ifndef __C_ENG_WINDOW_HPP__
-#define __C_ENG_WINDOW_HPP__
+#define __C_ENG_WINDOW_HPP__ /* NOLINT(bugprone-reserved-identifier) */
 
 #include <Preprocess.hpp>
 #include <CDS/Object>
@@ -33,7 +33,6 @@ namespace engine {
         Const ( PRIMITIVE_TYPE ( cds :: StringLiteral ),    defaultWindowTitle, VALUE ( "VEngineTest" ) )
         Const ( ENGINE_PRIMITIVE_TYPE ( WindowFlags ),      defaultFlags,       VALUE ( WindowFlagResizable | WindowFlagGrabFocusOnOpen | WindowFlagGrabFocusOnRaise ) ) // NOLINT(clion-misra-cpp2008-4-5-2)
 
-    private:
         Field ( TYPE ( cds :: String ),                                                     title,                          DEFAULT_VALUE ( defaultWindowTitle ),                                   GET_DEFAULT,    SET ( setTitle ) )
 
         Field ( TYPE ( utility :: SimpleEventQueue < __C_ENG_TYPE ( WindowEvent ) * > ),    customWindowEvents,             NO_INIT,                                                                GET_NONE,       SET_NONE )

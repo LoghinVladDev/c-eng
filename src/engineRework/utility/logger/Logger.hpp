@@ -3,7 +3,7 @@
 //
 
 #ifndef __C_ENG_LOGGER_HPP__
-#define __C_ENG_LOGGER_HPP__
+#define __C_ENG_LOGGER_HPP__ /* NOLINT(bugprone-reserved-identifier) */
 
 
 #include <Preprocess.hpp>

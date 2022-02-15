@@ -69,7 +69,7 @@ auto Self :: set ( Key key, Value value ) noexcept -> Self & {
     return * this;
 }
 
-static HashMap < String, Self :: Value > defaults = {
+static HashMap < String, Self :: Value > const defaults = {
         { __C_ENG_TYPE ( Settings ) :: keyUseValidationLayers,                   __C_ENG_TYPE ( Settings ) :: defaultUseValidationLayers },
         { __C_ENG_TYPE ( Settings ) :: keyLogToConsole,                          __C_ENG_TYPE ( Settings ) :: defaultLogToConsole },
         { __C_ENG_TYPE ( Settings ) :: keyPeriodicCacheReconstructionInterval,   __C_ENG_TYPE ( Settings ) :: defaultPeriodicCacheReconstructionInterval },

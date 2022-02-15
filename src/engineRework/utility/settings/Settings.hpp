@@ -3,7 +3,7 @@
 //
 
 #ifndef __C_ENG_SETTINGS_HPP__
-#define __C_ENG_SETTINGS_HPP__
+#define __C_ENG_SETTINGS_HPP__ /* NOLINT(bugprone-reserved-identifier) */
 
 #include <Preprocess.hpp>
 #include <CDS/HashMap>
@@ -49,7 +49,6 @@ namespace engine {
         Const ( PRIMITIVE_TYPE ( Key ),                     keyDrawDistance,                            VALUE ( "drawDistance" ) )
         Const ( PRIMITIVE_TYPE ( Value ),                   defaultDrawDistance,                        VALUE ( 200ull ) )
 
-    private:
         Field ( TYPE ( cds :: HashMap < cds :: String, Value > ),   settings,       NO_INIT,                    GET_NONE,       SET_NONE )
         Field ( PRIMITIVE_TYPE ( bool ),                            initialized,    DEFAULT_VALUE ( false ),    GET_DEFAULT,    SET_NONE )
 

@@ -3,7 +3,7 @@
 //
 
 #ifndef __C_ENG_VULKAN_RENDER_ENGINE_HPP__
-#define __C_ENG_VULKAN_RENDER_ENGINE_HPP__
+#define __C_ENG_VULKAN_RENDER_ENGINE_HPP__ /* NOLINT(bugprone-reserved-identifier) */
 
 #include <RenderEngine.hpp>
 #include <Instance.hpp>

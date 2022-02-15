@@ -3,7 +3,7 @@
 //
 
 #ifndef __C_ENG_SIMPLE_EVENT_QUEUE_HPP__
-#define __C_ENG_SIMPLE_EVENT_QUEUE_HPP__
+#define __C_ENG_SIMPLE_EVENT_QUEUE_HPP__ /* NOLINT(bugprone-reserved-identifier) */
 
 #include <Preprocess.hpp>
 #include <CDS/Utility>
@@ -15,16 +15,66 @@ namespace engine :: utility {
     class SimpleEventQueue {
     private:
         struct Node {
-            T data; // NOLINT(clion-misra-cpp2008-11-0-1)
-            Node *pNext; // NOLINT(clion-misra-cpp2008-11-0-1)
+            T       data; // NOLINT(clion-misra-cpp2008-11-0-1)
+            Node  * pNext; // NOLINT(clion-misra-cpp2008-11-0-1)
         };
 
         Node * pHead { nullptr };
         Node * pBack { nullptr };
 
     public:
+        SimpleEventQueue () noexcept = default;
+
+        SimpleEventQueue ( SimpleEventQueue const & queue ) noexcept {
+
+            auto current = queue.pHead;
+            while ( current != nullptr ) {
+                this->push ( current->data );
+                current = current->pNext;
+            }
+        }
+
+        SimpleEventQueue ( SimpleEventQueue && queue ) noexcept :
+                pHead ( cds :: exchange ( queue.pHead, nullptr ) ),
+                pBack ( cds :: exchange ( queue.pBack, nullptr ) ) {
+
+        }
+
+        inline auto operator = ( SimpleEventQueue const & queue ) noexcept -> SimpleEventQueue & {
+            if ( this == & queue ) {
+                return * this;
+            }
+
+            this->clear();
+
+            auto current = queue.pHead;
+            while ( current != nullptr ) {
+                this->push ( current->data );
+                current = current->pNext;
+            }
+
+            return * this;
+        }
+
+        inline auto operator = ( SimpleEventQueue && queue ) noexcept -> SimpleEventQueue & {
+            if ( this == & queue ) {
+                return * this;
+            }
+
+            this->clear();
+
+            this->pHead = cds :: exchange ( queue.pHead, nullptr );
+            this->pBack = cds :: exchange ( queue.pBack, nullptr );
+
+            return * this;
+        }
+
         ~SimpleEventQueue() noexcept {
-            while ( ! this->empty() ) { // NOLINT(clion-misra-cpp2008-5-3-1)
+            this->clear();
+        }
+
+        inline auto clear () noexcept -> void {
+            while ( ! this->empty() ) {
                 (void) this->pop();
             }
         }

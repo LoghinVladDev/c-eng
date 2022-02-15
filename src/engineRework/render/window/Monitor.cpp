@@ -134,15 +134,15 @@ namespace engine {
             if ( ! __GLFWActive ) {
                 try {
                     __initializeGLFW();
-                } catch ( Exception const & e ) {
+                } catch ( Exception const & ) {
                     (void) __C_ENG_TYPE ( Logger ) :: instance().fatal ( "Could not acquire monitors, GLFW could not initialize" );
                     return;
                 }
             }
 
             sint32 monitorCount;
-            GLFWmonitor ** _monitors = glfwGetMonitors ( & monitorCount );
-            GLFWmonitor * _primary = glfwGetPrimaryMonitor();
+            auto _monitors = glfwGetMonitors ( & monitorCount );
+            auto _primary = glfwGetPrimaryMonitor();
 
             monitors.resize(static_cast < Size > ( monitorCount ));
 
@@ -240,7 +240,7 @@ auto Self :: logMonitorQueryResult () noexcept -> void {
                 "\t\t\tsize = "_s + monitor->properties().gammaRamp.size
         );
 
-        static auto gammaRampAsString = [](uint16 const * pRamp, uint32 size) noexcept -> String {
+        static auto gammaRampAsString = [](uint16 const * pRamp, uint32 size) noexcept {
             String rampAsStr = "";
 
             for ( uint32 i = 0U; i < size; ++ i ) {

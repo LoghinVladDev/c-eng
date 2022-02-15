@@ -2841,6 +2841,148 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #define C_ENG_MAP_END
 #include <ObjectMapping.hpp>
 
+#define C_ENG_MAP_START     ENUM ( AccessFlag,  TYPE ( cds :: uint64 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( IndirectCommandRead,                VkAccessFlagBits :: VK_ACCESS_INDIRECT_COMMAND_READ_BIT ),
+            Field ( IndexRead,                          VkAccessFlagBits :: VK_ACCESS_INDEX_READ_BIT ),
+            Field ( VertexAttributeRead,                VkAccessFlagBits :: VK_ACCESS_VERTEX_ATTRIBUTE_READ_BIT ),
+            Field ( UniformRead,                        VkAccessFlagBits :: VK_ACCESS_UNIFORM_READ_BIT ),
+            Field ( InputAttachmentRead,                VkAccessFlagBits :: VK_ACCESS_INPUT_ATTACHMENT_READ_BIT ),
+            Field ( ShaderRead,                         VkAccessFlagBits :: VK_ACCESS_SHADER_READ_BIT ),
+            Field ( ShaderWrite,                        VkAccessFlagBits :: VK_ACCESS_SHADER_WRITE_BIT ),
+            Field ( ColorAttachmentRead,                VkAccessFlagBits :: VK_ACCESS_COLOR_ATTACHMENT_READ_BIT ),
+            Field ( ColorAttachmentWrite,               VkAccessFlagBits :: VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT ),
+            Field ( DepthStencilAttachmentRead,         VkAccessFlagBits :: VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT ),
+            Field ( DepthStencilAttachmentWrite,        VkAccessFlagBits :: VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT ),
+            Field ( TransferRead,                       VkAccessFlagBits :: VK_ACCESS_TRANSFER_READ_BIT ),
+            Field ( TransferWrite,                      VkAccessFlagBits :: VK_ACCESS_TRANSFER_WRITE_BIT ),
+            Field ( HostRead,                           VkAccessFlagBits :: VK_ACCESS_HOST_READ_BIT ),
+            Field ( HostWrite,                          VkAccessFlagBits :: VK_ACCESS_HOST_WRITE_BIT ),
+            Field ( MemoryRead,                         VkAccessFlagBits :: VK_ACCESS_MEMORY_READ_BIT ),
+            Field ( MemoryWrite,                        VkAccessFlagBits :: VK_ACCESS_MEMORY_WRITE_BIT ),
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+
+            Field ( None,                               VkAccessFlagBits :: VK_ACCESS_NONE ),
+            Field ( ShaderSampledRead,                  VK_ACCESS_2_SHADER_SAMPLED_READ_BIT ),
+            Field ( ShaderStorageRead,                  VK_ACCESS_2_SHADER_STORAGE_READ_BIT ),
+            Field ( ShaderStorageWrite,                 VK_ACCESS_2_SHADER_STORAGE_WRITE_BIT ),
+
+#if __C_ENG_VULKAN_BETA_EXTENSIONS_ENABLED && __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_DECODE_QUEUE_AVAILABLE
+
+            Field ( VideoDecodeRead,                    VK_ACCESS_2_VIDEO_DECODE_READ_BIT_KHR ),
+            Field ( VideoDecodeWrite,                   VK_ACCESS_2_VIDEO_DECODE_WRITE_BIT_KHR ),
+
+#endif
+
+#if __C_ENG_VULKAN_BETA_EXTENSIONS_ENABLED && __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_ENCODE_QUEUE_AVAILABLE
+
+            Field ( VideoEncodeRead,                    VK_ACCESS_2_VIDEO_ENCODE_READ_BIT_KHR ),
+            Field ( VideoEncodeWrite,                   VK_ACCESS_2_VIDEO_ENCODE_WRITE_BIT_KHR ),
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_HUAWEI_INVOCATION_MASK_AVAILABLE
+
+            Field ( InvocationMaskReadHuawei,           VK_ACCESS_2_INVOCATION_MASK_READ_BIT_HUAWEI ),
+
+#endif
+
+#elif __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
+
+            Field ( None,                               VkAccessFlagBits :: VK_ACCESS_NONE_KHR ),
+            Field ( ShaderSampledRead,                  VK_ACCESS_2_SHADER_SAMPLED_READ_BIT_KHR ),
+            Field ( ShaderStorageRead,                  VK_ACCESS_2_SHADER_STORAGE_READ_BIT_KHR ),
+            Field ( ShaderStorageWrite,                 VK_ACCESS_2_SHADER_STORAGE_WRITE_BIT_KHR ),
+
+#if __C_ENG_VULKAN_BETA_EXTENSIONS_ENABLED && __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_DECODE_QUEUE_AVAILABLE
+
+            Field ( VideoDecodeRead,                    VK_ACCESS_2_VIDEO_DECODE_READ_BIT_KHR ),
+            Field ( VideoDecodeWrite,                   VK_ACCESS_2_VIDEO_DECODE_WRITE_BIT_KHR ),
+
+#endif
+
+#if __C_ENG_VULKAN_BETA_EXTENSIONS_ENABLED && __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_ENCODE_QUEUE_AVAILABLE
+
+            Field ( VideoEncodeRead,                    VK_ACCESS_2_VIDEO_ENCODE_READ_BIT_KHR ),
+            Field ( VideoEncodeWrite,                   VK_ACCESS_2_VIDEO_ENCODE_WRITE_BIT_KHR ),
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_HUAWEI_INVOCATION_MASK_AVAILABLE
+
+            Field ( InvocationMaskReadHuawei,           VK_ACCESS_2_INVOCATION_MASK_READ_BIT_HUAWEI ),
+
+#endif
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_TRANSFORM_FEEDBACK_AVAILABLE
+
+            Field ( TransformFeedbackWrite,             VkAccessFlagBits :: VK_ACCESS_TRANSFORM_FEEDBACK_WRITE_BIT_EXT ),
+            Field ( TransformFeedbackCounterRead,       VkAccessFlagBits :: VK_ACCESS_TRANSFORM_FEEDBACK_COUNTER_READ_BIT_EXT ),
+            Field ( TransformFeedbackCounterWrite,      VkAccessFlagBits :: VK_ACCESS_TRANSFORM_FEEDBACK_COUNTER_WRITE_BIT_EXT ),
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_CONDITIONAL_RENDERING_AVAILABLE
+
+            Field ( ConditionalRenderingRead,           VkAccessFlagBits :: VK_ACCESS_CONDITIONAL_RENDERING_READ_BIT_EXT ),
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_BLEND_OPERATION_ADVANCED_AVAILABLE
+
+            Field ( ColorAttachmentReadNonCoherent,     VkAccessFlagBits :: VK_ACCESS_COLOR_ATTACHMENT_READ_NONCOHERENT_BIT_EXT ),
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+
+            Field ( AccelerationStructureRead,          VkAccessFlagBits :: VK_ACCESS_ACCELERATION_STRUCTURE_READ_BIT_KHR ),
+            Field ( AccelerationStructureWrite,         VkAccessFlagBits :: VK_ACCESS_ACCELERATION_STRUCTURE_WRITE_BIT_KHR ),
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_FRAGMENT_DENSITY_MAP_AVAILABLE
+
+            Field ( FragmentDensityMapRead,             VkAccessFlagBits :: VK_ACCESS_FRAGMENT_DENSITY_MAP_READ_BIT_EXT ),
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_FRAGMENT_SHADING_RATE_AVAILABLE
+
+            Field ( FragmentShadingRateAttachmentRead,  VkAccessFlagBits :: VK_ACCESS_FRAGMENT_SHADING_RATE_ATTACHMENT_READ_BIT_KHR ),
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEVICE_GENERATED_COMMANDS_AVAILABLE
+
+            Field ( CommandPreprocessReadNVidia,        VkAccessFlagBits :: VK_ACCESS_COMMAND_PREPROCESS_READ_BIT_NV ),
+            Field ( CommandPreprocessWriteNVidia,       VkAccessFlagBits :: VK_ACCESS_COMMAND_PREPROCESS_WRITE_BIT_NV ),
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SHADING_RATE_IMAGE_AVAILABLE
+
+            Field ( ShadingRateImageReadNVidia,         VkAccessFlagBits :: VK_ACCESS_SHADING_RATE_IMAGE_READ_BIT_NV ),
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+
+            Field ( AccelerationStructureReadNVidia,    VkAccessFlagBits :: VK_ACCESS_ACCELERATION_STRUCTURE_READ_BIT_NV ),
+            Field ( AccelerationStructureWriteNVidia,   VkAccessFlagBits :: VK_ACCESS_ACCELERATION_STRUCTURE_WRITE_BIT_NV ),
+
+#endif
+
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_GLOBAL_PRIORITY_AVAILABLE
@@ -3344,6 +3486,39 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #endif
 
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+
+#define C_ENG_MAP_START     ENUM ( FenceCreateFlag,     TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( Signaled,   VkFenceCreateFlagBits :: VK_FENCE_CREATE_SIGNALED_BIT ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+
+#define C_ENG_MAP_START     ENUM ( ExternalFenceHandleTypeFlag,     TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( OpaqueFD,       VkExternalFenceHandleTypeFlagBits :: VK_EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_FD_BIT ),
+            Field ( OpaqueWin32,    VkExternalFenceHandleTypeFlagBits :: VK_EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_BIT ),
+            Field ( OpaqueWin32KMT, VkExternalFenceHandleTypeFlagBits :: VK_EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT ),
+            Field ( SyncFD,         VkExternalFenceHandleTypeFlagBits :: VK_EXTERNAL_FENCE_HANDLE_TYPE_SYNC_FD_BIT ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
 
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 
@@ -3381,6 +3556,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_ALIAS ( ShaderStageFlags,               VkShaderStageFlags );
         __C_ENG_ALIAS ( QueueFlags,                     VkQueueFlags );
         __C_ENG_ALIAS ( PipelineStageFlags,             VkFlags64 );
+        __C_ENG_ALIAS ( AccessFlags,                    VkFlags64 );
         __C_ENG_ALIAS ( ImageUsageFlags,                VkImageUsageFlags );
         __C_ENG_ALIAS ( ImageViewCreateFlags,           VkImageViewCreateFlags );
         __C_ENG_ALIAS ( ImageAspectFlags,               VkImageAspectFlags );
@@ -3390,6 +3566,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_ALIAS ( CommandBufferUsageFlags,        VkCommandBufferUsageFlags );
         __C_ENG_ALIAS ( QueryControlFlags,              VkQueryControlFlags );
         __C_ENG_ALIAS ( QueryPipelineStatisticFlags,    VkQueryPipelineStatisticFlags );
+        __C_ENG_ALIAS ( FenceCreateFlags,               VkFenceCreateFlags );
 
         __C_ENG_ALIAS ( AllocationFunction,             PFN_vkAllocationFunction );
         __C_ENG_ALIAS ( ReallocationFunction,           PFN_vkReallocationFunction );
@@ -3403,6 +3580,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
         __C_ENG_ALIAS ( SamplerYCBCRConversion,         VkSamplerYcbcrConversion );
         __C_ENG_ALIAS ( CommandPoolTrimFlags,           VkCommandPoolTrimFlags );
+        __C_ENG_ALIAS ( ExternalFenceHandleTypeFlags,   VkExternalFenceHandleTypeFlags );
 
 #endif
 
@@ -8916,6 +9094,73 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( FenceCreateInfo,   NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )              structureType;
+            Type ( GenericStructure )   const * pNext;
+            Type ( FenceCreateFlags )           flags;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( ExportFenceCreateInfo,   NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                  structureType;
+            Type ( GenericStructure )       const * pNext;
+            Type ( ExternalFenceHandleTypeFlags )   handleTypes;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_FENCE_WIN32_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( ExportFenceWin32HandleInfo,   NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                  structureType;
+            Type ( GenericStructure )       const * pNext;
+            SECURITY_ATTRIBUTES             const * pAttributes;
+            DWORD                                   dwAccess;
+            LPCWSTR                                 name;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_FENCE_FD_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( FenceGetFDInfo,    NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                  structureType;
+            Type ( GenericStructure )       const * pNext;
+            Type ( FenceHandle )                    fence;
+            Type ( ExternalFenceHandleTypeFlag )    handleType;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
 
 #define C_ENG_MAP_START     HEADER
 #include <ObjectMapping.hpp>
@@ -8923,41 +9168,44 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( Result ) ) noexcept -> cds :: StringLiteral;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( StructureType ) ) noexcept -> cds :: StringLiteral;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( DebugMessageSeverityFlag ) ) noexcept -> cds :: StringLiteral;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( DebugMessageTypeFlag ) ) noexcept -> cds :: StringLiteral;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( ValidationFeatureEnable ) ) noexcept -> cds :: StringLiteral;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( ValidationFeatureDisable ) ) noexcept -> cds :: StringLiteral;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceType ) ) noexcept -> cds :: StringLiteral;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( VendorID ) ) noexcept -> cds :: StringLiteral;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( SampleCountFlag ) ) noexcept -> cds :: StringLiteral;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PointClippingBehavior ) ) noexcept -> cds :: StringLiteral;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( ShaderStageFlag ) ) noexcept -> cds :: StringLiteral;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( QueueFlag ) ) noexcept -> cds :: StringLiteral;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PipelineStageFlag ) ) noexcept -> cds :: StringLiteral;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( DeviceQueueCreateFlag ) ) noexcept -> cds :: StringLiteral;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( ObjectType ) ) noexcept -> cds :: StringLiteral;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( ImageUsageFlag ) ) noexcept -> cds :: StringLiteral;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( Format ) ) noexcept -> cds :: StringLiteral;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( SharingMode ) ) noexcept -> cds :: StringLiteral;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( ImageViewCreateFlag ) ) noexcept -> cds :: StringLiteral;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( ImageViewType ) ) noexcept -> cds :: StringLiteral;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( ComponentSwizzle ) ) noexcept -> cds :: StringLiteral;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( ImageAspectFlag ) ) noexcept -> cds :: StringLiteral;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( CommandPoolCreateFlag ) ) noexcept -> cds :: StringLiteral;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( CommandPoolResetFlag ) ) noexcept -> cds :: StringLiteral;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( CommandBufferResetFlag ) ) noexcept -> cds :: StringLiteral;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( CommandBufferLevel ) ) noexcept -> cds :: StringLiteral;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( CommandBufferUsageFlag ) ) noexcept -> cds :: StringLiteral;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( QueryPipelineStatisticFlag ) ) noexcept -> cds :: StringLiteral;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( QueryControlFlag ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( Result ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( StructureType ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( DebugMessageSeverityFlag ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( DebugMessageTypeFlag ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( ValidationFeatureEnable ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( ValidationFeatureDisable ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( PhysicalDeviceType ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( VendorID ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( SampleCountFlag ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( PointClippingBehavior ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( ShaderStageFlag ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( QueueFlag ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( PipelineStageFlag ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( AccessFlag ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( DeviceQueueCreateFlag ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( ObjectType ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( ImageUsageFlag ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( Format ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( SharingMode ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( ImageViewCreateFlag ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( ImageViewType ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( ComponentSwizzle ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( ImageAspectFlag ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( CommandPoolCreateFlag ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( CommandPoolResetFlag ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( CommandBufferResetFlag ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( CommandBufferLevel ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( CommandBufferUsageFlag ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( QueryPipelineStatisticFlag ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( QueryControlFlag ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( FenceCreateFlag ) ) noexcept -> cds :: StringLiteral;
 
 #endif
 
 #if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
 
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( SubgroupFeatureFlag ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( SubgroupFeatureFlag ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( ExternalFenceHandleTypeFlag ) ) noexcept -> cds :: StringLiteral;
 
 #endif
 
@@ -9045,79 +9293,83 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( Offset2D ) const & ) noexcept -> cds :: String;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( Offset3D ) const & ) noexcept -> cds :: String;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( Extent2D ) const & ) noexcept -> cds :: String;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( Extent3D ) const & ) noexcept -> cds :: String;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( Rect ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( Offset2D ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( Offset3D ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( Extent2D ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( Extent3D ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( Rect ) const & ) noexcept -> cds :: String;
         NoDiscard auto toString ( Type ( Viewport ) const & ) noexcept -> cds :: String;
 
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( Version ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( Version ) const & ) noexcept -> cds :: String;
 
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( DeviceSize ) ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( DeviceSize ) ) noexcept -> cds :: String;
 
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( ApplicationInfo ) const & ) noexcept -> cds :: String;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( InstanceCreateInfo ) const & ) noexcept -> cds :: String;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( DebugMessengerCreateInfo ) const & ) noexcept -> cds :: String;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( LayerProperties ) const & ) noexcept -> cds :: String;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( ExtensionProperties ) const & ) noexcept -> cds :: String;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( AllocationCallbacks ) const & ) noexcept -> cds :: String;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( ValidationFeatures ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( ApplicationInfo ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( InstanceCreateInfo ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( DebugMessengerCreateInfo ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( LayerProperties ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( ExtensionProperties ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( AllocationCallbacks ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( ValidationFeatures ) const & ) noexcept -> cds :: String;
 
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceLimits ) const & ) noexcept -> cds :: String;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceSparseProperties ) const & ) noexcept -> cds :: String;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceProperties ) const & ) noexcept -> cds :: String;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceFeatures ) const & ) noexcept -> cds :: String;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceDetails ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( PhysicalDeviceLimits ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( PhysicalDeviceSparseProperties ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( PhysicalDeviceProperties ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( PhysicalDeviceFeatures ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( PhysicalDeviceDetails ) const & ) noexcept -> cds :: String;
 
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( QueueFamilyProperties ) const & ) noexcept -> cds :: String;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( QueueFamilyExtendedProperties ) const & ) noexcept -> cds :: String;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( QueueFamilyDetails ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( QueueFamilyProperties ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( QueueFamilyExtendedProperties ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( QueueFamilyDetails ) const & ) noexcept -> cds :: String;
 
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( DeviceCreateInfo ) const & ) noexcept -> cds :: String;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( DeviceQueueCreateInfo ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( DeviceCreateInfo ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( DeviceQueueCreateInfo ) const & ) noexcept -> cds :: String;
 
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( ComponentMapping ) const & ) noexcept -> cds :: String;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( ImageSubresourceRange ) const & ) noexcept -> cds :: String;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( ImageViewCreateInfo ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( ComponentMapping ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( ImageSubresourceRange ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( ImageViewCreateInfo ) const & ) noexcept -> cds :: String;
 
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( CommandPoolCreateInfo ) const & ) noexcept -> cds :: String;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( CommandBufferAllocateInfo ) const & ) noexcept -> cds :: String;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( CommandBufferBeginInfo ) const & ) noexcept -> cds :: String;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( CommandBufferInheritanceInfo ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( CommandPoolCreateInfo ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( CommandBufferAllocateInfo ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( CommandBufferBeginInfo ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( CommandBufferInheritanceInfo ) const & ) noexcept -> cds :: String;
 
         NoDiscard auto toString ( Type ( SubmitInfo ) const & ) noexcept -> cds :: String;
+
+        NoDiscard auto toString ( Type ( FenceCreateInfo ) const & ) noexcept -> cds :: String;
 
 #endif
 
 #if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
 
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceExtendedProperties ) const & ) noexcept -> cds :: String;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceVulkan11Properties ) const & ) noexcept -> cds :: String;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceIDProperties ) const & ) noexcept -> cds :: String;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceMaintenanceProperties ) const & ) noexcept -> cds :: String;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceMultiviewProperties ) const & ) noexcept -> cds :: String;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDevicePointClippingProperties ) const & ) noexcept -> cds :: String;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceProtectedMemoryProperties ) const & ) noexcept -> cds :: String;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceSubgroupProperties ) const & ) noexcept -> cds :: String;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceGroupProperties ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( PhysicalDeviceExtendedProperties ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( PhysicalDeviceVulkan11Properties ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( PhysicalDeviceIDProperties ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( PhysicalDeviceMaintenanceProperties ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( PhysicalDeviceMultiviewProperties ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( PhysicalDevicePointClippingProperties ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( PhysicalDeviceProtectedMemoryProperties ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( PhysicalDeviceSubgroupProperties ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( PhysicalDeviceGroupProperties ) const & ) noexcept -> cds :: String;
 
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceExtendedFeatures ) const & ) noexcept -> cds :: String;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceVulkan11Features ) const & ) noexcept -> cds :: String;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDevice16BitStorageFeatures ) const & ) noexcept -> cds :: String;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceMultiviewFeatures ) const & ) noexcept -> cds :: String;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceProtectedMemoryFeatures ) const & ) noexcept -> cds :: String;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceSamplerYCBCRConversionFeatures ) const & ) noexcept -> cds :: String;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceShaderDrawParametersFeatures ) const & ) noexcept -> cds :: String;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceVariablePointersFeatures ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( PhysicalDeviceExtendedFeatures ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( PhysicalDeviceVulkan11Features ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( PhysicalDevice16BitStorageFeatures ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( PhysicalDeviceMultiviewFeatures ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( PhysicalDeviceProtectedMemoryFeatures ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( PhysicalDeviceSamplerYCBCRConversionFeatures ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( PhysicalDeviceShaderDrawParametersFeatures ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( PhysicalDeviceVariablePointersFeatures ) const & ) noexcept -> cds :: String;
 
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( DeviceGroupDeviceCreateInfo ) const & ) noexcept -> cds :: String;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( DeviceQueueInfo ) const & ) noexcept -> cds :: String;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( ImageViewUsageCreateInfo ) const & ) noexcept -> cds :: String;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( SamplerYCBCRConversionInfo ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( DeviceGroupDeviceCreateInfo ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( DeviceQueueInfo ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( ImageViewUsageCreateInfo ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( SamplerYCBCRConversionInfo ) const & ) noexcept -> cds :: String;
 
         NoDiscard auto toString ( Type ( DeviceGroupSubmitInfo ) const & ) noexcept -> cds :: String;
         NoDiscard auto toString ( Type ( ProtectedSubmitInfo ) const & ) noexcept -> cds :: String;
+
+        NoDiscard auto toString ( Type ( ExportFenceCreateInfo ) const & ) noexcept -> cds :: String;
 
 #endif
 
@@ -9130,29 +9382,29 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
 
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( ConformanceVersion ) const & ) noexcept -> cds :: String;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceVulkan12Properties ) const & ) noexcept -> cds :: String;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceDriverProperties ) const & ) noexcept -> cds :: String;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceDepthStencilResolveProperties ) const & ) noexcept -> cds :: String;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceDescriptorIndexingProperties ) const & ) noexcept -> cds :: String;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceFloatControlsProperties ) const & ) noexcept -> cds :: String;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceSamplerFilterMinmaxProperties ) const & ) noexcept -> cds :: String;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceTimelineSemaphoreProperties ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( ConformanceVersion ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( PhysicalDeviceVulkan12Properties ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( PhysicalDeviceDriverProperties ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( PhysicalDeviceDepthStencilResolveProperties ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( PhysicalDeviceDescriptorIndexingProperties ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( PhysicalDeviceFloatControlsProperties ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( PhysicalDeviceSamplerFilterMinmaxProperties ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( PhysicalDeviceTimelineSemaphoreProperties ) const & ) noexcept -> cds :: String;
 
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDevice8BitStorageFeatures ) const & ) noexcept -> cds :: String;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceVulkan12Features ) const & ) noexcept -> cds :: String;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceBufferDeviceAddressFeatures ) const & ) noexcept -> cds :: String;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceDescriptorIndexingFeatures ) const & ) noexcept -> cds :: String;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceHostQueryResetFeatures ) const & ) noexcept -> cds :: String;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceImagelessFramebufferFeatures ) const & ) noexcept -> cds :: String;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceScalarBlockLayoutFeatures ) const & ) noexcept -> cds :: String;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceSeparateDepthStencilLayoutsFeatures ) const & ) noexcept -> cds :: String;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceShaderAtomicInt64Features ) const & ) noexcept -> cds :: String;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceShaderFloat16Int8Features ) const & ) noexcept -> cds :: String;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceShaderSubgroupExtendedTypesFeatures ) const & ) noexcept -> cds :: String;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceTimelineSemaphoreFeatures ) const & ) noexcept -> cds :: String;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceUniformBufferStandardLayoutFeatures ) const & ) noexcept -> cds :: String;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceVulkanMemoryModelFeatures ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( PhysicalDevice8BitStorageFeatures ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( PhysicalDeviceVulkan12Features ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( PhysicalDeviceBufferDeviceAddressFeatures ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( PhysicalDeviceDescriptorIndexingFeatures ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( PhysicalDeviceHostQueryResetFeatures ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( PhysicalDeviceImagelessFramebufferFeatures ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( PhysicalDeviceScalarBlockLayoutFeatures ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( PhysicalDeviceSeparateDepthStencilLayoutsFeatures ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( PhysicalDeviceShaderAtomicInt64Features ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( PhysicalDeviceShaderFloat16Int8Features ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( PhysicalDeviceShaderSubgroupExtendedTypesFeatures ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( PhysicalDeviceTimelineSemaphoreFeatures ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( PhysicalDeviceUniformBufferStandardLayoutFeatures ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( PhysicalDeviceVulkanMemoryModelFeatures ) const & ) noexcept -> cds :: String;
 
         NoDiscard auto toString ( Type ( TimelineSemaphoreSubmitInfo ) const & ) noexcept -> cds :: String;
 
@@ -9171,6 +9423,18 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         NoDiscard auto toString ( Type ( SemaphoreSubmitInfo ) const & ) noexcept -> cds :: String;
         NoDiscard auto toString ( Type ( CommandBufferSubmitInfo ) const & ) noexcept -> cds :: String;
         NoDiscard auto toString ( Type ( SubmitInfo2 ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_FENCE_WIN32_AVAILABLE
+
+        NoDiscard auto toString ( Type ( ExportFenceWin32HandleInfo ) const & ) noexcept -> cds :: String;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_FENCE_FD_AVAILABLE
+
+        NoDiscard auto toString ( Type ( FenceGetFDInfo ) const & ) noexcept -> cds :: String;
 
 #endif
 

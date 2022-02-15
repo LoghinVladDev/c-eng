@@ -27,9 +27,9 @@ static VKAPI_ATTR auto VKAPI_CALL debugMessengerCallback (
         VkDebugUtilsMessageTypeFlagsEXT                 messageTypeFlags,
         VkDebugUtilsMessengerCallbackDataEXT    const * pCallbackData,
         void                                          * pUserData
-) noexcept -> VkBool32 {
+) noexcept -> vulkan :: __C_ENG_TYPE ( Bool ) {
 
-    __C_ENG_TYPE ( LogLevel ) logLevel;
+    __C_ENG_TYPE ( LogLevel ) logLevel = engine :: LogLevelInfo;
 
     if ( messageSeverityFlags == VkDebugUtilsMessageSeverityFlagBitsEXT :: VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT ) {
         logLevel = engine :: LogLevelInfo;
@@ -47,7 +47,7 @@ static VKAPI_ATTR auto VKAPI_CALL debugMessengerCallback (
         logLevel = engine :: LogLevelError;
     }
 
-    auto typeFlagsToString = []( VkDebugUtilsMessageTypeFlagsEXT flags ) noexcept -> String {
+    auto typeFlagsToString = []( VkDebugUtilsMessageTypeFlagsEXT flags ) noexcept {
         String asString = "";
 
         for ( uint32 f = 1U; true; f <<= 1 ) { // NOLINT(clion-misra-cpp2008-6-5-1)
@@ -127,11 +127,11 @@ static inline auto populateApplicationInfo (
 }
 
 static inline auto populateInstanceCreateInfo (
-        vulkan :: __C_ENG_TYPE ( InstanceCreateInfo )             * pCreateInfo,
-        vulkan :: __C_ENG_TYPE ( ApplicationInfo )                * pApplicationInfo,
-        vulkan :: __C_ENG_TYPE ( LayerHandler ) :: LayerNames     * pEnabledLayerNames,
-        vulkan :: __C_ENG_TYPE ( LayerHandler ) :: ExtensionNames * pEnabledExtensionNames,
-        void                                                      * pNext
+        vulkan :: __C_ENG_TYPE ( InstanceCreateInfo )                     * pCreateInfo,
+        vulkan :: __C_ENG_TYPE ( ApplicationInfo )                  const * pApplicationInfo,
+        vulkan :: __C_ENG_TYPE ( LayerHandler ) :: LayerNames       const * pEnabledLayerNames,
+        vulkan :: __C_ENG_TYPE ( LayerHandler ) :: ExtensionNames   const * pEnabledExtensionNames,
+        void                                                              * pNext
 ) noexcept -> void {
 
     if ( pCreateInfo == nullptr ) {
@@ -179,8 +179,7 @@ static inline auto populateValidationFeatures (
 auto vulkan :: Self :: supportedVulkanVersion () noexcept (false) -> __C_ENG_TYPE ( Version ) {
     uint32                      rawInstanceVersion;
 
-    auto result = enumerateInstanceVersion ( & rawInstanceVersion );
-    if ( result != ResultSuccess ) {
+    if ( auto result = enumerateInstanceVersion ( & rawInstanceVersion ); result != ResultSuccess ) {
         __C_ENG_LOG_AND_THROW_DETAILED_API_CALL_EXCEPTION(warning, "enumerateInstanceVersion", result);
     }
 
@@ -255,7 +254,7 @@ auto vulkan :: Self :: init () noexcept (false) -> Self & {
 
         pNext = & debugMessengerCreateInfo;
 
-        populateDebugMessengerCreateInfo(
+        populateDebugMessengerCreateInfo (
                 & debugMessengerCreateInfo,
                 this->debugMessageSeverityFlags(),
                 this->debugMessageTypeFlags(),
@@ -327,13 +326,14 @@ auto vulkan :: Self :: init () noexcept (false) -> Self & {
 auto vulkan :: Self :: clear () noexcept (false) -> Self & {
     if ( this->_debugMessengerHandle != nullptr ) {
 
-        auto result = vulkan :: destroyDebugMessenger (
-                this->handle(),
-                this->debugMessengerHandle(),
-                __C_ENG_TYPE ( Allocator ) :: instance().callbacks()
-        );
-
-        if ( result != ResultSuccess ) {
+        if (
+                auto result = vulkan :: destroyDebugMessenger (
+                        this->handle(),
+                        this->debugMessengerHandle(),
+                        __C_ENG_TYPE ( Allocator ) :: instance().callbacks()
+                );
+                result != ResultSuccess
+        ) {
             __C_ENG_LOG_DETAILED_API_CALL_EXCEPTION (warning, "destroyDebugMessenger", result);
         }
 
@@ -342,12 +342,13 @@ auto vulkan :: Self :: clear () noexcept (false) -> Self & {
 
     if ( this->_handle != nullptr ) {
 
-        auto result = vulkan :: destroyInstance (
-                this->handle(),
-                __C_ENG_TYPE ( Allocator ) :: instance().callbacks()
-        );
-
-        if ( result != ResultSuccess ) {
+        if (
+                auto result = vulkan :: destroyInstance (
+                        this->handle(),
+                        __C_ENG_TYPE ( Allocator ) :: instance().callbacks()
+                );
+                result != ResultSuccess
+        ) {
             __C_ENG_LOG_DETAILED_API_CALL_EXCEPTION (warning, "destroyInstance", result);
         }
 

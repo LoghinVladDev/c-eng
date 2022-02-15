@@ -17,6 +17,8 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
     namespace vulkan {
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+
         NoDiscard extern auto enumerateInstanceVersion (
                 cds :: uint32 *
         ) noexcept -> Type ( Result );
@@ -43,6 +45,8 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
                 cds :: uint32                 *,
                 Type ( PhysicalDeviceHandle ) * = nullptr
         ) noexcept -> Type ( Result );
+
+#endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PERFORMANCE_QUERY_AVAILABLE
 
@@ -414,6 +418,37 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         NoDiscard MaybeUnused extern auto commandBufferSetDeviceMask (
                 Type ( CommandBufferHandle ),
                 cds :: uint32
+        ) noexcept -> Type ( Result );
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+
+        NoDiscard MaybeUnused extern auto createFence (
+                Type ( DeviceHandle ),
+                Type ( FenceCreateInfo )        const *,
+                Type ( AllocationCallbacks )    const *,
+                Type ( FenceHandle )                  *
+        ) noexcept -> Type ( Result );
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_FENCE_WIN32_AVAILABLE
+
+        NoDiscard MaybeUnused extern auto getFenceWin32Handle (
+                Type ( DeviceHandle ),
+                Type ( FenceGetWin32HandleInfo )    const *,
+                HANDLE                                    *
+        ) noexcept -> Type ( Result );
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_FENCE_FD_AVAILABLE
+
+        NoDiscard MaybeUnused extern auto getFenceFD (
+                Type ( DeviceHandle ),
+                Type ( FenceGetFDInfo ) const *,
+                int                           *
         ) noexcept -> Type ( Result );
 
 #endif

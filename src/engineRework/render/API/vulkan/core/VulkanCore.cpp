@@ -8169,3 +8169,200 @@ auto vulkan :: toString (
 }
 
 #endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+
+auto vulkan :: toString (
+        Type ( AccessFlag ) flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case AccessFlagIndirectCommandRead:                 { asString = "IndirectCommandRead";                 break; }
+        case AccessFlagIndexRead:                           { asString = "IndexRead";                           break; }
+        case AccessFlagVertexAttributeRead:                 { asString = "VertexAttributeRead";                 break; }
+        case AccessFlagUniformRead:                         { asString = "UniformRead";                         break; }
+        case AccessFlagInputAttachmentRead:                 { asString = "InputAttachmentRead";                 break; }
+        case AccessFlagShaderRead:                          { asString = "ShaderRead";                          break; }
+        case AccessFlagShaderWrite:                         { asString = "ShaderWrite";                         break; }
+        case AccessFlagColorAttachmentRead:                 { asString = "ColorAttachmentRead";                 break; }
+        case AccessFlagColorAttachmentWrite:                { asString = "ColorAttachmentWrite";                break; }
+        case AccessFlagDepthStencilAttachmentRead:          { asString = "DepthStencilAttachmentRead";          break; }
+        case AccessFlagDepthStencilAttachmentWrite:         { asString = "DepthStencilAttachmentWrite";         break; }
+        case AccessFlagTransferRead:                        { asString = "TransferRead";                        break; }
+        case AccessFlagTransferWrite:                       { asString = "TransferWrite";                       break; }
+        case AccessFlagHostRead:                            { asString = "HostRead";                            break; }
+        case AccessFlagHostWrite:                           { asString = "HostWrite";                           break; }
+        case AccessFlagMemoryRead:                          { asString = "MemoryRead";                          break; }
+        case AccessFlagMemoryWrite:                         { asString = "MemoryWrite";                         break; }
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
+
+        case AccessFlagNone:                                { asString = "None";                                break; }
+        case AccessFlagShaderSampledRead:                   { asString = "ShaderSampledRead";                   break; }
+        case AccessFlagShaderStorageRead:                   { asString = "ShaderStorageRead";                   break; }
+        case AccessFlagShaderStorageWrite:                  { asString = "ShaderStorageWrite";                  break; }
+
+#if __C_ENG_VULKAN_BETA_EXTENSIONS_ENABLED && __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_DECODE_QUEUE_AVAILABLE
+
+        case AccessFlagShaderStorageRead:                   { asString = "ShaderStorageRead";                   break; }
+        case AccessFlagShaderStorageWrite:                  { asString = "ShaderStorageWrite";                  break; }
+
+#endif
+
+#if __C_ENG_VULKAN_BETA_EXTENSIONS_ENABLED && __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_ENCODE_QUEUE_AVAILABLE
+
+        case AccessFlagShaderStorageRead:                   { asString = "ShaderStorageRead";                   break; }
+        case AccessFlagShaderStorageWrite:                  { asString = "ShaderStorageWrite";                  break; }
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
+
+        case AccessFlagInvocationMaskReadHuawei:            { asString = "InvocationMaskReadHuawei";            break; }
+
+#endif
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_TRANSFORM_FEEDBACK_AVAILABLE
+
+        case AccessFlagTransformFeedbackWrite:              { asString = "TransformFeedbackWrite";              break; }
+        case AccessFlagTransformFeedbackCounterRead:        { asString = "TransformFeedbackCounterRead";        break; }
+        case AccessFlagTransformFeedbackCounterWrite:       { asString = "TransformFeedbackCounterWrite";       break; }
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_CONDITIONAL_RENDERING_AVAILABLE
+
+        case AccessFlagConditionalRenderingRead:            { asString = "ConditionalRenderingRead";            break; }
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_BLEND_OPERATION_ADVANCED_AVAILABLE
+
+        case AccessFlagColorAttachmentReadNonCoherent:      { asString = "ColorAttachmentReadNonCoherent";      break; }
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+
+        case AccessFlagAccelerationStructureRead:           { asString = "AccelerationStructureRead";           break; }
+        case AccessFlagAccelerationStructureWrite:          { asString = "AccelerationStructureWrite";          break; }
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_FRAGMENT_DENSITY_MAP_AVAILABLE
+
+        case AccessFlagFragmentDensityMapRead:              { asString = "FragmentDensityMapRead";              break; }
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_FRAGMENT_SHADING_RATE_AVAILABLE
+
+        case AccessFlagFragmentShadingRateAttachmentRead:   { asString = "FragmentShadingRateAttachmentRead";   break; }
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEVICE_GENERATED_COMMANDS_AVAILABLE
+
+        case AccessFlagCommandPreprocessReadNVidia:         { asString = "CommandPreprocessReadNVidia";         break; }
+        case AccessFlagCommandPreprocessWriteNVidia:        { asString = "CommandPreprocessWriteNVidia";        break; }
+
+#endif
+
+    }
+
+    return asString;
+}
+
+auto vulkan :: toString (
+        Type ( FenceCreateFlag ) flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case FenceCreateFlagSignaled:   { asString = "Signaled";    break; }
+    }
+
+    return asString;
+}
+
+auto vulkan :: toString (
+        Type ( FenceCreateInfo ) const & createInfo
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( FenceCreateInfo ) ) " "
+            "{ structureType = "_s  + toString ( createInfo.structureType ) +
+            ", pNext = "            + engine :: toString ( createInfo.pNext ) +
+            ", flags = "            + "0b" + Long ( createInfo.flags ).toString(2) +
+            " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+
+auto vulkan :: toString (
+        Type ( ExternalFenceHandleTypeFlag ) flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case ExternalFenceHandleTypeFlagOpaqueFD:       { asString = "OpaqueFD";        break; }
+        case ExternalFenceHandleTypeFlagOpaqueWin32:    { asString = "OpaqueWin32";     break; }
+        case ExternalFenceHandleTypeFlagOpaqueWin32KMT: { asString = "OpaqueWin32KMT";  break; }
+        case ExternalFenceHandleTypeFlagSyncFD:         { asString = "SyncFD";          break; }
+    }
+
+    return asString;
+}
+
+auto vulkan :: toString (
+        Type ( ExportFenceCreateInfo ) const & createInfo
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( ExportFenceCreateInfo ) ) " "
+            "{ structureType = "_s  + toString ( createInfo.structureType ) +
+            ", pNext = "            + engine :: toString ( createInfo.pNext ) +
+            ", handleTypes = "      + "0b" + Long ( createInfo.handleTypes ).toString(2) +
+            " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_FENCE_WIN32_AVAILABLE
+
+auto vulkan :: toString (
+        Type ( ExportFenceWin32HandleInfo ) const & createInfo
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( ExportFenceWin32HandleInfo ) ) " "
+            "{ structureType = "_s  + toString ( createInfo.structureType ) +
+            ", pNext = "            + engine :: toString ( createInfo.pNext ) +
+            ", pAttributes = "      + engine :: toString ( createInfo.pAttributes ) +
+            ", dwAccess = "         + createInfo.dwAccess +
+            ", name = "             + createInfo.name +
+            " }";
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_FENCE_FD_AVAILABLE
+
+auto vulkan :: toString (
+        Type ( FenceGetFDInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( FenceGetFDInfo ) ) " "
+            "{ structureType = "_s  + toString ( info.structureType ) +
+            ", pNext = "            + engine :: toString ( info.pNext ) +
+            ", fence = "            + engine :: toString ( info.fence ) +
+            ", handleType = "       + toString ( info.handleType ) +
+            " }";
+}
+
+#endif

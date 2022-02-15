@@ -3,7 +3,7 @@
 //
 
 #ifndef __C_ENG_PREPROCESS_HPP__
-#define __C_ENG_PREPROCESS_HPP__
+#define __C_ENG_PREPROCESS_HPP__ /* NOLINT(bugprone-reserved-identifier) */
 
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
@@ -20,7 +20,7 @@
 #include <glm/mat4x4.hpp>
 
 #ifndef __C_ENG_DEFAULT_NAMING_PREFIX
-#define __C_ENG_DEFAULT_NAMING_PREFIX V
+#define __C_ENG_DEFAULT_NAMING_PREFIX V /* NOLINT(bugprone-reserved-identifier) */
 #endif
 
 #include <Naming.hpp>
