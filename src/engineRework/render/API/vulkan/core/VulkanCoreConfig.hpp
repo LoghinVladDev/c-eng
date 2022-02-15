@@ -104,6 +104,10 @@
 #define __C_ENG_VULKAN_CORE_FUNCTION_NAME_BEGIN_COMMAND_BUFFER                                              "vkBeginCommandBuffer" /* NOLINT(bugprone-reserved-identifier) */
 #define __C_ENG_VULKAN_CORE_FUNCTION_NAME_END_COMMAND_BUFFER                                                "vkEndCommandBuffer" /* NOLINT(bugprone-reserved-identifier) */
 
+#define __C_ENG_VULKAN_CORE_FUNCTION_NAME_CMD_EXECUTE_COMMANDS                                              "vkCmdExecuteCommands" /* NOLINT(bugprone-reserved-identifier) */
+#define __C_ENG_VULKAN_CORE_FUNCTION_NAME_CMD_SET_DEVICE_MASK                                               "vkCmdSetDeviceMask" /* NOLINT(bugprone-reserved-identifier) */
+#define __C_ENG_VULKAN_CORE_FUNCTION_NAME_CMD_SET_DEVICE_MASK_KHR                                           "vkCmdSetDeviceMaskKHR" /* NOLINT(bugprone-reserved-identifier) */
+
 #define __C_ENG_VULKAN_CORE_FUNCTION_NAME_QUEUE_SUBMIT                                                      "vkQueueSubmit" /* NOLINT(bugprone-reserved-identifier) */
 #define __C_ENG_VULKAN_CORE_FUNCTION_NAME_QUEUE_SUBMIT_2                                                    "vkQueueSubmit2" /* NOLINT(bugprone-reserved-identifier) */
 #define __C_ENG_VULKAN_CORE_FUNCTION_NAME_QUEUE_SUBMIT_2_KHR                                                "vkQueueSubmit2KHR" /* NOLINT(bugprone-reserved-identifier) */

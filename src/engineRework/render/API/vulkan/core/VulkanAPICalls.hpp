@@ -390,6 +390,12 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
                 Type ( FenceHandle )
         ) noexcept -> Type ( Result );
 
+        NoDiscard MaybeUnused extern auto commandBufferExecuteCommands (
+                Type ( CommandBufferHandle ),
+                cds :: uint32,
+                Type ( CommandBufferHandle ) const *
+        ) noexcept -> Type ( Result );
+
 #endif
 
 #if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
@@ -399,6 +405,15 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
                 cds :: uint32,
                 Type ( SubmitInfo2 ) const *,
                 Type ( FenceHandle )
+        ) noexcept -> Type ( Result );
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DEVICE_GROUP_AVAILABLE
+
+        NoDiscard MaybeUnused extern auto commandBufferSetDeviceMask (
+                Type ( CommandBufferHandle ),
+                cds :: uint32
         ) noexcept -> Type ( Result );
 
 #endif

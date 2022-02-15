@@ -946,6 +946,7 @@ static PFN_vkResetCommandBuffer                                             pVkR
 static PFN_vkFreeCommandBuffers                                             pVkFreeCommandBuffers;
 static PFN_vkBeginCommandBuffer                                             pVkBeginCommandBuffer;
 static PFN_vkEndCommandBuffer                                               pVkEndCommandBuffer;
+static PFN_vkCmdExecuteCommands                                             pVkCmdExecuteCommands;
 static VkCommandBufferAllocateInfo                                          commandBufferAllocateInfo;
 static VkCommandBufferBeginInfo                                             commandBufferBeginInfo;
 static VkCommandBufferInheritanceInfo                                       commandBufferInheritanceInfo;
@@ -1045,6 +1046,16 @@ static VkSubmitInfo2_t                                                      subm
 static VkSemaphoreSubmitInfo                                                waitSemaphoreInfos [ __C_ENG_VULKAN_CORE_SUBMIT_INFO_MAX_COUNT ][ __C_ENG_VULKAN_CORE_SUBMIT_SEMAPHORE_INFO_MAX_COUNT ];
 static VkSemaphoreSubmitInfo                                                signalSemaphoreInfos [ __C_ENG_VULKAN_CORE_SUBMIT_INFO_MAX_COUNT ][ __C_ENG_VULKAN_CORE_SUBMIT_SEMAPHORE_INFO_MAX_COUNT ];
 static VkCommandBufferSubmitInfo                                            commandBufferSubmitInfos [ __C_ENG_VULKAN_CORE_SUBMIT_INFO_MAX_COUNT ][ __C_ENG_VULKAN_CORE_SUBMIT_COMMAND_BUFFER_INFO_MAX_COUNT ];
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+using PFN_vkCmdSetDeviceMask_t                                            = PFN_vkCmdSetDeviceMask;
+#elif __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DEVICE_GROUP_AVAILABLE
+using PFN_vkCmdSetDeviceMask_t                                            = PFN_vkCmdSetDeviceMaskKHR;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DEVICE_GROUP_AVAILABLE
+static PFN_vkCmdSetDeviceMask_t                                             pVkCmdSetDeviceMask;
 #endif
 
 
@@ -14765,6 +14776,75 @@ auto vulkan :: queueSubmit (
                     fenceHandle
             )
     );
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+
+auto vulkan :: commandBufferExecuteCommands (
+        Type ( CommandBufferHandle )            commandBuffer,
+        uint32                                  commandBufferCount,
+        Type ( CommandBufferHandle )    const * pCommandBuffers
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if (
+            commandBuffer       == nullptr ||
+            pCommandBuffers     == nullptr ||
+            commandBufferCount  == 0U
+    ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION (
+            lastCreatedInstance,
+            pVkCmdExecuteCommands,
+            CMD_EXECUTE_COMMANDS
+    )
+
+    pVkCmdExecuteCommands (
+            commandBuffer,
+            commandBufferCount,
+            pCommandBuffers
+    );
+
+    return ResultSuccess;
+}
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DEVICE_GROUP_AVAILABLE
+
+auto vulkan :: commandBufferSetDeviceMask (
+        Type ( CommandBufferHandle )    commandBufferHandle,
+        uint32                          deviceMask
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( commandBufferHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_2 (
+            lastCreatedInstance,
+            pVkCmdSetDeviceMask,
+            CMD_SET_DEVICE_MASK,
+            CMD_SET_DEVICE_MASK_KHR
+    )
+
+    pVkCmdSetDeviceMask (
+            commandBufferHandle,
+            deviceMask
+    );
+
+    return ResultSuccess;
 }
 
 #endif
