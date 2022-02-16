@@ -1952,6 +1952,22 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #define C_ENG_MAP_END
 #include <ObjectMapping.hpp>
 
+#if __C_ENG_VULKAN_API_EXTENSION_DEBUG_REPORT_AVAILABLE
+#define C_ENG_MAP_START     ENUM ( DebugReportFlag, TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( Information,        VkDebugReportFlagBitsEXT :: VK_DEBUG_REPORT_INFORMATION_BIT_EXT ),
+            Field ( Warning,            VkDebugReportFlagBitsEXT :: VK_DEBUG_REPORT_WARNING_BIT_EXT ),
+            Field ( PerformanceWarning, VkDebugReportFlagBitsEXT :: VK_DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT ),
+            Field ( Error,              VkDebugReportFlagBitsEXT :: VK_DEBUG_REPORT_ERROR_BIT_EXT ),
+            Field ( Debug,              VkDebugReportFlagBitsEXT :: VK_DEBUG_REPORT_DEBUG_BIT_EXT ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
 #define C_ENG_MAP_START     ENUM ( ValidationFeatureEnable,    TYPE ( cds :: uint8 ) )
 #include <ObjectMapping.hpp>
 
@@ -3584,6 +3600,11 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
+#if __C_ENG_VULKAN_API_EXTENSION_DEBUG_REPORT_AVAILABLE
+        __C_ENG_ALIAS ( DebugReportFlags,               VkDebugReportFlagsEXT );
+        __C_ENG_ALIAS ( DebugReportCallback,            PFN_vkDebugReportCallbackEXT );
+#endif
+
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_MAINTENANCE_AVAILABLE && ! __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
 
         __C_ENG_ALIAS ( CommandPoolTrimFlags,           VkCommandPoolTrimFlagsKHR );
@@ -3740,13 +3761,29 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #define C_ENG_MAP_END
 #include <ObjectMapping.hpp>
 
+#if __C_ENG_VULKAN_API_EXTENSION_DEBUG_REPORT_AVAILABLE
+#define C_ENG_MAP_START     STRUCT ( DebugReportCreateInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
 
+        Struct {
+            Type ( StructureType )              structureType;
+            Type ( GenericStructure )   const * pNext;
+            Type ( DebugReportFlags )           flags;
+            Type ( DebugReportCallback )        callback;
+            void                              * pUserData;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_DEBUG_UTILS_AVAILABLE
 #define C_ENG_MAP_START     STRUCT ( DebugMessengerCreateInfo, NO_PARENT )
 #include <ObjectMapping.hpp>
 
         Struct {
             Type ( StructureType )                  structureType;
-            Type ( GenericStructure )             * pNext;
+            Type ( GenericStructure )       const * pNext;
             Type ( DebugMessengerCreateFlags )      flags;
             Type ( DebugMessageSeverityFlags )      messageSeverityFlags;
             Type ( DebugMessageTypeFlags )          messageTypeFlags;
@@ -3756,7 +3793,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #define C_ENG_MAP_END
 #include <ObjectMapping.hpp>
-
+#endif
 
 #define C_ENG_MAP_START     STRUCT ( InstanceCreateInfo, NO_PARENT )
 #include <ObjectMapping.hpp>
@@ -3793,13 +3830,38 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #define C_ENG_MAP_END
 #include <ObjectMapping.hpp>
 
+#if __C_ENG_VULKAN_API_EXTENSION_VALIDATION_FLAGS_AVAILABLE
+#define C_ENG_MAP_START ENUM ( ValidationCheck, TYPE ( cds :: uint8 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( All,        VkValidationCheckEXT :: VK_VALIDATION_CHECK_ALL_EXT ),
+            Field ( Shaders,    VkValidationCheckEXT :: VK_VALIDATION_CHECK_SHADERS_EXT ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START STRUCT ( ValidationFlags, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )              structureType;
+            Type ( GenericStructure )   const * pNext;
+            cds :: uint32                       disabledValidationCheckCount;
+            Type ( ValidationCheck )    const * pDisabledValidationChecks;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
 
 #define C_ENG_MAP_START     STRUCT ( ValidationFeatures, NO_PARENT )
 #include <ObjectMapping.hpp>
 
         Struct {
             Type ( StructureType )                      structureType;
-            Type ( GenericStructure )                 * pNext;
+            Type ( GenericStructure )           const * pNext;
             cds :: uint32                               enabledValidationFeatureCount;
             Type ( ValidationFeatureEnable )    const * pEnabledValidationFeatures;
             cds :: uint32                               disabledValidationFeatureCount;
@@ -9225,6 +9287,10 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
+#if __C_ENG_VULKAN_API_EXTENSION_DEBUG_REPORT_AVAILABLE
+        NoDiscard auto toString ( Type ( DebugReportFlag ) ) noexcept -> cds :: StringLiteral;
+#endif
+
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SURFACE_AVAILABLE
 
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( ColorSpace ) ) noexcept -> cds :: StringLiteral;
@@ -9424,6 +9490,15 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         NoDiscard auto toString ( Type ( CommandBufferSubmitInfo ) const & ) noexcept -> cds :: String;
         NoDiscard auto toString ( Type ( SubmitInfo2 ) const & ) noexcept -> cds :: String;
 
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VALIDATION_FLAGS_AVAILABLE
+        NoDiscard auto toString ( Type ( ValidationCheck ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( ValidationFlags ) const & ) noexcept -> cds :: String;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_DEBUG_REPORT_AVAILABLE
+        NoDiscard auto toString ( Type ( DebugReportCreateInfo ) const & ) noexcept -> cds :: String;
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_FENCE_WIN32_AVAILABLE

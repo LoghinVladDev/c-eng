@@ -51,7 +51,6 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PERFORMANCE_QUERY_AVAILABLE
 
         NoDiscard MaybeUnused extern auto enumeratePhysicalDeviceQueueFamilyPerformanceQueryCounters (
-                Type ( InstanceHandle ),
                 Type ( PhysicalDeviceHandle ),
                 cds :: uint32,
                 cds :: uint32                           *,
@@ -88,11 +87,17 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+
         NoDiscard extern auto createInstance (
                 Type ( InstanceCreateInfo )     const *,
                 Type ( AllocationCallbacks )    const *,
                 Type ( InstanceHandle )               *
         ) noexcept -> Type ( Result );
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_DEBUG_UTILS_AVAILABLE
 
         NoDiscard extern auto createDebugMessenger (
                 Type ( InstanceHandle ),
@@ -101,12 +106,18 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
                 Type ( DebugMessengerHandle )             *
         ) noexcept -> Type ( Result );
 
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SURFACE_AVAILABLE
+
         NoDiscard extern auto createSurface (
                 Type ( InstanceHandle ),
                 GLFWwindow                          *,
                 Type ( AllocationCallbacks )  const *,
                 Type ( SurfaceHandle )              *
         ) noexcept -> Type ( Result );
+
+#endif
 
         NoDiscard extern auto createDevice (
                 Type ( PhysicalDeviceHandle ),

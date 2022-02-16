@@ -5,6 +5,7 @@
 #ifndef C_ENG_VULKANAPICALLSPRIVATE_HPP
 #define C_ENG_VULKANAPICALLSPRIVATE_HPP
 
+#include <VulkanAPICalls.hpp>
 #include <VulkanCoreConfig.hpp>
 
 #define __C_ENG_LOOKUP_VULKAN_FUNCTION(_fName)                                          \
@@ -21,6 +22,24 @@
         }                                                                               \
     }
 
+#define __C_ENG_LOOKUP_VULKAN_FUNCTION_R(_fName)                                            \
+    static PFN_ ## _fName _fName ## Handle;                                                 \
+    static Mutex _fName ## Lock;                                                            \
+    if ( _fName ## Handle == nullptr ) {                                                    \
+        LockGuard guard ( _fName ## Lock );                                                 \
+        if ( _fName ## Handle == nullptr ) {                                                \
+            if (                                                                            \
+                    auto lResult = vulkan :: getFunctionAddress (                           \
+                        # _fName,                                                           \
+                        reinterpret_cast < FunctionHandleAddress > ( & _fName ## Handle )   \
+                    );                                                                      \
+                    lResult != vulkan :: ResultSuccess                                      \
+            ) {                                                                             \
+                return lResult;                                                             \
+            }                                                                               \
+        }                                                                                   \
+    }
+
 #define __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION(_instance, _fName)                      \
     static PFN_ ## _fName _fName ## Handle;                                             \
     if ( _fName ## Handle == nullptr ) {                                                \
@@ -34,6 +53,25 @@
         ) {                                                                             \
             return lResult;                                                             \
         }                                                                               \
+    }
+
+#define __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R(_instance, _fName)                        \
+    static PFN_ ## _fName _fName ## Handle;                                                 \
+    static Mutex _fName ## Lock;                                                            \
+    if ( _fName ## Handle == nullptr ) {                                                    \
+        LockGuard guard ( _fName ## Lock );                                                 \
+        if ( _fName ## Handle == nullptr ) {                                                \
+            if (                                                                            \
+                    auto lResult = vulkan :: getInstanceFunctionAddress (                   \
+                        _instance,                                                          \
+                        # _fName,                                                           \
+                        reinterpret_cast < FunctionHandleAddress > ( & _fName ## Handle )   \
+                    );                                                                      \
+                    lResult != vulkan :: ResultSuccess                                      \
+            ) {                                                                             \
+                return lResult;                                                             \
+            }                                                                               \
+        }                                                                                   \
     }
 
 #define __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_2(_instance, _fName, _ext)                  \

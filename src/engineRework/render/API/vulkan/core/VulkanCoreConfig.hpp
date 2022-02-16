@@ -10,8 +10,13 @@
 #pragma ide diagnostic ignored "OCUnusedMacroInspection"
 #endif
 
+
+#define __C_ENG_VULKAN_CORE_CONTEXT_COUNT   16U /* NOLINT(bugprone-reserved-identifier) */
+
+
 #define __C_ENG_VULKAN_CORE_VALIDATION_FEATURE_ENABLE_MAX_COUNT     32U /* NOLINT(bugprone-reserved-identifier) */
 #define __C_ENG_VULKAN_CORE_VALIDATION_FEATURE_DISABLE_MAX_COUNT    32U /* NOLINT(bugprone-reserved-identifier) */
+#define __C_ENG_VULKAN_CORE_VALIDATION_CHECK_MAX_COUNT              16U /* NOLINT(bugprone-reserved-identifier) */
 
 #define __C_ENG_VULKAN_CORE_LAYER_MAX_COUNT  64U /* NOLINT(bugprone-reserved-identifier) */
 #define __C_ENG_VULKAN_CORE_LAYER_EXTENSION_MAX_COUNT  128U /* NOLINT(bugprone-reserved-identifier) */

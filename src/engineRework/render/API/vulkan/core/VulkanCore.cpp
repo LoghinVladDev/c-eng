@@ -8366,3 +8366,63 @@ auto vulkan :: toString (
 }
 
 #endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_DEBUG_REPORT_AVAILABLE
+auto vulkan :: toString (
+        Type ( DebugReportFlag )    flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case DebugReportFlagInformation:        { asString = "Information";         break; }
+        case DebugReportFlagWarning:            { asString = "Warning";             break; }
+        case DebugReportFlagPerformanceWarning: { asString = "PerformanceWarning";  break; }
+        case DebugReportFlagError:              { asString = "Error";               break; }
+        case DebugReportFlagDebug:              { asString = "Debug";               break; }
+    }
+
+    return asString;
+}
+
+auto vulkan :: toString (
+        Type ( DebugReportCreateInfo )  const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( DebugReportCreateInfo ) ) " "
+           "{ structureType = "_s  + toString ( info.structureType ) +
+           ", pNext = "            + engine :: toString ( info.pNext ) +
+           ", flags = "            + "0b" + Long ( info.flags ).toString(2) +
+           ", callback = "         + engine :: toString ( info.callback ) +
+           ", pUserData = "        + engine :: toString ( info.pUserData ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VALIDATION_FLAGS_AVAILABLE
+auto vulkan :: toString (
+        Type ( ValidationCheck )    check
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( check ) {
+        case ValidationCheckAll:        { asString = "All";     break; }
+        case ValidationCheckShaders:    { asString = "Shaders"; break; }
+    }
+
+    return asString;
+}
+
+auto vulkan :: toString (
+        Type ( ValidationFlags )    const & flags
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( ValidationFlags ) ) " "
+           "{ structureType = "_s               + toString ( flags.structureType ) +
+           ", pNext = "                         + engine :: toString ( flags.pNext ) +
+           ", disabledValidationCheckCount = "  + flags.disabledValidationCheckCount +
+           ", disabledValidationChecks = "      + :: toStringVulkan ( flags.disabledValidationCheckCount, flags.pDisabledValidationChecks ) +
+           " }";
+}
+#endif
