@@ -778,6 +778,41 @@ auto engine :: vulkan :: createSurface (
 #endif
 
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: createDevice (
+        Type ( PhysicalDeviceHandle )           physicalDeviceHandle,
+        Type ( DeviceCreateInfo )       const * pCreateInfo,
+        Type ( AllocationCallbacks )    const * pAllocationCallbacks,
+        Type ( DeviceHandle )                 * pDeviceHandle
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if (
+            physicalDeviceHandle    == nullptr ||
+            pCreateInfo             == nullptr ||
+            pDeviceHandle           == nullptr
+    ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkCreateDevice )
+
+    auto context = ContextManager :: acquire();
+
+    return static_cast < Type ( Result ) > (
+            vkCreateDeviceHandle (
+                    physicalDeviceHandle,
+                    prepareContext ( & context.data().create.device, pCreateInfo ),
+                    AllocatorHandler :: applyCallbacks ( pAllocationCallbacks ),
+                    pDeviceHandle
+            )
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 auto engine :: vulkan :: destroyInstance (
         Type ( InstanceHandle )                 handle,
         Type ( AllocationCallbacks )    const * pAllocationCallbacks

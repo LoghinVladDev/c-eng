@@ -6896,8 +6896,8 @@ static inline auto fromVulkanFormat (
     (void) std :: memcpy ( pProperties->limits.maxComputeWorkGroupCount,    pVkProperties->limits.maxComputeWorkGroupCount, sizeof ( pVkProperties->limits.maxComputeWorkGroupCount[0] ) * 3U ); // NOLINT(clion-misra-cpp2008-5-2-12)
     (void) std :: memcpy ( pProperties->limits.maxComputeWorkGroupSize,     pVkProperties->limits.maxComputeWorkGroupSize,  sizeof ( pVkProperties->limits.maxComputeWorkGroupSize[0] ) * 3U ); // NOLINT(clion-misra-cpp2008-5-2-12)
 
-    (void) std :: memcpy ( pProperties->limits.maxViewportDimensions,       pVkProperties->limits.maxViewportDimensions,    sizeof ( pVkProperties->limits.maxViewportDimensions[0] ) * 3U ); // NOLINT(clion-misra-cpp2008-5-2-12)
-    (void) std :: memcpy ( pProperties->limits.viewportBoundsRange,         pVkProperties->limits.viewportBoundsRange,      sizeof ( pVkProperties->limits.viewportBoundsRange[0] ) * 3U ); // NOLINT(clion-misra-cpp2008-5-2-12)
+    (void) std :: memcpy ( pProperties->limits.maxViewportDimensions,       pVkProperties->limits.maxViewportDimensions,    sizeof ( pVkProperties->limits.maxViewportDimensions[0] ) * 2U ); // NOLINT(clion-misra-cpp2008-5-2-12)
+    (void) std :: memcpy ( pProperties->limits.viewportBoundsRange,         pVkProperties->limits.viewportBoundsRange,      sizeof ( pVkProperties->limits.viewportBoundsRange[0] ) * 2U ); // NOLINT(clion-misra-cpp2008-5-2-12)
 
     (void) std :: memcpy ( pProperties->limits.pointSizeRange,              pVkProperties->limits.pointSizeRange,           sizeof ( pVkProperties->limits.pointSizeRange[0] ) * 2U ); // NOLINT(clion-misra-cpp2008-5-2-12)
     (void) std :: memcpy ( pProperties->limits.lineWidthRange,              pVkProperties->limits.lineWidthRange,           sizeof ( pVkProperties->limits.lineWidthRange[0] ) * 2U ); // NOLINT(clion-misra-cpp2008-5-2-12)
@@ -11114,7 +11114,7 @@ auto toVulkanFormat (
 
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PORTABILITY_SUBSET_AVAILABLE
 
-                    case StructureTypePhysicalDevicePortabilitySubsetFeatures:                        { nextInVkChain = reinterpret_cast < VkBaseOutStructure * > ( & devicePortabilitySubsetFeatures );                    toVulkanFormat ( & devicePortabilitySubsetFeatures,                     reinterpret_cast < __C_ENG_TYPE ( PhysicalDevicePortabilitySubsetFeatures ) const * > ( currentInChain ) );                         break; }
+                case StructureTypePhysicalDevicePortabilitySubsetFeatures:                        { nextInVkChain = reinterpret_cast < VkBaseOutStructure * > ( & devicePortabilitySubsetFeatures );                    toVulkanFormat ( & devicePortabilitySubsetFeatures,                     reinterpret_cast < __C_ENG_TYPE ( PhysicalDevicePortabilitySubsetFeatures ) const * > ( currentInChain ) );                         break; }
 
 #endif
 
@@ -11346,67 +11346,6 @@ auto toVulkanFormat (
             currentInVkChain->pNext = nullptr;
         }
     }
-}
-
-auto vulkan :: createDevice (
-        __C_ENG_TYPE ( PhysicalDeviceHandle )           physicalDeviceHandle,
-        __C_ENG_TYPE ( DeviceCreateInfo )       const * pDeviceCreateInfo,
-        __C_ENG_TYPE ( AllocationCallbacks )    const * pAllocationCallbacks,
-        __C_ENG_TYPE ( DeviceHandle )                 * pDeviceHandle
-) noexcept -> __C_ENG_TYPE ( Result ) {
-
-#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
-
-    if (
-            physicalDeviceHandle    == nullptr ||
-            pDeviceCreateInfo       == nullptr ||
-            pDeviceHandle           == nullptr
-    ) {
-        return ResultErrorIllegalArgument;
-    }
-
-#endif
-
-#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
-
-    if ( ! validate ( pDeviceCreateInfo, physicalDeviceHandle ) ) {
-        return ResultErrorInvalidUsage;
-    }
-
-    if ( pDeviceCreateInfo->queueCreateInfoCount > __C_ENG_VULKAN_CORE_DEVICE_QUEUE_FAMILY_CREATE_INFO_MAX_COUNT ) {
-        return ResultErrorConfigurationArraySizeSmall;
-    }
-
-#endif
-
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION ( lastCreatedInstance, vkCreateDevice )
-
-    VkAllocationCallbacks * pUsedAllocationCallback = nullptr;
-
-    if ( pAllocationCallbacks != nullptr ) {
-        pUsedAllocationCallback = & allocationCallbacks;
-        toVulkanFormat ( pAllocationCallbacks, pUsedAllocationCallback );
-    }
-
-    toVulkanFormat ( & deviceCreateInfo, pDeviceCreateInfo );
-
-#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
-
-    saveUsedDeviceQueueCreateInfos (
-            deviceCreateInfo.queueCreateInfoCount,
-            deviceCreateInfo.pQueueCreateInfos
-    );
-
-#endif
-
-    return static_cast < __C_ENG_TYPE ( Result ) > (
-            vkCreateDeviceHandle (
-                    physicalDeviceHandle,
-                    & deviceCreateInfo,
-                    pUsedAllocationCallback,
-                    pDeviceHandle
-            )
-    );
 }
 
 auto vulkan :: destroyDevice (
