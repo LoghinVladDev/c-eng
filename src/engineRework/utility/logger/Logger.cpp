@@ -31,7 +31,11 @@ auto Self :: currentTime () noexcept -> StringLiteral {
 
     auto time = std :: chrono :: system_clock :: to_time_t ( std :: chrono :: system_clock :: now() );
 
+#if defined(__CDS_Platform_Linux)
     localtime_r ( & time, & timeStruct );
+#else
+    localtime_s ( & timeStruct, & time );
+#endif
 
     (void) std :: strftime ( // NOLINT(clion-misra-cpp2008-18-0-4)
             timeBuffer, Self :: defaultTimeBufferSize, // NOLINT(clion-misra-cpp2008-5-2-12)

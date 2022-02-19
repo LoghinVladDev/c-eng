@@ -885,9 +885,9 @@ using VkCommandBufferSubmitInfo_t                                         = VkCo
 
 #if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
 static VkSubmitInfo2_t                                                      submitInfos2 [ __C_ENG_VULKAN_CORE_SUBMIT_INFO_MAX_COUNT ];
-static VkSemaphoreSubmitInfo                                                waitSemaphoreInfos [ __C_ENG_VULKAN_CORE_SUBMIT_INFO_MAX_COUNT ][ __C_ENG_VULKAN_CORE_SUBMIT_SEMAPHORE_INFO_MAX_COUNT ];
-static VkSemaphoreSubmitInfo                                                signalSemaphoreInfos [ __C_ENG_VULKAN_CORE_SUBMIT_INFO_MAX_COUNT ][ __C_ENG_VULKAN_CORE_SUBMIT_SEMAPHORE_INFO_MAX_COUNT ];
-static VkCommandBufferSubmitInfo                                            commandBufferSubmitInfos [ __C_ENG_VULKAN_CORE_SUBMIT_INFO_MAX_COUNT ][ __C_ENG_VULKAN_CORE_SUBMIT_COMMAND_BUFFER_INFO_MAX_COUNT ];
+static VkSemaphoreSubmitInfo_t                                              waitSemaphoreInfos [ __C_ENG_VULKAN_CORE_SUBMIT_INFO_MAX_COUNT ][ __C_ENG_VULKAN_CORE_SUBMIT_SEMAPHORE_INFO_MAX_COUNT ];
+static VkSemaphoreSubmitInfo_t                                              signalSemaphoreInfos [ __C_ENG_VULKAN_CORE_SUBMIT_INFO_MAX_COUNT ][ __C_ENG_VULKAN_CORE_SUBMIT_SEMAPHORE_INFO_MAX_COUNT ];
+static VkCommandBufferSubmitInfo_t                                          commandBufferSubmitInfos [ __C_ENG_VULKAN_CORE_SUBMIT_INFO_MAX_COUNT ][ __C_ENG_VULKAN_CORE_SUBMIT_COMMAND_BUFFER_INFO_MAX_COUNT ];
 #endif
 
 
@@ -13345,7 +13345,11 @@ static inline auto toVulkanFormat (
 
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
     pDestination->sType                     = VK_STRUCTURE_TYPE_SUBMIT_INFO_2;
+#elif __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
+    pDestination->sType                     = VK_STRUCTURE_TYPE_SUBMIT_INFO_2_KHR;
+#endif
     pDestination->pNext                     = nullptr;
     pDestination->flags                     = static_cast < decltype ( pDestination->flags ) > ( pSource->flags );
     pDestination->waitSemaphoreInfoCount    = pSource->waitSemaphoreInfoCount;
@@ -13434,7 +13438,11 @@ auto vulkan :: queueSubmit (
 
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
     __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_2 ( lastCreatedInstance, vkQueueSubmit2, KHR )
+#else
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION ( lastCreatedInstance, vkQueueSubmit2KHR )
+#endif
 
     if ( submitCount > __C_ENG_VULKAN_CORE_SUBMIT_INFO_MAX_COUNT ) {
         return ResultErrorConfigurationArraySizeSmall;
@@ -13445,12 +13453,21 @@ auto vulkan :: queueSubmit (
     }
 
     return static_cast < Type ( Result ) > (
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
             vkQueueSubmit2Handle (
                     queueHandle,
                     submitCount,
                     & submitInfos2 [0],
                     fenceHandle
             )
+#else
+            vkQueueSubmit2KHRHandle (
+                    queueHandle,
+                    submitCount,
+                    & submitInfos2 [0],
+                    fenceHandle
+            )
+#endif
     );
 }
 

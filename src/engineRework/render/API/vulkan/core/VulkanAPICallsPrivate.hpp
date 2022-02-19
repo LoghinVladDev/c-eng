@@ -178,7 +178,7 @@ using VkPhysicalDeviceMaintenance4Properties_t      = VkPhysicalDeviceMaintenanc
 #if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 using VkPhysicalDevicePipelineCreationCacheControlFeatures_t    = VkPhysicalDevicePipelineCreationCacheControlFeatures;
 #elif __C_ENG_VULKAN_API_EXTENSION_PIPELINE_CREATION_CACHE_CONTROL_AVAILABLE
-using VkPhysicalDevicePipelineCreationCacheControlFeatures_t    = VkPhysicalDevicePipelineCreationCacheControlFeaturesKHR;
+using VkPhysicalDevicePipelineCreationCacheControlFeatures_t    = VkPhysicalDevicePipelineCreationCacheControlFeaturesEXT;
 #endif
 
 #if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
