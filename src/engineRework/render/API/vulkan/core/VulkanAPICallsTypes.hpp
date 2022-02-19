@@ -78,7 +78,148 @@ struct EnumeratePhysicalDeviceGroupsContext {
 };
 
 struct DevicePropertiesContext {
-
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    VkPhysicalDeviceProperties                                  properties;
+#endif
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    VkPhysicalDeviceProperties2                                 properties2;
+    VkPhysicalDeviceVulkan11Properties                          vulkan11;
+    VkPhysicalDeviceIDProperties                                deviceID;
+    VkPhysicalDeviceMaintenance3Properties                      maintenance3;
+    VkPhysicalDeviceMultiviewProperties                         multiview;
+    VkPhysicalDevicePointClippingProperties                     pointClipping;
+    VkPhysicalDeviceProtectedMemoryProperties                   protectedMemory;
+    VkPhysicalDeviceSubgroupProperties                          subgroup;
+#endif
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+    VkPhysicalDeviceVulkan12Properties                          vulkan12;
+    VkPhysicalDeviceDepthStencilResolveProperties               depthStencilResolve;
+    VkPhysicalDeviceDescriptorIndexingProperties                descriptorIndexing;
+    VkPhysicalDeviceDriverProperties                            driver;
+    VkPhysicalDeviceFloatControlsProperties                     floatControls;
+    VkPhysicalDeviceSamplerFilterMinmaxProperties               samplerFilterMinmax;
+    VkPhysicalDeviceTimelineSemaphoreProperties                 timelineSemaphore;
+#endif
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+    VkPhysicalDeviceVulkan13Properties                          vulkan13;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_BLEND_OPERATION_ADVANCED_AVAILABLE
+    VkPhysicalDeviceBlendOperationAdvancedPropertiesEXT         blendOperationAdvanced;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_CONSERVATIVE_RASTERIZATION_AVAILABLE
+    VkPhysicalDeviceConservativeRasterizationPropertiesEXT      conservativeRasterization;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_CUSTOM_BORDER_COLOR_AVAILABLE
+    VkPhysicalDeviceCustomBorderColorPropertiesEXT              customBorderColor;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_DISCARD_RECTANGLES_AVAILABLE
+    VkPhysicalDeviceDiscardRectanglePropertiesEXT               discardRectangle;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_EXTERNAL_MEMORY_HOST_AVAILABLE
+    VkPhysicalDeviceExternalMemoryHostPropertiesEXT             externalMemoryHost;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_FRAGMENT_DENSITY_MAP_AVAILABLE
+    VkPhysicalDeviceFragmentDensityMapPropertiesEXT             fragmentDensityMap;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_FRAGMENT_DENSITY_MAP_2_AVAILABLE
+    VkPhysicalDeviceFragmentDensityMap2PropertiesEXT            fragmentDensityMap2;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_INLINE_UNIFORM_BLOCK_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+    VkPhysicalDeviceInlineUniformBlockProperties_t              inlineUniformBlock;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_LINE_RASTERIZATION_AVAILABLE
+    VkPhysicalDeviceLineRasterizationPropertiesEXT              lineRasterization;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_MULTI_DRAW_AVAILABLE
+    VkPhysicalDeviceMultiDrawPropertiesEXT                      multiDraw;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_PCI_BUS_INFO_AVAILABLE
+    VkPhysicalDevicePCIBusInfoPropertiesEXT                     pciBusInfo;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_PHYSICAL_DEVICE_DRM_AVAILABLE
+    VkPhysicalDeviceDrmPropertiesEXT                            deviceDrm;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_PROVOKING_VERTEX_AVAILABLE
+    VkPhysicalDeviceProvokingVertexPropertiesEXT                provokingVertex;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_ROBUSTNESS_AVAILABLE
+    VkPhysicalDeviceRobustness2PropertiesEXT                    robustness2;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_SAMPLE_LOCATIONS_AVAILABLE
+    VkPhysicalDeviceSampleLocationsPropertiesEXT                sampleLocations;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_SUBGROUP_SIZE_CONTROL_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+    VkPhysicalDeviceSubgroupSizeControlProperties_t             subgroupSizeControl;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_TEXEL_BUFFER_ALIGNMENT_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+    VkPhysicalDeviceTexelBufferAlignmentProperties_t            texelBufferAlignment;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_TRANSFORM_FEEDBACK_AVAILABLE
+    VkPhysicalDeviceTransformFeedbackPropertiesEXT              transformFeedback;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_VERTEX_ATTRIBUTE_DIVISOR_AVAILABLE
+    VkPhysicalDeviceVertexAttributeDivisorPropertiesEXT         vertexAttributeDivisor;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+    VkPhysicalDeviceAccelerationStructurePropertiesKHR          accelerationStructure;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_FRAGMENT_SHADING_RATE_AVAILABLE
+    VkPhysicalDeviceFragmentShadingRatePropertiesKHR            fragmentShadingRate;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_MAINTENANCE_4_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+    VkPhysicalDeviceMaintenance4Properties_t                    maintenance4;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PERFORMANCE_QUERY_AVAILABLE
+    VkPhysicalDevicePerformanceQueryPropertiesKHR               performanceQuery;
+#endif
+#if __C_ENG_VULKAN_BETA_EXTENSIONS_ENABLED && __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PORTABILITY_SUBSET_AVAILABLE
+    VkPhysicalDevicePortabilitySubsetPropertiesKHR              portabilitySubset;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PUSH_DESCRIPTOR_AVAILABLE
+    VkPhysicalDevicePushDescriptorPropertiesKHR                 pushDescriptor;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_RAY_TRACING_PIPELINE_AVAILABLE
+    VkPhysicalDeviceRayTracingPipelinePropertiesKHR             rayTracingPipeline;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_INTEGER_DOT_PRODUCT_AVAILABLE
+    VkPhysicalDeviceShaderIntegerDotProductPropertiesKHR        shaderIntegerDotProduct;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_COOPERATIVE_MATRIX_AVAILABLE
+    VkPhysicalDeviceCooperativeMatrixPropertiesNV               cooperativeMatrix;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEVICE_GENERATED_COMMANDS_AVAILABLE
+    VkPhysicalDeviceDeviceGeneratedCommandsPropertiesNV         deviceDeviceGeneratedCommands;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_FRAGMENT_SHADING_RATE_ENUMS_AVAILABLE
+    VkPhysicalDeviceFragmentShadingRateEnumsPropertiesNV        fragmentShadingRateEnums;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_MESH_SHADER_AVAILABLE
+    VkPhysicalDeviceMeshShaderPropertiesNV                      meshShader;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+    VkPhysicalDeviceRayTracingPropertiesNV                      rayTracing;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SHADER_SM_BUILTINS_AVAILABLE
+    VkPhysicalDeviceShaderSMBuiltinsPropertiesNV                shaderSmBuiltins;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SHADING_RATE_IMAGE_AVAILABLE
+    VkPhysicalDeviceShadingRateImagePropertiesNV                shadingRateImage;
+#endif
+#if ( __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE ) && __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXPERIMENTAL_MULTIVIEW_PER_VIEW_ATTRIBUTES_AVAILABLE
+    VkPhysicalDeviceMultiviewPerViewAttributesPropertiesNVX     multiviewPerViewattributes;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_AMD_SHADER_CORE_PROPERTIES_AVAILABLE
+    VkPhysicalDeviceShaderCorePropertiesAMD                     shaderCore;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_AMD_SHADER_CORE_PROPERTIES_2_AVAILABLE
+    VkPhysicalDeviceShaderCoreProperties2AMD                    shaderCore2;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_QUALCOMM_FRAGMENT_DENSITY_MAP_OFFSET_AVAILABLE
+    VkPhysicalDeviceFragmentDensityMapOffsetPropertiesQCOM      fragmentDensityMapOffset;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_HUAWEI_SUBPASS_SHADING_AVAILABLE
+    VkPhysicalDeviceSubpassShadingPropertiesHUAWEI              subpassShading;
+#endif
 };
 
 struct DeviceFeaturesContext {
@@ -396,6 +537,20 @@ struct CreateDeviceContext {
 #endif
 };
 
+struct GetPhysicalDevicePropertiesContext {
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    engine :: vulkan :: Type ( Result )         error;
+#endif
+    DevicePropertiesContext                     properties;
+};
+
+struct GetPhysicalDeviceFeaturesContext {
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    engine :: vulkan :: Type ( Result )         error;
+#endif
+    DeviceFeaturesContext                       features;
+};
+
 union EnumerateSharedContext {
     EnumerateLayerPropertiesContext                                     layerProperties;
     EnumerateExtensionPropertiesContext                                 extensionProperties;
@@ -409,10 +564,16 @@ union CreateSharedContext {
     CreateDeviceContext                                                 device;
 };
 
+union GetSharedContext {
+    GetPhysicalDevicePropertiesContext                                  physicalDeviceProperties;
+    GetPhysicalDeviceFeaturesContext                                    physicalDeviceFeatures;
+};
+
 union SharedContext {
     CommonContext                                                       common;
     CreateSharedContext                                                 create;
     EnumerateSharedContext                                              enumerate;
+    GetSharedContext                                                    get;
 };
 
 

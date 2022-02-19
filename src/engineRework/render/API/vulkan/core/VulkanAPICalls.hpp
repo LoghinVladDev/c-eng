@@ -119,6 +119,8 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+
         NoDiscard extern auto createDevice (
                 Type ( PhysicalDeviceHandle ),
                 Type ( DeviceCreateInfo )       const *,
@@ -126,10 +128,18 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
                 Type ( DeviceHandle )                 *
         ) noexcept -> Type ( Result );
 
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+
         NoDiscard extern auto destroyInstance (
                 Type ( InstanceHandle ),
                 Type ( AllocationCallbacks ) const *
         ) noexcept -> Type ( Result );
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_DEBUG_UTILS_AVAILABLE
 
         NoDiscard extern auto destroyDebugMessenger (
                 Type ( InstanceHandle ),
@@ -137,31 +147,53 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
                 Type ( AllocationCallbacks ) const *
         ) noexcept -> Type ( Result );
 
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SURFACE_AVAILABLE
+
         NoDiscard extern auto destroySurface (
                 Type ( InstanceHandle ),
                 Type ( SurfaceHandle ),
                 Type ( AllocationCallbacks ) const *
         ) noexcept -> Type ( Result );
 
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+
         NoDiscard extern auto destroyDevice (
                 Type ( DeviceHandle ),
                 Type ( AllocationCallbacks ) const *
         ) noexcept -> Type ( Result );
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 
         NoDiscard MaybeUnused extern auto getPhysicalDeviceProperties (
                 Type ( PhysicalDeviceHandle ),
                 Type ( PhysicalDeviceProperties ) *
         ) noexcept -> Type ( Result );
 
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+
         NoDiscard extern auto getPhysicalDeviceProperties (
                 Type ( PhysicalDeviceHandle ),
                 Type ( PhysicalDeviceExtendedProperties ) *
         ) noexcept -> Type ( Result );
 
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+
         NoDiscard extern auto getPhysicalDeviceFeatures (
                 Type ( PhysicalDeviceHandle ),
                 Type ( PhysicalDeviceFeatures ) *
         ) noexcept -> Type ( Result );
+
+#endif
 
         NoDiscard extern auto getPhysicalDeviceFeatures (
                 Type ( PhysicalDeviceHandle ),

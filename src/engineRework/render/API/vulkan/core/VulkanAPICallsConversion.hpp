@@ -148,6 +148,206 @@ namespace engine :: vulkan {
 #endif
 
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    static inline auto fromVulkanFormat (
+            Type ( PhysicalDeviceProperties )         * pDestination,
+            VkPhysicalDeviceProperties          const * pSource
+    ) noexcept -> Type ( PhysicalDeviceProperties ) * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        pDestination->apiVersion                                                 = vulkan :: uInt32ToInstanceVersion ( pSource->apiVersion );
+        pDestination->driverVersion                                              = pSource->driverVersion;
+        pDestination->vendorID                                                   = pSource->vendorID;
+        pDestination->deviceID                                                   = pSource->deviceID;
+        pDestination->deviceType                                                 = static_cast < vulkan :: __C_ENG_TYPE ( PhysicalDeviceType ) > ( pSource->deviceType );
+
+        pDestination->limits.maxImageDimension1D                                 = pSource->limits.maxImageDimension1D;
+        pDestination->limits.maxImageDimension2D                                 = pSource->limits.maxImageDimension2D;
+        pDestination->limits.maxImageDimension3D                                 = pSource->limits.maxImageDimension3D;
+        pDestination->limits.maxImageDimensionCube                               = pSource->limits.maxImageDimensionCube;
+        pDestination->limits.maxImageArrayLayers                                 = pSource->limits.maxImageArrayLayers;
+
+        pDestination->limits.maxTexelBufferElements                              = pSource->limits.maxTexelBufferElements;
+
+        pDestination->limits.maxUniformBufferRange                               = pSource->limits.maxUniformBufferRange;
+        pDestination->limits.maxStorageBufferRange                               = pSource->limits.maxStorageBufferRange;
+
+        pDestination->limits.maxPushConstantsSize                                = pSource->limits.maxPushConstantsSize;
+
+        pDestination->limits.maxMemoryAllocationCount                            = pSource->limits.maxMemoryAllocationCount;
+        pDestination->limits.maxSamplerAllocationCount                           = pSource->limits.maxSamplerAllocationCount;
+
+        pDestination->limits.bufferImageGranularity                              = pSource->limits.bufferImageGranularity;
+        pDestination->limits.sparseAddressSpaceSize                              = pSource->limits.sparseAddressSpaceSize;
+
+        pDestination->limits.maxBoundDescriptorSets                              = pSource->limits.maxBoundDescriptorSets;
+
+        pDestination->limits.maxPerStageDescriptorSamplers                       = pSource->limits.maxPerStageDescriptorSamplers;
+        pDestination->limits.maxPerStageDescriptorUniformBuffers                 = pSource->limits.maxPerStageDescriptorUniformBuffers;
+        pDestination->limits.maxPerStageDescriptorStorageBuffers                 = pSource->limits.maxPerStageDescriptorStorageBuffers;
+        pDestination->limits.maxPerStageDescriptorSampledImages                  = pSource->limits.maxPerStageDescriptorSampledImages;
+        pDestination->limits.maxPerStageDescriptorStorageImages                  = pSource->limits.maxPerStageDescriptorStorageImages;
+        pDestination->limits.maxPerStageDescriptorInputAttachments               = pSource->limits.maxPerStageDescriptorInputAttachments;
+        pDestination->limits.maxPerStageResources                                = pSource->limits.maxPerStageResources;
+
+        pDestination->limits.maxDescriptorSetSamplers                            = pSource->limits.maxDescriptorSetSamplers;
+        pDestination->limits.maxDescriptorSetUniformBuffers                      = pSource->limits.maxDescriptorSetUniformBuffers;
+        pDestination->limits.maxDescriptorSetUniformBuffersDynamic               = pSource->limits.maxDescriptorSetUniformBuffersDynamic;
+        pDestination->limits.maxDescriptorSetStorageBuffers                      = pSource->limits.maxDescriptorSetStorageBuffers;
+        pDestination->limits.maxDescriptorSetStorageBuffersDynamic               = pSource->limits.maxDescriptorSetStorageBuffersDynamic;
+        pDestination->limits.maxDescriptorSetSampledImages                       = pSource->limits.maxDescriptorSetSampledImages;
+        pDestination->limits.maxDescriptorSetStorageImages                       = pSource->limits.maxDescriptorSetStorageImages;
+        pDestination->limits.maxDescriptorSetInputAttachments                    = pSource->limits.maxDescriptorSetInputAttachments;
+
+        pDestination->limits.maxVertexInputAttributes                            = pSource->limits.maxVertexInputAttributes;
+        pDestination->limits.maxVertexInputBindings                              = pSource->limits.maxVertexInputBindings;
+        pDestination->limits.maxVertexInputAttributeOffset                       = pSource->limits.maxVertexInputAttributeOffset;
+        pDestination->limits.maxVertexInputBindingStride                         = pSource->limits.maxVertexInputBindingStride;
+        pDestination->limits.maxVertexOutputComponents                           = pSource->limits.maxVertexOutputComponents;
+
+        pDestination->limits.maxTessellationGenerationLevel                      = pSource->limits.maxTessellationGenerationLevel;
+        pDestination->limits.maxTessellationPatchSize                            = pSource->limits.maxTessellationPatchSize;
+        pDestination->limits.maxTessellationControlPerVertexInputComponents      = pSource->limits.maxTessellationControlPerVertexInputComponents;
+        pDestination->limits.maxTessellationControlPerVertexOutputComponents     = pSource->limits.maxTessellationControlPerVertexOutputComponents;
+        pDestination->limits.maxTessellationControlPerPatchOutputComponents      = pSource->limits.maxTessellationControlPerPatchOutputComponents;
+        pDestination->limits.maxTessellationControlTotalOutputComponents         = pSource->limits.maxTessellationControlTotalOutputComponents;
+        pDestination->limits.maxTessellationEvaluationInputComponents            = pSource->limits.maxTessellationEvaluationInputComponents;
+        pDestination->limits.maxTessellationEvaluationOutputComponents           = pSource->limits.maxTessellationEvaluationOutputComponents;
+
+        pDestination->limits.maxGeometryShaderInvocations                        = pSource->limits.maxGeometryShaderInvocations;
+        pDestination->limits.maxGeometryInputComponents                          = pSource->limits.maxGeometryInputComponents;
+        pDestination->limits.maxGeometryOutputComponents                         = pSource->limits.maxGeometryOutputComponents;
+        pDestination->limits.maxGeometryOutputVertices                           = pSource->limits.maxGeometryOutputVertices;
+        pDestination->limits.maxGeometryTotalOutputComponents                    = pSource->limits.maxGeometryTotalOutputComponents;
+
+        pDestination->limits.maxFragmentInputComponents                          = pSource->limits.maxFragmentInputComponents;
+        pDestination->limits.maxFragmentOutputAttachments                        = pSource->limits.maxFragmentOutputAttachments;
+        pDestination->limits.maxFragmentDualSourceAttachments                    = pSource->limits.maxFragmentDualSrcAttachments;
+        pDestination->limits.maxFragmentCombinedOutputResources                  = pSource->limits.maxFragmentCombinedOutputResources;
+
+        pDestination->limits.maxComputeSharedMemorySize                          = pSource->limits.maxComputeSharedMemorySize;
+        pDestination->limits.maxComputeWorkGroupInvocations                      = pSource->limits.maxComputeWorkGroupInvocations;
+
+        pDestination->limits.subPixelPrecisionBits                               = pSource->limits.subPixelPrecisionBits;
+        pDestination->limits.subTexelPrecisionBits                               = pSource->limits.subTexelPrecisionBits;
+
+        pDestination->limits.mipmapPrecisionBits                                 = pSource->limits.mipmapPrecisionBits;
+
+        pDestination->limits.maxDrawIndexedIndexValue                            = pSource->limits.maxDrawIndexedIndexValue;
+        pDestination->limits.maxDrawIndirectCount                                = pSource->limits.maxDrawIndirectCount;
+
+        pDestination->limits.maxSamplerLodBias                                   = pSource->limits.maxSamplerLodBias;
+        pDestination->limits.maxSamplerAnisotropy                                = pSource->limits.maxSamplerAnisotropy;
+
+        pDestination->limits.maxViewports                                        = pSource->limits.maxViewports;
+        pDestination->limits.viewportSubPixelBits                                = pSource->limits.viewportSubPixelBits;
+
+        pDestination->limits.minMemoryMapAlignment                               = pSource->limits.minMemoryMapAlignment;
+
+        pDestination->limits.minTexelBufferOffsetAlignment                       = pSource->limits.minTexelBufferOffsetAlignment;
+        pDestination->limits.minUniformBufferOffsetAlignment                     = pSource->limits.minUniformBufferOffsetAlignment;
+        pDestination->limits.minStorageBufferOffsetAlignment                     = pSource->limits.minStorageBufferOffsetAlignment;
+
+        pDestination->limits.minTexelOffset                                      = pSource->limits.minTexelOffset;
+        pDestination->limits.maxTexelOffset                                      = pSource->limits.maxTexelOffset;
+        pDestination->limits.minTexelGatherOffset                                = pSource->limits.minTexelGatherOffset;
+        pDestination->limits.maxTexelGatherOffset                                = pSource->limits.maxTexelGatherOffset;
+
+        pDestination->limits.minInterpolationOffset                              = pSource->limits.minInterpolationOffset;
+        pDestination->limits.maxInterpolationOffset                              = pSource->limits.maxInterpolationOffset;
+        pDestination->limits.subPixelInterpolationOffsetBits                     = pSource->limits.subPixelInterpolationOffsetBits;
+
+        pDestination->limits.maxFramebufferWidth                                 = pSource->limits.maxFramebufferWidth;
+        pDestination->limits.maxFramebufferHeight                                = pSource->limits.maxFramebufferHeight;
+        pDestination->limits.maxFramebufferLayers                                = pSource->limits.maxFramebufferLayers;
+
+        pDestination->limits.framebufferColorSampleCounts                        = pSource->limits.framebufferColorSampleCounts;
+        pDestination->limits.framebufferDepthSampleCounts                        = pSource->limits.framebufferDepthSampleCounts;
+        pDestination->limits.framebufferStencilSampleCounts                      = pSource->limits.framebufferStencilSampleCounts;
+        pDestination->limits.framebufferNoAttachmentsSampleCounts                = pSource->limits.framebufferNoAttachmentsSampleCounts;
+
+        pDestination->limits.maxColorAttachments                                 = pSource->limits.maxColorAttachments;
+
+        pDestination->limits.sampledImageColorSampleCounts                       = pSource->limits.sampledImageColorSampleCounts;
+        pDestination->limits.sampledImageIntegerSampleCounts                     = pSource->limits.sampledImageIntegerSampleCounts;
+        pDestination->limits.sampledImageDepthSampleCounts                       = pSource->limits.sampledImageDepthSampleCounts;
+        pDestination->limits.sampledImageStencilSampleCounts                     = pSource->limits.sampledImageStencilSampleCounts;
+        pDestination->limits.storageImageSampleCounts                            = pSource->limits.storageImageSampleCounts;
+
+        pDestination->limits.maxSampleMaskWords                                  = pSource->limits.maxSampleMaskWords;
+
+        pDestination->limits.timestampComputeAndGraphics                         = pSource->limits.timestampComputeAndGraphics;
+        pDestination->limits.timestampPeriod                                     = pSource->limits.timestampPeriod;
+
+        pDestination->limits.maxClipDistances                                    = pSource->limits.maxClipDistances;
+        pDestination->limits.maxCullDistances                                    = pSource->limits.maxCullDistances;
+        pDestination->limits.maxCombinedClipAndCullDistances                     = pSource->limits.maxCombinedClipAndCullDistances;
+
+        pDestination->limits.discreteQueuePriorities                             = pSource->limits.discreteQueuePriorities;
+
+        pDestination->limits.pointSizeGranularity                                = pSource->limits.pointSizeGranularity;
+        pDestination->limits.lineWidthGranularity                                = pSource->limits.lineWidthGranularity;
+        pDestination->limits.strictLines                                         = pSource->limits.strictLines;
+
+        pDestination->limits.standardSampleLocations                             = pSource->limits.standardSampleLocations;
+
+        pDestination->limits.optimalBufferCopyOffsetAlignment                    = pSource->limits.optimalBufferCopyOffsetAlignment;
+        pDestination->limits.optimalBufferCopyRowPitchAlignment                  = pSource->limits.optimalBufferCopyRowPitchAlignment;
+
+        pDestination->limits.nonCoherentAtomSize                                 = pSource->limits.nonCoherentAtomSize;
+
+        pDestination->sparseProperties.residencyStandard2DBlockShape             = pSource->sparseProperties.residencyStandard2DBlockShape;
+        pDestination->sparseProperties.residencyStandard2DMultisampleBlockShape  = pSource->sparseProperties.residencyStandard2DMultisampleBlockShape;
+        pDestination->sparseProperties.residencyStandard3DBlockShape             = pSource->sparseProperties.residencyStandard3DBlockShape;
+        pDestination->sparseProperties.residencyAlignedMipSize                   = pSource->sparseProperties.residencyAlignedMipSize;
+        pDestination->sparseProperties.residencyNonResidentStrict                = pSource->sparseProperties.residencyNonResidentStrict;
+
+        (void) std :: memcpy ( & pDestination->deviceName[0],                         & pSource->deviceName[0],                      static_cast < cds :: uint32 > ( VK_MAX_PHYSICAL_DEVICE_NAME_SIZE ) ); // NOLINT(clion-misra-cpp2008-5-2-12)
+        (void) std :: memcpy ( & pDestination->pipelineCacheUUID[0],                  & pSource->pipelineCacheUUID[0],               VK_UUID_SIZE ); // NOLINT(clion-misra-cpp2008-5-2-12)
+
+        (void) std :: memcpy ( & pDestination->limits.maxComputeWorkGroupCount[0],    & pSource->limits.maxComputeWorkGroupCount[0], sizeof ( pSource->limits.maxComputeWorkGroupCount[0] ) * 3U ); // NOLINT(clion-misra-cpp2008-5-2-12)
+        (void) std :: memcpy ( & pDestination->limits.maxComputeWorkGroupSize[0],     & pSource->limits.maxComputeWorkGroupSize[0],  sizeof ( pSource->limits.maxComputeWorkGroupSize[0] ) * 3U ); // NOLINT(clion-misra-cpp2008-5-2-12)
+
+        (void) std :: memcpy ( & pDestination->limits.maxViewportDimensions[0],       & pSource->limits.maxViewportDimensions[0],    sizeof ( pSource->limits.maxViewportDimensions[0] ) * 2U ); // NOLINT(clion-misra-cpp2008-5-2-12)
+        (void) std :: memcpy ( & pDestination->limits.viewportBoundsRange[0],         & pSource->limits.viewportBoundsRange[0],      sizeof ( pSource->limits.viewportBoundsRange[0] ) * 2U ); // NOLINT(clion-misra-cpp2008-5-2-12)
+
+        (void) std :: memcpy ( & pDestination->limits.pointSizeRange[0],              & pSource->limits.pointSizeRange[0],           sizeof ( pSource->limits.pointSizeRange[0] ) * 2U ); // NOLINT(clion-misra-cpp2008-5-2-12)
+        (void) std :: memcpy ( & pDestination->limits.lineWidthRange[0],              & pSource->limits.lineWidthRange[0],           sizeof ( pSource->limits.lineWidthRange[0] ) * 2U ); // NOLINT(clion-misra-cpp2008-5-2-12)
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    static inline auto fromVulkanFormat (
+            Type ( PhysicalDeviceExtendedProperties )         * pDestination,
+            VkPhysicalDeviceProperties2                 const * pSource
+    ) noexcept -> Type ( PhysicalDeviceExtendedProperties ) * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        pDestination->structureType = StructureTypePhysicalDeviceProperties;
+        pDestination->pNext = nullptr;
+
+        (void) fromVulkanFormat ( & pDestination->properties, & pSource->properties );
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
     static inline auto toVulkanFormat (
             VkApplicationInfo                 * pDestination,
             Type ( ApplicationInfo )    const * pSource
@@ -567,11 +767,84 @@ namespace engine :: vulkan {
 #endif
 
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
-
     static inline auto toVulkanFormat (
             VkPhysicalDeviceFeatures              * pDestination,
             Type ( PhysicalDeviceFeatures ) const * pSource
     ) noexcept -> VkPhysicalDeviceFeatures * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        pDestination->robustBufferAccess                        = pSource->robustBufferAccess;
+        pDestination->fullDrawIndexUint32                       = pSource->fullDrawIndexUint32;
+        pDestination->imageCubeArray                            = pSource->imageCubeArray;
+        pDestination->independentBlend                          = pSource->independentBlend;
+        pDestination->geometryShader                            = pSource->geometryShader;
+        pDestination->tessellationShader                        = pSource->tessellationShader;
+        pDestination->sampleRateShading                         = pSource->sampleRateShading;
+        pDestination->dualSrcBlend                              = pSource->dualSrcBlend;
+        pDestination->logicOp                                   = pSource->logicOp;
+        pDestination->multiDrawIndirect                         = pSource->multiDrawIndirect;
+        pDestination->drawIndirectFirstInstance                 = pSource->drawIndirectFirstInstance;
+        pDestination->depthClamp                                = pSource->depthClamp;
+        pDestination->depthBiasClamp                            = pSource->depthBiasClamp;
+        pDestination->fillModeNonSolid                          = pSource->fillModeNonSolid;
+        pDestination->depthBounds                               = pSource->depthBounds;
+        pDestination->wideLines                                 = pSource->wideLines;
+        pDestination->largePoints                               = pSource->largePoints;
+        pDestination->alphaToOne                                = pSource->alphaToOne;
+        pDestination->multiViewport                             = pSource->multiViewport;
+        pDestination->samplerAnisotropy                         = pSource->samplerAnisotropy;
+        pDestination->textureCompressionETC2                    = pSource->textureCompressionETC2;
+        pDestination->textureCompressionASTC_LDR                = pSource->textureCompressionASTC_LDR;
+        pDestination->textureCompressionBC                      = pSource->textureCompressionBC;
+        pDestination->occlusionQueryPrecise                     = pSource->occlusionQueryPrecise;
+        pDestination->pipelineStatisticsQuery                   = pSource->pipelineStatisticsQuery;
+        pDestination->vertexPipelineStoresAndAtomics            = pSource->vertexPipelineStoresAndAtomics;
+        pDestination->fragmentStoresAndAtomics                  = pSource->fragmentStoresAndAtomics;
+        pDestination->shaderTessellationAndGeometryPointSize    = pSource->shaderTessellationAndGeometryPointSize;
+        pDestination->shaderImageGatherExtended                 = pSource->shaderImageGatherExtended;
+        pDestination->shaderStorageImageExtendedFormats         = pSource->shaderStorageImageExtendedFormats;
+        pDestination->shaderStorageImageMultisample             = pSource->shaderStorageImageMultisample;
+        pDestination->shaderStorageImageReadWithoutFormat       = pSource->shaderStorageImageReadWithoutFormat;
+        pDestination->shaderStorageImageWriteWithoutFormat      = pSource->shaderStorageImageWriteWithoutFormat;
+        pDestination->shaderUniformBufferArrayDynamicIndexing   = pSource->shaderUniformBufferArrayDynamicIndexing;
+        pDestination->shaderSampledImageArrayDynamicIndexing    = pSource->shaderSampledImageArrayDynamicIndexing;
+        pDestination->shaderStorageBufferArrayDynamicIndexing   = pSource->shaderStorageBufferArrayDynamicIndexing;
+        pDestination->shaderStorageImageArrayDynamicIndexing    = pSource->shaderStorageImageArrayDynamicIndexing;
+        pDestination->shaderClipDistance                        = pSource->shaderClipDistance;
+        pDestination->shaderCullDistance                        = pSource->shaderCullDistance;
+        pDestination->shaderFloat64                             = pSource->shaderFloat64;
+        pDestination->shaderInt64                               = pSource->shaderInt64;
+        pDestination->shaderInt16                               = pSource->shaderInt16;
+        pDestination->shaderResourceResidency                   = pSource->shaderResourceResidency;
+        pDestination->shaderResourceMinLod                      = pSource->shaderResourceMinLod;
+        pDestination->sparseBinding                             = pSource->sparseBinding;
+        pDestination->sparseResidencyBuffer                     = pSource->sparseResidencyBuffer;
+        pDestination->sparseResidencyImage2D                    = pSource->sparseResidencyImage2D;
+        pDestination->sparseResidencyImage3D                    = pSource->sparseResidencyImage3D;
+        pDestination->sparseResidency2Samples                   = pSource->sparseResidency2Samples;
+        pDestination->sparseResidency4Samples                   = pSource->sparseResidency4Samples;
+        pDestination->sparseResidency8Samples                   = pSource->sparseResidency8Samples;
+        pDestination->sparseResidency16Samples                  = pSource->sparseResidency16Samples;
+        pDestination->sparseResidencyAliased                    = pSource->sparseResidencyAliased;
+        pDestination->variableMultisampleRate                   = pSource->variableMultisampleRate;
+        pDestination->inheritedQueries                          = pSource->inheritedQueries;
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    static inline auto fromVulkanFormat (
+            Type ( PhysicalDeviceFeatures )       * pDestination,
+            VkPhysicalDeviceFeatures        const * pSource
+    ) noexcept -> Type ( PhysicalDeviceFeatures ) * {
 
 #if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
 
@@ -658,7 +931,30 @@ namespace engine :: vulkan {
         pDestination->sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
         pDestination->pNext = nullptr;
 
-        toVulkanFormat ( & pDestination->features, & pSource->features );
+        (void) toVulkanFormat ( & pDestination->features, & pSource->features );
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    static inline auto fromVulkanFormat (
+            Type ( PhysicalDeviceExtendedFeatures )       * pDestination,
+            VkPhysicalDeviceFeatures2               const * pSource
+    ) noexcept -> Type ( PhysicalDeviceExtendedFeatures ) * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        pDestination->structureType = StructureTypePhysicalDeviceFeatures;
+        pDestination->pNext = nullptr;
+
+        (void) fromVulkanFormat ( & pDestination->features, & pSource->features );
 
         return pDestination;
     }
@@ -9055,6 +9351,851 @@ namespace engine :: vulkan {
         pCurrentVk->pNext = nullptr;
 
         return & pContext->device;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    static inline auto prepareContext (
+            GetPhysicalDevicePropertiesContext                * pContext,
+            Type ( PhysicalDeviceExtendedProperties )   const * pSource
+    ) noexcept -> VkPhysicalDeviceProperties2 * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pContext == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        pContext->properties.properties2.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2;
+
+        auto pCurrent   = reinterpret_cast < Type ( GenericInStructure ) const * > ( pSource->pNext );
+        auto pCurrentVk = reinterpret_cast < VkBaseOutStructure * > ( & pContext->properties.properties2 );
+
+        while ( pCurrent != nullptr ) {
+
+            switch ( pCurrent->structureType ) {
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+
+                case StructureTypePhysicalDeviceVulkan_1_1_Properties:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > ( & pContext->properties.vulkan11 );
+                    break;
+
+                case StructureTypePhysicalDeviceIDProperties:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > ( & pContext->properties.deviceID );
+                    break;
+
+                case StructureTypePhysicalDeviceMaintenanceProperties:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > ( & pContext->properties.maintenance3 );
+                    break;
+
+                case StructureTypePhysicalDeviceMultiviewProperties:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > ( & pContext->properties.multiview );
+                    break;
+
+                case StructureTypePhysicalDevicePointClippingProperties:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > ( & pContext->properties.pointClipping );
+                    break;
+
+                case StructureTypePhysicalDeviceProtectedMemoryProperties:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > ( & pContext->properties.protectedMemory );
+                    break;
+
+                case StructureTypePhysicalDeviceSubgroupProperties:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > ( & pContext->properties.subgroup );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+
+                case StructureTypePhysicalDeviceVulkan_1_2_Properties:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > ( & pContext->properties.vulkan12 );
+                    break;
+
+                case StructureTypePhysicalDeviceDepthStencilResolveProperties:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > ( & pContext->properties.depthStencilResolve );
+                    break;
+
+                case StructureTypePhysicalDeviceDescriptorIndexingProperties:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > ( & pContext->properties.descriptorIndexing );
+                    break;
+
+                case StructureTypePhysicalDeviceDriverProperties:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > ( & pContext->properties.driver );
+                    break;
+
+                case StructureTypePhysicalDeviceFloatControlsProperties:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > ( & pContext->properties.floatControls );
+                    break;
+
+                case StructureTypePhysicalDeviceSamplerFilterMinMaxProperties:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > ( & pContext->properties.samplerFilterMinmax );
+                    break;
+
+                case StructureTypePhysicalDeviceTimelineSemaphoreProperties:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > ( & pContext->properties.timelineSemaphore );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+
+                case StructureTypePhysicalDeviceVulkan_1_3_Properties:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > ( & pContext->properties.vulkan13 );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_BLEND_OPERATION_ADVANCED_AVAILABLE
+
+                case StructureTypePhysicalDeviceBlendOperationAdvancedProperties:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > ( & pContext->properties.blendOperationAdvanced );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_CONSERVATIVE_RASTERIZATION_AVAILABLE
+
+                case StructureTypePhysicalDeviceConservativeRasterizationProperties:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > ( & pContext->properties.conservativeRasterization );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_CUSTOM_BORDER_COLOR_AVAILABLE
+
+                case StructureTypePhysicalDeviceCustomBorderColorProperties:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > ( & pContext->properties.customBorderColor );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_DISCARD_RECTANGLES_AVAILABLE
+
+                case StructureTypePhysicalDeviceDiscardRectangleProperties:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > ( & pContext->properties.discardRectangle );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_EXTERNAL_MEMORY_HOST_AVAILABLE
+
+                case StructureTypePhysicalDeviceExternalMemoryHostProperties:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > ( & pContext->properties.externalMemoryHost );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_FRAGMENT_DENSITY_MAP_AVAILABLE
+
+                case StructureTypePhysicalDeviceFragmentDensityMapProperties:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > ( & pContext->properties.fragmentDensityMap );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_FRAGMENT_DENSITY_MAP_2_AVAILABLE
+
+                case StructureTypePhysicalDeviceFragmentDensityMap2Properties:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > ( & pContext->properties.fragmentDensityMap2 );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_INLINE_UNIFORM_BLOCK_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+
+                case StructureTypePhysicalDeviceInlineUniformBlockProperties:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > ( & pContext->properties.inlineUniformBlock );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_LINE_RASTERIZATION_AVAILABLE
+
+                case StructureTypePhysicalDeviceLineRasterizationProperties:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > ( & pContext->properties.lineRasterization );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_MULTI_DRAW_AVAILABLE
+
+                case StructureTypePhysicalDeviceMultiDrawProperties:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > ( & pContext->properties.multiDraw );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_PCI_BUS_INFO_AVAILABLE
+
+                case StructureTypePhysicalDevicePCIBusInfoProperties:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > ( & pContext->properties.pciBusInfo );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_PHYSICAL_DEVICE_DRM_AVAILABLE
+
+                case StructureTypePhysicalDeviceDRMProperties:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > ( & pContext->properties.deviceDrm );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_PROVOKING_VERTEX_AVAILABLE
+
+                case StructureTypePhysicalDeviceProvokingVertexProperties:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > ( & pContext->properties.provokingVertex );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_ROBUSTNESS_AVAILABLE
+
+                case StructureTypePhysicalDeviceRobustnessProperties:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > ( & pContext->properties.robustness2 );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_SAMPLE_LOCATIONS_AVAILABLE
+
+                case StructureTypePhysicalDeviceSampleLocationsProperties:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > ( & pContext->properties.sampleLocations );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_SUBGROUP_SIZE_CONTROL_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+
+                case StructureTypePhysicalDeviceSubgroupSizeControlProperties:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > ( & pContext->properties.subgroupSizeControl );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_TEXEL_BUFFER_ALIGNMENT_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+
+                case StructureTypePhysicalDeviceTexelBufferAlignmentProperties:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > ( & pContext->properties.texelBufferAlignment );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_TRANSFORM_FEEDBACK_AVAILABLE
+
+                case StructureTypePhysicalDeviceTransformFeedbackProperties:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > ( & pContext->properties.transformFeedback );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VERTEX_ATTRIBUTE_DIVISOR_AVAILABLE
+
+                case StructureTypePhysicalDeviceVertexAttributeDivisorProperties:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > ( & pContext->properties.vertexAttributeDivisor );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+
+                case StructureTypePhysicalDeviceAccelerationStructureProperties:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > ( & pContext->properties.accelerationStructure );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_FRAGMENT_SHADING_RATE_AVAILABLE
+
+                case StructureTypePhysicalDeviceFragmentShadingRateProperties:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > ( & pContext->properties.fragmentShadingRate );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_MAINTENANCE_4_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+
+                case StructureTypePhysicalDeviceMaintenance4Properties:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > ( & pContext->properties.maintenance4 );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PERFORMANCE_QUERY_AVAILABLE
+
+                case StructureTypePhysicalDevicePerformanceQueryProperties:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > ( & pContext->properties.performanceQuery );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_BETA_EXTENSIONS_ENABLED && __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PORTABILITY_SUBSET_AVAILABLE
+
+                case StructureTypePhysicalDevicePortabilitySubsetProperties:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > ( & pContext->properties.portabilitySubset );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PUSH_DESCRIPTOR_AVAILABLE
+
+                case StructureTypePhysicalDevicePushDescriptorProperties:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > ( & pContext->properties.pushDescriptor );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_RAY_TRACING_PIPELINE_AVAILABLE
+
+                case StructureTypePhysicalDeviceRayTracingPipelineProperties:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > ( & pContext->properties.rayTracingPipeline );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_INTEGER_DOT_PRODUCT_AVAILABLE
+
+                case StructureTypePhysicalDeviceShaderIntegerDotProductProperties:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > ( & pContext->properties.shaderIntegerDotProduct );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_COOPERATIVE_MATRIX_AVAILABLE
+
+                case StructureTypePhysicalDeviceCooperativeMatrixPropertiesNVidia:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > ( & pContext->properties.cooperativeMatrix );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEVICE_GENERATED_COMMANDS_AVAILABLE
+
+                case StructureTypePhysicalDeviceDeviceGeneratedCommandsPropertiesNVidia:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > ( & pContext->properties.deviceDeviceGeneratedCommands );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_FRAGMENT_SHADING_RATE_ENUMS_AVAILABLE
+
+                case StructureTypePhysicalDeviceFragmentShadingRateEnumsPropertiesNVidia:
+                    pContext->properties.fragmentShadingRateEnums.maxFragmentShadingRateInvocationCount = VkSampleCountFlagBits :: VK_SAMPLE_COUNT_1_BIT;
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > ( & pContext->properties.fragmentShadingRateEnums );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_MESH_SHADER_AVAILABLE
+
+                case StructureTypePhysicalDeviceMeshShaderPropertiesNVidia:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > ( & pContext->properties.meshShader );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+
+                case StructureTypePhysicalDeviceRayTracingPropertiesNVidia:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > ( & pContext->properties.rayTracing );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SHADER_SM_BUILTINS_AVAILABLE
+
+                case StructureTypePhysicalDeviceShaderSmBuiltinsPropertiesNVidia:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > ( & pContext->properties.shaderSmBuiltins );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SHADING_RATE_IMAGE_AVAILABLE
+
+                case StructureTypePhysicalDeviceShadingRateImagePropertiesNVidia:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > ( & pContext->properties.shadingRateImage );
+                    break;
+
+#endif
+
+#if ( __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE ) && __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXPERIMENTAL_MULTIVIEW_PER_VIEW_ATTRIBUTES_AVAILABLE
+
+                case StructureTypePhysicalDeviceMultiviewPerViewAttributesPropertiesNVidiaExperimental:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > ( & pContext->properties.multiviewPerViewattributes );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_AMD_SHADER_CORE_PROPERTIES_AVAILABLE
+
+                case StructureTypePhysicalDeviceShaderCorePropertiesAMD:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > ( & pContext->properties.shaderCore );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_AMD_SHADER_CORE_PROPERTIES_2_AVAILABLE
+
+                case StructureTypePhysicalDeviceShaderCoreProperties2AMD:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > ( & pContext->properties.shaderCore2 );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_QUALCOMM_FRAGMENT_DENSITY_MAP_OFFSET_AVAILABLE
+
+                case StructureTypePhysicalDeviceFragmentDensityMapOffsetPropertiesQualcomm:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > ( & pContext->properties.fragmentDensityMapOffset );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_HUAWEI_SUBPASS_SHADING_AVAILABLE
+
+                case StructureTypePhysicalDeviceSubpassShadingPropertiesHuawei:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > ( & pContext->properties.subpassShading );
+                    break;
+
+#endif
+
+                default:
+                    break;
+            }
+
+            if ( pCurrentVk->pNext != nullptr ) {
+                pCurrentVk = pCurrentVk->pNext;
+                pCurrentVk->sType = static_cast < VkStructureType > ( pCurrent->structureType );
+            }
+
+            pCurrent    = pCurrent->pNext;
+        }
+
+        pCurrentVk->pNext = nullptr;
+
+        return & pContext->properties.properties2;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    static inline auto extractContext (
+            Type ( PhysicalDeviceExtendedProperties )       * pDestination,
+            GetPhysicalDevicePropertiesContext        const * pContext
+    ) noexcept -> void {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pContext == nullptr || pDestination == nullptr ) {
+            return;
+        }
+
+#endif
+
+        auto pCurrent = reinterpret_cast < Type ( GenericOutStructure ) * > ( pDestination );
+        while ( pCurrent != nullptr ) {
+
+            auto pNext = pCurrent->pNext;
+
+            switch ( pCurrent->structureType ) {
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+
+                case StructureTypePhysicalDeviceProperties:
+                    (void) fromVulkanFormat ( reinterpret_cast < Type ( PhysicalDeviceExtendedProperties ) * > ( pCurrent ), & pContext->properties.properties2 );
+                    break;
+
+                case StructureTypePhysicalDeviceVulkan_1_1_Properties:
+                    (void) fromVulkanFormat ( reinterpret_cast < Type ( PhysicalDeviceVulkan11Properties ) * > ( pCurrent ), & pContext->properties.vulkan11 );
+                    break;
+
+                case StructureTypePhysicalDeviceIDProperties:
+                    (void) fromVulkanFormat ( reinterpret_cast < Type ( PhysicalDeviceIDProperties ) * > ( pCurrent ), & pContext->properties.deviceID );
+                    break;
+
+                case StructureTypePhysicalDeviceMaintenanceProperties:
+                    (void) fromVulkanFormat ( reinterpret_cast < Type ( PhysicalDeviceMaintenanceProperties ) * > ( pCurrent ), & pContext->properties.maintenance3 );
+                    break;
+
+                case StructureTypePhysicalDeviceMultiviewProperties:
+                    (void) fromVulkanFormat ( reinterpret_cast < Type ( PhysicalDeviceMultiviewProperties ) * > ( pCurrent ), & pContext->properties.multiview );
+                    break;
+
+                case StructureTypePhysicalDevicePointClippingProperties:
+                    (void) fromVulkanFormat ( reinterpret_cast < Type ( PhysicalDevicePointClippingProperties ) * > ( pCurrent ), & pContext->properties.pointClipping );
+                    break;
+
+                case StructureTypePhysicalDeviceProtectedMemoryProperties:
+                    (void) fromVulkanFormat ( reinterpret_cast < Type ( PhysicalDeviceProtectedMemoryProperties ) * > ( pCurrent ), & pContext->properties.protectedMemory );
+                    break;
+
+                case StructureTypePhysicalDeviceSubgroupProperties:
+                    (void) fromVulkanFormat ( reinterpret_cast < Type ( PhysicalDeviceSubgroupProperties ) * > ( pCurrent ), & pContext->properties.subgroup );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+
+                case StructureTypePhysicalDeviceVulkan_1_2_Properties:
+                    (void) fromVulkanFormat ( reinterpret_cast < Type ( PhysicalDeviceVulkan12Properties ) * > ( pCurrent ), & pContext->properties.vulkan12 );
+                    break;
+
+                case StructureTypePhysicalDeviceDepthStencilResolveProperties:
+                    (void) fromVulkanFormat ( reinterpret_cast < Type ( PhysicalDeviceDepthStencilResolveProperties ) * > ( pCurrent ), & pContext->properties.depthStencilResolve );
+                    break;
+
+                case StructureTypePhysicalDeviceDescriptorIndexingProperties:
+                    (void) fromVulkanFormat ( reinterpret_cast < Type ( PhysicalDeviceDescriptorIndexingProperties ) * > ( pCurrent ), & pContext->properties.descriptorIndexing );
+                    break;
+
+                case StructureTypePhysicalDeviceDriverProperties:
+                    (void) fromVulkanFormat ( reinterpret_cast < Type ( PhysicalDeviceDriverProperties ) * > ( pCurrent ), & pContext->properties.driver );
+                    break;
+
+                case StructureTypePhysicalDeviceFloatControlsProperties:
+                    (void) fromVulkanFormat ( reinterpret_cast < Type ( PhysicalDeviceFloatControlsProperties ) * > ( pCurrent ), & pContext->properties.floatControls );
+                    break;
+
+                case StructureTypePhysicalDeviceSamplerFilterMinMaxProperties:
+                    (void) fromVulkanFormat ( reinterpret_cast < Type ( PhysicalDeviceSamplerFilterMinmaxProperties ) * > ( pCurrent ), & pContext->properties.samplerFilterMinmax );
+                    break;
+
+                case StructureTypePhysicalDeviceTimelineSemaphoreProperties:
+                    (void) fromVulkanFormat ( reinterpret_cast < Type ( PhysicalDeviceTimelineSemaphoreProperties ) * > ( pCurrent ), & pContext->properties.timelineSemaphore );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+
+                case StructureTypePhysicalDeviceVulkan_1_3_Properties:
+                    (void) fromVulkanFormat ( reinterpret_cast < Type ( PhysicalDeviceVulkan13Properties ) * > ( pCurrent ), & pContext->properties.vulkan13 );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_BLEND_OPERATION_ADVANCED_AVAILABLE
+
+                case StructureTypePhysicalDeviceBlendOperationAdvancedProperties:
+                    (void) fromVulkanFormat ( reinterpret_cast < Type ( PhysicalDeviceBlendOperationAdvancedProperties ) * > ( pCurrent ), & pContext->properties.blendOperationAdvanced );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_CONSERVATIVE_RASTERIZATION_AVAILABLE
+
+                case StructureTypePhysicalDeviceConservativeRasterizationProperties:
+                    (void) fromVulkanFormat ( reinterpret_cast < Type ( PhysicalDeviceConservativeRasterizationProperties ) * > ( pCurrent ), & pContext->properties.conservativeRasterization );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_CUSTOM_BORDER_COLOR_AVAILABLE
+
+                case StructureTypePhysicalDeviceCustomBorderColorProperties:
+                    (void) fromVulkanFormat ( reinterpret_cast < Type ( PhysicalDeviceCustomBorderColorProperties ) * > ( pCurrent ), & pContext->properties.customBorderColor );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_DISCARD_RECTANGLES_AVAILABLE
+
+                case StructureTypePhysicalDeviceDiscardRectangleProperties:
+                    (void) fromVulkanFormat ( reinterpret_cast < Type ( PhysicalDeviceDiscardRectangleProperties ) * > ( pCurrent ), & pContext->properties.discardRectangle );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_EXTERNAL_MEMORY_HOST_AVAILABLE
+
+                case StructureTypePhysicalDeviceExternalMemoryHostProperties:
+                    (void) fromVulkanFormat ( reinterpret_cast < Type ( PhysicalDeviceExternalMemoryHostProperties ) * > ( pCurrent ), & pContext->properties.externalMemoryHost );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_FRAGMENT_DENSITY_MAP_AVAILABLE
+
+                case StructureTypePhysicalDeviceFragmentDensityMapProperties:
+                    (void) fromVulkanFormat ( reinterpret_cast < Type ( PhysicalDeviceFragmentDensityMapProperties ) * > ( pCurrent ), & pContext->properties.fragmentDensityMap );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_FRAGMENT_DENSITY_MAP_2_AVAILABLE
+
+                case StructureTypePhysicalDeviceFragmentDensityMap2Properties:
+                    (void) fromVulkanFormat ( reinterpret_cast < Type ( PhysicalDeviceFragmentDensityMap2Properties ) * > ( pCurrent ), & pContext->properties.fragmentDensityMap2 );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_INLINE_UNIFORM_BLOCK_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+
+                case StructureTypePhysicalDeviceInlineUniformBlockProperties:
+                    (void) fromVulkanFormat ( reinterpret_cast < Type ( PhysicalDeviceInlineUniformBlockProperties ) * > ( pCurrent ), & pContext->properties.inlineUniformBlock );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_LINE_RASTERIZATION_AVAILABLE
+
+                case StructureTypePhysicalDeviceLineRasterizationProperties:
+                    (void) fromVulkanFormat ( reinterpret_cast < Type ( PhysicalDeviceLineRasterizationProperties ) * > ( pCurrent ), & pContext->properties.lineRasterization );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_MULTI_DRAW_AVAILABLE
+
+                case StructureTypePhysicalDeviceMultiDrawProperties:
+                    (void) fromVulkanFormat ( reinterpret_cast < Type ( PhysicalDeviceMultiDrawProperties ) * > ( pCurrent ), & pContext->properties.multiDraw );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_PCI_BUS_INFO_AVAILABLE
+
+                case StructureTypePhysicalDevicePCIBusInfoProperties:
+                    (void) fromVulkanFormat ( reinterpret_cast < Type ( PhysicalDevicePCIBusInfoProperties ) * > ( pCurrent ), & pContext->properties.pciBusInfo );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_PHYSICAL_DEVICE_DRM_AVAILABLE
+
+                case StructureTypePhysicalDeviceDRMProperties:
+                    (void) fromVulkanFormat ( reinterpret_cast < Type ( PhysicalDeviceDRMProperties ) * > ( pCurrent ), & pContext->properties.deviceDrm );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_PROVOKING_VERTEX_AVAILABLE
+
+                case StructureTypePhysicalDeviceProvokingVertexProperties:
+                    (void) fromVulkanFormat ( reinterpret_cast < Type ( PhysicalDeviceProvokingVertexProperties ) * > ( pCurrent ), & pContext->properties.provokingVertex );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_ROBUSTNESS_AVAILABLE
+
+                case StructureTypePhysicalDeviceRobustnessProperties:
+                    (void) fromVulkanFormat ( reinterpret_cast < Type ( PhysicalDeviceRobustnessProperties ) * > ( pCurrent ), & pContext->properties.robustness2 );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_SAMPLE_LOCATIONS_AVAILABLE
+
+                case StructureTypePhysicalDeviceSampleLocationsProperties:
+                    (void) fromVulkanFormat ( reinterpret_cast < Type ( PhysicalDeviceSampleLocationsProperties ) * > ( pCurrent ), & pContext->properties.sampleLocations );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_SUBGROUP_SIZE_CONTROL_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+
+                case StructureTypePhysicalDeviceSubgroupSizeControlProperties:
+                    (void) fromVulkanFormat ( reinterpret_cast < Type ( PhysicalDeviceSubgroupSizeControlProperties ) * > ( pCurrent ), & pContext->properties.subgroupSizeControl );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_TEXEL_BUFFER_ALIGNMENT_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+
+                case StructureTypePhysicalDeviceTexelBufferAlignmentProperties:
+                    (void) fromVulkanFormat ( reinterpret_cast < Type ( PhysicalDeviceTexelBufferAlignmentProperties ) * > ( pCurrent ), & pContext->properties.texelBufferAlignment );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_TRANSFORM_FEEDBACK_AVAILABLE
+
+                case StructureTypePhysicalDeviceTransformFeedbackProperties:
+                    (void) fromVulkanFormat ( reinterpret_cast < Type ( PhysicalDeviceTransformFeedbackProperties ) * > ( pCurrent ), & pContext->properties.transformFeedback );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VERTEX_ATTRIBUTE_DIVISOR_AVAILABLE
+
+                case StructureTypePhysicalDeviceVertexAttributeDivisorProperties:
+                    (void) fromVulkanFormat ( reinterpret_cast < Type ( PhysicalDeviceVertexAttributeDivisorProperties ) * > ( pCurrent ), & pContext->properties.vertexAttributeDivisor );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+
+                case StructureTypePhysicalDeviceAccelerationStructureProperties:
+                    (void) fromVulkanFormat ( reinterpret_cast < Type ( PhysicalDeviceAccelerationStructureProperties ) * > ( pCurrent ), & pContext->properties.accelerationStructure );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_FRAGMENT_SHADING_RATE_AVAILABLE
+
+                case StructureTypePhysicalDeviceFragmentShadingRateProperties:
+                    (void) fromVulkanFormat ( reinterpret_cast < Type ( PhysicalDeviceFragmentShadingRateProperties ) * > ( pCurrent ), & pContext->properties.fragmentShadingRate );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_MAINTENANCE_4_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+
+                case StructureTypePhysicalDeviceMaintenance4Properties:
+                    (void) fromVulkanFormat ( reinterpret_cast < Type ( PhysicalDeviceMaintenance4Properties ) * > ( pCurrent ), & pContext->properties.maintenance4 );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PERFORMANCE_QUERY_AVAILABLE
+
+                case StructureTypePhysicalDevicePerformanceQueryProperties:
+                    (void) fromVulkanFormat ( reinterpret_cast < Type ( PhysicalDevicePerformanceQueryProperties ) * > ( pCurrent ), & pContext->properties.performanceQuery );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_BETA_EXTENSIONS_ENABLED && __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PORTABILITY_SUBSET_AVAILABLE
+
+                case StructureTypePhysicalDevicePortabilitySubsetProperties:
+                    (void) fromVulkanFormat ( reinterpret_cast < Type ( PhysicalDevicePortabilitySubsetProperties ) * > ( pCurrent ), & pContext->properties.portabilitySubset );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PUSH_DESCRIPTOR_AVAILABLE
+
+                case StructureTypePhysicalDevicePushDescriptorProperties:
+                    (void) fromVulkanFormat ( reinterpret_cast < Type ( PhysicalDevicePushDescriptorProperties ) * > ( pCurrent ), & pContext->properties.pushDescriptor );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_RAY_TRACING_PIPELINE_AVAILABLE
+
+                case StructureTypePhysicalDeviceRayTracingPipelineProperties:
+                    (void) fromVulkanFormat ( reinterpret_cast < Type ( PhysicalDeviceRayTracingPipelineProperties ) * > ( pCurrent ), & pContext->properties.rayTracingPipeline );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_INTEGER_DOT_PRODUCT_AVAILABLE
+
+                case StructureTypePhysicalDeviceShaderIntegerDotProductProperties:
+                    (void) fromVulkanFormat ( reinterpret_cast < Type ( PhysicalDeviceShaderIntegerDotProductProperties ) * > ( pCurrent ), & pContext->properties.shaderIntegerDotProduct );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_COOPERATIVE_MATRIX_AVAILABLE
+
+                case StructureTypePhysicalDeviceCooperativeMatrixPropertiesNVidia:
+                    (void) fromVulkanFormat ( reinterpret_cast < Type ( PhysicalDeviceCooperativeMatrixPropertiesNVidia ) * > ( pCurrent ), & pContext->properties.cooperativeMatrix );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEVICE_GENERATED_COMMANDS_AVAILABLE
+
+                case StructureTypePhysicalDeviceDeviceGeneratedCommandsPropertiesNVidia:
+                    (void) fromVulkanFormat ( reinterpret_cast < Type ( PhysicalDeviceDeviceGeneratedCommandsPropertiesNVidia ) * > ( pCurrent ), & pContext->properties.deviceDeviceGeneratedCommands );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_FRAGMENT_SHADING_RATE_ENUMS_AVAILABLE
+
+                case StructureTypePhysicalDeviceFragmentShadingRateEnumsPropertiesNVidia:
+                    (void) fromVulkanFormat ( reinterpret_cast < Type ( PhysicalDeviceFragmentShadingRateEnumsPropertiesNVidia ) * > ( pCurrent ), & pContext->properties.fragmentShadingRateEnums );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_MESH_SHADER_AVAILABLE
+
+                case StructureTypePhysicalDeviceMeshShaderPropertiesNVidia:
+                    (void) fromVulkanFormat ( reinterpret_cast < Type ( PhysicalDeviceMeshShaderPropertiesNVidia ) * > ( pCurrent ), & pContext->properties.meshShader );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+
+                case StructureTypePhysicalDeviceRayTracingPropertiesNVidia:
+                    (void) fromVulkanFormat ( reinterpret_cast < Type ( PhysicalDeviceRayTracingPropertiesNVidia ) * > ( pCurrent ), & pContext->properties.rayTracing );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SHADER_SM_BUILTINS_AVAILABLE
+
+                case StructureTypePhysicalDeviceShaderSmBuiltinsPropertiesNVidia:
+                    (void) fromVulkanFormat ( reinterpret_cast < Type ( PhysicalDeviceShaderSMBuiltinsPropertiesNVidia ) * > ( pCurrent ), & pContext->properties.shaderSmBuiltins );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SHADING_RATE_IMAGE_AVAILABLE
+
+                case StructureTypePhysicalDeviceShadingRateImagePropertiesNVidia:
+                    (void) fromVulkanFormat ( reinterpret_cast < Type ( PhysicalDeviceShadingRateImagePropertiesNVidia ) * > ( pCurrent ), & pContext->properties.shadingRateImage );
+                    break;
+
+#endif
+
+#if ( __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE ) && __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXPERIMENTAL_MULTIVIEW_PER_VIEW_ATTRIBUTES_AVAILABLE
+
+                case StructureTypePhysicalDeviceMultiviewPerViewAttributesPropertiesNVidiaExperimental:
+                    (void) fromVulkanFormat ( reinterpret_cast < Type ( PhysicalDeviceMultiviewPerViewAttributesPropertiesNVidia ) * > ( pCurrent ), & pContext->properties.multiviewPerViewattributes );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_AMD_SHADER_CORE_PROPERTIES_AVAILABLE
+
+                case StructureTypePhysicalDeviceShaderCorePropertiesAMD:
+                    (void) fromVulkanFormat ( reinterpret_cast < Type ( PhysicalDeviceShaderCorePropertiesAMD ) * > ( pCurrent ), & pContext->properties.shaderCore );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_AMD_SHADER_CORE_PROPERTIES_2_AVAILABLE
+
+                case StructureTypePhysicalDeviceShaderCoreProperties2AMD:
+                    (void) fromVulkanFormat ( reinterpret_cast < Type ( PhysicalDeviceShaderCoreProperties2AMD ) * > ( pCurrent ), & pContext->properties.shaderCore2 );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_QUALCOMM_FRAGMENT_DENSITY_MAP_OFFSET_AVAILABLE
+
+                case StructureTypePhysicalDeviceFragmentDensityMapOffsetPropertiesQualcomm:
+                    (void) fromVulkanFormat ( reinterpret_cast < Type ( PhysicalDeviceFragmentDensityMapOffsetPropertiesQualcomm ) * > ( pCurrent ), & pContext->properties.fragmentDensityMapOffset );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_HUAWEI_SUBPASS_SHADING_AVAILABLE
+
+                case StructureTypePhysicalDeviceSubpassShadingPropertiesHuawei:
+                    (void) fromVulkanFormat ( reinterpret_cast < Type ( PhysicalDeviceSubpassShadingPropertiesHuawei ) * > ( pCurrent ), & pContext->properties.subpassShading );
+                    break;
+
+#endif
+
+                default:
+                    break;
+            }
+
+            pCurrent->pNext = pNext;
+            pCurrent        = pCurrent->pNext;
+        }
     }
 #endif
 

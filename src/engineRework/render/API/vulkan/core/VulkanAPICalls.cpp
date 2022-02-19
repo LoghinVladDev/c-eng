@@ -6668,68 +6668,6 @@ inline static auto toVulkanFormat (
     };
 }
 
-
-auto vulkan :: destroyDebugMessenger (
-        __C_ENG_TYPE ( InstanceHandle )                 instanceHandle,
-        __C_ENG_TYPE ( DebugMessengerHandle )           debugMessengerHandle,
-        __C_ENG_TYPE ( AllocationCallbacks )    const * pAllocationCallbacks
-) noexcept -> __C_ENG_TYPE ( Result ) {
-
-#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
-
-    if ( instanceHandle == nullptr || debugMessengerHandle == nullptr ) {
-        return ResultErrorIllegalArgument;
-    }
-
-#endif
-
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION ( instanceHandle, vkDestroyDebugUtilsMessengerEXT )
-
-    VkAllocationCallbacks             * pUsedCallbacks = nullptr;
-
-    if ( pAllocationCallbacks != nullptr ) {
-        pUsedCallbacks = & allocationCallbacks;
-        toVulkanFormat ( pAllocationCallbacks, pUsedCallbacks );
-    }
-
-    vkDestroyDebugUtilsMessengerEXTHandle ( instanceHandle, debugMessengerHandle, pUsedCallbacks );
-    return ResultSuccess;
-}
-
-auto vulkan :: destroySurface (
-        __C_ENG_TYPE ( InstanceHandle )                 instanceHandle,
-        __C_ENG_TYPE ( SurfaceHandle )                  surfaceHandle,
-        __C_ENG_TYPE ( AllocationCallbacks )    const * pAllocationCallbacks
-) noexcept -> __C_ENG_TYPE ( Result ) {
-
-#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
-
-    if (
-            instanceHandle  == nullptr ||
-            surfaceHandle   == nullptr
-            ) {
-        return ResultErrorIllegalArgument;
-    }
-
-#endif
-
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION ( instanceHandle, vkDestroySurfaceKHR )
-
-    VkAllocationCallbacks * pUsedCallbacks = nullptr;
-    if ( pAllocationCallbacks != nullptr ) {
-        pUsedCallbacks = & allocationCallbacks;
-        toVulkanFormat ( pAllocationCallbacks, pUsedCallbacks );
-    }
-
-    vkDestroySurfaceKHRHandle (
-            instanceHandle,
-            surfaceHandle,
-            pUsedCallbacks
-    );
-
-    return ResultSuccess;
-}
-
 static inline auto fromVulkanFormat (
         VkPhysicalDeviceProperties                          const * pVkProperties,
         vulkan :: __C_ENG_TYPE ( PhysicalDeviceProperties )       * pProperties
@@ -6974,59 +6912,6 @@ static inline auto fromVulkanFormat (
     pDestination->sparseResidencyAliased                    = pSource->sparseResidencyAliased;
     pDestination->variableMultisampleRate                   = pSource->variableMultisampleRate;
     pDestination->inheritedQueries                          = pSource->inheritedQueries;
-}
-
-__C_ENG_MAYBE_UNUSED auto vulkan :: getPhysicalDeviceProperties (
-        __C_ENG_TYPE ( PhysicalDeviceHandle )       handle,
-        __C_ENG_TYPE ( PhysicalDeviceProperties ) * pProperties
-) noexcept -> __C_ENG_TYPE ( Result ) {
-
-#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
-
-    if ( handle == nullptr || pProperties == nullptr ) {
-        return ResultErrorIllegalArgument;
-    }
-
-#endif
-
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION ( lastCreatedInstance, vkGetPhysicalDeviceProperties )
-
-    vkGetPhysicalDevicePropertiesHandle (
-            handle,
-            & deviceProperties
-    );
-
-    fromVulkanFormat ( & deviceProperties, pProperties );
-
-    return ResultSuccess;
-}
-
-auto vulkan :: getPhysicalDeviceFeatures (
-        __C_ENG_TYPE ( PhysicalDeviceHandle )       physicalDeviceHandle,
-        __C_ENG_TYPE ( PhysicalDeviceFeatures )   * pPhysicalDeviceFeatures
-) noexcept -> __C_ENG_TYPE ( Result ) {
-
-#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
-
-    if (
-            physicalDeviceHandle == nullptr ||
-            pPhysicalDeviceFeatures == nullptr
-            ) {
-        return ResultErrorIllegalArgument;
-    }
-
-#endif
-
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION ( lastCreatedInstance, vkGetPhysicalDeviceFeatures )
-
-    vkGetPhysicalDeviceFeaturesHandle (
-            physicalDeviceHandle,
-            & deviceFeatures
-    );
-
-    fromVulkanFormat ( pPhysicalDeviceFeatures, & deviceFeatures );
-
-    return ResultSuccess;
 }
 
 static inline auto toVulkanFormat (
@@ -7640,50 +7525,6 @@ static auto fromVulkanFormat (
 
         currentInChain = currentInChain->pNext;
     }
-}
-
-auto vulkan :: getPhysicalDeviceProperties (
-        __C_ENG_TYPE ( PhysicalDeviceHandle )               handle,
-        __C_ENG_TYPE ( PhysicalDeviceExtendedProperties ) * pProperties
-) noexcept -> __C_ENG_TYPE ( Result ) {
-
-#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
-
-    if ( handle == nullptr || pProperties == nullptr ) {
-        return ResultErrorIllegalArgument;
-    }
-
-#endif
-
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION ( lastCreatedInstance, vkGetPhysicalDeviceProperties )
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION ( lastCreatedInstance, vkGetPhysicalDeviceProperties2 )
-
-    vkGetPhysicalDevicePropertiesHandle (
-            handle,
-            & deviceProperties
-    );
-
-#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
-
-    if (
-        auto version = vulkan :: uInt32ToInstanceVersion ( deviceProperties.apiVersion );
-            vulkan :: compare ( version, versionConstants :: version11 ) == CompareResultLess
-            ) {
-        return ResultErrorIncompatibleVersion;
-    }
-
-#endif
-
-    toVulkanFormat ( pProperties );
-
-    vkGetPhysicalDeviceProperties2Handle (
-            handle,
-            & deviceExtendedProperties
-    );
-
-    fromVulkanFormat ( pProperties );
-
-    return ResultSuccess;
 }
 
 static inline auto toVulkanFormat (
@@ -11346,36 +11187,6 @@ auto toVulkanFormat (
             currentInVkChain->pNext = nullptr;
         }
     }
-}
-
-auto vulkan :: destroyDevice (
-        __C_ENG_TYPE ( DeviceHandle )                handle,
-        __C_ENG_TYPE ( AllocationCallbacks ) const * pAllocationCallbacks
-) noexcept -> __C_ENG_TYPE ( Result ) {
-
-#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
-
-    if ( handle == nullptr ) {
-        return ResultErrorIllegalArgument;
-    }
-
-#endif
-
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION ( lastCreatedInstance, vkDestroyDevice )
-
-    VkAllocationCallbacks * pUsedAllocationCallback = nullptr;
-
-    if ( pAllocationCallbacks != nullptr ) {
-        pUsedAllocationCallback = & allocationCallbacks;
-        toVulkanFormat ( pAllocationCallbacks, pUsedAllocationCallback );
-    }
-
-    vkDestroyDeviceHandle (
-            handle,
-            pUsedAllocationCallback
-    );
-
-    return ResultSuccess;
 }
 
 auto vulkan :: utility :: chainFeaturesFromDetails (
