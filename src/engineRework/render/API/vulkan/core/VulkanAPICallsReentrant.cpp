@@ -940,6 +940,34 @@ auto engine :: vulkan :: getPhysicalDeviceProperties (
 }
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: getPhysicalDeviceFeatures (
+        Type ( PhysicalDeviceHandle )       physicalDeviceHandle,
+        Type ( PhysicalDeviceFeatures )   * pFeatures
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( physicalDeviceHandle == nullptr || pFeatures == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkGetPhysicalDeviceFeatures )
+
+    auto context = ContextManager :: acquire();
+
+    vkGetPhysicalDeviceFeaturesHandle (
+            physicalDeviceHandle,
+            & context.data().get.physicalDeviceFeatures.features.features
+    );
+
+    (void) fromVulkanFormat ( pFeatures, & context.data().get.physicalDeviceFeatures.features.features );
+    return ResultSuccess;
+}
+#endif
+
 #if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
 auto engine :: vulkan :: getPhysicalDeviceProperties (
         Type ( PhysicalDeviceHandle )                 handle,
@@ -967,7 +995,7 @@ auto engine :: vulkan :: getPhysicalDeviceProperties (
     );
 
     if (
-            auto version = uInt32ToInstanceVersion ( context.data().get.physicalDeviceProperties.properties.properties.apiVersion );
+        auto version = uInt32ToInstanceVersion ( context.data().get.physicalDeviceProperties.properties.properties.apiVersion );
             vulkan :: compare ( version, versionConstants :: version11 ) == CompareResultLess
     ) {
         return ResultErrorIncompatibleVersion;
@@ -985,10 +1013,10 @@ auto engine :: vulkan :: getPhysicalDeviceProperties (
 }
 #endif
 
-#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
 auto engine :: vulkan :: getPhysicalDeviceFeatures (
-        Type ( PhysicalDeviceHandle )       physicalDeviceHandle,
-        Type ( PhysicalDeviceFeatures )   * pFeatures
+        Type ( PhysicalDeviceHandle )               physicalDeviceHandle,
+        Type ( PhysicalDeviceExtendedFeatures )   * pFeatures
 ) noexcept -> Type ( Result ) {
 
 #if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
@@ -999,16 +1027,33 @@ auto engine :: vulkan :: getPhysicalDeviceFeatures (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkGetPhysicalDeviceFeatures )
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkGetPhysicalDeviceProperties )
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkGetPhysicalDeviceFeatures2 )
 
     auto context = ContextManager :: acquire();
 
-    vkGetPhysicalDeviceFeaturesHandle (
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    vkGetPhysicalDevicePropertiesHandle (
             physicalDeviceHandle,
-            & context.data().get.physicalDeviceFeatures.features.features
+            & context.data().get.physicalDeviceProperties.properties.properties
     );
 
-    (void) fromVulkanFormat ( pFeatures, & context.data().get.physicalDeviceFeatures.features.features );
+    if (
+        auto version = uInt32ToInstanceVersion ( context.data().get.physicalDeviceProperties.properties.properties.apiVersion );
+            vulkan :: compare ( version, versionConstants :: version11 ) == CompareResultLess
+    ) {
+        return ResultErrorIncompatibleVersion;
+    }
+
+#endif
+
+    vkGetPhysicalDeviceFeatures2Handle (
+            physicalDeviceHandle,
+            prepareContext ( & context.data().get.physicalDeviceFeatures, pFeatures )
+    );
+
+    extractContext ( pFeatures, & context.data().get.physicalDeviceFeatures );
     return ResultSuccess;
 }
 #endif

@@ -8703,53 +8703,6 @@ static auto fromVulkanFormat (
     }
 }
 
-auto vulkan :: getPhysicalDeviceFeatures (
-        __C_ENG_TYPE ( PhysicalDeviceHandle )               handle,
-        __C_ENG_TYPE ( PhysicalDeviceExtendedFeatures )   * pExtendedFeatures
-) noexcept -> __C_ENG_TYPE ( Result ) {
-
-#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
-
-    if (
-            handle              == nullptr ||
-            pExtendedFeatures   == nullptr
-            ) {
-        return ResultErrorIllegalArgument;
-    }
-
-#endif
-
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION ( lastCreatedInstance, vkGetPhysicalDeviceProperties )
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION ( lastCreatedInstance, vkGetPhysicalDeviceFeatures2 )
-
-    vkGetPhysicalDevicePropertiesHandle (
-            handle,
-            & deviceProperties
-    );
-
-#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
-
-    if (
-        auto version = vulkan :: uInt32ToInstanceVersion ( deviceProperties.apiVersion );
-            vulkan :: compare ( version, versionConstants :: version11 ) == CompareResultLess
-            ) {
-        return ResultErrorIncompatibleVersion;
-    }
-
-#endif
-
-    toVulkanFormat ( pExtendedFeatures );
-
-    vkGetPhysicalDeviceFeatures2Handle (
-            handle,
-            & deviceExtendedFeatures
-    );
-
-    fromVulkanFormat ( pExtendedFeatures );
-
-    return ResultSuccess;
-}
-
 static auto createChain (
         vulkan :: __C_ENG_TYPE ( PhysicalDeviceDetails )            * details,
         vulkan :: __C_ENG_TYPE ( PhysicalDeviceExtendedProperties ) * extendedProperties,

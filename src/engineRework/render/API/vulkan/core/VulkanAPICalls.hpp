@@ -195,10 +195,12 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
         NoDiscard extern auto getPhysicalDeviceFeatures (
                 Type ( PhysicalDeviceHandle ),
                 Type ( PhysicalDeviceExtendedFeatures ) *
         ) noexcept -> Type ( Result );
+#endif
 
         NoDiscard extern auto getPhysicalDeviceDetails (
                 Type ( PhysicalDeviceHandle ),
