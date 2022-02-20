@@ -19,7 +19,7 @@
 #define __C_ENG_VULKAN_CORE_VALIDATION_CHECK_MAX_COUNT              16U /* NOLINT(bugprone-reserved-identifier) */
 
 #define __C_ENG_VULKAN_CORE_LAYER_MAX_COUNT  64U /* NOLINT(bugprone-reserved-identifier) */
-#define __C_ENG_VULKAN_CORE_LAYER_EXTENSION_MAX_COUNT  128U /* NOLINT(bugprone-reserved-identifier) */
+#define __C_ENG_VULKAN_CORE_LAYER_EXTENSION_MAX_COUNT 256U /* NOLINT(bugprone-reserved-identifier) */
 
 #define __C_ENG_VULKAN_CORE_PHYSICAL_DEVICE_MAX_COUNT 8U /* NOLINT(bugprone-reserved-identifier) */
 #define __C_ENG_VULKAN_CORE_PHYSICAL_DEVICE_SURFACE_MAX_COUNT 32U /* NOLINT(bugprone-reserved-identifier) */

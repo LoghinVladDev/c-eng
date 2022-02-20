@@ -145,6 +145,12 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #define C_ENG_MAP_START     ENUM ( StructureType, TYPE ( cds :: sint32 ) )
 #include <ObjectMapping.hpp>
 
+#ifdef MemoryBarrier
+#define __C_ENG_REPLACED_MemoryBarrier
+#pragma push_macro("MemoryBarrier")
+#undef MemoryBarrier
+#endif
+
         Enum {
 
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
@@ -1891,6 +1897,11 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
         };
 
+#ifdef __C_ENG_REPLACED_MemoryBarrier
+#undef __C_ENG_REPLACED_MemoryBarrier
+#pragma pop_macro("MemoryBarrier")
+#endif
+
 #define C_ENG_MAP_END
 #include <ObjectMapping.hpp>
 
@@ -2660,7 +2671,11 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_MAINTENANCE_4_AVAILABLE
 
+#if defined(__CDS_Platform_Microsoft_Windows)
+            Field ( None,           0U ),
+#else
             Field ( None,           VkImageAspectFlagBits :: VK_IMAGE_ASPECT_NONE_KHR ),
+#endif
 
 #endif
 
@@ -10368,5 +10383,6 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
     }
 }
+
 
 #endif //__C_ENG_VULKAN_CORE_HPP__
