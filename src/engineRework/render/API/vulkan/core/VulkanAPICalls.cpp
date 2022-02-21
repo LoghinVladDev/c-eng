@@ -11427,33 +11427,33 @@ static inline auto toVulkanFormat (
 
 #if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_MAINTENANCE_AVAILABLE
 
-auto vulkan :: trimCommandPool (
-        Type ( DeviceHandle )           deviceHandle,
-        Type ( CommandPoolHandle )      handle,
-        Type ( CommandPoolTrimFlags )   flags
-) noexcept -> Type ( Result ) {
-
-#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
-
-    if (
-            deviceHandle    == nullptr ||
-            handle          == nullptr
-            ) {
-        return ResultErrorIllegalArgument;
-    }
-
-#endif
-
-    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_2 ( deviceHandle, vkTrimCommandPool, KHR )
-
-    vkTrimCommandPoolHandle (
-            deviceHandle,
-            handle,
-            flags
-    );
-
-    return ResultSuccess;
-}
+//auto vulkan :: trimCommandPool (
+//        Type ( DeviceHandle )           deviceHandle,
+//        Type ( CommandPoolHandle )      handle,
+//        Type ( CommandPoolTrimFlags )   flags
+//) noexcept -> Type ( Result ) {
+//
+//#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+//
+//    if (
+//            deviceHandle    == nullptr ||
+//            handle          == nullptr
+//            ) {
+//        return ResultErrorIllegalArgument;
+//    }
+//
+//#endif
+//
+//    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_2 ( deviceHandle, vkTrimCommandPool, KHR )
+//
+//    vkTrimCommandPoolHandle (
+//            deviceHandle,
+//            handle,
+//            flags
+//    );
+//
+//    return ResultSuccess;
+//}
 
 #endif
 
