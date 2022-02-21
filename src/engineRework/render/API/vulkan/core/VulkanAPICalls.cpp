@@ -11768,44 +11768,44 @@ static inline auto toVulkanFormat (
     }
 }
 
-auto vulkan :: queueSubmit (
-        Type ( QueueHandle )        queueHandle,
-        cds :: uint32               submitCount,
-        Type ( SubmitInfo ) const * pSubmits,
-        Type ( FenceHandle )        fenceHandle
-) noexcept -> Type ( Result ) {
-
-#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
-
-    if (
-            queueHandle == nullptr ||
-            pSubmits    == nullptr ||
-            submitCount == 0U
-            ) {
-        return ResultErrorIllegalArgument;
-    }
-
-#endif
-
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION ( lastCreatedInstance, vkQueueSubmit )
-
-    if ( submitCount > __C_ENG_VULKAN_CORE_SUBMIT_INFO_MAX_COUNT ) {
-        return ResultErrorConfigurationArraySizeSmall;
-    }
-
-    for ( uint32 i = 0U; i < submitCount; ++ i ) {
-        toVulkanFormat ( i, & submitInfos [ i ], & pSubmits [ i ] );
-    }
-
-    return static_cast < Type ( Result ) > (
-            vkQueueSubmitHandle (
-                    queueHandle,
-                    submitCount,
-                    & submitInfos [0],
-                    fenceHandle
-            )
-    );
-}
+//auto vulkan :: queueSubmit (
+//        Type ( QueueHandle )        queueHandle,
+//        cds :: uint32               submitCount,
+//        Type ( SubmitInfo ) const * pSubmits,
+//        Type ( FenceHandle )        fenceHandle
+//) noexcept -> Type ( Result ) {
+//
+//#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+//
+//    if (
+//            queueHandle == nullptr ||
+//            pSubmits    == nullptr ||
+//            submitCount == 0U
+//            ) {
+//        return ResultErrorIllegalArgument;
+//    }
+//
+//#endif
+//
+//    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION ( lastCreatedInstance, vkQueueSubmit )
+//
+//    if ( submitCount > __C_ENG_VULKAN_CORE_SUBMIT_INFO_MAX_COUNT ) {
+//        return ResultErrorConfigurationArraySizeSmall;
+//    }
+//
+//    for ( uint32 i = 0U; i < submitCount; ++ i ) {
+//        toVulkanFormat ( i, & submitInfos [ i ], & pSubmits [ i ] );
+//    }
+//
+//    return static_cast < Type ( Result ) > (
+//            vkQueueSubmitHandle (
+//                    queueHandle,
+//                    submitCount,
+//                    & submitInfos [0],
+//                    fenceHandle
+//            )
+//    );
+//}
 
 #endif
 

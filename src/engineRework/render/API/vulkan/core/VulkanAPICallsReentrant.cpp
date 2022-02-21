@@ -2092,3 +2092,38 @@ auto engine :: vulkan :: trimCommandPool (
     return ResultSuccess;
 }
 #endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: queueSubmit (
+        Type ( QueueHandle )        queueHandle,
+        cds :: uint32               submitCount,
+        Type ( SubmitInfo ) const * pSubmits,
+        Type ( FenceHandle )        fenceHandle
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( queueHandle == nullptr || pSubmits == nullptr || submitCount == 0U ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    if ( submitCount > __C_ENG_VULKAN_CORE_SUBMIT_INFO_MAX_COUNT ) {
+        return ResultErrorConfigurationArraySizeSmall;
+    }
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkQueueSubmit )
+
+    auto context = ContextManager :: acquire();
+
+    return static_cast < Type ( Result ) > (
+            vkQueueSubmitHandle (
+                    queueHandle,
+                    submitCount,
+                    prepareContext ( & context.data().submit.queue, submitCount, & pSubmits[0] ),
+                    fenceHandle
+            )
+    );
+}
+#endif

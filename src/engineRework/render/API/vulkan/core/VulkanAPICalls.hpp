@@ -431,30 +431,28 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #endif
 
 #if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_MAINTENANCE_AVAILABLE
-
         NoDiscard MaybeUnused extern auto trimCommandPool (
                 Type ( DeviceHandle ),
                 Type ( CommandPoolHandle ),
                 Type ( CommandPoolTrimFlags )
         ) noexcept -> Type ( Result );
-
 #endif
 
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
-
         NoDiscard MaybeUnused extern auto queueSubmit (
                 Type ( QueueHandle ),
                 cds :: uint32,
                 Type ( SubmitInfo ) const *,
                 Type ( FenceHandle )
         ) noexcept -> Type ( Result );
+#endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
         NoDiscard MaybeUnused extern auto commandBufferExecuteCommands (
                 Type ( CommandBufferHandle ),
                 cds :: uint32,
                 Type ( CommandBufferHandle ) const *
         ) noexcept -> Type ( Result );
-
 #endif
 
 #if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE

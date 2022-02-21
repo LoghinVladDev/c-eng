@@ -14338,6 +14338,388 @@ namespace engine :: vulkan {
     }
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    static inline auto toVulkanFormat (
+            VkDeviceGroupSubmitInfo               * pDestination,
+            Type ( DeviceGroupSubmitInfo )  const * pSource
+    ) noexcept -> VkDeviceGroupSubmitInfo * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if (
+                pDestination    == nullptr ||
+                pSource         == nullptr
+        ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                          = VK_STRUCTURE_TYPE_DEVICE_GROUP_SUBMIT_INFO,
+                .pNext                          = nullptr,
+                .waitSemaphoreCount             = pSource->waitSemaphoreCount,
+                .pWaitSemaphoreDeviceIndices    = pSource->pWaitSemaphoreDeviceIndices,
+                .commandBufferCount             = pSource->commandBufferCount,
+                .pCommandBufferDeviceMasks      = pSource->pCommandBufferDeviceMasks,
+                .signalSemaphoreCount           = pSource->signalSemaphoreCount,
+                .pSignalSemaphoreDeviceIndices  = pSource->pSignalSemaphoreDeviceIndices
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    static inline auto toVulkanFormat (
+            VkProtectedSubmitInfo               * pDestination,
+            Type ( ProtectedSubmitInfo )  const * pSource
+    ) noexcept -> VkProtectedSubmitInfo * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if (
+                pDestination    == nullptr ||
+                pSource         == nullptr
+        ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType              = VK_STRUCTURE_TYPE_PROTECTED_SUBMIT_INFO,
+                .pNext              = nullptr,
+                .protectedSubmit    = pSource->protectedSubmit
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+    static inline auto toVulkanFormat (
+            VkTimelineSemaphoreSubmitInfo               * pDestination,
+            Type ( TimelineSemaphoreSubmitInfo )  const * pSource
+    ) noexcept -> VkTimelineSemaphoreSubmitInfo * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if (
+                pDestination    == nullptr ||
+                pSource         == nullptr
+        ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                      = VK_STRUCTURE_TYPE_TIMELINE_SEMAPHORE_SUBMIT_INFO,
+                .pNext                      = nullptr,
+                .waitSemaphoreValueCount    = pSource->waitSemaphoreValueCount,
+                .pWaitSemaphoreValues       = reinterpret_cast < decltype ( pDestination->pWaitSemaphoreValues ) > ( pSource->pWaitSemaphoreValues ),
+                .signalSemaphoreValueCount  = pSource->signalSemaphoreValueCount,
+                .pSignalSemaphoreValues     = reinterpret_cast < decltype ( pDestination->pSignalSemaphoreValues ) > ( pSource->signalSemaphoreValueCount )
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PERFORMANCE_QUERY_AVAILABLE
+    static inline auto toVulkanFormat (
+            VkPerformanceQuerySubmitInfoKHR            * pDestination,
+            Type ( PerformanceQuerySubmitInfo )  const * pSource
+    ) noexcept -> VkPerformanceQuerySubmitInfoKHR * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if (
+                pDestination    == nullptr ||
+                pSource         == nullptr
+        ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                      = VK_STRUCTURE_TYPE_PERFORMANCE_QUERY_SUBMIT_INFO_KHR,
+                .pNext                      = nullptr,
+                .counterPassIndex           = pSource->counterPassIndex
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if VK_STRUCTURE_TYPE_PERFORMANCE_QUERY_SUBMIT_INFO_KHR
+    static inline auto toVulkanFormat (
+            VkWin32KeyedMutexAcquireReleaseInfoKHR            * pDestination,
+            Type ( Win32KeyedMutexAcquireReleaseInfo )  const * pSource
+    ) noexcept -> VkWin32KeyedMutexAcquireReleaseInfoKHR * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if (
+                pDestination    == nullptr ||
+                pSource         == nullptr
+        ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                      = VK_STRUCTURE_TYPE_WIN32_KEYED_MUTEX_ACQUIRE_RELEASE_INFO_KHR,
+                .pNext                      = nullptr,
+                .acquireCount               = pSource->acquireCount,
+                .pAcquireSyncs              = pSource->pAcquireSyncs,
+                .pAcquireKeys               = reinterpret_cast < decltype ( pDestination->pAcquireKeys ) > ( pSource->pAcquireKeys ),
+                .pAcquireTimeouts           = pSource->pAcquireTimeouts,
+                .releaseCount               = pSource->releaseCount,
+                .pReleaseSyncs              = pSource->pReleaseSyncs,
+                .pReleaseKeys               = reinterpret_cast < decltype ( pDestination->pReleaseKeys ) > ( pSource->pReleaseKeys )
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_WIN32_KEYED_MUTEX_AVAILABLE
+    static inline auto toVulkanFormat (
+            VkWin32KeyedMutexAcquireReleaseInfoNV            * pDestination,
+            Type ( Win32KeyedMutexAcquireReleaseInfoNVidia )  const * pSource
+    ) noexcept -> VkWin32KeyedMutexAcquireReleaseInfoNV * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if (
+                pDestination    == nullptr ||
+                pSource         == nullptr
+        ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                          = VK_STRUCTURE_TYPE_WIN32_KEYED_MUTEX_ACQUIRE_RELEASE_INFO_NV,
+                .pNext                          = nullptr,
+                .acquireCount                   = pSource->acquireCount,
+                .pAcquireSyncs                  = pSource->pAcquireSyncs,
+                .pAcquireKeys                   = reinterpret_cast < decltype ( pDestination->pAcquireKeys ) > ( pSource->pAcquireKeys ),
+                .pAcquireTimeoutMilliseconds    = pSource->pAcquireTimeoutsMilliseconds,
+                .releaseCount                   = pSource->releaseCount,
+                .pReleaseSyncs                  = pSource->pReleaseSyncs,
+                .pReleaseKeys                   = reinterpret_cast < decltype ( pDestination->pReleaseKeys ) > ( pSource->pReleaseKeys )
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_SEMAPHORE_WIN32_AVAILABLE
+    static inline auto toVulkanFormat (
+            VkD3D12FenceSubmitInfoKHR               * pDestination,
+            Type ( D3D12FenceSubmitInfo )     const * pSource
+    ) noexcept -> VkTimelineSemaphoreSubmitInfo * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if (
+                pDestination    == nullptr ||
+                pSource         == nullptr
+        ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                      = VK_STRUCTURE_TYPE_D3D12_FENCE_SUBMIT_INFO_KHR,
+                .pNext                      = nullptr,
+                .waitSemaphoreValueCount    = pSource->waitSemaphoreValueCount,
+                .pWaitSemaphoreValues       = reinterpret_cast < decltype ( pDestination->pWaitSemaphoreValues ) > ( pSource->pWaitSemaphoreValues ),
+                .signalSemaphoreValueCount  = pSource->signalSemaphoreValueCount,
+                .pSignalSemaphoreValues     = reinterpret_cast < decltype ( pDestination->pSignalSemaphoreValues ) > ( pSource->signalSemaphoreValueCount )
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    static inline auto toVulkanFormat (
+            VkSubmitInfo              * pDestination,
+            Type ( SubmitInfo ) const * pSource
+    ) noexcept -> VkSubmitInfo * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if (
+                pDestination    == nullptr ||
+                pSource         == nullptr
+        ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                      = VK_STRUCTURE_TYPE_SUBMIT_INFO,
+                .pNext                      = nullptr,
+                .waitSemaphoreCount         = pSource->waitSemaphoreCount,
+                .pWaitSemaphores            = pSource->pWaitSemaphores,
+                .pWaitDstStageMask          = nullptr,
+                .commandBufferCount         = pSource->commandBufferCount,
+                .pCommandBuffers            = pSource->pCommandBuffers,
+                .signalSemaphoreCount       = pSource->signalSemaphoreCount,
+                .pSignalSemaphores          = pSource->pSignalSemaphores
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    static inline auto prepareContext (
+            SubmitQueueContext        * pContext,
+            cds :: uint32               count,
+            Type ( SubmitInfo ) const * pInfos
+    ) noexcept -> VkSubmitInfo * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pContext == nullptr || pInfos == nullptr || count == 0U ) {
+            return nullptr;
+        }
+
+#endif
+
+        for ( cds :: uint32 i = 0U; i < count; ++ i ) {
+
+            auto pCurrent   = reinterpret_cast < Type ( GenericInStructure ) const * > ( pInfos[i].pNext );
+            auto pCurrentVk = reinterpret_cast < VkBaseOutStructure * > ( toVulkanFormat ( & pContext->submitInfos[i], & pInfos[i] ) );
+
+            while ( pCurrent != nullptr ) {
+
+                switch ( pCurrent->structureType ) {
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+
+                    case StructureTypeDeviceGroupSubmitInfo:
+                        pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                                toVulkanFormat (
+                                        & pContext->deviceGroupSubmitInfos[i],
+                                        reinterpret_cast < Type ( DeviceGroupSubmitInfo ) const * > ( pCurrent )
+                                )
+                        );
+                        break;
+
+                    case StructureTypeProtectedSubmitInfo:
+                        pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                                toVulkanFormat (
+                                        & pContext->protectedSubmitInfos[i],
+                                        reinterpret_cast < Type ( ProtectedSubmitInfo ) const * > ( pCurrent )
+                                )
+                        );
+                        break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+
+                    case StructureTypeTimelineSemaphoreSubmitInfo:
+                        pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                                toVulkanFormat (
+                                        & pContext->timelineSemaphoreSubmitInfos[i],
+                                        reinterpret_cast < Type ( TimelineSemaphoreSubmitInfo ) const * > ( pCurrent )
+                                )
+                        );
+                        break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PERFORMANCE_QUERY_AVAILABLE
+
+                    case StructureTypePerformanceQuerySubmitInfo:
+                        pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                                toVulkanFormat (
+                                        & pContext->performanceQuerySubmitInfos[i],
+                                        reinterpret_cast < Type ( PerformanceQuerySubmitInfo ) const * > ( pCurrent )
+                                )
+                        );
+                        break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_WIN32_KEYED_MUTEX_AVAILABLE
+
+                    case StructureTypeWin32KeyedMutexAcquireReleaseInfo:
+                        pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                                toVulkanFormat (
+                                        & pContext->win32KeyedMutexAcquireReleaseInfos[i],
+                                        reinterpret_cast < Type ( Win32KeyedMutexAcquireReleaseInfo ) const * > ( pCurrent )
+                                )
+                        );
+                        break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_WIN32_KEYED_MUTEX_AVAILABLE
+
+                    case StructureTypeWin32KeyedMutexAcquireReleaseInfoNVidia:
+                        pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                                toVulkanFormat (
+                                        & pContext->win32KeyedMutexAcquireReleaseInfosNVidia[i],
+                                        reinterpret_cast < Type ( Win32KeyedMutexAcquireReleaseInfoNVidia ) const * > ( pCurrent )
+                                )
+                        );
+                        break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_SEMAPHORE_WIN32_AVAILABLE
+
+                    case StructureTypeD3D12FenceSubmitInfo:
+                        pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                                toVulkanFormat (
+                                        & pContext->d3d12FenceSubmitInfos[i],
+                                        reinterpret_cast < Type ( D3D12FenceSubmitInfo ) const * > ( pCurrent )
+                                )
+                        );
+                        break;
+
+#endif
+
+                    default:
+                        break;
+                }
+
+                pCurrent    = pCurrent->pNext;
+                pCurrentVk  = pCurrentVk->pNext == nullptr ? pCurrentVk : pCurrentVk->pNext;
+            }
+
+            pCurrentVk->pNext = nullptr;
+
+            pContext->submitInfos[i].pWaitDstStageMask = & pContext->stageFlags[i][0];
+
+            if ( pContext->submitInfos[i].waitSemaphoreCount > __C_ENG_VULKAN_CORE_PIPELINE_STAGE_FLAGS_MAX_COUNT ) {
+                pContext->submitInfos[i].waitSemaphoreCount = __C_ENG_VULKAN_CORE_PIPELINE_STAGE_FLAGS_MAX_COUNT;
+                pContext->error = ResultErrorConfigurationArraySizeSmall;
+            }
+
+            for ( cds :: uint32 j = 0U; i < pContext->submitInfos[i].waitSemaphoreCount; ++ j ) {
+                pContext->stageFlags[i][j] = static_cast < VkPipelineStageFlags > ( pInfos[i].pWaitDestinationStageMasks[j] );
+            }
+        }
+
+        return & pContext->submitInfos[0];
+    }
+#endif
+
 }
 
 

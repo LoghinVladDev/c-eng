@@ -681,6 +681,33 @@ struct BeginCommandBufferContext {
 #endif
 };
 
+struct SubmitQueueContext {
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    engine :: vulkan :: Type ( Result )                     error;
+    VkSubmitInfo                                            submitInfos [ __C_ENG_VULKAN_CORE_SUBMIT_INFO_MAX_COUNT ];
+    VkPipelineStageFlags                                    stageFlags [ __C_ENG_VULKAN_CORE_SUBMIT_INFO_MAX_COUNT ] [ __C_ENG_VULKAN_CORE_PIPELINE_STAGE_FLAGS_MAX_COUNT ];
+#endif
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    VkDeviceGroupSubmitInfo                                 deviceGroupSubmitInfos [ __C_ENG_VULKAN_CORE_SUBMIT_INFO_MAX_COUNT ];
+    VkProtectedSubmitInfo                                   protectedSubmitInfos [ __C_ENG_VULKAN_CORE_SUBMIT_INFO_MAX_COUNT ];
+#endif
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+    VkTimelineSemaphoreSubmitInfo                           timelineSemaphoreSubmitInfos [ __C_ENG_VULKAN_CORE_SUBMIT_INFO_MAX_COUNT ];
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PERFORMANCE_QUERY_AVAILABLE
+    VkPerformanceQuerySubmitInfoKHR                         performanceQuerySubmitInfos [ __C_ENG_VULKAN_CORE_SUBMIT_INFO_MAX_COUNT ];
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_WIN32_KEYED_MUTEX_AVAILABLE
+    Win32KeyedMutexAcquireReleaseInfoKHR                    win32KeyedMutexAcquireReleaseInfos [ __C_ENG_VULKAN_CORE_SUBMIT_INFO_MAX_COUNT ];
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_WIN32_KEYED_MUTEX_AVAILABLE
+    Win32KeyedMutexAcquireReleaseInfoNV                     win32KeyedMutexAcquireReleaseInfosNVidia [ __C_ENG_VULKAN_CORE_SUBMIT_INFO_MAX_COUNT ];
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_SEMAPHORE_WIN32_AVAILABLE
+    D3D12FenceSubmitInfo                                    d3d12FenceSubmitInfos [ __C_ENG_VULKAN_CORE_SUBMIT_INFO_MAX_COUNT ];
+#endif
+};
+
 union EnumerateSharedContext {
     EnumerateLayerPropertiesContext                                     layerProperties;
     EnumerateExtensionPropertiesContext                                 extensionProperties;
@@ -714,6 +741,10 @@ union BeginSharedContext {
     BeginCommandBufferContext                                           commandBuffer;
 };
 
+union SubmitSharedContext {
+    SubmitQueueContext                                                  queue;
+};
+
 union SharedContext {
     CommonContext                                                       common;
     CreateSharedContext                                                 create;
@@ -721,6 +752,7 @@ union SharedContext {
     GetSharedContext                                                    get;
     AllocateSharedContext                                               allocate;
     BeginSharedContext                                                  begin;
+    SubmitSharedContext                                                 submit;
 };
 
 
