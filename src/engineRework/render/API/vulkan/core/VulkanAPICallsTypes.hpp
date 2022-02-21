@@ -551,6 +551,136 @@ struct GetPhysicalDeviceFeaturesContext {
     DeviceFeaturesContext                       features;
 };
 
+struct GetPhysicalDeviceQueueFamilyPropertiesContext {
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    engine :: vulkan :: Type ( Result )         error;
+    VkQueueFamilyProperties                     properties [ __C_ENG_VULKAN_CORE_QUEUE_FAMILY_MAX_COUNT ];
+#endif
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    VkQueueFamilyProperties2                    properties2 [ __C_ENG_VULKAN_CORE_QUEUE_FAMILY_MAX_COUNT ];
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEVICE_DIAGNOSTIC_CHECKPOINTS_AVAILABLE
+    VkQueueFamilyCheckpointPropertiesNV         checkpoints [ __C_ENG_VULKAN_CORE_QUEUE_FAMILY_MAX_COUNT ];
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_GLOBAL_PRIORITY_QUERY_AVAILABLE
+    VkQueueFamilyGlobalPriorityPropertiesEXT    globalPriorities [ __C_ENG_VULKAN_CORE_QUEUE_FAMILY_MAX_COUNT ];
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_QUEUE_AVAILABLE
+    VkQueueFamilyQueryResultStatusPropertiesKHR queryResultStatuses [ __C_ENG_VULKAN_CORE_QUEUE_FAMILY_MAX_COUNT ];
+    VkVideoQueueFamilyPropertiesKHR             videoQueues [ __C_ENG_VULKAN_CORE_QUEUE_FAMILY_MAX_COUNT ];
+#endif
+};
+
+struct GetDeviceQueueContext {
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    engine :: vulkan :: Type ( Result )         error;
+#endif
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    VkDeviceQueueInfo2                          info2;
+#endif
+};
+
+struct GetSurfaceContext {
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    engine :: vulkan :: Type ( Result )         error;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SURFACE_AVAILABLE
+    VkSurfaceCapabilitiesKHR                    capabilities;
+    VkSurfaceFormatKHR                          formats [ __C_ENG_VULKAN_CORE_SURFACE_FORMAT_MAX_COUNT ];
+    VkPresentModeKHR                            presentModes [ __C_ENG_VULKAN_CORE_SURFACE_PRESENT_MODE_MAX_COUNT ];
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_DISPLAY_SURFACE_COUNTER_AVAILABLE
+    VkSurfaceCapabilities2EXT                   capabilities2;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_GET_SURFACE_CAPABILITIES_AVAILABLE
+    VkPhysicalDeviceSurfaceInfo2KHR             surfaceInfo2;
+    VkSurfaceFormat2KHR                         formats2 [ __C_ENG_VULKAN_CORE_SURFACE_FORMAT_MAX_COUNT ];
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_FULL_SCREEN_EXCLUSIVE_AVAILABLE
+    VkSurfaceFullScreenExclusiveInfoEXT         fullScreenExclusive;
+#endif
+};
+
+struct CreateSwapChainContext {
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    engine :: vulkan :: Type ( Result )         error;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SWAP_CHAIN_AVAILABLE
+    VkSwapchainCreateInfoKHR                    createInfo;
+#endif
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+    VkImageFormatListCreateInfo                 formatListCreateInfo;
+    VkFormat                                    viewFormats [ __C_ENG_VULKAN_CORE_VIEW_FORMAT_MAX_COUNT ];
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_WIN32_SURFACE_AVAILABLE && __C_ENG_VULKAN_API_EXTENSION_FULL_SCREEN_EXCLUSIVE_AVAILABLE
+    VkSurfaceFullScreenExclusiveWin32Info       fullScreenExclusiveWin32Info;
+#endif
+};
+
+struct GetSwapChainContext {
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    engine :: vulkan :: Type ( Result )         error;
+    VkImage                                     images [ __C_ENG_VULKAN_CORE_SWAP_CHAIN_IMAGE_MAX_COUNT ];
+#endif
+};
+
+struct CreateImageViewContext {
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    engine :: vulkan :: Type ( Result )         error;
+    VkImageViewCreateInfo                       createInfo;
+#endif
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    VkImageViewUsageCreateInfo                  usageCreateInfo;
+    VkSamplerYcbcrConversionInfo                samplerYcbcrConversionInfo;
+#endif
+};
+
+struct CreateCommandPoolContext {
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    engine :: vulkan :: Type ( Result )         error;
+    VkCommandPoolCreateInfo                     createInfo;
+#endif
+};
+
+struct AllocateCommandBuffersContext {
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    engine :: vulkan :: Type ( Result )         error;
+    VkCommandBufferAllocateInfo                 allocateInfo;
+#endif
+};
+
+struct BeginCommandBufferContext {
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    engine :: vulkan :: Type ( Result )                     error;
+    VkCommandBufferBeginInfo                                beginInfo;
+    VkCommandBufferInheritanceInfo                          inheritanceInfo;
+#endif
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    VkDeviceGroupCommandBufferBeginInfo                     deviceGroupBeginInfo;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+    VkCommandBufferInheritanceRenderingInfo_t               inheritanceRenderingInfo;
+    VkFormat                                                renderingInfoFormats [ __C_ENG_VULKAN_CORE_RENDERING_INFO_FORMATS_MAX_COUNT ];
+#if __C_ENG_VULKAN_API_EXTENSION_AMD_MIXED_ATTACHMENT_SAMPLES_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_NVIDIA_FRAMEBUFFER_MIXED_SAMPLES_AVAILABLE
+    VkAttachmentSampleCountInfoAMD                          attachmentSampleCountInfo;
+    VkSampleCountFlagBits                                   sampleCountAttachmentSamples [ __C_ENG_VULKAN_CORE_SAMPLE_COUNT_ATTACHMENT_SAMPLES_MAX_COUNT ];
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXPERIMENTAL_MULTIVIEW_PER_VIEW_ATTRIBUTES_AVAILABLE
+    VkMultiviewPerViewAttributesInfoNVX                     multiviewPerViewAttributesInfo;
+#endif
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_CONDITIONAL_RENDERING_AVAILABLE
+    VkCommandBufferInheritanceConditionalRenderingInfoEXT   inheritanceConditionalRenderingInfo;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_QUALCOMM_RENDER_PASS_TRANSFORM_AVAILABLE
+    VkCommandBufferInheritanceRenderPassTransformInfoQCOM   inheritanceRenderpassTransformInfo;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_INHERITED_VIEWPORT_SCISSOR_AVAILABLE
+    VkCommandBufferInheritanceViewportScissorInfoNV         inheritanceViewportScissorInfo;
+    VkViewport                                              viewportDepths [ __C_ENG_VULKAN_CORE_VIEWPORT_DEPTH_MAX_COUNT ];
+#endif
+};
+
 union EnumerateSharedContext {
     EnumerateLayerPropertiesContext                                     layerProperties;
     EnumerateExtensionPropertiesContext                                 extensionProperties;
@@ -562,11 +692,26 @@ union EnumerateSharedContext {
 union CreateSharedContext {
     CreateInstanceContext                                               instance;
     CreateDeviceContext                                                 device;
+    CreateSwapChainContext                                              swapChain;
+    CreateImageViewContext                                              imageView;
+    CreateCommandPoolContext                                            commandPool;
 };
 
 union GetSharedContext {
     GetPhysicalDevicePropertiesContext                                  physicalDeviceProperties;
     GetPhysicalDeviceFeaturesContext                                    physicalDeviceFeatures;
+    GetPhysicalDeviceQueueFamilyPropertiesContext                       physicalDeviceQueueFamilyProperties;
+    GetDeviceQueueContext                                               deviceQueue;
+    GetSurfaceContext                                                   surface;
+    GetSwapChainContext                                                 swapChain;
+};
+
+union AllocateSharedContext {
+    AllocateCommandBuffersContext                                       commandBuffers;
+};
+
+union BeginSharedContext {
+    BeginCommandBufferContext                                           commandBuffer;
 };
 
 union SharedContext {
@@ -574,6 +719,8 @@ union SharedContext {
     CreateSharedContext                                                 create;
     EnumerateSharedContext                                              enumerate;
     GetSharedContext                                                    get;
+    AllocateSharedContext                                               allocate;
+    BeginSharedContext                                                  begin;
 };
 
 

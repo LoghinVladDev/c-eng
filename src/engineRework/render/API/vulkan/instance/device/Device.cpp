@@ -1399,9 +1399,12 @@ static inline auto deviceCreateInfoAddAllFeatures (
 
 #endif
 
-    (void) std :: memcpy ( & extendedFeatures.features, & pPhysicalDevice->details().basicFeatures, sizeof ( Type ( PhysicalDeviceFeatures ) ) );
+    static Type ( PhysicalDeviceDetails )   details;
 
-    vulkan :: utility :: chainFeaturesFromDetails ( & extendedFeatures, & ( pPhysicalDevice->details() ) );
+    (void) std :: memcpy ( & extendedFeatures.features, & pPhysicalDevice->details().basicFeatures, sizeof ( Type ( PhysicalDeviceFeatures ) ) );
+    (void) std :: memcpy ( & details, & ( pPhysicalDevice->details() ), sizeof ( details ) );
+
+    vulkan :: utility :: chainFeaturesFromDetails ( & extendedFeatures, & details );
 
     * pProtectedMemoryEnabled =
             ( pPhysicalDevice->details().vulkan11Features.protectedMemory == VK_TRUE ) ||

@@ -1057,3 +1057,1038 @@ auto engine :: vulkan :: getPhysicalDeviceFeatures (
     return ResultSuccess;
 }
 #endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+auto engine :: vulkan :: getPhysicalDeviceDetails (
+        Type ( PhysicalDeviceHandle )     handle,
+        Type ( PhysicalDeviceDetails )  * pDetails
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( handle == nullptr || pDetails == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    Type ( PhysicalDeviceExtendedProperties )   extendedProperties {};
+    Type ( PhysicalDeviceExtendedFeatures )     extendedFeatures   {};
+
+    createChain ( pDetails, & extendedProperties, & extendedFeatures );
+
+    if (
+            auto result = getPhysicalDeviceProperties ( handle, & extendedProperties );
+            result != ResultSuccess
+    ) {
+        return result;
+    }
+
+    if (
+            auto result = getPhysicalDeviceFeatures ( handle, & extendedFeatures );
+            result != ResultSuccess
+    ) {
+        return result;
+    }
+
+    for (
+            auto pCurrent = reinterpret_cast < Type ( GenericOutStructure ) * > ( & extendedProperties );
+            pCurrent != nullptr;
+    ) {
+        auto pCopy = pCurrent;
+        pCurrent = pCurrent->pNext;
+        pCopy->pNext = nullptr;
+    }
+
+    for (
+            auto pCurrent = reinterpret_cast < Type ( GenericOutStructure ) * > ( & extendedFeatures );
+            pCurrent != nullptr;
+    ) {
+        auto pCopy = pCurrent;
+        pCurrent = pCurrent->pNext;
+        pCopy->pNext = nullptr;
+    }
+
+    (void) std :: memcpy ( & pDetails->basicProperties, & extendedProperties.properties, sizeof ( pDetails->basicProperties ) );
+    (void) std :: memcpy ( & pDetails->basicFeatures,   & extendedFeatures.features,     sizeof ( pDetails->basicFeatures ) );
+
+    return ResultSuccess;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+auto engine :: vulkan :: utility :: chainFeaturesFromDetails (
+        Type ( PhysicalDeviceExtendedFeatures )       * pExtendedFeatures,
+        Type ( PhysicalDeviceDetails )                * pDetails
+) noexcept -> void {
+    createChain ( pDetails, nullptr, pExtendedFeatures ); // NOLINT(clion-misra-cpp2008-5-2-5)
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: getPhysicalDeviceQueueFamilyProperties (
+        Type ( PhysicalDeviceHandle )     physicalDeviceHandle,
+        uint32                          * pCount,
+        Type ( QueueFamilyProperties )  * pProperties
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( physicalDeviceHandle == nullptr || pCount == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkGetPhysicalDeviceQueueFamilyProperties )
+
+    if ( pProperties == nullptr ) {
+        vkGetPhysicalDeviceQueueFamilyPropertiesHandle (
+                physicalDeviceHandle,
+                pCount,
+                nullptr
+        );
+
+        return ResultSuccess;
+    }
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( * pCount > __C_ENG_VULKAN_CORE_QUEUE_FAMILY_MAX_COUNT ) {
+        return ResultErrorConfigurationArraySizeSmall;
+    }
+
+#endif
+
+    auto context = ContextManager :: acquire();
+
+    vkGetPhysicalDeviceQueueFamilyPropertiesHandle (
+            physicalDeviceHandle,
+            pCount,
+            & context.data().get.physicalDeviceQueueFamilyProperties.properties[0]
+    );
+
+    for ( uint32 i = 0U; i < * pCount; ++ i ) {
+        (void) fromVulkanFormat ( & pProperties[i], & context.data().get.physicalDeviceQueueFamilyProperties.properties[i] );
+    }
+
+    return ResultSuccess;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+auto engine :: vulkan :: getPhysicalDeviceQueueFamilyProperties (
+        Type ( PhysicalDeviceHandle )             physicalDeviceHandle,
+        uint32                                  * pCount,
+        Type ( QueueFamilyExtendedProperties )  * pProperties
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( physicalDeviceHandle == nullptr || pCount == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkGetPhysicalDeviceQueueFamilyProperties2 )
+
+    if ( pProperties == nullptr ) {
+        vkGetPhysicalDeviceQueueFamilyProperties2Handle (
+                physicalDeviceHandle,
+                pCount,
+                nullptr
+        );
+
+        return ResultSuccess;
+    }
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( * pCount > __C_ENG_VULKAN_CORE_QUEUE_FAMILY_MAX_COUNT ) {
+        return ResultErrorConfigurationArraySizeSmall;
+    }
+
+#endif
+
+    auto context = ContextManager :: acquire();
+
+    vkGetPhysicalDeviceQueueFamilyProperties2Handle (
+            physicalDeviceHandle,
+            pCount,
+            prepareContext ( & context.data().get.physicalDeviceQueueFamilyProperties, * pCount, pProperties )
+    );
+
+    extractContext (
+            * pCount,
+            & pProperties[0],
+            & context.data().get.physicalDeviceQueueFamilyProperties
+    );
+
+    return ResultSuccess;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+auto engine :: vulkan :: getPhysicalDeviceQueueFamilyDetails (
+        Type ( PhysicalDeviceHandle )   handle,
+        uint32                        * pCount,
+        Type ( QueueFamilyDetails )   * pDetails
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( handle == nullptr || pCount == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkGetPhysicalDeviceQueueFamilyProperties2 )
+
+    if ( pDetails == nullptr ) {
+        vkGetPhysicalDeviceQueueFamilyProperties2Handle (
+                handle,
+                pCount,
+                nullptr
+        );
+
+        return ResultSuccess;
+    }
+
+    Type ( QueueFamilyExtendedProperties ) extendedProperties [ __C_ENG_VULKAN_CORE_QUEUE_FAMILY_MAX_COUNT ];
+
+    createChain ( * pCount, & pDetails[0], & extendedProperties[0] );
+
+    if (
+            auto result = getPhysicalDeviceQueueFamilyProperties (
+                    handle,
+                    pCount,
+                    & extendedProperties[0]
+            ); result != ResultSuccess
+    ) {
+        return result;
+    }
+
+    for ( uint32 i = 0U; i < * pCount; ++ i ) {
+        auto pCurrent = reinterpret_cast < Type ( GenericOutStructure * ) > ( & extendedProperties[i] );
+        while ( pCurrent != nullptr ) {
+            auto pCopy = pCurrent;
+            pCurrent = pCurrent->pNext;
+            pCopy->pNext = nullptr;
+        }
+
+        (void) std :: memcpy ( & pDetails[i].properties, & extendedProperties[i].properties, sizeof ( pDetails[i].properties ) );
+    }
+
+    return ResultSuccess;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SURFACE_AVAILABLE
+auto engine :: vulkan :: getPhysicalDeviceSurfaceSupport (
+        Type ( PhysicalDeviceHandle )       deviceHandle,
+        cds :: uint32                       queueFamilyIndex,
+        Type ( SurfaceHandle )              surfaceHandle,
+        bool                              * pSupport
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if (
+            deviceHandle    == nullptr ||
+            surfaceHandle   == nullptr ||
+            pSupport        == nullptr
+    ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkGetPhysicalDeviceSurfaceSupportKHR )
+
+    Type ( Bool ) support = VK_FALSE;
+
+    if (
+            auto result = vkGetPhysicalDeviceSurfaceSupportKHRHandle (
+                    deviceHandle,
+                    queueFamilyIndex,
+                    surfaceHandle,
+                    & support
+            ); result != VK_SUCCESS
+    ) {
+        return static_cast < Type ( Result ) > ( result );
+    }
+
+    * pSupport = support == VK_TRUE;
+
+    return ResultSuccess;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: getDeviceQueue (
+        Type ( DeviceHandle )   deviceHandle,
+        uint32                  queueFamilyIndex,
+        uint32                  queueIndex,
+        Type ( QueueHandle )  * pQueueHandle
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || pQueueHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkGetDeviceQueue )
+
+    vkGetDeviceQueueHandle (
+            deviceHandle,
+            queueFamilyIndex,
+            queueIndex,
+            pQueueHandle
+    );
+
+    return ResultSuccess;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+auto engine :: vulkan :: getDeviceQueue (
+        Type ( DeviceHandle )               deviceHandle,
+        Type ( DeviceQueueInfo )    const * pQueueInfo,
+        Type ( QueueHandle )              * pQueueHandle
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || pQueueHandle == nullptr || pQueueInfo == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkGetDeviceQueue2 )
+
+    auto context = ContextManager :: acquire();
+
+    vkGetDeviceQueue2Handle (
+            deviceHandle,
+            toVulkanFormat ( & context.data().get.deviceQueue.info2, pQueueInfo ),
+            pQueueHandle
+    );
+
+    return ResultSuccess;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SURFACE_AVAILABLE
+auto engine :: vulkan :: getPhysicalDeviceSurfaceCapabilities (
+        Type ( PhysicalDeviceHandle )   deviceHandle,
+        Type ( SurfaceHandle )          surfaceHandle,
+        Type ( SurfaceCapabilities )  * pSurfaceCapabilities
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || surfaceHandle == nullptr || pSurfaceCapabilities == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkGetPhysicalDeviceSurfaceCapabilitiesKHR )
+
+    auto context = ContextManager :: acquire();
+
+    if (
+            auto result = vkGetPhysicalDeviceSurfaceCapabilitiesKHRHandle (
+                    deviceHandle,
+                    surfaceHandle,
+                    & context.data().get.surface.capabilities
+            ); result != VK_SUCCESS
+    ) {
+        return static_cast < Type ( Result ) > ( result );
+    }
+
+    (void) fromVulkanFormat ( pSurfaceCapabilities, & context.data().get.surface.capabilities );
+    return ResultSuccess;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SURFACE_AVAILABLE
+auto engine :: vulkan :: getPhysicalDeviceSurfaceFormats (
+        Type ( PhysicalDeviceHandle )   deviceHandle,
+        Type ( SurfaceHandle )          surfaceHandle,
+        uint32                        * pCount,
+        Type ( SurfaceFormat )        * pFormats
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || surfaceHandle == nullptr || pCount == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkGetPhysicalDeviceSurfaceFormatsKHR )
+
+    if ( pFormats == nullptr ) {
+        return static_cast < Type ( Result ) > (
+                vkGetPhysicalDeviceSurfaceFormatsKHRHandle (
+                        deviceHandle,
+                        surfaceHandle,
+                        pCount,
+                        nullptr
+                )
+        );
+    }
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( * pCount > __C_ENG_VULKAN_CORE_SURFACE_FORMAT_MAX_COUNT ) {
+        return ResultErrorConfigurationArraySizeSmall;
+    }
+
+#endif
+
+    auto context = ContextManager :: acquire();
+
+    if (
+            auto result = vkGetPhysicalDeviceSurfaceFormatsKHRHandle (
+                    deviceHandle,
+                    surfaceHandle,
+                    pCount,
+                    & context.data().get.surface.formats[0]
+            ); result != VK_SUCCESS
+    ) {
+        return static_cast < Type ( Result ) > ( result );
+    }
+
+    for ( uint32 i = 0U; i < * pCount; ++ i ) {
+        (void) fromVulkanFormat ( & pFormats [i], & context.data().get.surface.formats[i] );
+    }
+
+    return ResultSuccess;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SURFACE_AVAILABLE
+auto engine :: vulkan :: getPhysicalDeviceSurfacePresentModes (
+        Type ( PhysicalDeviceHandle )   deviceHandle,
+        Type ( SurfaceHandle )          surfaceHandle,
+        uint32                        * pCount,
+        Type ( PresentMode )          * pPresentModes
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || surfaceHandle == nullptr || pCount == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkGetPhysicalDeviceSurfacePresentModesKHR )
+
+    if ( pPresentModes == nullptr ) {
+        return static_cast < Type ( Result ) > (
+                vkGetPhysicalDeviceSurfacePresentModesKHR (
+                        deviceHandle,
+                        surfaceHandle,
+                        pCount,
+                        nullptr
+                )
+        );
+    }
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( * pCount > __C_ENG_VULKAN_CORE_SURFACE_PRESENT_MODE_MAX_COUNT ) {
+        return ResultErrorConfigurationArraySizeSmall;
+    }
+
+#endif
+
+    auto context = ContextManager :: acquire();
+
+    if (
+            auto result = vkGetPhysicalDeviceSurfacePresentModesKHRHandle (
+                    deviceHandle,
+                    surfaceHandle,
+                    pCount,
+                    & context.data().get.surface.presentModes[0]
+            ); result != VK_SUCCESS
+    ) {
+        return static_cast < Type ( Result ) > ( result );
+    }
+
+    for ( uint32 i = 0U; i < * pCount; ++ i ) {
+        pPresentModes[i] = static_cast < Type ( PresentMode ) > ( context.data().get.surface.presentModes[i] );
+    }
+
+    return ResultSuccess;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_DISPLAY_SURFACE_COUNTER_AVAILABLE
+auto engine :: vulkan :: getPhysicalDeviceSurfaceCapabilities (
+        Type ( PhysicalDeviceHandle )   deviceHandle,
+        Type ( SurfaceHandle )          surfaceHandle,
+        Type ( SurfaceCapabilities2 ) * pSurfaceCapabilities
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || surfaceHandle == nullptr || pSurfaceCapabilities == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkGetPhysicalDeviceSurfaceCapabilities2EXT )
+
+    auto context = ContextManager :: acquire();
+
+    if (
+            auto result = vkGetPhysicalDeviceSurfaceCapabilities2EXTHandle (
+                    deviceHandle,
+                    surfaceHandle,
+                    & context.data().get.surface.capabilities2
+            ); result != VK_SUCCESS
+    ) {
+        return static_cast < Type ( Result ) > ( result );
+    }
+
+    (void) fromVulkanFormat ( pSurfaceCapabilities, & context.data().get.surface.capabilities2 );
+    return ResultSuccess;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_GET_SURFACE_CAPABILITIES_AVAILABLE
+auto engine :: vulkan :: getPhysicalDeviceSurfaceFormats (
+        Type ( PhysicalDeviceHandle )               deviceHandle,
+        Type ( PhysicalDeviceSurfaceInfo )  const * pSurfaceInfo,
+        uint32                                    * pCount,
+        Type ( SurfaceFormat2 )                   * pFormats
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || pSurfaceInfo == nullptr || pCount == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkGetPhysicalDeviceSurfaceFormats2KHR )
+
+    auto context = ContextManager :: acquire();
+
+    if ( pFormats == nullptr ) {
+        return static_cast < Type ( Result ) > (
+                vkGetPhysicalDeviceSurfaceFormats2KHRHandle (
+                        deviceHandle,
+                        prepareContext ( & context.data().get.surface, pSurfaceInfo ),
+                        pCount,
+                        nullptr
+                )
+        );
+    }
+
+    if ( * pCount > __C_ENG_VULKAN_CORE_SURFACE_FORMAT_MAX_COUNT ) {
+        return ResultErrorConfigurationArraySizeSmall;
+    }
+
+    if (
+            auto result = vkGetPhysicalDeviceSurfaceFormats2KHRHandle (
+                    deviceHandle,
+                    prepareContext ( & context.data().get.surface, pSurfaceInfo ),
+                    pCount,
+                    & context.data().get.surface.formats2[0]
+            ); result != VK_SUCCESS
+    ) {
+        return static_cast < Type ( Result ) > ( result );
+    }
+
+    for ( uint32 i = 0U; i < * pCount; ++ i ) {
+        (void) fromVulkanFormat ( & pFormats[i], & context.data().get.surface.formats2[0] );
+    }
+
+    return ResultSuccess;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_FULL_SCREEN_EXCLUSIVE_AVAILABLE
+auto engine :: vulkan :: getPhysicalDeviceSurfacePresentModes (
+        Type ( PhysicalDeviceHandle )               deviceHandle,
+        Type ( PhysicalDeviceSurfaceInfo )  const * pSurfaceInfo,
+        uint32                                    * pCount,
+        Type ( PresentMode )                      * pPresentModes
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || pSurfaceInfo == nullptr || pPresentModeCount == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkGetPhysicalDeviceSurfacePresentModes2EXT )
+
+    auto context = ContextManager :: acquire();
+
+    if ( pPresentModes == nullptr ) {
+        return static_cast < Type ( Result ) > (
+                vkGetPhysicalDeviceSurfacePresentModes2EXTHandle (
+                        deviceHandle,
+                        prepareContext ( & context.data().get.surface.surfaceInfo2, pSurfaceInfo ),
+                        pCount,
+                        nullptr
+                )
+        );
+    }
+
+    if ( * pCount > __C_ENG_VULKAN_CORE_SURFACE_PRESENT_MODE_MAX_COUNT ) {
+        return ResultErrorConfigurationArraySizeSmall;
+    }
+
+    if (
+            auto result = vkGetPhysicalDeviceSurfacePresentModes2EXTHandle (
+                    deviceHandle,
+                    prepareContext ( & context.data().get.surface.surfaceInfo2, pSurfaceInfo ),
+                    pCount,
+                    & context.data().get.surface.presentModes[0]
+            ); result != VK_SUCCESS
+    ) {
+        return static_cast < Type ( Result ) > ( result );
+    }
+
+    for ( uint32 i = 0U; i < * pCount; ++ i ) {
+        pPresentModes [i] = static_cast < Type ( PresentMode ) > ( context.data().get.surface.presentModes[i] );
+    }
+
+    return ResultSuccess;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SWAP_CHAIN_AVAILABLE
+auto engine :: vulkan :: createSwapChain (
+        Type ( DeviceHandle )                   deviceHandle,
+        Type ( SwapChainCreateInfo )    const * pCreateInfo,
+        Type ( AllocationCallbacks )    const * pAllocationCallbacks,
+        Type ( SwapChainHandle )              * pHandle
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || pCreateInfo == nullptr || pHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkCreateSwapchainKHR )
+
+    auto context = ContextManager :: acquire();
+
+    return static_cast < Type ( Result ) > (
+            vkCreateSwapchainKHRHandle (
+                    deviceHandle,
+                    prepareContext ( & context.data().create.swapChain, pCreateInfo ),
+                    AllocatorHandler :: applyCallbacks ( pAllocationCallbacks ),
+                    pHandle
+            )
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SWAP_CHAIN_AVAILABLE
+auto engine :: vulkan :: destroySwapChain (
+        Type ( DeviceHandle )                   deviceHandle,
+        Type ( SwapChainHandle )                handle,
+        Type ( AllocationCallbacks )    const * pAllocationCallbacks
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || handle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkDestroySwapchainKHR )
+
+    vkDestroySwapchainKHRHandle (
+            deviceHandle,
+            handle,
+            AllocatorHandler :: applyCallbacks ( pAllocationCallbacks )
+    );
+
+    return ResultSuccess;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SWAP_CHAIN_AVAILABLE
+auto engine :: vulkan :: getSwapChainImages (
+        Type ( DeviceHandle )       deviceHandle,
+        Type ( SwapChainHandle )    swapChainHandle,
+        uint32                    * pCount,
+        Type ( ImageHandle )      * pImageHandles
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || swapChainHandle == nullptr || pCount == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkGetSwapchainImagesKHR )
+
+    if ( pImageHandles == nullptr ) {
+        return static_cast < Type ( Result ) > (
+                vkGetSwapchainImagesKHRHandle (
+                        deviceHandle,
+                        swapChainHandle,
+                        pCount,
+                        nullptr
+                )
+        );
+    }
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( * pCount > __C_ENG_VULKAN_CORE_SWAP_CHAIN_IMAGE_MAX_COUNT ) {
+        return ResultErrorConfigurationArraySizeSmall;
+    }
+
+#endif
+
+    auto context = ContextManager :: acquire();
+
+    if (
+            auto result = vkGetSwapchainImagesKHRHandle (
+                    deviceHandle,
+                    swapChainHandle,
+                    pCount,
+                    & context.data().get.swapChain.images[0]
+            ); result != VK_SUCCESS
+    ) {
+        return static_cast < Type ( Result ) > ( result );
+    }
+
+    for ( uint32 i = 0U; i < * pCount; ++ i ) {
+        pImageHandles[i] = static_cast < Type ( ImageHandle ) > ( context.data().get.swapChain.images[i] );
+    }
+
+    return ResultSuccess;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: createImageView (
+        Type ( DeviceHandle )                   deviceHandle,
+        Type ( ImageViewCreateInfo )    const * pCreateInfo,
+        Type ( AllocationCallbacks )    const * pAllocationCallbacks,
+        Type ( ImageViewHandle )              * pHandle
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || pCreateInfo == nullptr || pHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkCreateImageView )
+
+    auto context = ContextManager :: acquire();
+
+    return static_cast < Type ( Result ) > (
+            vkCreateImageViewHandle (
+                    deviceHandle,
+                    prepareContext ( & context.data().create.imageView, pCreateInfo ),
+                    AllocatorHandler :: applyCallbacks ( pAllocationCallbacks ),
+                    pHandle
+            )
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: destroyImageView (
+        Type ( DeviceHandle )                   deviceHandle,
+        Type ( ImageViewHandle )                handle,
+        Type ( AllocationCallbacks )    const * pAllocationCallbacks
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || handle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkDestroyImageView )
+
+    vkDestroyImageViewHandle (
+            deviceHandle,
+            handle,
+            AllocatorHandler :: applyCallbacks ( pAllocationCallbacks )
+    );
+
+    return ResultSuccess;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: createCommandPool (
+        Type ( DeviceHandle )                   deviceHandle,
+        Type ( CommandPoolCreateInfo )  const * pCreateInfo,
+        Type ( AllocationCallbacks )    const * pAllocationCallbacks,
+        Type ( CommandPoolHandle )            * pHandle
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || pCreateInfo == nullptr || pHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkCreateCommandPool )
+
+    auto context = ContextManager :: acquire();
+
+    return static_cast < Type ( Result ) > (
+            vkCreateCommandPoolHandle (
+                    deviceHandle,
+                    toVulkanFormat ( & context.data().create.commandPool.createInfo, pCreateInfo ),
+                    AllocatorHandler :: applyCallbacks ( pAllocationCallbacks ),
+                    pHandle
+            )
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: destroyCommandPool (
+        Type ( DeviceHandle )                   deviceHandle,
+        Type ( CommandPoolHandle )              handle,
+        Type ( AllocationCallbacks )    const * pAllocationCallbacks
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( deviceHandle == nullptr || handle == nullptr ) {
+            return ResultErrorIllegalArgument;
+        }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkDestroyCommandPool )
+
+    vkDestroyCommandPoolHandle (
+            deviceHandle,
+            handle,
+            AllocatorHandler :: applyCallbacks ( pAllocationCallbacks )
+    );
+
+    return ResultSuccess;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: resetCommandPool (
+        Type ( DeviceHandle )                   deviceHandle,
+        Type ( CommandPoolHandle )              handle,
+        Type ( CommandPoolResetFlags )          flags
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( deviceHandle == nullptr || handle == nullptr ) {
+            return ResultErrorIllegalArgument;
+        }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkResetCommandPool )
+
+    return static_cast < Type ( Result ) > (
+            vkResetCommandPool (
+                    deviceHandle,
+                    handle,
+                    flags
+            )
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: allocateCommandBuffers (
+        Type ( DeviceHandle )                       deviceHandle,
+        Type ( CommandBufferAllocateInfo )  const * pAllocateInfo,
+        Type ( CommandBufferHandle )              * pHandles
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || pHandles == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkAllocateCommandBuffers )
+
+    auto context = ContextManager :: acquire();
+
+    return static_cast < Type ( Result ) > (
+            vkAllocateCommandBuffersHandle (
+                    deviceHandle,
+                    toVulkanFormat ( & context.data().allocate.commandBuffers.allocateInfo, pAllocateInfo ),
+                    & pHandles [0]
+            )
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: resetCommandBuffer (
+        Type ( CommandBufferHandle )                handle,
+        Type ( CommandBufferResetFlags )            flags
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( handle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkResetCommandBuffer )
+
+    auto context = ContextManager :: acquire();
+
+    return static_cast < Type ( Result ) > (
+            vkResetCommandBufferHandle (
+                    handle,
+                    flags
+            )
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: freeCommandBuffers (
+        Type ( DeviceHandle )           deviceHandle,
+        Type ( CommandPoolHandle )      commandPoolHandle,
+        cds :: uint32                   commandBufferCount,
+        Type ( CommandBufferHandle )  * pCommandBuffers
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || commandPoolHandle == nullptr || pCommandBuffers == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkFreeCommandBuffers )
+
+    vkFreeCommandBuffersHandle (
+            deviceHandle,
+            commandPoolHandle,
+            commandBufferCount,
+            pCommandBuffers
+    );
+
+    return ResultSuccess;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: beginCommandBuffer (
+        Type ( CommandBufferHandle )            commandBufferHandle,
+        Type ( CommandBufferBeginInfo ) const * pBeginInfo
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( commandBufferHandle == nullptr || pBeginInfo == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkBeginCommandBuffer )
+
+    auto context = ContextManager :: acquire();
+
+    return static_cast < Type ( Result ) > (
+            vkBeginCommandBuffer (
+                    commandBufferHandle,
+                    prepareContext ( & context.data().begin.commandBuffer, pBeginInfo )
+            )
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: endCommandBuffer (
+        Type ( CommandBufferHandle )    commandBufferHandle
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( commandBufferHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkEndCommandBuffer )
+
+    return static_cast < Type ( Result ) > ( vkEndCommandBufferHandle ( commandBufferHandle ) );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+auto engine :: vulkan :: trimCommandPool (
+        Type ( DeviceHandle )           deviceHandle,
+        Type ( CommandPoolHandle )      handle,
+        Type ( CommandPoolTrimFlags )   flags
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || handle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkTrimCommandPool )
+
+    vkTrimCommandPoolHandle (
+            deviceHandle,
+            handle,
+            flags
+    );
+
+    return ResultSuccess;
+}
+#endif

@@ -165,7 +165,7 @@ namespace engine :: vulkan {
         pDestination->driverVersion                                              = pSource->driverVersion;
         pDestination->vendorID                                                   = pSource->vendorID;
         pDestination->deviceID                                                   = pSource->deviceID;
-        pDestination->deviceType                                                 = static_cast < vulkan :: __C_ENG_TYPE ( PhysicalDeviceType ) > ( pSource->deviceType );
+        pDestination->deviceType                                                 = static_cast < vulkan :: Type ( PhysicalDeviceType ) > ( pSource->deviceType );
 
         pDestination->limits.maxImageDimension1D                                 = pSource->limits.maxImageDimension1D;
         pDestination->limits.maxImageDimension2D                                 = pSource->limits.maxImageDimension2D;
@@ -991,7 +991,7 @@ namespace engine :: vulkan {
 
         pDestination->subgroupSupportedOperations       = pSource->subgroupSupportedOperations;
 
-        pDestination->pointClippingBehavior             = static_cast < vulkan :: __C_ENG_TYPE ( PointClippingBehavior ) > ( pSource->pointClippingBehavior );
+        pDestination->pointClippingBehavior             = static_cast < vulkan :: Type ( PointClippingBehavior ) > ( pSource->pointClippingBehavior );
 
         pDestination->maxMemoryAllocationSize           = pSource->maxMemoryAllocationSize;
 
@@ -1164,7 +1164,7 @@ namespace engine :: vulkan {
         pDestination->structureType = StructureTypePhysicalDevicePointClippingProperties;
         pDestination->pNext         = nullptr;
 
-        pDestination->pointClippingBehavior             = static_cast < vulkan :: __C_ENG_TYPE ( PointClippingBehavior ) > ( pSource->pointClippingBehavior );
+        pDestination->pointClippingBehavior             = static_cast < vulkan :: Type ( PointClippingBehavior ) > ( pSource->pointClippingBehavior );
 
         return pDestination;
     }
@@ -1546,13 +1546,13 @@ namespace engine :: vulkan {
 
         pDestination->structureType = StructureTypePhysicalDeviceVulkan_1_2_Properties;
 
-        pDestination->driverID                                                  = static_cast < vulkan :: __C_ENG_TYPE ( DriverID ) > ( pSource->driverID );
+        pDestination->driverID                                                  = static_cast < vulkan :: Type ( DriverID ) > ( pSource->driverID );
         (void) std :: memcpy ( pDestination->driverName,                        pSource->driverName, sizeof ( pSource->driverName[0] ) * VK_MAX_DRIVER_NAME_SIZE ); // NOLINT(clion-misra-cpp2008-5-2-12)
         (void) std :: memcpy ( pDestination->driverInfo,                        pSource->driverInfo, sizeof ( pSource->driverInfo[0] ) * VK_MAX_DRIVER_INFO_SIZE ); // NOLINT(clion-misra-cpp2008-5-2-12)
         fromVulkanFormat ( & pDestination->conformanceVersion,                  & pSource->conformanceVersion );
 
-        pDestination->denormBehaviorIndependence                                = static_cast < vulkan :: __C_ENG_TYPE ( ShaderFloatControlsIndependence ) > ( pSource->denormBehaviorIndependence );
-        pDestination->roundingModeIndependence                                  = static_cast < vulkan :: __C_ENG_TYPE ( ShaderFloatControlsIndependence ) > ( pSource->roundingModeIndependence );
+        pDestination->denormBehaviorIndependence                                = static_cast < vulkan :: Type ( ShaderFloatControlsIndependence ) > ( pSource->denormBehaviorIndependence );
+        pDestination->roundingModeIndependence                                  = static_cast < vulkan :: Type ( ShaderFloatControlsIndependence ) > ( pSource->roundingModeIndependence );
 
         pDestination->shaderSignedZeroInfNanPreserveFloat16                     = pSource->shaderSignedZeroInfNanPreserveFloat16;
         pDestination->shaderSignedZeroInfNanPreserveFloat32                     = pSource->shaderSignedZeroInfNanPreserveFloat32;
@@ -1713,7 +1713,7 @@ namespace engine :: vulkan {
         pDestination->structureType = StructureTypePhysicalDeviceDriverProperties;
         pDestination->pNext = nullptr;
 
-        pDestination->driverID                                                  = static_cast < vulkan :: __C_ENG_TYPE ( DriverID ) > ( pSource->driverID );
+        pDestination->driverID                                                  = static_cast < vulkan :: Type ( DriverID ) > ( pSource->driverID );
         (void) std :: memcpy ( pDestination->driverName,                        pSource->driverName, sizeof ( pSource->driverName[0] ) * VK_MAX_DRIVER_NAME_SIZE ); // NOLINT(clion-misra-cpp2008-5-2-12)
         (void) std :: memcpy ( pDestination->driverInfo,                        pSource->driverInfo, sizeof ( pSource->driverInfo[0] ) * VK_MAX_DRIVER_INFO_SIZE ); // NOLINT(clion-misra-cpp2008-5-2-12)
         fromVulkanFormat ( & pDestination->conformanceVersion,                  & pSource->conformanceVersion );
@@ -1739,8 +1739,8 @@ namespace engine :: vulkan {
         pDestination->structureType = StructureTypePhysicalDeviceFloatControlsProperties;
         pDestination->pNext = nullptr;
 
-        pDestination->denormBehaviorIndependence                                = static_cast < vulkan :: __C_ENG_TYPE ( ShaderFloatControlsIndependence ) > ( pSource->denormBehaviorIndependence );
-        pDestination->roundingModeIndependence                                  = static_cast < vulkan :: __C_ENG_TYPE ( ShaderFloatControlsIndependence ) > ( pSource->roundingModeIndependence );
+        pDestination->denormBehaviorIndependence                                = static_cast < vulkan :: Type ( ShaderFloatControlsIndependence ) > ( pSource->denormBehaviorIndependence );
+        pDestination->roundingModeIndependence                                  = static_cast < vulkan :: Type ( ShaderFloatControlsIndependence ) > ( pSource->roundingModeIndependence );
 
         pDestination->shaderSignedZeroInfNanPreserveFloat16                     = pSource->shaderSignedZeroInfNanPreserveFloat16;
         pDestination->shaderSignedZeroInfNanPreserveFloat32                     = pSource->shaderSignedZeroInfNanPreserveFloat32;
@@ -3253,7 +3253,7 @@ namespace engine :: vulkan {
         pDestination->maxFragmentSize                                           = pSource->maxFragmentSize;
         pDestination->maxFragmentSizeAspectRatio                                = pSource->maxFragmentSizeAspectRatio;
         pDestination->maxFragmentShadingRateCoverageSamples                     = pSource->maxFragmentShadingRateCoverageSamples;
-        pDestination->maxFragmentShadingRateRasterizationSamples                = static_cast < vulkan :: __C_ENG_TYPE ( SampleCountFlag ) > ( pSource->maxFragmentShadingRateRasterizationSamples );
+        pDestination->maxFragmentShadingRateRasterizationSamples                = static_cast < vulkan :: Type ( SampleCountFlag ) > ( pSource->maxFragmentShadingRateRasterizationSamples );
 
         pDestination->fragmentShadingRateWithShaderDepthStencilWrites           = pSource->fragmentShadingRateWithShaderDepthStencilWrites;
         pDestination->fragmentShadingRateWithSampleMask                         = pSource->fragmentShadingRateWithSampleMask;
@@ -3522,7 +3522,7 @@ namespace engine :: vulkan {
         pDestination->structureType = StructureTypePhysicalDeviceFragmentShadingRateEnumsPropertiesNVidia;
         pDestination->pNext = nullptr;
 
-        pDestination->maxFragmentShadingRateInvocationCount  = static_cast < vulkan :: __C_ENG_TYPE ( SampleCountFlag ) > ( pSource->maxFragmentShadingRateInvocationCount );
+        pDestination->maxFragmentShadingRateInvocationCount  = static_cast < vulkan :: Type ( SampleCountFlag ) > ( pSource->maxFragmentShadingRateInvocationCount );
 
         return pDestination;
     }
@@ -9299,7 +9299,7 @@ namespace engine :: vulkan {
 
     static inline auto toVulkanFormat (
             VkDeviceQueueCreateInfo                                 * pDestination,
-            vulkan :: __C_ENG_TYPE ( DeviceQueueCreateInfo )  const * pSource
+            vulkan :: Type ( DeviceQueueCreateInfo )  const * pSource
     ) noexcept -> void {
 
 #if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
@@ -11911,6 +11911,2430 @@ namespace engine :: vulkan {
             pCurrent->pNext = pNext;
             pCurrent        = pCurrent->pNext;
         }
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    static auto createChain (
+            vulkan :: Type ( PhysicalDeviceDetails )            * details,
+            vulkan :: Type ( PhysicalDeviceExtendedProperties ) * extendedProperties,
+            vulkan :: Type ( PhysicalDeviceExtendedFeatures )   * extendedFeatures
+    ) noexcept -> void {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( details == nullptr ) {
+            return;
+        }
+
+#endif
+
+        if ( extendedProperties != nullptr ) {
+
+            auto currentInChain = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( extendedProperties );
+            currentInChain->structureType = engine :: vulkan :: StructureTypePhysicalDeviceProperties;
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->vulkan11Properties ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = engine :: vulkan :: StructureTypePhysicalDeviceVulkan_1_1_Properties;
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->IDProperties ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = engine :: vulkan :: StructureTypePhysicalDeviceIDProperties;
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->maintenanceProperties ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = engine :: vulkan :: StructureTypePhysicalDeviceMaintenanceProperties;
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->multiviewProperties ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = engine :: vulkan :: StructureTypePhysicalDeviceMultiviewProperties;
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->pointClippingProperties ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = engine :: vulkan :: StructureTypePhysicalDevicePointClippingProperties;
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->protectedMemoryProperties ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = engine :: vulkan :: StructureTypePhysicalDeviceProtectedMemoryProperties;
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->subgroupProperties ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = engine :: vulkan :: StructureTypePhysicalDeviceSubgroupProperties;
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->vulkan12Properties ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = engine :: vulkan :: StructureTypePhysicalDeviceVulkan_1_2_Properties;
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->driverProperties ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = engine :: vulkan :: StructureTypePhysicalDeviceDriverProperties;
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->depthStencilResolveProperties ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = engine :: vulkan :: StructureTypePhysicalDeviceDepthStencilResolveProperties;
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->descriptorIndexingProperties ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = engine :: vulkan :: StructureTypePhysicalDeviceDescriptorIndexingProperties;
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->deviceFloatControlsProperties ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = engine :: vulkan :: StructureTypePhysicalDeviceFloatControlsProperties;
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->samplerFilterMinmaxProperties ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = engine :: vulkan :: StructureTypePhysicalDeviceSamplerFilterMinMaxProperties;
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->timelineSemaphoreProperties ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = engine :: vulkan :: StructureTypePhysicalDeviceTimelineSemaphoreProperties;
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->vulkan13Properties ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = engine :: vulkan :: StructureTypePhysicalDeviceVulkan_1_3_Properties;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_PCI_BUS_INFO_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->pciBusInfoProperties ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = engine :: vulkan :: StructureTypePhysicalDevicePCIBusInfoProperties;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_PHYSICAL_DEVICE_DRM_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->DRMProperties ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = engine :: vulkan :: StructureTypePhysicalDeviceDRMProperties;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->accelerationStructureProperties ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = engine :: vulkan :: StructureTypePhysicalDeviceAccelerationStructureProperties;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_BLEND_OPERATION_ADVANCED_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->blendOperationAdvancedProperties ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = engine :: vulkan :: StructureTypePhysicalDeviceBlendOperationAdvancedProperties;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_CONSERVATIVE_RASTERIZATION_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->conservativeRasterizationProperties ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = engine :: vulkan :: StructureTypePhysicalDeviceConservativeRasterizationProperties;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_COOPERATIVE_MATRIX_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->cooperativeMatrixPropertiesNVidia ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = engine :: vulkan :: StructureTypePhysicalDeviceCooperativeMatrixPropertiesNVidia;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_CUSTOM_BORDER_COLOR_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->customBorderColorProperties ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = engine :: vulkan :: StructureTypePhysicalDeviceCustomBorderColorProperties;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEVICE_GENERATED_COMMANDS_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->deviceGeneratedCommandsProperties ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = engine :: vulkan :: StructureTypePhysicalDeviceDeviceGeneratedCommandsPropertiesNVidia;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_DISCARD_RECTANGLES_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->externalMemoryHostProperties ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = engine :: vulkan :: StructureTypePhysicalDeviceExternalMemoryHostProperties;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_FRAGMENT_DENSITY_MAP_2_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->fragmentDensityMap2Properties ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = engine :: vulkan :: StructureTypePhysicalDeviceFragmentDensityMap2Properties;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_QUALCOMM_FRAGMENT_DENSITY_MAP_OFFSET_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->fragmentDensityMapOffsetPropertiesQualcomm ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = engine :: vulkan :: StructureTypePhysicalDeviceFragmentDensityMapOffsetPropertiesQualcomm;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_FRAGMENT_DENSITY_MAP_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->fragmentDensityMapProperties ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = engine :: vulkan :: StructureTypePhysicalDeviceFragmentDensityMapProperties;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_FRAGMENT_SHADING_RATE_ENUMS_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->fragmentShadingRateEnumsPropertiesNVidia ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = engine :: vulkan :: StructureTypePhysicalDeviceFragmentShadingRateEnumsPropertiesNVidia;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_FRAGMENT_SHADING_RATE_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->fragmentShadingRateProperties ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = engine :: vulkan :: StructureTypePhysicalDeviceFragmentShadingRateProperties;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_INLINE_UNIFORM_BLOCK_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->inlineUniformBlockProperties ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = engine :: vulkan :: StructureTypePhysicalDeviceInlineUniformBlockProperties;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_LINE_RASTERIZATION_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->lineRasterizationProperties ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = engine :: vulkan :: StructureTypePhysicalDeviceLineRasterizationProperties;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_MAINTENANCE_4_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->maintenance4Properties ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = engine :: vulkan :: StructureTypePhysicalDeviceMaintenance4Properties;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_MESH_SHADER_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->meshShaderPropertiesNVidia ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = engine :: vulkan :: StructureTypePhysicalDeviceMeshShaderPropertiesNVidia;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_MULTI_DRAW_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->multiDrawProperties ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = engine :: vulkan :: StructureTypePhysicalDeviceMultiDrawProperties;
+
+#endif
+
+#if ( __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE ) && __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXPERIMENTAL_MULTIVIEW_PER_VIEW_ATTRIBUTES_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->multiviewPerViewAttributesPropertiesNVidia ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = engine :: vulkan :: StructureTypePhysicalDeviceMultiviewPerViewAttributesPropertiesNVidiaExperimental;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PERFORMANCE_QUERY_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->performanceQueryProperties ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = engine :: vulkan :: StructureTypePhysicalDevicePerformanceQueryProperties;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PORTABILITY_SUBSET_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->portabilitySubsetProperties ); // NOLINT(clion-misra-cpp2008-6-2-1)
+        currentInChain->structureType = engine :: vulkan :: StructureTypePhysicalDevicePortabilitySubsetProperties;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_PROVOKING_VERTEX_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->provokingVertexProperties ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = engine :: vulkan :: StructureTypePhysicalDeviceProvokingVertexProperties;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PUSH_DESCRIPTOR_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->pushDescriptorProperties ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = engine :: vulkan :: StructureTypePhysicalDevicePushDescriptorProperties;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_RAY_TRACING_PIPELINE_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->rayTracingPipelineProperties ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = engine :: vulkan :: StructureTypePhysicalDeviceRayTracingPipelineProperties;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_ROBUSTNESS_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->robustnessProperties ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = engine :: vulkan :: StructureTypePhysicalDeviceRobustnessProperties;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_SAMPLE_LOCATIONS_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->sampleLocationsProperties ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = engine :: vulkan :: StructureTypePhysicalDeviceSampleLocationsProperties;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_AMD_SHADER_CORE_PROPERTIES_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->shaderCorePropertiesAMD ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = engine :: vulkan :: StructureTypePhysicalDeviceShaderCorePropertiesAMD;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_AMD_SHADER_CORE_PROPERTIES_2_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->shaderCoreProperties2AMD ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = engine :: vulkan :: StructureTypePhysicalDeviceShaderCoreProperties2AMD;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SHADER_SM_BUILTINS_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->shaderSmBuiltinsPropertiesNVidia ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = engine :: vulkan :: StructureTypePhysicalDeviceShaderSmBuiltinsPropertiesNVidia;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SHADING_RATE_IMAGE_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->shadingRateImagePropertiesNVidia ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = engine :: vulkan :: StructureTypePhysicalDeviceShadingRateImagePropertiesNVidia;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_SUBGROUP_SIZE_CONTROL_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->subgroupSizeControlProperties ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = engine :: vulkan :: StructureTypePhysicalDeviceSubgroupSizeControlProperties;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_HUAWEI_SUBPASS_SHADING_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->subpassShadingPropertiesHuawei ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = engine :: vulkan :: StructureTypePhysicalDeviceSubpassShadingPropertiesHuawei;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_TEXEL_BUFFER_ALIGNMENT_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->texelBufferAlignmentProperties ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = engine :: vulkan :: StructureTypePhysicalDeviceTexelBufferAlignmentProperties;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_TRANSFORM_FEEDBACK_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->transformFeedbackProperties ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = engine :: vulkan :: StructureTypePhysicalDeviceTransformFeedbackProperties;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VERTEX_ATTRIBUTE_DIVISOR_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->vertexAttributeDivisorProperties ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = engine :: vulkan :: StructureTypePhysicalDeviceVertexAttributeDivisorProperties;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->rayTracingPropertiesNVidia ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = engine :: vulkan :: StructureTypePhysicalDeviceRayTracingPropertiesNVidia;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_INTEGER_DOT_PRODUCT_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->shaderIntegerDotProductProperties ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = engine :: vulkan :: StructureTypePhysicalDeviceShaderIntegerDotProductProperties;
+
+#endif
+
+            currentInChain->pNext = nullptr;
+
+        }
+
+
+        if ( extendedFeatures != nullptr ) {
+
+            auto currentInChain = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( extendedFeatures );
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceFeatures;
+
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->vulkan11Features ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceVulkan_1_1_Features;
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->_16BitStorageFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDevice16BitStorageFeatures;
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->multiviewFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceMultiviewFeatures;
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->protectedMemoryFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceProtectedMemoryFeatures;
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->samplerYCBCRConversionFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceSamplerYCBCRConversionFeatures;
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->shaderDrawParametersFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceShaderDrawParametersFeatures;
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->variablePointersFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceVariablePointersFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->vulkan12Features ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceVulkan_1_2_Features;
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->_8BitStorageFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDevice8BitStorageFeatures;
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->bufferDeviceAddressFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceBufferDeviceAddressFeatures;
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->descriptorIndexingFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceDescriptorIndexingFeatures;
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->hostQueryResetFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceHostQueryResetFeatures;
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->imagelessFramebufferFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceImagelessFramebufferFeatures;
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->scalarBlockLayoutFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceScalarBlockLayoutFeatures;
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->separateDepthStencilLayoutsFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceSeparateDepthStencilLayoutsFeatures;
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->shaderAtomicInt64Features ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceShaderAtomicInt64Features;
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->shaderFloat16Int8Features ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceShaderFloat16Int8Features;
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->shaderSubgroupExtendedTypesFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceShaderSubgroupExtendedTypesFeatures;
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->timelineSemaphoreFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceTimelineSemaphoreFeatures;
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->uniformBufferStandardLayoutFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceUniformBufferStandardLayoutFeatures;
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->vulkanMemoryModelFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceVulkanMemoryModelFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->vulkan13Features ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceVulkan_1_3_Features;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_4444_FORMATS_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->_4444FormatsFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDevice4444FormatsFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_ASTC_DECODE_MODE_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->ASTCDecodeFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceASTCDecodeFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->accelerationStructureFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceAccelerationStructureFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_BLEND_OPERATION_ADVANCED_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->blendOperationAdvancedFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceBlendOperationAdvancedFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_BORDER_COLOR_SWIZZLE_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->borderColorSwizzleFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceBorderColorSwizzleFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_AMD_DEVICE_COHERENT_MEMORY_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->coherentMemoryFeaturesAMD ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceCoherentMemoryFeaturesAMD;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_COLOR_WRITE_ENABLE_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->colorWriteEnabledFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceColorWriteEnableFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_COMPUTE_SHADER_DERIVATIVES_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->computeShaderDerivativesFeaturesNVidia ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceComputeShaderDerivativesFeaturesNVidia;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_CONDITIONAL_RENDERING_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->conditionalRenderingFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceConditionalRenderingFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_COOPERATIVE_MATRIX_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->cooperativeMatrixFeaturesNVidia ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceCooperativeMatrixFeaturesNVidia;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_CORNER_SAMPLED_IMAGE_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->cornerSampledImageFeaturesNVidia ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceCornerSampledImageFeaturesNVidia;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_COVERAGE_REDUCTION_MODE_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->coverageReductionModeFeaturesNVidia ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceCoverageReductionModeFeaturesNVidia;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_CUSTOM_BORDER_COLOR_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->customBorderColorFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceCustomBorderColorFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEDICATED_ALLOCATION_IMAGE_ALIASING_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->dedicatedAllocationImageAliasingFeaturesNVidia ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceDedicatedAllocationImageAliasingFeaturesNVidia;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_DEPTH_CLIP_CONTROL_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->depthClipControlFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceDepthClipControlFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_DEPTH_CLIP_ENABLE_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->depthClipEnableFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceDepthClipEnableFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEVICE_GENERATED_COMMANDS_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->deviceGeneratedCommandsFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceDeviceGeneratedCommandsFeaturesNVidia;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_DEVICE_MEMORY_REPORT_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->deviceMemoryReportFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceDeviceMemoryReportFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEVICE_DIAGNOSTICS_CONFIG_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->diagnosticsConfigFeaturesNVidia ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceDiagnosticsConfigFeaturesNVidia;
+
+#endif
+
+#if ( __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE ) || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->dynamicRenderingFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceDynamicRenderingFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SCISSOR_EXCLUSIVE_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->exclusiveScissorFeaturesNVidia ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceExclusiveScissorFeaturesNVidia;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_EXTENDED_DYNAMIC_STATE_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->extendedDynamicStateFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceExtendedDynamicStateFeatures;
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->extendedDynamicState2Features ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceExtendedDynamicState2Features;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXTERNAL_MEMORY_RDMA_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->externalMemoryRDMAFeaturesNVidia ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceExternalMemoryRDMAFeaturesNVidia;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_FRAGMENT_DENSITY_MAP_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->fragmentDensityMapFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceFragmentDensityMapFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_FRAGMENT_DENSITY_MAP_2_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->fragmentDensityMap2Features ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceFragmentDensityMap2Features;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_QUALCOMM_FRAGMENT_DENSITY_MAP_OFFSET_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->fragmentDensityMapOffsetFeaturesQualcomm ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceFragmentDensityMapOffsetFeaturesQualcomm;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_FRAGMENT_SHADER_BARYCENTRIC_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->fragmentShaderBarycentricFeaturesNVidia ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceFragmentShaderBarycentricFeaturesNVidia;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_FRAGMENT_SHADER_INTERLOCK_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->fragmentShaderInterlockFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceFragmentShaderInterlockFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_FRAGMENT_SHADING_RATE_ENUMS_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->fragmentShadingRateEnumsFeaturesNVidia ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceFragmentShadingRateEnumsFeaturesNVidia;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_FRAGMENT_SHADING_RATE_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->fragmentShadingRateFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceFragmentShadingRateFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_GLOBAL_PRIORITY_QUERY_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->globalPriorityQueryFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceGlobalPriorityQueryFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_IMAGE_ROBUSTNESS_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->imageRobustnessFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceImageRobustnessFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_IMAGE_VIEW_MIN_LOD_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->imageViewMinLODFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceImageViewMinLODFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_INDEX_TYPE_UINT8_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->indexTypeUInt8Features ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceIndexTypeUInt8Features;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_INHERITED_VIEWPORT_SCISSOR_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->inheritedViewportScissorFeaturesNVidia ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceInheritedViewportScissorFeaturesNVidia;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_INLINE_UNIFORM_BLOCK_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->inlineUniformBlockFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceInlineUniformBlockFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_HUAWEI_INVOCATION_MASK_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->invocationMaskFeaturesHuawei ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceInvocationMaskFeaturesHuawei;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_LINE_RASTERIZATION_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->lineRasterizationFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceLineRasterizationFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_LINEAR_COLOR_ATTACHMENT_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->linearColorAttachmentFeaturesNVidia ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceLinearColorAttachmentFeaturesNVidia;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_MAINTENANCE_4_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->maintenance4Features ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceMaintenance4Features;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_MEMORY_PRIORITY_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->memoryPriorityFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceMemoryPriorityFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_MESH_SHADER_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->meshShaderFeaturesNVidia ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceMeshShaderFeaturesNVidia;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_MULTI_DRAW_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->multiDrawFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceMultiDrawFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VALVE_MUTABLE_DESCRIPTOR_TYPE_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->mutableDescriptorTypeFeaturesValve ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceMutableDescriptorTypeFeaturesValve;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_PAGEABLE_DEVICE_LOCAL_MEMORY_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->pageableDeviceLocalMemoryFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDevicePageableDeviceLocalMemoryFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PERFORMANCE_QUERY_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->performanceQueryFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDevicePerformanceQueryFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_PIPELINE_CREATION_CACHE_CONTROL_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->pipelineCreationCacheControlFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDevicePipelineCreationCacheControlFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PIPELINE_EXECUTABLE_PROPERTIES_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->pipelineExecutablePropertiesFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDevicePipelineExecutablePropertiesFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PORTABILITY_SUBSET_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details.portabilitySubsetFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
+        currentInChain->structureType = vulkan :: StructureTypePhysicalDevicePortabilitySubsetFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PRESENT_ID_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->presentIDFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDevicePresentIDFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PRESENT_WAIT_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->presentWaitFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDevicePresentWaitFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_PRIMITIVE_TOPOLOGY_LIST_RESTART_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->primitiveTopologyListRestartFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDevicePrimitiveTopologyListRestartFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_PRIVATE_DATA_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->privateDataFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDevicePrivateDataFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_PROVOKING_VERTEX_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->provokingVertexFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceProvokingVertexFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_RGBA_10_X_6_FORMATS_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->RGBA10x6FormatsFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceRGBA10x6FormatsFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_ARM_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->rasterizationOrderAttachmentAccessFeaturesARM ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceRasterizationOrderAttachmentAccessFeaturesARM;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_RAY_QUERY_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->rayQueryFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceRayQueryFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_MOTION_BLUR_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->rayTracingMotionBlurFeaturesNVidia ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceRayTracingMotionBlurFeaturesNVidia;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_RAY_TRACING_PIPELINE_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->rayTracingPipelineFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceRayTracingPipelineFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_REPRESENTATIVE_FRAGMENT_TEST_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->representativeFragmentTestFeaturesNVidia ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceRepresentativeFragmentTestFeaturesNVidia;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_ROBUSTNESS_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->robustnessFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceRobustnessFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_SHADER_ATOMIC_FLOAT_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->shaderAtomicFloatFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceShaderAtomicFloatFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_SHADER_ATOMIC_FLOAT_2_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->shaderAtomicFloat2Features ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceShaderAtomicFloat2Features;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_CLOCK_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->shaderClockFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceShaderClockFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_SHADER_DEMOTE_TO_HELPER_INVOCATION_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->shaderDemoteToHelperInvocationFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceShaderDemoteToHelperInvocationFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_SHADER_IMAGE_ATOMIC_INT64_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->shaderImageAtomicInt64Features ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceShaderImageAtomicInt64Features;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SHADER_IMAGE_FOOTPRINT_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->shaderImageFootprintFeaturesNVidia ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceShaderImageFootprintFeaturesNVidia;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SHADER_SM_BUILTINS_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->shaderSmBuiltinsFeaturesNVidia ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceShaderSmBuiltinsFeaturesNVidia;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_SUBGROUP_UNIFORM_CONTROL_FLOW_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->shaderSubgroupUniformControlFlowFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceShaderSubgroupUniformControlFlowFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_TERMINATE_INVOCATION_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->shaderTerminateInvocationFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceShaderTerminateInvocationFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SHADING_RATE_IMAGE_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->shadingRateImageFeaturesNVidia ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceShadingRateImageFeaturesNVidia;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_SUBGROUP_SIZE_CONTROL_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->subgroupSizeControlFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceSubgroupSizeControlFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_HUAWEI_SUBPASS_SHADING_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->subpassShadingFeaturesHuawei ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceSubpassShadingFeaturesHuawei;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->synchronizationFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceSynchronizationFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_TEXEL_BUFFER_ALIGNMENT_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->texelBufferAlignmentFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceTexelBufferAlignmentFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_TEXTURE_COMPRESSION_ASTC_HDR_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->textureCompressionASTCHDRFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceTextureCompressionASTCHDRFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_TRANSFORM_FEEDBACK_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->transformFeedbackFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceTransformFeedbackFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VERTEX_ATTRIBUTE_DIVISOR_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->vertexAttributeDivisorFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceVertexAttributeDivisorFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VERTEX_INPUT_DYNAMIC_STATE_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->vertexInputDynamicStateFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceVertexInputDynamicStateFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_INTEGER_DOT_PRODUCT_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->shaderIntegerDotProductFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceShaderIntegerDotProductFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_INTEL_SHADER_INTEGER_FUNCTIONS_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->shaderIntegerFunctionsFeaturesIntel ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceShaderIntegerFunctionsFeaturesIntel;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_WORKGROUP_MEMORY_EXPLICIT_LAYOUT_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->workgroupMemoryExplicitLayoutFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceWorkgroupMemoryExplicitLayoutFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_YCBCR_2_PLANE_444_FORMATS_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->YCBCR2Plane444FormatFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceYCBCR2Plane444FormatsFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_YCBCR_IMAGE_ARRAYS_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->YCBCRImageArraysFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceYCBCRImageArraysFeatures;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ZERO_INITIALIZE_WORKGROUP_MEMORY_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->zeroInitializeWorkgroupMemoryFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceZeroInitializeWorkgroupMemoryFeatures;
+
+#endif
+
+            currentInChain->pNext = nullptr;
+
+        }
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    static inline auto fromVulkanFormat (
+            Type ( QueueFamilyProperties )        * pDestination,
+            VkQueueFamilyProperties         const * pSource
+    ) noexcept -> Type ( QueueFamilyProperties ) * {
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .queueFlags                     = pSource->queueFlags,
+                .queueCount                     = pSource->queueCount,
+                .timestampValidBits             = pSource->timestampValidBits,
+                .minImageTransferGranularity    = pSource->minImageTransferGranularity
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    static inline auto prepareContext (
+            GetPhysicalDeviceQueueFamilyPropertiesContext         * pContext,
+            cds :: uint32                                           count,
+            Type ( QueueFamilyExtendedProperties )          const * pProperties
+    ) noexcept -> VkQueueFamilyProperties2 * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pContext == nullptr || pProperties == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        for ( cds :: uint32 i = 0U; i < count; ++i ) {
+            pContext->properties2[i].sType = VK_STRUCTURE_TYPE_QUEUE_FAMILY_PROPERTIES_2;
+
+            auto pCurrent   = reinterpret_cast < Type ( GenericInStructure ) const * > ( pProperties[i].pNext );
+            auto pCurrentVk = reinterpret_cast < VkBaseOutStructure * > ( & pContext->properties2[i] );
+
+            while ( pCurrent != nullptr ) {
+
+                switch ( pCurrent->structureType ) {
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEVICE_DIAGNOSTIC_CHECKPOINTS_AVAILABLE
+
+                    case StructureTypeQueueFamilyCheckpointPropertiesNVidia:
+                        pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > ( & pContext->checkpoints[i] );
+                        break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_GLOBAL_PRIORITY_QUERY_AVAILABLE
+
+                    case StructureTypeQueueFamilyGlobalPriorityProperties:
+                        pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > ( & pContext->globalPriorities[i] );
+                        break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_QUEUE_AVAILABLE
+
+                    case StructureTypeQueueFamilyQueryResultStatusProperties:
+                        pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > ( & pContext->queryResultStatuses[i] );
+                        break;
+
+                    case StructureTypeVideoQueueFamilyProperties:
+                        pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > ( & pContext->videoQueues[i] );
+                        break;
+
+#endif
+
+                    default:
+                        break;
+                }
+
+                if ( pCurrentVk->pNext != nullptr ) {
+                    pCurrentVk          = pCurrentVk->pNext;
+                    pCurrentVk->sType   = static_cast < VkStructureType > ( pCurrent->structureType );
+                }
+
+                pCurrent = pCurrent->pNext;
+            }
+
+            pCurrentVk->pNext = nullptr;
+        }
+
+        return & pContext->properties2[0];
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    static inline auto fromVulkanFormat (
+            Type ( QueueFamilyExtendedProperties )        * pDestination,
+            VkQueueFamilyProperties2                const * pSource
+    ) noexcept -> Type ( QueueFamilyExtendedProperties ) * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        pDestination->structureType = StructureTypeQueueFamilyProperties;
+        pDestination->pNext         = nullptr;
+
+        (void) fromVulkanFormat ( & pDestination->properties, & pSource->queueFamilyProperties );
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEVICE_DIAGNOSTIC_CHECKPOINTS_AVAILABLE
+    static inline auto fromVulkanFormat (
+            Type ( QueueFamilyCheckpointPropertiesNVidia )        * pDestination,
+            VkQueueFamilyCheckpointPropertiesNV             const * pSource
+    ) noexcept -> Type ( QueueFamilyCheckpointPropertiesNVidia ) * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .structureType                  = StructureTypeQueueFamilyCheckpointPropertiesNVidia,
+                .pNext                          = nullptr,
+                .checkpointExecutionStageMask   = pSource->checkpointExecutionStageMask
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_GLOBAL_PRIORITY_QUERY_AVAILABLE
+    static inline auto fromVulkanFormat (
+            Type ( QueueFamilyGlobalPriorityProperties )        * pDestination,
+            VkQueueFamilyGlobalPriorityPropertiesEXT      const * pSource
+    ) noexcept -> Type ( QueueFamilyGlobalPriorityProperties ) * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        pDestination->structureType = StructureTypeQueueFamilyGlobalPriorityProperties;
+        pDestination->pNext         = nullptr;
+        pDestination->priorityCount = pSource->priorityCount;
+
+        for ( cds :: uint32 i = 0U; i < pDestination->priorityCount; ++ i ) {
+            pDestination->priorities[i] = static_cast < Type ( QueueGlobalPriority ) > ( pSource->priorities[i] );
+        }
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_QUEUE_AVAILABLE
+    static inline auto fromVulkanFormat (
+            Type ( QueueFamilyQueryResultStatusProperties )        * pDestination,
+            VkQueueFamilyQueryResultStatusPropertiesKHR      const * pSource
+    ) noexcept -> Type ( QueueFamilyQueryResultStatusProperties ) * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        pDestination->structureType = StructureTypeQueueFamilyQueryResultStatusProperties;
+        pDestination->pNext         = nullptr;
+        pDestination->supported     = pSource->supported;
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_QUEUE_AVAILABLE
+    static inline auto fromVulkanFormat (
+            Type ( VideoQueueFamilyProperties )        * pDestination,
+            VkVideoQueueFamilyPropertiesKHR      const * pSource
+    ) noexcept -> Type ( VideoQueueFamilyProperties ) * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        pDestination->structureType         = StructureTypeVideoQueueFamilyProperties;
+        pDestination->pNext                 = nullptr;
+        pDestination->videoCodecOperations  = pSource->videoCodecOperations;
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    static inline auto extractContext (
+            cds :: uint32                                         count,
+            Type ( QueueFamilyExtendedProperties )              * pProperties,
+            GetPhysicalDeviceQueueFamilyPropertiesContext const * pContext
+    ) noexcept -> void {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pProperties == nullptr || pContext == nullptr ) {
+            return;
+        }
+
+#endif
+
+        for ( cds :: uint32 i = 0U; i < count; ++ i ) {
+
+            auto pCurrent = reinterpret_cast < Type (GenericOutStructure) * > ( & pProperties[i] );
+            while (pCurrent != nullptr) {
+
+                auto pNext = pCurrent->pNext;
+                switch ( pCurrent->structureType ) {
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+
+                    case StructureTypeQueueFamilyProperties:
+                        (void) fromVulkanFormat ( reinterpret_cast < Type ( QueueFamilyExtendedProperties ) * > ( pCurrent ), & pContext->properties2[i] );
+                        break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEVICE_DIAGNOSTIC_CHECKPOINTS_AVAILABLE
+
+                    case StructureTypeQueueFamilyCheckpointPropertiesNVidia:
+                        (void) fromVulkanFormat ( reinterpret_cast < Type ( QueueFamilyCheckpointPropertiesNVidia ) * > ( pCurrent ), & pContext->checkpoints[i] );
+                        break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_GLOBAL_PRIORITY_QUERY_AVAILABLE
+
+                    case StructureTypeQueueFamilyGlobalPriorityProperties:
+                        (void) fromVulkanFormat ( reinterpret_cast < Type ( QueueFamilyGlobalPriorityProperties ) * > ( pCurrent ), & pContext->globalPriorities[i] );
+                        break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_QUEUE_AVAILABLE
+
+                    case StructureTypeQueueFamilyQueryResultStatusProperties:
+                        (void) fromVulkanFormat ( reinterpret_cast < Type ( QueueFamilyQueryResultStatusProperties ) * > ( pCurrent ), & pContext->queryResultStatuses[i] );
+                        break;
+
+                    case StructureTypeVideoQueueFamilyProperties:
+                        (void) fromVulkanFormat ( reinterpret_cast < Type ( VideoQueueFamilyProperties ) * > ( pCurrent ), & pContext->videoQueues[i] );
+                        break;
+
+#endif
+
+                    default:
+                        break;
+                }
+
+                pCurrent->pNext = pNext;
+                pCurrent        = pCurrent->pNext;
+            }
+        }
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    static inline auto createChain (
+            cds :: uint32                                       queueFamilyCount,
+            vulkan :: Type ( QueueFamilyDetails )             * pDetails,
+            vulkan :: Type ( QueueFamilyExtendedProperties )  * pExtendedProperties
+    ) noexcept -> void {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDetails == nullptr || pExtendedProperties == nullptr ) {
+            return;
+        }
+
+#endif
+
+        for ( cds :: uint32 i = 0U; i < queueFamilyCount; ++ i ) {
+
+            auto currentInChain = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & pExtendedProperties[i] );
+            currentInChain->structureType = vulkan :: StructureTypeQueueFamilyProperties;
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEVICE_DIAGNOSTIC_CHECKPOINTS_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & pDetails[i].checkpointPropertiesNVidia ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypeQueueFamilyCheckpointPropertiesNVidia;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_GLOBAL_PRIORITY_QUERY_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & pDetails[i].globalPriorityProperties ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypeQueueFamilyGlobalPriorityProperties;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_QUEUE_AVAILABLE
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & pDetails[i].queryResultStatusProperties ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypeQueueFamilyQueryResultStatusProperties;
+
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & pDetails[i].videoProperties ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain->structureType = vulkan :: StructureTypeVideoQueueFamilyProperties;
+
+#endif
+
+            currentInChain->pNext = nullptr;
+
+        }
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    static inline auto toVulkanFormat (
+            VkDeviceQueueInfo2                * pDestination,
+            Type ( DeviceQueueInfo )    const * pSource
+    ) noexcept -> VkDeviceQueueInfo2 * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType              = VK_STRUCTURE_TYPE_DEVICE_QUEUE_INFO_2,
+                .pNext              = nullptr,
+                .flags              = pSource->flags,
+                .queueFamilyIndex   = pSource->queueFamilyIndex,
+                .queueIndex         = pSource->queueIndex
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SURFACE_AVAILABLE
+    static inline auto fromVulkanFormat (
+            Type ( SurfaceCapabilities )      * pDestination,
+            VkSurfaceCapabilitiesKHR    const * pSource
+    ) noexcept -> Type ( SurfaceCapabilities ) * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .minImageCount              = pSource->minImageCount,
+                .maxImageCount              = pSource->maxImageCount,
+                .currentExtent              = {
+                        .width                      = pSource->currentExtent.width,
+                        .height                     = pSource->currentExtent.height
+                },
+                .minImageExtent             = {
+                        .width                      = pSource->minImageExtent.width,
+                        .height                     = pSource->minImageExtent.height
+                },
+                .maxImageExtent             = {
+                        .width                      = pSource->maxImageExtent.width,
+                        .height                     = pSource->maxImageExtent.height
+                },
+                .maxImageArrayLayers        = pSource->maxImageArrayLayers,
+                .supportedTransforms        = pSource->supportedTransforms,
+                .currentTransform           = static_cast < Type ( SurfaceTransformFlag ) > ( pSource->currentTransform ),
+                .supportedCompositeAlpha    = pSource->supportedCompositeAlpha,
+                .supportedUsageFlags        = pSource->supportedUsageFlags
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SURFACE_AVAILABLE
+    static inline auto fromVulkanFormat (
+            Type ( SurfaceFormat )      * pDestination,
+            VkSurfaceFormatKHR    const * pSource
+    ) noexcept -> Type ( SurfaceFormat ) * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .format     = static_cast < Type ( Format ) > ( pSource->format ),
+                .colorSpace = static_cast < Type ( ColorSpace ) > ( pSource->colorSpace )
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_DISPLAY_SURFACE_COUNTER_AVAILABLE
+    static inline auto fromVulkanFormat (
+            Type ( SurfaceCapabilities2 )      * pDestination,
+            VkSurfaceCapabilities2EXT    const * pSource
+    ) noexcept -> Type ( SurfaceCapabilities2 ) * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .structureType              = StructureTypeSurfaceCapabilities2,
+                .pNext                      = nullptr,
+                .minImageCount              = pSource->minImageCount,
+                .maxImageCount              = pSource->maxImageCount,
+                .currentExtent              = {
+                        .width                      = pSource->currentExtent.width,
+                        .height                     = pSource->currentExtent.height
+                },
+                .minImageExtent             = {
+                        .width                      = pSource->minImageExtent.width,
+                        .height                     = pSource->minImageExtent.height
+                },
+                .maxImageExtent             = {
+                        .width                      = pSource->maxImageExtent.width,
+                        .height                     = pSource->maxImageExtent.height
+                },
+                .maxImageArrayLayers        = pSource->maxImageArrayLayers,
+                .supportedTransforms        = pSource->supportedTransforms,
+                .currentTransform           = static_cast < Type ( SurfaceTransformFlag ) > ( pSource->currentTransform ),
+                .supportedCompositeAlpha    = pSource->supportedCompositeAlpha,
+                .supportedUsageFlags        = pSource->supportedUsageFlags
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_GET_SURFACE_CAPABILITIES_AVAILABLE
+    static inline auto fromVulkanFormat (
+            Type ( SurfaceFormat2 )      * pDestination,
+            VkSurfaceFormat2KHR    const * pSource
+    ) noexcept -> Type ( SurfaceFormat2 ) * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        pDestination->structureType     = vulkan :: StructureTypeSurfaceFormat;
+        pDestination->pNext             = nullptr;
+        fromVulkanFormat ( & pDestination->surfaceFormat, & pSource->surfaceFormat );
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_FULL_SCREEN_EXCLUSIVE_AVAILABLE
+    static inline auto toVulkanFormat (
+        VkSurfaceFullScreenExclusiveInfoEXT           * pDestination,
+        Type ( SurfaceFullScreenExclusiveInfo ) const * pSource
+    ) noexcept -> VkSurfaceFullScreenExclusiveInfoEXT * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( pDestination == nullptr || pSource == nullptr ) {
+        return nullptr;
+    }
+
+#endif
+
+        * pDestination = {
+            .sType                  = VK_STRUCTURE_TYPE_SURFACE_FULL_SCREEN_EXCLUSIVE_INFO_EXT,
+            .pNext                  = nullptr,
+            .fullScreenExclusive    = static_cast < VkFullScreenExclusiveEXT > ( pSource->fullScreenExclusive )
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_GET_SURFACE_CAPABILITIES_AVAILABLE
+    static inline auto prepareContext (
+            GetSurfaceContext                         * pContext,
+            Type ( PhysicalDeviceSurfaceInfo )  const * pSource
+    ) noexcept -> VkPhysicalDeviceSurfaceInfo2KHR * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pContext == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        pContext->surfaceInfo2.sType    = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SURFACE_INFO_2_KHR;
+        pContext->surfaceInfo2.surface  = pSource->surface;
+
+        auto pCurrent   = reinterpret_cast < Type ( GenericInStructure ) const * > ( pSource->pNext );
+        auto pCurrentVk = reinterpret_cast < VkBaseOutStructure * > ( & pContext->surfaceInfo2 );
+
+        while ( pCurrent != nullptr ) {
+
+            switch ( pCurrent->structureType ) {
+
+#if __C_ENG_VULKAN_API_EXTENSION_FULL_SCREEN_EXCLUSIVE_AVAILABLE
+
+                case StructureTypeSurfaceFullScreenExclusiveInfo:
+                    pCurrentVk->pNext = toVulkanFormat (
+                            & pContext->fullScreenExclusive,
+                            pCurrent
+                    );
+                    break;
+
+#endif
+
+                default:
+                    break;
+            }
+
+            if ( pCurrentVk->pNext != nullptr ) {
+                pCurrentVk = pCurrentVk->pNext;
+            }
+
+            pCurrent = pCurrent->pNext;
+        }
+
+        pCurrentVk->pNext = nullptr;
+
+        return & pContext->surfaceInfo2;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SWAP_CHAIN_AVAILABLE
+    static inline auto toVulkanFormat (
+            VkSwapchainCreateInfoKHR              * pDestination,
+            Type ( SwapChainCreateInfo )    const * pSource
+    ) noexcept -> VkSwapchainCreateInfoKHR * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                  = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR,
+                .pNext                  = nullptr,
+                .flags                  = pSource->flags,
+                .surface                = pSource->surface,
+                .minImageCount          = pSource->minImageCount,
+                .imageFormat            = static_cast < VkFormat > ( pSource->imageFormat ),
+                .imageColorSpace        = static_cast < VkColorSpaceKHR > ( pSource->imageColorSpace ),
+                .imageExtent            = {
+                        .width                  = pSource->imageExtent.width,
+                        .height                 = pSource->imageExtent.height
+                },
+                .imageArrayLayers       = pSource->imageArrayLayers,
+                .imageUsage             = pSource->imageUsage,
+                .imageSharingMode       = static_cast < VkSharingMode > ( pSource->imageSharingMode ),
+                .queueFamilyIndexCount  = pSource->queueFamilyIndexCount,
+                .pQueueFamilyIndices    = pSource->pQueueFamilyIndices,
+                .preTransform           = static_cast < VkSurfaceTransformFlagBitsKHR > ( pSource->preTransform ),
+                .compositeAlpha         = static_cast < VkCompositeAlphaFlagBitsKHR > ( pSource->compositeAlpha ),
+                .presentMode            = static_cast < VkPresentModeKHR > ( pSource->presentMode ),
+                .clipped                = pSource->clipped,
+                .oldSwapchain           = pSource->oldSwapChain
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+    static inline auto toVulkanFormat (
+            VkImageFormatListCreateInfo                 * pDestination,
+            Type ( ImageFormatListCreateInfo )    const * pSource
+    ) noexcept -> VkImageFormatListCreateInfo * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                  = VK_STRUCTURE_TYPE_IMAGE_FORMAT_LIST_CREATE_INFO,
+                .pNext                  = nullptr,
+                .viewFormatCount        = pSource->viewFormatCount,
+                .pViewFormats           = pDestination->pViewFormats
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_WIN32_SURFACE_AVAILABLE && __C_ENG_VULKAN_API_EXTENSION_FULL_SCREEN_EXCLUSIVE_AVAILABLE
+    static inline auto toVulkanFormat (
+            VkSurfaceFullScreenExclusiveWin32InfoEXT              * pDestination,
+            Type ( SurfaceFullScreenExclusiveWin32Info )    const * pSource
+    ) noexcept -> VkSurfaceFullScreenExclusiveWin32InfoEXT * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                  = VK_STRUCTURE_TYPE_SURFACE_FULL_SCREEN_EXCLUSIVE_WIN32_INFO_EXT,
+                .pNext                  = nullptr,
+                .hmonitor               = pSource->monitorHandle
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SWAP_CHAIN_AVAILABLE
+    static inline auto prepareContext (
+            CreateSwapChainContext                * pContext,
+            Type ( SwapChainCreateInfo )    const * pSource
+    ) noexcept -> VkSwapchainCreateInfoKHR * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pContext == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        auto pCurrent   = reinterpret_cast < Type ( GenericInStructure ) const * > ( pSource->pNext );
+        auto pCurrentVk = reinterpret_cast < VkBaseOutStructure * > ( toVulkanFormat ( & pContext->createInfo, pSource ) );
+
+        while ( pCurrent != nullptr ) {
+
+            switch ( pCurrent->structureType ) {
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+
+                case StructureTypeImageFormatListCreateInfo: {
+
+                    auto pFormatListCreateInfo = reinterpret_cast < Type ( ImageFormatListCreateInfo ) const * > ( pCurrent );
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                            toVulkanFormat (
+                                & pContext->formatListCreateInfo,
+                                pFormatListCreateInfo
+                            )
+                    );
+
+                    pContext->formatListCreateInfo.pViewFormats = & pContext->viewFormats [0];
+
+                    if ( pContext->formatListCreateInfo.viewFormatCount > __C_ENG_VULKAN_CORE_VIEW_FORMAT_MAX_COUNT ) {
+                        pContext->error = ResultErrorConfigurationArraySizeSmall;
+                        pContext->formatListCreateInfo.viewFormatCount = __C_ENG_VULKAN_CORE_VIEW_FORMAT_MAX_COUNT;
+                    }
+
+                    for ( cds :: uint32 i = 0U; i < pContext->formatListCreateInfo.viewFormatCount; ++ i ) {
+                        pContext->viewFormats[i] = static_cast < VkFormat > ( pFormatListCreateInfo->pViewFormats[i] );
+                    }
+
+                    break;
+                }
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_WIN32_SURFACE_AVAILABLE && __C_ENG_VULKAN_API_EXTENSION_FULL_SCREEN_EXCLUSIVE_AVAILABLE
+
+                case StructureTypeSurfaceFullScreenExclusiveWin32Info:
+                    pCurrentVk->pNext = toVulkanFormat (
+                            & pContext->fullScreenExclusiveWin32Info,
+                            reinterpret_cast < Type ( SurfaceFullScreenExclusiveWin32Info ) const * > ( pCurrent )
+                    );
+                    break;
+
+#endif
+
+                default:
+                    break;
+            }
+
+            pCurrentVk  = pCurrentVk->pNext == nullptr ? pCurrentVk : pCurrentVk->pNext;
+            pCurrent    = pCurrent->pNext;
+        }
+
+        pCurrentVk->pNext = nullptr;
+
+        return & pContext->createInfo;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    static inline auto toVulkanFormat (
+            VkImageViewCreateInfo                 * pDestination,
+            Type ( ImageViewCreateInfo )    const * pSource
+    ) noexcept -> VkImageViewCreateInfo * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType              = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO,
+                .pNext              = nullptr,
+                .flags              = pSource->flags,
+                .image              = pSource->image,
+                .viewType           = static_cast < VkImageViewType > ( pSource->viewType ),
+                .format             = static_cast < VkFormat > ( pSource->format ),
+                .components         = {
+                        .r                  = static_cast < VkComponentSwizzle > ( pSource->components.r ),
+                        .g                  = static_cast < VkComponentSwizzle > ( pSource->components.g ),
+                        .b                  = static_cast < VkComponentSwizzle > ( pSource->components.b ),
+                        .a                  = static_cast < VkComponentSwizzle > ( pSource->components.a )
+                },
+                .subresourceRange   = {
+                        .aspectMask         = pSource->subresourceRange.aspectMask,
+                        .baseMipLevel       = pSource->subresourceRange.baseMipLevel,
+                        .levelCount         = pSource->subresourceRange.levelCount,
+                        .baseArrayLayer     = pSource->subresourceRange.baseArrayLayer,
+                        .layerCount         = pSource->subresourceRange.layerCount
+                }
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    static inline auto toVulkanFormat (
+            VkImageViewUsageCreateInfo                 * pDestination,
+            Type ( ImageViewUsageCreateInfo )    const * pSource
+    ) noexcept -> VkImageViewUsageCreateInfo * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType              = VK_STRUCTURE_TYPE_IMAGE_VIEW_USAGE_CREATE_INFO,
+                .pNext              = nullptr,
+                .usage              = pSource->usage
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    static inline auto toVulkanFormat (
+            VkSamplerYcbcrConversionInfo                 * pDestination,
+            Type ( SamplerYCBCRConversionInfo )    const * pSource
+    ) noexcept -> VkSamplerYcbcrConversionInfo * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType              = VK_STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_INFO,
+                .pNext              = nullptr,
+                .conversion         = pSource->conversion
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    static inline auto prepareContext (
+            CreateImageViewContext                * pContext,
+            Type ( ImageViewCreateInfo )    const * pSource
+    ) noexcept -> VkImageViewCreateInfo * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pContext == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        auto pCurrent   = reinterpret_cast < Type ( GenericInStructure ) const * > ( pSource->pNext );
+        auto pCurrentVk = reinterpret_cast < VkBaseOutStructure * > ( toVulkanFormat ( & pContext->createInfo, pSource ) );
+
+        while ( pCurrent != nullptr ) {
+
+            switch ( pCurrent->structureType ) {
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+
+                case StructureTypeImageViewUsageCreateInfo:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                            toVulkanFormat (
+                                    & pContext->usageCreateInfo,
+                                    reinterpret_cast < Type ( ImageViewUsageCreateInfo ) const * > ( pCurrent )
+                            )
+                    );
+                    break;
+
+                case StructureTypeSamplerYCBCRConversionInfo:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                            toVulkanFormat (
+                                    & pContext->samplerYcbcrConversionInfo,
+                                    reinterpret_cast < Type ( SamplerYCBCRConversionInfo ) const * > ( pCurrent )
+                            )
+                    );
+                    break;
+
+#endif
+
+                default:
+                    break;
+            }
+
+            pCurrentVk  = pCurrentVk->pNext == nullptr ? pCurrentVk : pCurrentVk->pNext;
+            pCurrent    = pCurrent->pNext;
+        }
+
+        pCurrentVk->pNext = nullptr;
+        return & pContext->createInfo;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    static inline auto toVulkanFormat (
+            VkCommandPoolCreateInfo                 * pDestination,
+            Type ( CommandPoolCreateInfo )    const * pSource
+    ) noexcept -> VkCommandPoolCreateInfo * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType              = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO,
+                .pNext              = nullptr,
+                .flags              = pSource->flags,
+                .queueFamilyIndex   = pSource->queueFamilyIndex
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    static inline auto toVulkanFormat (
+            VkCommandBufferAllocateInfo                 * pDestination,
+            Type ( CommandBufferAllocateInfo )    const * pSource
+    ) noexcept -> VkCommandBufferAllocateInfo * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType              = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO,
+                .pNext              = nullptr,
+                .commandPool        = pSource->commandPool,
+                .level              = static_cast < VkCommandBufferLevel > ( pSource->level ),
+                .commandBufferCount = pSource->commandBufferCount
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    static inline auto toVulkanFormat (
+            VkCommandBufferBeginInfo                 * pDestination,
+            Type ( CommandBufferBeginInfo )    const * pSource
+    ) noexcept -> VkCommandBufferBeginInfo * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType              = VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO,
+                .pNext              = nullptr,
+                .flags              = pSource->flags,
+                .pInheritanceInfo   = nullptr
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    static inline auto toVulkanFormat (
+            VkCommandBufferInheritanceInfo                 * pDestination,
+            Type ( CommandBufferInheritanceInfo )    const * pSource
+    ) noexcept -> VkCommandBufferInheritanceInfo * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                  = VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO,
+                .pNext                  = nullptr,
+                .renderPass             = pSource->renderPass,
+                .subpass                = pSource->subpass,
+                .framebuffer            = pSource->frameBuffer,
+                .occlusionQueryEnable   = pSource->occlusionQueryEnable,
+                .queryFlags             = pSource->queryFlags,
+                .pipelineStatistics     = pSource->pipelineStatistics
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    static inline auto toVulkanFormat (
+            VkDeviceGroupCommandBufferBeginInfo                 * pDestination,
+            Type ( DeviceGroupCommandBufferBeginInfo )    const * pSource
+    ) noexcept -> VkDeviceGroupCommandBufferBeginInfo * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                  = VK_STRUCTURE_TYPE_DEVICE_GROUP_COMMAND_BUFFER_BEGIN_INFO,
+                .pNext                  = nullptr,
+                .deviceMask             = pSource->deviceMask
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+    static inline auto toVulkanFormat (
+            VkCommandBufferInheritanceRenderingInfo_t               * pDestination,
+            Type ( CommandBufferInheritanceRenderingInfo )    const * pSource
+    ) noexcept -> VkCommandBufferInheritanceRenderingInfo_t * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE
+                .sType                      = VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_RENDERING_INFO_KHR,
+#elif __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+                .sType                      = VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_RENDERING_INFO,
+#endif
+                .pNext                      = nullptr,
+                .flags                      = pSource->flags,
+                .viewMask                   = pSource->viewMask,
+                .colorAttachmentCount       = pSource->colorAttachmentCount,
+                .pColorAttachmentFormats    = nullptr,
+                .depthAttachmentFormat      = static_cast < VkFormat > ( pSource->depthAttachmentFormat ),
+                .stencilAttachmentFormat    = static_cast < VkFormat > ( pSource->stencilAttachmentFormat ),
+                .rasterizationSamples       = static_cast < VkSampleCountFlagBits > ( pSource->rasterizationSamples )
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE && __C_ENG_VULKAN_API_EXTENSION_AMD_MIXED_ATTACHMENT_SAMPLES_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_NVIDIA_FRAMEBUFFER_MIXED_SAMPLES_AVAILABLE
+    static inline auto toVulkanFormat (
+            VkAttachmentSampleCountInfoAMD                           * pDestination,
+            vulkan :: hidden :: __AttachmentSampleCountInfo    const * pSource
+    ) noexcept -> VkAttachmentSampleCountInfoAMD * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                          = VK_STRUCTURE_TYPE_ATTACHMENT_SAMPLE_COUNT_INFO_AMD,
+                .pNext                          = nullptr,
+                .colorAttachmentCount           = pSource->colorAttachmentCount,
+                .pColorAttachmentSamples        = nullptr,
+                .depthStencilAttachmentSamples  = static_cast < VkSampleCountFlagBits > ( pSource->depthStencilAttachmentSamples )
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE && __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXPERIMENTAL_MULTIVIEW_PER_VIEW_ATTRIBUTES_AVAILABLE
+    static inline auto toVulkanFormat (
+            VkMultiviewPerViewAttributesInfoNVX                   * pDestination,
+            Type ( MultiviewPerViewAttributesInfoNVidia )   const * pSource
+    ) noexcept -> VkMultiviewPerViewAttributesInfoNVX * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                          = VK_STRUCTURE_TYPE_ATTACHMENT_SAMPLE_COUNT_INFO_AMD,
+                .pNext                          = nullptr,
+                .perViewAttributes              = pSource->perViewAttributes,
+                .perViewAttributesPositionXOnly = pSource->perViewAttributesPositionXOnly
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_CONDITIONAL_RENDERING_AVAILABLE
+    static inline auto toVulkanFormat (
+            VkCommandBufferInheritanceConditionalRenderingInfoEXT             * pDestination,
+            Type ( CommandBufferInheritanceConditionalRenderingInfo )   const * pSource
+    ) noexcept -> VkCommandBufferInheritanceConditionalRenderingInfoEXT * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                          = VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_CONDITIONAL_RENDERING_INFO_EXT,
+                .pNext                          = nullptr,
+                .conditionalRenderingEnable     = pSource->conditionalRenderingEnable
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_QUALCOMM_RENDER_PASS_TRANSFORM_AVAILABLE
+    static inline auto toVulkanFormat (
+            VkCommandBufferInheritanceRenderPassTransformInfoQCOM                    * pDestination,
+            Type ( CommandBufferInheritanceRenderPassTransformInfoQualcomm )   const * pSource
+    ) noexcept -> VkCommandBufferInheritanceRenderPassTransformInfoQCOM * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType      = VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_RENDER_PASS_TRANSFORM_INFO_QCOM,
+                .pNext      = nullptr,
+                .transform  = static_cast < VkSurfaceTransformFlagBitsKHR > ( pSource->transform ),
+                .renderArea = {
+                        .offset     = {
+                                .x          = pSource->renderArea.offset.x,
+                                .y          = pSource->renderArea.offset.y
+                        },
+                        .extent     = {
+                                .width      = pSource->renderArea.extent.width,
+                                .height     = pSource->renderArea.extent.height
+                        }
+                }
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    static inline auto toVulkanFormat (
+            VkViewport                * pDestination,
+            Type ( Viewport )   const * pSource
+    ) noexcept -> VkViewport * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .x          = pSource->x,
+                .y          = pSource->y,
+                .width      = pSource->width,
+                .height     = pSource->height,
+                .minDepth   = pSource->minDepth,
+                .maxDepth   = pSource->maxDepth
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_INHERITED_VIEWPORT_SCISSOR_AVAILABLE
+    static inline auto toVulkanFormat (
+            VkCommandBufferInheritanceViewportScissorInfoNV                    * pDestination,
+            Type ( CommandBufferInheritanceViewportScissorInfoNVidia )   const * pSource
+    ) noexcept -> VkCommandBufferInheritanceViewportScissorInfoNV * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType              = VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_RENDER_PASS_TRANSFORM_INFO_QCOM,
+                .pNext              = nullptr,
+                .viewportScissor2D  = pSource->viewportScissor2D,
+                .viewportDepthCount = pSource->viewportDepthCount,
+                .pViewportDepths    = nullptr
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    static inline auto prepareContext (
+            BeginCommandBufferContext             * pContext,
+            Type ( CommandBufferBeginInfo ) const * pSource
+    ) noexcept -> VkCommandBufferBeginInfo * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pContext == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        auto pCurrent   = reinterpret_cast < Type ( GenericInStructure ) const * > ( pSource->pNext );
+        auto pCurrentVk = reinterpret_cast < VkBaseOutStructure * > ( toVulkanFormat ( & pContext->beginInfo, pSource ) );
+
+        while ( pCurrent != nullptr ) {
+
+            switch ( pCurrent->structureType ) {
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+
+                case StructureTypeDeviceGroupCommandBufferBeginInfo:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                            toVulkanFormat (
+                                    & pContext->deviceGroupBeginInfo,
+                                    reinterpret_cast < Type ( DeviceGroupCommandBufferBeginInfo ) const * > ( pCurrent )
+                            )
+                    );
+                    break;
+
+#endif
+
+                default:
+                    break;
+            }
+
+            pCurrentVk  = pCurrentVk->pNext == nullptr ? pCurrentVk : pCurrentVk->pNext;
+            pCurrent    = pCurrent->pNext;
+        }
+
+        pCurrentVk->pNext = nullptr;
+
+        if ( pSource->pInheritanceInfo != nullptr ) {
+
+            pContext->beginInfo.pInheritanceInfo = & pContext->inheritanceInfo;
+
+            pCurrent    = reinterpret_cast < Type ( GenericInStructure ) const * > ( pSource->pInheritanceInfo->pNext );
+            pCurrentVk  = reinterpret_cast < VkBaseOutStructure * > ( toVulkanFormat ( & pContext->inheritanceInfo, pSource->pInheritanceInfo ) );
+
+            while ( pCurrent != nullptr ) {
+
+                switch ( pCurrent->structureType ) {
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+
+                    case StructureTypeCommandBufferInheritanceRenderingInfo: {
+
+                        auto pInheritanceRenderingInfo = reinterpret_cast < Type ( CommandBufferInheritanceRenderingInfo ) const * > ( pCurrent );
+                        pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                                toVulkanFormat (
+                                        & pContext->inheritanceRenderingInfo,
+                                        pInheritanceRenderingInfo
+                                )
+                        );
+
+                        pContext->inheritanceRenderingInfo.pColorAttachmentFormats = & pContext->renderingInfoFormats[0];
+
+                        if ( pContext->inheritanceRenderingInfo.colorAttachmentCount > __C_ENG_VULKAN_CORE_RENDERING_INFO_FORMATS_MAX_COUNT ) {
+                            pContext->inheritanceRenderingInfo.colorAttachmentCount = __C_ENG_VULKAN_CORE_RENDERING_INFO_FORMATS_MAX_COUNT;
+                            pContext->error = ResultErrorConfigurationArraySizeSmall;
+                        }
+
+                        for ( cds :: uint32 i = 0U; i < pContext->inheritanceRenderingInfo.colorAttachmentCount; ++ i ) {
+                            pContext->renderingInfoFormats[i] = static_cast < VkFormat > ( pInheritanceRenderingInfo->pColorAttachmentFormats[i] );
+                        }
+
+                        break;
+                    }
+
+#if __C_ENG_VULKAN_API_EXTENSION_AMD_MIXED_ATTACHMENT_SAMPLES_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_NVIDIA_FRAMEBUFFER_MIXED_SAMPLES_AVAILABLE
+
+                    case StructureTypeAttachmentSampleCountInfoAMD: {
+
+                        auto pAttachmentSampleCountInfo = reinterpret_cast < Type ( AttachmentSampleCountInfoAMD ) const * > ( pCurrent );
+                        pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                                toVulkanFormat (
+                                        & pContext->attachmentSampleCountInfo,
+                                        pAttachmentSampleCountInfo
+                                )
+                        );
+
+                        pContext->attachmentSampleCountInfo.pColorAttachmentSamples = & pContext->sampleCountAttachmentSamples[0];
+
+                        if ( pContext->attachmentSampleCountInfo.colorAttachmentCount > __C_ENG_VULKAN_CORE_SAMPLE_COUNT_ATTACHMENT_SAMPLES_MAX_COUNT ) {
+                            pContext->attachmentSampleCountInfo.colorAttachmentCount = __C_ENG_VULKAN_CORE_SAMPLE_COUNT_ATTACHMENT_SAMPLES_MAX_COUNT;
+                            pContext->error = ResultErrorConfigurationArraySizeSmall;
+                        }
+
+                        for ( cds :: uint32 i = 0U; i < pContext->attachmentSampleCountInfo.colorAttachmentCount; ++ i ) {
+                            pContext->sampleCountAttachmentSamples[i] = static_cast < VkSampleCountFlagBits > ( pAttachmentSampleCountInfo->pColorAttachmentSamples[i] );
+                        }
+
+                        break;
+                    }
+
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXPERIMENTAL_MULTIVIEW_PER_VIEW_ATTRIBUTES_AVAILABLE
+
+                    case StructureTypeMultiviewPerViewAttributesInfoNVidiaExperimental:
+                        pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                                toVulkanFormat (
+                                        & pContext->multiviewPerViewAttributesInfo,
+                                        reinterpret_cast < Type ( MultiviewPerViewAttributesInfoNVidia ) const * > ( pCurrent )
+                                )
+                        );
+                        break;
+
+#endif
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_CONDITIONAL_RENDERING_AVAILABLE
+
+                    case StructureTypeCommandBufferInheritanceConditionalRenderingInfo:
+                        pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                                toVulkanFormat (
+                                        & pContext->inheritanceConditionalRenderingInfo,
+                                        reinterpret_cast < Type ( CommandBufferInheritanceConditionalRenderingInfo ) const * > ( pCurrent )
+                                )
+                        );
+                        break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_QUALCOMM_RENDER_PASS_TRANSFORM_AVAILABLE
+
+                    case StructureTypeCommandBufferInheritanceRenderPassTransformInfoQualcomm:
+                        pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                                toVulkanFormat (
+                                        & pContext->inheritanceRenderpassTransformInfo,
+                                        reinterpret_cast < Type ( CommandBufferInheritanceRenderPassTransformInfoQualcomm ) const * > ( pCurrent )
+                                )
+                        );
+                        break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_INHERITED_VIEWPORT_SCISSOR_AVAILABLE
+
+                    case StructureTypeCommandBufferInheritanceViewportScissorInfoNVidia: {
+
+                        auto pInheritanceViewportScissorInfo = reinterpret_cast < Type ( CommandBufferInheritanceViewportScissorInfoNVidia ) const * > ( pCurrent );
+                        pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                                toVulkanFormat (
+                                        & pContext->inheritanceViewportScissorInfo,
+                                        pInheritanceViewportScissorInfo
+                                )
+                        );
+
+                        pContext->inheritanceViewportScissorInfo.pViewportDepths = & pContext->viewportDepths[0];
+
+                        if ( pContext->inheritanceViewportScissorInfo.viewportDepthCount > __C_ENG_VULKAN_CORE_VIEWPORT_DEPTH_MAX_COUNT ) {
+                            pContext->inheritanceViewportScissorInfo.viewportDepthCount = __C_ENG_VULKAN_CORE_VIEWPORT_DEPTH_MAX_COUNT;
+                            pContext->error = ResultErrorConfigurationArraySizeSmall;
+                        }
+
+                        for ( cds :: uint32 i = 0U; i < pContext->inheritanceViewportScissorInfo.viewportDepthCount; ++ i ) {
+                            (void) toVulkanFormat ( & pContext->viewportDepths[i], & pInheritanceViewportScissorInfo->pViewportDepths[i] );
+                        }
+
+                        break;
+                    }
+
+#endif
+
+                    default:
+                        break;
+                }
+
+                pCurrent    = pCurrent->pNext;
+                pCurrentVk  = pCurrentVk->pNext == nullptr ? pCurrentVk : pCurrentVk->pNext;
+            }
+
+            pCurrentVk->pNext = nullptr;
+        }
+
+        return & pContext->beginInfo;
     }
 #endif
 

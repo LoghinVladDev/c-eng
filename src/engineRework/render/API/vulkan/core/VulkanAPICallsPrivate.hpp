@@ -137,6 +137,25 @@
         }                                                                               \
     }
 
+#define __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R(_device, _fName)                            \
+    static PFN_ ## _fName _fName ## Handle;                                                 \
+    static Mutex _fName ## Lock;                                                            \
+    if ( _fName ## Handle == nullptr ) {                                                    \
+        LockGuard guard ( _fName ## Lock );                                                 \
+        if ( _fName ## Handle == nullptr ) {                                                \
+            if (                                                                            \
+                    auto lResult = vulkan :: getDeviceFunctionAddress (                     \
+                        _device,                                                            \
+                        # _fName,                                                           \
+                        reinterpret_cast < FunctionHandleAddress > ( & _fName ## Handle )   \
+                    );                                                                      \
+                    lResult != vulkan :: ResultSuccess                                      \
+            ) {                                                                             \
+                return lResult;                                                             \
+            }                                                                               \
+        }                                                                                   \
+    }
+
 
 using FunctionHandleAddress = void **;
 
@@ -239,6 +258,12 @@ using VkPhysicalDeviceShaderIntegerDotProductProperties_t       = VkPhysicalDevi
 using VkPhysicalDeviceZeroInitializeWorkgroupMemoryFeatures_t   = VkPhysicalDeviceZeroInitializeWorkgroupMemoryFeatures;
 #elif __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ZERO_INITIALIZE_WORKGROUP_MEMORY_AVAILABLE
 using VkPhysicalDeviceZeroInitializeWorkgroupMemoryFeatures_t   = VkPhysicalDeviceZeroInitializeWorkgroupMemoryFeaturesKHR;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+using VkCommandBufferInheritanceRenderingInfo_t                 = VkCommandBufferInheritanceRenderingInfo;
+#elif __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE
+using VkCommandBufferInheritanceRenderingInfo_t                 = VkCommandBufferInheritanceRenderingInfoKHR;
 #endif
 
 #if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE

@@ -4119,7 +4119,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
         Struct {
             Type ( StructureType )              structureType;
-            Type ( GenericInStructure ) const * pNext;
+            Type ( GenericStructure )   const * pNext;
             Type ( CommandPoolCreateFlags )     flags;
             cds :: uint32                       queueFamilyIndex;
         };
@@ -4132,7 +4132,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
         Struct {
             Type ( StructureType )              structureType;
-            Type ( GenericInStructure ) const * pNext;
+            Type ( GenericStructure )   const * pNext;
             Type ( CommandPoolHandle )          commandPool;
             Type ( CommandBufferLevel )         level;
             cds :: uint32                       commandBufferCount;
@@ -4146,7 +4146,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
         Struct {
             Type ( StructureType )                          structureType;
-            Type ( GenericInStructure )             const * pNext;
+            Type ( GenericStructure )               const * pNext;
             Type ( RenderPassHandle )                       renderPass;
             cds :: uint32                                   subpass;
             Type ( FrameBufferHandle )                      frameBuffer;
@@ -4163,7 +4163,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
         Struct {
             Type ( StructureType )                          structureType;
-            Type ( GenericInStructure )             const * pNext;
+            Type ( GenericStructure )               const * pNext;
             Type ( CommandBufferUsageFlags )                flags;
             Type ( CommandBufferInheritanceInfo )   const * pInheritanceInfo;
         };
@@ -4181,7 +4181,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
         Struct {
             Type ( StructureType )              structureType;
-            Type ( GenericInStructure ) const * pNext;
+            Type ( GenericStructure )   const * pNext;
             cds :: uint32                       deviceMask;
         };
 
