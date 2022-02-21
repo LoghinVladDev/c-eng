@@ -14720,6 +14720,17 @@ namespace engine :: vulkan {
     }
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
+    static inline auto prepareContext (
+            SubmitQueueContext            * pContext,
+            cds :: uint32                   count,
+            Type ( SubmitInfo2 )    const * pInfos
+    ) noexcept -> VkSubmitInfo2_t * {
+
+        return & pContext->submitInfos2[0];
+    }
+#endif
+
 }
 
 

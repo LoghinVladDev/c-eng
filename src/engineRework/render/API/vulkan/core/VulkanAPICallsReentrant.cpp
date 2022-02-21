@@ -2107,11 +2107,11 @@ auto engine :: vulkan :: queueSubmit (
         return ResultErrorIllegalArgument;
     }
 
-#endif
-
     if ( submitCount > __C_ENG_VULKAN_CORE_SUBMIT_INFO_MAX_COUNT ) {
         return ResultErrorConfigurationArraySizeSmall;
     }
+
+#endif
 
     __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkQueueSubmit )
 
@@ -2125,5 +2125,112 @@ auto engine :: vulkan :: queueSubmit (
                     fenceHandle
             )
     );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: commandBufferExecuteCommands (
+        Type ( CommandBufferHandle )            primaryCommandBufferHandle,
+        uint32                                  commandBufferCount,
+        Type ( CommandBufferHandle )    const * pSecondaryCommandBufferHandles
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( primaryCommandBufferHandle == nullptr || commandBufferCount == 0U || pSecondaryCommandBufferHandles == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkCmdExecuteCommands )
+
+    vkCmdExecuteCommandsHandle (
+            primaryCommandBufferHandle,
+            commandBufferCount,
+            pSecondaryCommandBufferHandles
+    );
+
+    return ResultSuccess;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
+auto engine :: vulkan :: queueSubmit (
+        Type ( QueueHandle )            queueHandle,
+        uint32                          submitCount,
+        Type ( SubmitInfo2 )    const * pSubmits,
+        Type ( FenceHandle )            fenceHandle
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( queueHandle == nullptr || submitCount == 0U || pSubmits == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+    if ( submitCount > __C_ENG_VULKAN_CORE_SUBMIT_INFO_MAX_COUNT ) {
+        return ResultErrorConfigurationArraySizeSmall;
+    }
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE && __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_2_R ( LastCreatedInstance :: acquire(), vkQueueSubmit2, KHR )
+
+    auto context = ContextManager :: acquire();
+
+    if ( vkQueueSubmit2Handle != nullptr ) {
+        return static_cast < Type ( Result ) > (
+                vkQueueSubmit2Handle (
+                        queueHandle,
+                        submitCount,
+                        prepareContext ( & context.data().submit.queue, submitCount, & pSubmits [0] ),
+                        fenceHandle
+                )
+        );
+    }
+
+    return static_cast < Type ( Result ) > (
+            vkQueueSubmit2KHRHandle (
+                    queueHandle,
+                    submitCount,
+                    reinterpret_cast < VkSubmitInfo2KHR * > ( prepareContext ( & context.data().submit.queue, submitCount, & pSubmits [0] ) ),
+                    fenceHandle
+            )
+    );
+
+#elif __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkQueueSubmit2 )
+
+    auto context = ContextManager :: acquire();
+
+    return static_cast < Type ( Result ) > (
+                vkQueueSubmit2Handle (
+                        queueHandle,
+                        submitCount,
+                        prepareContext ( & context.data().submit.queue, submitCount, & pSubmits [0] ),
+                        fenceHandle
+                )
+        );
+
+#elif __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkQueueSubmit2KHR )
+
+    auto context = ContextManager :: acquire();
+
+    return static_cast < Type ( Result ) > (
+                vkQueueSubmit2HandleKHR (
+                        queueHandle,
+                        submitCount,
+                        prepareContext ( & context.data().submit.queue, submitCount, & pSubmits [0] ),
+                        fenceHandle
+                )
+        );
+
+#endif
 }
 #endif

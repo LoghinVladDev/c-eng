@@ -685,6 +685,7 @@ struct SubmitQueueContext {
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
     engine :: vulkan :: Type ( Result )                     error;
     VkSubmitInfo                                            submitInfos [ __C_ENG_VULKAN_CORE_SUBMIT_INFO_MAX_COUNT ];
+    VkSubmitInfo2_t                                         submitInfos2 [ __C_ENG_VULKAN_CORE_SUBMIT_INFO_MAX_COUNT ];
     VkPipelineStageFlags                                    stageFlags [ __C_ENG_VULKAN_CORE_SUBMIT_INFO_MAX_COUNT ] [ __C_ENG_VULKAN_CORE_PIPELINE_STAGE_FLAGS_MAX_COUNT ];
 #endif
 #if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE

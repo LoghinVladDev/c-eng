@@ -74,6 +74,33 @@
         }                                                                                   \
     }
 
+#define __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_2_R(_instance, _fName, _ext)                            \
+    static PFN_ ## _fName _fName ## Handle;                                                             \
+    static PFN_ ## _fName ## _ext _fName ## _ext ## Handle;                                             \
+    static Mutex _fName ## Lock;                                                                        \
+    if ( _fName ## Handle == nullptr && _fName ## _ext ## Handle == nullptr ) {                         \
+        LockGuard guard ( _fName ## Lock );                                                             \
+        if ( _fName ## Handle == nullptr && _fName ## _ext ## Handle == nullptr ) {                     \
+            if (                                                                                        \
+                    auto lResult = vulkan :: getInstanceFunctionAddress (                               \
+                        _instance,                                                                      \
+                        # _fName,                                                                       \
+                        reinterpret_cast < FunctionHandleAddress > ( & _fName ## Handle )               \
+                    ); lResult != vulkan :: ResultSuccess                                               \
+            ) {                                                                                         \
+                if (                                                                                    \
+                        lResult = vulkan :: getInstanceFunctionAddress (                                \
+                            _instance,                                                                  \
+                            __C_ENG_STRINGIFY ( _fName ## _ext ),                                       \
+                            reinterpret_cast < FunctionHandleAddress > ( & _fName ## _ext ## Handle )   \
+                        ); lResult != vulkan :: ResultSuccess                                           \
+                ) {                                                                                     \
+                    return lResult;                                                                     \
+                }                                                                                       \
+            }                                                                                           \
+        }                                                                                               \
+    }
+
 #define __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_2(_instance, _fName, _ext)                  \
     static PFN_ ## _fName _fName ## Handle;                                                 \
     if ( _fName ## Handle == nullptr ) {                                                    \
@@ -228,8 +255,10 @@ using VkPhysicalDeviceSubgroupSizeControlProperties_t           = VkPhysicalDevi
 
 #if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 using VkPhysicalDeviceSynchronization2Features_t                = VkPhysicalDeviceSynchronization2Features;
+using VkSubmitInfo2_t                                           = VkSubmitInfo2;
 #elif __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
 using VkPhysicalDeviceSynchronization2Features_t                = VkPhysicalDeviceSynchronization2FeaturesKHR;
+using VkSubmitInfo2_t                                           = VkSubmitInfo2KHR;
 #endif
 
 #if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE

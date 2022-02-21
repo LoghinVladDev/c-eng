@@ -11958,90 +11958,90 @@ static inline auto toVulkanFormat (
     }
 }
 
-auto vulkan :: queueSubmit (
-        Type ( QueueHandle )            queueHandle,
-        cds :: uint32                   submitCount,
-        Type ( SubmitInfo2 )    const * pSubmits,
-        Type ( FenceHandle )            fenceHandle
-) noexcept -> Type ( Result ) {
-
-#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
-
-    if (
-            queueHandle == nullptr ||
-            pSubmits    == nullptr ||
-            submitCount == 0U
-    ) {
-        return ResultErrorIllegalArgument;
-    }
-
-#endif
-
-#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_2 ( lastCreatedInstance, vkQueueSubmit2, KHR )
-#else
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION ( lastCreatedInstance, vkQueueSubmit2KHR )
-#endif
-
-    if ( submitCount > __C_ENG_VULKAN_CORE_SUBMIT_INFO_MAX_COUNT ) {
-        return ResultErrorConfigurationArraySizeSmall;
-    }
-
-    for ( uint32 i = 0U; i < submitCount; ++ i ) {
-        toVulkanFormat ( i, & submitInfos2 [ i ], & pSubmits [ i ] );
-    }
-
-    return static_cast < Type ( Result ) > (
-#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
-            vkQueueSubmit2Handle (
-                    queueHandle,
-                    submitCount,
-                    & submitInfos2 [0],
-                    fenceHandle
-            )
-#else
-            vkQueueSubmit2KHRHandle (
-                    queueHandle,
-                    submitCount,
-                    & submitInfos2 [0],
-                    fenceHandle
-            )
-#endif
-    );
-}
+//auto vulkan :: queueSubmit (
+//        Type ( QueueHandle )            queueHandle,
+//        cds :: uint32                   submitCount,
+//        Type ( SubmitInfo2 )    const * pSubmits,
+//        Type ( FenceHandle )            fenceHandle
+//) noexcept -> Type ( Result ) {
+//
+//#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+//
+//    if (
+//            queueHandle == nullptr ||
+//            pSubmits    == nullptr ||
+//            submitCount == 0U
+//    ) {
+//        return ResultErrorIllegalArgument;
+//    }
+//
+//#endif
+//
+//#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+//    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_2 ( lastCreatedInstance, vkQueueSubmit2, KHR )
+//#else
+//    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION ( lastCreatedInstance, vkQueueSubmit2KHR )
+//#endif
+//
+//    if ( submitCount > __C_ENG_VULKAN_CORE_SUBMIT_INFO_MAX_COUNT ) {
+//        return ResultErrorConfigurationArraySizeSmall;
+//    }
+//
+//    for ( uint32 i = 0U; i < submitCount; ++ i ) {
+//        toVulkanFormat ( i, & submitInfos2 [ i ], & pSubmits [ i ] );
+//    }
+//
+//    return static_cast < Type ( Result ) > (
+//#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+//            vkQueueSubmit2Handle (
+//                    queueHandle,
+//                    submitCount,
+//                    & submitInfos2 [0],
+//                    fenceHandle
+//            )
+//#else
+//            vkQueueSubmit2KHRHandle (
+//                    queueHandle,
+//                    submitCount,
+//                    & submitInfos2 [0],
+//                    fenceHandle
+//            )
+//#endif
+//    );
+//}
 
 #endif
 
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 
-auto vulkan :: commandBufferExecuteCommands (
-        Type ( CommandBufferHandle )            commandBuffer,
-        uint32                                  commandBufferCount,
-        Type ( CommandBufferHandle )    const * pCommandBuffers
-) noexcept -> Type ( Result ) {
-
-#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
-
-    if (
-            commandBuffer       == nullptr ||
-            pCommandBuffers     == nullptr ||
-            commandBufferCount  == 0U
-    ) {
-        return ResultErrorIllegalArgument;
-    }
-
-#endif
-
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION ( lastCreatedInstance, vkCmdExecuteCommands )
-
-    vkCmdExecuteCommandsHandle (
-            commandBuffer,
-            commandBufferCount,
-            pCommandBuffers
-    );
-
-    return ResultSuccess;
-}
+//auto vulkan :: commandBufferExecuteCommands (
+//        Type ( CommandBufferHandle )            commandBuffer,
+//        uint32                                  commandBufferCount,
+//        Type ( CommandBufferHandle )    const * pCommandBuffers
+//) noexcept -> Type ( Result ) {
+//
+//#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+//
+//    if (
+//            commandBuffer       == nullptr ||
+//            pCommandBuffers     == nullptr ||
+//            commandBufferCount  == 0U
+//    ) {
+//        return ResultErrorIllegalArgument;
+//    }
+//
+//#endif
+//
+//    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION ( lastCreatedInstance, vkCmdExecuteCommands )
+//
+//    vkCmdExecuteCommandsHandle (
+//            commandBuffer,
+//            commandBufferCount,
+//            pCommandBuffers
+//    );
+//
+//    return ResultSuccess;
+//}
 
 #endif
 
