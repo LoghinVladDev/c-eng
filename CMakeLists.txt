@@ -256,6 +256,9 @@ if(Vulkan_FOUND)
             src/engineRework/render/API/vulkan/core/VulkanAPICalls.hpp
             src/engineRework/render/API/vulkan/core/VulkanAPICalls.cpp
 
+            src/engineRework/render/API/vulkan/core/VulkanAPICallsConversion.cpp
+            src/engineRework/render/API/vulkan/core/VulkanAPICallsConversion.hpp
+
             src/engineRework/render/API/vulkan/core/VulkanAPIExceptions.hpp
 
             src/engineRework/render/API/vulkan/core/VulkanAPIDetails.hpp

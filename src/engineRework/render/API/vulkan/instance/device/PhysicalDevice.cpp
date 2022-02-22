@@ -26,30 +26,32 @@ struct DeviceWithExtensions {
     bool                                        queried;
 };
 
-static vulkan :: Type ( Instance ) const * pLastQueriedInstance = nullptr;
-static Array < vulkan :: Self > physicalDevices;
-
-static vulkan :: Type ( PhysicalDeviceHandle )  physicalDeviceHandles [ __C_ENG_VULKAN_CORE_PHYSICAL_DEVICE_MAX_COUNT ];
-
-static vulkan :: Type ( ExtensionProperties )   extensionPropertiesArray [ __C_ENG_VULKAN_CORE_LAYER_EXTENSION_MAX_COUNT ];
-static vulkan :: Self :: DeviceExtension        ungroupedExtensions [ __C_ENG_VULKAN_CORE_PHYSICAL_DEVICE_MAX_COUNT ] [ __C_ENG_VULKAN_CORE_LAYER_EXTENSION_MAX_COUNT ];
-static DeviceWithExtensions                     devicesWithExtensions [ __C_ENG_VULKAN_CORE_PHYSICAL_DEVICE_MAX_COUNT ];
-static uint32                                   devicesWithExtensionCount;
-static Mutex                                    deviceExtensionLock;
-
-static vulkan :: Type ( PhysicalDeviceHandle )  lastQueriedDevice;
-static DeviceWithExtensions                   * pLastQueriedDeviceExtensions;
+namespace globals {
+    static vulkan :: Type ( Instance ) const * pLastQueriedInstance = nullptr;
+    static Array < vulkan :: Self > physicalDevices;
+    
+    static vulkan :: Type ( PhysicalDeviceHandle )  physicalDeviceHandles [ __C_ENG_VULKAN_CORE_PHYSICAL_DEVICE_MAX_COUNT ];
+    
+    static vulkan :: Type ( ExtensionProperties )   extensionPropertiesArray [ __C_ENG_VULKAN_CORE_LAYER_EXTENSION_MAX_COUNT ];
+    static vulkan :: Self :: DeviceExtension        ungroupedExtensions [ __C_ENG_VULKAN_CORE_PHYSICAL_DEVICE_MAX_COUNT ] [ __C_ENG_VULKAN_CORE_LAYER_EXTENSION_MAX_COUNT ];
+    static DeviceWithExtensions                     devicesWithExtensions [ __C_ENG_VULKAN_CORE_PHYSICAL_DEVICE_MAX_COUNT ];
+    static uint32                                   devicesWithExtensionCount;
+    static Mutex                                    deviceExtensionLock;
+    
+    static vulkan :: Type ( PhysicalDeviceHandle )  lastQueriedDevice;
+    static DeviceWithExtensions                   * pLastQueriedDeviceExtensions;
+};
 
 #ifndef NDEBUG
 
 static inline auto logPhysicalDevices () noexcept -> void {
-    (void) __C_ENG_TYPE ( Logger ) :: instance().info ( "Found "_s + :: physicalDevices.size() + " vulkan compatible devices : " );
+    (void) __C_ENG_TYPE ( Logger ) :: instance().info ( "Found "_s + globals :: physicalDevices.size() + " vulkan compatible devices : " );
 
-    for ( uint32 i = 0U; i < physicalDevices.size(); ++ i ) {
+    for ( uint32 i = 0U; i < globals :: physicalDevices.size(); ++ i ) {
 
         (void) __C_ENG_TYPE ( Logger ) :: instance().info ( " "_s * 4 + "Device " + i );
 
-        auto deviceAsString = toString(physicalDevices[static_cast < Index > ( i )].details());
+        auto deviceAsString = toString(globals :: physicalDevices[static_cast < Index > ( i )].details());
 
         int indent = 8;
         auto rows = deviceAsString.split(',');
@@ -96,12 +98,12 @@ static inline auto logPhysicalDevices () noexcept -> void {
 
         (void) __C_ENG_TYPE ( Logger ) :: instance().info (" "_s * indent + "Device " + i + " Queue Family Properties : ");
 
-        for ( uint32 j = 0U; j < physicalDevices[static_cast < Index > ( i )].queueFamilies().size(); ++ j ) {
+        for ( uint32 j = 0U; j < globals :: physicalDevices[static_cast < Index > ( i )].queueFamilies().size(); ++ j ) {
             indent += 4;
 
             (void) __C_ENG_TYPE ( Logger ) :: instance().info (" "_s * indent + "Family " + j);
 
-            auto queuePropertiesAsString = toString(physicalDevices[static_cast < Index > ( i )].queueFamilies()[static_cast < Index > ( j )].details());
+            auto queuePropertiesAsString = toString(globals :: physicalDevices[static_cast < Index > ( i )].queueFamilies()[static_cast < Index > ( j )].details());
 
             auto innerRows = queuePropertiesAsString.split(',');
 
@@ -190,7 +192,7 @@ auto vulkan :: Self :: refreshPhysicalDevices (
     result = vulkan :: enumeratePhysicalDevices (
             pInstance->handle(),
             & physicalDeviceCount,
-            physicalDeviceHandles // NOLINT(clion-misra-cpp2008-5-2-12)
+            globals :: physicalDeviceHandles // NOLINT(clion-misra-cpp2008-5-2-12)
     );
 
     if ( result != ResultSuccess ) {
@@ -203,7 +205,7 @@ auto vulkan :: Self :: refreshPhysicalDevices (
 
             Self device;
 
-            device._handle      = physicalDeviceHandles[i];
+            device._handle      = globals :: physicalDeviceHandles[i];
             device._instance    = pInstance;
 
             result = vulkan :: getPhysicalDeviceDetails (
@@ -223,38 +225,38 @@ auto vulkan :: Self :: refreshPhysicalDevices (
         }
     }
 
-    pLastQueriedInstance = pInstance;
-    :: physicalDevices = std :: move ( newPhysicalDevices );
+    globals :: pLastQueriedInstance = pInstance;
+    globals :: physicalDevices = std :: move ( newPhysicalDevices );
 
     {
-        LockGuard guard ( deviceExtensionLock );
+        LockGuard guard ( globals :: deviceExtensionLock );
 
-        if ( :: physicalDevices.size() > __C_ENG_VULKAN_CORE_PHYSICAL_DEVICE_MAX_COUNT ) {
+        if ( globals :: physicalDevices.size() > __C_ENG_VULKAN_CORE_PHYSICAL_DEVICE_MAX_COUNT ) {
             throw Type ( VulkanAPIException ) ( "Configuration Size for Physical Device Count is too small" );
         }
 
-        for ( auto & device : :: physicalDevices ) {
+        for ( auto & device : globals :: physicalDevices ) {
 
             bool addDevice = true;
-            for ( uint32 i = 0U; i < devicesWithExtensionCount; ++ i ) {
+            for ( uint32 i = 0U; i < globals :: devicesWithExtensionCount; ++ i ) {
 
-                if ( device.handle() == devicesWithExtensions[i].handle ) {
+                if ( device.handle() == globals :: devicesWithExtensions[i].handle ) {
                     addDevice = false;
                     break;
                 }
             }
 
             if ( addDevice ) {
-                devicesWithExtensions[ devicesWithExtensionCount ] = {
+                globals :: devicesWithExtensions[ globals :: devicesWithExtensionCount ] = {
                         .handle             = device.handle(),
                         .extensionArray    = {
-                                .pExtensions    = & ungroupedExtensions [ devicesWithExtensionCount ][0],
+                                .pExtensions    = & globals :: ungroupedExtensions [ globals :: devicesWithExtensionCount ][0],
                                 .count          = 0U
                         },
                         .queried            = false
                 };
 
-                ++ devicesWithExtensionCount;
+                ++ globals :: devicesWithExtensionCount;
             }
         }
     }
@@ -315,11 +317,11 @@ auto vulkan :: Self :: refreshQueueFamilies () noexcept (false) -> Self & {
 auto vulkan :: Self :: physicalDevices (
         __C_ENG_TYPE ( Instance ) const * pInstance
 ) noexcept (false) -> Array < Self > const & {
-    if ( pInstance != nullptr && pLastQueriedInstance != pInstance ) {
+    if ( pInstance != nullptr && globals :: pLastQueriedInstance != pInstance ) {
         Self :: refreshPhysicalDevices ( pInstance );
     }
 
-    return :: physicalDevices;
+    return globals :: physicalDevices;
 }
 
 auto vulkan :: Self :: renderScore () const noexcept -> uint32 {
@@ -346,17 +348,17 @@ static inline auto getDeviceExtensions (
         throw vulkan :: Type ( VulkanAPIException ) ( "Device not acquired. Cannot retrieve properties" );
     }
 
-    if ( handle == lastQueriedDevice ) {
-        return * pLastQueriedDeviceExtensions;
+    if ( handle == globals :: lastQueriedDevice ) {
+        return * globals :: pLastQueriedDeviceExtensions;
     }
 
-    for ( uint32 i = 0U; i < devicesWithExtensionCount; ++ i ) {
-        if ( devicesWithExtensions[i].handle == handle ) {
+    for ( uint32 i = 0U; i < globals :: devicesWithExtensionCount; ++ i ) {
+        if ( globals :: devicesWithExtensions[i].handle == handle ) {
 
-            lastQueriedDevice = handle;
-            pLastQueriedDeviceExtensions = & devicesWithExtensions[i];
+            globals :: lastQueriedDevice = handle;
+            globals :: pLastQueriedDeviceExtensions = & globals :: devicesWithExtensions[i];
 
-            return devicesWithExtensions[i];
+            return globals :: devicesWithExtensions[i];
         }
     }
 
@@ -369,7 +371,7 @@ static inline auto refreshExtensions (
 ) noexcept (false) -> void {
 
     using namespace vulkan; // NOLINT(clion-misra-cpp2008-7-3-4)
-    LockGuard guard ( deviceExtensionLock );
+    LockGuard guard ( globals :: deviceExtensionLock );
 
     auto result = enumeratePhysicalDeviceExtensionProperties (
             rDeviceWithExtensions.handle,
@@ -383,7 +385,7 @@ static inline auto refreshExtensions (
     result = enumeratePhysicalDeviceExtensionProperties (
             rDeviceWithExtensions.handle,
             & rDeviceWithExtensions.extensionArray.count,
-            & extensionPropertiesArray[0]
+            & globals :: extensionPropertiesArray[0]
     );
 
     if ( result != ResultSuccess ) {
@@ -393,8 +395,8 @@ static inline auto refreshExtensions (
     for ( uint32 i = 0U; i < rDeviceWithExtensions.extensionArray.count; ++ i ) {
         (void) std :: memcpy (
                 & rDeviceWithExtensions.extensionArray.pExtensions[i].properties,
-                & extensionPropertiesArray[i],
-                sizeof ( extensionPropertiesArray[i] )
+                & globals :: extensionPropertiesArray[i],
+                sizeof ( globals :: extensionPropertiesArray[i] )
         );
 
         rDeviceWithExtensions.extensionArray.pExtensions[i].enabled =

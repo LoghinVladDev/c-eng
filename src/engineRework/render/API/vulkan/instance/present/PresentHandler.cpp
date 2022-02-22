@@ -25,15 +25,17 @@ struct DeviceSurfaceProperties {
     Type ( SurfaceHandle )          surfaceHandle;
 };
 
-static Mutex propertiesLock;
+namespace globals {
+    static Mutex propertiesLock;
 
-static Type ( SurfaceFormat ) surfaceFormats [ __C_ENG_VULKAN_CORE_PHYSICAL_DEVICE_MAX_COUNT * __C_ENG_VULKAN_CORE_PHYSICAL_DEVICE_SURFACE_MAX_COUNT ] [ __C_ENG_VULKAN_CORE_SURFACE_FORMAT_MAX_COUNT ];
-static Type ( PresentMode ) presentModes [ __C_ENG_VULKAN_CORE_PHYSICAL_DEVICE_MAX_COUNT * __C_ENG_VULKAN_CORE_PHYSICAL_DEVICE_SURFACE_MAX_COUNT ] [ __C_ENG_VULKAN_CORE_SURFACE_PRESENT_MODE_MAX_COUNT ];
+    static Type ( SurfaceFormat ) surfaceFormats [ __C_ENG_VULKAN_CORE_PHYSICAL_DEVICE_MAX_COUNT * __C_ENG_VULKAN_CORE_PHYSICAL_DEVICE_SURFACE_MAX_COUNT ] [ __C_ENG_VULKAN_CORE_SURFACE_FORMAT_MAX_COUNT ];
+    static Type ( PresentMode ) presentModes [ __C_ENG_VULKAN_CORE_PHYSICAL_DEVICE_MAX_COUNT * __C_ENG_VULKAN_CORE_PHYSICAL_DEVICE_SURFACE_MAX_COUNT ] [ __C_ENG_VULKAN_CORE_SURFACE_PRESENT_MODE_MAX_COUNT ];
 
-static DeviceSurfaceProperties properties [ __C_ENG_VULKAN_CORE_PHYSICAL_DEVICE_MAX_COUNT * __C_ENG_VULKAN_CORE_PHYSICAL_DEVICE_SURFACE_MAX_COUNT ];
-static uint32 propertyCount;
+    static DeviceSurfaceProperties properties [ __C_ENG_VULKAN_CORE_PHYSICAL_DEVICE_MAX_COUNT * __C_ENG_VULKAN_CORE_PHYSICAL_DEVICE_SURFACE_MAX_COUNT ];
+    static uint32 propertyCount;
 
-static DeviceSurfaceProperties * pLastUsedDeviceProperties;
+    static DeviceSurfaceProperties * pLastUsedDeviceProperties;
+}
 
 
 struct ImageViewArea {
@@ -41,9 +43,10 @@ struct ImageViewArea {
     Self                const * pOwner;
 };
 
-static Mutex imageViewsLock;
-
-static ImageViewArea imageViewAreas [ __C_ENG_VULKAN_CORE_PHYSICAL_DEVICE_MAX_COUNT * __C_ENG_VULKAN_CORE_PHYSICAL_DEVICE_SURFACE_MAX_COUNT ];
+namespace globals {
+    static Mutex imageViewsLock;
+    static ImageViewArea imageViewAreas [ __C_ENG_VULKAN_CORE_PHYSICAL_DEVICE_MAX_COUNT * __C_ENG_VULKAN_CORE_PHYSICAL_DEVICE_SURFACE_MAX_COUNT ];
+}
 
 
 auto Self :: propertiesForDevice (
@@ -58,32 +61,32 @@ auto Self :: propertiesForDevice (
         return nullptr;
     }
 
-    LockGuard guard ( propertiesLock );
+    LockGuard guard ( globals :: propertiesLock );
 
     if (
-            pLastUsedDeviceProperties                   != nullptr &&
-            pLastUsedDeviceProperties->deviceHandle     == deviceHandle &&
-            pLastUsedDeviceProperties->surfaceHandle    == surfaceHandle
+            globals :: pLastUsedDeviceProperties                   != nullptr &&
+            globals :: pLastUsedDeviceProperties->deviceHandle     == deviceHandle &&
+            globals :: pLastUsedDeviceProperties->surfaceHandle    == surfaceHandle
     ) {
-        return & pLastUsedDeviceProperties->properties;
+        return & globals :: pLastUsedDeviceProperties->properties;
     }
 
-    for ( uint32 i = 0U; i < propertyCount; ++ i ) {
-        if ( properties[i].deviceHandle == deviceHandle ) {
+    for ( uint32 i = 0U; i < globals :: propertyCount; ++ i ) {
+        if ( globals :: properties[i].deviceHandle == deviceHandle ) {
 
-            pLastUsedDeviceProperties = & properties [i];
-            return & properties[i].properties;
+            globals :: pLastUsedDeviceProperties = & globals :: properties [i];
+            return & globals :: properties[i].properties;
         }
     }
 
-    if ( propertyCount >= __C_ENG_VULKAN_CORE_PHYSICAL_DEVICE_MAX_COUNT ) {
+    if ( globals :: propertyCount >= __C_ENG_VULKAN_CORE_PHYSICAL_DEVICE_MAX_COUNT ) {
         return nullptr;
     }
 
-    auto currentProperties = & properties [ propertyCount ];
+    auto currentProperties = & globals :: properties [ globals :: propertyCount ];
 
-    currentProperties->properties.formats.pFormats              = & surfaceFormats [ propertyCount ] [ 0 ];
-    currentProperties->properties.presentModes.pPresentModes    = & presentModes [ propertyCount ] [ 0 ];
+    currentProperties->properties.formats.pFormats              = & globals :: surfaceFormats [ globals :: propertyCount ] [ 0 ];
+    currentProperties->properties.presentModes.pPresentModes    = & globals :: presentModes [ globals :: propertyCount ] [ 0 ];
 
     auto result = getPhysicalDeviceSurfaceCapabilities (
             deviceHandle,
@@ -137,11 +140,11 @@ auto Self :: propertiesForDevice (
         __C_ENG_LOG_AND_THROW_DETAILED_API_CALL_EXCEPTION ( error, "getPhysicalDeviceSurfacePresentModes", result );
     }
 
-    currentProperties->deviceHandle     = deviceHandle;
-    currentProperties->surfaceHandle    = surfaceHandle;
-    pLastUsedDeviceProperties           = currentProperties;
+    currentProperties->deviceHandle         = deviceHandle;
+    currentProperties->surfaceHandle        = surfaceHandle;
+    globals :: pLastUsedDeviceProperties    = currentProperties;
 
-    return & properties [ propertyCount ++ ].properties;
+    return & globals :: properties [ globals :: propertyCount ++ ].properties;
 }
 
 auto Self :: deviceSupportsSurfacePresent (
@@ -186,9 +189,9 @@ auto Self :: createSuitablePresentHandler (
 
 auto Self :: acquireImageViews () noexcept -> Type ( ImageViewHandle ) * {
 
-    LockGuard guard ( imageViewsLock );
+    LockGuard guard ( globals :: imageViewsLock );
 
-    for ( auto & area : imageViewAreas ) {
+    for ( auto & area : globals :: imageViewAreas ) {
         if ( area.pOwner == nullptr ) {
             area.pOwner = this;
             return area.imageViewHandles;
@@ -200,9 +203,9 @@ auto Self :: acquireImageViews () noexcept -> Type ( ImageViewHandle ) * {
 
 auto Self :: releaseImageViews () noexcept -> void {
 
-    LockGuard guard ( imageViewsLock );
+    LockGuard guard ( globals :: imageViewsLock );
 
-    for ( auto & area : imageViewAreas ) {
+    for ( auto & area : globals :: imageViewAreas ) {
         if ( area.pOwner == this ) {
             area.pOwner = nullptr;
             return;

@@ -39,8 +39,10 @@ using namespace engine; // NOLINT(clion-misra-cpp2008-7-3-4)
 #define C_ENG_MAP_START     CLASS ( Window, PARENT ( Object ) )
 #include <ObjectMapping.hpp>
 
-bool __GLFWActive = false; // NOLINT(bugprone-reserved-identifier)
-static Array < Self const * > activeWindows;
+namespace globals {
+    bool __GLFWActive = false; // NOLINT(bugprone-reserved-identifier)
+    static Array < Self const * > activeWindows;
+}
 
 constexpr static auto GLFWErrorCodeName ( int errorCode ) noexcept -> StringLiteral {
     StringLiteral errorName = "";
@@ -68,7 +70,7 @@ static auto GLFWErrorCallback ( int errorCode, StringLiteral errorMessage ) noex
 }
 
 auto __initializeGLFW () noexcept (false) -> void { // NOLINT(bugprone-reserved-identifier)
-    if ( __GLFWActive ) {
+    if ( globals :: __GLFWActive ) {
         return;
     }
 
@@ -109,11 +111,11 @@ auto __initializeGLFW () noexcept (false) -> void { // NOLINT(bugprone-reserved-
             runtimeRevision
     );
 
-    __GLFWActive = true;
+    globals :: __GLFWActive = true;
 }
 
 static auto terminateGLFW () noexcept -> void {
-    if ( ! __GLFWActive ) {
+    if ( ! globals :: __GLFWActive ) {
         return;
     }
 
@@ -291,7 +293,7 @@ auto Self :: init () noexcept (false) -> Self & {
         .y =    static_cast < uint32 > ( yPos )
     };
 
-    activeWindows.add (this);
+    globals :: activeWindows.add (this);
     return * this;
 }
 
@@ -322,9 +324,9 @@ auto Self :: clear () noexcept -> Self & {
     glfwDestroyWindow ( this->_handle );
     this->_handle = nullptr;
 
-    (void) activeWindows.removeFirst ( this );
+    (void) globals :: activeWindows.removeFirst ( this );
 
-    if ( activeWindows.empty() ) {
+    if ( globals :: activeWindows.empty() ) {
         terminateGLFW ();
     }
 

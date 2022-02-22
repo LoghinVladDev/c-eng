@@ -12,7 +12,10 @@ using namespace cds; // NOLINT(clion-misra-cpp2008-7-3-4)
 using namespace engine; // NOLINT(clion-misra-cpp2008-7-3-4)
 
 
-extern bool __GLFWActive; // NOLINT(bugprone-reserved-identifier)
+namespace globals {
+    extern bool __GLFWActive; // NOLINT(bugprone-reserved-identifier)
+}
+
 extern auto __initializeGLFW () noexcept (false) -> void; // NOLINT(bugprone-reserved-identifier)
 
 
@@ -131,7 +134,7 @@ namespace engine {
         }
 
         auto query () noexcept -> void {
-            if ( ! __GLFWActive ) {
+            if ( ! globals :: __GLFWActive ) {
                 try {
                     __initializeGLFW();
                 } catch ( Exception const & ) {
@@ -316,7 +319,7 @@ auto Self :: logMonitorQueryResult () noexcept -> void {
 #include <ObjectMapping.hpp>
 
 auto Self :: monitors () noexcept -> Array < Self const * > const & {
-    if ( ! monitorContainer.monitorsQueried || ! __GLFWActive ) {
+    if ( ! monitorContainer.monitorsQueried || ! globals :: __GLFWActive ) {
         monitorContainer.query();
     }
 
@@ -324,7 +327,7 @@ auto Self :: monitors () noexcept -> Array < Self const * > const & {
 }
 
 __C_ENG_MAYBE_UNUSED auto Self :: primaryMonitor () noexcept -> Self const * {
-    if ( ! monitorContainer.monitorsQueried || ! __GLFWActive ) {
+    if ( ! monitorContainer.monitorsQueried || ! globals :: __GLFWActive ) {
         monitorContainer.query();
     }
 
@@ -332,7 +335,7 @@ __C_ENG_MAYBE_UNUSED auto Self :: primaryMonitor () noexcept -> Self const * {
 }
 
 __C_ENG_MAYBE_UNUSED auto Self :: initMonitorHandler () noexcept -> void {
-    if ( ! monitorContainer.monitorsQueried || ! __GLFWActive ) {
+    if ( ! monitorContainer.monitorsQueried || ! globals :: __GLFWActive ) {
         monitorContainer.query();
     }
 }

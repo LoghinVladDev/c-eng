@@ -497,6 +497,21 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         ) noexcept -> Type ( Result );
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+        NoDiscard MaybeUnused extern auto destroyFence (
+                Type ( DeviceHandle ),
+                Type ( FenceHandle ),
+                Type ( AllocationCallbacks )    const *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+        NoDiscard MaybeUnused extern auto getFenceStatus (
+                Type ( DeviceHandle ),
+                Type ( FenceHandle )
+        ) noexcept -> Type ( Result );
+#endif
+
     }
 
 }

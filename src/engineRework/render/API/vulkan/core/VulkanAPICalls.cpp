@@ -5,6 +5,7 @@
 #include <VulkanAPI.hpp>
 #include <VulkanAPICallsPrivate.hpp>
 #include <VulkanAPICallsConversion.hpp>
+#include <VulkanAPICallsTypes.hpp>
 #include <CDS/Mutex>
 #include <CDS/LockGuard>
 
@@ -2339,5 +2340,52 @@ auto engine :: vulkan :: getFenceFD (
                     pHandle
             )
     );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: destroyFence (
+        Type ( DeviceHandle )                   deviceHandle,
+        Type ( FenceHandle )                    fenceHandle,
+        Type ( AllocationCallbacks )    const * pAllocationCallbacks
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || fenceHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkDestroyFence )
+
+    vkDestroyFenceHandle (
+            deviceHandle,
+            fenceHandle,
+            AllocatorHandler :: applyCallbacks ( pAllocationCallbacks )
+    );
+
+    return ResultSuccess;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: getFenceStatus (
+        Type ( DeviceHandle )                   deviceHandle,
+        Type ( FenceHandle )                    fenceHandle
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || fenceHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkGetFenceStatus )
+
+    return static_cast < Type ( Result ) > ( vkGetFenceStatusHandle ( deviceHandle, fenceHandle ) );
 }
 #endif

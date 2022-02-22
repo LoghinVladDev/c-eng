@@ -78,8 +78,10 @@ namespace engine {
 
 }
 
-static Self handler;
-static __C_ENG_TYPE ( Engine ) * pGlobalEngine;
+namespace globals {
+    static Self                     handler;
+    static __C_ENG_TYPE (Engine)  * pGlobalEngine;
+}
 
 
 auto Self :: connectController (
@@ -105,10 +107,10 @@ auto Self :: connectController (
 
     glfwSetJoystickUserPointer ( controllerID, reinterpret_cast < void * > ( pNewController ) );
 
-    if ( pGlobalEngine != nullptr ) {
+    if ( globals :: pGlobalEngine != nullptr ) {
 
         __C_ENG_TYPE ( ControllerConnectEvent ) event ( pNewController );
-        (void) pGlobalEngine->eventHandler().controllerConnectEvent ( & event );
+        (void) globals :: pGlobalEngine->eventHandler().controllerConnectEvent ( & event );
 
     }
 
@@ -138,10 +140,10 @@ auto Self :: disconnectController (
         -- connectedControllerCount;
     }
 
-    if ( pGlobalEngine != nullptr ) {
+    if ( globals :: pGlobalEngine != nullptr ) {
 
         __C_ENG_TYPE ( ControllerDisconnectEvent ) event ( pController );
-        (void) pGlobalEngine->eventHandler().controllerDisconnectEvent ( & event );
+        (void) globals :: pGlobalEngine->eventHandler().controllerDisconnectEvent ( & event );
 
     }
 
@@ -159,7 +161,7 @@ auto Self :: disconnectController (
 auto Self :: setEngine (
         __C_ENG_TYPE ( Engine ) * pEngine
 ) noexcept -> void {
-    pGlobalEngine = pEngine;
+    globals :: pGlobalEngine = pEngine;
 }
 
 static auto controllerConnectEventRootCallback (
@@ -168,11 +170,11 @@ static auto controllerConnectEventRootCallback (
 ) noexcept -> void {
     if ( connectEvent == GLFW_CONNECTED ) {
 
-        handler.connectController ( controllerID );
+        globals :: handler.connectController ( controllerID );
 
     } else if ( connectEvent == GLFW_DISCONNECTED ) {
 
-        handler.disconnectController ( controllerID );
+        globals :: handler.disconnectController ( controllerID );
 
     } else {
         // do nothing
@@ -180,17 +182,17 @@ static auto controllerConnectEventRootCallback (
 }
 
 __C_ENG_MAYBE_UNUSED auto Self :: connectedControllerCount () noexcept -> uint32 {
-    return handler.connectedControllerCount;
+    return globals :: handler.connectedControllerCount;
 }
 
 __C_ENG_MAYBE_UNUSED auto Self :: connectedControllers () noexcept -> Self ** {
-    return handler.connectedControllers;
+    return globals :: handler.connectedControllers;
 }
 
 __C_ENG_MAYBE_UNUSED auto Self :: updateEvents () noexcept -> void {
 
-    for ( uint32 i = 0U; i < handler.connectedControllerCount; ++ i ) {
-        handler.connectedControllers[i]->update();
+    for ( uint32 i = 0U; i < globals :: handler.connectedControllerCount; ++ i ) {
+        globals :: handler.connectedControllers[i]->update();
     }
 }
 
@@ -227,8 +229,10 @@ struct RawControllerEvent { // NOLINT(clion-misra-cpp2008-0-1-7)
     };
 };
 
-RawControllerEvent activeEvents[512];
-uint32          activeEventCount;
+namespace globals {
+    static RawControllerEvent  activeEvents[512];
+    static uint32              activeEventCount;
+}
 
 auto __C_ENG_TYPE ( Gamepad ) :: update () noexcept -> void {
     GLFWgamepadstate currentState;
@@ -251,7 +255,7 @@ auto __C_ENG_TYPE ( Gamepad ) :: update () noexcept -> void {
         for ( uint32 i = 0U; i < axesCount; ++ i ) {
             if ( this->_axes[i] != currentState.axes[i] ) {
 
-                activeEvents[activeEventCount ++] = (RawControllerEvent) {
+                globals :: activeEvents[globals :: activeEventCount ++] = (RawControllerEvent) {
                     .handle     = this->handle(),
                     .type       = RawControllerEventType :: Axis,
                     .axisEvent  = (RawAxisEvent) {
@@ -275,7 +279,7 @@ auto __C_ENG_TYPE ( Gamepad ) :: update () noexcept -> void {
 
             if ( this->_buttons[i] != current ) {
 
-                activeEvents[activeEventCount ++] = (RawControllerEvent) {
+                globals :: activeEvents[globals :: activeEventCount ++] = (RawControllerEvent) {
                     .handle         = this->handle(),
                     .type           = RawControllerEventType :: Button,
                     .buttonEvent    = (RawButtonEvent) {
@@ -315,7 +319,7 @@ auto __C_ENG_TYPE ( Joystick ) :: update () noexcept -> void {
         for ( sint32 i = 0; i < readAxisCount; ++ i ) {
             if ( this->_axes[i] != readAxes[i] ) {
 
-                activeEvents[activeEventCount ++] = (RawControllerEvent) {
+                globals :: activeEvents[globals :: activeEventCount ++] = (RawControllerEvent) {
                     .handle     = this->handle(),
                     .type       = RawControllerEventType :: Axis,
                     .axisEvent  = (RawAxisEvent) {
@@ -353,7 +357,7 @@ auto __C_ENG_TYPE ( Joystick ) :: update () noexcept -> void {
 
             if ( this->_buttons[i] != current ) {
 
-                activeEvents[activeEventCount ++] = (RawControllerEvent) {
+                globals :: activeEvents[globals :: activeEventCount ++] = (RawControllerEvent) {
                     .handle         = this->handle(),
                     .type           = RawControllerEventType :: Button,
                     .buttonEvent    = (RawButtonEvent) {
@@ -379,7 +383,7 @@ auto __C_ENG_TYPE ( Joystick ) :: update () noexcept -> void {
         for ( sint32 i = 0; i < readHatCount; ++ i ) {
             if ( this->_hats[i] != readHats[i] ) { // NOLINT(clion-misra-cpp2008-5-0-4)
 
-                activeEvents[activeEventCount ++] = ( RawControllerEvent ) {
+                globals :: activeEvents[globals :: activeEventCount ++] = ( RawControllerEvent ) {
                     .handle     = this->handle(),
                     .type       = RawControllerEventType :: Hat,
                     .hatEvent   = (RawHatEvent) {
@@ -402,7 +406,7 @@ static inline auto controllerAxisEventRootCallback (
         float                   oldValue
 ) noexcept -> void {
     auto pObject = reinterpret_cast < Self * > ( glfwGetJoystickUserPointer ( handle ) );
-    if ( pGlobalEngine != nullptr ) {
+    if ( globals :: pGlobalEngine != nullptr ) {
 
         __C_ENG_TYPE ( ControllerAxisEvent ) event (
                 pObject,
@@ -411,7 +415,7 @@ static inline auto controllerAxisEventRootCallback (
                 oldValue
         );
 
-        (void) pGlobalEngine->eventHandler().controllerAxisEvent ( & event );
+        (void) globals :: pGlobalEngine->eventHandler().controllerAxisEvent ( & event );
 
     }
 }
@@ -422,7 +426,7 @@ static inline auto controllerButtonEventRootCallback (
         bool                    pressed
 ) noexcept -> void {
     auto pObject = reinterpret_cast < Self * > ( glfwGetJoystickUserPointer ( handle ) );
-    if ( pGlobalEngine != nullptr ) {
+    if ( globals :: pGlobalEngine != nullptr ) {
 
         if ( pressed ) {
 
@@ -431,7 +435,7 @@ static inline auto controllerButtonEventRootCallback (
                     button
             );
 
-            (void) pGlobalEngine->eventHandler().controllerButtonPressEvent ( & event );
+            (void) globals :: pGlobalEngine->eventHandler().controllerButtonPressEvent ( & event );
 
         } else {
 
@@ -440,7 +444,7 @@ static inline auto controllerButtonEventRootCallback (
                     button
             );
 
-            (void) pGlobalEngine->eventHandler().controllerButtonReleaseEvent ( & event );
+            (void) globals :: pGlobalEngine->eventHandler().controllerButtonReleaseEvent ( & event );
 
         }
 
@@ -453,7 +457,7 @@ static inline auto controllerHatEventRootCallback (
         uint8                   state
 ) noexcept -> void {
     auto pObject = reinterpret_cast < Self * > ( glfwGetJoystickUserPointer ( handle ) );
-    if ( pGlobalEngine != nullptr ) {
+    if ( globals :: pGlobalEngine != nullptr ) {
 
         __C_ENG_TYPE ( ControllerHatEvent ) event (
                 pObject,
@@ -461,7 +465,7 @@ static inline auto controllerHatEventRootCallback (
                 static_cast < __C_ENG_TYPE ( ControllerHatState ) > ( state )
         );
 
-        (void) pGlobalEngine->eventHandler().controllerHatEvent ( & event );
+        (void) globals :: pGlobalEngine->eventHandler().controllerHatEvent ( & event );
 
     }
 }
@@ -476,30 +480,30 @@ __C_ENG_MAYBE_UNUSED auto Self :: handleEvent (
 
 auto Self :: pollEvents() noexcept -> void {
 
-    for ( uint32 i = 0U; i < activeEventCount; ++ i ) {
-        if ( activeEvents[i].type == RawControllerEventType :: Axis ) {
+    for ( uint32 i = 0U; i < globals :: activeEventCount; ++ i ) {
+        if ( globals :: activeEvents[i].type == RawControllerEventType :: Axis ) {
 
             controllerAxisEventRootCallback(
-                    activeEvents[i].handle,
-                    activeEvents[i].axisEvent.axisID,
-                    activeEvents[i].axisEvent.newValue,
-                    activeEvents[i].axisEvent.oldValue
+                    globals :: activeEvents[i].handle,
+                    globals :: activeEvents[i].axisEvent.axisID,
+                    globals :: activeEvents[i].axisEvent.newValue,
+                    globals :: activeEvents[i].axisEvent.oldValue
             );
 
-        } else if ( activeEvents[i].type == RawControllerEventType :: Button ) {
+        } else if ( globals :: activeEvents[i].type == RawControllerEventType :: Button ) {
 
             controllerButtonEventRootCallback(
-                    activeEvents[i].handle,
-                    activeEvents[i].buttonEvent.buttonID,
-                    activeEvents[i].buttonEvent.state
+                    globals :: activeEvents[i].handle,
+                    globals :: activeEvents[i].buttonEvent.buttonID,
+                    globals :: activeEvents[i].buttonEvent.state
             );
 
-        } else if ( activeEvents[i].type == RawControllerEventType :: Hat ) {
+        } else if ( globals :: activeEvents[i].type == RawControllerEventType :: Hat ) {
 
             controllerHatEventRootCallback(
-                    activeEvents[i].handle,
-                    activeEvents[i].hatEvent.hatID,
-                    activeEvents[i].hatEvent.hatState
+                    globals :: activeEvents[i].handle,
+                    globals :: activeEvents[i].hatEvent.hatID,
+                    globals :: activeEvents[i].hatEvent.hatState
             );
 
         } else {
@@ -510,14 +514,14 @@ auto Self :: pollEvents() noexcept -> void {
     while ( ! customEvents.empty() ) {
         auto currentEvent = customEvents.pop();
 
-        if ( pGlobalEngine != nullptr ) {
-            (void) pGlobalEngine->eventHandler().controllerCustomEvent ( currentEvent );
+        if ( globals :: pGlobalEngine != nullptr ) {
+            (void) globals :: pGlobalEngine->eventHandler().controllerCustomEvent ( currentEvent );
         }
 
         delete currentEvent;
     }
 
-    activeEventCount = 0U;
+    globals :: activeEventCount = 0U;
 }
 
 auto Self :: toString () const noexcept -> String {

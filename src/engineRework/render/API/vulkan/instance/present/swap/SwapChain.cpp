@@ -28,9 +28,10 @@ struct SwapChainImages {
     Type ( SwapChainHandle )    swapChainHandle;
 };
 
-static SwapChainImages  swapChainImageAreas [ __C_ENG_VULKAN_CORE_PHYSICAL_DEVICE_MAX_COUNT * __C_ENG_VULKAN_CORE_PHYSICAL_DEVICE_SURFACE_MAX_COUNT ];
-static Mutex            areasLock;
-
+namespace globals {
+    static SwapChainImages  swapChainImageAreas [ __C_ENG_VULKAN_CORE_PHYSICAL_DEVICE_MAX_COUNT * __C_ENG_VULKAN_CORE_PHYSICAL_DEVICE_SURFACE_MAX_COUNT ];
+    static Mutex            areasLock;
+}
 
 static inline auto chooseFormat (
         Type ( PresentHandler ) :: SurfaceProperties const * pProperties
@@ -332,9 +333,9 @@ auto Self :: reserveAndAcquireImages () noexcept(false) -> Self & {
 
     SwapChainImages * pArea = nullptr;
 
-    LockGuard guard ( areasLock );
+    LockGuard guard ( globals :: areasLock );
 
-    for ( auto & swapChainImageArea : swapChainImageAreas ) {
+    for ( auto & swapChainImageArea : globals :: swapChainImageAreas ) {
         if ( swapChainImageArea.swapChainHandle == nullptr || swapChainImageArea.swapChainHandle == this->handle() ) {
             pArea = & swapChainImageArea;
             break;
@@ -377,7 +378,7 @@ auto Self :: reserveAndAcquireImages () noexcept(false) -> Self & {
 }
 
 auto Self :: freeImages() noexcept -> VSwapChain & {
-    for ( auto & imageArea : swapChainImageAreas ) {
+    for ( auto & imageArea : globals :: swapChainImageAreas ) {
         if ( imageArea.swapChainHandle == this->_handle ) {
 
             imageArea.swapChainHandle = nullptr;
@@ -387,7 +388,7 @@ auto Self :: freeImages() noexcept -> VSwapChain & {
         }
     }
 
-    for ( auto & imageArea : swapChainImageAreas ) {
+    for ( auto & imageArea : globals :: swapChainImageAreas ) {
         if ( imageArea.imagesArray == this->_images.pImages ) {
 
             imageArea.swapChainHandle = nullptr;
