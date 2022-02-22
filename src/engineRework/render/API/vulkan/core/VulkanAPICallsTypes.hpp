@@ -685,7 +685,6 @@ struct SubmitQueueContext {
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
     engine :: vulkan :: Type ( Result )                     error;
     VkSubmitInfo                                            submitInfos [ __C_ENG_VULKAN_CORE_SUBMIT_INFO_MAX_COUNT ];
-    VkSubmitInfo2_t                                         submitInfos2 [ __C_ENG_VULKAN_CORE_SUBMIT_INFO_MAX_COUNT ];
     VkPipelineStageFlags                                    stageFlags [ __C_ENG_VULKAN_CORE_SUBMIT_INFO_MAX_COUNT ] [ __C_ENG_VULKAN_CORE_PIPELINE_STAGE_FLAGS_MAX_COUNT ];
 #endif
 #if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
@@ -707,6 +706,37 @@ struct SubmitQueueContext {
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_SEMAPHORE_WIN32_AVAILABLE
     D3D12FenceSubmitInfo                                    d3d12FenceSubmitInfos [ __C_ENG_VULKAN_CORE_SUBMIT_INFO_MAX_COUNT ];
 #endif
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
+    VkSubmitInfo2_t                                         submitInfos2 [ __C_ENG_VULKAN_CORE_SUBMIT_INFO_MAX_COUNT ];
+    VkSemaphoreSubmitInfo_t                                 waitSemaphoreSubmitInfos [ __C_ENG_VULKAN_CORE_SUBMIT_INFO_MAX_COUNT ][ __C_ENG_VULKAN_CORE_SUBMIT_SEMAPHORE_INFO_MAX_COUNT ];
+    VkSemaphoreSubmitInfo_t                                 signalSemaphoreSubmitInfos [ __C_ENG_VULKAN_CORE_SUBMIT_INFO_MAX_COUNT ][ __C_ENG_VULKAN_CORE_SUBMIT_SEMAPHORE_INFO_MAX_COUNT ];
+    VkCommandBufferSubmitInfo_t                             commandBufferSubmitInfos [ __C_ENG_VULKAN_CORE_SUBMIT_INFO_MAX_COUNT ][ __C_ENG_VULKAN_CORE_SUBMIT_COMMAND_BUFFER_INFO_MAX_COUNT ];
+#endif
+};
+
+struct CreateFenceContext {
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    engine :: vulkan :: Type ( Result )                     error;
+    VkFenceCreateInfo                                       createInfo;
+#endif
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    VkExportFenceCreateInfo                                 exportCreateInfo;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_FENCE_WIN32_AVAILABLE
+    VkExportFenceWin32HandleInfo                            exportWin32HandleInfo;
+#endif
+};
+
+struct GetFenceContext {
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    engine :: vulkan :: Type ( Result )                     error;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_FENCE_WIN32_AVAILABLE
+    VkFenceGetWin32HandleInfoKHR                            win32HandleInfo;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_FENCE_FD_AVAILABLE
+    VkFenceGetFdInfoKHR                                     fdInfo;
+#endif
 };
 
 union EnumerateSharedContext {
@@ -723,6 +753,7 @@ union CreateSharedContext {
     CreateSwapChainContext                                              swapChain;
     CreateImageViewContext                                              imageView;
     CreateCommandPoolContext                                            commandPool;
+    CreateFenceContext                                                  fence;
 };
 
 union GetSharedContext {
@@ -732,6 +763,7 @@ union GetSharedContext {
     GetDeviceQueueContext                                               deviceQueue;
     GetSurfaceContext                                                   surface;
     GetSwapChainContext                                                 swapChain;
+    GetFenceContext                                                     fence;
 };
 
 union AllocateSharedContext {

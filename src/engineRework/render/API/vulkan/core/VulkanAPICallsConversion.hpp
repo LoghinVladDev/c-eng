@@ -14711,12 +14711,106 @@ namespace engine :: vulkan {
                 pContext->error = ResultErrorConfigurationArraySizeSmall;
             }
 
-            for ( cds :: uint32 j = 0U; i < pContext->submitInfos[i].waitSemaphoreCount; ++ j ) {
+            for ( cds :: uint32 j = 0U; j < pContext->submitInfos[i].waitSemaphoreCount; ++ j ) {
                 pContext->stageFlags[i][j] = static_cast < VkPipelineStageFlags > ( pInfos[i].pWaitDestinationStageMasks[j] );
             }
         }
 
         return & pContext->submitInfos[0];
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
+    static inline auto toVulkanFormat (
+            VkSubmitInfo2_t            * pDestination,
+            Type ( SubmitInfo2 ) const * pSource
+    ) noexcept -> VkSubmitInfo2_t * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+                .sType                     = VK_STRUCTURE_TYPE_SUBMIT_INFO_2,
+#elif __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
+                .sType                     = VK_STRUCTURE_TYPE_SUBMIT_INFO_2_KHR,
+#endif
+                .pNext                     = nullptr,
+                .flags                     = pSource->flags,
+                .waitSemaphoreInfoCount    = pSource->waitSemaphoreInfoCount,
+                .pWaitSemaphoreInfos       = nullptr,
+                .commandBufferInfoCount    = pSource->commandBufferInfoCount,
+                .pCommandBufferInfos       = nullptr,
+                .signalSemaphoreInfoCount  = pSource->signalSemaphoreInfoCount,
+                .pSignalSemaphoreInfos     = nullptr
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
+    static inline auto toVulkanFormat (
+            VkSemaphoreSubmitInfo_t            * pDestination,
+            Type ( SemaphoreSubmitInfo ) const * pSource
+    ) noexcept -> VkSemaphoreSubmitInfo_t * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+                .sType                     = VK_STRUCTURE_TYPE_SEMAPHORE_SUBMIT_INFO,
+#elif __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
+                .sType                     = VK_STRUCTURE_TYPE_SEMAPHORE_SUBMIT_INFO_KHR,
+#endif
+                .pNext                     = nullptr,
+                .semaphore                 = pSource->semaphore,
+                .value                     = pSource->value,
+                .stageMask                 = pSource->stageMask,
+                .deviceIndex               = pSource->deviceIndex
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
+    static inline auto toVulkanFormat (
+            VkCommandBufferSubmitInfo_t            * pDestination,
+            Type ( CommandBufferSubmitInfo ) const * pSource
+    ) noexcept -> VkCommandBufferSubmitInfo_t * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+                .sType                     = VK_STRUCTURE_TYPE_COMMAND_BUFFER_SUBMIT_INFO,
+#elif __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
+                .sType                     = VK_STRUCTURE_TYPE_COMMAND_BUFFER_SUBMIT_INFO_KHR,
+#endif
+                .pNext                     = nullptr,
+                .commandBuffer             = pSource->commandBuffer,
+                .deviceMask                = pSource->deviceMask
+        };
+
+        return pDestination;
     }
 #endif
 
@@ -14727,7 +14821,293 @@ namespace engine :: vulkan {
             Type ( SubmitInfo2 )    const * pInfos
     ) noexcept -> VkSubmitInfo2_t * {
 
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pContext == nullptr || count == 0U || pInfos == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        for ( cds :: uint32 i = 0U; i < count; ++ i ) {
+
+            auto pCurrent   = reinterpret_cast < Type ( GenericInStructure ) const * > ( pInfos[i].pNext );
+            auto pCurrentVk = reinterpret_cast < VkBaseOutStructure * > ( toVulkanFormat ( & pContext->submitInfos2[i], & pInfos[i] ) );
+
+            while ( pCurrent != nullptr ) {
+
+                switch ( pCurrent->structureType ) {
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PERFORMANCE_QUERY_AVAILABLE
+
+                    case StructureTypePerformanceQuerySubmitInfo:
+                        pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                                toVulkanFormat (
+                                        & pContext->performanceQuerySubmitInfos [i],
+                                        reinterpret_cast < Type ( PerformanceQuerySubmitInfo ) const * > ( pCurrent )
+                                )
+                        );
+                        break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_WIN32_KEYED_MUTEX_AVAILABLE
+
+                    case StructureTypeWin32KeyedMutexAcquireReleaseInfo:
+                        pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                                toVulkanFormat (
+                                        & pContext->win32KeyedMutexAcquireReleaseInfos [i],
+                                        reinterpret_cast < Type ( Win32KeyedMutexAcquireReleaseInfo ) const * > ( pCurrent )
+                                )
+                        );
+                        break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_WIN32_KEYED_MUTEX_AVAILABLE
+
+                    case StructureTypeWin32KeyedMutexAcquireReleaseInfoNVidia:
+                        pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                                toVulkanFormat (
+                                        & pContext->win32KeyedMutexAcquireReleaseInfosNVidia [i],
+                                        reinterpret_cast < Type ( Win32KeyedMutexAcquireReleaseInfoNVidia ) const * > ( pCurrent )
+                                )
+                        );
+                        break;
+
+#endif
+
+                    default:
+                        break;
+                }
+
+                pCurrentVk  = pCurrentVk->pNext == nullptr ? pCurrentVk : pCurrentVk->pNext;
+                pCurrent    = pCurrent->pNext;
+            }
+
+            pCurrentVk->pNext = nullptr;
+
+            pContext->submitInfos2[i].pWaitSemaphoreInfos = & pContext->waitSemaphoreSubmitInfos[i][0];
+
+            if ( pContext->submitInfos2[i].waitSemaphoreInfoCount > __C_ENG_VULKAN_CORE_SUBMIT_SEMAPHORE_INFO_MAX_COUNT ) {
+                pContext->submitInfos2[i].waitSemaphoreInfoCount = __C_ENG_VULKAN_CORE_SUBMIT_SEMAPHORE_INFO_MAX_COUNT;
+                pContext->error = ResultErrorConfigurationArraySizeSmall;
+            }
+
+            for ( cds :: uint32 j = 0U; j < pContext->submitInfos2[i].waitSemaphoreInfoCount; ++ j ) {
+                (void) toVulkanFormat ( & pContext->waitSemaphoreSubmitInfos[i][j], & pInfos[i].pWaitSemaphoreInfos[j] );
+            }
+
+            pContext->submitInfos2[i].pCommandBufferInfos = & pContext->commandBufferSubmitInfos[i][0];
+
+            if ( pContext->submitInfos2[i].commandBufferInfoCount > __C_ENG_VULKAN_CORE_SUBMIT_COMMAND_BUFFER_INFO_MAX_COUNT ) {
+                pContext->submitInfos2[i].commandBufferInfoCount = __C_ENG_VULKAN_CORE_SUBMIT_COMMAND_BUFFER_INFO_MAX_COUNT;
+                pContext->error = ResultErrorConfigurationArraySizeSmall;
+            }
+
+            for ( cds :: uint32 j = 0U; j < pContext->submitInfos2[i].commandBufferInfoCount; ++ j ) {
+                (void) toVulkanFormat ( & pContext->commandBufferSubmitInfos[i][j], & pInfos[i].pCommandBufferInfos[j] );
+            }
+
+            pContext->submitInfos2[i].pSignalSemaphoreInfos = & pContext->signalSemaphoreSubmitInfos[i][0];
+
+            if ( pContext->submitInfos2[i].signalSemaphoreInfoCount > __C_ENG_VULKAN_CORE_SUBMIT_SEMAPHORE_INFO_MAX_COUNT ) {
+                pContext->submitInfos2[i].signalSemaphoreInfoCount = __C_ENG_VULKAN_CORE_SUBMIT_SEMAPHORE_INFO_MAX_COUNT;
+                pContext->error = ResultErrorConfigurationArraySizeSmall;
+            }
+
+            for ( cds :: uint32 j = 0U; j < pContext->submitInfos2[i].signalSemaphoreInfoCount; ++ j ) {
+                (void) toVulkanFormat ( & pContext->signalSemaphoreSubmitInfos[i][j], & pInfos[i].pSignalSemaphoreInfos[j] );
+            }
+        }
+
         return & pContext->submitInfos2[0];
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    static inline auto toVulkanFormat (
+            VkFenceCreateInfo            * pDestination,
+            Type ( FenceCreateInfo ) const * pSource
+    ) noexcept -> VkFenceCreateInfo * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                      = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO,
+                .pNext                      = nullptr,
+                .flags                      = pSource->flags
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    static inline auto toVulkanFormat (
+            VkExportFenceCreateInfo            * pDestination,
+            Type ( ExportFenceCreateInfo ) const * pSource
+    ) noexcept -> VkExportFenceCreateInfo * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                      = VK_STRUCTURE_TYPE_EXPORT_FENCE_CREATE_INFO,
+                .pNext                      = nullptr,
+                .handleTypes                = pSource->handleTypes
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_FENCE_WIN32_AVAILABLE
+    static inline auto toVulkanFormat (
+            VkExportFenceWin32HandleInfoKHR            * pDestination,
+            Type ( ExportFenceWin32HandleInfo ) const * pSource
+    ) noexcept -> VkExportFenceWin32HandleInfoKHR * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                      = VK_STRUCTURE_TYPE_EXPORT_FENCE_WIN32_HANDLE_INFO_KHR,
+                .pNext                      = nullptr,
+                .pAttributes                = pSource->pAttributes,
+                .dwAccess                   = pSource->dwAccess,
+                .name                       = pSource->name
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    static inline auto prepareContext (
+            CreateFenceContext                * pContext,
+            Type ( FenceCreateInfo )    const * pSource
+    ) noexcept -> VkFenceCreateInfo * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pContext == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        auto pCurrent   = reinterpret_cast < Type ( GenericInStructure ) const * > ( pSource->pNext );
+        auto pCurrentVk = reinterpret_cast < VkBaseOutStructure * > ( toVulkanFormat ( & pContext->createInfo, pSource ) );
+
+        while ( pCurrent != nullptr ) {
+
+            switch ( pCurrent->structureType ) {
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+
+                case StructureTypeExportFenceCreateInfo:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                            toVulkanFormat (
+                                    & pContext->exportCreateInfo,
+                                    reinterpret_cast < Type ( ExportFenceCreateInfo ) const * > ( pCurrent )
+                            )
+                    );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_FENCE_WIN32_AVAILABLE
+
+                case StructureTypeExportFenceWin32HandleInfo:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                            toVulkanFormat (
+                                    & pContext->exportCreateInfo,
+                                    reinterpret_cast < Type ( ExportFenceWin32HandleInfo ) const * > ( pCurrent )
+                            )
+                    );
+                    break;
+
+#endif
+
+                default:
+                    break;
+            }
+
+            pCurrentVk  = pCurrentVk->pNext == nullptr ? pCurrentVk : pCurrentVk->pNext;
+            pCurrent    = pCurrent->pNext;
+        }
+
+        pCurrentVk->pNext = nullptr;
+
+        return & pContext->createInfo;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_FENCE_WIN32_AVAILABLE
+    static inline auto toVulkanFormat (
+            VkFenceGetWin32HandleInfoKHR           * pDestination,
+            Type ( FenceGetWin32HandleInfo ) const * pSource
+    ) noexcept -> VkFenceGetWin32HandleInfoKHR * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                      = VK_STRUCTURE_TYPE_FENCE_GET_WIN32_HANDLE_INFO_KHR,
+                .pNext                      = nullptr,
+                .pAttributes                = pSource->pAttributes,
+                .dwAccess                   = pSource->dwAccess,
+                .name                       = pSource->name
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_FENCE_FD_AVAILABLE
+    static inline auto toVulkanFormat (
+            VkFenceGetFdInfoKHR           * pDestination,
+            Type ( FenceGetFDInfo ) const * pSource
+    ) noexcept -> VkFenceGetFdInfoKHR * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                      = VK_STRUCTURE_TYPE_FENCE_GET_FD_INFO_KHR,
+                .pNext                      = nullptr,
+                .fence                      = pSource->fence,
+                .handleType                 = static_cast < VkExternalFenceHandleTypeFlagBitsKHR > ( pSource->handleType )
+        };
+
+        return pDestination;
     }
 #endif
 

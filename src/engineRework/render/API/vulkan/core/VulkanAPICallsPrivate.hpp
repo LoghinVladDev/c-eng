@@ -256,9 +256,13 @@ using VkPhysicalDeviceSubgroupSizeControlProperties_t           = VkPhysicalDevi
 #if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 using VkPhysicalDeviceSynchronization2Features_t                = VkPhysicalDeviceSynchronization2Features;
 using VkSubmitInfo2_t                                           = VkSubmitInfo2;
+using VkSemaphoreSubmitInfo_t                                   = VkSemaphoreSubmitInfo;
+using VkCommandBufferSubmitInfo_t                               = VkCommandBufferSubmitInfo;
 #elif __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
 using VkPhysicalDeviceSynchronization2Features_t                = VkPhysicalDeviceSynchronization2FeaturesKHR;
 using VkSubmitInfo2_t                                           = VkSubmitInfo2KHR;
+using VkSemaphoreSubmitInfo_t                                   = VkSemaphoreSubmitInfoKHR;
+using VkCommandBufferSubmitInfo_t                               = VkCommandBufferSubmitInfoKHR;
 #endif
 
 #if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
