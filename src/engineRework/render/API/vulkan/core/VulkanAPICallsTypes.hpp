@@ -739,6 +739,34 @@ struct GetFenceContext {
 #endif
 };
 
+struct RegisterEventContext {
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    engine :: vulkan :: Type ( Result )                     error;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_DISPLAY_CONTROL_AVAILABLE
+    VkDeviceEventInfoEXT                                    deviceInfo;
+    VkDisplayEventInfoEXT                                   displayInfo;
+#endif
+};
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_FENCE_WIN32_AVAILABLE
+struct ImportFenceWin32Context {
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    engine :: vulkan :: Type ( Result )                     error;
+#endif
+    VkImportFenceWin32HandleInfoKHR                         info;
+};
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_FENCE_FD_AVAILABLE
+struct ImportFenceFdContext {
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    engine :: vulkan :: Type ( Result )                     error;
+#endif
+    VkImportFenceFdInfoKHR                                  info;
+};
+#endif
+
 union EnumerateSharedContext {
     EnumerateLayerPropertiesContext                                     layerProperties;
     EnumerateExtensionPropertiesContext                                 extensionProperties;
@@ -778,6 +806,23 @@ union SubmitSharedContext {
     SubmitQueueContext                                                  queue;
 };
 
+union OthersSharedContext {
+    RegisterEventContext                                                registerEvent;
+};
+
+union ImportFenceSharedContext {
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_FENCE_WIN32_AVAILABLE
+    ImportFenceWin32Context                                             win32;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_FENCE_FD_AVAILABLE
+    ImportFenceFdContext                                                fd;
+#endif
+};
+
+union ImportSharedContext {
+    ImportFenceSharedContext                                            fence;
+};
+
 union SharedContext {
     CommonContext                                                       common;
     CreateSharedContext                                                 create;
@@ -786,6 +831,8 @@ union SharedContext {
     AllocateSharedContext                                               allocate;
     BeginSharedContext                                                  begin;
     SubmitSharedContext                                                 submit;
+    OthersSharedContext                                                 other;
+    ImportSharedContext                                                 _import;
 };
 
 

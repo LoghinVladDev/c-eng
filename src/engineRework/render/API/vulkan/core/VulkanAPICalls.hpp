@@ -512,6 +512,57 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         ) noexcept -> Type ( Result );
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+        NoDiscard MaybeUnused extern auto resetFences (
+                Type ( DeviceHandle ),
+                cds :: uint32,
+                Type ( FenceHandle )    const *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+        NoDiscard MaybeUnused extern auto waitForFences (
+                Type ( DeviceHandle ),
+                cds :: uint32,
+                Type ( FenceHandle )    const *,
+                bool,
+                cds :: uint64
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_DISPLAY_CONTROL_AVAILABLE
+        NoDiscard MaybeUnused extern auto registerDeviceEvent (
+                Type ( DeviceHandle ),
+                Type ( DeviceEventInfo )        const *,
+                Type ( AllocationCallbacks )    const *,
+                Type ( FenceHandle )                  *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_DISPLAY_CONTROL_AVAILABLE
+        NoDiscard MaybeUnused extern auto registerDisplayEvent (
+                Type ( DeviceHandle ),
+                Type ( DisplayHandle ),
+                Type ( DisplayEventInfo )       const *,
+                Type ( AllocationCallbacks )    const *,
+                Type ( FenceHandle )                  *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_FENCE_WIN32_AVAILABLE
+        NoDiscard MaybeUnused extern auto importFenceWin32Handle (
+                Type ( DeviceHandle ),
+                Type ( ImportFenceWin32HandleInfo ) const *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_FENCE_FD_AVAILABLE
+        NoDiscard MaybeUnused extern auto importFenceFd (
+                Type ( DeviceHandle ),
+                Type ( ImportFenceFdInfo ) const *
+        ) noexcept -> Type ( Result );
+#endif
+
     }
 
 }

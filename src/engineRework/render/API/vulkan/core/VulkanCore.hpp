@@ -3550,6 +3550,45 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #endif
 
 
+#if __C_ENG_VULKAN_API_EXTENSION_DISPLAY_CONTROL_AVAILABLE
+
+#define C_ENG_MAP_START     ENUM ( DeviceEventType,     TYPE ( cds :: uint8 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( DisplayHotplug, VkDeviceEventTypeEXT :: VK_DEVICE_EVENT_TYPE_DISPLAY_HOTPLUG_EXT ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START     ENUM ( DisplayEventType,     TYPE ( cds :: uint8 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( FirstPixelOut, VkDisplayEventTypeEXT :: VK_DISPLAY_EVENT_TYPE_FIRST_PIXEL_OUT_EXT ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+
+#define C_ENG_MAP_START ENUM ( FenceImportFlag, TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( Temporary,  VkFenceImportFlagBits :: VK_FENCE_IMPORT_TEMPORARY_BIT ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+
 
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 
@@ -3612,6 +3651,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_ALIAS ( SamplerYCBCRConversion,         VkSamplerYcbcrConversion );
         __C_ENG_ALIAS ( CommandPoolTrimFlags,           VkCommandPoolTrimFlags );
         __C_ENG_ALIAS ( ExternalFenceHandleTypeFlags,   VkExternalFenceHandleTypeFlags );
+        __C_ENG_ALIAS ( FenceImportFlags,               VkFenceImportFlags );
 
 #endif
 
@@ -3633,6 +3673,12 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #elif __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE
 
         __C_ENG_ALIAS ( RenderingFlags,                 VkRenderingFlagsKHR );
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DISPLAY_AVAILABLE
+
+        __C_ENG_ALIAS ( DisplayHandle,                  VkDisplayKHR );
 
 #endif
 
@@ -9238,6 +9284,73 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
+#if __C_ENG_VULKAN_API_EXTENSION_DISPLAY_CONTROL_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( DeviceEventInfo,    NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                  structureType;
+            Type ( GenericStructure )       const * pNext;
+            Type ( DeviceEventType )                deviceEvent;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START     STRUCT ( DisplayEventInfo,    NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                  structureType;
+            Type ( GenericStructure )       const * pNext;
+            Type ( DisplayEventType )               displayEvent;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_FENCE_WIN32_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( ImportFenceWin32HandleInfo,    NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                  structureType;
+            Type ( GenericStructure )       const * pNext;
+            Type ( FenceHandle )                    fence;
+            Type ( FenceImportFlags )               flags;
+            Type ( ExternalFenceHandleTypeFlag )    handleType;
+            HANDLE                                  handle;
+            LPCWSTR                                 name;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_FENCE_FD_AVAILABLE
+
+#define C_ENG_MAP_START     STRUCT ( ImportFenceFdInfo,    NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                  structureType;
+            Type ( GenericStructure )       const * pNext;
+            Type ( FenceHandle )                    fence;
+            Type ( FenceImportFlags )               flags;
+            Type ( ExternalFenceHandleTypeFlag )    handleType;
+            int                                     fd;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
 
 #define C_ENG_MAP_START     HEADER
 #include <ObjectMapping.hpp>
@@ -9283,6 +9396,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
         NoDiscard auto toString ( Type ( SubgroupFeatureFlag ) ) noexcept -> cds :: StringLiteral;
         NoDiscard auto toString ( Type ( ExternalFenceHandleTypeFlag ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( FenceImportFlag ) ) noexcept -> cds :: StringLiteral;
 
 #endif
 
@@ -9300,6 +9414,13 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
         NoDiscard auto toString ( Type ( SubmitFlag ) ) noexcept -> cds :: StringLiteral;
 
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_DISPLAY_CONTROL_AVAILABLE
+        NoDiscard auto toString ( Type ( DeviceEventType ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( DeviceEventInfo ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( DisplayEventType ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( DisplayEventInfo ) const & ) noexcept -> cds :: String;
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_DEBUG_REPORT_AVAILABLE
@@ -9510,6 +9631,14 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #if __C_ENG_VULKAN_API_EXTENSION_VALIDATION_FLAGS_AVAILABLE
         NoDiscard auto toString ( Type ( ValidationCheck ) ) noexcept -> cds :: StringLiteral;
         NoDiscard auto toString ( Type ( ValidationFlags ) const & ) noexcept -> cds :: String;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_FENCE_WIN32_AVAILABLE
+        NoDiscard auto toString ( Type ( ImportFenceWin32HandleInfo ) const & ) noexcept -> cds :: String;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_FENCE_FD_AVAILABLE
+        NoDiscard auto toString ( Type ( ImportFenceFdInfo ) const & ) noexcept -> cds :: String;
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_DEBUG_REPORT_AVAILABLE

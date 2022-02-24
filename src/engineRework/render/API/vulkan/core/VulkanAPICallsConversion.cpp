@@ -15109,5 +15109,108 @@ namespace engine :: vulkan {
     }
 #endif
 
+#if __C_ENG_VULKAN_API_EXTENSION_DISPLAY_CONTROL_AVAILABLE
+    auto toVulkanFormat (
+            VkDeviceEventInfoEXT              * pDestination,
+            Type ( DeviceEventInfo )    const * pSource
+    ) noexcept -> VkDeviceEventInfoEXT * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType          = VK_STRUCTURE_TYPE_DEVICE_EVENT_INFO_EXT,
+                .pNext          = nullptr,
+                .deviceEvent    = static_cast < VkDeviceEventTypeEXT > ( pSource->deviceEvent )
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_DISPLAY_CONTROL_AVAILABLE
+    auto toVulkanFormat (
+            VkDisplayEventInfoEXT              * pDestination,
+            Type ( DisplayEventInfo )    const * pSource
+    ) noexcept -> VkDisplayEventInfoEXT * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType          = VK_STRUCTURE_TYPE_DISPLAY_EVENT_INFO_EXT,
+                .pNext          = nullptr,
+                .displayEvent   = static_cast < VkDisplayEventTypeEXT > ( pSource->displayEvent )
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_FENCE_WIN32_AVAILABLE
+    auto toVulkanFormat (
+            VkImportFenceWin32HandleInfoKHR              * pDestination,
+            Type ( ImportFenceWin32HandleInfo )    const * pSource
+    ) noexcept -> VkImportFenceWin32HandleInfoKHR * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType          = VK_STRUCTURE_TYPE_IMPORT_FENCE_WIN32_HANDLE_INFO_KHR,
+                .pNext          = nullptr,
+                .fence          = pSource->fence,
+                .flags          = pSource->flags,
+                .handleType     = static_cast < VkExternalFenceHandleTypeFlagBits > ( pSource->handleType ),
+                .handle         = pSource->handle,
+                .name           = pSource->name
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_FENCE_FD_AVAILABLE
+    auto toVulkanFormat (
+            VkImportFenceFdInfoKHR              * pDestination,
+            Type ( ImportFenceFdInfo )    const * pSource
+    ) noexcept -> VkImportFenceFdInfoKHR * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType          = VK_STRUCTURE_TYPE_IMPORT_FENCE_FD_INFO_KHR,
+                .pNext          = nullptr,
+                .fence          = pSource->fence,
+                .flags          = pSource->flags,
+                .handleType     = static_cast < VkExternalFenceHandleTypeFlagBits > ( pSource->handleType ),
+                .fd             = pSource->fd
+        };
+
+        return pDestination;
+    }
+#endif
+
 }
 

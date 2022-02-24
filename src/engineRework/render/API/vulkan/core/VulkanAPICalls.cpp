@@ -2389,3 +2389,179 @@ auto engine :: vulkan :: getFenceStatus (
     return static_cast < Type ( Result ) > ( vkGetFenceStatusHandle ( deviceHandle, fenceHandle ) );
 }
 #endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: resetFences (
+        Type ( DeviceHandle )           deviceHandle,
+        uint32                          count,
+        Type ( FenceHandle )    const * pFences
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || count == 0U || pFences == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkResetFences )
+
+    return static_cast < Type ( Result ) > (
+            vkResetFencesHandle (
+                    deviceHandle,
+                    count,
+                    pFences
+            )
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: waitForFences (
+        Type ( DeviceHandle )           deviceHandle,
+        uint32                          count,
+        Type ( FenceHandle )    const * pFences,
+        bool                            waitForAll,
+        uint64                          timeout
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || count == 0U || pFences == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkWaitForFences )
+
+    return static_cast < Type ( Result ) > (
+            vkWaitForFencesHandle (
+                    deviceHandle,
+                    count,
+                    pFences,
+                    waitForAll ? VK_TRUE : VK_FALSE,
+                    timeout
+            )
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_DISPLAY_CONTROL_AVAILABLE
+auto engine :: vulkan :: registerDeviceEvent (
+        Type ( DeviceHandle )                   deviceHandle,
+        Type ( DeviceEventInfo )        const * pEventInfo,
+        Type ( AllocationCallbacks )    const * pAllocationCallbacks,
+        Type ( FenceHandle )                  * pHandle
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || pEventInfo == nullptr || pHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkRegisterDeviceEventEXT )
+
+    auto context = ContextManager :: acquire();
+
+    return static_cast < Type ( Result ) > (
+            vkRegisterDeviceEventEXTHandle (
+                    deviceHandle,
+                    toVulkanFormat ( & context.data().other.registerEvent.deviceInfo, pEventInfo ),
+                    AllocatorHandler :: applyCallbacks ( pAllocationCallbacks ),
+                    pHandle
+            )
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_DISPLAY_CONTROL_AVAILABLE
+auto engine :: vulkan :: registerDisplayEvent (
+        Type ( DeviceHandle )                   deviceHandle,
+        Type ( DisplayHandle )                  displayHandle,
+        Type ( DisplayEventInfo )       const * pEventInfo,
+        Type ( AllocationCallbacks )    const * pAllocationCallbacks,
+        Type ( FenceHandle )                  * pHandle
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || pEventInfo == nullptr || pHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkRegisterDisplayEventEXT )
+
+    auto context = ContextManager :: acquire();
+
+    return static_cast < Type ( Result ) > (
+            vkRegisterDisplayEventEXTHandle (
+                    deviceHandle,
+                    displayHandle,
+                    toVulkanFormat ( & context.data().other.registerEvent.displayInfo, pEventInfo ),
+                    AllocatorHandler :: applyCallbacks ( pAllocationCallbacks ),
+                    pHandle
+            )
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_FENCE_WIN32_AVAILABLE
+auto engine :: vulkan :: importFenceWin32Handle (
+        Type ( DeviceHandle )                       deviceHandle,
+        Type ( ImportFenceWin32HandleInfo ) const * pInfo
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || pInfo == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkImportFenceWin32HandleKHR )
+
+    auto context = ContextManager :: acquire();
+
+    return static_cast < Type ( Result ) > (
+            vkImportFenceWin32HandleKHRHandle (
+                    deviceHandle,
+                    toVulkanFormat ( & context.data()._import.fence.win32.info, pInfo )
+            )
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_FENCE_FD_AVAILABLE
+auto engine :: vulkan :: importFenceFd (
+        Type ( DeviceHandle )              deviceHandle,
+        Type ( ImportFenceFdInfo ) const * pInfo
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || pInfo == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkImportFenceFdKHR )
+
+    auto context = ContextManager :: acquire();
+
+    return static_cast < Type ( Result ) > (
+            vkImportFenceFdKHRHandle (
+                    deviceHandle,
+                    toVulkanFormat ( & context.data()._import.fence.fd.info, pInfo )
+            )
+    );
+}
+#endif

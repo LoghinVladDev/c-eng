@@ -2521,6 +2521,34 @@ namespace engine :: vulkan {
     ) noexcept -> VkFenceGetFdInfoKHR *;
 #endif
 
+#if __C_ENG_VULKAN_API_EXTENSION_DISPLAY_CONTROL_AVAILABLE
+    extern auto toVulkanFormat (
+            VkDeviceEventInfoEXT              *,
+            Type ( DeviceEventInfo )    const *
+    ) noexcept -> VkDeviceEventInfoEXT *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_DISPLAY_CONTROL_AVAILABLE
+    extern auto toVulkanFormat (
+            VkDisplayEventInfoEXT              *,
+            Type ( DisplayEventInfo )    const *
+    ) noexcept -> VkDisplayEventInfoEXT *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_FENCE_WIN32_AVAILABLE
+    extern auto toVulkanFormat (
+            VkImportFenceWin32HandleInfoKHR              *,
+            Type ( ImportFenceWin32HandleInfo )    const *
+    ) noexcept -> VkImportFenceWin32HandleInfoKHR *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_FENCE_FD_AVAILABLE
+    extern auto toVulkanFormat (
+            VkImportFenceFdInfoKHR              *,
+            Type ( ImportFenceFdInfo )    const *
+    ) noexcept -> VkImportFenceFdInfoKHR *;
+#endif
+
 }
 
 #define C_ENG_MAP_END

@@ -8426,3 +8426,101 @@ auto vulkan :: toString (
            " }";
 }
 #endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_DISPLAY_CONTROL_AVAILABLE
+auto vulkan :: toString (
+        Type ( DeviceEventType )    type
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( type ) {
+        case DeviceEventTypeDisplayHotplug: { asString = "Display Hotplug"; break; }
+    }
+
+    return asString;
+}
+
+auto vulkan :: toString (
+        Type ( DeviceEventInfo )    const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( DeviceEventInfo ) ) " "
+           "{ structureType = "_s               + toString ( info.structureType ) +
+           ", pNext = "                         + engine :: toString ( info.pNext ) +
+           ", deviceEvent = "                   + toString ( info.deviceEvent ) +
+           " }";
+}
+
+auto vulkan :: toString (
+        Type ( DisplayEventType )   type
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( type ) {
+        case DisplayEventTypeFirstPixelOut: { asString = "First Pixel Out"; break; }
+    }
+
+    return asString;
+}
+
+auto vulkan :: toString (
+        Type ( DisplayEventInfo )    const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( DisplayEventInfo ) ) " "
+           "{ structureType = "_s               + toString ( info.structureType ) +
+           ", pNext = "                         + engine :: toString ( info.pNext ) +
+           ", displayEvent = "                  + toString ( info.displayEvent ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+auto vulkan :: toString (
+        Type ( FenceImportFlag )    flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case FenceImportFlagTemporary: { asString = "Temporary"; break; }
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_FENCE_WIN32_AVAILABLE
+auto vulkan :: toString (
+        Type ( ImportFenceWin32HandleInfo )    const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( ImportFenceWin32HandleInfo ) ) " "
+           "{ structureType = "_s               + toString ( info.structureType ) +
+           ", pNext = "                         + engine :: toString ( info.pNext ) +
+           ", fence = "                         + engine :: toString ( info.fence ) +
+           ", flags = "                         + "0b" + Long ( info.flags ).toString(2) +
+           ", handleType = "                    + toString ( info.handleType ) +
+           ", handle = "                        + engine :: toString ( info.handle ) +
+           ", name = "                          + info.name +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_FENCE_FD_AVAILABLE
+auto vulkan :: toString (
+        Type ( ImportFenceFdInfo )    const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( ImportFenceFdInfo ) ) " "
+           "{ structureType = "_s               + toString ( info.structureType ) +
+           ", pNext = "                         + engine :: toString ( info.pNext ) +
+           ", fence = "                         + engine :: toString ( info.fence ) +
+           ", flags = "                         + "0b" + Long ( info.flags ).toString(2) +
+           ", handleType = "                    + toString ( info.handleType ) +
+           ", fd = "                            + info.fd +
+           " }";
+}
+#endif
