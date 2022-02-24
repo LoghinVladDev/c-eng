@@ -563,6 +563,91 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         ) noexcept -> Type ( Result );
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+        NoDiscard MaybeUnused extern auto createSemaphore (
+                Type ( DeviceHandle ),
+                Type ( SemaphoreCreateInfo )    const *,
+                Type ( AllocationCallbacks )    const *,
+                Type ( SemaphoreHandle )              *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_SEMAPHORE_WIN32_AVAILABLE
+        NoDiscard MaybeUnused extern auto getSemaphoreWin32Handle (
+                Type ( DeviceHandle ),
+                Type ( SemaphoreGetWin32HandleInfo )    const *,
+                HANDLE                                        *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_SEMAPHORE_FD_AVAILABLE
+        NoDiscard MaybeUnused extern auto getSemaphoreFd (
+                Type ( DeviceHandle ),
+                Type ( SemaphoreGetFdInfo ) const *,
+                int                               *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_GOOGLE_FUCHSIA_EXTERNAL_SEMAPHORE_AVAILABLE
+        NoDiscard MaybeUnused extern auto getSemaphoreZirconHandleGoogle (
+                Type ( DeviceHandle ),
+                Type ( SemaphoreGetZirconHandleInfoGoogle ) const *,
+                zx_handle_t                                       *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+        NoDiscard MaybeUnused extern auto destroySemaphore (
+                Type ( DeviceHandle ),
+                Type ( SemaphoreHandle ),
+                Type ( AllocationCallbacks ) const *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+        NoDiscard MaybeUnused extern auto getSemaphoreCounterValue (
+                Type ( DeviceHandle ),
+                Type ( SemaphoreHandle ),
+                cds :: uint64               *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+        NoDiscard MaybeUnused extern auto waitSemaphores (
+                Type ( DeviceHandle ),
+                Type ( SemaphoreWaitInfo )  const *,
+                cds :: uint64
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+        NoDiscard MaybeUnused extern auto signalSemaphore (
+                Type ( DeviceHandle ),
+                Type ( SemaphoreSignalInfo )  const *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_SEMAPHORE_WIN32_AVAILABLE
+        NoDiscard MaybeUnused extern auto importSemaphoreWin32Handle (
+                Type ( DeviceHandle ),
+                Type ( ImportSemaphoreWin32HandleInfo ) const *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_SEMAPHORE_FD_AVAILABLE
+        NoDiscard MaybeUnused extern auto importSemaphoreFd (
+                Type ( DeviceHandle ),
+                Type ( ImportSemaphoreFdInfo ) const *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_GOOGLE_FUCHSIA_EXTERNAL_SEMAPHORE_AVAILABLE
+        NoDiscard MaybeUnused extern auto importSemaphoreZirconHandleGoogle (
+                Type ( DeviceHandle ),
+                Type ( ImportSemaphoreZirconHandleInfoGoogle ) const *
+        ) noexcept -> Type ( Result );
+#endif
+
     }
 
 }

@@ -767,6 +767,83 @@ struct ImportFenceFdContext {
 };
 #endif
 
+struct CreateSemaphoreContext {
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    engine :: vulkan :: Type ( Result )                     error;
+    VkSemaphoreCreateInfo                                   createInfo;
+#endif
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    VkExportSemaphoreCreateInfo                             exportCreateInfo;
+#endif
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+    VkSemaphoreTypeCreateInfo                               typeCreateInfo;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_SEMAPHORE_WIN32_AVAILABLE
+    VkExportSemaphoreWin32HandleInfoKHR                     exportWin32HandleInfo;
+#endif
+};
+
+struct GetSemaphoreContext {
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    engine :: vulkan :: Type ( Result )                     error;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_SEMAPHORE_WIN32_AVAILABLE
+    VkSemaphoreGetWin32HandleInfoKHR                        win32HandleInfo;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_SEMAPHORE_FD_AVAILABLE
+    VkSemaphoreGetFdInfoKHR                                 fdInfo;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_GOOGLE_FUCHSIA_EXTERNAL_SEMAPHORE_AVAILABLE
+    VkSemaphoreGetZirconHandleInfoFUCHSIA                   zirconHandleInfo;
+#endif
+};
+
+struct WaitSemaphoreContext {
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    engine :: vulkan :: Type ( Result )                     error;
+#endif
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+    VkSemaphoreWaitInfo                                     info;
+    uint64_t                                                values [ __C_ENG_VULKAN_CORE_WAIT_SEMAPHORE_MAX_COUNT ];
+#endif
+};
+
+struct SignalSemaphoreContext {
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    engine :: vulkan :: Type ( Result )                     error;
+#endif
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+    VkSemaphoreSignalInfo                                   info;
+#endif
+};
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_SEMAPHORE_WIN32_AVAILABLE
+struct ImportSemaphoreWin32Context {
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    engine :: vulkan :: Type ( Result )                     error;
+#endif
+    VkImportSemaphoreWin32HandleInfoKHR                     info;
+};
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_SEMAPHORE_FD_AVAILABLE
+struct ImportSemaphoreFdContext {
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    engine :: vulkan :: Type ( Result )                     error;
+#endif
+    VkImportSemaphoreFdInfoKHR                              info;
+};
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_GOOGLE_FUCHSIA_EXTERNAL_SEMAPHORE_AVAILABLE
+struct ImportSemaphoreZirconHandleInfoGoogleContext {
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    engine :: vulkan :: Type ( Result )                     error;
+#endif
+    VkImportSemaphoreZirconHandleInfoGoogle                 info;
+};
+#endif
+
 union EnumerateSharedContext {
     EnumerateLayerPropertiesContext                                     layerProperties;
     EnumerateExtensionPropertiesContext                                 extensionProperties;
@@ -782,6 +859,7 @@ union CreateSharedContext {
     CreateImageViewContext                                              imageView;
     CreateCommandPoolContext                                            commandPool;
     CreateFenceContext                                                  fence;
+    CreateSemaphoreContext                                              semaphore;
 };
 
 union GetSharedContext {
@@ -792,6 +870,7 @@ union GetSharedContext {
     GetSurfaceContext                                                   surface;
     GetSwapChainContext                                                 swapChain;
     GetFenceContext                                                     fence;
+    GetSemaphoreContext                                                 semaphore;
 };
 
 union AllocateSharedContext {
@@ -819,8 +898,29 @@ union ImportFenceSharedContext {
 #endif
 };
 
+union ImportSemaphoreSharedContext {
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_SEMAPHORE_WIN32_AVAILABLE
+    ImportSemaphoreWin32Context                                             win32;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_SEMAPHORE_FD_AVAILABLE
+    ImportSemaphoreFdContext                                                fd;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_GOOGLE_FUCHSIA_EXTERNAL_SEMAPHORE_AVAILABLE
+    ImportSemaphoreZirconHandleInfoGoogleContext                            zircon;
+#endif
+};
+
 union ImportSharedContext {
     ImportFenceSharedContext                                            fence;
+    ImportSemaphoreSharedContext                                        semaphore;
+};
+
+union WaitSharedContext {
+    WaitSemaphoreContext                                                semaphore;
+};
+
+union SignalSharedContext {
+    SignalSemaphoreContext                                              semaphore;
 };
 
 union SharedContext {
@@ -833,6 +933,8 @@ union SharedContext {
     SubmitSharedContext                                                 submit;
     OthersSharedContext                                                 other;
     ImportSharedContext                                                 _import;
+    WaitSharedContext                                                   wait;
+    SignalSharedContext                                                 signal;
 };
 
 

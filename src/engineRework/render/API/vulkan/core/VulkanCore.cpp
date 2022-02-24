@@ -8524,3 +8524,221 @@ auto vulkan :: toString (
            " }";
 }
 #endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( SemaphoreCreateInfo )    const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( ImportFenceFdInfo ) ) " "
+           "{ structureType = "_s               + toString ( info.structureType ) +
+           ", pNext = "                         + engine :: toString ( info.pNext ) +
+           ", flags = "                         + "0b" + Long ( info.flags ).toString(2) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+auto vulkan :: toString (
+        Type ( ExternalSemaphoreHandleTypeFlag )    flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case ExternalSemaphoreHandleTypeFlagOpaqueFd:           { asString = "Opaque FD";           break; }
+        case ExternalSemaphoreHandleTypeFlagOpaqueWin32:        { asString = "Opaque Win32";        break; }
+        case ExternalSemaphoreHandleTypeFlagOpaqueWin32KMT:     { asString = "Opaque Win32 KMT";    break; }
+        case ExternalSemaphoreHandleTypeFlagD3D12Fence:         { asString = "D3D12 Fence";         break; }
+        case ExternalSemaphoreHandleTypeFlagSyncFd:             { asString = "Sync FD";             break; }
+#if __C_ENG_VULKAN_API_EXTENSION_GOOGLE_FUCHSIA_EXTERNAL_SEMAPHORE_AVAILABLE
+        case ExternalSemaphoreHandleTypeFlagZirconEventFuchsia: { asString = "Zircon Event";        break; }
+#endif
+    }
+
+    return asString;
+}
+
+auto vulkan :: toString (
+        Type ( ExportSemaphoreCreateInfo )    const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( ExportSemaphoreCreateInfo ) ) " "
+           "{ structureType = "_s               + toString ( info.structureType ) +
+           ", pNext = "                         + engine :: toString ( info.pNext ) +
+           ", handleTypes = "                   + "0b" + Long ( info.handleTypes ).toString(2) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+auto vulkan :: toString (
+        Type ( SemaphoreType ) type
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( type ) {
+        case SemaphoreTypeBinary:   { asString = "Binary";      break; }
+        case SemaphoreTypeTimeline: { asString = "Timeline";    break; }
+    }
+
+    return asString;
+}
+
+auto vulkan :: toString (
+        Type ( SemaphoreTypeCreateInfo )    const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( SemaphoreTypeCreateInfo ) ) " "
+           "{ structureType = "_s               + toString ( info.structureType ) +
+           ", pNext = "                         + engine :: toString ( info.pNext ) +
+           ", semaphoreType = "                 + toString ( info.semaphoreType ) +
+           ", initialValue = "                  + info.initialValue +
+           " }";
+}
+auto vulkan :: toString (
+        Type ( SemaphoreWaitFlag ) flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case SemaphoreWaitFlagAny:  { asString = "Any";      break; }
+    }
+
+    return asString;
+}
+
+auto vulkan :: toString (
+        Type ( SemaphoreWaitInfo )    const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( SemaphoreWaitInfo ) ) " "
+           "{ structureType = "_s               + toString ( info.structureType ) +
+           ", pNext = "                         + engine :: toString ( info.pNext ) +
+           ", flags = "                         + "0b" + Long ( info.flags ).toString(2) +
+           ", semaphoreCount = "                + info.semaphoreCount +
+           ", pSemaphores = "                   + :: toStringEngine ( info.semaphoreCount, info.pSemaphores ) +
+           ", pValues = "                       + :: toStringRegular ( info.semaphoreCount, info.pValues ) +
+           " }";
+}
+
+auto vulkan :: toString (
+        Type ( SemaphoreSignalInfo )    const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( SemaphoreSignalInfo ) ) " "
+           "{ structureType = "_s               + toString ( info.structureType ) +
+           ", pNext = "                         + engine :: toString ( info.pNext ) +
+           ", semaphore = "                     + engine :: toString ( info.semaphore ) +
+           ", value = "                         + info.value +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_SEMAPHORE_WIN32_AVAILABLE
+auto vulkan :: toString (
+        Type ( SemaphoreGetWin32HandleInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( SemaphoreGetWin32HandleInfo ) ) " "
+           "{ structureType = "_s               + toString ( info.structureType ) +
+           ", pNext = "                         + engine :: toString ( info.pNext ) +
+           ", semaphore = "                     + engine :: toString ( info.semaphore ) +
+           ", handleType = "                    + toString ( info.handleType ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_SEMAPHORE_FD_AVAILABLE
+auto vulkan :: toString (
+        Type ( SemaphoreGetFdInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( SemaphoreGetFdInfo ) ) " "
+           "{ structureType = "_s               + toString ( info.structureType ) +
+           ", pNext = "                         + engine :: toString ( info.pNext ) +
+           ", semaphore = "                     + engine :: toString ( info.semaphore ) +
+           ", handleType = "                    + toString ( info.handleType ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_GOOGLE_FUCHSIA_EXTERNAL_SEMAPHORE_AVAILABLE
+auto vulkan :: toString (
+        Type ( SemaphoreGetZirconHandleInfoGoogle ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( SemaphoreGetZirconHandleInfoGoogle ) ) " "
+           "{ structureType = "_s               + toString ( info.structureType ) +
+           ", pNext = "                         + engine :: toString ( info.pNext ) +
+           ", semaphore = "                     + engine :: toString ( info.semaphore ) +
+           ", handleType = "                    + toString ( info.handleType ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+auto vulkan :: toString (
+        Type ( SemaphoreImportFlag ) flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case SemaphoreImportFlagTemporary:  { asString = "Temporary";      break; }
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_SEMAPHORE_WIN32_AVAILABLE
+auto vulkan :: toString (
+        Type ( ImportSemaphoreWin32HandleInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( ImportSemaphoreWin32HandleInfo ) ) " "
+           "{ structureType = "_s               + toString ( info.structureType ) +
+           ", pNext = "                         + engine :: toString ( info.pNext ) +
+           ", semaphore = "                     + engine :: toString ( info.semaphore ) +
+           ", flags = "                         + "0b" + Long ( info.flags ).toString(2) +
+           ", handleType = "                    + toString ( info.handleType ) +
+           ", handle = "                        + engine :: toString ( info.handle ) +
+           ", name = "                          + info.name +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_SEMAPHORE_FD_AVAILABLE
+auto vulkan :: toString (
+        Type ( ImportSemaphoreFdInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( ImportSemaphoreFdInfo ) ) " "
+           "{ structureType = "_s               + toString ( info.structureType ) +
+           ", pNext = "                         + engine :: toString ( info.pNext ) +
+           ", semaphore = "                     + engine :: toString ( info.semaphore ) +
+           ", flags = "                         + "0b" + Long ( info.flags ).toString(2) +
+           ", handleType = "                    + toString ( info.handleType ) +
+           ", fd = "                            + info.fd +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_GOOGLE_FUCHSIA_EXTERNAL_SEMAPHORE_AVAILABLE
+auto vulkan :: toString (
+        Type ( ImportSemaphoreZirconHandleInfoGoogle ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( ImportSemaphoreZirconHandleInfoGoogle ) ) " "
+           "{ structureType = "_s               + toString ( info.structureType ) +
+           ", pNext = "                         + engine :: toString ( info.pNext ) +
+           ", semaphore = "                     + engine :: toString ( info.semaphore ) +
+           ", flags = "                         + "0b" + Long ( info.flags ).toString(2) +
+           ", handleType = "                    + toString ( info.handleType ) +
+           ", zirconHandle = "                  + info.zirconHandle +
+           " }";
+}
+#endif

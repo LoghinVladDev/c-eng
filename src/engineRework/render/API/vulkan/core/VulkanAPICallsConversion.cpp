@@ -15212,5 +15212,418 @@ namespace engine :: vulkan {
     }
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    auto toVulkanFormat (
+            VkSemaphoreCreateInfo                  * pDestination,
+            Type ( SemaphoreCreateInfo )     const * pSource
+    ) noexcept -> VkSemaphoreCreateInfo * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType          = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO,
+                .pNext          = nullptr,
+                .flags          = pSource->flags
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    auto toVulkanFormat (
+            VkExportSemaphoreCreateInfo                  * pDestination,
+            Type ( ExportSemaphoreCreateInfo )     const * pSource
+    ) noexcept -> VkExportSemaphoreCreateInfo * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType          = VK_STRUCTURE_TYPE_EXPORT_SEMAPHORE_CREATE_INFO,
+                .pNext          = nullptr,
+                .handleTypes    = pSource->handleTypes
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+    auto toVulkanFormat (
+            VkSemaphoreTypeCreateInfo                  * pDestination,
+            Type ( SemaphoreTypeCreateInfo )     const * pSource
+    ) noexcept -> VkSemaphoreTypeCreateInfo * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType          = VK_STRUCTURE_TYPE_SEMAPHORE_TYPE_CREATE_INFO,
+                .pNext          = nullptr,
+                .semaphoreType  = static_cast < VkSemaphoreType > ( pSource->semaphoreType ),
+                .initialValue   = pSource->initialValue
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_SEMAPHORE_WIN32_AVAILABLE
+    auto toVulkanFormat (
+            VkExportSemaphoreWin32HandleInfoKHR                  * pDestination,
+            Type ( ExportSemaphoreWin32HandleInfo )        const * pSource
+    ) noexcept -> VkExportSemaphoreWin32HandleInfoKHR * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType          = VK_STRUCTURE_TYPE_EXPORT_SEMAPHORE_WIN32_HANDLE_INFO_KHR,
+                .pNext          = nullptr,
+                .pAttributes    = pSource->pAttributes,
+                .dwAccess       = pSource->dwAccess,
+                .name           = pSource->name
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    auto prepareContext (
+            CreateSemaphoreContext                * pContext,
+            Type ( SemaphoreCreateInfo )    const * pSource
+    ) noexcept -> VkSemaphoreCreateInfo * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pContext == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        auto pCurrent   = reinterpret_cast < Type ( GenericInStructure ) const * > ( pSource->pNext );
+        auto pCurrentVk = reinterpret_cast < VkBaseOutStructure * > ( toVulkanFormat ( & pContext->createInfo, pSource ) );
+
+        while ( pCurrent != nullptr ) {
+
+            switch ( pCurrent->structureType ) {
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+
+                case StructureTypeExportSemaphoreCreateInfo:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                            toVulkanFormat (
+                                    & pContext->exportCreateInfo,
+                                    reinterpret_cast < Type ( ExportSemaphoreCreateInfo ) const * > ( pCurrent )
+                            )
+                    );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+
+                case StructureTypeSemaphoreTypeCreateInfo:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                            toVulkanFormat (
+                                    & pContext->typeCreateInfo,
+                                    reinterpret_cast < Type ( SemaphoreTypeCreateInfo ) const * > ( pCurrent )
+                            )
+                    );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_SEMAPHORE_WIN32_AVAILABLE
+
+                case StructureTypeExportSemaphoreWin32HandleInfo:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                            toVulkanFormat (
+                                    & pContext->exportWin32HandleInfo,
+                                    reinterpret_cast < Type ( ExportSemaphoreWin32HandleInfo ) const * > ( pCurrent )
+                            )
+                    );
+                    break;
+
+#endif
+
+                default:
+                    break;
+            }
+
+            pCurrentVk  = pCurrentVk->pNext == nullptr ? pCurrentVk : pCurrentVk->pNext;
+            pCurrent    = pCurrent->pNext;
+        }
+
+        pCurrentVk = nullptr;
+
+        return & pContext->createInfo;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_SEMAPHORE_WIN32_AVAILABLE
+    auto toVulkanFormat (
+            VkSemaphoreGetWin32HandleInfoKHR                  * pDestination,
+            Type ( SemaphoreGetWin32HandleInfo )        const * pSource
+    ) noexcept -> VkSemaphoreGetWin32HandleInfoKHR * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType          = VK_STRUCTURE_TYPE_SEMAPHORE_GET_WIN32_HANDLE_INFO_KHR,
+                .pNext          = nullptr,
+                .semaphore      = pSource->semaphore,
+                .handleType     = static_cast < VkExternalSemaphoreHandleTypeFlagBits > ( pSource->handleType )
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_SEMAPHORE_FD_AVAILABLE
+    auto toVulkanFormat (
+            VkSemaphoreGetFdInfoKHR                  * pDestination,
+            Type ( SemaphoreGetFdInfo )        const * pSource
+    ) noexcept -> VkSemaphoreGetFdInfoKHR * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType          = VK_STRUCTURE_TYPE_SEMAPHORE_GET_FD_INFO_KHR,
+                .pNext          = nullptr,
+                .semaphore      = pSource->semaphore,
+                .handleType     = static_cast < VkExternalSemaphoreHandleTypeFlagBits > ( pSource->handleType )
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_GOOGLE_FUCHSIA_EXTERNAL_SEMAPHORE_AVAILABLE
+    auto toVulkanFormat (
+            VkSemaphoreGetZirconHandleInfoFUCHSIA                    * pDestination,
+            Type ( SemaphoreGetZirconHandleInfoGoogle )        const * pSource
+    ) noexcept -> VkSemaphoreGetZirconHandleInfoFUCHSIA * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType          = VK_STRUCTURE_TYPE_SEMAPHORE_GET_ZIRCON_HANDLE_INFO_FUCHSIA,
+                .pNext          = nullptr,
+                .semaphore      = pSource->semaphore,
+                .handleType     = static_cast < VkExternalSemaphoreHandleTypeFlagBits > ( pSource->handleType )
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+    auto toVulkanFormat (
+            VkSemaphoreWaitInfo                     * pDestination,
+            Type ( SemaphoreWaitInfo )        const * pSource
+    ) noexcept -> VkSemaphoreWaitInfo * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType          = VK_STRUCTURE_TYPE_SEMAPHORE_WAIT_INFO,
+                .pNext          = nullptr,
+                .flags          = pSource->flags,
+                .semaphoreCount = pSource->semaphoreCount,
+                .pSemaphores    = pSource->pSemaphores,
+                .pValues        = nullptr
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+    extern auto prepareContext (
+            WaitSemaphoreContext                * pContext,
+            Type ( SemaphoreWaitInfo )    const * pSource
+    ) noexcept -> VkSemaphoreWaitInfo * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pContext == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        (void) toVulkanFormat ( & pContext->info, pSource );
+
+        pContext->info.pValues = & pContext->values[0];
+
+        if ( pContext->info.semaphoreCount > __C_ENG_VULKAN_CORE_WAIT_SEMAPHORE_MAX_COUNT ) {
+            pContext->info.semaphoreCount   = __C_ENG_VULKAN_CORE_WAIT_SEMAPHORE_MAX_COUNT;
+            pContext->error                 = ResultErrorConfigurationArraySizeSmall;
+        }
+
+        for ( cds :: uint32 i = 0U; i < pContext->info.semaphoreCount; ++ i ) {
+            pContext->values[i] = static_cast < uint64_t > ( pSource->pValues[i] );
+        }
+
+        return & pContext->info;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+    auto toVulkanFormat (
+            VkSemaphoreSignalInfo                     * pDestination,
+            Type ( SemaphoreSignalInfo )        const * pSource
+    ) noexcept -> VkSemaphoreSignalInfo * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType          = VK_STRUCTURE_TYPE_SEMAPHORE_SIGNAL_INFO,
+                .pNext          = nullptr,
+                .semaphore      = pSource->semaphore,
+                .value          = static_cast < uint64_t > ( pSource->value )
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_SEMAPHORE_WIN32_AVAILABLE
+    auto toVulkanFormat (
+            VkImportSemaphoreWin32HandleInfoKHR                  * pDestination,
+            Type ( ImportSemaphoreWin32HandleInfo )        const * pSource
+    ) noexcept -> VkImportSemaphoreWin32HandleInfoKHR * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType          = VK_STRUCTURE_TYPE_IMPORT_SEMAPHORE_WIN32_HANDLE_INFO_KHR,
+                .pNext          = nullptr,
+                .semaphore      = pSource->semaphore,
+                .flags          = pSource->flags,
+                .handleType     = static_cast < VkExternalSemaphoreHandleTypeFlagBits > ( pSource->handleType ),
+                .handle         = pSource->handle,
+                .name           = pSource->name
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_SEMAPHORE_FD_AVAILABLE
+    auto toVulkanFormat (
+            VkImportSemaphoreFdInfoKHR                  * pDestination,
+            Type ( ImportSemaphoreFdInfo )        const * pSource
+    ) noexcept -> VkImportSemaphoreFdInfoKHR * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType          = VK_STRUCTURE_TYPE_IMPORT_SEMAPHORE_FD_INFO_KHR,
+                .pNext          = nullptr,
+                .semaphore      = pSource->semaphore,
+                .flags          = pSource->flags,
+                .handleType     = static_cast < VkExternalSemaphoreHandleTypeFlagBits > ( pSource->handleType ),
+                .fd             = pSource->fd
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_GOOGLE_FUCHSIA_EXTERNAL_SEMAPHORE_AVAILABLE
+    auto toVulkanFormat (
+            VkImportSemaphoreZirconHandleInfoFUCHSIA                    * pDestination,
+            Type ( ImportSemaphoreZirconHandleInfoGoogle )        const * pSource
+    ) noexcept -> VkImportSemaphoreZirconHandleInfoFUCHSIA * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType          = VK_STRUCTURE_TYPE_IMPORT_SEMAPHORE_ZIRCON_HANDLE_INFO_FUCHSIA,
+                .pNext          = nullptr,
+                .semaphore      = pSource->semaphore,
+                .flags          = pSource->flags,
+                .handleType     = static_cast < VkExternalSemaphoreHandleTypeFlagBits > ( pSource->handleType ),
+                .zirconHandle   = pSource->zirconHandle
+        };
+
+        return pDestination;
+    }
+#endif
+
 }
 

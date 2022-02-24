@@ -2565,3 +2565,324 @@ auto engine :: vulkan :: importFenceFd (
     );
 }
 #endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: createSemaphore (
+        Type ( DeviceHandle )                   deviceHandle,
+        Type ( SemaphoreCreateInfo )    const * pCreateInfo,
+        Type ( AllocationCallbacks )    const * pAllocationCallbacks,
+        Type ( SemaphoreHandle )              * pHandle
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || pCreateInfo == nullptr || pHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkCreateSemaphore )
+
+    auto context = ContextManager :: acquire();
+
+    return static_cast < Type ( Result ) > (
+            vkCreateSemaphoreHandle (
+                    deviceHandle,
+                    prepareContext ( & context.data().create.semaphore, pCreateInfo ),
+                    AllocatorHandler :: applyCallbacks ( pAllocationCallbacks ),
+                    pHandle
+            )
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_SEMAPHORE_WIN32_AVAILABLE
+auto engine :: vulkan :: getSemaphoreWin32Handle (
+        Type ( DeviceHandle )                           deviceHandle,
+        Type ( SemaphoreGetWin32HandleInfo )    const * pInfo,
+        HANDLE                                        * pHandle
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || pInfo == nullptr || pHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkGetSemaphoreWin32HandleKHR )
+
+    auto context = ContextManager :: acquire();
+
+    return static_cast < Type ( Result ) > (
+            vkGetSemaphoreWin32HandleKHRHandle (
+                    deviceHandle,
+                    toVulkanFormat ( & context.data().get.semaphore.win32HandleInfo, pInfo ),
+                    pHandle
+            )
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_SEMAPHORE_FD_AVAILABLE
+auto engine :: vulkan :: getSemaphoreFd (
+        Type ( DeviceHandle )               deviceHandle,
+        Type ( SemaphoreGetFdInfo ) const * pInfo,
+        int                               * pFd
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || pInfo == nullptr || pFd == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkGetSemaphoreFdKHR )
+
+    auto context = ContextManager :: acquire();
+
+    return static_cast < Type ( Result ) > (
+            vkGetSemaphoreFdKHRHandle (
+                    deviceHandle,
+                    toVulkanFormat ( & context.data().get.semaphore.fdInfo, pInfo ),
+                    pFd
+            )
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_GOOGLE_FUCHSIA_EXTERNAL_SEMAPHORE_AVAILABLE
+auto engine :: vulkan :: getSemaphoreZirconHandleGoogle (
+        Type ( DeviceHandle )                               deviceHandle,
+        Type ( SemaphoreGetZirconHandleInfoGoogle ) const * pInfo,
+        zx_handle_t                                       * pHandle
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || pInfo == nullptr || pHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkGetSemaphoreZirconHandleFUCHSIA )
+
+    auto context = ContextManager :: acquire();
+
+    return static_cast < Type ( Result ) > (
+            vkGetSemaphoreZirconHandleFUCHSIAHandle (
+                    deviceHandle,
+                    toVulkanFormat ( & context.data().get.semaphore.zirconHandleInfo, pInfo ),
+                    pHandle
+            )
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: destroySemaphore (
+        Type ( DeviceHandle )                   deviceHandle,
+        Type ( SemaphoreHandle )                semaphoreHandle,
+        Type ( AllocationCallbacks )    const * pAllocationCallbacks
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || semaphoreHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkDestroySemaphore )
+
+    vkDestroySemaphoreHandle (
+            deviceHandle,
+            semaphoreHandle,
+            AllocatorHandler :: applyCallbacks ( pAllocationCallbacks )
+    );
+
+    return ResultSuccess;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+auto engine :: vulkan :: getSemaphoreCounterValue (
+        Type ( DeviceHandle )                   deviceHandle,
+        Type ( SemaphoreHandle )                semaphoreHandle,
+        uint64                                * pValue
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || semaphoreHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkGetSemaphoreCounterValue )
+
+    uint64_t value = 0U;
+
+    if (
+            auto result = vkGetSemaphoreCounterValueHandle (
+                    deviceHandle,
+                    semaphoreHandle,
+                    & value
+            ); result != VK_SUCCESS
+    ) {
+        return static_cast < Type ( Result ) > ( result );
+    }
+
+    * pValue = static_cast < uint64 > ( value );
+
+    return ResultSuccess;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+auto engine :: vulkan :: waitSemaphores (
+        Type ( DeviceHandle )               deviceHandle,
+        Type ( SemaphoreWaitInfo )  const * pWaitInfo,
+        uint64                              timeout
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || pWaitInfo == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+    if ( pWaitInfo->semaphoreCount > __C_ENG_VULKAN_CORE_WAIT_SEMAPHORE_MAX_COUNT ) {
+        return ResultErrorConfigurationArraySizeSmall;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkWaitSemaphores )
+
+    auto context = ContextManager :: acquire();
+
+    return static_cast < Type ( Result ) > (
+            vkWaitSemaphoresHandle (
+                    deviceHandle,
+                    prepareContext ( & context.data().wait.semaphore, pWaitInfo ),
+                    static_cast < uint64_t > ( timeout )
+            )
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+auto engine :: vulkan :: signalSemaphore (
+        Type ( DeviceHandle )                   deviceHandle,
+        Type ( SemaphoreSignalInfo )    const * pSignalInfo
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || pSignalInfo == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkSignalSemaphore )
+
+    auto context = ContextManager :: acquire();
+
+    return static_cast < Type ( Result ) > (
+            vkSignalSemaphoreHandle (
+                    deviceHandle,
+                    toVulkanFormat ( & context.data().signal.semaphore.info, pSignalInfo )
+            )
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_SEMAPHORE_WIN32_AVAILABLE
+auto engine :: vulkan :: importSemaphoreWin32Handle (
+        Type ( DeviceHandle )                           deviceHandle,
+        Type ( ImportSemaphoreWin32HandleInfo ) const * pInfo
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || pInfo == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkImportSemaphoreWin32HandleKHR )
+
+    auto context = ContextManager :: acquire();
+
+    return static_cast < Type ( Result ) > (
+            vkImportSemaphoreWin32HandleKHRHandle (
+                    deviceHandle,
+                    toVulkanFormat ( & context.data()._import.semaphore.win32.info, pInfo )
+            )
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_SEMAPHORE_FD_AVAILABLE
+auto engine :: vulkan :: importSemaphoreFd (
+        Type ( DeviceHandle )                  deviceHandle,
+        Type ( ImportSemaphoreFdInfo ) const * pInfo
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || pInfo == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkImportSemaphoreFdKHR )
+
+    auto context = ContextManager :: acquire();
+
+    return static_cast < Type ( Result ) > (
+            vkImportSemaphoreFdKHRHandle (
+                    deviceHandle,
+                    toVulkanFormat ( & context.data()._import.semaphore.fd.info, pInfo )
+            )
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_GOOGLE_FUCHSIA_EXTERNAL_SEMAPHORE_AVAILABLE
+auto engine :: vulkan :: importSemaphoreZirconHandleGoogle (
+        Type ( DeviceHandle )                                   deviceHandle,
+        Type ( ImportSemaphoreZirconHandleInfoGoogle )  const * pInfo
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || pInfo == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkImportSemaphoreZirconHandleFUCHSIA )
+
+    auto context = ContextManager :: acquire();
+
+    return static_cast < Type ( Result ) > (
+            vkImportSemaphoreZirconHandleFUCHSIAHandle (
+                    deviceHandle,
+                    toVulkanFormat ( & context.data()._import.semaphore.zircon.info, pInfo )
+            )
+    );
+}
+#endif

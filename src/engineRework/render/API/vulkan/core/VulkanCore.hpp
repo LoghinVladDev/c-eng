@@ -3550,6 +3550,41 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #endif
 
 
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+#define C_ENG_MAP_START ENUM ( SemaphoreType, TYPE ( cds :: uint8 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( Binary,     VkSemaphoreType :: VK_SEMAPHORE_TYPE_BINARY ),
+            Field ( Timeline,   VkSemaphoreType :: VK_SEMAPHORE_TYPE_TIMELINE ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+#define C_ENG_MAP_START ENUM ( ExternalSemaphoreHandleTypeFlag, TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( OpaqueFd,           VkExternalSemaphoreHandleTypeFlagBits :: VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD_BIT ),
+            Field ( OpaqueWin32,        VkExternalSemaphoreHandleTypeFlagBits :: VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT ),
+            Field ( OpaqueWin32KMT,     VkExternalSemaphoreHandleTypeFlagBits :: VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT ),
+            Field ( D3D12Fence,         VkExternalSemaphoreHandleTypeFlagBits :: VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D12_FENCE_BIT ),
+            Field ( SyncFd,             VkExternalSemaphoreHandleTypeFlagBits :: VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_SYNC_FD_BIT ),
+
+#if __C_ENG_VULKAN_API_EXTENSION_GOOGLE_FUCHSIA_EXTERNAL_SEMAPHORE_AVAILABLE
+            Field ( ZirconEventGoogle,  VkExternalSemaphoreHandleTypeFlagBits :: VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_ZIRCON_EVENT_BIT_FUCHSIA ),
+#endif
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+
 #if __C_ENG_VULKAN_API_EXTENSION_DISPLAY_CONTROL_AVAILABLE
 
 #define C_ENG_MAP_START     ENUM ( DeviceEventType,     TYPE ( cds :: uint8 ) )
@@ -3581,6 +3616,30 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
         Enum {
             Field ( Temporary,  VkFenceImportFlagBits :: VK_FENCE_IMPORT_TEMPORARY_BIT ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START ENUM ( SemaphoreImportFlag, TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( Temporary,  VkSemaphoreImportFlagBits :: VK_SEMAPHORE_IMPORT_TEMPORARY_BIT ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+
+#define C_ENG_MAP_START ENUM ( SemaphoreWaitFlag, TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( Any, VkSemaphoreWaitFlagBits :: VK_SEMAPHORE_WAIT_ANY_BIT ),
         };
 
 #define C_ENG_MAP_END
@@ -3637,6 +3696,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_ALIAS ( QueryControlFlags,              VkQueryControlFlags );
         __C_ENG_ALIAS ( QueryPipelineStatisticFlags,    VkQueryPipelineStatisticFlags );
         __C_ENG_ALIAS ( FenceCreateFlags,               VkFenceCreateFlags );
+        __C_ENG_ALIAS ( SemaphoreCreateFlags,           VkSemaphoreCreateFlags );
 
         __C_ENG_ALIAS ( AllocationFunction,             PFN_vkAllocationFunction );
         __C_ENG_ALIAS ( ReallocationFunction,           PFN_vkReallocationFunction );
@@ -3648,10 +3708,18 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
 
-        __C_ENG_ALIAS ( SamplerYCBCRConversion,         VkSamplerYcbcrConversion );
-        __C_ENG_ALIAS ( CommandPoolTrimFlags,           VkCommandPoolTrimFlags );
-        __C_ENG_ALIAS ( ExternalFenceHandleTypeFlags,   VkExternalFenceHandleTypeFlags );
-        __C_ENG_ALIAS ( FenceImportFlags,               VkFenceImportFlags );
+        __C_ENG_ALIAS ( SamplerYCBCRConversion,             VkSamplerYcbcrConversion );
+        __C_ENG_ALIAS ( CommandPoolTrimFlags,               VkCommandPoolTrimFlags );
+        __C_ENG_ALIAS ( ExternalFenceHandleTypeFlags,       VkExternalFenceHandleTypeFlags );
+        __C_ENG_ALIAS ( FenceImportFlags,                   VkFenceImportFlags );
+        __C_ENG_ALIAS ( SemaphoreImportFlags,               VkSemaphoreImportFlags );
+        __C_ENG_ALIAS ( ExternalSemaphoreHandleTypeFlags,   VkExternalSemaphoreHandleTypeFlags );
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+
+        __C_ENG_ALIAS ( SemaphoreWaitFlags,                 VkSemaphoreWaitFlags );
 
 #endif
 
@@ -9351,6 +9419,184 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+
+#define C_ENG_MAP_START STRUCT ( SemaphoreCreateInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                  structureType;
+            Type ( GenericStructure )       const * pNext;
+            Type ( SemaphoreCreateFlags )           flags;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+
+#define C_ENG_MAP_START STRUCT ( ExportSemaphoreCreateInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                              structureType;
+            Type ( GenericStructure )                   const * pNext;
+            Type ( ExternalSemaphoreHandleTypeFlags )           handleTypes;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+
+#define C_ENG_MAP_START STRUCT ( SemaphoreTypeCreateInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                              structureType;
+            Type ( GenericStructure )                   const * pNext;
+            Type ( SemaphoreType )                              semaphoreType;
+            cds :: uint64                                       initialValue;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_SEMAPHORE_WIN32_AVAILABLE
+
+#define C_ENG_MAP_START STRUCT ( SemaphoreGetWin32HandleInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                              structureType;
+            Type ( GenericStructure )                   const * pNext;
+            Type ( SemaphoreHandle )                            semaphore;
+            Type ( ExternalSemaphoreHandleTypeFlag )            handleType;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START STRUCT ( ImportSemaphoreWin32HandleInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                              structureType;
+            Type ( GenericStructure )                   const * pNext;
+            Type ( SemaphoreHandle )                            semaphore;
+            Type ( SemaphoreImportFlags )                       flags;
+            Type ( ExternalSemaphoreHandleTypeFlag )            handleType;
+            HANDLE                                              handle;
+            LPCWSTR                                             name;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_SEMAPHORE_FD_AVAILABLE
+
+#define C_ENG_MAP_START STRUCT ( SemaphoreGetFdInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                              structureType;
+            Type ( GenericStructure )                   const * pNext;
+            Type ( SemaphoreHandle )                            semaphore;
+            Type ( ExternalSemaphoreHandleTypeFlag )            handleType;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START STRUCT ( ImportSemaphoreFdInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                              structureType;
+            Type ( GenericStructure )                   const * pNext;
+            Type ( SemaphoreHandle )                            semaphore;
+            Type ( SemaphoreImportFlags )                       flags;
+            Type ( ExternalSemaphoreHandleTypeFlag )            handleType;
+            int                                                 fd;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_GOOGLE_FUCHSIA_EXTERNAL_SEMAPHORE_AVAILABLE
+
+#define C_ENG_MAP_START STRUCT ( SemaphoreGetZirconHandleInfoGoogle, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                              structureType;
+            Type ( GenericStructure )                   const * pNext;
+            Type ( SemaphoreHandle )                            semaphore;
+            Type ( ExternalSemaphoreHandleTypeFlag )            handleType;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START STRUCT ( ImportSemaphoreZirconHandleInfoGoogle, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                              structureType;
+            Type ( GenericStructure )                   const * pNext;
+            Type ( SemaphoreHandle )                            semaphore;
+            Type ( SemaphoreImportFlags )                       flags;
+            Type ( ExternalSemaphoreHandleTypeFlag )            handleType;
+            zx_handle_t                                         zirconHandle;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+
+#define C_ENG_MAP_START STRUCT ( SemaphoreWaitInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                              structureType;
+            Type ( GenericStructure )                   const * pNext;
+            Type ( SemaphoreWaitFlags )                         flags;
+            cds :: uint32                                       semaphoreCount;
+            Type ( SemaphoreHandle )                    const * pSemaphores;
+            cds :: uint64                               const * pValues;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START STRUCT ( SemaphoreSignalInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                              structureType;
+            Type ( GenericStructure )                   const * pNext;
+            Type ( SemaphoreHandle )                            semaphore;
+            cds :: uint64                                       value;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#endif
+
 
 #define C_ENG_MAP_START     HEADER
 #include <ObjectMapping.hpp>
@@ -9397,6 +9643,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         NoDiscard auto toString ( Type ( SubgroupFeatureFlag ) ) noexcept -> cds :: StringLiteral;
         NoDiscard auto toString ( Type ( ExternalFenceHandleTypeFlag ) ) noexcept -> cds :: StringLiteral;
         NoDiscard auto toString ( Type ( FenceImportFlag ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( SemaphoreImportFlag ) ) noexcept -> cds :: StringLiteral;
 
 #endif
 
@@ -9539,6 +9786,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         NoDiscard auto toString ( Type ( SubmitInfo ) const & ) noexcept -> cds :: String;
 
         NoDiscard auto toString ( Type ( FenceCreateInfo ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( SemaphoreCreateInfo ) const & ) noexcept -> cds :: String;
 
 #endif
 
@@ -10490,6 +10738,34 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
         NoDiscard auto toString ( Type ( CommandBufferInheritanceRenderPassTransformInfoQualcomm ) const & ) noexcept -> cds :: String;
 
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+        NoDiscard auto toString ( Type ( ExternalSemaphoreHandleTypeFlag ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( ExportSemaphoreCreateInfo ) const & ) noexcept -> cds :: String;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+        NoDiscard auto toString ( Type ( SemaphoreType ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( SemaphoreWaitFlag ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( SemaphoreTypeCreateInfo ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( SemaphoreWaitInfo ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( SemaphoreSignalInfo ) const & ) noexcept -> cds :: String;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_SEMAPHORE_WIN32_AVAILABLE
+        NoDiscard auto toString ( Type ( SemaphoreGetWin32HandleInfo ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( ImportSemaphoreWin32HandleInfo ) const & ) noexcept -> cds :: String;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_SEMAPHORE_FD_AVAILABLE
+        NoDiscard auto toString ( Type ( SemaphoreGetFdInfo ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( ImportSemaphoreFdInfo ) const & ) noexcept -> cds :: String;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_GOOGLE_FUCHSIA_EXTERNAL_SEMAPHORE_AVAILABLE
+        NoDiscard auto toString ( Type ( SemaphoreGetZirconHandleInfoGoogle ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( ImportSemaphoreZirconHandleInfoGoogle ) const & ) noexcept -> cds :: String;
 #endif
 
         __C_ENG_NO_DISCARD auto compare ( __C_ENG_TYPE ( Version ) const &, __C_ENG_TYPE ( Version ) const & ) noexcept -> __C_ENG_TYPE ( CompareResult );

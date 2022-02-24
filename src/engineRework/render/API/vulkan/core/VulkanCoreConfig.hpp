@@ -47,6 +47,8 @@
 #define __C_ENG_VULKAN_CORE_SUBMIT_SEMAPHORE_INFO_MAX_COUNT 16U /* NOLINT(bugprone-reserved-identifier) */
 #define __C_ENG_VULKAN_CORE_SUBMIT_COMMAND_BUFFER_INFO_MAX_COUNT 32U /* NOLINT(bugprone-reserved-identifier) */
 
+#define __C_ENG_VULKAN_CORE_WAIT_SEMAPHORE_MAX_COUNT 128U
+
 #if defined ( __C_ENG_USE_DEFENSIVE_PROGRAMMING ) || !defined(NDEBUG)
 
 #define __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED true /* NOLINT(bugprone-reserved-identifier) */

@@ -2549,6 +2549,69 @@ namespace engine :: vulkan {
     ) noexcept -> VkImportFenceFdInfoKHR *;
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto prepareContext (
+            CreateSemaphoreContext                *,
+            Type ( SemaphoreCreateInfo )    const *
+    ) noexcept -> VkSemaphoreCreateInfo *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_SEMAPHORE_WIN32_AVAILABLE
+    extern auto toVulkanFormat (
+            VkSemaphoreGetWin32HandleInfoKHR              *,
+            Type ( SemaphoreGetWin32HandleInfo )    const *
+    ) noexcept -> VkSemaphoreGetWin32HandleInfoKHR *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_SEMAPHORE_FD_AVAILABLE
+    extern auto toVulkanFormat (
+            VkSemaphoreGetFdInfoKHR              *,
+            Type ( SemaphoreGetFdInfo )    const *
+    ) noexcept -> VkSemaphoreGetFdInfoKHR *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_GOOGLE_FUCHSIA_EXTERNAL_SEMAPHORE_AVAILABLE
+    extern auto toVulkanFormat (
+            VkSemaphoreGetZirconHandleInfoFUCHSIA                *,
+            Type ( SemaphoreGetZirconHandleInfoGoogle )    const *
+    ) noexcept -> VkSemaphoreGetZirconHandleInfoFUCHSIA *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+    extern auto prepareContext (
+            WaitSemaphoreContext                *,
+            Type ( SemaphoreWaitInfo )    const *
+    ) noexcept -> VkSemaphoreWaitInfo *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+    extern auto toVulkanFormat (
+            VkSemaphoreSignalInfo                 *,
+            Type ( SemaphoreSignalInfo )    const *
+    ) noexcept -> VkSemaphoreSignalInfo *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_SEMAPHORE_WIN32_AVAILABLE
+    extern auto toVulkanFormat (
+            VkImportSemaphoreWin32HandleInfoKHR              *,
+            Type ( ImportSemaphoreWin32HandleInfo )    const *
+    ) noexcept -> VkImportSemaphoreWin32HandleInfoKHR *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_SEMAPHORE_FD_AVAILABLE
+    extern auto toVulkanFormat (
+            VkImportSemaphoreFdInfoKHR              *,
+            Type ( ImportSemaphoreFdInfo )    const *
+    ) noexcept -> VkImportSemaphoreFdInfoKHR *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_GOOGLE_FUCHSIA_EXTERNAL_SEMAPHORE_AVAILABLE
+    extern auto toVulkanFormat (
+            VkImportSemaphoreZirconHandleInfoFUCHSIA                *,
+            Type ( ImportSemaphoreZirconHandleInfoGoogle )    const *
+    ) noexcept -> VkImportSemaphoreZirconHandleInfoFUCHSIA *;
+#endif
+
 }
 
 #define C_ENG_MAP_END
