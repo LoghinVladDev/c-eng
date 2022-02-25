@@ -2886,3 +2886,136 @@ auto engine :: vulkan :: importSemaphoreZirconHandleGoogle (
     );
 }
 #endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: createEvent (
+        Type ( DeviceHandle )                   deviceHandle,
+        Type ( EventCreateInfo )        const * pCreateInfo,
+        Type ( AllocationCallbacks )    const * pAllocationCallbacks,
+        Type ( EventHandle )                  * pHandle
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || pCreateInfo == nullptr || pHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkCreateEvent )
+
+    auto context = ContextManager :: acquire();
+
+    return static_cast < Type ( Result ) > (
+            vkCreateEventHandle (
+                    deviceHandle,
+                    toVulkanFormat ( & context.data().create.event.createInfo, pCreateInfo ),
+                    AllocatorHandler :: applyCallbacks ( pAllocationCallbacks ),
+                    pHandle
+            )
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: destroyEvent (
+        Type ( DeviceHandle )                   deviceHandle,
+        Type ( EventHandle )                    handle,
+        Type ( AllocationCallbacks )    const * pAllocationCallbacks
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || handle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkDestroyEvent )
+
+    vkDestroyEventHandle (
+            deviceHandle,
+            handle,
+            AllocatorHandler :: applyCallbacks ( pAllocationCallbacks )
+    );
+
+    return ResultSuccess;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: getEventStatus (
+        Type ( DeviceHandle )                   deviceHandle,
+        Type ( EventHandle )                    handle
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || handle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkGetEventStatus )
+
+    return static_cast < Type ( Result ) > (
+            vkGetEventStatusHandle (
+                    deviceHandle,
+                    handle
+            )
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: setEvent (
+        Type ( DeviceHandle )                   deviceHandle,
+        Type ( EventHandle )                    handle
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || handle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkSetEvent )
+
+    return static_cast < Type ( Result ) > (
+            vkSetEventHandle (
+                    deviceHandle,
+                    handle
+            )
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: resetEvent (
+        Type ( DeviceHandle )                   deviceHandle,
+        Type ( EventHandle )                    handle
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || handle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkResetEvent )
+
+    return static_cast < Type ( Result ) > (
+            vkResetEventHandle (
+                    deviceHandle,
+                    handle
+            )
+    );
+}
+#endif

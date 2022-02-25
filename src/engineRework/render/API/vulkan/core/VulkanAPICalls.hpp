@@ -648,6 +648,44 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         ) noexcept -> Type ( Result );
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+        NoDiscard MaybeUnused extern auto createEvent (
+                Type ( DeviceHandle ),
+                Type ( EventCreateInfo )        const *,
+                Type ( AllocationCallbacks )    const *,
+                Type ( EventHandle )                  *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+        NoDiscard MaybeUnused extern auto destroyEvent (
+                Type ( DeviceHandle ),
+                Type ( EventHandle ),
+                Type ( AllocationCallbacks )    const *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+        NoDiscard MaybeUnused extern auto getEventStatus (
+                Type ( DeviceHandle ),
+                Type ( EventHandle )
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+        NoDiscard MaybeUnused extern auto setEvent (
+                Type ( DeviceHandle ),
+                Type ( EventHandle )
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+        NoDiscard MaybeUnused extern auto resetEvent (
+                Type ( DeviceHandle ),
+                Type ( EventHandle )
+        ) noexcept -> Type ( Result );
+#endif
+
     }
 
 }

@@ -2612,6 +2612,13 @@ namespace engine :: vulkan {
     ) noexcept -> VkImportSemaphoreZirconHandleInfoFUCHSIA *;
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto toVulkanFormat (
+            VkEventCreateInfo                 *,
+            Type ( EventCreateInfo )    const *
+    ) noexcept -> VkEventCreateInfo *;
+#endif
+
 }
 
 #define C_ENG_MAP_END

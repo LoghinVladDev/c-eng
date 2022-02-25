@@ -844,6 +844,13 @@ struct ImportSemaphoreZirconHandleInfoGoogleContext {
 };
 #endif
 
+struct CreateEventContext {
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    engine :: vulkan :: Type ( Result )                     error;
+    VkEventCreateInfo                                       createInfo;
+#endif
+};
+
 union EnumerateSharedContext {
     EnumerateLayerPropertiesContext                                     layerProperties;
     EnumerateExtensionPropertiesContext                                 extensionProperties;
@@ -860,6 +867,7 @@ union CreateSharedContext {
     CreateCommandPoolContext                                            commandPool;
     CreateFenceContext                                                  fence;
     CreateSemaphoreContext                                              semaphore;
+    CreateEventContext                                                  event;
 };
 
 union GetSharedContext {

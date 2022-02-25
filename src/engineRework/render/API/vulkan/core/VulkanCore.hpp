@@ -3529,6 +3529,82 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #define C_ENG_MAP_END
 #include <ObjectMapping.hpp>
 
+#define C_ENG_MAP_START     ENUM ( EventCreateFlag,     TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( DeviceOnly, VkEventCreateFlagBits :: VK_EVENT_CREATE_DEVICE_ONLY_BIT ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START     ENUM ( ImageLayout,     TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( Undefined,                              VkImageLayout :: VK_IMAGE_LAYOUT_UNDEFINED ),
+            Field ( General,                                VkImageLayout :: VK_IMAGE_LAYOUT_GENERAL ),
+            Field ( ColorttachmentOptimal,                  VkImageLayout :: VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL ),
+            Field ( DepthStencilAttachmentOptimal,          VkImageLayout :: VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL ),
+            Field ( DepthStencilReadOnlyOptimal,            VkImageLayout :: VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL ),
+            Field ( SharedReadOnlyOptimal,                  VkImageLayout :: VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL ),
+            Field ( TransferSourceOptimal,                  VkImageLayout :: VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL ),
+            Field ( TransferDestinationOptimal,             VkImageLayout :: VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL ),
+            Field ( Preinitialized,                         VkImageLayout :: VK_IMAGE_LAYOUT_PREINITIALIZED ),
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+            Field ( DepthReadOnlyStencilAttachmentOptimal,  VkImageLayout :: VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL ),
+            Field ( DepthAttachmentStencilReadOnlyOptimal,  VkImageLayout :: VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL ),
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+            Field ( DepthAttachmentOptimal,                 VkImageLayout :: VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL ),
+            Field ( DepthReadOnlyOptimal,                   VkImageLayout :: VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL ),
+            Field ( StencilAttachmentOptimal,               VkImageLayout :: VK_IMAGE_LAYOUT_STENCIL_ATTACHMENT_OPTIMAL ),
+            Field ( StencilReadOnlyOptimal,                 VkImageLayout :: VK_IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL ),
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+            Field ( ReadOnlyOptimal,                        VkImageLayout :: VK_IMAGE_LAYOUT_READ_ONLY_OPTIMAL ),
+            Field ( AttachmentOptimal,                      VkImageLayout :: VK_IMAGE_LAYOUT_ATTACHMENT_OPTIMAL ),
+#elif __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
+            Field ( ReadOnlyOptimal,                        VkImageLayout :: VK_IMAGE_LAYOUT_READ_ONLY_OPTIMAL_KHR ),
+            Field ( AttachmentOptimal,                      VkImageLayout :: VK_IMAGE_LAYOUT_ATTACHMENT_OPTIMAL_KHR ),
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SWAP_CHAIN_AVAILABLE
+            Field ( LayoutPresentSource,                    VkImageLayout :: VK_IMAGE_LAYOUT_PRESENT_SRC_KHR ),
+#endif
+
+#if __C_ENG_VULKAN_BETA_EXTENSIONS_ENABLED && __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_DECODE_QUEUE_AVAILABLE
+            Field ( VideoDecodeDestination,                 VkImageLayout :: VK_IMAGE_LAYOUT_VIDEO_DECODE_DST_KHR ),
+            Field ( VideoDecodeSource,                      VkImageLayout :: VK_IMAGE_LAYOUT_VIDEO_DECODE_SRC_KHR ),
+            Field ( VideoDecodeDPB,                         VkImageLayout :: VK_IMAGE_LAYOUT_VIDEO_DECODE_DPB_KHR ),
+#endif
+
+#if __C_ENG_VULKAN_BETA_EXTENSIONS_ENABLED && __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_ENCODE_QUEUE_AVAILABLE
+            Field ( VideoEncodeDestination,                 VkImageLayout :: VK_IMAGE_LAYOUT_VIDEO_ENCODE_DST_KHR ),
+            Field ( VideoEncodeSource,                      VkImageLayout :: VK_IMAGE_LAYOUT_VIDEO_ENCODE_SRC_KHR ),
+            Field ( VideoEncodeDPB,                         VkImageLayout :: VK_IMAGE_LAYOUT_VIDEO_ENCODE_DPB_KHR ),
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHARED_PRESENTABLE_IMAGE_AVAILABLE
+            Field ( SharedPresent,                          VkImageLayout :: VK_IMAGE_LAYOUT_SHARED_PRESENT_KHR ),
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_FRAGMENT_DENSITY_MAP_AVAILABLE
+            Field ( FragmentDensityMapOptimal,              VkImageLayout :: VK_IMAGE_LAYOUT_FRAGMENT_DENSITY_MAP_OPTIMAL_EXT ),
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_FRAGMENT_SHADING_RATE_AVAILABLE
+            Field ( FragmentShadingRateAttachmentOptimal,   VkImageLayout :: VK_IMAGE_LAYOUT_FRAGMENT_SHADING_RATE_ATTACHMENT_OPTIMAL_KHR ),
+#endif
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
 #endif
 
 
@@ -3634,7 +3710,6 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #endif
 
 #if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
-
 #define C_ENG_MAP_START ENUM ( SemaphoreWaitFlag, TYPE ( cds :: uint32 ) )
 #include <ObjectMapping.hpp>
 
@@ -3644,7 +3719,24 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #define C_ENG_MAP_END
 #include <ObjectMapping.hpp>
+#endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+#define C_ENG_MAP_START ENUM ( DependencyFlag, TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( ByRegion,       VkDependencyFlagBits :: VK_DEPENDENCY_BY_REGION_BIT ),
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+            Field ( DeviceGroup,    VkDependencyFlagBits :: VK_DEPENDENCY_DEVICE_GROUP_BIT ),
+            Field ( ViewLocal,      VkDependencyFlagBits :: VK_DEPENDENCY_VIEW_LOCAL_BIT ),
+#endif
+
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
 #endif
 
 
@@ -3676,6 +3768,8 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_ALIAS ( RenderPassHandle,               VkRenderPass );
         __C_ENG_ALIAS ( SemaphoreHandle,                VkSemaphore );
         __C_ENG_ALIAS ( FenceHandle,                    VkFence );
+        __C_ENG_ALIAS ( EventHandle,                    VkEvent );
+        __C_ENG_ALIAS ( BufferHandle,                   VkBuffer );
 
         __C_ENG_ALIAS ( InstanceCreateFlags,            VkInstanceCreateFlags );
         __C_ENG_ALIAS ( DebugMessengerCreateFlags,      VkDebugUtilsMessengerCreateFlagsEXT );
@@ -3697,6 +3791,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_ALIAS ( QueryPipelineStatisticFlags,    VkQueryPipelineStatisticFlags );
         __C_ENG_ALIAS ( FenceCreateFlags,               VkFenceCreateFlags );
         __C_ENG_ALIAS ( SemaphoreCreateFlags,           VkSemaphoreCreateFlags );
+        __C_ENG_ALIAS ( EventCreateFlags,               VkEventCreateFlags );
 
         __C_ENG_ALIAS ( AllocationFunction,             PFN_vkAllocationFunction );
         __C_ENG_ALIAS ( ReallocationFunction,           PFN_vkReallocationFunction );
@@ -3742,6 +3837,12 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
         __C_ENG_ALIAS ( RenderingFlags,                 VkRenderingFlagsKHR );
 
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+        __C_ENG_ALIAS ( DependencyFlags,                VkDependencyFlags );
+#elif __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
+        __C_ENG_ALIAS ( DepepdencyFlags,                VkDependencyFlagsKHR );
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DISPLAY_AVAILABLE
@@ -9565,6 +9666,20 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( EventCreateInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                              structureType;
+            Type ( GenericStructure )                   const * pNext;
+            Type ( EventCreateFlags )                           flags;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
 #if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
 
 #define C_ENG_MAP_START STRUCT ( SemaphoreWaitInfo, NO_PARENT )
@@ -9595,6 +9710,111 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #define C_ENG_MAP_END
 #include <ObjectMapping.hpp>
 
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( MemoryBarrier2, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                              structureType;
+            Type ( GenericStructure )                   const * pNext;
+            Type ( PipelineStageFlags )                         sourceStageMask;
+            Type ( AccessFlags )                                sourceAccessMask;
+            Type ( PipelineStageFlags )                         destinationStageMask;
+            Type ( AccessFlags )                                destinationAccessMask;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START STRUCT ( BufferMemoryBarrier2, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                              structureType;
+            Type ( GenericStructure )                   const * pNext;
+            Type ( PipelineStageFlags )                         sourceStageMask;
+            Type ( AccessFlags )                                sourceAccessMask;
+            Type ( PipelineStageFlags )                         destinationStageMask;
+            Type ( AccessFlags )                                destinationAccessMask;
+            cds :: uint32                                       sourceQueueFamilyIndex;
+            cds :: uint32                                       destinationQueueFamilyIndex;
+            Type ( BufferHandle )                               buffer;
+            Type ( DeviceSize )                                 offset;
+            Type ( DeviceSize )                                 size;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START STRUCT ( ImageMemoryBarrier2, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                              structureType;
+            Type ( GenericStructure )                   const * pNext;
+            Type ( PipelineStageFlags )                         sourceStageMask;
+            Type ( AccessFlags )                                sourceAccessMask;
+            Type ( PipelineStageFlags )                         destinationStageMask;
+            Type ( AccessFlags )                                destinationAccessMask;
+            Type ( ImageLayout )                                oldLayout;
+            Type ( ImageLayout )                                newLayout;
+            cds :: uint32                                       sourceQueueFamilyIndex;
+            cds :: uint32                                       destinationQueueFamilyIndex;
+            Type ( ImageHandle )                                image;
+            Type ( ImageSubresourceRange )                      subresourceRange;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START STRUCT ( DependencyInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                              structureType;
+            Type ( GenericStructure )                   const * pNext;
+            Type ( DependencyFlags )                            dependencyFlags;
+            cds :: uint32                                       memoryBarrierCount;
+            Type ( MemoryBarrier2 )                     const * pMemoryBarriers;
+            cds :: uint32                                       bufferMemoryBarrierCount;
+            Type ( BufferMemoryBarrier2 )               const * pBufferMemoryBarriers;
+            cds :: uint32                                       imageMemoryBarrierCount;
+            Type ( ImageMemoryBarrier2 )                const * pImageMemoryBarriers;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_SAMPLE_LOCATIONS_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( SampleLocation, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            float x;
+            float y;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START STRUCT ( SampleLocationsInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                              structureType;
+            Type ( GenericStructure )                   const * pNext;
+            Type ( SampleCountFlag )                            sampleLocationsPerPixel;
+            Type ( Extent2D )                                   sampleLocationGridSize;
+            cds :: uint32                                       sampleLocationsCount;
+            Type ( SampleLocation )                     const * pSampleLocations;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
 #endif
 
 
@@ -9635,6 +9855,9 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         NoDiscard auto toString ( Type ( QueryPipelineStatisticFlag ) ) noexcept -> cds :: StringLiteral;
         NoDiscard auto toString ( Type ( QueryControlFlag ) ) noexcept -> cds :: StringLiteral;
         NoDiscard auto toString ( Type ( FenceCreateFlag ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( EventCreateFlag ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( DependencyFlag ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( ImageLayout ) ) noexcept -> cds :: StringLiteral;
 
 #endif
 
@@ -9658,9 +9881,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #endif
 
 #if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
-
         NoDiscard auto toString ( Type ( SubmitFlag ) ) noexcept -> cds :: StringLiteral;
-
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_DISPLAY_CONTROL_AVAILABLE
@@ -9787,6 +10008,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
         NoDiscard auto toString ( Type ( FenceCreateInfo ) const & ) noexcept -> cds :: String;
         NoDiscard auto toString ( Type ( SemaphoreCreateInfo ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( EventCreateInfo ) const & ) noexcept -> cds :: String;
 
 #endif
 
@@ -9873,6 +10095,11 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         NoDiscard auto toString ( Type ( SemaphoreSubmitInfo ) const & ) noexcept -> cds :: String;
         NoDiscard auto toString ( Type ( CommandBufferSubmitInfo ) const & ) noexcept -> cds :: String;
         NoDiscard auto toString ( Type ( SubmitInfo2 ) const & ) noexcept -> cds :: String;
+
+        NoDiscard auto toString ( Type ( MemoryBarrier2 ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( BufferMemoryBarrier2 ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( ImageMemoryBarrier2 ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( DependencyInfo ) const & ) noexcept -> cds :: String;
 
 #endif
 
@@ -10766,6 +10993,11 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #if __C_ENG_VULKAN_API_EXTENSION_GOOGLE_FUCHSIA_EXTERNAL_SEMAPHORE_AVAILABLE
         NoDiscard auto toString ( Type ( SemaphoreGetZirconHandleInfoGoogle ) const & ) noexcept -> cds :: String;
         NoDiscard auto toString ( Type ( ImportSemaphoreZirconHandleInfoGoogle ) const & ) noexcept -> cds :: String;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_SAMPLE_LOCATIONS_AVAILABLE
+        NoDiscard auto toString ( Type ( SampleLocation ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( SampleLocationsInfo ) const & ) noexcept -> cds :: String;
 #endif
 
         __C_ENG_NO_DISCARD auto compare ( __C_ENG_TYPE ( Version ) const &, __C_ENG_TYPE ( Version ) const & ) noexcept -> __C_ENG_TYPE ( CompareResult );

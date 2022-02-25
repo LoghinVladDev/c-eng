@@ -15625,5 +15625,29 @@ namespace engine :: vulkan {
     }
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    auto toVulkanFormat (
+            VkEventCreateInfo                    * pDestination,
+            Type ( EventCreateInfo )        const * pSource
+    ) noexcept -> VkEventCreateInfo * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType          = VK_STRUCTURE_TYPE_EVENT_CREATE_INFO,
+                .pNext          = nullptr,
+                .flags          = pSource->flags
+        };
+
+        return pDestination;
+    }
+#endif
+
 }
 

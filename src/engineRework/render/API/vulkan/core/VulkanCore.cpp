@@ -8742,3 +8742,225 @@ auto vulkan :: toString (
            " }";
 }
 #endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( EventCreateFlag ) flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case EventCreateFlagDeviceOnly: { asString = "Device Only";      break; }
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( EventCreateInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( EventCreateInfo ) ) " "
+           "{ structureType = "_s               + toString ( info.structureType ) +
+           ", pNext = "                         + engine :: toString ( info.pNext ) +
+           ", flags = "                         + "0b" + Long ( info.flags ).toString(2) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( DependencyFlag ) flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case DependencyFlagByRegion:    { asString = "By Region";       break; }
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+        case DependencyFlagDeviceGroup: { asString = "Device Group";    break; }
+        case DependencyFlagViewLocal:   { asString = "View Local";      break; }
+#endif
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( ImageLayout ) flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case ImageLayoutUndefined:                            { asString = "Undefined";                             break; }
+        case ImageLayoutGeneral:                              { asString = "General";                               break; }
+        case ImageLayoutColorttachmentOptimal:                { asString = "ColorttachmentOptimal";                 break; }
+        case ImageLayoutDepthStencilAttachmentOptimal:        { asString = "DepthStencilAttachmentOptimal";         break; }
+        case ImageLayoutDepthStencilReadOnlyOptimal:          { asString = "DepthStencilReadOnlyOptimal";           break; }
+        case ImageLayoutSharedReadOnlyOptimal:                { asString = "SharedReadOnlyOptimal";                 break; }
+        case ImageLayoutTransferSourceOptimal:                { asString = "TransferSourceOptimal";                 break; }
+        case ImageLayoutTransferDestinationOptimal:           { asString = "TransferDestinationOptimal";            break; }
+        case ImageLayoutPreinitialized:                       { asString = "Preinitialized";                        break; }
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+        case ImageLayoutDepthReadOnlyStencilAttachmentOptimal:{ asString = "DepthReadOnlyStencilAttachmentOptimal"; break; }
+        case ImageLayoutDepthAttachmentStencilReadOnlyOptimal:{ asString = "DepthAttachmentStencilReadOnlyOptimal"; break; }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+        case ImageLayoutDepthAttachmentOptimal:               { asString = "DepthAttachmentOptimal";                break; }
+        case ImageLayoutDepthReadOnlyOptimal:                 { asString = "DepthReadOnlyOptimal";                  break; }
+        case ImageLayoutStencilAttachmentOptimal:             { asString = "StencilAttachmentOptimal";              break; }
+        case ImageLayoutStencilReadOnlyOptimal:               { asString = "StencilReadOnlyOptimal";                break; }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
+        case ImageLayoutReadOnlyOptimal:                      { asString = "ReadOnlyOptimal";                       break; }
+        case ImageLayoutAttachmentOptimal:                    { asString = "AttachmentOptimal";                     break; }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SWAP_CHAIN_AVAILABLE
+        case ImageLayoutLayoutPresentSource:                  { asString = "LayoutPresentSource";                   break; }
+#endif
+
+#if __C_ENG_VULKAN_BETA_EXTENSIONS_ENABLED && __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_DECODE_QUEUE_AVAILABLE
+        case ImageLayoutVideoDecodeDestination:               { asString = "VideoDecodeDestination";                break; }
+        case ImageLayoutVideoDecodeSource:                    { asString = "VideoDecodeSource";                     break; }
+        case ImageLayoutVideoDecodeDPB:                       { asString = "VideoDecodeDPB";                        break; }
+#endif
+
+#if __C_ENG_VULKAN_BETA_EXTENSIONS_ENABLED && __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_ENCODE_QUEUE_AVAILABLE
+        case ImageLayoutVideoEncodeDestination:               { asString = "VideoEncodeDestination";                break; }
+        case ImageLayoutVideoEncodeSource:                    { asString = "VideoEncodeSource";                     break; }
+        case ImageLayoutVideoEncodeDPB:                       { asString = "VideoEncodeDPB";                        break; }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHARED_PRESENTABLE_IMAGE_AVAILABLE
+        case ImageLayoutSharedPresent:                        { asString = "SharedPresent";                         break; }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_FRAGMENT_DENSITY_MAP_AVAILABLE
+        case ImageLayoutFragmentDensityMapOptimal:            { asString = "FragmentDensityMapOptimal";             break; }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_FRAGMENT_SHADING_RATE_AVAILABLE
+        case ImageLayoutFragmentShadingRateAttachmentOptimal: { asString = "FragmentShadingRateAttachmentOptimal";  break; }
+#endif
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
+auto vulkan :: toString (
+        Type ( MemoryBarrier2 ) const & barrier
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( MemoryBarrier2 ) ) " "
+           "{ structureType = "_s               + toString ( barrier.structureType ) +
+           ", pNext = "                         + engine :: toString ( barrier.pNext ) +
+           ", sourceStageMask = "               + "0b" + Long ( static_cast < cds :: sint64 > ( barrier.sourceAccessMask ) ).toString(2) +
+           ", sourceAccessMask = "              + "0b" + Long ( static_cast < cds :: sint64 > ( barrier.sourceAccessMask ) ).toString(2) +
+           ", destinationStageMask = "          + "0b" + Long ( static_cast < cds :: sint64 > ( barrier.destinationStageMask ) ).toString(2) +
+           ", destinationAccessMask = "         + "0b" + Long ( static_cast < cds :: sint64 > ( barrier.destinationAccessMask ) ).toString(2) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
+auto vulkan :: toString (
+        Type ( BufferMemoryBarrier2 ) const & barrier
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( BufferMemoryBarrier2 ) ) " "
+           "{ structureType = "_s               + toString ( barrier.structureType ) +
+           ", pNext = "                         + engine :: toString ( barrier.pNext ) +
+           ", sourceStageMask = "               + "0b" + Long ( static_cast < cds :: sint64 > ( barrier.sourceAccessMask ) ).toString(2) +
+           ", sourceAccessMask = "              + "0b" + Long ( static_cast < cds :: sint64 > ( barrier.sourceAccessMask ) ).toString(2) +
+           ", destinationStageMask = "          + "0b" + Long ( static_cast < cds :: sint64 > ( barrier.destinationStageMask ) ).toString(2) +
+           ", destinationAccessMask = "         + "0b" + Long ( static_cast < cds :: sint64 > ( barrier.destinationAccessMask ) ).toString(2) +
+           ", sourceQueueFamilyIndex = "        + barrier.sourceQueueFamilyIndex +
+           ", destinationQueueFamilyIndex = "   + barrier.destinationQueueFamilyIndex +
+           ", buffer = "                        + engine :: toString ( barrier.buffer ) +
+           ", offset = "                        + toString ( barrier.offset ) +
+           ", size = "                          + toString ( barrier.size ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
+auto vulkan :: toString (
+        Type ( ImageMemoryBarrier2 ) const & barrier
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( ImageMemoryBarrier2 ) ) " "
+           "{ structureType = "_s               + toString ( barrier.structureType ) +
+           ", pNext = "                         + engine :: toString ( barrier.pNext ) +
+           ", sourceStageMask = "               + "0b" + Long ( static_cast < cds :: sint64 > ( barrier.sourceAccessMask ) ).toString(2) +
+           ", sourceAccessMask = "              + "0b" + Long ( static_cast < cds :: sint64 > ( barrier.sourceAccessMask ) ).toString(2) +
+           ", destinationStageMask = "          + "0b" + Long ( static_cast < cds :: sint64 > ( barrier.destinationStageMask ) ).toString(2) +
+           ", destinationAccessMask = "         + "0b" + Long ( static_cast < cds :: sint64 > ( barrier.destinationAccessMask ) ).toString(2) +
+           ", oldLayout = "                     + toString ( barrier.oldLayout ) +
+           ", newLayout = "                     + toString ( barrier.newLayout ) +
+           ", sourceQueueFamilyIndex = "        + barrier.sourceQueueFamilyIndex +
+           ", destinationQueueFamilyIndex = "   + barrier.destinationQueueFamilyIndex +
+           ", image = "                         + engine :: toString ( barrier.image ) +
+           ", subresourceRange = "              + toString ( barrier.subresourceRange ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
+auto vulkan :: toString (
+        Type ( DependencyInfo ) const & barrier
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( DependencyInfo ) ) " "
+           "{ structureType = "_s               + toString ( barrier.structureType ) +
+           ", pNext = "                         + engine :: toString ( barrier.pNext ) +
+           ", dependencyFlags = "               + "0b" + Long ( barrier.dependencyFlags ).toString(2) +
+           ", memoryBarrierCount = "            + barrier.memoryBarrierCount +
+           ", memoryBarriers = "                + :: toStringVulkan ( barrier.memoryBarrierCount, barrier.pMemoryBarriers ) +
+           ", bufferMemoryBarrierCount = "      + barrier.bufferMemoryBarrierCount +
+           ", pBufferMemoryBarriers = "         + :: toStringVulkan ( barrier.bufferMemoryBarrierCount, barrier.pBufferMemoryBarriers ) +
+           ", imageMemoryBarrierCount = "       + barrier.imageMemoryBarrierCount +
+           ", pImageMemoryBarriers = "          + :: toStringVulkan ( barrier.imageMemoryBarrierCount, barrier.pImageMemoryBarriers ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_SAMPLE_LOCATIONS_AVAILABLE
+auto vulkan :: toString (
+        Type ( SampleLocation ) const & location
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( SampleLocation ) ) " "
+           "{ x = "_s   + location.x +
+           ", y = "     + location.y +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_SAMPLE_LOCATIONS_AVAILABLE
+auto vulkan :: toString (
+        Type ( SampleLocationsInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( SampleLocationsInfo ) ) " "
+           "{ structureType = "_s               + toString ( info.structureType ) +
+           ", pNext = "                         + engine :: toString ( info.pNext ) +
+           ", sampleLocationsPerPixel = "       + toString ( info.sampleLocationsPerPixel ) +
+           ", sampleLocationGridSize = "        + toString ( info.sampleLocationGridSize ) +
+           ", sampleLocationsCount = "          + toString ( info.sampleLocationsCount ) +
+           ", sampleLocations = "               + :: toStringVulkan ( info.sampleLocationsCount, info.pSampleLocations ) +
+           " }";
+}
+#endif
