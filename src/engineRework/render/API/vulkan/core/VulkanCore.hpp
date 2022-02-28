@@ -9913,6 +9913,121 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #endif
 
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+#define C_ENG_MAP_START ENUM ( AttachmentLoadOperation, TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( Load,       VkAttachmentLoadOp :: VK_ATTACHMENT_LOAD_OP_LOAD ),
+            Field ( Clear,      VkAttachmentLoadOp :: VK_ATTACHMENT_LOAD_OP_CLEAR ),
+            Field ( DontCare,   VkAttachmentLoadOp :: VK_ATTACHMENT_LOAD_OP_DONT_CARE ),
+
+#if __C_ENG_VULKAN_API_EXTENSION_LOAD_STORE_OP_NONE_AVAILABLE
+            Field ( None,       VkAttachmentLoadOp :: VK_ATTACHMENT_LOAD_OP_NONE_EXT ),
+#endif
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START ENUM ( AttachmentStoreOperation, TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( Store,      VkAttachmentStoreOp :: VK_ATTACHMENT_STORE_OP_STORE ),
+            Field ( DontCare,   VkAttachmentStoreOp :: VK_ATTACHMENT_STORE_OP_DONT_CARE ),
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+            Field ( None,       VkAttachmentStoreOp :: VK_ATTACHMENT_STORE_OP_NONE ),
+#elif __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE
+            Field ( None,       VkAttachmentStoreOp :: VK_ATTACHMENT_STORE_OP_NONE_KHR ),
+#elif __C_ENG_VULKAN_API_EXTENSION_LOAD_STORE_OP_NONE_AVAILABLE
+            Field ( None,       VkAttachmentStoreOp :: VK_ATTACHMENT_STORE_OP_NONE_EXT ),
+#elif __C_ENG_VULKAN_API_EXTENSION_QUALCOMM_RENDER_PASS_STORE_OPERATIONS_AVAILABLE
+            Field ( None,       VkAttachmentStoreOp :: VK_ATTACHMENT_STORE_OP_NONE_QCOM ),
+#endif
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START STRUCT ( ClearColorValue,  NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            float           float32[4];
+            cds :: sint32   int32[4];
+            cds :: uint32   uint32[4];
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START STRUCT ( ClearDepthStencilValue,  NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            float           depth;
+            cds :: uint32   stencil;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START UNION ( ClearValue,  NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Union {
+            Type ( ClearColorValue )        color;
+            Type ( ClearDepthStencilValue ) depthStencil;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( RenderingAttachmentInfo,  NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                      structureType;
+            Type ( GenericStructure )           const * pNext;
+            Type ( ImageViewHandle )                    imageView;
+            Type ( ImageLayout )                        imageLayout;
+            Type ( ResolveModeFlag )                    resolveMode;
+            Type ( ImageViewHandle )                    resolveImageView;
+            Type ( ImageLayout )                        resolveImageLayout;
+            Type ( AttachmentLoadOperation )            loadOperation;
+            Type ( AttachmentStoreOperation )           storeOperation;
+            Type ( ClearValue )                         clearValue;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START STRUCT ( RenderingInfo,  NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                      structureType;
+            Type ( GenericStructure )           const * pNext;
+            Type ( RenderingFlags )                     flags;
+            Type ( Rect )                               renderArea;
+            cds :: uint32                               layerCount;
+            cds :: uint32                               viewMask;
+            cds :: uint32                               colorAttachmentCount;
+            Type ( RenderingAttachmentInfo )    const * pColorAttachments;
+            Type ( RenderingAttachmentInfo )    const * pDepthAttachment;
+            Type ( RenderingAttachmentInfo )    const * pStencilAttachment;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+
 #define C_ENG_MAP_START     HEADER
 #include <ObjectMapping.hpp>
 
@@ -9953,6 +10068,8 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         NoDiscard auto toString ( Type ( EventCreateFlag ) ) noexcept -> cds :: StringLiteral;
         NoDiscard auto toString ( Type ( DependencyFlag ) ) noexcept -> cds :: StringLiteral;
         NoDiscard auto toString ( Type ( ImageLayout ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( AttachmentLoadOperation ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( AttachmentStoreOperation ) ) noexcept -> cds :: StringLiteral;
 
 #endif
 
@@ -10108,6 +10225,10 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         NoDiscard auto toString ( Type ( MemoryBarrier ) const & ) noexcept -> cds :: String;
         NoDiscard auto toString ( Type ( BufferMemoryBarrier ) const & ) noexcept -> cds :: String;
         NoDiscard auto toString ( Type ( ImageMemoryBarrier ) const & ) noexcept -> cds :: String;
+
+        NoDiscard auto toString ( Type ( ClearColorValue ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( ClearDepthStencilValue ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( ClearValue ) const & ) noexcept -> cds :: String;
 
 #endif
 
@@ -11039,6 +11160,8 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
         NoDiscard auto toString ( Type ( RenderingFlag ) ) noexcept -> cds :: StringLiteral;
         NoDiscard auto toString ( Type ( CommandBufferInheritanceRenderingInfo ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( RenderingAttachmentInfo ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( RenderingInfo ) const & ) noexcept -> cds :: String;
 
 #if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_FRAMEBUFFER_MIXED_SAMPLES_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_AMD_MIXED_ATTACHMENT_SAMPLES_AVAILABLE
 

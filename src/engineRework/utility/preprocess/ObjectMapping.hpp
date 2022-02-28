@@ -439,6 +439,14 @@
 #define __C_ENG_OBJECT_MAP_PARENT_STRUCT(_typename, _baseFormula)                   __C_ENG_OBJECT_MAP_PARENT_STRUCT_ ## _baseFormula
 
 
+#define __C_ENG_OBJECT_MAP_CLASS_UNION(_typename, _baseFormula)                    __C_ENG_TYPE ( _typename )
+#define __C_ENG_OBJECT_MAP_DECLARATION_UNION(_typename, _baseFormula)              union __C_ENG_OBJECT_MAP_CLASS_UNION( _typename, _baseFormula ) __C_ENG_OBJECT_MAP_PARENT_DECLARATION_ ## _baseFormula
+#define __C_ENG_OBJECT_MAP_CONSTRUCTOR_UNION(_typename, _baseFormula)              __C_ENG_OBJECT_MAP_CLASS_UNION( _typename, _baseFormula )
+#define __C_ENG_OBJECT_MAP_DESTRUCTOR_UNION(_typename, _baseFormula)               ~ __C_ENG_OBJECT_MAP_CLASS_UNION( _typename, _baseFormula )
+#define __C_ENG_OBJECT_MAP_SELF_UNION(_typename, _baseFormula)                     __C_ENG_OBJECT_MAP_CLASS_UNION( _typename, _baseFormula )
+#define __C_ENG_OBJECT_MAP_PARENT_UNION(_typename, _baseFormula)                   __C_ENG_OBJECT_MAP_PARENT_UNION_ ## _baseFormula
+
+
 #define __C_ENG_OBJECT_MAP_CLASS_ENUM(_typename, _baseFormula)                      __C_ENG_TYPE ( _typename )
 #define __C_ENG_OBJECT_MAP_BASE_NAME_ENUM(_typename, _baseFormula)                  _typename
 #define __C_ENG_OBJECT_MAP_BASE_TYPE_ENUM(_typename, _baseFormula)                  __C_ENG_OBJECT_MAP_BASE_TYPE_ ## _baseFormula
@@ -534,6 +542,7 @@
 
 #define Class                                                                       __C_ENG_OBJECT_MAP_META_CALL(__C_ENG_OBJECT_MAP_DECLARATION_,     C_ENG_MAP_START)
 #define Struct                                                                      __C_ENG_OBJECT_MAP_META_CALL(__C_ENG_OBJECT_MAP_DECLARATION_,     C_ENG_MAP_START)
+#define Union                                                                       __C_ENG_OBJECT_MAP_META_CALL(__C_ENG_OBJECT_MAP_DECLARATION_,     C_ENG_MAP_START)
 #define Enum                                                                        __C_ENG_OBJECT_MAP_META_CALL(__C_ENG_OBJECT_MAP_DECLARATION_,     C_ENG_MAP_START)
 #define Constructor                                                                 __C_ENG_OBJECT_MAP_META_CALL(__C_ENG_OBJECT_MAP_CONSTRUCTOR_,     C_ENG_MAP_START)
 #define Destructor                                                                  __C_ENG_OBJECT_MAP_META_CALL(__C_ENG_OBJECT_MAP_DESTRUCTOR_,      C_ENG_MAP_START)
@@ -827,6 +836,13 @@
 #undef __C_ENG_OBJECT_MAP_FIELD_CLASS_GEN_SETTER_ACCESS_MODIFIER_SET_INLINE
 #undef __C_ENG_OBJECT_MAP_FIELD_CLASS_GEN_SETTER_ACCESS_MODIFIER_SET
 
+#undef __C_ENG_OBJECT_MAP_CLASS_UNION
+#undef __C_ENG_OBJECT_MAP_DECLARATION_UNION
+#undef __C_ENG_OBJECT_MAP_CONSTRUCTOR_UNION
+#undef __C_ENG_OBJECT_MAP_DESTRUCTOR_UNION
+#undef __C_ENG_OBJECT_MAP_SELF_UNION
+#undef __C_ENG_OBJECT_MAP_PARENT_UNION
+
 
 #undef Class
 #undef Struct
@@ -841,6 +857,7 @@
 #undef Type
 #undef NoDiscard
 #undef MaybeUnused
+#undef Union
 
 
 #undef C_ENG_MAP_END

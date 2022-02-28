@@ -9063,3 +9063,119 @@ auto vulkan :: toString (
            " }";
 }
 #endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( AttachmentLoadOperation ) operation
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( operation ) {
+        case AttachmentLoadOperationLoad:       { asString = "Load";        break; }
+        case AttachmentLoadOperationClear:      { asString = "Clear";       break; }
+        case AttachmentLoadOperationDontCare:   { asString = "Don't Care";  break; }
+#if __C_ENG_VULKAN_API_EXTENSION_LOAD_STORE_OP_NONE_AVAILABLE
+        case AttachmentLoadOperationNone:       { asString = "None";        break; }
+#endif
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( AttachmentStoreOperation ) operation
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( operation ) {
+        case AttachmentStoreOperationStore:       { asString = "Store";       break; }
+        case AttachmentStoreOperationDontCare:    { asString = "Don't Care";  break; }
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_LOAD_STORE_OP_NONE_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_QUALCOMM_RENDER_PASS_STORE_OPERATIONS_AVAILABLE
+        case AttachmentStoreOperationNone:        { asString = "None";        break; }
+#endif
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( ClearColorValue ) const & value
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( ClearColorValue ) " " +
+            "{ float32 = "_s    + :: toStringRegular ( 4, & value.float32[0] ) +
+            ", int32 = "        + :: toStringRegular ( 4, & value.int32[0] ) +
+            ", uint32 = "       + :: toStringRegular ( 4, & value.uint32[0] ) +
+            " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( ClearDepthStencilValue ) const & value
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( ClearDepthStencilValue ) " " +
+            "{ depth = "_s      + value.depth +
+            ", stencil = "      + value.stencil +
+            " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( ClearValue ) const & value
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( ClearValue ) " " +
+            "{ color = "_s          + toString ( value.color ) +
+            " OR depthStencil = "   + toString ( value.depthStencil ) +
+            " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE
+auto vulkan :: toString (
+        Type ( RenderingAttachmentInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( RenderingAttachmentInfo ) " " +
+           "{ structureType = "_s               + toString ( info.structureType ) +
+           ", pNext = "                         + engine :: toString ( info.pNext ) +
+           ", imageView = "                     + engine :: toString ( info.imageView ) +
+           ", imageLayout = "                   + toString ( info.imageLayout ) +
+           ", resolveMode = "                   + toString ( info.resolveMode ) +
+           ", resolveImageView = "              + engine :: toString ( info.resolveImageView ) +
+           ", resolveImageLayout = "            + toString ( info.resolveImageLayout ) +
+           ", loadOperation = "                 + toString ( info.loadOperation ) +
+           ", storeOperation = "                + toString ( info.storeOperation ) +
+           ", clearValue = "                    + toString ( info.clearValue ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE
+auto vulkan :: toString (
+        Type ( RenderingInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( RenderingInfo ) " " +
+           "{ structureType = "_s               + toString ( info.structureType ) +
+           ", pNext = "                         + engine :: toString ( info.pNext ) +
+           ", flags = "                         + "0b" + Long ( info.flags ).toString(2) +
+           ", renderArea = "                    + toString ( info.renderArea ) +
+           ", layerCount = "                    + info.layerCount +
+           ", viewMask = "                      + info.viewMask +
+           ", colorAttachmentCount = "          + info.colorAttachmentCount +
+           ", colorAttachments = "              + :: toStringVulkan ( info.colorAttachmentCount, info.pColorAttachments ) +
+           ", pDepthAttachment = "              + engine :: toString ( info.pDepthAttachment ) +
+           ", pStencilAttachment = "            + engine :: toString ( info.pStencilAttachment ) +
+           " }";
+}
+#endif
