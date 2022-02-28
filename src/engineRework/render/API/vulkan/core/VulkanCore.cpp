@@ -9017,3 +9017,49 @@ auto vulkan :: toString (
            " }";
 }
 #endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_CALIBRATED_TIMESTAMPS_AVAILABLE
+auto vulkan :: toString (
+        Type ( TimeDomain ) domain
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( domain ) {
+        case TimeDomainDevice:                  { asString = "Device";                      break; }
+        case TimeDomainClockMonotonic:          { asString = "Clock Monotonic";             break; }
+        case TimeDomainClockMonotonicRaw:       { asString = "Clock Monotonic Raw";         break; }
+        case TimeDomainQueryPerformanceCounter: { asString = "Query Performance Counter";   break; }
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_CALIBRATED_TIMESTAMPS_AVAILABLE
+auto vulkan :: toString (
+        Type ( CalibratedTimestampInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( CalibratedTimestampInfo ) ) " "
+           "{ structureType = "_s               + toString ( info.structureType ) +
+           ", pNext = "                         + engine :: toString ( info.pNext ) +
+           ", timeDomain = "                    + toString ( info.timeDomain ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_CALIBRATED_TIMESTAMPS_AVAILABLE
+auto vulkan :: toString (
+        Type ( GetCalibratedTimestamps ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( GetCalibratedTimestamps ) ) " "
+           "{ device = "_s               + engine :: toString ( info.device ) +
+           ", timestampCount = "         + info.timestampCount +
+           ", timestampInfos = "         + :: toStringVulkan ( info.timestampCount, info.pTimestampInfos ) +
+           ", timestamps = "             + :: toStringRegular ( info.timestampCount, info.pTimestamps ) +
+           ", maxDeviation = "           + engine :: toString ( info.pMaxDeviation ) +
+           " }";
+}
+#endif

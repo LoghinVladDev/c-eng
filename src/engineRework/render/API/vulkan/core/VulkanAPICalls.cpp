@@ -3350,3 +3350,41 @@ auto engine :: vulkan :: commandBufferWaitEvents (
     return ResultSuccess;
 }
 #endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: queueWaitIdle (
+        Type ( QueueHandle ) handle
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( handle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkQueueWaitIdle )
+
+    return static_cast < Type ( Result ) > ( vkQueueWaitIdleHandle ( handle ) );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: deviceWaitIdle (
+        Type ( DeviceHandle ) handle
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( handle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkDeviceWaitIdle )
+
+    return static_cast < Type ( Result ) > ( vkDeviceWaitIdleHandle ( handle ) );
+}
+#endif

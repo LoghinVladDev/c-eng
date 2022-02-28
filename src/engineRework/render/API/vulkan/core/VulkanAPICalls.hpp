@@ -735,6 +735,18 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         ) noexcept -> Type ( Result );
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+        NoDiscard MaybeUnused extern auto queueWaitIdle (
+                Type ( QueueHandle )
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+        NoDiscard MaybeUnused extern auto deviceWaitIdle (
+                Type ( DeviceHandle )
+        ) noexcept -> Type ( Result );
+#endif
+
     }
 
 }

@@ -9871,6 +9871,48 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #endif
 
 
+#if __C_ENG_VULKAN_API_EXTENSION_CALIBRATED_TIMESTAMPS_AVAILABLE
+#define C_ENG_MAP_START ENUM ( TimeDomain,  TYPE ( cds :: uint8 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( Device,                     VkTimeDomainEXT :: VK_TIME_DOMAIN_DEVICE_EXT ),
+            Field ( ClockMonotonic,             VkTimeDomainEXT :: VK_TIME_DOMAIN_CLOCK_MONOTONIC_EXT ),
+            Field ( ClockMonotonicRaw,          VkTimeDomainEXT :: VK_TIME_DOMAIN_CLOCK_MONOTONIC_RAW_EXT ),
+            Field ( QueryPerformanceCounter,    VkTimeDomainEXT :: VK_TIME_DOMAIN_QUERY_PERFORMANCE_COUNTER_EXT ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START STRUCT ( CalibratedTimestampInfo,  NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )              structureType;
+            Type ( GenericStructure )   const * pNext;
+            Type ( TimeDomain )                 timeDomain;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START STRUCT ( GetCalibratedTimestamps,  NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( DeviceHandle )                       device;
+            cds :: uint32                               timestampCount;
+            Type ( CalibratedTimestampInfo )    const * pTimestampInfos;
+            cds :: uint64                             * pTimestamps;
+            cds :: uint64                             * pMaxDeviation;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+
 #define C_ENG_MAP_START     HEADER
 #include <ObjectMapping.hpp>
 
@@ -11055,6 +11097,12 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #if __C_ENG_VULKAN_API_EXTENSION_SAMPLE_LOCATIONS_AVAILABLE
         NoDiscard auto toString ( Type ( SampleLocation ) const & ) noexcept -> cds :: String;
         NoDiscard auto toString ( Type ( SampleLocationsInfo ) const & ) noexcept -> cds :: String;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_CALIBRATED_TIMESTAMPS_AVAILABLE
+        NoDiscard auto toString ( Type ( TimeDomain ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( CalibratedTimestampInfo ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( GetCalibratedTimestamps ) const & ) noexcept -> cds :: String;
 #endif
 
         __C_ENG_NO_DISCARD auto compare ( __C_ENG_TYPE ( Version ) const &, __C_ENG_TYPE ( Version ) const & ) noexcept -> __C_ENG_TYPE ( CompareResult );
