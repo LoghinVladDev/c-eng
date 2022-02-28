@@ -9818,6 +9818,59 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #endif
 
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( MemoryBarrier, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )              structureType;
+            Type ( GenericStructure )   const * pNext;
+            Type ( AccessFlags )                sourceAccessMask;
+            Type ( AccessFlags )                destinationAccessMask;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START STRUCT ( BufferMemoryBarrier, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )              structureType;
+            Type ( GenericStructure )   const * pNext;
+            Type ( AccessFlags )                sourceAccessMask;
+            Type ( AccessFlags )                destinationAccessMask;
+            cds :: uint32                       sourceQueueFamilyIndex;
+            cds :: uint32                       destinationQueueFamilyIndex;
+            Type ( BufferHandle )               buffer;
+            Type ( DeviceSize )                 offset;
+            Type ( DeviceSize )                 size;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START STRUCT ( ImageMemoryBarrier, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )              structureType;
+            Type ( GenericStructure )   const * pNext;
+            Type ( AccessFlags )                sourceAccessMask;
+            Type ( AccessFlags )                destinationAccessMask;
+            Type ( ImageLayout )                oldLayout;
+            Type ( ImageLayout )                newLayout;
+            cds :: uint32                       sourceQueueFamilyIndex;
+            cds :: uint32                       destinationQueueFamilyIndex;
+            Type ( ImageHandle )                image;
+            Type ( ImageSubresourceRange )      subresourceRange;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+
 #define C_ENG_MAP_START     HEADER
 #include <ObjectMapping.hpp>
 
@@ -10009,6 +10062,10 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         NoDiscard auto toString ( Type ( FenceCreateInfo ) const & ) noexcept -> cds :: String;
         NoDiscard auto toString ( Type ( SemaphoreCreateInfo ) const & ) noexcept -> cds :: String;
         NoDiscard auto toString ( Type ( EventCreateInfo ) const & ) noexcept -> cds :: String;
+
+        NoDiscard auto toString ( Type ( MemoryBarrier ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( BufferMemoryBarrier ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( ImageMemoryBarrier ) const & ) noexcept -> cds :: String;
 
 #endif
 

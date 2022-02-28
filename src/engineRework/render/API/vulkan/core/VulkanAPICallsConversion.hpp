@@ -2619,6 +2619,45 @@ namespace engine :: vulkan {
     ) noexcept -> VkEventCreateInfo *;
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
+    extern auto prepareContext (
+            SetCommandBufferEventContext     *,
+            Type ( DependencyInfo )    const *
+    ) noexcept -> VkDependencyInfo_t *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
+    extern auto prepareContext (
+            WaitCommandBufferEvent2Context   *,
+            cds :: uint32,
+            Type ( DependencyInfo )    const *
+    ) noexcept -> VkDependencyInfo_t *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto prepareContext (
+            WaitCommandBufferEventContext         *,
+            cds :: uint32,
+            Type ( MemoryBarrier )          const *
+    ) noexcept -> VkMemoryBarrier *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto prepareContext (
+            WaitCommandBufferEventContext         *,
+            cds :: uint32,
+            Type ( BufferMemoryBarrier )          const *
+    ) noexcept -> VkBufferMemoryBarrier *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto prepareContext (
+            WaitCommandBufferEventContext         *,
+            cds :: uint32,
+            Type ( ImageMemoryBarrier )          const *
+    ) noexcept -> VkImageMemoryBarrier *;
+#endif
+
 }
 
 #define C_ENG_MAP_END

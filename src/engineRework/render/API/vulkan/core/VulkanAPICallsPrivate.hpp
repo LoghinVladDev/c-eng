@@ -166,11 +166,19 @@ using VkPhysicalDeviceSynchronization2Features_t                = VkPhysicalDevi
 using VkSubmitInfo2_t                                           = VkSubmitInfo2;
 using VkSemaphoreSubmitInfo_t                                   = VkSemaphoreSubmitInfo;
 using VkCommandBufferSubmitInfo_t                               = VkCommandBufferSubmitInfo;
+using VkDependencyInfo_t                                        = VkDependencyInfo;
+using VkMemoryBarrier2_t                                        = VkMemoryBarrier2;
+using VkBufferMemoryBarrier2_t                                  = VkBufferMemoryBarrier2;
+using VkImageMemoryBarrier2_t                                   = VkImageMemoryBarrier2;
 #elif __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
 using VkPhysicalDeviceSynchronization2Features_t                = VkPhysicalDeviceSynchronization2FeaturesKHR;
 using VkSubmitInfo2_t                                           = VkSubmitInfo2KHR;
 using VkSemaphoreSubmitInfo_t                                   = VkSemaphoreSubmitInfoKHR;
 using VkCommandBufferSubmitInfo_t                               = VkCommandBufferSubmitInfoKHR;
+using VkDependencyInfo_t                                        = VkDependencyInfoKHR;
+using VkMemoryBarrier2_t                                        = VkMemoryBarrier2KHR;
+using VkBufferMemoryBarrier2_t                                  = VkBufferMemoryBarrier2KHR;
+using VkImageMemoryBarrier2_t                                   = VkImageMemoryBarrier2KHR;
 #endif
 
 #if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE

@@ -8,6 +8,7 @@
 #include <VulkanAPICallsTypes.hpp>
 #include <CDS/Mutex>
 #include <CDS/LockGuard>
+#include <Logger.hpp>
 
 #define C_ENG_MAP_START     SOURCE
 #include <ObjectMapping.hpp>
@@ -47,6 +48,21 @@ private:
         ~ContextHolder () noexcept {
             LockGuard guard ( contextLock );
             this->pContext->inUse = false;
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+            if ( this->pContext->data.common.diag.error != ResultSuccess ) {
+                Type ( Logger ) :: instance().error ( String::f (
+                    "API Error logged in context at release : %s, in %s -> %s : %d",
+                    toString ( pContext->data.common.diag.error ),
+                    pContext->data.common.diag.file,
+                    pContext->data.common.diag.function,
+                    pContext->data.common.diag.line
+                ));
+
+                this->pContext->data.common.diag.error = ResultSuccess;
+            }
+#endif
+
         }
 
         ContextHolder ( ContextHolder && holder ) noexcept :
@@ -77,6 +93,11 @@ public:
             if ( firstCall ) {
                 for ( auto & context : contexts ) {
                     context.inUse = false;
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+                    context.data.common.diag.error = ResultSuccess;
+#endif
+
                 }
             }
 
@@ -3017,5 +3038,315 @@ auto engine :: vulkan :: resetEvent (
                     handle
             )
     );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
+auto engine :: vulkan :: commandBufferSetEvent (
+        Type ( CommandBufferHandle )    commandBufferHandle,
+        Type ( EventHandle )            eventHandle,
+        Type ( DependencyInfo ) const * pDependencyInfo
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( commandBufferHandle == nullptr || eventHandle == nullptr || pDependencyInfo == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE && __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_2_R ( LastCreatedInstance :: acquire(), vkCmdSetEvent2, KHR )
+
+    auto context = ContextManager :: acquire();
+
+    if ( vkCmdSetEvent2Handle != nullptr ) {
+        vkCmdSetEvent2Handle (
+                commandBufferHandle,
+                eventHandle,
+                prepareContext ( & context.data().set.commandBuffer.event, pDependencyInfo )
+        );
+
+        return ResultSuccess;
+    }
+
+    vkCmdSetEvent2KHRHandle (
+            commandBufferHandle,
+            eventHandle,
+            prepareContext ( & context.data().set.commandBuffer.event, pDependencyInfo )
+    );
+
+    return ResultSuccess;
+
+#elif __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkCmdSetEvent2 )
+
+    auto context = ContextManager :: acquire();
+
+    vkCmdSetEvent2Handle (
+            commandBufferHandle,
+            eventHandle,
+            prepareContext ( & context.data().set.commandBuffer.event, pDependencyInfo )
+    );
+
+    return ResultSuccess;
+
+#elif __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkCmdSetEvent2KHR )
+
+    auto context = ContextManager :: acquire();
+
+    vkCmdSetEvent2KHRHandle (
+            commandBufferHandle,
+            eventHandle,
+            prepareContext ( & context.data().set.commandBuffer.event, pDependencyInfo )
+    );
+
+    return ResultSuccess;
+
+#endif
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: commandBufferSetEvent (
+        Type ( CommandBufferHandle )    commandBufferHandle,
+        Type ( EventHandle )            eventHandle,
+        Type ( PipelineStageFlags )     flags
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( commandBufferHandle == nullptr || eventHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkCmdSetEvent )
+
+    vkCmdSetEventHandle (
+            commandBufferHandle,
+            eventHandle,
+            flags
+    );
+
+    return ResultSuccess;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: commandBufferResetEvent (
+        Type ( CommandBufferHandle )    commandBufferHandle,
+        Type ( EventHandle )            eventHandle,
+        Type ( PipelineStageFlags )     flags
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( commandBufferHandle == nullptr || eventHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE && __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_2_R ( LastCreatedInstance :: acquire(), vkCmdResetEvent2, KHR )
+
+    if ( vkCmdResetEvent2Handle != nullptr ) {
+        vkCmdResetEvent2Handle (
+                commandBufferHandle,
+                eventHandle,
+                flags
+        );
+
+        return ResultSuccess;
+    }
+
+    vkCmdResetEvent2KHRHandle (
+            commandBufferHandle,
+            eventHandle,
+            flags
+    );
+
+    return ResultSuccess;
+
+#elif __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkCmdResetEvent2 )
+
+    vkCmdResetEvent2Handle (
+            commandBufferHandle,
+            eventHandle,
+            flags
+    );
+
+    return ResultSuccess;
+
+#elif __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkCmdResetEvent2KHR )
+
+    vkCmdResetEvent2KHRHandle (
+            commandBufferHandle,
+            eventHandle,
+            flags
+    );
+
+    return ResultSuccess;
+
+#else
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkCmdResetEvent )
+
+    vkCmdResetEventHandle (
+            commandBufferHandle,
+            eventHandle,
+            flags
+    );
+
+    return ResultSuccess;
+
+#endif
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
+auto engine :: vulkan :: commandBufferWaitEvents (
+        Type ( CommandBufferHandle )            commandBufferHandle,
+        cds :: uint32                           eventCount,
+        Type ( EventHandle )            const * pEventHandles,
+        Type ( DependencyInfo )         const * pDependencyInfos
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( commandBufferHandle == nullptr || pEventHandles == nullptr || pDependencyInfos == nullptr || eventCount == 0U ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE && __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_2_R ( LastCreatedInstance :: acquire(), vkCmdWaitEvents2, KHR )
+
+    auto context = ContextManager :: acquire();
+
+    if ( vkCmdWaitEvents2Handle != nullptr ) {
+        vkCmdWaitEvents2Handle (
+                commandBufferHandle,
+                eventCount,
+                pEventHandles,
+                prepareContext ( & context.data().wait.commandBuffer.event2, eventCount, pDependencyInfos )
+        );
+
+        return ResultSuccess;
+    }
+
+    vkCmdWaitEvents2KHRHandle (
+            commandBufferHandle,
+            eventCount,
+            pEventHandles,
+            prepareContext ( & context.data().wait.commandBuffer.event2, eventCount, pDependencyInfos )
+    );
+
+    return ResultSuccess;
+
+#elif __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkCmdWaitEvents2 )
+
+    auto context = ContextManager :: acquire();
+
+    if ( vkCmdWaitEvents2Handle != nullptr ) {
+        vkCmdWaitEvents2Handle (
+                commandBufferHandle,
+                eventCount,
+                pEventHandles,
+                prepareContext ( & context.data().wait.commandBuffer.event2, eventCount, pDependencyInfos )
+        );
+
+        return ResultSuccess;
+    }
+
+    return ResultSuccess;
+
+#elif __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkCmdWaitEvents2KHR )
+
+    auto context = ContextManager :: acquire();
+
+    vkCmdWaitEvents2KHRHandle (
+            commandBufferHandle,
+            eventCount,
+            pEventHandles,
+            prepareContext ( & context.data().wait.commandBuffer.event2, eventCount, pDependencyInfos )
+    );
+
+    return ResultSuccess;
+
+#endif
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: commandBufferWaitEvents (
+        Type ( CommandBufferHandle )            commandBufferHandle,
+        cds :: uint32                           eventCount,
+        Type ( EventHandle )            const * pEventHandles,
+        Type ( PipelineStageFlags )             sourceStageMask,
+        Type ( PipelineStageFlags )             destinationStageMask,
+        cds :: uint32                           memoryBarrierCount,
+        Type ( MemoryBarrier )          const * pMemoryBarriers,
+        cds :: uint32                           bufferMemoryBarrierCount,
+        Type ( BufferMemoryBarrier )    const * pBufferMemoryBarriers,
+        cds :: uint32                           imageMemoryBarrierCount,
+        Type ( ImageMemoryBarrier )     const * pImageMemoryBarriers
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if (
+            commandBufferHandle         == nullptr  ||
+            eventCount                  == 0U       ||
+            pEventHandles               == nullptr  ||
+            memoryBarrierCount          == 0U       ||
+            pMemoryBarriers             == nullptr  ||
+            bufferMemoryBarrierCount    == 0U       ||
+            pBufferMemoryBarriers       == nullptr  ||
+            imageMemoryBarrierCount     == 0U       ||
+            pImageMemoryBarriers        == nullptr
+    ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkCmdWaitEvents )
+
+    auto context = ContextManager :: acquire();
+
+    vkCmdWaitEventsHandle (
+            commandBufferHandle,
+            eventCount,
+            pEventHandles,
+            sourceStageMask,
+            destinationStageMask,
+            memoryBarrierCount,
+            prepareContext ( & context.data().wait.commandBuffer.event, memoryBarrierCount, pMemoryBarriers ),
+            bufferMemoryBarrierCount,
+            prepareContext ( & context.data().wait.commandBuffer.event, bufferMemoryBarrierCount, pBufferMemoryBarriers ),
+            imageMemoryBarrierCount,
+            prepareContext ( & context.data().wait.commandBuffer.event, imageMemoryBarrierCount, pImageMemoryBarriers )
+    );
+
+    return ResultSuccess;
 }
 #endif

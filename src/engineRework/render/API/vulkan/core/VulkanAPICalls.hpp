@@ -686,6 +686,55 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         ) noexcept -> Type ( Result );
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
+        NoDiscard MaybeUnused extern auto commandBufferSetEvent (
+                Type ( CommandBufferHandle ),
+                Type ( EventHandle ),
+                Type ( DependencyInfo )         const *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+        NoDiscard MaybeUnused extern auto commandBufferSetEvent (
+                Type ( CommandBufferHandle ),
+                Type ( EventHandle ),
+                Type ( PipelineStageFlags )
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+        NoDiscard MaybeUnused extern auto commandBufferResetEvent (
+                Type ( CommandBufferHandle ),
+                Type ( EventHandle ),
+                Type ( PipelineStageFlags )
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
+        NoDiscard MaybeUnused extern auto commandBufferWaitEvents (
+                Type ( CommandBufferHandle ),
+                cds :: uint32,
+                Type ( EventHandle )            const *,
+                Type ( DependencyInfo )         const *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+        NoDiscard MaybeUnused extern auto commandBufferWaitEvents (
+                Type ( CommandBufferHandle ),
+                cds :: uint32,
+                Type ( EventHandle )            const *,
+                Type ( PipelineStageFlags ),
+                Type ( PipelineStageFlags ),
+                cds :: uint32,
+                Type ( MemoryBarrier )          const *,
+                cds :: uint32,
+                Type ( BufferMemoryBarrier )    const *,
+                cds :: uint32,
+                Type ( ImageMemoryBarrier )     const *
+        ) noexcept -> Type ( Result );
+#endif
+
     }
 
 }

@@ -10,13 +10,21 @@
 #define C_ENG_MAP_START HEADER
 #include <ObjectMapping.hpp>
 
-struct CommonContext {
+
+struct DiagnosticContext {
     engine :: vulkan :: Type ( Result ) error;
+    cds :: StringLiteral                file;
+    cds :: StringLiteral                function;
+    cds :: uint32                       line;
+};
+
+struct CommonContext {
+    DiagnosticContext                   diag;
 };
 
 struct CreateInstanceContext {
+    DiagnosticContext                   diag;
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
-    engine :: vulkan :: Type ( Result ) error;
     VkInstanceCreateInfo                instance;
     VkApplicationInfo                   applicationInfo;
 #endif
@@ -38,30 +46,28 @@ struct CreateInstanceContext {
 };
 
 struct EnumerateLayerPropertiesContext {
+    DiagnosticContext                   diag;
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
-    engine :: vulkan :: Type ( Result ) error;
     VkLayerProperties                   properties [ __C_ENG_VULKAN_CORE_LAYER_MAX_COUNT ];
 #endif
 };
 
 struct EnumerateExtensionPropertiesContext {
+    DiagnosticContext                   diag;
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
-    engine :: vulkan :: Type ( Result ) error;
     VkExtensionProperties               properties [ __C_ENG_VULKAN_CORE_LAYER_MAX_COUNT ];
 #endif
 };
 
 struct EnumeratePhysicalDevicesContext {
+    DiagnosticContext                   diag;
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
-    engine :: vulkan :: Type ( Result ) error;
     VkPhysicalDevice                    devices [ __C_ENG_VULKAN_CORE_PHYSICAL_DEVICE_MAX_COUNT ];
 #endif
 };
 
 struct EnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersContext {
-#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
-    engine :: vulkan :: Type ( Result ) error;
-#endif
+    DiagnosticContext                   diag;
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PERFORMANCE_QUERY_AVAILABLE
     VkPerformanceCounterKHR             counters [ __C_ENG_VULKAN_CORE_QUEUE_FAMILY_PERFORMANCE_COUNTER_MAX_COUNT ];
     VkPerformanceCounterDescriptionKHR  descriptions [ __C_ENG_VULKAN_CORE_QUEUE_FAMILY_PERFORMANCE_COUNTER_MAX_COUNT ];
@@ -69,9 +75,7 @@ struct EnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersContext {
 };
 
 struct EnumeratePhysicalDeviceGroupsContext {
-#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
-    engine :: vulkan :: Type ( Result ) error;
-#endif
+    DiagnosticContext                   diag;
 #if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
     VkPhysicalDeviceGroupProperties     properties [ __C_ENG_VULKAN_CORE_PHYSICAL_DEVICE_GROUP_MAX_COUNT ];
 #endif
@@ -514,8 +518,8 @@ struct DeviceFeaturesContext {
 };
 
 struct CreateDeviceContext {
+    DiagnosticContext                           diag;
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
-    engine :: vulkan :: Type ( Result )         error;
     VkDeviceCreateInfo                          device;
     VkDeviceQueueCreateInfo                     queues [ __C_ENG_VULKAN_CORE_DEVICE_QUEUE_FAMILY_CREATE_INFO_MAX_COUNT ];
 #endif
@@ -538,22 +542,18 @@ struct CreateDeviceContext {
 };
 
 struct GetPhysicalDevicePropertiesContext {
-#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
-    engine :: vulkan :: Type ( Result )         error;
-#endif
+    DiagnosticContext                           diag;
     DevicePropertiesContext                     properties;
 };
 
 struct GetPhysicalDeviceFeaturesContext {
-#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
-    engine :: vulkan :: Type ( Result )         error;
-#endif
+    DiagnosticContext                           diag;
     DeviceFeaturesContext                       features;
 };
 
 struct GetPhysicalDeviceQueueFamilyPropertiesContext {
+    DiagnosticContext                           diag;
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
-    engine :: vulkan :: Type ( Result )         error;
     VkQueueFamilyProperties                     properties [ __C_ENG_VULKAN_CORE_QUEUE_FAMILY_MAX_COUNT ];
 #endif
 #if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
@@ -572,18 +572,14 @@ struct GetPhysicalDeviceQueueFamilyPropertiesContext {
 };
 
 struct GetDeviceQueueContext {
-#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
-    engine :: vulkan :: Type ( Result )         error;
-#endif
+    DiagnosticContext                           diag;
 #if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
     VkDeviceQueueInfo2                          info2;
 #endif
 };
 
 struct GetSurfaceContext {
-#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
-    engine :: vulkan :: Type ( Result )         error;
-#endif
+    DiagnosticContext                           diag;
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SURFACE_AVAILABLE
     VkSurfaceCapabilitiesKHR                    capabilities;
     VkSurfaceFormatKHR                          formats [ __C_ENG_VULKAN_CORE_SURFACE_FORMAT_MAX_COUNT ];
@@ -602,9 +598,7 @@ struct GetSurfaceContext {
 };
 
 struct CreateSwapChainContext {
-#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
-    engine :: vulkan :: Type ( Result )         error;
-#endif
+    DiagnosticContext                           diag;
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SWAP_CHAIN_AVAILABLE
     VkSwapchainCreateInfoKHR                    createInfo;
 #endif
@@ -618,15 +612,15 @@ struct CreateSwapChainContext {
 };
 
 struct GetSwapChainContext {
+    DiagnosticContext                           diag;
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
-    engine :: vulkan :: Type ( Result )         error;
     VkImage                                     images [ __C_ENG_VULKAN_CORE_SWAP_CHAIN_IMAGE_MAX_COUNT ];
 #endif
 };
 
 struct CreateImageViewContext {
+    DiagnosticContext                           diag;
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
-    engine :: vulkan :: Type ( Result )         error;
     VkImageViewCreateInfo                       createInfo;
 #endif
 #if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
@@ -636,22 +630,22 @@ struct CreateImageViewContext {
 };
 
 struct CreateCommandPoolContext {
+    DiagnosticContext                           diag;
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
-    engine :: vulkan :: Type ( Result )         error;
     VkCommandPoolCreateInfo                     createInfo;
 #endif
 };
 
 struct AllocateCommandBuffersContext {
+    DiagnosticContext                           diag;
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
-    engine :: vulkan :: Type ( Result )         error;
     VkCommandBufferAllocateInfo                 allocateInfo;
 #endif
 };
 
 struct BeginCommandBufferContext {
+    DiagnosticContext                                       diag;
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
-    engine :: vulkan :: Type ( Result )                     error;
     VkCommandBufferBeginInfo                                beginInfo;
     VkCommandBufferInheritanceInfo                          inheritanceInfo;
 #endif
@@ -682,8 +676,8 @@ struct BeginCommandBufferContext {
 };
 
 struct SubmitQueueContext {
+    DiagnosticContext                                       diag;
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
-    engine :: vulkan :: Type ( Result )                     error;
     VkSubmitInfo                                            submitInfos [ __C_ENG_VULKAN_CORE_SUBMIT_INFO_MAX_COUNT ];
     VkPipelineStageFlags                                    stageFlags [ __C_ENG_VULKAN_CORE_SUBMIT_INFO_MAX_COUNT ] [ __C_ENG_VULKAN_CORE_PIPELINE_STAGE_FLAGS_MAX_COUNT ];
 #endif
@@ -715,8 +709,8 @@ struct SubmitQueueContext {
 };
 
 struct CreateFenceContext {
+    DiagnosticContext                                       diag;
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
-    engine :: vulkan :: Type ( Result )                     error;
     VkFenceCreateInfo                                       createInfo;
 #endif
 #if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
@@ -728,9 +722,7 @@ struct CreateFenceContext {
 };
 
 struct GetFenceContext {
-#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
-    engine :: vulkan :: Type ( Result )                     error;
-#endif
+    DiagnosticContext                                       diag;
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_FENCE_WIN32_AVAILABLE
     VkFenceGetWin32HandleInfoKHR                            win32HandleInfo;
 #endif
@@ -740,9 +732,7 @@ struct GetFenceContext {
 };
 
 struct RegisterEventContext {
-#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
-    engine :: vulkan :: Type ( Result )                     error;
-#endif
+    DiagnosticContext                                       diag;
 #if __C_ENG_VULKAN_API_EXTENSION_DISPLAY_CONTROL_AVAILABLE
     VkDeviceEventInfoEXT                                    deviceInfo;
     VkDisplayEventInfoEXT                                   displayInfo;
@@ -751,25 +741,21 @@ struct RegisterEventContext {
 
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_FENCE_WIN32_AVAILABLE
 struct ImportFenceWin32Context {
-#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
-    engine :: vulkan :: Type ( Result )                     error;
-#endif
+    DiagnosticContext                                       diag;
     VkImportFenceWin32HandleInfoKHR                         info;
 };
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_FENCE_FD_AVAILABLE
 struct ImportFenceFdContext {
-#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
-    engine :: vulkan :: Type ( Result )                     error;
-#endif
+    DiagnosticContext                                       diag;
     VkImportFenceFdInfoKHR                                  info;
 };
 #endif
 
 struct CreateSemaphoreContext {
+    DiagnosticContext                                       diag;
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
-    engine :: vulkan :: Type ( Result )                     error;
     VkSemaphoreCreateInfo                                   createInfo;
 #endif
 #if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
@@ -784,9 +770,7 @@ struct CreateSemaphoreContext {
 };
 
 struct GetSemaphoreContext {
-#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
-    engine :: vulkan :: Type ( Result )                     error;
-#endif
+    DiagnosticContext                                       diag;
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_SEMAPHORE_WIN32_AVAILABLE
     VkSemaphoreGetWin32HandleInfoKHR                        win32HandleInfo;
 #endif
@@ -799,9 +783,7 @@ struct GetSemaphoreContext {
 };
 
 struct WaitSemaphoreContext {
-#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
-    engine :: vulkan :: Type ( Result )                     error;
-#endif
+    DiagnosticContext                                       diag;
 #if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
     VkSemaphoreWaitInfo                                     info;
     uint64_t                                                values [ __C_ENG_VULKAN_CORE_WAIT_SEMAPHORE_MAX_COUNT ];
@@ -809,9 +791,7 @@ struct WaitSemaphoreContext {
 };
 
 struct SignalSemaphoreContext {
-#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
-    engine :: vulkan :: Type ( Result )                     error;
-#endif
+    DiagnosticContext                                       diag;
 #if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
     VkSemaphoreSignalInfo                                   info;
 #endif
@@ -819,35 +799,70 @@ struct SignalSemaphoreContext {
 
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_SEMAPHORE_WIN32_AVAILABLE
 struct ImportSemaphoreWin32Context {
-#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
-    engine :: vulkan :: Type ( Result )                     error;
-#endif
+    DiagnosticContext                                       diag;
     VkImportSemaphoreWin32HandleInfoKHR                     info;
 };
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_SEMAPHORE_FD_AVAILABLE
 struct ImportSemaphoreFdContext {
-#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
-    engine :: vulkan :: Type ( Result )                     error;
-#endif
+    DiagnosticContext                                       diag;
     VkImportSemaphoreFdInfoKHR                              info;
 };
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_GOOGLE_FUCHSIA_EXTERNAL_SEMAPHORE_AVAILABLE
 struct ImportSemaphoreZirconHandleInfoGoogleContext {
-#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
-    engine :: vulkan :: Type ( Result )                     error;
-#endif
+    DiagnosticContext                                       diag;
     VkImportSemaphoreZirconHandleInfoGoogle                 info;
 };
 #endif
 
 struct CreateEventContext {
+    DiagnosticContext                                       diag;
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
-    engine :: vulkan :: Type ( Result )                     error;
     VkEventCreateInfo                                       createInfo;
+#endif
+};
+
+struct SetCommandBufferEventContext {
+    DiagnosticContext                                       diag;
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
+    VkDependencyInfo_t                                      dependencyInfo;
+    VkMemoryBarrier2_t                                      memoryBarriers [ __C_ENG_VULKAN_CORE_DEPENDENCY_INFO_MEMORY_BARRIER_MAX_COUNT ];
+    VkBufferMemoryBarrier2_t                                bufferMemoryBarriers [ __C_ENG_VULKAN_CORE_DEPENDENCY_INFO_BUFFER_MEMORY_BARRIER_MAX_COUNT ];
+    VkImageMemoryBarrier2_t                                 imageMemoryBarriers [ __C_ENG_VULKAN_CORE_DEPENDENCY_INFO_IMAGE_MEMORY_BARRIER_MAX_COUNT ];
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_SAMPLE_LOCATIONS_AVAILABLE
+    VkSampleLocationsInfoEXT                                sampleLocationsInfos [ __C_ENG_VULKAN_CORE_DEPENDENCY_INFO_IMAGE_MEMORY_BARRIER_MAX_COUNT ];
+    VkSampleLocationEXT                                     sampleLocations [ __C_ENG_VULKAN_CORE_DEPENDENCY_INFO_IMAGE_MEMORY_BARRIER_MAX_COUNT ] [ __C_ENG_VULKAN_CORE_SAMPLE_LOCATIONS_INFO_SAMPLE_LOCATIONS_MAX_COUNT ];
+#endif
+};
+
+struct WaitCommandBufferEvent2Context {
+    DiagnosticContext                                       diag;
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
+    VkDependencyInfo_t                                      dependencyInfos [ __C_ENG_VULKAN_CORE_COMMAND_BUFFER_WAIT_EVENTS_DEPENDENCY_INFO_MAX_COUNT ];
+    VkMemoryBarrier2_t                                      memoryBarriers [ __C_ENG_VULKAN_CORE_COMMAND_BUFFER_WAIT_EVENTS_DEPENDENCY_INFO_MAX_COUNT ] [ __C_ENG_VULKAN_CORE_DEPENDENCY_INFO_MEMORY_BARRIER_MAX_COUNT ];
+    VkBufferMemoryBarrier2_t                                bufferMemoryBarriers [ __C_ENG_VULKAN_CORE_COMMAND_BUFFER_WAIT_EVENTS_DEPENDENCY_INFO_MAX_COUNT ] [ __C_ENG_VULKAN_CORE_DEPENDENCY_INFO_BUFFER_MEMORY_BARRIER_MAX_COUNT ];
+    VkImageMemoryBarrier2_t                                 imageMemoryBarriers [ __C_ENG_VULKAN_CORE_COMMAND_BUFFER_WAIT_EVENTS_DEPENDENCY_INFO_MAX_COUNT ] [ __C_ENG_VULKAN_CORE_DEPENDENCY_INFO_IMAGE_MEMORY_BARRIER_MAX_COUNT ];
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_SAMPLE_LOCATIONS_AVAILABLE
+    VkSampleLocationsInfoEXT                                sampleLocationsInfos [ __C_ENG_VULKAN_CORE_COMMAND_BUFFER_WAIT_EVENTS_DEPENDENCY_INFO_MAX_COUNT ] [ __C_ENG_VULKAN_CORE_DEPENDENCY_INFO_IMAGE_MEMORY_BARRIER_MAX_COUNT ];
+    VkSampleLocationEXT                                     sampleLocations [ __C_ENG_VULKAN_CORE_COMMAND_BUFFER_WAIT_EVENTS_DEPENDENCY_INFO_MAX_COUNT ] [ __C_ENG_VULKAN_CORE_DEPENDENCY_INFO_IMAGE_MEMORY_BARRIER_MAX_COUNT ] [ __C_ENG_VULKAN_CORE_SAMPLE_LOCATIONS_INFO_SAMPLE_LOCATIONS_MAX_COUNT ];
+#endif
+};
+
+struct WaitCommandBufferEventContext {
+    DiagnosticContext                                       diag;
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    VkMemoryBarrier                                         memoryBarriers [ __C_ENG_VULKAN_CORE_MEMORY_BARRIER_MAX_COUNT ];
+    VkBufferMemoryBarrier                                   bufferMemoryBarriers [ __C_ENG_VULKAN_CORE_BUFFER_MEMORY_BARRIER_MAX_COUNT ];
+    VkImageMemoryBarrier                                    imageMemoryBarriers [ __C_ENG_VULKAN_CORE_IMAGE_MEMORY_BARRIER_MAX_COUNT ];
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_SAMPLE_LOCATIONS_AVAILABLE
+    VkSampleLocationsInfoEXT                                sampleLocationsInfos [ __C_ENG_VULKAN_CORE_IMAGE_MEMORY_BARRIER_MAX_COUNT ];
+    VkSampleLocationEXT                                     sampleLocations [ __C_ENG_VULKAN_CORE_IMAGE_MEMORY_BARRIER_MAX_COUNT ] [ __C_ENG_VULKAN_CORE_SAMPLE_LOCATIONS_INFO_SAMPLE_LOCATIONS_MAX_COUNT ];
 #endif
 };
 
@@ -918,6 +933,11 @@ union ImportSemaphoreSharedContext {
 #endif
 };
 
+union WaitCommandBufferSharedContext {
+    WaitCommandBufferEventContext                                       event;
+    WaitCommandBufferEvent2Context                                      event2;
+};
+
 union ImportSharedContext {
     ImportFenceSharedContext                                            fence;
     ImportSemaphoreSharedContext                                        semaphore;
@@ -925,10 +945,19 @@ union ImportSharedContext {
 
 union WaitSharedContext {
     WaitSemaphoreContext                                                semaphore;
+    WaitCommandBufferSharedContext                                      commandBuffer;
 };
 
 union SignalSharedContext {
     SignalSemaphoreContext                                              semaphore;
+};
+
+union SetCommandBufferSharedContext {
+    SetCommandBufferEventContext                                        event;
+};
+
+union SetSharedContext {
+    SetCommandBufferSharedContext                                       commandBuffer;
 };
 
 union SharedContext {
@@ -936,6 +965,7 @@ union SharedContext {
     CreateSharedContext                                                 create;
     EnumerateSharedContext                                              enumerate;
     GetSharedContext                                                    get;
+    SetSharedContext                                                    set;
     AllocateSharedContext                                               allocate;
     BeginSharedContext                                                  begin;
     SubmitSharedContext                                                 submit;

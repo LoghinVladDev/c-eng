@@ -8867,7 +8867,7 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( Type ( MemoryBarrier2 ) ) " "
            "{ structureType = "_s               + toString ( barrier.structureType ) +
            ", pNext = "                         + engine :: toString ( barrier.pNext ) +
-           ", sourceStageMask = "               + "0b" + Long ( static_cast < cds :: sint64 > ( barrier.sourceAccessMask ) ).toString(2) +
+           ", sourceStageMask = "               + "0b" + Long ( static_cast < cds :: sint64 > ( barrier.sourceStageMask ) ).toString(2) +
            ", sourceAccessMask = "              + "0b" + Long ( static_cast < cds :: sint64 > ( barrier.sourceAccessMask ) ).toString(2) +
            ", destinationStageMask = "          + "0b" + Long ( static_cast < cds :: sint64 > ( barrier.destinationStageMask ) ).toString(2) +
            ", destinationAccessMask = "         + "0b" + Long ( static_cast < cds :: sint64 > ( barrier.destinationAccessMask ) ).toString(2) +
@@ -8883,7 +8883,7 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( Type ( BufferMemoryBarrier2 ) ) " "
            "{ structureType = "_s               + toString ( barrier.structureType ) +
            ", pNext = "                         + engine :: toString ( barrier.pNext ) +
-           ", sourceStageMask = "               + "0b" + Long ( static_cast < cds :: sint64 > ( barrier.sourceAccessMask ) ).toString(2) +
+           ", sourceStageMask = "               + "0b" + Long ( static_cast < cds :: sint64 > ( barrier.sourceStageMask ) ).toString(2) +
            ", sourceAccessMask = "              + "0b" + Long ( static_cast < cds :: sint64 > ( barrier.sourceAccessMask ) ).toString(2) +
            ", destinationStageMask = "          + "0b" + Long ( static_cast < cds :: sint64 > ( barrier.destinationStageMask ) ).toString(2) +
            ", destinationAccessMask = "         + "0b" + Long ( static_cast < cds :: sint64 > ( barrier.destinationAccessMask ) ).toString(2) +
@@ -8904,7 +8904,7 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( Type ( ImageMemoryBarrier2 ) ) " "
            "{ structureType = "_s               + toString ( barrier.structureType ) +
            ", pNext = "                         + engine :: toString ( barrier.pNext ) +
-           ", sourceStageMask = "               + "0b" + Long ( static_cast < cds :: sint64 > ( barrier.sourceAccessMask ) ).toString(2) +
+           ", sourceStageMask = "               + "0b" + Long ( static_cast < cds :: sint64 > ( barrier.sourceStageMask ) ).toString(2) +
            ", sourceAccessMask = "              + "0b" + Long ( static_cast < cds :: sint64 > ( barrier.sourceAccessMask ) ).toString(2) +
            ", destinationStageMask = "          + "0b" + Long ( static_cast < cds :: sint64 > ( barrier.destinationStageMask ) ).toString(2) +
            ", destinationAccessMask = "         + "0b" + Long ( static_cast < cds :: sint64 > ( barrier.destinationAccessMask ) ).toString(2) +
@@ -8961,6 +8961,59 @@ auto vulkan :: toString (
            ", sampleLocationGridSize = "        + toString ( info.sampleLocationGridSize ) +
            ", sampleLocationsCount = "          + toString ( info.sampleLocationsCount ) +
            ", sampleLocations = "               + :: toStringVulkan ( info.sampleLocationsCount, info.pSampleLocations ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( MemoryBarrier ) const & barrier
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( MemoryBarrier ) ) " "
+           "{ structureType = "_s               + toString ( barrier.structureType ) +
+           ", pNext = "                         + engine :: toString ( barrier.pNext ) +
+           ", sourceAccessMask = "              + "0b" + Long ( static_cast < cds :: sint64 > ( barrier.sourceAccessMask ) ).toString(2) +
+           ", destinationAccessMask = "         + "0b" + Long ( static_cast < cds :: sint64 > ( barrier.destinationAccessMask ) ).toString(2) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( BufferMemoryBarrier ) const & barrier
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( BufferMemoryBarrier ) ) " "
+           "{ structureType = "_s               + toString ( barrier.structureType ) +
+           ", pNext = "                         + engine :: toString ( barrier.pNext ) +
+           ", sourceAccessMask = "              + "0b" + Long ( static_cast < cds :: sint64 > ( barrier.sourceAccessMask ) ).toString(2) +
+           ", destinationAccessMask = "         + "0b" + Long ( static_cast < cds :: sint64 > ( barrier.destinationAccessMask ) ).toString(2) +
+           ", sourceQueueFamilyIndex = "        + barrier.sourceQueueFamilyIndex +
+           ", destinationQueueFamilyIndex = "   + barrier.destinationQueueFamilyIndex +
+           ", buffer = "                        + engine :: toString ( barrier.buffer ) +
+           ", offset = "                        + toString ( barrier.offset ) +
+           ", size = "                          + toString ( barrier.size ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( ImageMemoryBarrier ) const & barrier
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( ImageMemoryBarrier2 ) ) " "
+           "{ structureType = "_s               + toString ( barrier.structureType ) +
+           ", pNext = "                         + engine :: toString ( barrier.pNext ) +
+           ", sourceAccessMask = "              + "0b" + Long ( static_cast < cds :: sint64 > ( barrier.sourceAccessMask ) ).toString(2) +
+           ", destinationAccessMask = "         + "0b" + Long ( static_cast < cds :: sint64 > ( barrier.destinationAccessMask ) ).toString(2) +
+           ", oldLayout = "                     + toString ( barrier.oldLayout ) +
+           ", newLayout = "                     + toString ( barrier.newLayout ) +
+           ", sourceQueueFamilyIndex = "        + barrier.sourceQueueFamilyIndex +
+           ", destinationQueueFamilyIndex = "   + barrier.destinationQueueFamilyIndex +
+           ", image = "                         + engine :: toString ( barrier.image ) +
+           ", subresourceRange = "              + toString ( barrier.subresourceRange ) +
            " }";
 }
 #endif

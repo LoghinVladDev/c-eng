@@ -10,6 +10,31 @@
 #include <ObjectMapping.hpp>
 
 
+#if defined(__CDS_compiler_clang) || defined(__CDS_compiler_gcc)
+
+#define __C_ENG_DIAG_SET_CONTEXT_ERROR(_pContext, _error)   _pContext->diag = { \
+    .error      = _error,                                                       \
+    .file       = __FILE__,                                                     \
+    .function   = __PRETTY_FUNCTION__,                                          \
+    .line       = __LINE__                                                      \
+};
+
+#elif defined(__CDS_compiler_MinGW)
+
+#define __C_ENG_DIAG_SET_CONTEXT_ERROR(_pContext, _error)   _pContext->diag = { \
+    .error      = _error,                                                       \
+    .file       = __FILE__,                                                     \
+    .function   = __PRETTY_FUNCTION__,                                          \
+    .line       = __LINE__                                                      \
+};
+
+#else
+
+#error Define The __C_ENG_DIAG_SET_CONTEXT_ERROR macro set for the selected compiler
+
+#endif
+
+
 namespace engine :: vulkan {
 
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
@@ -463,7 +488,7 @@ namespace engine :: vulkan {
 
                     if ( pContext->validationFeatures.enabledValidationFeatureCount > __C_ENG_VULKAN_CORE_VALIDATION_FEATURE_ENABLE_MAX_COUNT ) {
                         pContext->validationFeatures.enabledValidationFeatureCount = __C_ENG_VULKAN_CORE_VALIDATION_FEATURE_ENABLE_MAX_COUNT;
-                        pContext->error = ResultErrorConfigurationArraySizeSmall;
+                        __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall )
                     }
 
                     for ( cds :: uint32 i = 0U; i < pContext->validationFeatures.enabledValidationFeatureCount; ++ i ) {
@@ -474,7 +499,7 @@ namespace engine :: vulkan {
 
                     if ( pContext->validationFeatures.disabledValidationFeatureCount > __C_ENG_VULKAN_CORE_VALIDATION_FEATURE_DISABLE_MAX_COUNT ) {
                         pContext->validationFeatures.disabledValidationFeatureCount = __C_ENG_VULKAN_CORE_VALIDATION_FEATURE_DISABLE_MAX_COUNT;
-                        pContext->error = ResultErrorConfigurationArraySizeSmall;
+                        __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall )
                     }
 
                     for ( cds :: uint32 i = 0U; i < pContext->validationFeatures.disabledValidationFeatureCount; ++ i ) {
@@ -500,7 +525,7 @@ namespace engine :: vulkan {
 
                     if ( pValidationFlags->disabledValidationCheckCount > __C_ENG_VULKAN_CORE_VALIDATION_CHECK_MAX_COUNT ) {
                         pContext->validationFlags.disabledValidationCheckCount = __C_ENG_VULKAN_CORE_VALIDATION_CHECK_MAX_COUNT;
-                        pContext->error = ResultErrorConfigurationArraySizeSmall;
+                        __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall )
                     }
 
                     for ( cds :: uint32 i = 0U; i < pContext->validationFlags.disabledValidationCheckCount; ++ i ) {
@@ -9341,7 +9366,7 @@ namespace engine :: vulkan {
 
         if ( pContext->device.queueCreateInfoCount > __C_ENG_VULKAN_CORE_DEVICE_QUEUE_FAMILY_CREATE_INFO_MAX_COUNT ) {
             pContext->device.queueCreateInfoCount = __C_ENG_VULKAN_CORE_DEVICE_QUEUE_FAMILY_CREATE_INFO_MAX_COUNT;
-            pContext->error = ResultErrorConfigurationArraySizeSmall;
+            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall )
         }
 
         for ( cds :: uint32 i = 0U; i < pContext->device.queueCreateInfoCount; ++ i ) {
@@ -13638,7 +13663,7 @@ namespace engine :: vulkan {
                     pContext->formatListCreateInfo.pViewFormats = & pContext->viewFormats [0];
 
                     if ( pContext->formatListCreateInfo.viewFormatCount > __C_ENG_VULKAN_CORE_VIEW_FORMAT_MAX_COUNT ) {
-                        pContext->error = ResultErrorConfigurationArraySizeSmall;
+                        __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall )
                         pContext->formatListCreateInfo.viewFormatCount = __C_ENG_VULKAN_CORE_VIEW_FORMAT_MAX_COUNT;
                     }
 
@@ -14216,7 +14241,7 @@ namespace engine :: vulkan {
 
                         if ( pContext->inheritanceRenderingInfo.colorAttachmentCount > __C_ENG_VULKAN_CORE_RENDERING_INFO_FORMATS_MAX_COUNT ) {
                             pContext->inheritanceRenderingInfo.colorAttachmentCount = __C_ENG_VULKAN_CORE_RENDERING_INFO_FORMATS_MAX_COUNT;
-                            pContext->error = ResultErrorConfigurationArraySizeSmall;
+                            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall )
                         }
 
                         for ( cds :: uint32 i = 0U; i < pContext->inheritanceRenderingInfo.colorAttachmentCount; ++ i ) {
@@ -14242,7 +14267,7 @@ namespace engine :: vulkan {
 
                         if ( pContext->attachmentSampleCountInfo.colorAttachmentCount > __C_ENG_VULKAN_CORE_SAMPLE_COUNT_ATTACHMENT_SAMPLES_MAX_COUNT ) {
                             pContext->attachmentSampleCountInfo.colorAttachmentCount = __C_ENG_VULKAN_CORE_SAMPLE_COUNT_ATTACHMENT_SAMPLES_MAX_COUNT;
-                            pContext->error = ResultErrorConfigurationArraySizeSmall;
+                            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall )
                         }
 
                         for ( cds :: uint32 i = 0U; i < pContext->attachmentSampleCountInfo.colorAttachmentCount; ++ i ) {
@@ -14309,7 +14334,7 @@ namespace engine :: vulkan {
 
                         if ( pContext->inheritanceViewportScissorInfo.viewportDepthCount > __C_ENG_VULKAN_CORE_VIEWPORT_DEPTH_MAX_COUNT ) {
                             pContext->inheritanceViewportScissorInfo.viewportDepthCount = __C_ENG_VULKAN_CORE_VIEWPORT_DEPTH_MAX_COUNT;
-                            pContext->error = ResultErrorConfigurationArraySizeSmall;
+                            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall )
                         }
 
                         for ( cds :: uint32 i = 0U; i < pContext->inheritanceViewportScissorInfo.viewportDepthCount; ++ i ) {
@@ -14706,7 +14731,7 @@ namespace engine :: vulkan {
 
             if ( pContext->submitInfos[i].waitSemaphoreCount > __C_ENG_VULKAN_CORE_PIPELINE_STAGE_FLAGS_MAX_COUNT ) {
                 pContext->submitInfos[i].waitSemaphoreCount = __C_ENG_VULKAN_CORE_PIPELINE_STAGE_FLAGS_MAX_COUNT;
-                pContext->error = ResultErrorConfigurationArraySizeSmall;
+                __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall )
             }
 
             for ( cds :: uint32 j = 0U; j < pContext->submitInfos[i].waitSemaphoreCount; ++ j ) {
@@ -14889,7 +14914,7 @@ namespace engine :: vulkan {
 
             if ( pContext->submitInfos2[i].waitSemaphoreInfoCount > __C_ENG_VULKAN_CORE_SUBMIT_SEMAPHORE_INFO_MAX_COUNT ) {
                 pContext->submitInfos2[i].waitSemaphoreInfoCount = __C_ENG_VULKAN_CORE_SUBMIT_SEMAPHORE_INFO_MAX_COUNT;
-                pContext->error = ResultErrorConfigurationArraySizeSmall;
+                __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall )
             }
 
             for ( cds :: uint32 j = 0U; j < pContext->submitInfos2[i].waitSemaphoreInfoCount; ++ j ) {
@@ -14900,7 +14925,7 @@ namespace engine :: vulkan {
 
             if ( pContext->submitInfos2[i].commandBufferInfoCount > __C_ENG_VULKAN_CORE_SUBMIT_COMMAND_BUFFER_INFO_MAX_COUNT ) {
                 pContext->submitInfos2[i].commandBufferInfoCount = __C_ENG_VULKAN_CORE_SUBMIT_COMMAND_BUFFER_INFO_MAX_COUNT;
-                pContext->error = ResultErrorConfigurationArraySizeSmall;
+                __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall )
             }
 
             for ( cds :: uint32 j = 0U; j < pContext->submitInfos2[i].commandBufferInfoCount; ++ j ) {
@@ -14911,7 +14936,7 @@ namespace engine :: vulkan {
 
             if ( pContext->submitInfos2[i].signalSemaphoreInfoCount > __C_ENG_VULKAN_CORE_SUBMIT_SEMAPHORE_INFO_MAX_COUNT ) {
                 pContext->submitInfos2[i].signalSemaphoreInfoCount = __C_ENG_VULKAN_CORE_SUBMIT_SEMAPHORE_INFO_MAX_COUNT;
-                pContext->error = ResultErrorConfigurationArraySizeSmall;
+                __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall )
             }
 
             for ( cds :: uint32 j = 0U; j < pContext->submitInfos2[i].signalSemaphoreInfoCount; ++ j ) {
@@ -15507,7 +15532,7 @@ namespace engine :: vulkan {
 
         if ( pContext->info.semaphoreCount > __C_ENG_VULKAN_CORE_WAIT_SEMAPHORE_MAX_COUNT ) {
             pContext->info.semaphoreCount   = __C_ENG_VULKAN_CORE_WAIT_SEMAPHORE_MAX_COUNT;
-            pContext->error                 = ResultErrorConfigurationArraySizeSmall;
+            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall )
         }
 
         for ( cds :: uint32 i = 0U; i < pContext->info.semaphoreCount; ++ i ) {
@@ -15627,7 +15652,7 @@ namespace engine :: vulkan {
 
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
     auto toVulkanFormat (
-            VkEventCreateInfo                    * pDestination,
+            VkEventCreateInfo                     * pDestination,
             Type ( EventCreateInfo )        const * pSource
     ) noexcept -> VkEventCreateInfo * {
 
@@ -15646,6 +15671,616 @@ namespace engine :: vulkan {
         };
 
         return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
+    auto toVulkanFormat (
+            VkDependencyInfo_t            * pDestination,
+            Type ( DependencyInfo ) const * pSource
+    ) noexcept -> VkDependencyInfo_t * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+                .sType                      = VK_STRUCTURE_TYPE_DEPENDENCY_INFO,
+#elif __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
+                .sType                      = VK_STRUCTURE_TYPE_DEPENDENCY_INFO_KHR,
+#endif
+                .pNext                      = nullptr,
+                .dependencyFlags            = pSource->dependencyFlags,
+                .memoryBarrierCount         = pSource->memoryBarrierCount,
+                .pMemoryBarriers            = nullptr,
+                .bufferMemoryBarrierCount   = pSource->bufferMemoryBarrierCount,
+                .pBufferMemoryBarriers      = nullptr,
+                .imageMemoryBarrierCount    = pSource->imageMemoryBarrierCount,
+                .pImageMemoryBarriers       = nullptr
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
+    auto toVulkanFormat (
+            VkMemoryBarrier2_t            * pDestination,
+            Type ( MemoryBarrier2 ) const * pSource
+    ) noexcept -> VkMemoryBarrier2_t * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+                .sType                      = VK_STRUCTURE_TYPE_MEMORY_BARRIER_2,
+#elif __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
+                .sType                      = VK_STRUCTURE_TYPE_MEMORY_BARRIER_2_KHR,
+#endif
+                .pNext                      = nullptr,
+                .srcStageMask               = pSource->sourceStageMask,
+                .srcAccessMask              = pSource->sourceAccessMask,
+                .dstStageMask               = pSource->destinationStageMask,
+                .dstAccessMask              = pSource->destinationAccessMask
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
+    auto toVulkanFormat (
+            VkBufferMemoryBarrier2_t            * pDestination,
+            Type ( BufferMemoryBarrier2 ) const * pSource
+    ) noexcept -> VkBufferMemoryBarrier2_t * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+                .sType                      = VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER_2,
+#elif __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
+                .sType                      = VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER_2_KHR,
+#endif
+                .pNext                      = nullptr,
+                .srcStageMask               = pSource->sourceStageMask,
+                .srcAccessMask              = pSource->sourceAccessMask,
+                .dstStageMask               = pSource->destinationStageMask,
+                .dstAccessMask              = pSource->destinationAccessMask,
+                .srcQueueFamilyIndex        = pSource->sourceQueueFamilyIndex,
+                .dstQueueFamilyIndex        = pSource->destinationQueueFamilyIndex,
+                .buffer                     = pSource->buffer,
+                .offset                     = pSource->offset,
+                .size                       = pSource->size
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
+    auto toVulkanFormat (
+            VkImageMemoryBarrier2_t            * pDestination,
+            Type ( ImageMemoryBarrier2 ) const * pSource
+    ) noexcept -> VkImageMemoryBarrier2_t * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+                .sType                      = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2,
+#elif __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
+                .sType                      = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2_KHR,
+#endif
+                .pNext                      = nullptr,
+                .srcStageMask               = pSource->sourceStageMask,
+                .srcAccessMask              = pSource->sourceAccessMask,
+                .dstStageMask               = pSource->destinationStageMask,
+                .dstAccessMask              = pSource->destinationAccessMask,
+                .oldLayout                  = static_cast < VkImageLayout > ( pSource->oldLayout ),
+                .newLayout                  = static_cast < VkImageLayout > ( pSource->newLayout ),
+                .srcQueueFamilyIndex        = pSource->sourceQueueFamilyIndex,
+                .dstQueueFamilyIndex        = pSource->destinationQueueFamilyIndex,
+                .image                      = pSource->image,
+                .subresourceRange           = {
+                        .aspectMask                 = pSource->subresourceRange.aspectMask,
+                        .baseMipLevel               = pSource->subresourceRange.baseMipLevel,
+                        .levelCount                 = pSource->subresourceRange.levelCount,
+                        .baseArrayLayer             = pSource->subresourceRange.baseArrayLayer,
+                        .layerCount                 = pSource->subresourceRange.layerCount,
+                }
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    auto toVulkanFormat (
+            VkMemoryBarrier              * pDestination,
+            Type ( MemoryBarrier ) const * pSource
+    ) noexcept -> VkMemoryBarrier * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                      = VK_STRUCTURE_TYPE_MEMORY_BARRIER,
+                .pNext                      = nullptr,
+                .srcAccessMask              = static_cast < VkAccessFlags > ( pSource->sourceAccessMask ),
+                .dstAccessMask              = static_cast < VkAccessFlags > ( pSource->destinationAccessMask )
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    auto toVulkanFormat (
+            VkBufferMemoryBarrier              * pDestination,
+            Type ( BufferMemoryBarrier ) const * pSource
+    ) noexcept -> VkBufferMemoryBarrier * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                      = VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER,
+                .pNext                      = nullptr,
+                .srcAccessMask              = static_cast < VkAccessFlags > ( pSource->sourceAccessMask ),
+                .dstAccessMask              = static_cast < VkAccessFlags > ( pSource->destinationAccessMask ),
+                .srcQueueFamilyIndex        = pSource->sourceQueueFamilyIndex,
+                .dstQueueFamilyIndex        = pSource->destinationQueueFamilyIndex,
+                .buffer                     = pSource->buffer,
+                .offset                     = pSource->offset,
+                .size                       = pSource->size
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    auto toVulkanFormat (
+            VkImageMemoryBarrier              * pDestination,
+            Type ( ImageMemoryBarrier ) const * pSource
+    ) noexcept -> VkImageMemoryBarrier * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                      = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER,
+                .pNext                      = nullptr,
+                .srcAccessMask              = static_cast < VkAccessFlags > ( pSource->sourceAccessMask ),
+                .dstAccessMask              = static_cast < VkAccessFlags > ( pSource->destinationAccessMask ),
+                .oldLayout                  = static_cast < VkImageLayout > ( pSource->oldLayout ),
+                .newLayout                  = static_cast < VkImageLayout > ( pSource->newLayout ),
+                .srcQueueFamilyIndex        = pSource->sourceQueueFamilyIndex,
+                .dstQueueFamilyIndex        = pSource->destinationQueueFamilyIndex,
+                .image                      = pSource->image,
+                .subresourceRange           = {
+                        .aspectMask                 = pSource->subresourceRange.aspectMask,
+                        .baseMipLevel               = pSource->subresourceRange.baseMipLevel,
+                        .levelCount                 = pSource->subresourceRange.levelCount,
+                        .baseArrayLayer             = pSource->subresourceRange.baseArrayLayer,
+                        .layerCount                 = pSource->subresourceRange.layerCount,
+                }
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_SAMPLE_LOCATIONS_AVAILABLE
+    auto toVulkanFormat (
+            VkSampleLocationsInfoEXT           * pDestination,
+            Type ( SampleLocationsInfo ) const * pSource
+    ) noexcept -> VkSampleLocationsInfoEXT * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                      = VK_STRUCTURE_TYPE_SAMPLE_LOCATIONS_INFO_EXT,
+                .pNext                      = nullptr,
+                .sampleLocationsPerPixel    = static_cast < VkSampleCountFlagBits > ( pSource->sampleLocationsPerPixel ),
+                .sampleLocationGridSize     = {
+                        .width                      = pSource->sampleLocationGridSize.width,
+                        .height                     = pSource->sampleLocationGridSize.height
+                },
+                .sampleLocationsCount       = pSource->sampleLocationsCount,
+                .pSampleLocations           = nullptr
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
+    auto prepareContext (
+            SetCommandBufferEventContext          * pContext,
+            Type ( DependencyInfo )         const * pSource
+    ) noexcept -> VkDependencyInfo_t * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pContext == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        (void) toVulkanFormat ( & pContext->dependencyInfo, pSource );
+
+        pContext->dependencyInfo.pMemoryBarriers = & pContext->memoryBarriers[0];
+
+        if ( pContext->dependencyInfo.memoryBarrierCount > __C_ENG_VULKAN_CORE_DEPENDENCY_INFO_MEMORY_BARRIER_MAX_COUNT ) {
+            pContext->dependencyInfo.memoryBarrierCount = __C_ENG_VULKAN_CORE_DEPENDENCY_INFO_MEMORY_BARRIER_MAX_COUNT;
+            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall )
+        }
+
+        for ( cds :: uint32 i = 0U; i < pContext->dependencyInfo.memoryBarrierCount; ++ i ) {
+            (void) toVulkanFormat ( & pContext->memoryBarriers[i], & pSource->pMemoryBarriers[i] );
+        }
+
+        pContext->dependencyInfo.pBufferMemoryBarriers = & pContext->bufferMemoryBarriers[0];
+
+        if ( pContext->dependencyInfo.bufferMemoryBarrierCount > __C_ENG_VULKAN_CORE_DEPENDENCY_INFO_BUFFER_MEMORY_BARRIER_MAX_COUNT ) {
+            pContext->dependencyInfo.bufferMemoryBarrierCount = __C_ENG_VULKAN_CORE_DEPENDENCY_INFO_BUFFER_MEMORY_BARRIER_MAX_COUNT;
+            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall )
+        }
+
+        for ( cds :: uint32 i = 0U; i < pContext->dependencyInfo.bufferMemoryBarrierCount; ++ i ) {
+            (void) toVulkanFormat ( & pContext->bufferMemoryBarriers[i], & pSource->pBufferMemoryBarriers[i] );
+        }
+
+        pContext->dependencyInfo.pImageMemoryBarriers = & pContext->imageMemoryBarriers[0];
+
+        if ( pContext->dependencyInfo.imageMemoryBarrierCount > __C_ENG_VULKAN_CORE_DEPENDENCY_INFO_IMAGE_MEMORY_BARRIER_MAX_COUNT ) {
+            pContext->dependencyInfo.imageMemoryBarrierCount = __C_ENG_VULKAN_CORE_DEPENDENCY_INFO_IMAGE_MEMORY_BARRIER_MAX_COUNT;
+            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall )
+        }
+
+        for ( cds :: uint32 i = 0U; i < pContext->dependencyInfo.imageMemoryBarrierCount; ++ i ) {
+
+            auto pCurrent   = reinterpret_cast < Type ( GenericInStructure ) const * > ( pSource->pNext );
+            auto pCurrentVk = reinterpret_cast < VkBaseOutStructure * > ( toVulkanFormat ( & pContext->imageMemoryBarriers[i], & pSource->pImageMemoryBarriers[i] ) );
+
+            while ( pCurrent != nullptr ) {
+
+                switch ( pCurrent->structureType ) {
+
+#if __C_ENG_VULKAN_API_EXTENSION_SAMPLE_LOCATIONS_AVAILABLE
+
+                    case StructureTypeSampleLocationsInfo: {
+
+                        auto pSampleLocationsInfo = reinterpret_cast < Type ( SampleLocationsInfo ) const * > ( pCurrent );
+                        pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                                toVulkanFormat (
+                                        & pContext->sampleLocationsInfos[i],
+                                        pSampleLocationsInfo
+                                )
+                        );
+
+                        pContext->sampleLocationsInfos[i].pSampleLocations = & pContext->sampleLocations[i][0];
+
+                        if ( pContext->sampleLocationsInfos[i].sampleLocationsCount > __C_ENG_VULKAN_CORE_SAMPLE_LOCATIONS_INFO_SAMPLE_LOCATIONS_MAX_COUNT ) {
+                            pContext->sampleLocationsInfos[i].sampleLocationsCount = __C_ENG_VULKAN_CORE_SAMPLE_LOCATIONS_INFO_SAMPLE_LOCATIONS_MAX_COUNT;
+                            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall )
+                        }
+
+                        for ( cds :: uint32 j = 0U; j < pContext->sampleLocationsInfos[i].sampleLocationsCount; ++ j ) {
+                            pContext->sampleLocations[i][j] = {
+                                    pSampleLocationsInfo->pSampleLocations[j].x,
+                                    pSampleLocationsInfo->pSampleLocations[j].y
+                            };
+                        }
+
+                        break;
+
+                    }
+
+#endif
+
+                    default:
+                        break;
+                }
+
+                pCurrentVk  = pCurrentVk->pNext == nullptr ? pCurrentVk : pCurrentVk->pNext;
+                pCurrent    = pCurrent->pNext;
+            }
+
+            pCurrentVk->pNext = nullptr;
+        }
+
+        return & pContext->dependencyInfo;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
+    auto prepareContext (
+            WaitCommandBufferEvent2Context        * pContext,
+            cds :: uint32                           count,
+            Type ( DependencyInfo )         const * pDependencyInfos
+    ) noexcept -> VkDependencyInfo_t * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pContext == nullptr || pDependencyInfos == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        if ( count > __C_ENG_VULKAN_CORE_COMMAND_BUFFER_WAIT_EVENTS_DEPENDENCY_INFO_MAX_COUNT ) {
+            count = __C_ENG_VULKAN_CORE_COMMAND_BUFFER_WAIT_EVENTS_DEPENDENCY_INFO_MAX_COUNT;
+            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall )
+        }
+
+        for ( cds :: uint32 i = 0U; i < count; ++ i ) {
+
+            (void) toVulkanFormat ( & pContext->dependencyInfos[i], & pDependencyInfos[i] );
+
+            pContext->dependencyInfos[i].pMemoryBarriers = & pContext->memoryBarriers[i][0];
+
+            if ( pContext->dependencyInfos[i].memoryBarrierCount > __C_ENG_VULKAN_CORE_DEPENDENCY_INFO_MEMORY_BARRIER_MAX_COUNT ) {
+                pContext->dependencyInfos[i].memoryBarrierCount = __C_ENG_VULKAN_CORE_DEPENDENCY_INFO_MEMORY_BARRIER_MAX_COUNT;
+                __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall )
+            }
+
+            for ( cds :: uint32 j = 0U; j < pContext->dependencyInfos[i].memoryBarrierCount; ++ j ) {
+                (void) toVulkanFormat ( & pContext->memoryBarriers[i][j], & pDependencyInfos[i].pMemoryBarriers[j] );
+            }
+
+            pContext->dependencyInfos[i].pBufferMemoryBarriers = & pContext->bufferMemoryBarriers[i][0];
+
+            if ( pContext->dependencyInfos[i].bufferMemoryBarrierCount > __C_ENG_VULKAN_CORE_DEPENDENCY_INFO_BUFFER_MEMORY_BARRIER_MAX_COUNT ) {
+                pContext->dependencyInfos[i].bufferMemoryBarrierCount = __C_ENG_VULKAN_CORE_DEPENDENCY_INFO_BUFFER_MEMORY_BARRIER_MAX_COUNT;
+                __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall )
+            }
+
+            for ( cds :: uint32 j = 0U; j < pContext->dependencyInfos[i].bufferMemoryBarrierCount; ++ j ) {
+                (void) toVulkanFormat ( & pContext->bufferMemoryBarriers[i][j], & pDependencyInfos[i].pBufferMemoryBarriers[j] );
+            }
+
+            pContext->dependencyInfos[i].pImageMemoryBarriers = & pContext->imageMemoryBarriers[i][0];
+
+            if ( pContext->dependencyInfos[i].imageMemoryBarrierCount > __C_ENG_VULKAN_CORE_DEPENDENCY_INFO_IMAGE_MEMORY_BARRIER_MAX_COUNT ) {
+                pContext->dependencyInfos[i].imageMemoryBarrierCount = __C_ENG_VULKAN_CORE_DEPENDENCY_INFO_IMAGE_MEMORY_BARRIER_MAX_COUNT;
+                __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall )
+            }
+
+            for ( cds :: uint32 j = 0U; j < pContext->dependencyInfos[i].imageMemoryBarrierCount; ++ j ) {
+
+                auto pCurrent   = reinterpret_cast < Type ( GenericInStructure ) const * > ( pDependencyInfos[i].pNext );
+                auto pCurrentVk = reinterpret_cast < VkBaseOutStructure * > ( toVulkanFormat ( & pContext->imageMemoryBarriers[i][j], & pDependencyInfos[i].pImageMemoryBarriers[j] ) );
+
+                while ( pCurrent != nullptr ) {
+
+                    switch ( pCurrent->structureType ) {
+
+#if __C_ENG_VULKAN_API_EXTENSION_SAMPLE_LOCATIONS_AVAILABLE
+
+                        case StructureTypeSampleLocationsInfo: {
+
+                            auto pSampleLocationsInfo = reinterpret_cast < Type ( SampleLocationsInfo ) const * > ( pCurrent );
+                            pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                                    toVulkanFormat (
+                                            & pContext->sampleLocationsInfos[i][j],
+                                            pSampleLocationsInfo
+                                    )
+                            );
+
+                            pContext->sampleLocationsInfos[i][j].pSampleLocations = & pContext->sampleLocations[i][j][0];
+
+                            if ( pContext->sampleLocationsInfos[i][j].sampleLocationsCount > __C_ENG_VULKAN_CORE_SAMPLE_LOCATIONS_INFO_SAMPLE_LOCATIONS_MAX_COUNT ) {
+                                pContext->sampleLocationsInfos[i][j].sampleLocationsCount = __C_ENG_VULKAN_CORE_SAMPLE_LOCATIONS_INFO_SAMPLE_LOCATIONS_MAX_COUNT;
+                                __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall )
+                            }
+
+                            for ( cds :: uint32 k = 0U; k < pContext->sampleLocationsInfos[j][k].sampleLocationsCount; ++ k ) {
+                                pContext->sampleLocations[i][j][k] = {
+                                        pSampleLocationsInfo->pSampleLocations[k].x,
+                                        pSampleLocationsInfo->pSampleLocations[k].y
+                                };
+                            }
+
+                            break;
+
+                        }
+
+#endif
+
+                        default:
+                            break;
+                    }
+
+                    pCurrentVk  = pCurrentVk->pNext == nullptr ? pCurrentVk : pCurrentVk->pNext;
+                    pCurrent    = pCurrent->pNext;
+                }
+
+                pCurrentVk->pNext = nullptr;
+            }
+
+        }
+
+        return & pContext->dependencyInfos[0];
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    auto prepareContext (
+            WaitCommandBufferEventContext         * pContext,
+            cds :: uint32                           count,
+            Type ( MemoryBarrier )          const * pMemoryBarriers
+    ) noexcept -> VkMemoryBarrier * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pContext == nullptr || count == 0U || pMemoryBarriers == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        if ( count > __C_ENG_VULKAN_CORE_MEMORY_BARRIER_MAX_COUNT ) {
+            count = __C_ENG_VULKAN_CORE_MEMORY_BARRIER_MAX_COUNT;
+            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall )
+        }
+
+        for ( cds :: uint32 i = 0U; i < count; ++ i ) {
+            (void) toVulkanFormat ( & pContext->memoryBarriers[i], & pMemoryBarriers[i] );
+        }
+
+        return & pContext->memoryBarriers[0];
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    auto prepareContext (
+            WaitCommandBufferEventContext         * pContext,
+            cds :: uint32                           count,
+            Type ( BufferMemoryBarrier )    const * pBufferMemoryBarriers
+    ) noexcept -> VkBufferMemoryBarrier * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pContext == nullptr || count == 0U || pBufferMemoryBarriers == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        if ( count > __C_ENG_VULKAN_CORE_BUFFER_MEMORY_BARRIER_MAX_COUNT ) {
+            count = __C_ENG_VULKAN_CORE_BUFFER_MEMORY_BARRIER_MAX_COUNT;
+            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall )
+        }
+
+        for ( cds :: uint32 i = 0U; i < count; ++ i ) {
+            (void) toVulkanFormat ( & pContext->bufferMemoryBarriers[i], & pBufferMemoryBarriers[i] );
+        }
+
+        return & pContext->bufferMemoryBarriers[0];
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    auto prepareContext (
+            WaitCommandBufferEventContext         * pContext,
+            cds :: uint32                           count,
+            Type ( ImageMemoryBarrier )     const * pImageMemoryBarriers
+    ) noexcept -> VkImageMemoryBarrier * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pContext == nullptr || count == 0U || pImageMemoryBarriers == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        if ( count > __C_ENG_VULKAN_CORE_IMAGE_MEMORY_BARRIER_MAX_COUNT ) {
+            count = __C_ENG_VULKAN_CORE_IMAGE_MEMORY_BARRIER_MAX_COUNT;
+            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall )
+        }
+
+        for ( cds :: uint32 i = 0U; i < count; ++ i ) {
+
+            auto pCurrent   = reinterpret_cast < Type ( GenericInStructure ) const * > ( & pImageMemoryBarriers[i] );
+            auto pCurrentVk = reinterpret_cast < VkBaseOutStructure * > ( toVulkanFormat ( & pContext->imageMemoryBarriers[i], & pImageMemoryBarriers[i] ) );
+
+            while ( pCurrent != nullptr ) {
+
+                switch ( pCurrent->structureType ) {
+
+#if __C_ENG_VULKAN_API_EXTENSION_SAMPLE_LOCATIONS_AVAILABLE
+
+                    case StructureTypeSampleLocationsInfo: {
+
+                        auto pSampleLocationsInfo = reinterpret_cast < Type ( SampleLocationsInfo ) const * > ( pCurrent );
+                        pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                                toVulkanFormat (
+                                        & pContext->sampleLocationsInfos[i],
+                                        pSampleLocationsInfo
+                                )
+                        );
+
+                        pContext->sampleLocationsInfos[i].pSampleLocations = & pContext->sampleLocations[i][0];
+
+                        if ( pContext->sampleLocationsInfos[i].sampleLocationsCount > __C_ENG_VULKAN_CORE_SAMPLE_LOCATIONS_INFO_SAMPLE_LOCATIONS_MAX_COUNT ) {
+                            pContext->sampleLocationsInfos[i].sampleLocationsCount = __C_ENG_VULKAN_CORE_SAMPLE_LOCATIONS_INFO_SAMPLE_LOCATIONS_MAX_COUNT;
+                            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall )
+                        }
+
+                        for ( cds :: uint32 j = 0U; j < pContext->sampleLocationsInfos[j].sampleLocationsCount; ++ j ) {
+                            pContext->sampleLocations[i][j] = {
+                                    pSampleLocationsInfo->pSampleLocations[j].x,
+                                    pSampleLocationsInfo->pSampleLocations[j].y
+                            };
+                        }
+
+                        break;
+
+                    }
+
+#endif
+
+                    default:
+                        break;
+                }
+
+                pCurrentVk  = pCurrentVk->pNext == nullptr ? pCurrentVk : pCurrentVk->pNext;
+                pCurrent    = pCurrent->pNext;
+            }
+
+            pCurrentVk->pNext = nullptr;
+        }
+
+        return & pContext->imageMemoryBarriers[0];
     }
 #endif
 
