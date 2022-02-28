@@ -1021,13 +1021,13 @@ namespace globals {
     static __C_ENG_TYPE ( PhysicalDeviceDetails ) physicalDeviceDetails;
 
     static Mutex deviceCreationLock;
-    static StringLiteral    extensionNames [ __C_ENG_VULKAN_CORE_LAYER_EXTENSION_MAX_COUNT ];
+    static StringLiteral    extensionNames [ engine :: vulkan :: config :: layerExtensionCount ];
     static uint32           extensionCount;
 
     static HashMap < vulkan :: __C_ENG_TYPE ( QueueFlag ), HashMap < QueueFamilyIndex, uint32 > > typeFamilyCount;
 
-    static vulkan :: __C_ENG_TYPE ( DeviceQueueCreateInfo ) queueCreateInfos [ __C_ENG_VULKAN_CORE_QUEUE_FAMILY_MAX_COUNT ];
-    static float                                            queuePriorities [ __C_ENG_VULKAN_CORE_QUEUE_FAMILY_MAX_COUNT ][ __C_ENG_VULKAN_CORE_QUEUE_FAMILY_QUEUE_MAX_COUNT ];
+    static vulkan :: __C_ENG_TYPE ( DeviceQueueCreateInfo ) queueCreateInfos [ engine :: vulkan :: config :: queueFamilyCount ];
+    static float                                            queuePriorities [ engine :: vulkan :: config :: queueFamilyCount ][ engine :: vulkan :: config :: queueFamilyQueueCount ];
     static uint32                                           queueCreateInfoCount;
 }
 
@@ -1331,7 +1331,7 @@ auto Self :: deviceCreateInfoAddQueueCreateInfos (
     globals :: queueCreateInfoCount = 0U;
     for ( auto & usedFamilyCount : usedFamilyCounts ) {
 
-        if ( usedFamilyCount.second() > __C_ENG_VULKAN_CORE_QUEUE_FAMILY_QUEUE_MAX_COUNT ) {
+        if ( usedFamilyCount.second() > engine :: vulkan :: config :: queueFamilyQueueCount ) {
             throw Type ( VulkanAPIException ) ( "Too many queues reserved from family '"_s + usedFamilyCount.first() + "'. Increase capacity in configuration" );
         }
 

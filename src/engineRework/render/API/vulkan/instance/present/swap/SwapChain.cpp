@@ -24,12 +24,12 @@ using namespace vulkan; // NOLINT(clion-misra-cpp2008-7-3-4)
 
 
 struct SwapChainImages {
-    Type ( ImageHandle )        imagesArray [ __C_ENG_VULKAN_CORE_SWAP_CHAIN_IMAGE_MAX_COUNT ];
+    Type ( ImageHandle )        imagesArray [ engine :: vulkan :: config :: swapChainImageCount ];
     Type ( SwapChainHandle )    swapChainHandle;
 };
 
 namespace globals {
-    static SwapChainImages  swapChainImageAreas [ __C_ENG_VULKAN_CORE_PHYSICAL_DEVICE_MAX_COUNT * __C_ENG_VULKAN_CORE_PHYSICAL_DEVICE_SURFACE_MAX_COUNT ];
+    static SwapChainImages  swapChainImageAreas [ engine :: vulkan :: config :: physicalDeviceCount * engine :: vulkan :: config :: physicalDeviceSurfaceCount ];
     static Mutex            areasLock;
 }
 
@@ -264,7 +264,7 @@ auto Self :: init (
 #endif
 
     uint32 queueFamilyIndexCount = 0U;
-    uint32 queueFamilyIndices [ __C_ENG_VULKAN_CORE_QUEUE_FAMILY_MAX_COUNT ];
+    uint32 queueFamilyIndices [ engine :: vulkan :: config :: queueFamilyCount ];
 
     populateQueueFamilyIndices (
             pDevice,

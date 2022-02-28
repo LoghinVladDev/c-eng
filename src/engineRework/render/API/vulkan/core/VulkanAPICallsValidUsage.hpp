@@ -114,7 +114,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
             }
 
             cds :: uint32 occurredDeviceCount = 0U;
-            __C_ENG_TYPE ( PhysicalDeviceHandle ) occurredDevices [ __C_ENG_VULKAN_CORE_PHYSICAL_DEVICE_GROUP_MAX_COUNT ];
+            __C_ENG_TYPE ( PhysicalDeviceHandle ) occurredDevices [ engine :: vulkan :: config :: physicalDeviceGroupCount ];
 
             for ( cds :: uint32 i = 0U; i < pCreateInfo->physicalDeviceCount; ++ i ) {
                 for ( cds :: uint32 j = 0U; j < occurredDeviceCount; ++ j ) {

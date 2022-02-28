@@ -10028,6 +10028,56 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #endif
 
 
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( DeviceGroupRenderPassBeginInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                      structureType;
+            Type ( GenericStructure )           const * pNext;
+            cds :: uint32                               deviceMask;
+            cds :: uint32                               deviceRenderAreaCount;
+            Type ( Rect )                       const * pDeviceRenderAreas;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+
+#if ( __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE ) && __C_ENG_VULKAN_API_EXTENSION_FRAGMENT_DENSITY_MAP_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( RenderingFragmentDensityMapAttachmentInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                      structureType;
+            Type ( GenericStructure )           const * pNext;
+            Type ( ImageViewHandle )                    imageView;
+            Type ( ImageLayout )                        imageLayout;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+
+#if ( __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE ) && __C_ENG_VULKAN_API_EXTENSION_KHRONOS_FRAGMENT_SHADING_RATE_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( RenderingFragmentShadingRateAttachmentInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                      structureType;
+            Type ( GenericStructure )           const * pNext;
+            Type ( ImageViewHandle )                    imageView;
+            Type ( ImageLayout )                        imageLayout;
+            Type ( Extent2D )                           shadingRateAttachmentTexelSize;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+
 #define C_ENG_MAP_START     HEADER
 #include <ObjectMapping.hpp>
 
@@ -10262,6 +10312,8 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         NoDiscard auto toString ( Type ( ProtectedSubmitInfo ) const & ) noexcept -> cds :: String;
 
         NoDiscard auto toString ( Type ( ExportFenceCreateInfo ) const & ) noexcept -> cds :: String;
+
+        NoDiscard auto toString ( Type ( DeviceGroupRenderPassBeginInfo ) const & ) noexcept -> cds :: String;
 
 #endif
 
@@ -11164,15 +11216,19 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         NoDiscard auto toString ( Type ( RenderingInfo ) const & ) noexcept -> cds :: String;
 
 #if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_FRAMEBUFFER_MIXED_SAMPLES_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_AMD_MIXED_ATTACHMENT_SAMPLES_AVAILABLE
-
         NoDiscard auto toString ( hidden :: __AttachmentSampleCountInfo const & ) noexcept -> cds :: String;
-
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXPERIMENTAL_MULTIVIEW_PER_VIEW_ATTRIBUTES_AVAILABLE
-
         NoDiscard auto toString ( Type ( MultiviewPerViewAttributesInfoNVidia ) const & ) noexcept -> cds :: String;
+#endif
 
+#if __C_ENG_VULKAN_API_EXTENSION_FRAGMENT_DENSITY_MAP_AVAILABLE
+        NoDiscard auto toString ( Type ( RenderingFragmentDensityMapAttachmentInfo ) const & ) noexcept -> cds :: String;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_FRAGMENT_SHADING_RATE_AVAILABLE
+        NoDiscard auto toString ( Type ( RenderingFragmentShadingRateAttachmentInfo ) const & ) noexcept -> cds :: String;
 #endif
 
 #endif

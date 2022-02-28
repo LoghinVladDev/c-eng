@@ -754,6 +754,12 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         ) noexcept -> Type ( Result );
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE
+        NoDiscard MaybeUnused extern auto commandBufferEndRendering (
+                Type ( CommandBufferHandle )
+        ) noexcept -> Type ( Result );
+#endif
+
     }
 
 }

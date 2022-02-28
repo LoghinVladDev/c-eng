@@ -30,11 +30,11 @@ namespace globals {
     static vulkan :: Type ( Instance ) const * pLastQueriedInstance = nullptr;
     static Array < vulkan :: Self > physicalDevices;
     
-    static vulkan :: Type ( PhysicalDeviceHandle )  physicalDeviceHandles [ __C_ENG_VULKAN_CORE_PHYSICAL_DEVICE_MAX_COUNT ];
+    static vulkan :: Type ( PhysicalDeviceHandle )  physicalDeviceHandles [ engine :: vulkan :: config :: physicalDeviceCount ];
     
-    static vulkan :: Type ( ExtensionProperties )   extensionPropertiesArray [ __C_ENG_VULKAN_CORE_LAYER_EXTENSION_MAX_COUNT ];
-    static vulkan :: Self :: DeviceExtension        ungroupedExtensions [ __C_ENG_VULKAN_CORE_PHYSICAL_DEVICE_MAX_COUNT ] [ __C_ENG_VULKAN_CORE_LAYER_EXTENSION_MAX_COUNT ];
-    static DeviceWithExtensions                     devicesWithExtensions [ __C_ENG_VULKAN_CORE_PHYSICAL_DEVICE_MAX_COUNT ];
+    static vulkan :: Type ( ExtensionProperties )   extensionPropertiesArray [ engine :: vulkan :: config :: layerExtensionCount ];
+    static vulkan :: Self :: DeviceExtension        ungroupedExtensions [ engine :: vulkan :: config :: physicalDeviceCount ] [ engine :: vulkan :: config :: layerExtensionCount ];
+    static DeviceWithExtensions                     devicesWithExtensions [ engine :: vulkan :: config :: physicalDeviceCount ];
     static uint32                                   devicesWithExtensionCount;
     static Mutex                                    deviceExtensionLock;
     
@@ -231,11 +231,11 @@ auto vulkan :: Self :: refreshPhysicalDevices (
     {
         LockGuard guard ( globals :: deviceExtensionLock );
 
-        if ( globals :: physicalDevices.size() > __C_ENG_VULKAN_CORE_PHYSICAL_DEVICE_MAX_COUNT ) {
+        if ( globals :: physicalDevices.size() > engine :: vulkan :: config :: physicalDeviceCount ) {
             throw Type ( VulkanAPIException ) ( "Configuration Size for Physical Device Count is too small" );
         }
 
-        for ( auto & device : globals :: physicalDevices ) {
+        for ( auto const & device : globals :: physicalDevices ) {
 
             bool addDevice = true;
             for ( uint32 i = 0U; i < globals :: devicesWithExtensionCount; ++ i ) {

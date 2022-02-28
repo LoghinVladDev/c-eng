@@ -224,8 +224,8 @@ auto vulkan :: Self :: init () noexcept (false) -> Self & {
     __C_ENG_TYPE ( InstanceCreateInfo )         instanceCreateInfo {};
     __C_ENG_TYPE ( ValidationFeatures )         validationFeatures {};
 
-    __C_ENG_TYPE ( ValidationFeatureEnable )    enabledValidationFeatures   [ __C_ENG_VULKAN_CORE_VALIDATION_FEATURE_ENABLE_MAX_COUNT ];
-    __C_ENG_TYPE ( ValidationFeatureDisable )   disabledValidationFeatures  [ __C_ENG_VULKAN_CORE_VALIDATION_FEATURE_DISABLE_MAX_COUNT ];
+    __C_ENG_TYPE ( ValidationFeatureEnable )    enabledValidationFeatures   [ engine :: vulkan :: config :: validationFeatureEnableCount ];
+    __C_ENG_TYPE ( ValidationFeatureDisable )   disabledValidationFeatures  [ engine :: vulkan :: config :: validationFeatureDisableCount ];
 
     __C_ENG_TYPE ( LayerHandler ) :: ValidationEnabledFeatures  enabledFeatures {};
     __C_ENG_TYPE ( LayerHandler ) :: ValidationDisabledFeatures disabledFeatures {};

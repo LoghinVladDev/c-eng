@@ -36,48 +36,48 @@ struct CreateInstanceContext {
 #endif
 #if __C_ENG_VULKAN_API_EXTENSION_VALIDATION_FEATURES_AVAILABLE
     VkValidationFeaturesEXT             validationFeatures;
-    VkValidationFeatureEnableEXT        validationFeatureEnables [ __C_ENG_VULKAN_CORE_VALIDATION_FEATURE_ENABLE_MAX_COUNT ];
-    VkValidationFeatureDisableEXT       validationFeatureDisables [ __C_ENG_VULKAN_CORE_VALIDATION_FEATURE_DISABLE_MAX_COUNT ];
+    VkValidationFeatureEnableEXT        validationFeatureEnables [ engine :: vulkan :: config :: validationFeatureEnableCount ];
+    VkValidationFeatureDisableEXT       validationFeatureDisables [ engine :: vulkan :: config :: validationFeatureDisableCount ];
 #endif
 #if __C_ENG_VULKAN_API_EXTENSION_VALIDATION_FLAGS_AVAILABLE
     VkValidationFlagsEXT                validationFlags;
-    VkValidationCheckEXT                validationChecks [ __C_ENG_VULKAN_CORE_VALIDATION_CHECK_MAX_COUNT ];
+    VkValidationCheckEXT                validationChecks [ engine :: vulkan :: config :: validationCheckCount ];
 #endif
 };
 
 struct EnumerateLayerPropertiesContext {
     DiagnosticContext                   diag;
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
-    VkLayerProperties                   properties [ __C_ENG_VULKAN_CORE_LAYER_MAX_COUNT ];
+    VkLayerProperties                   properties [ engine :: vulkan :: config :: layerCount ];
 #endif
 };
 
 struct EnumerateExtensionPropertiesContext {
     DiagnosticContext                   diag;
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
-    VkExtensionProperties               properties [ __C_ENG_VULKAN_CORE_LAYER_MAX_COUNT ];
+    VkExtensionProperties               properties [ engine :: vulkan :: config :: layerExtensionCount ];
 #endif
 };
 
 struct EnumeratePhysicalDevicesContext {
     DiagnosticContext                   diag;
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
-    VkPhysicalDevice                    devices [ __C_ENG_VULKAN_CORE_PHYSICAL_DEVICE_MAX_COUNT ];
+    VkPhysicalDevice                    devices [ engine :: vulkan :: config :: physicalDeviceCount ];
 #endif
 };
 
 struct EnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersContext {
     DiagnosticContext                   diag;
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PERFORMANCE_QUERY_AVAILABLE
-    VkPerformanceCounterKHR             counters [ __C_ENG_VULKAN_CORE_QUEUE_FAMILY_PERFORMANCE_COUNTER_MAX_COUNT ];
-    VkPerformanceCounterDescriptionKHR  descriptions [ __C_ENG_VULKAN_CORE_QUEUE_FAMILY_PERFORMANCE_COUNTER_MAX_COUNT ];
+    VkPerformanceCounterKHR             counters [ engine :: vulkan :: config :: queueFamilyPerformanceCounterCount ];
+    VkPerformanceCounterDescriptionKHR  descriptions [ engine :: vulkan :: config :: queueFamilyPerformanceCounterCount ];
 #endif
 };
 
 struct EnumeratePhysicalDeviceGroupsContext {
     DiagnosticContext                   diag;
 #if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
-    VkPhysicalDeviceGroupProperties     properties [ __C_ENG_VULKAN_CORE_PHYSICAL_DEVICE_GROUP_MAX_COUNT ];
+    VkPhysicalDeviceGroupProperties     properties [ engine :: vulkan :: config :: physicalDeviceGroupCount ];
 #endif
 };
 
@@ -521,7 +521,7 @@ struct CreateDeviceContext {
     DiagnosticContext                           diag;
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
     VkDeviceCreateInfo                          device;
-    VkDeviceQueueCreateInfo                     queues [ __C_ENG_VULKAN_CORE_DEVICE_QUEUE_FAMILY_CREATE_INFO_MAX_COUNT ];
+    VkDeviceQueueCreateInfo                     queues [ engine :: vulkan :: config :: queueFamilyCreateInfoCount ];
 #endif
     DeviceFeaturesContext                       features;
 #if __C_ENG_VULKAN_API_EXTENSION_DEVICE_MEMORY_REPORT_AVAILABLE
@@ -554,20 +554,20 @@ struct GetPhysicalDeviceFeaturesContext {
 struct GetPhysicalDeviceQueueFamilyPropertiesContext {
     DiagnosticContext                           diag;
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
-    VkQueueFamilyProperties                     properties [ __C_ENG_VULKAN_CORE_QUEUE_FAMILY_MAX_COUNT ];
+    VkQueueFamilyProperties                     properties [ engine :: vulkan :: config :: queueFamilyCount ];
 #endif
 #if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
-    VkQueueFamilyProperties2                    properties2 [ __C_ENG_VULKAN_CORE_QUEUE_FAMILY_MAX_COUNT ];
+    VkQueueFamilyProperties2                    properties2 [ engine :: vulkan :: config :: queueFamilyCount ];
 #endif
 #if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEVICE_DIAGNOSTIC_CHECKPOINTS_AVAILABLE
-    VkQueueFamilyCheckpointPropertiesNV         checkpoints [ __C_ENG_VULKAN_CORE_QUEUE_FAMILY_MAX_COUNT ];
+    VkQueueFamilyCheckpointPropertiesNV         checkpoints [ engine :: vulkan :: config :: queueFamilyCount ];
 #endif
 #if __C_ENG_VULKAN_API_EXTENSION_GLOBAL_PRIORITY_QUERY_AVAILABLE
-    VkQueueFamilyGlobalPriorityPropertiesEXT    globalPriorities [ __C_ENG_VULKAN_CORE_QUEUE_FAMILY_MAX_COUNT ];
+    VkQueueFamilyGlobalPriorityPropertiesEXT    globalPriorities [ engine :: vulkan :: config :: queueFamilyCount ];
 #endif
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_QUEUE_AVAILABLE
-    VkQueueFamilyQueryResultStatusPropertiesKHR queryResultStatuses [ __C_ENG_VULKAN_CORE_QUEUE_FAMILY_MAX_COUNT ];
-    VkVideoQueueFamilyPropertiesKHR             videoQueues [ __C_ENG_VULKAN_CORE_QUEUE_FAMILY_MAX_COUNT ];
+    VkQueueFamilyQueryResultStatusPropertiesKHR queryResultStatuses [ engine :: vulkan :: config :: queueFamilyCount ];
+    VkVideoQueueFamilyPropertiesKHR             videoQueues [ engine :: vulkan :: config :: queueFamilyCount ];
 #endif
 };
 
@@ -582,15 +582,15 @@ struct GetSurfaceContext {
     DiagnosticContext                           diag;
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SURFACE_AVAILABLE
     VkSurfaceCapabilitiesKHR                    capabilities;
-    VkSurfaceFormatKHR                          formats [ __C_ENG_VULKAN_CORE_SURFACE_FORMAT_MAX_COUNT ];
-    VkPresentModeKHR                            presentModes [ __C_ENG_VULKAN_CORE_SURFACE_PRESENT_MODE_MAX_COUNT ];
+    VkSurfaceFormatKHR                          formats [ engine :: vulkan :: config :: surfaceFormatCount ];
+    VkPresentModeKHR                            presentModes [ engine :: vulkan :: config :: surfacePresentModeCount ];
 #endif
 #if __C_ENG_VULKAN_API_EXTENSION_DISPLAY_SURFACE_COUNTER_AVAILABLE
     VkSurfaceCapabilities2EXT                   capabilities2;
 #endif
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_GET_SURFACE_CAPABILITIES_AVAILABLE
     VkPhysicalDeviceSurfaceInfo2KHR             surfaceInfo2;
-    VkSurfaceFormat2KHR                         formats2 [ __C_ENG_VULKAN_CORE_SURFACE_FORMAT_MAX_COUNT ];
+    VkSurfaceFormat2KHR                         formats2 [ engine :: vulkan :: config :: surfaceFormatCount ];
 #endif
 #if __C_ENG_VULKAN_API_EXTENSION_FULL_SCREEN_EXCLUSIVE_AVAILABLE
     VkSurfaceFullScreenExclusiveInfoEXT         fullScreenExclusive;
@@ -604,7 +604,7 @@ struct CreateSwapChainContext {
 #endif
 #if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
     VkImageFormatListCreateInfo                 formatListCreateInfo;
-    VkFormat                                    viewFormats [ __C_ENG_VULKAN_CORE_VIEW_FORMAT_MAX_COUNT ];
+    VkFormat                                    viewFormats [ engine :: vulkan :: config :: viewFormatCount ];
 #endif
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_WIN32_SURFACE_AVAILABLE && __C_ENG_VULKAN_API_EXTENSION_FULL_SCREEN_EXCLUSIVE_AVAILABLE
     VkSurfaceFullScreenExclusiveWin32Info       fullScreenExclusiveWin32Info;
@@ -614,7 +614,7 @@ struct CreateSwapChainContext {
 struct GetSwapChainContext {
     DiagnosticContext                           diag;
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
-    VkImage                                     images [ __C_ENG_VULKAN_CORE_SWAP_CHAIN_IMAGE_MAX_COUNT ];
+    VkImage                                     images [ engine :: vulkan :: config :: swapChainImageCount ];
 #endif
 };
 
@@ -654,10 +654,10 @@ struct BeginCommandBufferContext {
 #endif
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
     VkCommandBufferInheritanceRenderingInfo_t               inheritanceRenderingInfo;
-    VkFormat                                                renderingInfoFormats [ __C_ENG_VULKAN_CORE_RENDERING_INFO_FORMATS_MAX_COUNT ];
+    VkFormat                                                renderingInfoFormats [ engine :: vulkan :: config :: renderingInfoFormatsCount ];
 #if __C_ENG_VULKAN_API_EXTENSION_AMD_MIXED_ATTACHMENT_SAMPLES_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_NVIDIA_FRAMEBUFFER_MIXED_SAMPLES_AVAILABLE
     VkAttachmentSampleCountInfoAMD                          attachmentSampleCountInfo;
-    VkSampleCountFlagBits                                   sampleCountAttachmentSamples [ __C_ENG_VULKAN_CORE_SAMPLE_COUNT_ATTACHMENT_SAMPLES_MAX_COUNT ];
+    VkSampleCountFlagBits                                   sampleCountAttachmentSamples [ engine :: vulkan :: config :: sampleCountAttachmentSamplesCount ];
 #endif
 #if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXPERIMENTAL_MULTIVIEW_PER_VIEW_ATTRIBUTES_AVAILABLE
     VkMultiviewPerViewAttributesInfoNVX                     multiviewPerViewAttributesInfo;
@@ -671,40 +671,40 @@ struct BeginCommandBufferContext {
 #endif
 #if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_INHERITED_VIEWPORT_SCISSOR_AVAILABLE
     VkCommandBufferInheritanceViewportScissorInfoNV         inheritanceViewportScissorInfo;
-    VkViewport                                              viewportDepths [ __C_ENG_VULKAN_CORE_VIEWPORT_DEPTH_MAX_COUNT ];
+    VkViewport                                              viewportDepths [ engine :: vulkan :: config :: viewportDepthCount ];
 #endif
 };
 
 struct SubmitQueueContext {
     DiagnosticContext                                       diag;
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
-    VkSubmitInfo                                            submitInfos [ __C_ENG_VULKAN_CORE_SUBMIT_INFO_MAX_COUNT ];
-    VkPipelineStageFlags                                    stageFlags [ __C_ENG_VULKAN_CORE_SUBMIT_INFO_MAX_COUNT ] [ __C_ENG_VULKAN_CORE_PIPELINE_STAGE_FLAGS_MAX_COUNT ];
+    VkSubmitInfo                                            submitInfos [ engine :: vulkan :: config :: submitInfoCount ];
+    VkPipelineStageFlags                                    stageFlags [ engine :: vulkan :: config :: submitInfoCount ] [ engine :: vulkan :: config :: pipelineStageFlagsCount ];
 #endif
 #if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
-    VkDeviceGroupSubmitInfo                                 deviceGroupSubmitInfos [ __C_ENG_VULKAN_CORE_SUBMIT_INFO_MAX_COUNT ];
-    VkProtectedSubmitInfo                                   protectedSubmitInfos [ __C_ENG_VULKAN_CORE_SUBMIT_INFO_MAX_COUNT ];
+    VkDeviceGroupSubmitInfo                                 deviceGroupSubmitInfos [ engine :: vulkan :: config :: submitInfoCount ];
+    VkProtectedSubmitInfo                                   protectedSubmitInfos [ engine :: vulkan :: config :: submitInfoCount ];
 #endif
 #if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
-    VkTimelineSemaphoreSubmitInfo                           timelineSemaphoreSubmitInfos [ __C_ENG_VULKAN_CORE_SUBMIT_INFO_MAX_COUNT ];
+    VkTimelineSemaphoreSubmitInfo                           timelineSemaphoreSubmitInfos [ engine :: vulkan :: config :: submitInfoCount ];
 #endif
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PERFORMANCE_QUERY_AVAILABLE
-    VkPerformanceQuerySubmitInfoKHR                         performanceQuerySubmitInfos [ __C_ENG_VULKAN_CORE_SUBMIT_INFO_MAX_COUNT ];
+    VkPerformanceQuerySubmitInfoKHR                         performanceQuerySubmitInfos [ engine :: vulkan :: config :: submitInfoCount ];
 #endif
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_WIN32_KEYED_MUTEX_AVAILABLE
-    Win32KeyedMutexAcquireReleaseInfoKHR                    win32KeyedMutexAcquireReleaseInfos [ __C_ENG_VULKAN_CORE_SUBMIT_INFO_MAX_COUNT ];
+    Win32KeyedMutexAcquireReleaseInfoKHR                    win32KeyedMutexAcquireReleaseInfos [ engine :: vulkan :: config :: submitInfoCount ];
 #endif
 #if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_WIN32_KEYED_MUTEX_AVAILABLE
-    Win32KeyedMutexAcquireReleaseInfoNV                     win32KeyedMutexAcquireReleaseInfosNVidia [ __C_ENG_VULKAN_CORE_SUBMIT_INFO_MAX_COUNT ];
+    Win32KeyedMutexAcquireReleaseInfoNV                     win32KeyedMutexAcquireReleaseInfosNVidia [ engine :: vulkan :: config :: submitInfoCount ];
 #endif
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_SEMAPHORE_WIN32_AVAILABLE
-    D3D12FenceSubmitInfo                                    d3d12FenceSubmitInfos [ __C_ENG_VULKAN_CORE_SUBMIT_INFO_MAX_COUNT ];
+    D3D12FenceSubmitInfo                                    d3d12FenceSubmitInfos [ engine :: vulkan :: config :: submitInfoCount ];
 #endif
 #if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
-    VkSubmitInfo2_t                                         submitInfos2 [ __C_ENG_VULKAN_CORE_SUBMIT_INFO_MAX_COUNT ];
-    VkSemaphoreSubmitInfo_t                                 waitSemaphoreSubmitInfos [ __C_ENG_VULKAN_CORE_SUBMIT_INFO_MAX_COUNT ][ __C_ENG_VULKAN_CORE_SUBMIT_SEMAPHORE_INFO_MAX_COUNT ];
-    VkSemaphoreSubmitInfo_t                                 signalSemaphoreSubmitInfos [ __C_ENG_VULKAN_CORE_SUBMIT_INFO_MAX_COUNT ][ __C_ENG_VULKAN_CORE_SUBMIT_SEMAPHORE_INFO_MAX_COUNT ];
-    VkCommandBufferSubmitInfo_t                             commandBufferSubmitInfos [ __C_ENG_VULKAN_CORE_SUBMIT_INFO_MAX_COUNT ][ __C_ENG_VULKAN_CORE_SUBMIT_COMMAND_BUFFER_INFO_MAX_COUNT ];
+    VkSubmitInfo2_t                                         submitInfos2 [ engine :: vulkan :: config :: submitInfoCount ];
+    VkSemaphoreSubmitInfo_t                                 waitSemaphoreSubmitInfos [ engine :: vulkan :: config :: submitInfoCount ][ engine :: vulkan :: config :: submitSemaphoreInfoCount ];
+    VkSemaphoreSubmitInfo_t                                 signalSemaphoreSubmitInfos [ engine :: vulkan :: config :: submitInfoCount ][ engine :: vulkan :: config :: submitSemaphoreInfoCount ];
+    VkCommandBufferSubmitInfo_t                             commandBufferSubmitInfos [ engine :: vulkan :: config :: submitInfoCount ][ engine :: vulkan :: config :: submitCommandBufferInfoCount ];
 #endif
 };
 
@@ -786,7 +786,7 @@ struct WaitSemaphoreContext {
     DiagnosticContext                                       diag;
 #if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
     VkSemaphoreWaitInfo                                     info;
-    uint64_t                                                values [ __C_ENG_VULKAN_CORE_WAIT_SEMAPHORE_MAX_COUNT ];
+    uint64_t                                                values [ engine :: vulkan :: config :: waitSemaphoreCount ];
 #endif
 };
 
@@ -829,40 +829,63 @@ struct SetCommandBufferEventContext {
     DiagnosticContext                                       diag;
 #if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
     VkDependencyInfo_t                                      dependencyInfo;
-    VkMemoryBarrier2_t                                      memoryBarriers [ __C_ENG_VULKAN_CORE_DEPENDENCY_INFO_MEMORY_BARRIER_MAX_COUNT ];
-    VkBufferMemoryBarrier2_t                                bufferMemoryBarriers [ __C_ENG_VULKAN_CORE_DEPENDENCY_INFO_BUFFER_MEMORY_BARRIER_MAX_COUNT ];
-    VkImageMemoryBarrier2_t                                 imageMemoryBarriers [ __C_ENG_VULKAN_CORE_DEPENDENCY_INFO_IMAGE_MEMORY_BARRIER_MAX_COUNT ];
+    VkMemoryBarrier2_t                                      memoryBarriers [ engine :: vulkan :: config :: dependencyInfoMemoryBarrierCount ];
+    VkBufferMemoryBarrier2_t                                bufferMemoryBarriers [ engine :: vulkan :: config :: dependencyInfoBufferMemoryBarrierCount ];
+    VkImageMemoryBarrier2_t                                 imageMemoryBarriers [ engine :: vulkan :: config :: dependencyInfoImageMemoryBarrierCount ];
 #endif
 #if __C_ENG_VULKAN_API_EXTENSION_SAMPLE_LOCATIONS_AVAILABLE
-    VkSampleLocationsInfoEXT                                sampleLocationsInfos [ __C_ENG_VULKAN_CORE_DEPENDENCY_INFO_IMAGE_MEMORY_BARRIER_MAX_COUNT ];
-    VkSampleLocationEXT                                     sampleLocations [ __C_ENG_VULKAN_CORE_DEPENDENCY_INFO_IMAGE_MEMORY_BARRIER_MAX_COUNT ] [ __C_ENG_VULKAN_CORE_SAMPLE_LOCATIONS_INFO_SAMPLE_LOCATIONS_MAX_COUNT ];
+    VkSampleLocationsInfoEXT                                sampleLocationsInfos [ engine :: vulkan :: config :: dependencyInfoImageMemoryBarrierCount ];
+    VkSampleLocationEXT                                     sampleLocations [ engine :: vulkan :: config :: dependencyInfoImageMemoryBarrierCount ] [ engine :: vulkan :: config :: sampleLocationsInfoSampleLocationsCount ];
 #endif
 };
 
 struct WaitCommandBufferEvent2Context {
     DiagnosticContext                                       diag;
 #if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
-    VkDependencyInfo_t                                      dependencyInfos [ __C_ENG_VULKAN_CORE_COMMAND_BUFFER_WAIT_EVENTS_DEPENDENCY_INFO_MAX_COUNT ];
-    VkMemoryBarrier2_t                                      memoryBarriers [ __C_ENG_VULKAN_CORE_COMMAND_BUFFER_WAIT_EVENTS_DEPENDENCY_INFO_MAX_COUNT ] [ __C_ENG_VULKAN_CORE_DEPENDENCY_INFO_MEMORY_BARRIER_MAX_COUNT ];
-    VkBufferMemoryBarrier2_t                                bufferMemoryBarriers [ __C_ENG_VULKAN_CORE_COMMAND_BUFFER_WAIT_EVENTS_DEPENDENCY_INFO_MAX_COUNT ] [ __C_ENG_VULKAN_CORE_DEPENDENCY_INFO_BUFFER_MEMORY_BARRIER_MAX_COUNT ];
-    VkImageMemoryBarrier2_t                                 imageMemoryBarriers [ __C_ENG_VULKAN_CORE_COMMAND_BUFFER_WAIT_EVENTS_DEPENDENCY_INFO_MAX_COUNT ] [ __C_ENG_VULKAN_CORE_DEPENDENCY_INFO_IMAGE_MEMORY_BARRIER_MAX_COUNT ];
+    VkDependencyInfo_t                                      dependencyInfos [ engine :: vulkan :: config :: commandBufferWaitEventsDependencyInfoCount ];
+    VkMemoryBarrier2_t                                      memoryBarriers [ engine :: vulkan :: config :: commandBufferWaitEventsDependencyInfoCount ] [ engine :: vulkan :: config :: dependencyInfoMemoryBarrierCount ];
+    VkBufferMemoryBarrier2_t                                bufferMemoryBarriers [ engine :: vulkan :: config :: commandBufferWaitEventsDependencyInfoCount ] [ engine :: vulkan :: config :: dependencyInfoBufferMemoryBarrierCount ];
+    VkImageMemoryBarrier2_t                                 imageMemoryBarriers [ engine :: vulkan :: config :: commandBufferWaitEventsDependencyInfoCount ] [ engine :: vulkan :: config :: dependencyInfoImageMemoryBarrierCount ];
 #endif
 #if __C_ENG_VULKAN_API_EXTENSION_SAMPLE_LOCATIONS_AVAILABLE
-    VkSampleLocationsInfoEXT                                sampleLocationsInfos [ __C_ENG_VULKAN_CORE_COMMAND_BUFFER_WAIT_EVENTS_DEPENDENCY_INFO_MAX_COUNT ] [ __C_ENG_VULKAN_CORE_DEPENDENCY_INFO_IMAGE_MEMORY_BARRIER_MAX_COUNT ];
-    VkSampleLocationEXT                                     sampleLocations [ __C_ENG_VULKAN_CORE_COMMAND_BUFFER_WAIT_EVENTS_DEPENDENCY_INFO_MAX_COUNT ] [ __C_ENG_VULKAN_CORE_DEPENDENCY_INFO_IMAGE_MEMORY_BARRIER_MAX_COUNT ] [ __C_ENG_VULKAN_CORE_SAMPLE_LOCATIONS_INFO_SAMPLE_LOCATIONS_MAX_COUNT ];
+    VkSampleLocationsInfoEXT                                sampleLocationsInfos [ engine :: vulkan :: config :: commandBufferWaitEventsDependencyInfoCount ] [ engine :: vulkan :: config :: dependencyInfoImageMemoryBarrierCount ];
+    VkSampleLocationEXT                                     sampleLocations [ engine :: vulkan :: config :: commandBufferWaitEventsDependencyInfoCount ] [ engine :: vulkan :: config :: dependencyInfoImageMemoryBarrierCount ] [ engine :: vulkan :: config :: sampleLocationsInfoSampleLocationsCount ];
 #endif
 };
 
 struct WaitCommandBufferEventContext {
     DiagnosticContext                                       diag;
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
-    VkMemoryBarrier                                         memoryBarriers [ __C_ENG_VULKAN_CORE_MEMORY_BARRIER_MAX_COUNT ];
-    VkBufferMemoryBarrier                                   bufferMemoryBarriers [ __C_ENG_VULKAN_CORE_BUFFER_MEMORY_BARRIER_MAX_COUNT ];
-    VkImageMemoryBarrier                                    imageMemoryBarriers [ __C_ENG_VULKAN_CORE_IMAGE_MEMORY_BARRIER_MAX_COUNT ];
+    VkMemoryBarrier                                         memoryBarriers [ engine :: vulkan :: config :: memoryBarrierCount ];
+    VkBufferMemoryBarrier                                   bufferMemoryBarriers [ engine :: vulkan :: config :: bufferMemoryBarrierCount ];
+    VkImageMemoryBarrier                                    imageMemoryBarriers [ engine :: vulkan :: config :: imageMemoryBarrierCount ];
 #endif
 #if __C_ENG_VULKAN_API_EXTENSION_SAMPLE_LOCATIONS_AVAILABLE
-    VkSampleLocationsInfoEXT                                sampleLocationsInfos [ __C_ENG_VULKAN_CORE_IMAGE_MEMORY_BARRIER_MAX_COUNT ];
-    VkSampleLocationEXT                                     sampleLocations [ __C_ENG_VULKAN_CORE_IMAGE_MEMORY_BARRIER_MAX_COUNT ] [ __C_ENG_VULKAN_CORE_SAMPLE_LOCATIONS_INFO_SAMPLE_LOCATIONS_MAX_COUNT ];
+    VkSampleLocationsInfoEXT                                sampleLocationsInfos [ engine :: vulkan :: config :: imageMemoryBarrierCount ];
+    VkSampleLocationEXT                                     sampleLocations [ engine :: vulkan :: config :: imageMemoryBarrierCount ] [ engine :: vulkan :: config :: sampleLocationsInfoSampleLocationsCount ];
+#endif
+};
+
+struct BeginCommandBufferRenderingContext {
+    DiagnosticContext                                       diag;
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE
+    VkRenderingInfo_t                                       info;
+    VkRenderingAttachmentInfo_t                             colorAttachments [ engine :: vulkan :: config :: renderingInfoColorAttachmentCount ];
+    VkRenderingAttachmentInfo_t                             depthAttachment;
+    VkRenderingAttachmentInfo_t                             stencilAttachment;
+#endif
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    VkDeviceGroupRenderPassBeginInfo                        deviceGroupRenderPassBeginInfo;
+    VkRect2D                                                deviceRenderAreas [ engine :: vulkan :: config :: deviceGroupRenderPassBeginDeviceRenderAreaCount ];
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXPERIMENTAL_MULTIVIEW_PER_VIEW_ATTRIBUTES_AVAILABLE && ( __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE )
+    VkMultiviewPerViewAttributesInfoNVX                     multiviewPerViewAttributesInfo;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_FRAGMENT_DENSITY_MAP_AVAILABLE && ( __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE )
+    VkRenderingFragmentDensityMapAttachmentInfoEXT          densityMapAttachmentInfo;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_FRAGMENT_SHADING_RATE_AVAILABLE && ( __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE )
+    VkRenderingFragmentShadingRateAttachmentInfoKHR         fragmentShadingRateAttachmentInfo;
 #endif
 };
 
@@ -902,6 +925,7 @@ union AllocateSharedContext {
 
 union BeginSharedContext {
     BeginCommandBufferContext                                           commandBuffer;
+    BeginCommandBufferRenderingContext                                  commandBufferRendering;
 };
 
 union SubmitSharedContext {

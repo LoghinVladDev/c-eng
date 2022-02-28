@@ -9140,7 +9140,7 @@ auto vulkan :: toString (
 }
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 auto vulkan :: toString (
         Type ( RenderingAttachmentInfo ) const & info
 ) noexcept -> String {
@@ -9160,7 +9160,7 @@ auto vulkan :: toString (
 }
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 auto vulkan :: toString (
         Type ( RenderingInfo ) const & info
 ) noexcept -> String {
@@ -9176,6 +9176,50 @@ auto vulkan :: toString (
            ", colorAttachments = "              + :: toStringVulkan ( info.colorAttachmentCount, info.pColorAttachments ) +
            ", pDepthAttachment = "              + engine :: toString ( info.pDepthAttachment ) +
            ", pStencilAttachment = "            + engine :: toString ( info.pStencilAttachment ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+auto vulkan :: toString (
+        Type ( DeviceGroupRenderPassBeginInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( DeviceGroupRenderPassBeginInfo ) " " +
+           "{ structureType = "_s               + toString ( info.structureType ) +
+           ", pNext = "                         + engine :: toString ( info.pNext ) +
+           ", deviceMask = "                    + info.deviceMask +
+           ", deviceRenderAreaCount = "         + info.deviceRenderAreaCount +
+           ", deviceRenderAreas = "             + :: toStringVulkan ( info.deviceRenderAreaCount, info.pDeviceRenderAreas ) +
+           " }";
+}
+#endif
+
+#if ( __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE ) && __C_ENG_VULKAN_API_EXTENSION_FRAGMENT_DENSITY_MAP_AVAILABLE
+auto vulkan :: toString (
+        Type ( RenderingFragmentDensityMapAttachmentInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( RenderingFragmentDensityMapAttachmentInfo ) " " +
+           "{ structureType = "_s               + toString ( info.structureType ) +
+           ", pNext = "                         + engine :: toString ( info.pNext ) +
+           ", imageView = "                     + engine :: toString ( info.imageView ) +
+           ", imageLayout = "                   + toString ( info.imageLayout ) +
+           " }";
+}
+#endif
+
+#if ( __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE ) && __C_ENG_VULKAN_API_EXTENSION_KHRONOS_FRAGMENT_SHADING_RATE_AVAILABLE
+auto vulkan :: toString (
+        Type ( RenderingFragmentShadingRateAttachmentInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( RenderingFragmentShadingRateAttachmentInfo ) " " +
+           "{ structureType = "_s                   + toString ( info.structureType ) +
+           ", pNext = "                             + engine :: toString ( info.pNext ) +
+           ", imageView = "                         + engine :: toString ( info.imageView ) +
+           ", imageLayout = "                       + toString ( info.imageLayout ) +
+           ", shadingRateAttachmentTexelSize = "    + toString ( info.shadingRateAttachmentTexelSize ) +
            " }";
 }
 #endif

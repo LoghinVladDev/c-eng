@@ -30,7 +30,7 @@ private:
         SharedContext   data;
     };
 
-    static inline Context   contexts [ __C_ENG_VULKAN_CORE_CONTEXT_COUNT ];
+    static inline Context   contexts [ engine :: vulkan :: config :: contextCount ];
     static inline Mutex     contextLock;
     static inline bool      firstCall = true;
 
@@ -355,7 +355,7 @@ auto engine :: vulkan :: enumerateInstanceLayerProperties (
 
 #if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
 
-    if ( * pCount > __C_ENG_VULKAN_CORE_LAYER_MAX_COUNT ) {
+    if ( * pCount > engine :: vulkan :: config :: layerCount ) {
         return ResultErrorConfigurationArraySizeSmall;
     }
 
@@ -409,7 +409,7 @@ auto engine :: vulkan :: enumeratePhysicalDeviceLayerProperties (
 
 #if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
 
-    if ( * pCount > __C_ENG_VULKAN_CORE_LAYER_MAX_COUNT ) {
+    if ( * pCount > engine :: vulkan :: config :: layerCount ) {
         return ResultErrorConfigurationArraySizeSmall;
     }
 
@@ -464,7 +464,7 @@ auto engine :: vulkan :: enumerateInstanceExtensionProperties (
 
 #if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
 
-    if ( * pCount > __C_ENG_VULKAN_CORE_LAYER_EXTENSION_MAX_COUNT ) {
+    if ( * pCount > engine :: vulkan :: config :: layerExtensionCount ) {
         return ResultErrorConfigurationArraySizeSmall;
     }
 
@@ -519,7 +519,7 @@ auto engine :: vulkan :: enumeratePhysicalDevices (
 
 #if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
 
-    if ( * pCount > __C_ENG_VULKAN_CORE_PHYSICAL_DEVICE_MAX_COUNT ) {
+    if ( * pCount > engine :: vulkan :: config :: physicalDeviceCount ) {
         return ResultErrorConfigurationArraySizeSmall;
     }
 
@@ -576,7 +576,7 @@ auto engine :: vulkan :: enumeratePhysicalDeviceQueueFamilyPerformanceQueryCount
 
 #if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
 
-    if ( * pCount > __C_ENG_VULKAN_CORE_QUEUE_FAMILY_PERFORMANCE_COUNTER_MAX_COUNT ) {
+    if ( * pCount > engine :: vulkan :: config :: queueFamilyPerformanceCounterCount ) {
         return ResultErrorConfigurationArraySizeSmall;
     }
 
@@ -634,7 +634,7 @@ auto engine :: vulkan :: enumeratePhysicalDeviceGroups (
 
 #if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
 
-    if ( * pCount > __C_ENG_VULKAN_CORE_PHYSICAL_DEVICE_GROUP_MAX_COUNT ) {
+    if ( * pCount > engine :: vulkan :: config :: physicalDeviceGroupCount ) {
         return ResultErrorConfigurationArraySizeSmall;
     }
 
@@ -707,7 +707,7 @@ auto engine :: vulkan :: enumeratePhysicalDeviceExtensionProperties (
 
 #if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
 
-    if ( * pCount > __C_ENG_VULKAN_CORE_LAYER_EXTENSION_MAX_COUNT ) {
+    if ( * pCount > engine :: vulkan :: config :: layerExtensionCount ) {
         return ResultErrorConfigurationArraySizeSmall;
     }
 
@@ -1173,7 +1173,7 @@ auto engine :: vulkan :: getPhysicalDeviceQueueFamilyProperties (
 
 #if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
 
-    if ( * pCount > __C_ENG_VULKAN_CORE_QUEUE_FAMILY_MAX_COUNT ) {
+    if ( * pCount > engine :: vulkan :: config :: queueFamilyCount ) {
         return ResultErrorConfigurationArraySizeSmall;
     }
 
@@ -1224,7 +1224,7 @@ auto engine :: vulkan :: getPhysicalDeviceQueueFamilyProperties (
 
 #if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
 
-    if ( * pCount > __C_ENG_VULKAN_CORE_QUEUE_FAMILY_MAX_COUNT ) {
+    if ( * pCount > engine :: vulkan :: config :: queueFamilyCount ) {
         return ResultErrorConfigurationArraySizeSmall;
     }
 
@@ -1275,7 +1275,7 @@ auto engine :: vulkan :: getPhysicalDeviceQueueFamilyDetails (
         return ResultSuccess;
     }
 
-    Type ( QueueFamilyExtendedProperties ) extendedProperties [ __C_ENG_VULKAN_CORE_QUEUE_FAMILY_MAX_COUNT ];
+    Type ( QueueFamilyExtendedProperties ) extendedProperties [ engine :: vulkan :: config :: queueFamilyCount ];
 
     createChain ( * pCount, & pDetails[0], & extendedProperties[0] );
 
@@ -1468,7 +1468,7 @@ auto engine :: vulkan :: getPhysicalDeviceSurfaceFormats (
 
 #if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
 
-    if ( * pCount > __C_ENG_VULKAN_CORE_SURFACE_FORMAT_MAX_COUNT ) {
+    if ( * pCount > engine :: vulkan :: config :: surfaceFormatCount ) {
         return ResultErrorConfigurationArraySizeSmall;
     }
 
@@ -1526,7 +1526,7 @@ auto engine :: vulkan :: getPhysicalDeviceSurfacePresentModes (
 
 #if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
 
-    if ( * pCount > __C_ENG_VULKAN_CORE_SURFACE_PRESENT_MODE_MAX_COUNT ) {
+    if ( * pCount > engine :: vulkan :: config :: surfacePresentModeCount ) {
         return ResultErrorConfigurationArraySizeSmall;
     }
 
@@ -1618,7 +1618,7 @@ auto engine :: vulkan :: getPhysicalDeviceSurfaceFormats (
         );
     }
 
-    if ( * pCount > __C_ENG_VULKAN_CORE_SURFACE_FORMAT_MAX_COUNT ) {
+    if ( * pCount > engine :: vulkan :: config :: surfaceFormatCount ) {
         return ResultErrorConfigurationArraySizeSmall;
     }
 
@@ -1784,7 +1784,7 @@ auto engine :: vulkan :: getSwapChainImages (
 
 #if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
 
-    if ( * pCount > __C_ENG_VULKAN_CORE_SWAP_CHAIN_IMAGE_MAX_COUNT ) {
+    if ( * pCount > engine :: vulkan :: config :: swapChainImageCount ) {
         return ResultErrorConfigurationArraySizeSmall;
     }
 
@@ -2126,7 +2126,7 @@ auto engine :: vulkan :: queueSubmit (
         return ResultErrorIllegalArgument;
     }
 
-    if ( submitCount > __C_ENG_VULKAN_CORE_SUBMIT_INFO_MAX_COUNT ) {
+    if ( submitCount > engine :: vulkan :: config :: submitInfoCount ) {
         return ResultErrorConfigurationArraySizeSmall;
     }
 
@@ -2188,7 +2188,7 @@ auto engine :: vulkan :: queueSubmit (
         return ResultErrorIllegalArgument;
     }
 
-    if ( submitCount > __C_ENG_VULKAN_CORE_SUBMIT_INFO_MAX_COUNT ) {
+    if ( submitCount > engine :: vulkan :: config :: submitInfoCount ) {
         return ResultErrorConfigurationArraySizeSmall;
     }
 
@@ -2780,7 +2780,7 @@ auto engine :: vulkan :: waitSemaphores (
         return ResultErrorIllegalArgument;
     }
 
-    if ( pWaitInfo->semaphoreCount > __C_ENG_VULKAN_CORE_WAIT_SEMAPHORE_MAX_COUNT ) {
+    if ( pWaitInfo->semaphoreCount > engine :: vulkan :: config :: waitSemaphoreCount ) {
         return ResultErrorConfigurationArraySizeSmall;
     }
 
@@ -3386,5 +3386,114 @@ auto engine :: vulkan :: deviceWaitIdle (
     __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkDeviceWaitIdle )
 
     return static_cast < Type ( Result ) > ( vkDeviceWaitIdleHandle ( handle ) );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE
+auto engine :: vulkan :: commandBufferBeginRendering (
+        Type ( CommandBufferHandle )        handle,
+        Type ( RenderingInfo )      const * pRenderingInfo
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( handle == nullptr || pRenderingInfo == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE && __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_2_R ( LastCreatedInstance :: acquire(), vkCmdBeginRendering, KHR )
+
+    auto context = ContextManager :: acquire();
+
+    if ( vkCmdBeginRenderingHandle != nullptr ) {
+        vkCmdBeginRenderingHandle (
+                handle,
+                prepareContext ( & context.data().begin.commandBufferRendering, pRenderingInfo )
+        );
+
+        return ResultSuccess;
+    }
+
+    vkCmdBeginRenderingKHRHandle (
+            handle,
+            prepareContext ( & context.data().begin.commandBufferRendering, pRenderingInfo )
+    );
+
+    return ResultSuccess;
+
+#elif __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkCmdBeginRendering )
+
+    auto context = ContextManager :: acquire();
+
+    vkCmdBeginRenderingHandle (
+                handle,
+                prepareContext ( & context.data().begin.commandBufferRendering, pRenderingInfo )
+    );
+
+    return ResultSuccess;
+
+#elif __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkCmdBeginRenderingKHR )
+
+    auto context = ContextManager :: acquire();
+
+    vkCmdBeginRenderingKHRHandle (
+                handle,
+                prepareContext ( & context.data().begin.commandBufferRendering, pRenderingInfo )
+    );
+
+    return ResultSuccess;
+
+#endif
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE
+auto engine :: vulkan :: commandBufferEndRendering (
+        Type ( CommandBufferHandle )    handle
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( handle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE && __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_2_R ( LastCreatedInstance :: acquire(), vkCmdEndRendering, KHR )
+
+    if ( vkCmdEndRenderingHandle != nullptr ) {
+        vkCmdEndRenderingHandle ( handle );
+        return ResultSuccess;
+    }
+
+    vkCmdEndRenderingKHRHandle ( handle );
+    return ResultSuccess;
+
+#elif __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkCmdEndRendering )
+
+    vkCmdEndRenderingHandle ( handle );
+    return ResultSuccess;
+
+#elif __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkCmdEndRenderingKHR )
+
+    vkCmdEndRenderingKHRHandle ( handle );
+    return ResultSuccess;
+
+#endif
 }
 #endif

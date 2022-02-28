@@ -486,8 +486,8 @@ namespace engine :: vulkan {
                             )
                     );
 
-                    if ( pContext->validationFeatures.enabledValidationFeatureCount > __C_ENG_VULKAN_CORE_VALIDATION_FEATURE_ENABLE_MAX_COUNT ) {
-                        pContext->validationFeatures.enabledValidationFeatureCount = __C_ENG_VULKAN_CORE_VALIDATION_FEATURE_ENABLE_MAX_COUNT;
+                    if ( pContext->validationFeatures.enabledValidationFeatureCount > engine :: vulkan :: config :: validationFeatureEnableCount ) {
+                        pContext->validationFeatures.enabledValidationFeatureCount = engine :: vulkan :: config :: validationFeatureEnableCount;
                         __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall )
                     }
 
@@ -497,8 +497,8 @@ namespace engine :: vulkan {
 
                     pContext->validationFeatures.pEnabledValidationFeatures = & pContext->validationFeatureEnables[0];
 
-                    if ( pContext->validationFeatures.disabledValidationFeatureCount > __C_ENG_VULKAN_CORE_VALIDATION_FEATURE_DISABLE_MAX_COUNT ) {
-                        pContext->validationFeatures.disabledValidationFeatureCount = __C_ENG_VULKAN_CORE_VALIDATION_FEATURE_DISABLE_MAX_COUNT;
+                    if ( pContext->validationFeatures.disabledValidationFeatureCount > engine :: vulkan :: config :: validationFeatureDisableCount ) {
+                        pContext->validationFeatures.disabledValidationFeatureCount = engine :: vulkan :: config :: validationFeatureDisableCount;
                         __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall )
                     }
 
@@ -523,8 +523,8 @@ namespace engine :: vulkan {
                             )
                     );
 
-                    if ( pValidationFlags->disabledValidationCheckCount > __C_ENG_VULKAN_CORE_VALIDATION_CHECK_MAX_COUNT ) {
-                        pContext->validationFlags.disabledValidationCheckCount = __C_ENG_VULKAN_CORE_VALIDATION_CHECK_MAX_COUNT;
+                    if ( pValidationFlags->disabledValidationCheckCount > engine :: vulkan :: config :: validationCheckCount ) {
+                        pContext->validationFlags.disabledValidationCheckCount = engine :: vulkan :: config :: validationCheckCount;
                         __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall )
                     }
 
@@ -9364,8 +9364,8 @@ namespace engine :: vulkan {
 
         pContext->device.pQueueCreateInfos = & pContext->queues [0];
 
-        if ( pContext->device.queueCreateInfoCount > __C_ENG_VULKAN_CORE_DEVICE_QUEUE_FAMILY_CREATE_INFO_MAX_COUNT ) {
-            pContext->device.queueCreateInfoCount = __C_ENG_VULKAN_CORE_DEVICE_QUEUE_FAMILY_CREATE_INFO_MAX_COUNT;
+        if ( pContext->device.queueCreateInfoCount > engine :: vulkan :: config :: queueFamilyCreateInfoCount ) {
+            pContext->device.queueCreateInfoCount = engine :: vulkan :: config :: queueFamilyCreateInfoCount;
             __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall )
         }
 
@@ -13662,9 +13662,9 @@ namespace engine :: vulkan {
 
                     pContext->formatListCreateInfo.pViewFormats = & pContext->viewFormats [0];
 
-                    if ( pContext->formatListCreateInfo.viewFormatCount > __C_ENG_VULKAN_CORE_VIEW_FORMAT_MAX_COUNT ) {
+                    if ( pContext->formatListCreateInfo.viewFormatCount > engine :: vulkan :: config :: viewFormatCount ) {
                         __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall )
-                        pContext->formatListCreateInfo.viewFormatCount = __C_ENG_VULKAN_CORE_VIEW_FORMAT_MAX_COUNT;
+                        pContext->formatListCreateInfo.viewFormatCount = engine :: vulkan :: config :: viewFormatCount;
                     }
 
                     for ( cds :: uint32 i = 0U; i < pContext->formatListCreateInfo.viewFormatCount; ++ i ) {
@@ -14239,8 +14239,8 @@ namespace engine :: vulkan {
 
                         pContext->inheritanceRenderingInfo.pColorAttachmentFormats = & pContext->renderingInfoFormats[0];
 
-                        if ( pContext->inheritanceRenderingInfo.colorAttachmentCount > __C_ENG_VULKAN_CORE_RENDERING_INFO_FORMATS_MAX_COUNT ) {
-                            pContext->inheritanceRenderingInfo.colorAttachmentCount = __C_ENG_VULKAN_CORE_RENDERING_INFO_FORMATS_MAX_COUNT;
+                        if ( pContext->inheritanceRenderingInfo.colorAttachmentCount > engine :: vulkan :: config :: renderingInfoFormatsCount ) {
+                            pContext->inheritanceRenderingInfo.colorAttachmentCount = engine :: vulkan :: config :: renderingInfoFormatsCount;
                             __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall )
                         }
 
@@ -14265,8 +14265,8 @@ namespace engine :: vulkan {
 
                         pContext->attachmentSampleCountInfo.pColorAttachmentSamples = & pContext->sampleCountAttachmentSamples[0];
 
-                        if ( pContext->attachmentSampleCountInfo.colorAttachmentCount > __C_ENG_VULKAN_CORE_SAMPLE_COUNT_ATTACHMENT_SAMPLES_MAX_COUNT ) {
-                            pContext->attachmentSampleCountInfo.colorAttachmentCount = __C_ENG_VULKAN_CORE_SAMPLE_COUNT_ATTACHMENT_SAMPLES_MAX_COUNT;
+                        if ( pContext->attachmentSampleCountInfo.colorAttachmentCount > engine :: vulkan :: config :: sampleCountAttachmentSamplesCount ) {
+                            pContext->attachmentSampleCountInfo.colorAttachmentCount = engine :: vulkan :: config :: sampleCountAttachmentSamplesCount;
                             __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall )
                         }
 
@@ -14332,8 +14332,8 @@ namespace engine :: vulkan {
 
                         pContext->inheritanceViewportScissorInfo.pViewportDepths = & pContext->viewportDepths[0];
 
-                        if ( pContext->inheritanceViewportScissorInfo.viewportDepthCount > __C_ENG_VULKAN_CORE_VIEWPORT_DEPTH_MAX_COUNT ) {
-                            pContext->inheritanceViewportScissorInfo.viewportDepthCount = __C_ENG_VULKAN_CORE_VIEWPORT_DEPTH_MAX_COUNT;
+                        if ( pContext->inheritanceViewportScissorInfo.viewportDepthCount > engine :: vulkan :: config :: viewportDepthCount ) {
+                            pContext->inheritanceViewportScissorInfo.viewportDepthCount = engine :: vulkan :: config :: viewportDepthCount;
                             __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall )
                         }
 
@@ -14729,8 +14729,8 @@ namespace engine :: vulkan {
 
             pContext->submitInfos[i].pWaitDstStageMask = & pContext->stageFlags[i][0];
 
-            if ( pContext->submitInfos[i].waitSemaphoreCount > __C_ENG_VULKAN_CORE_PIPELINE_STAGE_FLAGS_MAX_COUNT ) {
-                pContext->submitInfos[i].waitSemaphoreCount = __C_ENG_VULKAN_CORE_PIPELINE_STAGE_FLAGS_MAX_COUNT;
+            if ( pContext->submitInfos[i].waitSemaphoreCount > engine :: vulkan :: config :: pipelineStageFlagsCount ) {
+                pContext->submitInfos[i].waitSemaphoreCount = engine :: vulkan :: config :: pipelineStageFlagsCount;
                 __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall )
             }
 
@@ -14912,8 +14912,8 @@ namespace engine :: vulkan {
 
             pContext->submitInfos2[i].pWaitSemaphoreInfos = & pContext->waitSemaphoreSubmitInfos[i][0];
 
-            if ( pContext->submitInfos2[i].waitSemaphoreInfoCount > __C_ENG_VULKAN_CORE_SUBMIT_SEMAPHORE_INFO_MAX_COUNT ) {
-                pContext->submitInfos2[i].waitSemaphoreInfoCount = __C_ENG_VULKAN_CORE_SUBMIT_SEMAPHORE_INFO_MAX_COUNT;
+            if ( pContext->submitInfos2[i].waitSemaphoreInfoCount > engine :: vulkan :: config :: submitSemaphoreInfoCount ) {
+                pContext->submitInfos2[i].waitSemaphoreInfoCount = engine :: vulkan :: config :: submitSemaphoreInfoCount;
                 __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall )
             }
 
@@ -14923,8 +14923,8 @@ namespace engine :: vulkan {
 
             pContext->submitInfos2[i].pCommandBufferInfos = & pContext->commandBufferSubmitInfos[i][0];
 
-            if ( pContext->submitInfos2[i].commandBufferInfoCount > __C_ENG_VULKAN_CORE_SUBMIT_COMMAND_BUFFER_INFO_MAX_COUNT ) {
-                pContext->submitInfos2[i].commandBufferInfoCount = __C_ENG_VULKAN_CORE_SUBMIT_COMMAND_BUFFER_INFO_MAX_COUNT;
+            if ( pContext->submitInfos2[i].commandBufferInfoCount > engine :: vulkan :: config :: submitCommandBufferInfoCount ) {
+                pContext->submitInfos2[i].commandBufferInfoCount = engine :: vulkan :: config :: submitCommandBufferInfoCount;
                 __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall )
             }
 
@@ -14934,8 +14934,8 @@ namespace engine :: vulkan {
 
             pContext->submitInfos2[i].pSignalSemaphoreInfos = & pContext->signalSemaphoreSubmitInfos[i][0];
 
-            if ( pContext->submitInfos2[i].signalSemaphoreInfoCount > __C_ENG_VULKAN_CORE_SUBMIT_SEMAPHORE_INFO_MAX_COUNT ) {
-                pContext->submitInfos2[i].signalSemaphoreInfoCount = __C_ENG_VULKAN_CORE_SUBMIT_SEMAPHORE_INFO_MAX_COUNT;
+            if ( pContext->submitInfos2[i].signalSemaphoreInfoCount > engine :: vulkan :: config :: submitSemaphoreInfoCount ) {
+                pContext->submitInfos2[i].signalSemaphoreInfoCount = engine :: vulkan :: config :: submitSemaphoreInfoCount;
                 __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall )
             }
 
@@ -15530,8 +15530,8 @@ namespace engine :: vulkan {
 
         pContext->info.pValues = & pContext->values[0];
 
-        if ( pContext->info.semaphoreCount > __C_ENG_VULKAN_CORE_WAIT_SEMAPHORE_MAX_COUNT ) {
-            pContext->info.semaphoreCount   = __C_ENG_VULKAN_CORE_WAIT_SEMAPHORE_MAX_COUNT;
+        if ( pContext->info.semaphoreCount > engine :: vulkan :: config :: waitSemaphoreCount ) {
+            pContext->info.semaphoreCount   = engine :: vulkan :: config :: waitSemaphoreCount;
             __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall )
         }
 
@@ -15958,8 +15958,8 @@ namespace engine :: vulkan {
 
         pContext->dependencyInfo.pMemoryBarriers = & pContext->memoryBarriers[0];
 
-        if ( pContext->dependencyInfo.memoryBarrierCount > __C_ENG_VULKAN_CORE_DEPENDENCY_INFO_MEMORY_BARRIER_MAX_COUNT ) {
-            pContext->dependencyInfo.memoryBarrierCount = __C_ENG_VULKAN_CORE_DEPENDENCY_INFO_MEMORY_BARRIER_MAX_COUNT;
+        if ( pContext->dependencyInfo.memoryBarrierCount > engine :: vulkan :: config :: dependencyInfoMemoryBarrierCount ) {
+            pContext->dependencyInfo.memoryBarrierCount = engine :: vulkan :: config :: dependencyInfoMemoryBarrierCount;
             __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall )
         }
 
@@ -15969,8 +15969,8 @@ namespace engine :: vulkan {
 
         pContext->dependencyInfo.pBufferMemoryBarriers = & pContext->bufferMemoryBarriers[0];
 
-        if ( pContext->dependencyInfo.bufferMemoryBarrierCount > __C_ENG_VULKAN_CORE_DEPENDENCY_INFO_BUFFER_MEMORY_BARRIER_MAX_COUNT ) {
-            pContext->dependencyInfo.bufferMemoryBarrierCount = __C_ENG_VULKAN_CORE_DEPENDENCY_INFO_BUFFER_MEMORY_BARRIER_MAX_COUNT;
+        if ( pContext->dependencyInfo.bufferMemoryBarrierCount > engine :: vulkan :: config :: dependencyInfoBufferMemoryBarrierCount ) {
+            pContext->dependencyInfo.bufferMemoryBarrierCount = engine :: vulkan :: config :: dependencyInfoBufferMemoryBarrierCount;
             __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall )
         }
 
@@ -15980,8 +15980,8 @@ namespace engine :: vulkan {
 
         pContext->dependencyInfo.pImageMemoryBarriers = & pContext->imageMemoryBarriers[0];
 
-        if ( pContext->dependencyInfo.imageMemoryBarrierCount > __C_ENG_VULKAN_CORE_DEPENDENCY_INFO_IMAGE_MEMORY_BARRIER_MAX_COUNT ) {
-            pContext->dependencyInfo.imageMemoryBarrierCount = __C_ENG_VULKAN_CORE_DEPENDENCY_INFO_IMAGE_MEMORY_BARRIER_MAX_COUNT;
+        if ( pContext->dependencyInfo.imageMemoryBarrierCount > engine :: vulkan :: config :: dependencyInfoImageMemoryBarrierCount ) {
+            pContext->dependencyInfo.imageMemoryBarrierCount = engine :: vulkan :: config :: dependencyInfoImageMemoryBarrierCount;
             __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall )
         }
 
@@ -16008,8 +16008,8 @@ namespace engine :: vulkan {
 
                         pContext->sampleLocationsInfos[i].pSampleLocations = & pContext->sampleLocations[i][0];
 
-                        if ( pContext->sampleLocationsInfos[i].sampleLocationsCount > __C_ENG_VULKAN_CORE_SAMPLE_LOCATIONS_INFO_SAMPLE_LOCATIONS_MAX_COUNT ) {
-                            pContext->sampleLocationsInfos[i].sampleLocationsCount = __C_ENG_VULKAN_CORE_SAMPLE_LOCATIONS_INFO_SAMPLE_LOCATIONS_MAX_COUNT;
+                        if ( pContext->sampleLocationsInfos[i].sampleLocationsCount > engine :: vulkan :: config :: sampleLocationsInfoSampleLocationsCount ) {
+                            pContext->sampleLocationsInfos[i].sampleLocationsCount = engine :: vulkan :: config :: sampleLocationsInfoSampleLocationsCount;
                             __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall )
                         }
 
@@ -16056,8 +16056,8 @@ namespace engine :: vulkan {
 
 #endif
 
-        if ( count > __C_ENG_VULKAN_CORE_COMMAND_BUFFER_WAIT_EVENTS_DEPENDENCY_INFO_MAX_COUNT ) {
-            count = __C_ENG_VULKAN_CORE_COMMAND_BUFFER_WAIT_EVENTS_DEPENDENCY_INFO_MAX_COUNT;
+        if ( count > engine :: vulkan :: config :: commandBufferWaitEventsDependencyInfoCount ) {
+            count = engine :: vulkan :: config :: commandBufferWaitEventsDependencyInfoCount;
             __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall )
         }
 
@@ -16067,8 +16067,8 @@ namespace engine :: vulkan {
 
             pContext->dependencyInfos[i].pMemoryBarriers = & pContext->memoryBarriers[i][0];
 
-            if ( pContext->dependencyInfos[i].memoryBarrierCount > __C_ENG_VULKAN_CORE_DEPENDENCY_INFO_MEMORY_BARRIER_MAX_COUNT ) {
-                pContext->dependencyInfos[i].memoryBarrierCount = __C_ENG_VULKAN_CORE_DEPENDENCY_INFO_MEMORY_BARRIER_MAX_COUNT;
+            if ( pContext->dependencyInfos[i].memoryBarrierCount > engine :: vulkan :: config :: dependencyInfoMemoryBarrierCount ) {
+                pContext->dependencyInfos[i].memoryBarrierCount = engine :: vulkan :: config :: dependencyInfoMemoryBarrierCount;
                 __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall )
             }
 
@@ -16078,8 +16078,8 @@ namespace engine :: vulkan {
 
             pContext->dependencyInfos[i].pBufferMemoryBarriers = & pContext->bufferMemoryBarriers[i][0];
 
-            if ( pContext->dependencyInfos[i].bufferMemoryBarrierCount > __C_ENG_VULKAN_CORE_DEPENDENCY_INFO_BUFFER_MEMORY_BARRIER_MAX_COUNT ) {
-                pContext->dependencyInfos[i].bufferMemoryBarrierCount = __C_ENG_VULKAN_CORE_DEPENDENCY_INFO_BUFFER_MEMORY_BARRIER_MAX_COUNT;
+            if ( pContext->dependencyInfos[i].bufferMemoryBarrierCount > engine :: vulkan :: config :: dependencyInfoBufferMemoryBarrierCount ) {
+                pContext->dependencyInfos[i].bufferMemoryBarrierCount = engine :: vulkan :: config :: dependencyInfoBufferMemoryBarrierCount;
                 __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall )
             }
 
@@ -16089,8 +16089,8 @@ namespace engine :: vulkan {
 
             pContext->dependencyInfos[i].pImageMemoryBarriers = & pContext->imageMemoryBarriers[i][0];
 
-            if ( pContext->dependencyInfos[i].imageMemoryBarrierCount > __C_ENG_VULKAN_CORE_DEPENDENCY_INFO_IMAGE_MEMORY_BARRIER_MAX_COUNT ) {
-                pContext->dependencyInfos[i].imageMemoryBarrierCount = __C_ENG_VULKAN_CORE_DEPENDENCY_INFO_IMAGE_MEMORY_BARRIER_MAX_COUNT;
+            if ( pContext->dependencyInfos[i].imageMemoryBarrierCount > engine :: vulkan :: config :: dependencyInfoImageMemoryBarrierCount ) {
+                pContext->dependencyInfos[i].imageMemoryBarrierCount = engine :: vulkan :: config :: dependencyInfoImageMemoryBarrierCount;
                 __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall )
             }
 
@@ -16117,8 +16117,8 @@ namespace engine :: vulkan {
 
                             pContext->sampleLocationsInfos[i][j].pSampleLocations = & pContext->sampleLocations[i][j][0];
 
-                            if ( pContext->sampleLocationsInfos[i][j].sampleLocationsCount > __C_ENG_VULKAN_CORE_SAMPLE_LOCATIONS_INFO_SAMPLE_LOCATIONS_MAX_COUNT ) {
-                                pContext->sampleLocationsInfos[i][j].sampleLocationsCount = __C_ENG_VULKAN_CORE_SAMPLE_LOCATIONS_INFO_SAMPLE_LOCATIONS_MAX_COUNT;
+                            if ( pContext->sampleLocationsInfos[i][j].sampleLocationsCount > engine :: vulkan :: config :: sampleLocationsInfoSampleLocationsCount ) {
+                                pContext->sampleLocationsInfos[i][j].sampleLocationsCount = engine :: vulkan :: config :: sampleLocationsInfoSampleLocationsCount;
                                 __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall )
                             }
 
@@ -16167,8 +16167,8 @@ namespace engine :: vulkan {
 
 #endif
 
-        if ( count > __C_ENG_VULKAN_CORE_MEMORY_BARRIER_MAX_COUNT ) {
-            count = __C_ENG_VULKAN_CORE_MEMORY_BARRIER_MAX_COUNT;
+        if ( count > engine :: vulkan :: config :: memoryBarrierCount ) {
+            count = engine :: vulkan :: config :: memoryBarrierCount;
             __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall )
         }
 
@@ -16195,8 +16195,8 @@ namespace engine :: vulkan {
 
 #endif
 
-        if ( count > __C_ENG_VULKAN_CORE_BUFFER_MEMORY_BARRIER_MAX_COUNT ) {
-            count = __C_ENG_VULKAN_CORE_BUFFER_MEMORY_BARRIER_MAX_COUNT;
+        if ( count > engine :: vulkan :: config :: bufferMemoryBarrierCount ) {
+            count = engine :: vulkan :: config :: bufferMemoryBarrierCount;
             __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall )
         }
 
@@ -16223,8 +16223,8 @@ namespace engine :: vulkan {
 
 #endif
 
-        if ( count > __C_ENG_VULKAN_CORE_IMAGE_MEMORY_BARRIER_MAX_COUNT ) {
-            count = __C_ENG_VULKAN_CORE_IMAGE_MEMORY_BARRIER_MAX_COUNT;
+        if ( count > engine :: vulkan :: config :: imageMemoryBarrierCount ) {
+            count = engine :: vulkan :: config :: imageMemoryBarrierCount;
             __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall )
         }
 
@@ -16251,8 +16251,8 @@ namespace engine :: vulkan {
 
                         pContext->sampleLocationsInfos[i].pSampleLocations = & pContext->sampleLocations[i][0];
 
-                        if ( pContext->sampleLocationsInfos[i].sampleLocationsCount > __C_ENG_VULKAN_CORE_SAMPLE_LOCATIONS_INFO_SAMPLE_LOCATIONS_MAX_COUNT ) {
-                            pContext->sampleLocationsInfos[i].sampleLocationsCount = __C_ENG_VULKAN_CORE_SAMPLE_LOCATIONS_INFO_SAMPLE_LOCATIONS_MAX_COUNT;
+                        if ( pContext->sampleLocationsInfos[i].sampleLocationsCount > engine :: vulkan :: config :: sampleLocationsInfoSampleLocationsCount ) {
+                            pContext->sampleLocationsInfos[i].sampleLocationsCount = engine :: vulkan :: config :: sampleLocationsInfoSampleLocationsCount;
                             __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall )
                         }
 
@@ -16281,6 +16281,288 @@ namespace engine :: vulkan {
         }
 
         return & pContext->imageMemoryBarriers[0];
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE
+    auto toVulkanFormat (
+            VkRenderingInfo_t            * pDestination,
+            Type ( RenderingInfo ) const * pSource
+    ) noexcept -> VkRenderingInfo_t * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                      = VK_STRUCTURE_TYPE_RENDERING_INFO,
+                .pNext                      = nullptr,
+                .flags                      = pSource->flags,
+                .renderArea                 = {
+                        .offset                     = {
+                                .x                          = pSource->renderArea.offset.x,
+                                .y                          = pSource->renderArea.offset.y
+                        },
+                        .extent                     = {
+                                .width                      = pSource->renderArea.extent.width,
+                                .height                     = pSource->renderArea.extent.height
+                        }
+                },
+                .layerCount                 = pSource->layerCount,
+                .viewMask                   = pSource->viewMask,
+                .colorAttachmentCount       = pSource->colorAttachmentCount,
+                .pColorAttachments          = nullptr,
+                .pDepthAttachment           = nullptr,
+                .pStencilAttachment         = nullptr
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE
+    auto toVulkanFormat (
+            VkRenderingAttachmentInfo_t            * pDestination,
+            Type ( RenderingAttachmentInfo ) const * pSource
+    ) noexcept -> VkRenderingAttachmentInfo_t * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        pDestination->sType                      = VK_STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO;
+        pDestination->pNext                      = nullptr;
+        pDestination->imageView                  = pSource->imageView;
+        pDestination->imageLayout                = static_cast < VkImageLayout > ( pSource->imageLayout );
+        pDestination->resolveMode                = static_cast < VkResolveModeFlagBits > ( pSource->resolveMode );
+        pDestination->resolveImageView           = pSource->resolveImageView;
+        pDestination->resolveImageLayout         = static_cast < VkImageLayout > ( pSource->resolveImageLayout );
+        pDestination->loadOp                     = static_cast < VkAttachmentLoadOp > ( pSource->loadOperation );
+        pDestination->storeOp                    = static_cast < VkAttachmentStoreOp > ( pSource->storeOperation );
+
+        (void) std :: memcpy ( & pDestination->clearValue, & pSource->clearValue, sizeof ( VkClearValue ) );
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    auto toVulkanFormat (
+            VkDeviceGroupRenderPassBeginInfo              * pDestination,
+            Type ( DeviceGroupRenderPassBeginInfo ) const * pSource
+    ) noexcept -> VkDeviceGroupRenderPassBeginInfo * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                      = VK_STRUCTURE_TYPE_DEVICE_GROUP_RENDER_PASS_BEGIN_INFO,
+                .pNext                      = nullptr,
+                .deviceMask                 = pSource->deviceMask,
+                .deviceRenderAreaCount      = pSource->deviceRenderAreaCount,
+                .pDeviceRenderAreas         = nullptr
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_FRAGMENT_DENSITY_MAP_AVAILABLE && ( __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE )
+    auto toVulkanFormat (
+            VkRenderingFragmentDensityMapAttachmentInfoEXT           * pDestination,
+            Type ( RenderingFragmentDensityMapAttachmentInfo ) const * pSource
+    ) noexcept -> VkRenderingFragmentDensityMapAttachmentInfoEXT * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                      = VK_STRUCTURE_TYPE_RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_INFO_EXT,
+                .pNext                      = nullptr,
+                .imageView                  = pSource->imageView,
+                .imageLayout                = static_cast < VkImageLayout > ( pSource->imageLayout )
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_FRAGMENT_SHADING_RATE_AVAILABLE && ( __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE )
+    auto toVulkanFormat (
+            VkRenderingFragmentShadingRateAttachmentInfoKHR           * pDestination,
+            Type ( RenderingFragmentShadingRateAttachmentInfo ) const * pSource
+    ) noexcept -> VkRenderingFragmentShadingRateAttachmentInfoKHR * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                          = VK_STRUCTURE_TYPE_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_INFO_KHR,
+                .pNext                          = nullptr,
+                .imageView                      = pSource->imageView,
+                .imageLayout                    = static_cast < VkImageLayout > ( pSource->imageLayout ),
+                .shadingRateAttachmentTexelSize = {
+                        .width                          = pSource->shadingRateAttachmentTexelSize.width,
+                        .height                         = pSource->shadingRateAttachmentTexelSize.height
+                }
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE
+    auto prepareContext (
+            BeginCommandBufferRenderingContext        * pContext,
+            Type ( RenderingInfo )              const * pRenderingInfo
+    ) noexcept -> VkRenderingInfo_t * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pContext == nullptr || pRenderingInfo == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        auto pCurrent   = reinterpret_cast < Type ( GenericInStructure ) const * > ( pRenderingInfo->pNext );
+        auto pCurrentVk = reinterpret_cast < VkBaseOutStructure * > ( toVulkanFormat ( & pContext->info, pRenderingInfo ) );
+
+        while ( pCurrent != nullptr ) {
+
+            switch ( pCurrent->structureType ) {
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+
+                case StructureTypeDeviceGroupRenderPassBeginInfo: {
+
+                    auto pDeviceGroupRenderPassBeginInfo = reinterpret_cast < Type ( DeviceGroupRenderPassBeginInfo ) const * > ( pCurrent );
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                            toVulkanFormat (
+                                    & pContext->deviceGroupRenderPassBeginInfo,
+                                    pDeviceGroupRenderPassBeginInfo
+                            )
+                    );
+
+                    pContext->deviceGroupRenderPassBeginInfo.pDeviceRenderAreas = & pContext->deviceRenderAreas[0];
+
+                    if ( pContext->deviceGroupRenderPassBeginInfo.deviceRenderAreaCount > engine :: vulkan :: config :: deviceGroupRenderPassBeginDeviceRenderAreaCount ) {
+                        pContext->deviceGroupRenderPassBeginInfo.deviceRenderAreaCount = engine :: vulkan :: config :: deviceGroupRenderPassBeginDeviceRenderAreaCount;
+                        __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall )
+                    }
+
+                    for ( cds :: uint32 i = 0U; i < pContext->deviceGroupRenderPassBeginInfo.deviceRenderAreaCount; ++ i ) {
+                        pContext->deviceRenderAreas[i] = {
+                                .offset = {
+                                        .x      = pDeviceGroupRenderPassBeginInfo->pDeviceRenderAreas[i].offset.x,
+                                        .y      = pDeviceGroupRenderPassBeginInfo->pDeviceRenderAreas[i].offset.y
+                                },
+                                .extent = {
+                                        .width  = pDeviceGroupRenderPassBeginInfo->pDeviceRenderAreas[i].extent.width,
+                                        .height = pDeviceGroupRenderPassBeginInfo->pDeviceRenderAreas[i].extent.height
+                                }
+                        };
+                    }
+
+                    break;
+                }
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXPERIMENTAL_MULTIVIEW_PER_VIEW_ATTRIBUTES_AVAILABLE && ( __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE )
+
+                case StructureTypeMultiviewPerViewAttributesInfoNVidiaExperimental:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                            toVulkanFormat (
+                                    & pContext->multiviewPerViewAttributesInfo,
+                                    reinterpret_cast < Type ( MultiviewPerViewAttributesInfoNVidia ) const * > ( pCurrent )
+                            )
+                    );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXPERIMENTAL_MULTIVIEW_PER_VIEW_ATTRIBUTES_AVAILABLE && ( __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE )
+
+                case StructureTypeRenderingFragmentDensityMapAttachmentInfo:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                            toVulkanFormat (
+                                    & pContext->densityMapAttachmentInfo,
+                                    reinterpret_cast < Type ( RenderingFragmentDensityMapAttachmentInfo ) const * > ( pCurrent )
+                            )
+                    );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXPERIMENTAL_MULTIVIEW_PER_VIEW_ATTRIBUTES_AVAILABLE && ( __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE )
+
+                case StructureTypeRenderingFragmentShadingRateAttachmentInfo:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                            toVulkanFormat (
+                                    & pContext->fragmentShadingRateAttachmentInfo,
+                                    reinterpret_cast < Type ( RenderingFragmentShadingRateAttachmentInfo ) const * > ( pCurrent )
+                            )
+                    );
+                    break;
+
+#endif
+
+                default:
+                    break;
+            }
+
+            pCurrentVk  = pCurrentVk->pNext == nullptr ? pCurrentVk : pCurrentVk->pNext;
+            pCurrent    = pCurrent->pNext;
+        }
+
+        pCurrentVk->pNext = nullptr;
+
+        pContext->info.pColorAttachments = & pContext->colorAttachments[0];
+
+        if ( pContext->info.colorAttachmentCount > engine :: vulkan :: config :: renderingInfoColorAttachmentCount ) {
+            pContext->info.colorAttachmentCount = engine :: vulkan :: config :: renderingInfoColorAttachmentCount;
+            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall )
+        }
+
+        for ( cds :: uint32 i = 0U; i < pContext->info.colorAttachmentCount; ++ i ) {
+            (void) toVulkanFormat ( & pContext->colorAttachments[i], & pRenderingInfo->pColorAttachments[i] );
+        }
+
+        if ( pRenderingInfo->pDepthAttachment != nullptr ) {
+            pContext->info.pDepthAttachment = & pContext->depthAttachment;
+            (void) toVulkanFormat ( & pContext->depthAttachment, pRenderingInfo->pDepthAttachment );
+        }
+
+        if ( pRenderingInfo->pStencilAttachment != nullptr ) {
+            pContext->info.pStencilAttachment = & pContext->stencilAttachment;
+            (void) toVulkanFormat ( & pContext->stencilAttachment, pRenderingInfo->pStencilAttachment );
+        }
+
+        return & pContext->info;
     }
 #endif
 

@@ -2658,6 +2658,13 @@ namespace engine :: vulkan {
     ) noexcept -> VkImageMemoryBarrier *;
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE
+    extern auto prepareContext (
+            BeginCommandBufferRenderingContext        *,
+            Type ( RenderingInfo )              const *
+    ) noexcept -> VkRenderingInfo_t *;
+#endif
+
 }
 
 #define C_ENG_MAP_END

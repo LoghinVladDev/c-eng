@@ -28,10 +28,10 @@ struct DeviceSurfaceProperties {
 namespace globals {
     static Mutex propertiesLock;
 
-    static Type ( SurfaceFormat ) surfaceFormats [ __C_ENG_VULKAN_CORE_PHYSICAL_DEVICE_MAX_COUNT * __C_ENG_VULKAN_CORE_PHYSICAL_DEVICE_SURFACE_MAX_COUNT ] [ __C_ENG_VULKAN_CORE_SURFACE_FORMAT_MAX_COUNT ];
-    static Type ( PresentMode ) presentModes [ __C_ENG_VULKAN_CORE_PHYSICAL_DEVICE_MAX_COUNT * __C_ENG_VULKAN_CORE_PHYSICAL_DEVICE_SURFACE_MAX_COUNT ] [ __C_ENG_VULKAN_CORE_SURFACE_PRESENT_MODE_MAX_COUNT ];
+    static Type ( SurfaceFormat ) surfaceFormats [ engine :: vulkan :: config :: physicalDeviceCount * engine :: vulkan :: config :: physicalDeviceSurfaceCount ] [ engine :: vulkan :: config :: surfaceFormatCount ];
+    static Type ( PresentMode ) presentModes [ engine :: vulkan :: config :: physicalDeviceCount * engine :: vulkan :: config :: physicalDeviceSurfaceCount ] [ engine :: vulkan :: config :: surfacePresentModeCount ];
 
-    static DeviceSurfaceProperties properties [ __C_ENG_VULKAN_CORE_PHYSICAL_DEVICE_MAX_COUNT * __C_ENG_VULKAN_CORE_PHYSICAL_DEVICE_SURFACE_MAX_COUNT ];
+    static DeviceSurfaceProperties properties [ engine :: vulkan :: config :: physicalDeviceCount * engine :: vulkan :: config :: physicalDeviceSurfaceCount ];
     static uint32 propertyCount;
 
     static DeviceSurfaceProperties * pLastUsedDeviceProperties;
@@ -39,13 +39,13 @@ namespace globals {
 
 
 struct ImageViewArea {
-    Type ( ImageViewHandle )    imageViewHandles [ __C_ENG_VULKAN_CORE_SWAP_CHAIN_IMAGE_MAX_COUNT ];
+    Type ( ImageViewHandle )    imageViewHandles [ engine :: vulkan :: config :: swapChainImageCount ];
     Self                const * pOwner;
 };
 
 namespace globals {
     static Mutex imageViewsLock;
-    static ImageViewArea imageViewAreas [ __C_ENG_VULKAN_CORE_PHYSICAL_DEVICE_MAX_COUNT * __C_ENG_VULKAN_CORE_PHYSICAL_DEVICE_SURFACE_MAX_COUNT ];
+    static ImageViewArea imageViewAreas [ engine :: vulkan :: config :: physicalDeviceCount * engine :: vulkan :: config :: physicalDeviceSurfaceCount ];
 }
 
 
@@ -79,7 +79,7 @@ auto Self :: propertiesForDevice (
         }
     }
 
-    if ( globals :: propertyCount >= __C_ENG_VULKAN_CORE_PHYSICAL_DEVICE_MAX_COUNT ) {
+    if ( globals :: propertyCount >= engine :: vulkan :: config :: physicalDeviceCount ) {
         return nullptr;
     }
 
