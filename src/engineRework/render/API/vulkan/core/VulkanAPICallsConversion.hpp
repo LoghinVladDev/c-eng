@@ -2665,6 +2665,146 @@ namespace engine :: vulkan {
     ) noexcept -> VkRenderingInfo_t *;
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto prepareContext (
+            CreateRenderPassContext               *,
+            Type ( RenderPassCreateInfo )   const *
+    ) noexcept -> VkRenderPassCreateInfo *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto toVulkanFormat (
+            VkRenderPassCreateInfo              *,
+            Type ( RenderPassCreateInfo ) const *
+    ) noexcept -> VkRenderPassCreateInfo *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_FRAGMENT_DENSITY_MAP_AVAILABLE
+    extern auto toVulkanFormat (
+            VkRenderPassFragmentDensityMapCreateInfoEXT           *,
+            Type ( RenderPassFragmentDensityMapCreateInfo ) const *
+    ) noexcept -> VkRenderPassFragmentDensityMapCreateInfoEXT *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    extern auto toVulkanFormat (
+            VkRenderPassInputAttachmentAspectCreateInfo              *,
+            Type ( RenderPassInputAttachmentAspectCreateInfo ) const *
+    ) noexcept -> VkRenderPassInputAttachmentAspectCreateInfo *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    extern auto toVulkanFormat (
+            VkInputAttachmentAspectReference              *,
+            Type ( InputAttachmentAspectReference ) const *
+    ) noexcept -> VkInputAttachmentAspectReference *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    extern auto toVulkanFormat (
+            VkRenderPassMultiviewCreateInfo              *,
+            Type ( RenderPassMultiviewCreateInfo ) const *
+    ) noexcept -> VkRenderPassMultiviewCreateInfo *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto toVulkanFormat (
+            VkAttachmentDescription              *,
+            Type ( AttachmentDescription ) const *
+    ) noexcept -> VkAttachmentDescription *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto toVulkanFormat (
+            VkSubpassDescription              *,
+            Type ( SubpassDescription ) const *
+    ) noexcept -> VkSubpassDescription *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto toVulkanFormat (
+            VkSubpassDependency              *,
+            Type ( SubpassDependency ) const *
+    ) noexcept -> VkSubpassDependency *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto toVulkanFormat (
+            VkAttachmentReference              *,
+            Type ( AttachmentReference ) const *
+    ) noexcept -> VkAttachmentReference *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+    extern auto prepareContext (
+            CreateRenderPass2Context              *,
+            Type ( RenderPassCreateInfo2 )  const *
+    ) noexcept -> VkRenderPassCreateInfo2 *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+    extern auto toVulkanFormat (
+            VkRenderPassCreateInfo2              *,
+            Type ( RenderPassCreateInfo2 ) const *
+    ) noexcept -> VkRenderPassCreateInfo2 *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+    extern auto toVulkanFormat (
+            VkAttachmentDescription2              *,
+            Type ( AttachmentDescription2 ) const *
+    ) noexcept -> VkAttachmentDescription2 *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+    extern auto toVulkanFormat (
+            VkAttachmentDescriptionStencilLayout              *,
+            Type ( AttachmentDescriptionStencilLayout ) const *
+    ) noexcept -> VkAttachmentDescriptionStencilLayout *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+    extern auto toVulkanFormat (
+            VkSubpassDescription2              *,
+            Type ( SubpassDescription2 ) const *
+    ) noexcept -> VkSubpassDescription2 *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_FRAGMENT_SHADING_RATE_AVAILABLE
+    extern auto toVulkanFormat (
+            VkFragmentShadingRateAttachmentInfoKHR           *,
+            Type ( FragmentShadingRateAttachmentInfo ) const *
+    ) noexcept -> VkFragmentShadingRateAttachmentInfoKHR *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+    extern auto toVulkanFormat (
+            VkAttachmentReference2              *,
+            Type ( AttachmentReference2 ) const *
+    ) noexcept -> VkAttachmentReference2 *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+    extern auto toVulkanFormat (
+            VkSubpassDescriptionDepthStencilResolve              *,
+            Type ( SubpassDescriptionDepthStencilResolve ) const *
+    ) noexcept -> VkSubpassDescriptionDepthStencilResolve *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+    extern auto toVulkanFormat (
+            VkAttachmentReferenceStencilLayout              *,
+            Type ( AttachmentReferenceStencilLayout ) const *
+    ) noexcept -> VkAttachmentReferenceStencilLayout *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+    extern auto toVulkanFormat (
+            VkSubpassDependency2              *,
+            Type ( SubpassDependency2 ) const *
+    ) noexcept -> VkSubpassDependency2 *;
+#endif
+
 }
 
 #define C_ENG_MAP_END

@@ -52,12 +52,15 @@ private:
 #if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
             if ( this->pContext->data.common.diag.error != ResultSuccess ) {
                 Type ( Logger ) :: instance().error ( String::f (
-                    "API Error logged in context at release : %s, in %s -> %s : %d",
+                    "API Error logged in context at release : %s, in %s -> %s : %d ---> %s",
                     toString ( pContext->data.common.diag.error ),
                     pContext->data.common.diag.file,
                     pContext->data.common.diag.function,
-                    pContext->data.common.diag.line
+                    pContext->data.common.diag.line,
+                    pContext->data.common.diag.pMessage == nullptr ? "no details given" : pContext->data.common.diag.pMessage->cStr()
                 ));
+
+                cds :: Memory :: instance().destroy ( pContext->data.common.diag.pMessage );
 
                 this->pContext->data.common.diag.error = ResultSuccess;
             }
@@ -3495,5 +3498,67 @@ auto engine :: vulkan :: commandBufferEndRendering (
     return ResultSuccess;
 
 #endif
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: createRenderPass (
+        Type ( DeviceHandle )                   deviceHandle,
+        Type ( RenderPassCreateInfo )   const * pCreateInfo,
+        Type ( AllocationCallbacks )    const * pAllocationCallbacks,
+        Type ( RenderPassHandle )             * pHandle
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || pCreateInfo == nullptr || pHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkCreateRenderPass )
+
+    auto context = ContextManager :: acquire();
+
+    return static_cast < Type ( Result ) > (
+            vkCreateRenderPassHandle (
+                    deviceHandle,
+                    prepareContext ( & context.data().create.renderPass, pCreateInfo ),
+                    AllocatorHandler :: applyCallbacks ( pAllocationCallbacks ),
+                    pHandle
+            )
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+auto engine :: vulkan :: createRenderPass (
+        Type ( DeviceHandle )                   deviceHandle,
+        Type ( RenderPassCreateInfo2 )  const * pCreateInfo,
+        Type ( AllocationCallbacks )    const * pAllocationCallbacks,
+        Type ( RenderPassHandle )             * pHandle
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || pCreateInfo == nullptr || pHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkCreateRenderPass2 )
+
+    auto context = ContextManager :: acquire();
+
+    return static_cast < Type ( Result ) > (
+            vkCreateRenderPass2Handle (
+                    deviceHandle,
+                    prepareContext ( & context.data().create.renderPass2, pCreateInfo ),
+                    AllocatorHandler :: applyCallbacks ( pAllocationCallbacks ),
+                    pHandle
+            )
+    );
 }
 #endif

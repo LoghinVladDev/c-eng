@@ -7,15 +7,21 @@
 
 #include <VulkanAPICallsPrivate.hpp>
 
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+#include <CDS/String>
+#endif
+
 #define C_ENG_MAP_START HEADER
 #include <ObjectMapping.hpp>
 
-
 struct DiagnosticContext {
-    engine :: vulkan :: Type ( Result ) error;
-    cds :: StringLiteral                file;
-    cds :: StringLiteral                function;
-    cds :: uint32                       line;
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+    engine :: vulkan :: Type ( Result )     error;
+    cds :: StringLiteral                    file;
+    cds :: StringLiteral                    function;
+    cds :: uint32                           line;
+    cds :: String                         * pMessage;
+#endif
 };
 
 struct CommonContext {
@@ -889,6 +895,57 @@ struct BeginCommandBufferRenderingContext {
 #endif
 };
 
+struct CreateRenderPassContext {
+    DiagnosticContext                                       diag;
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    VkRenderPassCreateInfo                                  createInfo;
+    VkAttachmentDescription                                 attachmentDescriptions [ engine :: vulkan :: config :: renderPassAttachmentDescriptionCount ];
+    VkSubpassDescription                                    subpassDescriptions [ engine :: vulkan :: config :: renderPassSubpassDescriptionCount ];
+    VkAttachmentReference                                   inputAttachments [ engine :: vulkan :: config :: renderPassSubpassDescriptionCount ] [ engine :: vulkan :: config :: renderPassSubpassDescriptionInputAttachmentCount ];
+    VkAttachmentReference                                   colorAttachments [ engine :: vulkan :: config :: renderPassSubpassDescriptionCount ] [ engine :: vulkan :: config :: renderPassSubpassDescriptionColorAttachmentCount ];
+    VkAttachmentReference                                   resolveAttachments [ engine :: vulkan :: config :: renderPassSubpassDescriptionCount ] [ engine :: vulkan :: config :: renderPassSubpassDescriptionColorAttachmentCount ];
+    VkAttachmentReference                                   depthStencilAttachments [ engine :: vulkan :: config :: renderPassSubpassDescriptionCount ];
+    VkSubpassDependency                                     subpassDependencies [ engine :: vulkan :: config :: renderPassSubpassDependencyCount ];
+#endif
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    VkRenderPassInputAttachmentAspectCreateInfo             inputAttachmentAspectCreateInfo;
+    VkInputAttachmentAspectReference                        inputAttachmentAspectReferences [ engine :: vulkan :: config :: renderPassInputAttachmentAspectReferenceCount ];
+    VkRenderPassMultiviewCreateInfo                         multiviewCreateInfo;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_FRAGMENT_DENSITY_MAP_AVAILABLE
+    VkRenderPassFragmentDensityMapCreateInfoEXT             fragmentDensityMapCreateInfo;
+#endif
+};
+
+struct CreateRenderPass2Context {
+    DiagnosticContext                                       diag;
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+    VkRenderPassCreateInfo2                                 createInfo;
+    VkAttachmentDescription2                                attachmentDescriptions [ engine :: vulkan :: config :: renderPassAttachmentDescriptionCount ];
+    VkAttachmentDescriptionStencilLayout                    attachmentDescriptionStencilLayouts [ engine :: vulkan :: config :: renderPassAttachmentDescriptionCount ];
+    VkSubpassDescription2                                   subpassDescriptions [ engine :: vulkan :: config :: renderPassSubpassDescriptionCount ];
+    VkAttachmentReference2                                  inputAttachments [ engine :: vulkan :: config :: renderPassSubpassDescriptionCount ] [ engine :: vulkan :: config :: renderPassSubpassDescriptionInputAttachmentCount ];
+    VkAttachmentReferenceStencilLayout                      inputAttachmentsReferenceStencilLayouts [ engine :: vulkan :: config :: renderPassSubpassDescriptionCount ] [ engine :: vulkan :: config :: renderPassSubpassDescriptionInputAttachmentCount ];
+    VkAttachmentReference2                                  colorAttachments [ engine :: vulkan :: config :: renderPassSubpassDescriptionCount ] [ engine :: vulkan :: config :: renderPassSubpassDescriptionColorAttachmentCount ];
+    VkAttachmentReferenceStencilLayout                      colorAttachmentsReferenceStencilLayouts [ engine :: vulkan :: config :: renderPassSubpassDescriptionCount ] [ engine :: vulkan :: config :: renderPassSubpassDescriptionColorAttachmentCount ];
+    VkAttachmentReference2                                  resolveAttachments [ engine :: vulkan :: config :: renderPassSubpassDescriptionCount ] [ engine :: vulkan :: config :: renderPassSubpassDescriptionColorAttachmentCount ];
+    VkAttachmentReferenceStencilLayout                      resolveAttachmentsReferenceStencilLayouts [ engine :: vulkan :: config :: renderPassSubpassDescriptionCount ] [ engine :: vulkan :: config :: renderPassSubpassDescriptionColorAttachmentCount ];
+    VkAttachmentReference2                                  depthStencilAttachments [ engine :: vulkan :: config :: renderPassSubpassDescriptionCount ];
+    VkAttachmentReferenceStencilLayout                      depthStencilAttachmentsReferenceStencilLayouts [ engine :: vulkan :: config :: renderPassSubpassDescriptionCount ];
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_FRAGMENT_SHADING_RATE_AVAILABLE
+    VkFragmentShadingRateAttachmentInfoKHR                  fragmentShadingRateAttachmentInfos [ engine :: vulkan :: config :: renderPassSubpassDescriptionCount ];
+    VkAttachmentReference2                                  fragmentShadingRateAttachmentReferences [ engine :: vulkan :: config :: renderPassSubpassDescriptionCount ];
+#endif
+    VkSubpassDescriptionDepthStencilResolve                 subpassDescriptionDepthStencilResolve [ engine :: vulkan :: config :: renderPassSubpassDescriptionCount ];
+    VkAttachmentReference2                                  subpassDescriptionDepthStencilReferences [ engine :: vulkan :: config :: renderPassSubpassDescriptionCount ];
+    VkSubpassDependency2                                    subpassDependencies [ engine :: vulkan :: config :: renderPassSubpassDependencyCount ];
+    VkMemoryBarrier2_t                                      memoryBarriers [ engine :: vulkan :: config :: renderPassSubpassDependencyCount ];
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_FRAGMENT_DENSITY_MAP_AVAILABLE
+    VkRenderPassFragmentDensityMapCreateInfoEXT             fragmentDensityMapCreateInfo;
+#endif
+};
+
 union EnumerateSharedContext {
     EnumerateLayerPropertiesContext                                     layerProperties;
     EnumerateExtensionPropertiesContext                                 extensionProperties;
@@ -906,6 +963,8 @@ union CreateSharedContext {
     CreateFenceContext                                                  fence;
     CreateSemaphoreContext                                              semaphore;
     CreateEventContext                                                  event;
+    CreateRenderPassContext                                             renderPass;
+    CreateRenderPass2Context                                            renderPass2;
 };
 
 union GetSharedContext {

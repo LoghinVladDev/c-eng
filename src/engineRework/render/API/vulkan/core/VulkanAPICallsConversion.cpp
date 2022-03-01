@@ -2,35 +2,45 @@
 // Created by loghin on 16.02.2022.
 //
 
+#include <VulkanAPICallsConversion.hpp>
 #include <VulkanAPICallsPrivate.hpp>
 #include <VulkanAPICallsTypes.hpp>
-#include <cstring>
+#include <CDS/String>
 
 #define C_ENG_MAP_START     SOURCE
 #include <ObjectMapping.hpp>
 
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
 
 #if defined(__CDS_compiler_clang) || defined(__CDS_compiler_gcc)
 
-#define __C_ENG_DIAG_SET_CONTEXT_ERROR(_pContext, _error)   _pContext->diag = { \
-    .error      = _error,                                                       \
-    .file       = __FILE__,                                                     \
-    .function   = __PRETTY_FUNCTION__,                                          \
-    .line       = __LINE__                                                      \
+#define __C_ENG_DIAG_SET_CONTEXT_ERROR(_pContext, _error, ...)   _pContext->diag = {        \
+    .error      = _error,                                                                   \
+    .file       = __FILE__,                                                                 \
+    .function   = __PRETTY_FUNCTION__,                                                      \
+    .line       = __LINE__,                                                                 \
+    .pMessage   = (__VA_ARGS__).copy()                                                      \
 };
 
 #elif defined(__CDS_compiler_MinGW)
 
-#define __C_ENG_DIAG_SET_CONTEXT_ERROR(_pContext, _error)   _pContext->diag = { \
-    .error      = _error,                                                       \
-    .file       = __FILE__,                                                     \
-    .function   = __PRETTY_FUNCTION__,                                          \
-    .line       = __LINE__                                                      \
+#define __C_ENG_DIAG_SET_CONTEXT_ERROR(_pContext, _error, ...)   _pContext->diag = {    \
+    .error      = _error,                                                               \
+    .file       = __FILE__,                                                             \
+    .function   = __PRETTY_FUNCTION__,                                                  \
+    .line       = __LINE__,                                                             \
+    .pMessage   = (__VA_ARGS__).copy()                                                  \
 };
 
 #else
 
 #error Define The __C_ENG_DIAG_SET_CONTEXT_ERROR macro set for the selected compiler
+
+#endif
+
+#else
+
+#define __C_ENG_DIAG_SET_CONTEXT_ERROR(_pContext, _error, ...)
 
 #endif
 
@@ -487,8 +497,13 @@ namespace engine :: vulkan {
                     );
 
                     if ( pContext->validationFeatures.enabledValidationFeatureCount > engine :: vulkan :: config :: validationFeatureEnableCount ) {
+                        __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, cds :: String :: f (
+                                "config :: validationFeatureEnableCount = %d. Minimum Required = %d",
+                                engine :: vulkan :: config :: validationFeatureEnableCount,
+                                pContext->validationFeatures.enabledValidationFeatureCount
+                        ))
+
                         pContext->validationFeatures.enabledValidationFeatureCount = engine :: vulkan :: config :: validationFeatureEnableCount;
-                        __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall )
                     }
 
                     for ( cds :: uint32 i = 0U; i < pContext->validationFeatures.enabledValidationFeatureCount; ++ i ) {
@@ -498,8 +513,13 @@ namespace engine :: vulkan {
                     pContext->validationFeatures.pEnabledValidationFeatures = & pContext->validationFeatureEnables[0];
 
                     if ( pContext->validationFeatures.disabledValidationFeatureCount > engine :: vulkan :: config :: validationFeatureDisableCount ) {
+                        __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, cds :: String :: f (
+                                "config :: validationFeatureDisableCount = %d. Minimum Required = %d",
+                                engine :: vulkan :: config :: validationFeatureDisableCount,
+                                pContext->validationFeatures.disabledValidationFeatureCount
+                        ))
+
                         pContext->validationFeatures.disabledValidationFeatureCount = engine :: vulkan :: config :: validationFeatureDisableCount;
-                        __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall )
                     }
 
                     for ( cds :: uint32 i = 0U; i < pContext->validationFeatures.disabledValidationFeatureCount; ++ i ) {
@@ -524,8 +544,13 @@ namespace engine :: vulkan {
                     );
 
                     if ( pValidationFlags->disabledValidationCheckCount > engine :: vulkan :: config :: validationCheckCount ) {
+                        __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, cds :: String :: f (
+                                "config :: validationCheckCount = %d. Minimum Required = %d",
+                                engine :: vulkan :: config :: validationCheckCount,
+                                pValidationFlags->disabledValidationCheckCount
+                        ))
+
                         pContext->validationFlags.disabledValidationCheckCount = engine :: vulkan :: config :: validationCheckCount;
-                        __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall )
                     }
 
                     for ( cds :: uint32 i = 0U; i < pContext->validationFlags.disabledValidationCheckCount; ++ i ) {
@@ -9365,8 +9390,13 @@ namespace engine :: vulkan {
         pContext->device.pQueueCreateInfos = & pContext->queues [0];
 
         if ( pContext->device.queueCreateInfoCount > engine :: vulkan :: config :: queueFamilyCreateInfoCount ) {
+            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, cds :: String :: f (
+                    "config :: queueFamilyCreateInfoCount = %d. Minimum Required = %d",
+                    engine :: vulkan :: config :: queueFamilyCreateInfoCount,
+                    pContext->device.queueCreateInfoCount
+            ))
+
             pContext->device.queueCreateInfoCount = engine :: vulkan :: config :: queueFamilyCreateInfoCount;
-            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall )
         }
 
         for ( cds :: uint32 i = 0U; i < pContext->device.queueCreateInfoCount; ++ i ) {
@@ -13663,7 +13693,12 @@ namespace engine :: vulkan {
                     pContext->formatListCreateInfo.pViewFormats = & pContext->viewFormats [0];
 
                     if ( pContext->formatListCreateInfo.viewFormatCount > engine :: vulkan :: config :: viewFormatCount ) {
-                        __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall )
+                        __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, cds :: String :: f (
+                                "config :: viewFormatCount = %d. Minimum Required = %d",
+                                engine :: vulkan :: config :: viewFormatCount,
+                                pContext->formatListCreateInfo.viewFormatCount
+                        ))
+
                         pContext->formatListCreateInfo.viewFormatCount = engine :: vulkan :: config :: viewFormatCount;
                     }
 
@@ -14240,8 +14275,13 @@ namespace engine :: vulkan {
                         pContext->inheritanceRenderingInfo.pColorAttachmentFormats = & pContext->renderingInfoFormats[0];
 
                         if ( pContext->inheritanceRenderingInfo.colorAttachmentCount > engine :: vulkan :: config :: renderingInfoFormatsCount ) {
+                            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, cds :: String :: f (
+                                    "config :: renderingInfoFormatsCount = %d. Minimum Required = %d",
+                                    engine :: vulkan :: config :: renderingInfoFormatsCount,
+                                    pContext->inheritanceRenderingInfo.colorAttachmentCount
+                            ))
+
                             pContext->inheritanceRenderingInfo.colorAttachmentCount = engine :: vulkan :: config :: renderingInfoFormatsCount;
-                            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall )
                         }
 
                         for ( cds :: uint32 i = 0U; i < pContext->inheritanceRenderingInfo.colorAttachmentCount; ++ i ) {
@@ -14266,8 +14306,13 @@ namespace engine :: vulkan {
                         pContext->attachmentSampleCountInfo.pColorAttachmentSamples = & pContext->sampleCountAttachmentSamples[0];
 
                         if ( pContext->attachmentSampleCountInfo.colorAttachmentCount > engine :: vulkan :: config :: sampleCountAttachmentSamplesCount ) {
+                            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, cds :: String :: f (
+                                    "config :: sampleCountAttachmentSamplesCount = %d. Minimum Required = %d",
+                                    engine :: vulkan :: config :: sampleCountAttachmentSamplesCount,
+                                    pContext->attachmentSampleCountInfo.colorAttachmentCount
+                            ))
+
                             pContext->attachmentSampleCountInfo.colorAttachmentCount = engine :: vulkan :: config :: sampleCountAttachmentSamplesCount;
-                            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall )
                         }
 
                         for ( cds :: uint32 i = 0U; i < pContext->attachmentSampleCountInfo.colorAttachmentCount; ++ i ) {
@@ -14333,8 +14378,13 @@ namespace engine :: vulkan {
                         pContext->inheritanceViewportScissorInfo.pViewportDepths = & pContext->viewportDepths[0];
 
                         if ( pContext->inheritanceViewportScissorInfo.viewportDepthCount > engine :: vulkan :: config :: viewportDepthCount ) {
+                            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, cds :: String :: f (
+                                    "config :: viewportDepthCount = %d. Minimum Required = %d",
+                                    engine :: vulkan :: config :: viewportDepthCount,
+                                    pContext->inheritanceViewportScissorInfo.viewportDepthCount
+                            ))
+
                             pContext->inheritanceViewportScissorInfo.viewportDepthCount = engine :: vulkan :: config :: viewportDepthCount;
-                            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall )
                         }
 
                         for ( cds :: uint32 i = 0U; i < pContext->inheritanceViewportScissorInfo.viewportDepthCount; ++ i ) {
@@ -14730,8 +14780,13 @@ namespace engine :: vulkan {
             pContext->submitInfos[i].pWaitDstStageMask = & pContext->stageFlags[i][0];
 
             if ( pContext->submitInfos[i].waitSemaphoreCount > engine :: vulkan :: config :: pipelineStageFlagsCount ) {
+                __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, cds :: String :: f (
+                        "config :: pipelineStageFlagsCount = %d. Minimum Required = %d",
+                        engine :: vulkan :: config :: pipelineStageFlagsCount,
+                        pContext->submitInfos[i].waitSemaphoreCount
+                ))
+
                 pContext->submitInfos[i].waitSemaphoreCount = engine :: vulkan :: config :: pipelineStageFlagsCount;
-                __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall )
             }
 
             for ( cds :: uint32 j = 0U; j < pContext->submitInfos[i].waitSemaphoreCount; ++ j ) {
@@ -14913,8 +14968,13 @@ namespace engine :: vulkan {
             pContext->submitInfos2[i].pWaitSemaphoreInfos = & pContext->waitSemaphoreSubmitInfos[i][0];
 
             if ( pContext->submitInfos2[i].waitSemaphoreInfoCount > engine :: vulkan :: config :: submitSemaphoreInfoCount ) {
+                __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, cds :: String :: f (
+                        "config :: submitSemaphoreInfoCount = %d. Minimum Required = %d",
+                        engine :: vulkan :: config :: submitSemaphoreInfoCount,
+                        pContext->submitInfos2[i].waitSemaphoreInfoCount
+                ))
+
                 pContext->submitInfos2[i].waitSemaphoreInfoCount = engine :: vulkan :: config :: submitSemaphoreInfoCount;
-                __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall )
             }
 
             for ( cds :: uint32 j = 0U; j < pContext->submitInfos2[i].waitSemaphoreInfoCount; ++ j ) {
@@ -14924,8 +14984,13 @@ namespace engine :: vulkan {
             pContext->submitInfos2[i].pCommandBufferInfos = & pContext->commandBufferSubmitInfos[i][0];
 
             if ( pContext->submitInfos2[i].commandBufferInfoCount > engine :: vulkan :: config :: submitCommandBufferInfoCount ) {
+                __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, cds :: String :: f (
+                        "config :: submitCommandBufferInfoCount = %d. Minimum Required = %d",
+                        engine :: vulkan :: config :: submitCommandBufferInfoCount,
+                        pContext->submitInfos2[i].commandBufferInfoCount
+                ))
+
                 pContext->submitInfos2[i].commandBufferInfoCount = engine :: vulkan :: config :: submitCommandBufferInfoCount;
-                __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall )
             }
 
             for ( cds :: uint32 j = 0U; j < pContext->submitInfos2[i].commandBufferInfoCount; ++ j ) {
@@ -14935,8 +15000,13 @@ namespace engine :: vulkan {
             pContext->submitInfos2[i].pSignalSemaphoreInfos = & pContext->signalSemaphoreSubmitInfos[i][0];
 
             if ( pContext->submitInfos2[i].signalSemaphoreInfoCount > engine :: vulkan :: config :: submitSemaphoreInfoCount ) {
+                __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, cds :: String :: f (
+                        "config :: submitSemaphoreInfoCount = %d. Minimum Required = %d",
+                        engine :: vulkan :: config :: submitSemaphoreInfoCount,
+                        pContext->submitInfos2[i].signalSemaphoreInfoCount
+                ))
+
                 pContext->submitInfos2[i].signalSemaphoreInfoCount = engine :: vulkan :: config :: submitSemaphoreInfoCount;
-                __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall )
             }
 
             for ( cds :: uint32 j = 0U; j < pContext->submitInfos2[i].signalSemaphoreInfoCount; ++ j ) {
@@ -15531,8 +15601,13 @@ namespace engine :: vulkan {
         pContext->info.pValues = & pContext->values[0];
 
         if ( pContext->info.semaphoreCount > engine :: vulkan :: config :: waitSemaphoreCount ) {
+            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, cds :: String :: f (
+                    "config :: waitSemaphoreCount = %d. Minimum Required = %d",
+                    engine :: vulkan :: config :: waitSemaphoreCount,
+                    pContext->info.semaphoreCount
+            ))
+
             pContext->info.semaphoreCount   = engine :: vulkan :: config :: waitSemaphoreCount;
-            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall )
         }
 
         for ( cds :: uint32 i = 0U; i < pContext->info.semaphoreCount; ++ i ) {
@@ -15959,8 +16034,13 @@ namespace engine :: vulkan {
         pContext->dependencyInfo.pMemoryBarriers = & pContext->memoryBarriers[0];
 
         if ( pContext->dependencyInfo.memoryBarrierCount > engine :: vulkan :: config :: dependencyInfoMemoryBarrierCount ) {
+            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, cds :: String :: f (
+                    "config :: dependencyInfoMemoryBarrierCount = %d. Minimum Required = %d",
+                    engine :: vulkan :: config :: dependencyInfoMemoryBarrierCount,
+                    pContext->dependencyInfo.memoryBarrierCount
+            ))
+
             pContext->dependencyInfo.memoryBarrierCount = engine :: vulkan :: config :: dependencyInfoMemoryBarrierCount;
-            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall )
         }
 
         for ( cds :: uint32 i = 0U; i < pContext->dependencyInfo.memoryBarrierCount; ++ i ) {
@@ -15970,8 +16050,13 @@ namespace engine :: vulkan {
         pContext->dependencyInfo.pBufferMemoryBarriers = & pContext->bufferMemoryBarriers[0];
 
         if ( pContext->dependencyInfo.bufferMemoryBarrierCount > engine :: vulkan :: config :: dependencyInfoBufferMemoryBarrierCount ) {
+            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, cds :: String :: f (
+                    "config :: dependencyInfoBufferMemoryBarrierCount = %d. Minimum Required = %d",
+                    engine :: vulkan :: config :: dependencyInfoBufferMemoryBarrierCount,
+                    pContext->dependencyInfo.bufferMemoryBarrierCount
+            ))
+
             pContext->dependencyInfo.bufferMemoryBarrierCount = engine :: vulkan :: config :: dependencyInfoBufferMemoryBarrierCount;
-            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall )
         }
 
         for ( cds :: uint32 i = 0U; i < pContext->dependencyInfo.bufferMemoryBarrierCount; ++ i ) {
@@ -15981,8 +16066,13 @@ namespace engine :: vulkan {
         pContext->dependencyInfo.pImageMemoryBarriers = & pContext->imageMemoryBarriers[0];
 
         if ( pContext->dependencyInfo.imageMemoryBarrierCount > engine :: vulkan :: config :: dependencyInfoImageMemoryBarrierCount ) {
+            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, cds :: String :: f (
+                    "config :: dependencyInfoImageMemoryBarrierCount = %d. Minimum Required = %d",
+                    engine :: vulkan :: config :: dependencyInfoImageMemoryBarrierCount,
+                    pContext->dependencyInfo.imageMemoryBarrierCount
+            ))
+
             pContext->dependencyInfo.imageMemoryBarrierCount = engine :: vulkan :: config :: dependencyInfoImageMemoryBarrierCount;
-            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall )
         }
 
         for ( cds :: uint32 i = 0U; i < pContext->dependencyInfo.imageMemoryBarrierCount; ++ i ) {
@@ -16009,8 +16099,13 @@ namespace engine :: vulkan {
                         pContext->sampleLocationsInfos[i].pSampleLocations = & pContext->sampleLocations[i][0];
 
                         if ( pContext->sampleLocationsInfos[i].sampleLocationsCount > engine :: vulkan :: config :: sampleLocationsInfoSampleLocationsCount ) {
+                            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, cds :: String :: f (
+                                    "config :: sampleLocationsInfoSampleLocationsCount = %d. Minimum Required = %d",
+                                    engine :: vulkan :: config :: sampleLocationsInfoSampleLocationsCount,
+                                    pContext->sampleLocationsInfos[i].sampleLocationsCount
+                            ))
+
                             pContext->sampleLocationsInfos[i].sampleLocationsCount = engine :: vulkan :: config :: sampleLocationsInfoSampleLocationsCount;
-                            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall )
                         }
 
                         for ( cds :: uint32 j = 0U; j < pContext->sampleLocationsInfos[i].sampleLocationsCount; ++ j ) {
@@ -16057,8 +16152,13 @@ namespace engine :: vulkan {
 #endif
 
         if ( count > engine :: vulkan :: config :: commandBufferWaitEventsDependencyInfoCount ) {
+            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, cds :: String :: f (
+                    "config :: commandBufferWaitEventsDependencyInfoCount = %d. Minimum Required = %d",
+                    engine :: vulkan :: config :: commandBufferWaitEventsDependencyInfoCount,
+                    count
+            ))
+
             count = engine :: vulkan :: config :: commandBufferWaitEventsDependencyInfoCount;
-            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall )
         }
 
         for ( cds :: uint32 i = 0U; i < count; ++ i ) {
@@ -16068,8 +16168,13 @@ namespace engine :: vulkan {
             pContext->dependencyInfos[i].pMemoryBarriers = & pContext->memoryBarriers[i][0];
 
             if ( pContext->dependencyInfos[i].memoryBarrierCount > engine :: vulkan :: config :: dependencyInfoMemoryBarrierCount ) {
+                __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, cds :: String :: f (
+                        "config :: dependencyInfoMemoryBarrierCount = %d. Minimum Required = %d",
+                        engine :: vulkan :: config :: dependencyInfoMemoryBarrierCount,
+                        pContext->dependencyInfos[i].memoryBarrierCount
+                ))
+
                 pContext->dependencyInfos[i].memoryBarrierCount = engine :: vulkan :: config :: dependencyInfoMemoryBarrierCount;
-                __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall )
             }
 
             for ( cds :: uint32 j = 0U; j < pContext->dependencyInfos[i].memoryBarrierCount; ++ j ) {
@@ -16079,8 +16184,13 @@ namespace engine :: vulkan {
             pContext->dependencyInfos[i].pBufferMemoryBarriers = & pContext->bufferMemoryBarriers[i][0];
 
             if ( pContext->dependencyInfos[i].bufferMemoryBarrierCount > engine :: vulkan :: config :: dependencyInfoBufferMemoryBarrierCount ) {
+                __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, cds :: String :: f (
+                        "config :: dependencyInfoBufferMemoryBarrierCount = %d. Minimum Required = %d",
+                        engine :: vulkan :: config :: dependencyInfoBufferMemoryBarrierCount,
+                        pContext->dependencyInfos[i].bufferMemoryBarrierCount
+                ))
+
                 pContext->dependencyInfos[i].bufferMemoryBarrierCount = engine :: vulkan :: config :: dependencyInfoBufferMemoryBarrierCount;
-                __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall )
             }
 
             for ( cds :: uint32 j = 0U; j < pContext->dependencyInfos[i].bufferMemoryBarrierCount; ++ j ) {
@@ -16090,8 +16200,13 @@ namespace engine :: vulkan {
             pContext->dependencyInfos[i].pImageMemoryBarriers = & pContext->imageMemoryBarriers[i][0];
 
             if ( pContext->dependencyInfos[i].imageMemoryBarrierCount > engine :: vulkan :: config :: dependencyInfoImageMemoryBarrierCount ) {
+                __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, cds :: String :: f (
+                        "config :: dependencyInfoImageMemoryBarrierCount = %d. Minimum Required = %d",
+                        engine :: vulkan :: config :: dependencyInfoImageMemoryBarrierCount,
+                        pContext->dependencyInfos[i].imageMemoryBarrierCount
+                ))
+
                 pContext->dependencyInfos[i].imageMemoryBarrierCount = engine :: vulkan :: config :: dependencyInfoImageMemoryBarrierCount;
-                __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall )
             }
 
             for ( cds :: uint32 j = 0U; j < pContext->dependencyInfos[i].imageMemoryBarrierCount; ++ j ) {
@@ -16118,8 +16233,13 @@ namespace engine :: vulkan {
                             pContext->sampleLocationsInfos[i][j].pSampleLocations = & pContext->sampleLocations[i][j][0];
 
                             if ( pContext->sampleLocationsInfos[i][j].sampleLocationsCount > engine :: vulkan :: config :: sampleLocationsInfoSampleLocationsCount ) {
+                                __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, cds :: String :: f (
+                                        "config :: sampleLocationsInfoSampleLocationsCount = %d. Minimum Required = %d",
+                                        engine :: vulkan :: config :: sampleLocationsInfoSampleLocationsCount,
+                                        pContext->sampleLocationsInfos[i][j].sampleLocationsCount
+                                ))
+
                                 pContext->sampleLocationsInfos[i][j].sampleLocationsCount = engine :: vulkan :: config :: sampleLocationsInfoSampleLocationsCount;
-                                __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall )
                             }
 
                             for ( cds :: uint32 k = 0U; k < pContext->sampleLocationsInfos[j][k].sampleLocationsCount; ++ k ) {
@@ -16168,8 +16288,13 @@ namespace engine :: vulkan {
 #endif
 
         if ( count > engine :: vulkan :: config :: memoryBarrierCount ) {
+            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, cds :: String :: f (
+                    "config :: memoryBarrierCount = %d. Minimum Required = %d",
+                    engine :: vulkan :: config :: memoryBarrierCount,
+                    count
+            ))
+
             count = engine :: vulkan :: config :: memoryBarrierCount;
-            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall )
         }
 
         for ( cds :: uint32 i = 0U; i < count; ++ i ) {
@@ -16196,8 +16321,13 @@ namespace engine :: vulkan {
 #endif
 
         if ( count > engine :: vulkan :: config :: bufferMemoryBarrierCount ) {
+            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, cds :: String :: f (
+                    "config :: bufferMemoryBarrierCount = %d. Minimum Required = %d",
+                    engine :: vulkan :: config :: bufferMemoryBarrierCount,
+                    count
+            ))
+
             count = engine :: vulkan :: config :: bufferMemoryBarrierCount;
-            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall )
         }
 
         for ( cds :: uint32 i = 0U; i < count; ++ i ) {
@@ -16224,8 +16354,13 @@ namespace engine :: vulkan {
 #endif
 
         if ( count > engine :: vulkan :: config :: imageMemoryBarrierCount ) {
+            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, cds :: String :: f (
+                    "config :: imageMemoryBarrierCount = %d. Minimum Required = %d",
+                    engine :: vulkan :: config :: imageMemoryBarrierCount,
+                    count
+            ))
+
             count = engine :: vulkan :: config :: imageMemoryBarrierCount;
-            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall )
         }
 
         for ( cds :: uint32 i = 0U; i < count; ++ i ) {
@@ -16252,8 +16387,13 @@ namespace engine :: vulkan {
                         pContext->sampleLocationsInfos[i].pSampleLocations = & pContext->sampleLocations[i][0];
 
                         if ( pContext->sampleLocationsInfos[i].sampleLocationsCount > engine :: vulkan :: config :: sampleLocationsInfoSampleLocationsCount ) {
+                            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, cds :: String :: f (
+                                    "config :: sampleLocationsInfoSampleLocationsCount = %d. Minimum Required = %d",
+                                    engine :: vulkan :: config :: sampleLocationsInfoSampleLocationsCount,
+                                    pContext->sampleLocationsInfos[i].sampleLocationsCount
+                            ))
+
                             pContext->sampleLocationsInfos[i].sampleLocationsCount = engine :: vulkan :: config :: sampleLocationsInfoSampleLocationsCount;
-                            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall )
                         }
 
                         for ( cds :: uint32 j = 0U; j < pContext->sampleLocationsInfos[j].sampleLocationsCount; ++ j ) {
@@ -16470,8 +16610,13 @@ namespace engine :: vulkan {
                     pContext->deviceGroupRenderPassBeginInfo.pDeviceRenderAreas = & pContext->deviceRenderAreas[0];
 
                     if ( pContext->deviceGroupRenderPassBeginInfo.deviceRenderAreaCount > engine :: vulkan :: config :: deviceGroupRenderPassBeginDeviceRenderAreaCount ) {
+                        __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, cds :: String :: f (
+                                "config :: deviceGroupRenderPassBeginDeviceRenderAreaCount = %d. Minimum Required = %d",
+                                engine :: vulkan :: config :: deviceGroupRenderPassBeginDeviceRenderAreaCount,
+                                pContext->deviceGroupRenderPassBeginInfo.deviceRenderAreaCount
+                        ))
+
                         pContext->deviceGroupRenderPassBeginInfo.deviceRenderAreaCount = engine :: vulkan :: config :: deviceGroupRenderPassBeginDeviceRenderAreaCount;
-                        __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall )
                     }
 
                     for ( cds :: uint32 i = 0U; i < pContext->deviceGroupRenderPassBeginInfo.deviceRenderAreaCount; ++ i ) {
@@ -16544,8 +16689,13 @@ namespace engine :: vulkan {
         pContext->info.pColorAttachments = & pContext->colorAttachments[0];
 
         if ( pContext->info.colorAttachmentCount > engine :: vulkan :: config :: renderingInfoColorAttachmentCount ) {
+            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, cds :: String :: f (
+                    "config :: renderingInfoColorAttachmentCount = %d. Minimum Required = %d",
+                    engine :: vulkan :: config :: renderingInfoColorAttachmentCount,
+                    pContext->info.colorAttachmentCount
+            ))
+
             pContext->info.colorAttachmentCount = engine :: vulkan :: config :: renderingInfoColorAttachmentCount;
-            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall )
         }
 
         for ( cds :: uint32 i = 0U; i < pContext->info.colorAttachmentCount; ++ i ) {
@@ -16563,6 +16713,1026 @@ namespace engine :: vulkan {
         }
 
         return & pContext->info;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    auto toVulkanFormat (
+            VkRenderPassCreateInfo              * pDestination,
+            Type ( RenderPassCreateInfo ) const * pSource
+    ) noexcept -> VkRenderPassCreateInfo * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                          = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO,
+                .pNext                          = nullptr,
+                .flags                          = pSource->flags,
+                .attachmentCount                = pSource->attachmentCount,
+                .pAttachments                   = nullptr,
+                .subpassCount                   = pSource->subpassCount,
+                .pSubpasses                     = nullptr,
+                .dependencyCount                = pSource->dependencyCount,
+                .pDependencies                  = nullptr
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_FRAGMENT_DENSITY_MAP_AVAILABLE
+    auto toVulkanFormat (
+            VkRenderPassFragmentDensityMapCreateInfoEXT           * pDestination,
+            Type ( RenderPassFragmentDensityMapCreateInfo ) const * pSource
+    ) noexcept -> VkRenderPassFragmentDensityMapCreateInfoEXT * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                          = VK_STRUCTURE_TYPE_RENDER_PASS_FRAGMENT_DENSITY_MAP_CREATE_INFO_EXT,
+                .pNext                          = nullptr,
+                .fragmentDensityMapAttachment   = {
+                        .attachment                     = pSource->fragmentDensityMapAttachment.attachment,
+                        .layout                         = static_cast < VkImageLayout > ( pSource->fragmentDensityMapAttachment.layout )
+                }
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    auto toVulkanFormat (
+            VkRenderPassInputAttachmentAspectCreateInfo              * pDestination,
+            Type ( RenderPassInputAttachmentAspectCreateInfo ) const * pSource
+    ) noexcept -> VkRenderPassInputAttachmentAspectCreateInfo * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                          = VK_STRUCTURE_TYPE_RENDER_PASS_INPUT_ATTACHMENT_ASPECT_CREATE_INFO,
+                .pNext                          = nullptr,
+                .aspectReferenceCount           = pSource->aspectReferenceCount,
+                .pAspectReferences              = nullptr
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    auto toVulkanFormat (
+            VkInputAttachmentAspectReference              * pDestination,
+            Type ( InputAttachmentAspectReference ) const * pSource
+    ) noexcept -> VkInputAttachmentAspectReference * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .subpass                = pSource->subpass,
+                .inputAttachmentIndex   = pSource->inputAttachmentIndex,
+                .aspectMask             = pSource->aspectMask
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    auto toVulkanFormat (
+            VkRenderPassMultiviewCreateInfo              * pDestination,
+            Type ( RenderPassMultiviewCreateInfo ) const * pSource
+    ) noexcept -> VkRenderPassMultiviewCreateInfo * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                  = VK_STRUCTURE_TYPE_RENDER_PASS_MULTIVIEW_CREATE_INFO,
+                .pNext                  = nullptr,
+                .subpassCount           = pSource->subpassCount,
+                .pViewMasks             = pSource->pViewMasks,
+                .dependencyCount        = pSource->dependencyCount,
+                .pViewOffsets           = pSource->pViewOffsets,
+                .correlationMaskCount   = pSource->correlationMaskCount,
+                .pCorrelationMasks      = pSource->pCorrelationMasks
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    auto toVulkanFormat (
+            VkAttachmentDescription              * pDestination,
+            Type ( AttachmentDescription ) const * pSource
+    ) noexcept -> VkAttachmentDescription * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .flags          = pSource->flags,
+                .format         = static_cast < VkFormat > ( pSource->format ),
+                .samples        = static_cast < VkSampleCountFlagBits > ( pSource->samples ),
+                .loadOp         = static_cast < VkAttachmentLoadOp > ( pSource->loadOperation ),
+                .storeOp        = static_cast < VkAttachmentStoreOp > ( pSource->storeOperation ),
+                .stencilLoadOp  = static_cast < VkAttachmentLoadOp > ( pSource->stencilLoadOperation ),
+                .stencilStoreOp = static_cast < VkAttachmentStoreOp > ( pSource->stencilStoreOperation ),
+                .initialLayout  = static_cast < VkImageLayout > ( pSource->initialLayout ),
+                .finalLayout    = static_cast < VkImageLayout > ( pSource->finalLayout )
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    auto toVulkanFormat (
+            VkSubpassDescription              * pDestination,
+            Type ( SubpassDescription ) const * pSource
+    ) noexcept -> VkSubpassDescription * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .flags                      = pSource->flags,
+                .pipelineBindPoint          = static_cast < VkPipelineBindPoint > ( pSource->pipelineBindPoint ),
+                .inputAttachmentCount       = pSource->inputAttachmentCount,
+                .pInputAttachments          = nullptr,
+                .colorAttachmentCount       = pSource->colorAttachmentsCount,
+                .pColorAttachments          = nullptr,
+                .pResolveAttachments        = nullptr,
+                .pDepthStencilAttachment    = nullptr,
+                .preserveAttachmentCount    = pSource->preserveAttachmentCount,
+                .pPreserveAttachments       = pSource->pPreserveAttachments
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    auto toVulkanFormat (
+            VkSubpassDependency              * pDestination,
+            Type ( SubpassDependency ) const * pSource
+    ) noexcept -> VkSubpassDependency * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .srcSubpass         = pSource->sourceSubpass,
+                .dstSubpass         = pSource->destinationSubpass,
+                .srcStageMask       = static_cast < VkPipelineStageFlags > ( pSource->sourceStageMask ),
+                .dstStageMask       = static_cast < VkPipelineStageFlags > ( pSource->destinationStageMask ),
+                .srcAccessMask      = static_cast < VkAccessFlags > ( pSource->sourceAccessMask ),
+                .dstAccessMask      = static_cast < VkAccessFlags > ( pSource->destinationAccessMask ),
+                .dependencyFlags    = pSource->dependencyFlags
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    auto toVulkanFormat (
+            VkAttachmentReference              * pDestination,
+            Type ( AttachmentReference ) const * pSource
+    ) noexcept -> VkAttachmentReference * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .attachment = pSource->attachment,
+                .layout     = static_cast < VkImageLayout > ( pSource->layout )
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+    auto toVulkanFormat (
+            VkRenderPassCreateInfo2              * pDestination,
+            Type ( RenderPassCreateInfo2 ) const * pSource
+    ) noexcept -> VkRenderPassCreateInfo2 * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                      = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO_2,
+                .pNext                      = nullptr,
+                .flags                      = pSource->flags,
+                .attachmentCount            = pSource->attachmentCount,
+                .pAttachments               = nullptr,
+                .subpassCount               = pSource->subpassCount,
+                .pSubpasses                 = nullptr,
+                .dependencyCount            = pSource->dependencyCount,
+                .pDependencies              = nullptr,
+                .correlatedViewMaskCount    = pSource->correlatedViewMaskCount,
+                .pCorrelatedViewMasks       = pSource->pCorrelatedViewMasks
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+    auto toVulkanFormat (
+            VkAttachmentDescription2              * pDestination,
+            Type ( AttachmentDescription2 ) const * pSource
+    ) noexcept -> VkAttachmentDescription2 * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                      = VK_STRUCTURE_TYPE_ATTACHMENT_REFERENCE_2,
+                .pNext                      = nullptr,
+                .flags                      = pSource->flags,
+                .format                     = static_cast < VkFormat > ( pSource->format ),
+                .samples                    = static_cast < VkSampleCountFlagBits > ( pSource->samples ),
+                .loadOp                     = static_cast < VkAttachmentLoadOp > ( pSource->loadOperation ),
+                .storeOp                    = static_cast < VkAttachmentStoreOp > ( pSource->storeOperation ),
+                .stencilLoadOp              = static_cast < VkAttachmentLoadOp > ( pSource->stencilLoadOperation ),
+                .stencilStoreOp             = static_cast < VkAttachmentStoreOp > ( pSource->stencilStoreOperation ),
+                .initialLayout              = static_cast < VkImageLayout > ( pSource->initialLayout ),
+                .finalLayout                = static_cast < VkImageLayout > ( pSource->finalLayout )
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+    auto toVulkanFormat (
+            VkAttachmentDescriptionStencilLayout              * pDestination,
+            Type ( AttachmentDescriptionStencilLayout ) const * pSource
+    ) noexcept -> VkAttachmentDescriptionStencilLayout * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                      = VK_STRUCTURE_TYPE_ATTACHMENT_DESCRIPTION_STENCIL_LAYOUT,
+                .pNext                      = nullptr,
+                .stencilInitialLayout       = static_cast < VkImageLayout > ( pSource->stencilInitialLayout ),
+                .stencilFinalLayout         = static_cast < VkImageLayout > ( pSource->stencilFinalLayout )
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+    auto toVulkanFormat (
+            VkAttachmentReferenceStencilLayout              * pDestination,
+            Type ( AttachmentReferenceStencilLayout ) const * pSource
+    ) noexcept -> VkAttachmentReferenceStencilLayout * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                      = VK_STRUCTURE_TYPE_ATTACHMENT_REFERENCE_STENCIL_LAYOUT,
+                .pNext                      = nullptr,
+                .stencilLayout              = static_cast < VkImageLayout > ( pSource->stencilLayout )
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+    auto toVulkanFormat (
+            VkAttachmentReference2              * pDestination,
+            Type ( AttachmentReference2 ) const * pSource
+    ) noexcept -> VkAttachmentReference2 * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                      = VK_STRUCTURE_TYPE_ATTACHMENT_REFERENCE_2,
+                .pNext                      = nullptr,
+                .attachment                 = pSource->attachment,
+                .layout                     = static_cast < VkImageLayout > ( pSource->layout ),
+                .aspectMask                 = pSource->aspectMask
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+    auto toVulkanFormat (
+            VkSubpassDescription2              * pDestination,
+            Type ( SubpassDescription2 ) const * pSource
+    ) noexcept -> VkSubpassDescription2 * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                      = VK_STRUCTURE_TYPE_SUBPASS_DESCRIPTION_2,
+                .pNext                      = nullptr,
+                .flags                      = pSource->flags,
+                .pipelineBindPoint          = static_cast < VkPipelineBindPoint > ( pSource->pipelineBindPoint ),
+                .viewMask                   = pSource->viewMask,
+                .inputAttachmentCount       = pSource->inputAttachmentCount,
+                .pInputAttachments          = nullptr,
+                .colorAttachmentCount       = pSource->colorAttachmentsCount,
+                .pColorAttachments          = nullptr,
+                .pResolveAttachments        = nullptr,
+                .pDepthStencilAttachment    = nullptr,
+                .preserveAttachmentCount    = pSource->preserveAttachmentCount,
+                .pPreserveAttachments       = nullptr
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+    auto toVulkanFormat (
+            VkSubpassDescriptionDepthStencilResolve              * pDestination,
+            Type ( SubpassDescriptionDepthStencilResolve ) const * pSource
+    ) noexcept -> VkSubpassDescriptionDepthStencilResolve * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                          = VK_STRUCTURE_TYPE_SUBPASS_DESCRIPTION_DEPTH_STENCIL_RESOLVE,
+                .pNext                          = nullptr,
+                .depthResolveMode               = static_cast < VkResolveModeFlagBits > ( pSource->depthResolveMode ),
+                .stencilResolveMode             = static_cast < VkResolveModeFlagBits > ( pSource->stencilResolveMode ),
+                .pDepthStencilResolveAttachment = nullptr
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+    auto toVulkanFormat (
+            VkSubpassDependency2              * pDestination,
+            Type ( SubpassDependency2 ) const * pSource
+    ) noexcept -> VkSubpassDependency2 * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                          = VK_STRUCTURE_TYPE_SUBPASS_DEPENDENCY_2,
+                .pNext                          = nullptr,
+                .srcSubpass                     = pSource->sourceSubpass,
+                .dstSubpass                     = pSource->destinationSubpass,
+                .srcStageMask                   = static_cast < VkPipelineStageFlags > ( pSource->sourceStageMask ),
+                .dstStageMask                   = static_cast < VkPipelineStageFlags > ( pSource->destinationStageMask ),
+                .srcAccessMask                  = static_cast < VkAccessFlags > ( pSource->sourceAccessMask ),
+                .dstAccessMask                  = static_cast < VkAccessFlags > ( pSource->destinationAccessMask ),
+                .dependencyFlags                = pSource->dependencyFlags,
+                .viewOffset                     = pSource->viewOffset
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_FRAGMENT_SHADING_RATE_AVAILABLE
+    auto toVulkanFormat (
+            VkFragmentShadingRateAttachmentInfoKHR              * pDestination,
+            Type ( FragmentShadingRateAttachmentInfo ) const * pSource
+    ) noexcept -> VkFragmentShadingRateAttachmentInfoKHR * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                          = VK_STRUCTURE_TYPE_FRAGMENT_SHADING_RATE_ATTACHMENT_INFO_KHR,
+                .pNext                          = nullptr,
+                .pFragmentShadingRateAttachment = nullptr,
+                .shadingRateAttachmentTexelSize = {
+                        .width                          = pSource->shadingRateAttachmentTexelSize.width,
+                        .height                         = pSource->shadingRateAttachmentTexelSize.height
+                }
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    auto prepareContext (
+            CreateRenderPassContext               * pContext,
+            Type ( RenderPassCreateInfo )   const * pSource
+    ) noexcept -> VkRenderPassCreateInfo * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pContext == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        auto pCurrent   = reinterpret_cast < Type ( GenericInStructure ) const * > ( pSource->pNext );
+        auto pCurrentVk = reinterpret_cast < VkBaseOutStructure * > ( toVulkanFormat ( & pContext->createInfo, pSource ) );
+
+        while ( pCurrent != nullptr ) {
+
+            switch ( pCurrent->structureType ) {
+
+#if __C_ENG_VULKAN_API_EXTENSION_FRAGMENT_DENSITY_MAP_AVAILABLE
+
+                case StructureTypeRenderPassFragmentDensityMapCreateInfo:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                            toVulkanFormat (
+                                    & pContext->fragmentDensityMapCreateInfo,
+                                    reinterpret_cast < Type ( RenderPassFragmentDensityMapCreateInfo ) const * > ( pCurrent )
+                            )
+                    );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+
+                case StructureTypeRenderPassInputAttachmentAspectCreateInfo: {
+
+                    auto pInputAttachmentAspectCreateInfo = reinterpret_cast < Type ( RenderPassInputAttachmentAspectCreateInfo ) const * > ( pCurrent );
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                            toVulkanFormat (
+                                    & pContext->inputAttachmentAspectCreateInfo,
+                                    pInputAttachmentAspectCreateInfo
+                            )
+                    );
+
+                    pContext->inputAttachmentAspectCreateInfo.pAspectReferences = & pContext->inputAttachmentAspectReferences[0];
+
+                    if ( pContext->inputAttachmentAspectCreateInfo.aspectReferenceCount > engine :: vulkan :: config :: renderPassInputAttachmentAspectReferenceCount ) {
+                        __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, cds :: String :: f (
+                                "config :: renderPassInputAttachmentAspectReferenceCount = %d. Minimum Required = %d",
+                                engine :: vulkan :: config :: renderPassInputAttachmentAspectReferenceCount,
+                                pContext->inputAttachmentAspectCreateInfo.aspectReferenceCount
+                        ))
+
+                        pContext->inputAttachmentAspectCreateInfo.aspectReferenceCount = engine :: vulkan :: config :: renderPassInputAttachmentAspectReferenceCount;
+                    }
+
+                    for ( cds :: uint32 i = 0U; i < pContext->inputAttachmentAspectCreateInfo.aspectReferenceCount; ++ i ) {
+                        (void) toVulkanFormat ( & pContext->inputAttachmentAspectReferences[i], & pInputAttachmentAspectCreateInfo->pAspectReferences[i] );
+                    }
+
+                    break;
+                }
+
+                case StructureTypeRenderPassMultiviewCreateInfo:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                            toVulkanFormat (
+                                    & pContext->multiviewCreateInfo,
+                                    reinterpret_cast < Type ( RenderPassMultiviewCreateInfo ) const * > ( pCurrent )
+                            )
+                    );
+                    break;
+
+#endif
+
+                default:
+                    break;
+            }
+
+            pCurrentVk  = pCurrentVk->pNext == nullptr ? pCurrentVk : pCurrentVk->pNext;
+            pCurrent    = pCurrent->pNext;
+        }
+
+        pCurrentVk->pNext = nullptr;
+
+        pContext->createInfo.pAttachments = & pContext->attachmentDescriptions[0];
+
+        if ( pContext->createInfo.attachmentCount > engine :: vulkan :: config :: renderPassAttachmentDescriptionCount ) {
+            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, cds :: String :: f (
+                    "config :: renderPassAttachmentDescriptionCount = %d. Minimum Required = %d",
+                    engine :: vulkan :: config :: renderPassAttachmentDescriptionCount,
+                    pContext->createInfo.attachmentCount
+            ))
+
+            pContext->createInfo.attachmentCount = engine :: vulkan :: config :: renderPassAttachmentDescriptionCount;
+        }
+
+        for ( cds :: uint32 i = 0U; i < pContext->createInfo.attachmentCount; ++ i ) {
+            (void) toVulkanFormat ( & pContext->attachmentDescriptions[i], & pSource->pAttachments[i] );
+        }
+
+        pContext->createInfo.pSubpasses = & pContext->subpassDescriptions[0];
+
+        if ( pContext->createInfo.subpassCount > engine :: vulkan :: config :: renderPassSubpassDescriptionCount ) {
+            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, cds :: String :: f (
+                    "config :: renderPassSubpassDescriptionCount = %d. Minimum Required = %d",
+                    engine :: vulkan :: config :: renderPassSubpassDescriptionCount,
+                    pContext->createInfo.subpassCount
+            ))
+
+            pContext->createInfo.subpassCount = engine :: vulkan :: config :: renderPassSubpassDescriptionCount;
+        }
+
+        for ( cds :: uint32 i = 0U; i < pContext->createInfo.subpassCount; ++ i ) {
+            (void) toVulkanFormat ( & pContext->subpassDescriptions[i], & pSource->pSubpasses[i] );
+
+            pContext->subpassDescriptions[i].pInputAttachments = & pContext->inputAttachments[i][0];
+
+            if ( pContext->subpassDescriptions[i].inputAttachmentCount > engine :: vulkan :: config :: renderPassSubpassDescriptionInputAttachmentCount ) {
+                __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, cds :: String :: f (
+                        "config :: renderPassSubpassDescriptionInputAttachmentCount = %d. Minimum Required = %d",
+                        engine :: vulkan :: config :: renderPassSubpassDescriptionInputAttachmentCount,
+                        pContext->subpassDescriptions[i].inputAttachmentCount
+                ))
+
+                pContext->subpassDescriptions[i].inputAttachmentCount = engine :: vulkan :: config :: renderPassSubpassDescriptionInputAttachmentCount;
+            }
+
+            for ( cds :: uint32 j = 0U; j < pContext->subpassDescriptions[i].inputAttachmentCount; ++ j ) {
+                (void) toVulkanFormat ( & pContext->inputAttachments[i][j], & pSource->pSubpasses[i].pInputAttachments[j] );
+            }
+
+            pContext->subpassDescriptions[i].pColorAttachments = & pContext->colorAttachments[i][0];
+            pContext->subpassDescriptions[i].pResolveAttachments = & pContext->resolveAttachments[i][0];
+
+            if ( pContext->subpassDescriptions[i].colorAttachmentCount > engine :: vulkan :: config :: renderPassSubpassDescriptionColorAttachmentCount ) {
+                __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, cds :: String :: f (
+                        "config :: renderPassSubpassDescriptionColorAttachmentCount = %d. Minimum Required = %d",
+                        engine :: vulkan :: config :: renderPassSubpassDescriptionColorAttachmentCount,
+                        pContext->subpassDescriptions[i].colorAttachmentCount
+                ))
+
+                pContext->subpassDescriptions[i].colorAttachmentCount = engine :: vulkan :: config :: renderPassSubpassDescriptionColorAttachmentCount;
+            }
+
+            for ( cds :: uint32 j = 0U; j < pContext->subpassDescriptions[i].colorAttachmentCount; ++ j ) {
+                (void) toVulkanFormat ( & pContext->colorAttachments[i][j], & pSource->pSubpasses[i].pColorAttachments[j] );
+                (void) toVulkanFormat ( & pContext->resolveAttachments[i][j], & pSource->pSubpasses[i].pResolveAttachments[j] );
+            }
+
+            if ( pSource->pSubpasses[i].pDepthStencilAttachment != nullptr ) {
+                pContext->subpassDescriptions[i].pDepthStencilAttachment = toVulkanFormat ( & pContext->depthStencilAttachments[i], pSource->pSubpasses[i].pDepthStencilAttachment );
+            }
+        }
+
+        pContext->createInfo.pDependencies = & pContext->subpassDependencies[0];
+
+        if ( pContext->createInfo.dependencyCount > engine :: vulkan :: config :: renderPassSubpassDependencyCount ) {
+            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, cds :: String :: f (
+                    "config :: renderPassSubpassDependencyCount = %d. Minimum Required = %d",
+                    engine :: vulkan :: config :: renderPassSubpassDependencyCount,
+                    pContext->createInfo.dependencyCount
+            ))
+
+            pContext->createInfo.dependencyCount = engine :: vulkan :: config :: renderPassSubpassDependencyCount;
+        }
+
+        for ( cds :: uint32 i = 0U; i < pContext->createInfo.dependencyCount; ++ i ) {
+            (void) toVulkanFormat ( & pContext->subpassDependencies[i], & pSource->pDependencies[i] );
+        }
+
+        return & pContext->createInfo;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+    auto prepareContext (
+            CreateRenderPass2Context               * pContext,
+            Type ( RenderPassCreateInfo2 )   const * pSource
+    ) noexcept -> VkRenderPassCreateInfo2 * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pContext == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        auto pCurrent   = reinterpret_cast < Type ( GenericInStructure ) const * > ( pSource->pNext );
+        auto pCurrentVk = reinterpret_cast < VkBaseOutStructure * > ( toVulkanFormat ( & pContext->createInfo, pSource ) );
+
+        while ( pCurrent != nullptr ) {
+
+            switch ( pCurrent->structureType ) {
+
+#if __C_ENG_VULKAN_API_EXTENSION_FRAGMENT_DENSITY_MAP_AVAILABLE
+
+                case StructureTypeRenderPassFragmentDensityMapCreateInfo:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                            toVulkanFormat (
+                                    & pContext->fragmentDensityMapCreateInfo,
+                                    reinterpret_cast < Type ( RenderPassFragmentDensityMapCreateInfo ) const * > ( pCurrent )
+                            )
+                    );
+                    break;
+
+#endif
+
+                default:
+                    break;
+            }
+
+            pCurrentVk  = pCurrentVk->pNext == nullptr ? pCurrentVk : pCurrentVk->pNext;
+            pCurrent    = pCurrent->pNext;
+        }
+
+        pCurrentVk->pNext = nullptr;
+
+        pContext->createInfo.pAttachments = & pContext->attachmentDescriptions[0];
+
+        if ( pContext->createInfo.attachmentCount > engine :: vulkan :: config :: renderPassAttachmentDescriptionCount ) {
+            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, cds :: String :: f (
+                    "config :: renderPassAttachmentDescriptionCount = %d. Minimum Required = %d",
+                    engine :: vulkan :: config :: renderPassAttachmentDescriptionCount,
+                    pContext->createInfo.attachmentCount
+            ))
+
+            pContext->createInfo.attachmentCount = engine :: vulkan :: config :: renderPassAttachmentDescriptionCount;
+        }
+
+        for ( cds :: uint32 i = 0U; i < pContext->createInfo.attachmentCount; ++ i ) {
+
+            pCurrent    = reinterpret_cast < Type ( GenericInStructure ) const * > ( pSource->pAttachments[i].pNext );
+            pCurrentVk  = reinterpret_cast < VkBaseOutStructure * > ( toVulkanFormat ( & pContext->attachmentDescriptions[i], & pSource->pAttachments[i] ) );
+
+            while ( pCurrent != nullptr ) {
+
+                switch ( pCurrent->structureType ) {
+
+                    case StructureTypeAttachmentDescriptionStencilLayout:
+                        pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                                toVulkanFormat (
+                                        & pContext->attachmentDescriptionStencilLayouts[i],
+                                        reinterpret_cast < Type ( AttachmentDescriptionStencilLayout ) const * > ( pCurrent )
+                                )
+                        );
+                        break;
+
+                    default:
+                        break;
+                }
+
+                pCurrentVk  = pCurrentVk->pNext == nullptr ? pCurrentVk : pCurrentVk->pNext;
+                pCurrent    = pCurrent->pNext;
+            }
+
+            pCurrentVk->pNext = nullptr;
+        }
+
+        pContext->createInfo.pSubpasses = & pContext->subpassDescriptions[0];
+
+        if ( pContext->createInfo.subpassCount > engine :: vulkan :: config :: renderPassSubpassDescriptionCount ) {
+            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, cds :: String :: f (
+                    "config :: renderPassSubpassDescriptionCount = %d. Minimum Required = %d",
+                    engine :: vulkan :: config :: renderPassSubpassDescriptionCount,
+                    pContext->createInfo.subpassCount
+            ))
+
+            pContext->createInfo.subpassCount = engine :: vulkan :: config :: renderPassSubpassDescriptionCount;
+        }
+
+        for ( cds :: uint32 i = 0U; i < pContext->createInfo.subpassCount; ++ i ) {
+
+            pCurrentVk  = reinterpret_cast < VkBaseOutStructure * > ( toVulkanFormat ( & pContext->subpassDescriptions[i], & pSource->pSubpasses[i] ) );
+            pCurrent    = reinterpret_cast < Type ( GenericInStructure ) const * > ( pSource->pSubpasses[i].pNext );
+
+            while ( pCurrent != nullptr ) {
+
+                switch ( pCurrent->structureType ) {
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_FRAGMENT_SHADING_RATE_AVAILABLE
+
+                    case StructureTypeFragmentShadingRateAttachmentInfo: {
+
+                        auto pFragmentShadingRateAttachmentInfo = reinterpret_cast < Type ( FragmentShadingRateAttachmentInfo ) const * > ( pCurrent );
+                        pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                                toVulkanFormat (
+                                        & pContext->fragmentShadingRateAttachmentInfos[i],
+                                        pFragmentShadingRateAttachmentInfo
+                                )
+                        );
+
+                        if ( pFragmentShadingRateAttachmentInfo->pFragmentShadingRateAttachment != nullptr ) {
+                            pContext->fragmentShadingRateAttachmentInfos[i].pFragmentShadingRateAttachment = toVulkanFormat ( & pContext->fragmentShadingRateAttachmentReferences[i], pFragmentShadingRateAttachmentInfo->pFragmentShadingRateAttachment );
+                        }
+
+                        break;
+                    }
+
+#endif
+
+                    case StructureTypeSubpassDescriptionDepthStencilResolve: {
+
+                        auto pSubpassDescriptionDepthStencilResolve = reinterpret_cast < Type ( SubpassDescriptionDepthStencilResolve ) const * > ( pCurrent );
+                        pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                                toVulkanFormat (
+                                        & pContext->subpassDescriptionDepthStencilResolve[i],
+                                        pSubpassDescriptionDepthStencilResolve
+                                )
+                        );
+
+                        if ( pSubpassDescriptionDepthStencilResolve->pDepthStencilResolveAttachment != nullptr ) {
+                            pContext->subpassDescriptionDepthStencilResolve[i].pDepthStencilResolveAttachment = toVulkanFormat ( & pContext->subpassDescriptionDepthStencilReferences[i], pSubpassDescriptionDepthStencilResolve->pDepthStencilResolveAttachment );
+                        }
+
+                        break;
+                    }
+
+                    default:
+                        break;
+                }
+
+                pCurrentVk  = pCurrentVk->pNext == nullptr ? pCurrentVk : pCurrentVk->pNext;
+                pCurrent    = pCurrent->pNext;
+            }
+
+            pCurrentVk->pNext = nullptr;
+
+            pContext->subpassDescriptions[i].pInputAttachments = & pContext->inputAttachments[i][0];
+
+            if ( pContext->subpassDescriptions[i].inputAttachmentCount > engine :: vulkan :: config :: renderPassSubpassDescriptionInputAttachmentCount ) {
+                __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, cds :: String :: f (
+                        "config :: renderPassSubpassDescriptionInputAttachmentCount = %d. Minimum Required = %d",
+                        engine :: vulkan :: config :: renderPassSubpassDescriptionInputAttachmentCount,
+                        pContext->subpassDescriptions[i].inputAttachmentCount
+                ))
+
+                pContext->subpassDescriptions[i].inputAttachmentCount = engine :: vulkan :: config :: renderPassSubpassDescriptionInputAttachmentCount;
+            }
+
+            for ( cds :: uint32 j = 0U; j < pContext->subpassDescriptions[i].inputAttachmentCount; ++ j ) {
+
+                pCurrentVk  = reinterpret_cast < VkBaseOutStructure * > ( toVulkanFormat ( & pContext->inputAttachments[i][j], & pSource->pSubpasses[i].pInputAttachments[j] ) );
+                pCurrent    = reinterpret_cast < Type ( GenericInStructure ) const * > ( pSource->pSubpasses[i].pInputAttachments[j].pNext );
+
+                while ( pCurrent != nullptr ) {
+
+                    switch ( pCurrent->structureType ) {
+
+                        case StructureTypeAttachmentReferenceStencilLayout:
+                            pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                                    toVulkanFormat (
+                                            & pContext->inputAttachmentsReferenceStencilLayouts[i][j],
+                                            reinterpret_cast < Type ( AttachmentReferenceStencilLayout ) const * > ( pCurrent )
+                                    )
+                            );
+                            break;
+
+                        default:
+                            break;
+                    }
+
+                    pCurrentVk  = pCurrentVk->pNext == nullptr ? pCurrentVk : pCurrentVk->pNext;
+                    pCurrent    = pCurrent->pNext;
+                }
+
+                pCurrentVk->pNext = nullptr;
+            }
+
+            pContext->subpassDescriptions[i].pColorAttachments = & pContext->colorAttachments[i][0];
+            pContext->subpassDescriptions[i].pResolveAttachments = & pContext->resolveAttachments[i][0];
+
+            if ( pContext->subpassDescriptions[i].colorAttachmentCount > engine :: vulkan :: config :: renderPassSubpassDescriptionColorAttachmentCount ) {
+                __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, cds :: String :: f (
+                        "config :: renderPassSubpassDescriptionColorAttachmentCount = %d. Minimum Required = %d",
+                        engine :: vulkan :: config :: renderPassSubpassDescriptionColorAttachmentCount,
+                        pContext->subpassDescriptions[i].colorAttachmentCount
+                ))
+
+                pContext->subpassDescriptions[i].colorAttachmentCount = engine :: vulkan :: config :: renderPassSubpassDescriptionColorAttachmentCount;
+            }
+
+            for ( cds :: uint32 j = 0U; j < pContext->subpassDescriptions[i].colorAttachmentCount; ++ j ) {
+
+                pCurrentVk  = reinterpret_cast < VkBaseOutStructure * > ( toVulkanFormat ( & pContext->colorAttachments[i][j], & pSource->pSubpasses[i].pColorAttachments[j] ) );
+                pCurrent    = reinterpret_cast < Type ( GenericInStructure ) const * > ( pSource->pSubpasses[i].pColorAttachments[j].pNext );
+
+                while ( pCurrent != nullptr ) {
+
+                    switch ( pCurrent->structureType ) {
+
+                        case StructureTypeAttachmentReferenceStencilLayout:
+                            pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                                    toVulkanFormat (
+                                            & pContext->colorAttachmentsReferenceStencilLayouts[i][j],
+                                            reinterpret_cast < Type ( AttachmentReferenceStencilLayout ) const * > ( pCurrent )
+                                    )
+                            );
+                            break;
+
+                        default:
+                            break;
+                    }
+
+                    pCurrentVk  = pCurrentVk->pNext == nullptr ? pCurrentVk : pCurrentVk->pNext;
+                    pCurrent    = pCurrent->pNext;
+                }
+
+                pCurrentVk->pNext = nullptr;
+
+                pCurrentVk  = reinterpret_cast < VkBaseOutStructure * > ( toVulkanFormat ( & pContext->resolveAttachments[i][j], & pSource->pSubpasses[i].pResolveAttachments[j] ) );
+                pCurrent    = reinterpret_cast < Type ( GenericInStructure ) const * > ( pSource->pSubpasses[i].pResolveAttachments[j].pNext );
+
+                while ( pCurrent != nullptr ) {
+
+                    switch ( pCurrent->structureType ) {
+
+                        case StructureTypeAttachmentReferenceStencilLayout:
+                            pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                                    toVulkanFormat (
+                                            & pContext->resolveAttachmentsReferenceStencilLayouts[i][j],
+                                            reinterpret_cast < Type ( AttachmentReferenceStencilLayout ) const * > ( pCurrent )
+                                    )
+                            );
+                            break;
+
+                        default:
+                            break;
+                    }
+
+                    pCurrentVk  = pCurrentVk->pNext == nullptr ? pCurrentVk : pCurrentVk->pNext;
+                    pCurrent    = pCurrent->pNext;
+                }
+
+                pCurrentVk->pNext = nullptr;
+            }
+
+            if ( pSource->pSubpasses[i].pDepthStencilAttachment != nullptr ) {
+                pContext->subpassDescriptions[i].pDepthStencilAttachment = toVulkanFormat ( & pContext->depthStencilAttachments[i], pSource->pSubpasses[i].pDepthStencilAttachment );
+
+                pCurrentVk  = reinterpret_cast < VkBaseOutStructure * > ( & pContext->depthStencilAttachments[i] );
+                pCurrent    = reinterpret_cast < Type ( GenericInStructure ) const * > ( pSource->pSubpasses[i].pDepthStencilAttachment );
+
+                while ( pCurrent != nullptr ) {
+
+                    switch ( pCurrent->structureType ) {
+
+                        case StructureTypeAttachmentReferenceStencilLayout:
+                            pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                                    toVulkanFormat (
+                                            & pContext->depthStencilAttachmentsReferenceStencilLayouts[i],
+                                            reinterpret_cast < Type ( AttachmentReferenceStencilLayout ) const * > ( pCurrent )
+                                    )
+                            );
+                            break;
+
+                        default:
+                            break;
+                    }
+
+                    pCurrentVk  = pCurrentVk->pNext == nullptr ? pCurrentVk : pCurrentVk->pNext;
+                    pCurrent    = pCurrent->pNext;
+                }
+
+                pCurrentVk->pNext = nullptr;
+            }
+        }
+
+        pContext->createInfo.pDependencies = & pContext->subpassDependencies[0];
+
+        if ( pContext->createInfo.dependencyCount > engine :: vulkan :: config :: renderPassSubpassDependencyCount ) {
+            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, cds :: String :: f (
+                    "config :: renderPassSubpassDependencyCount = %d. Minimum Required = %d",
+                    engine :: vulkan :: config :: renderPassSubpassDependencyCount,
+                    pContext->createInfo.dependencyCount
+            ))
+
+            pContext->createInfo.dependencyCount = engine :: vulkan :: config :: renderPassSubpassDependencyCount;
+        }
+
+        for ( cds :: uint32 i = 0U; i < pContext->createInfo.dependencyCount; ++ i ) {
+
+            pCurrentVk  = reinterpret_cast < VkBaseOutStructure * > ( toVulkanFormat ( & pContext->subpassDependencies[i], & pSource->pDependencies[i] ) );
+            pCurrent    = reinterpret_cast < Type ( GenericInStructure ) const * > ( pSource->pDependencies[i].pNext );
+
+            while ( pCurrent != nullptr ) {
+
+                switch ( pCurrent->structureType ) {
+
+                    case StructureTypeMemoryBarrier2:
+                        pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                                toVulkanFormat (
+                                        & pContext->memoryBarriers[i],
+                                        reinterpret_cast < Type ( MemoryBarrier2 ) const * > ( pCurrent )
+                                )
+                        );
+                        break;
+
+                    default:
+                        break;
+                }
+
+                pCurrentVk  = pCurrentVk->pNext == nullptr ? pCurrentVk : pCurrentVk->pNext;
+                pCurrent    = pCurrent->pNext;
+            }
+
+            pCurrentVk->pNext = nullptr;
+        }
+
+        return & pContext->createInfo;
     }
 #endif
 

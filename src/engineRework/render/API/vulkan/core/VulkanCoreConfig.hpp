@@ -56,6 +56,13 @@ namespace engine :: vulkan :: config {
 
     constexpr cds :: uint32 renderingInfoColorAttachmentCount               = 16U;
     constexpr cds :: uint32 deviceGroupRenderPassBeginDeviceRenderAreaCount = physicalDeviceGroupCount * 4U;
+
+    constexpr cds :: uint32 renderPassInputAttachmentAspectReferenceCount       = 64U;
+    constexpr cds :: uint32 renderPassAttachmentDescriptionCount                = 32U;
+    constexpr cds :: uint32 renderPassSubpassDescriptionCount                   = 32U;
+    constexpr cds :: uint32 renderPassSubpassDependencyCount                    = 32U;
+    constexpr cds :: uint32 renderPassSubpassDescriptionInputAttachmentCount    = 128U;
+    constexpr cds :: uint32 renderPassSubpassDescriptionColorAttachmentCount    = 128U;
 }
 
 #if defined ( __C_ENG_USE_DEFENSIVE_PROGRAMMING ) || !defined(NDEBUG)

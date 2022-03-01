@@ -3737,6 +3737,70 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #define C_ENG_MAP_END
 #include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START ENUM ( RenderPassCreateFlag, TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+#if __C_ENG_VULKAN_API_EXTENSION_QUALCOMM_RENDER_PASS_TRANSFORM_AVAILABLE
+            Field ( TransformQualcomm,  VkRenderPassCreateFlagBits :: VK_RENDER_PASS_CREATE_TRANSFORM_BIT_QCOM ),
+#endif
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START ENUM ( AttachmentDescriptionFlag, TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( MayAlias,  VkAttachmentDescriptionFlagBits :: VK_ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START ENUM ( SubpassDescriptionFlag, TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXPERIMENTAL_MULTIVIEW_PER_VIEW_ATTRIBUTES_AVAILABLE
+            Field ( PerViewAttributesNVidia,                        VkSubpassDescriptionFlagBits :: VK_SUBPASS_DESCRIPTION_PER_VIEW_ATTRIBUTES_BIT_NVX ),
+            Field ( PerViewPositionXOnlyNVidia,                     VkSubpassDescriptionFlagBits :: VK_SUBPASS_DESCRIPTION_PER_VIEW_POSITION_X_ONLY_BIT_NVX ),
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_QUALCOMM_RENDER_PASS_SHADER_RESOLVE_AVAILABLE
+            Field ( FragmentRegionQualcomm,                         VkSubpassDescriptionFlagBits :: VK_SUBPASS_DESCRIPTION_FRAGMENT_REGION_BIT_QCOM ),
+            Field ( ShaderResolveQualcomm,                          VkSubpassDescriptionFlagBits :: VK_SUBPASS_DESCRIPTION_SHADER_RESOLVE_BIT_QCOM ),
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_ARM_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_AVAILABLE
+            Field ( RasterizationOrderAttachmentColorAccessARM,     VkSubpassDescriptionFlagBits :: VK_SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_COLOR_ACCESS_BIT_ARM ),
+            Field ( RasterizationOrderAttachmentDepthAccessARM,     VkSubpassDescriptionFlagBits :: VK_SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_DEPTH_ACCESS_BIT_ARM ),
+            Field ( RasterizationOrderAttachmentStencilAccessARM,   VkSubpassDescriptionFlagBits :: VK_SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_STENCIL_ACCESS_BIT_ARM ),
+#endif
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START ENUM ( PipelineBindPoint, TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( Graphics,               VkPipelineBindPoint :: VK_PIPELINE_BIND_POINT_GRAPHICS ),
+            Field ( Compute,                VkPipelineBindPoint :: VK_PIPELINE_BIND_POINT_COMPUTE ),
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_RAY_TRACING_PIPELINE_AVAILABLE
+            Field ( RayTracing,             VkPipelineBindPoint :: VK_PIPELINE_BIND_POINT_RAY_TRACING_KHR ),
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_HUAWEI_SUBPASS_SHADING_AVAILABLE
+            Field ( SubpassShadingHuawei,   VkPipelineBindPoint :: VK_PIPELINE_BIND_POINT_SUBPASS_SHADING_HUAWEI ),
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+            Field ( RayTracingNVidia,       VkPipelineBindPoint :: VK_PIPELINE_BIND_POINT_RAY_TRACING_NV ),
+#endif
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
 #endif
 
 
@@ -3792,6 +3856,9 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_ALIAS ( FenceCreateFlags,               VkFenceCreateFlags );
         __C_ENG_ALIAS ( SemaphoreCreateFlags,           VkSemaphoreCreateFlags );
         __C_ENG_ALIAS ( EventCreateFlags,               VkEventCreateFlags );
+        __C_ENG_ALIAS ( RenderPassCreateFlags,          VkRenderPassCreateFlags );
+        __C_ENG_ALIAS ( AttachmentDescriptionFlags,     VkAttachmentDescriptionFlags );
+        __C_ENG_ALIAS ( SubpassDescriptionFlags,        VkSubpassDescriptionFlags );
 
         __C_ENG_ALIAS ( AllocationFunction,             PFN_vkAllocationFunction );
         __C_ENG_ALIAS ( ReallocationFunction,           PFN_vkReallocationFunction );
@@ -10078,6 +10145,304 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #endif
 
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( AttachmentDescription, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( AttachmentDescriptionFlags ) flags;
+            Type ( Format )                     format;
+            Type ( SampleCountFlag )            samples;
+            Type ( AttachmentLoadOperation )    loadOperation;
+            Type ( AttachmentStoreOperation )   storeOperation;
+            Type ( AttachmentLoadOperation )    stencilLoadOperation;
+            Type ( AttachmentStoreOperation )   stencilStoreOperation;
+            Type ( ImageLayout )                initialLayout;
+            Type ( ImageLayout )                finalLayout;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START STRUCT ( AttachmentReference, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            cds :: uint32           attachment;
+            Type ( ImageLayout )    layout;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START STRUCT ( SubpassDescription, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( SubpassDescriptionFlags )        flags;
+            Type ( PipelineBindPoint )              pipelineBindPoint;
+            cds :: uint32                           inputAttachmentCount;
+            Type ( AttachmentReference )    const * pInputAttachments;
+            cds :: uint32                           colorAttachmentsCount;
+            Type ( AttachmentReference )    const * pColorAttachments;
+            Type ( AttachmentReference )    const * pResolveAttachments;
+            Type ( AttachmentReference )    const * pDepthStencilAttachment;
+            cds :: uint32                           preserveAttachmentCount;
+            cds :: uint32                   const * pPreserveAttachments;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START STRUCT ( SubpassDependency, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            cds :: uint32               sourceSubpass;
+            cds :: uint32               destinationSubpass;
+            Type ( PipelineStageFlags ) sourceStageMask;
+            Type ( PipelineStageFlags ) destinationStageMask;
+            Type ( AccessFlags )        sourceAccessMask;
+            Type ( AccessFlags )        destinationAccessMask;
+            Type ( DependencyFlags )    dependencyFlags;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START STRUCT ( RenderPassCreateInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                      structureType;
+            Type ( GenericStructure )           const * pNext;
+            Type ( RenderPassCreateFlags )              flags;
+            cds :: uint32                               attachmentCount;
+            Type ( AttachmentDescription )      const * pAttachments;
+            cds :: uint32                               subpassCount;
+            Type ( SubpassDescription )         const * pSubpasses;
+            cds :: uint32                               dependencyCount;
+            Type ( SubpassDependency )          const * pDependencies;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( AttachmentDescription2, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )              structureType;
+            Type ( GenericStructure )   const * pNext;
+            Type ( AttachmentDescriptionFlags ) flags;
+            Type ( Format )                     format;
+            Type ( SampleCountFlag )            samples;
+            Type ( AttachmentLoadOperation )    loadOperation;
+            Type ( AttachmentStoreOperation )   storeOperation;
+            Type ( AttachmentLoadOperation )    stencilLoadOperation;
+            Type ( AttachmentStoreOperation )   stencilStoreOperation;
+            Type ( ImageLayout )                initialLayout;
+            Type ( ImageLayout )                finalLayout;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START STRUCT ( AttachmentDescriptionStencilLayout, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )              structureType;
+            Type ( GenericStructure )   const * pNext;
+            Type ( ImageLayout )                stencilInitialLayout;
+            Type ( ImageLayout )                stencilFinalLayout;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START STRUCT ( AttachmentReferenceStencilLayout, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )              structureType;
+            Type ( GenericStructure )   const * pNext;
+            Type ( ImageLayout )                stencilLayout;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START STRUCT ( AttachmentReference2, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )              structureType;
+            Type ( GenericStructure )   const * pNext;
+            cds :: uint32                       attachment;
+            Type ( ImageLayout )                layout;
+            Type ( ImageAspectFlags )           aspectMask;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START STRUCT ( SubpassDescription2, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                  structureType;
+            Type ( GenericStructure )       const * pNext;
+            Type ( SubpassDescriptionFlags )        flags;
+            Type ( PipelineBindPoint )              pipelineBindPoint;
+            cds :: uint32                           viewMask;
+            cds :: uint32                           inputAttachmentCount;
+            Type ( AttachmentReference2 )   const * pInputAttachments;
+            cds :: uint32                           colorAttachmentsCount;
+            Type ( AttachmentReference2 )   const * pColorAttachments;
+            Type ( AttachmentReference2 )   const * pResolveAttachments;
+            Type ( AttachmentReference2 )   const * pDepthStencilAttachment;
+            cds :: uint32                           preserveAttachmentCount;
+            cds :: uint32                   const * pPreserveAttachments;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START STRUCT ( SubpassDescriptionDepthStencilResolve, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                  structureType;
+            Type ( GenericStructure )       const * pNext;
+            Type ( ResolveModeFlag )                depthResolveMode;
+            Type ( ResolveModeFlag )                stencilResolveMode;
+            Type ( AttachmentReference2 )   const * pDepthStencilResolveAttachment;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START STRUCT ( SubpassDependency2, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                  structureType;
+            Type ( GenericStructure )       const * pNext;
+            cds :: uint32                           sourceSubpass;
+            cds :: uint32                           destinationSubpass;
+            Type ( PipelineStageFlags )             sourceStageMask;
+            Type ( PipelineStageFlags )             destinationStageMask;
+            Type ( AccessFlags )                    sourceAccessMask;
+            Type ( AccessFlags )                    destinationAccessMask;
+            Type ( DependencyFlags )                dependencyFlags;
+            cds :: sint32                           viewOffset;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START STRUCT ( RenderPassCreateInfo2, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                      structureType;
+            Type ( GenericStructure )           const * pNext;
+            Type ( RenderPassCreateFlags )              flags;
+            cds :: uint32                               attachmentCount;
+            Type ( AttachmentDescription2 )     const * pAttachments;
+            cds :: uint32                               subpassCount;
+            Type ( SubpassDescription2 )        const * pSubpasses;
+            cds :: uint32                               dependencyCount;
+            Type ( SubpassDependency2 )         const * pDependencies;
+            cds :: uint32                               correlatedViewMaskCount;
+            cds :: uint32                       const * pCorrelatedViewMasks;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_FRAGMENT_SHADING_RATE_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( FragmentShadingRateAttachmentInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                      structureType;
+            Type ( GenericStructure )           const * pNext;
+            Type ( AttachmentReference2 )       const * pFragmentShadingRateAttachment;
+            Type ( Extent2D )                           shadingRateAttachmentTexelSize;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_FRAGMENT_DENSITY_MAP_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( RenderPassFragmentDensityMapCreateInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                      structureType;
+            Type ( GenericStructure )           const * pNext;
+            Type ( AttachmentReference )                fragmentDensityMapAttachment;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( InputAttachmentAspectReference, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            cds :: uint32               subpass;
+            cds :: uint32               inputAttachmentIndex;
+            Type ( ImageAspectFlags )   aspectMask;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START STRUCT ( RenderPassInputAttachmentAspectCreateInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                          structureType;
+            Type ( GenericStructure )               const * pNext;
+            cds :: uint32                                   aspectReferenceCount;
+            Type ( InputAttachmentAspectReference ) const * pAspectReferences;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START STRUCT ( RenderPassMultiviewCreateInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                          structureType;
+            Type ( GenericStructure )               const * pNext;
+            cds :: uint32                                   subpassCount;
+            cds :: uint32                           const * pViewMasks;
+            cds :: uint32                                   dependencyCount;
+            cds :: sint32                           const * pViewOffsets;
+            cds :: uint32                                   correlationMaskCount;
+            cds :: uint32                           const * pCorrelationMasks;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+
 #define C_ENG_MAP_START     HEADER
 #include <ObjectMapping.hpp>
 
@@ -10120,6 +10485,10 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         NoDiscard auto toString ( Type ( ImageLayout ) ) noexcept -> cds :: StringLiteral;
         NoDiscard auto toString ( Type ( AttachmentLoadOperation ) ) noexcept -> cds :: StringLiteral;
         NoDiscard auto toString ( Type ( AttachmentStoreOperation ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( RenderPassCreateFlag ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( AttachmentDescriptionFlag ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( SubpassDescriptionFlag ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( PipelineBindPoint ) ) noexcept -> cds :: StringLiteral;
 
 #endif
 
@@ -10280,6 +10649,12 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         NoDiscard auto toString ( Type ( ClearDepthStencilValue ) const & ) noexcept -> cds :: String;
         NoDiscard auto toString ( Type ( ClearValue ) const & ) noexcept -> cds :: String;
 
+        NoDiscard auto toString ( Type ( RenderPassCreateInfo ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( AttachmentDescription ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( SubpassDescription ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( AttachmentReference ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( SubpassDependency ) const & ) noexcept -> cds :: String;
+
 #endif
 
 #if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
@@ -10314,6 +10689,9 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         NoDiscard auto toString ( Type ( ExportFenceCreateInfo ) const & ) noexcept -> cds :: String;
 
         NoDiscard auto toString ( Type ( DeviceGroupRenderPassBeginInfo ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( InputAttachmentAspectReference ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( RenderPassInputAttachmentAspectCreateInfo ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( RenderPassMultiviewCreateInfo ) const & ) noexcept -> cds :: String;
 
 #endif
 
@@ -10352,6 +10730,15 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
         NoDiscard auto toString ( Type ( TimelineSemaphoreSubmitInfo ) const & ) noexcept -> cds :: String;
 
+        NoDiscard auto toString ( Type ( AttachmentDescription2 ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( AttachmentDescriptionStencilLayout ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( AttachmentReferenceStencilLayout ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( AttachmentReference2 ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( SubpassDescription2 ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( SubpassDescriptionDepthStencilResolve ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( SubpassDependency2 ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( RenderPassCreateInfo2 ) const & ) noexcept -> cds :: String;
+
 #endif
 
 #if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
@@ -10360,6 +10747,14 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceVulkan13Features ) const & ) noexcept -> cds :: String;
 
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_FRAGMENT_DENSITY_MAP_AVAILABLE
+        NoDiscard auto toString ( Type ( RenderPassFragmentDensityMapCreateInfo ) const & ) noexcept -> cds :: String;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_FRAGMENT_SHADING_RATE_AVAILABLE
+        NoDiscard auto toString ( Type ( FragmentShadingRateAttachmentInfo ) const & ) noexcept -> cds :: String;
 #endif
 
 #if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
