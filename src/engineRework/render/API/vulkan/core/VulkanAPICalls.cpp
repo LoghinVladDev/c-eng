@@ -3562,3 +3562,277 @@ auto engine :: vulkan :: createRenderPass (
     );
 }
 #endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: destroyRenderPass (
+        Type ( DeviceHandle )                   deviceHandle,
+        Type ( RenderPassHandle )               renderPassHandle,
+        Type ( AllocationCallbacks )    const * pAllocationCallbacks
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || renderPassHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkDestroyRenderPass )
+
+    vkDestroyRenderPassHandle (
+            deviceHandle,
+            renderPassHandle,
+            AllocatorHandler :: applyCallbacks ( pAllocationCallbacks )
+    );
+
+    return ResultSuccess;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: createFrameBuffer (
+        Type ( DeviceHandle )                   deviceHandle,
+        Type ( FrameBufferCreateInfo )  const * pCreateInfo,
+        Type ( AllocationCallbacks )    const * pAllocationCallbacks,
+        Type ( FrameBufferHandle )            * pHandle
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || pCreateInfo == nullptr || pHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkCreateFramebuffer )
+
+    auto context = ContextManager :: acquire();
+
+    return static_cast < Type ( Result ) > (
+            vkCreateFramebufferHandle (
+                    deviceHandle,
+                    prepareContext ( & context.data().create.frameBuffer, pCreateInfo ),
+                    AllocatorHandler :: applyCallbacks ( pAllocationCallbacks ),
+                    pHandle
+            )
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: destroyFrameBuffer (
+        Type ( DeviceHandle )                   deviceHandle,
+        Type ( FrameBufferHandle )              handle,
+        Type ( AllocationCallbacks )    const * pAllocationCallbacks
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || handle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkDestroyFramebuffer )
+
+    auto context = ContextManager :: acquire();
+
+    vkDestroyFramebufferHandle (
+            deviceHandle,
+            handle,
+            AllocatorHandler :: applyCallbacks ( pAllocationCallbacks )
+    );
+
+    return ResultSuccess;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: commandBufferBeginRenderPass (
+        Type ( CommandBufferHandle )            commandBufferHandle,
+        Type ( RenderPassBeginInfo )    const * pInfo,
+        Type ( SubpassContents )                subpassContents
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( commandBufferHandle == nullptr || pInfo == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkCmdBeginRenderPass )
+
+    auto context = ContextManager :: acquire();
+
+    vkCmdBeginRenderPassHandle (
+            commandBufferHandle,
+            prepareContext ( & context.data().begin.renderPass, pInfo ),
+            static_cast < VkSubpassContents > ( subpassContents )
+    );
+
+    return ResultSuccess;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+auto engine :: vulkan :: commandBufferBeginRenderPass (
+        Type ( CommandBufferHandle )            commandBufferHandle,
+        Type ( RenderPassBeginInfo )    const * pRenderPassBeginInfo,
+        Type ( SubpassBeginInfo )       const * pSubpassBeginInfo
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( commandBufferHandle == nullptr || pRenderPassBeginInfo == nullptr || pSubpassBeginInfo == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkCmdBeginRenderPass2 )
+
+    auto context = ContextManager :: acquire();
+
+    vkCmdBeginRenderPass2Handle (
+            commandBufferHandle,
+            prepareContext ( & context.data().begin.renderPass, pRenderPassBeginInfo ),
+            prepareContext ( & context.data().begin.renderPass, pSubpassBeginInfo )
+    );
+
+    return ResultSuccess;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: getRenderAreaGranularity (
+        Type ( DeviceHandle )       deviceHandle,
+        Type ( RenderPassHandle )   renderPassHandle,
+        Type ( Extent2D )         * pGranularity
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || renderPassHandle == nullptr || pGranularity == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkGetRenderAreaGranularity )
+
+    vkGetRenderAreaGranularityHandle (
+            deviceHandle,
+            renderPassHandle,
+            pGranularity
+    );
+
+    return ResultSuccess;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: commandBufferNextSubpass (
+        Type ( CommandBufferHandle )    commandBufferHandle,
+        Type ( SubpassContents )        contents
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( commandBufferHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkCmdNextSubpass )
+
+    vkCmdNextSubpassHandle (
+            commandBufferHandle,
+            static_cast < VkSubpassContents > ( contents )
+    );
+
+    return ResultSuccess;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+auto engine :: vulkan :: commandBufferNextSubpass (
+        Type ( CommandBufferHandle )        commandBufferHandle,
+        Type ( SubpassBeginInfo )   const * pBeginInfo,
+        Type ( SubpassEndInfo )     const * pEndInfo
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( commandBufferHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkCmdNextSubpass2 )
+
+    auto context = ContextManager :: acquire();
+
+    vkCmdNextSubpass2Handle (
+            commandBufferHandle,
+            prepareContext ( & context.data().other.nextSubpass, pBeginInfo ),
+            prepareContext ( & context.data().other.nextSubpass, pEndInfo )
+    );
+
+    return ResultSuccess;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: commandBufferEndRenderPass (
+        Type ( CommandBufferHandle )    handle
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( handle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkCmdEndRenderPass )
+
+    vkCmdEndRenderPassHandle ( handle );
+
+    return ResultSuccess;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+auto engine :: vulkan :: commandBufferEndRenderPass (
+        Type ( CommandBufferHandle )        handle,
+        Type ( SubpassEndInfo )     const * pInfo
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( handle == nullptr || pInfo == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkCmdEndRenderPass2 )
+
+    auto context = ContextManager :: acquire();
+
+    vkCmdEndRenderPass2Handle (
+            handle,
+            prepareContext ( & context.data().other.nextSubpass, pInfo )
+    );
+
+    return ResultSuccess;
+}
+#endif

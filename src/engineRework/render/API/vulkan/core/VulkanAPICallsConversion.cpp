@@ -1954,9 +1954,9 @@ namespace engine :: vulkan {
 
 #if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
     auto fromVulkanFormat (
-            Type ( PhysicalDeviceImagelessFramebufferFeatures )       * pDestination,
+            Type ( PhysicalDeviceImagelessFrameBufferFeatures )       * pDestination,
             VkPhysicalDeviceImagelessFramebufferFeatures        const * pSource
-    ) noexcept -> Type ( PhysicalDeviceImagelessFramebufferFeatures ) * {
+    ) noexcept -> Type ( PhysicalDeviceImagelessFrameBufferFeatures ) * {
 
 #if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
 
@@ -1966,7 +1966,7 @@ namespace engine :: vulkan {
 
 #endif
 
-        pDestination->structureType = StructureTypePhysicalDeviceImagelessFramebufferFeatures;
+        pDestination->structureType = StructureTypePhysicalDeviceImagelessFrameBufferFeatures;
         pDestination->pNext = nullptr;
 
         pDestination->imagelessFramebuffer             = pSource->imagelessFramebuffer;
@@ -2373,7 +2373,7 @@ namespace engine :: vulkan {
 #if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
     auto toVulkanFormat (
             VkPhysicalDeviceImagelessFramebufferFeatures              * pDestination,
-            Type ( PhysicalDeviceImagelessFramebufferFeatures ) const * pSource
+            Type ( PhysicalDeviceImagelessFrameBufferFeatures ) const * pSource
     ) noexcept -> VkPhysicalDeviceImagelessFramebufferFeatures * {
 
 #if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
@@ -8130,11 +8130,11 @@ namespace engine :: vulkan {
                 );
                 break;
 
-            case StructureTypePhysicalDeviceImagelessFramebufferFeatures:
+            case StructureTypePhysicalDeviceImagelessFrameBufferFeatures:
                 pDestination->pNext = reinterpret_cast < VkBaseOutStructure * > (
                         toVulkanFormat (
                                 & pContext->imagelessFramebuffer,
-                                reinterpret_cast < Type ( PhysicalDeviceImagelessFramebufferFeatures ) const * > ( pSource )
+                                reinterpret_cast < Type ( PhysicalDeviceImagelessFrameBufferFeatures ) const * > ( pSource )
                         )
                 );
                 break;
@@ -10398,7 +10398,7 @@ namespace engine :: vulkan {
                     pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > ( & pContext->features.hostQueryReset );
                     break;
 
-                case StructureTypePhysicalDeviceImagelessFramebufferFeatures:
+                case StructureTypePhysicalDeviceImagelessFrameBufferFeatures:
                     pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > ( & pContext->features.imagelessFramebuffer );
                     break;
 
@@ -11227,8 +11227,8 @@ namespace engine :: vulkan {
                     (void) fromVulkanFormat ( reinterpret_cast < Type ( PhysicalDeviceHostQueryResetFeatures ) * > ( pCurrent ), & pContext->features.hostQueryReset );
                     break;
 
-                case StructureTypePhysicalDeviceImagelessFramebufferFeatures:
-                    (void) fromVulkanFormat ( reinterpret_cast < Type ( PhysicalDeviceImagelessFramebufferFeatures ) * > ( pCurrent ), & pContext->features.imagelessFramebuffer );
+                case StructureTypePhysicalDeviceImagelessFrameBufferFeatures:
+                    (void) fromVulkanFormat ( reinterpret_cast < Type ( PhysicalDeviceImagelessFrameBufferFeatures ) * > ( pCurrent ), & pContext->features.imagelessFramebuffer );
                     break;
 
                 case StructureTypePhysicalDeviceScalarBlockLayoutFeatures:
@@ -12364,7 +12364,7 @@ namespace engine :: vulkan {
             currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceHostQueryResetFeatures;
 
             currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->imagelessFramebufferFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
-            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceImagelessFramebufferFeatures;
+            currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceImagelessFrameBufferFeatures;
 
             currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->scalarBlockLayoutFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
             currentInChain->structureType = vulkan :: StructureTypePhysicalDeviceScalarBlockLayoutFeatures;
@@ -17733,6 +17733,719 @@ namespace engine :: vulkan {
         }
 
         return & pContext->createInfo;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    auto toVulkanFormat (
+            VkFramebufferCreateInfo              * pDestination,
+            Type ( FrameBufferCreateInfo ) const * pSource
+    ) noexcept -> VkFramebufferCreateInfo * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                          = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO,
+                .pNext                          = nullptr,
+                .flags                          = pSource->flags,
+                .renderPass                     = pSource->renderPass,
+                .attachmentCount                = pSource->attachmentCount,
+                .pAttachments                   = pSource->pAttachments,
+                .width                          = pSource->width,
+                .height                         = pSource->height,
+                .layers                         = pSource->layers
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+    auto toVulkanFormat (
+            VkFramebufferAttachmentsCreateInfo              * pDestination,
+            Type ( FrameBufferAttachmentsCreateInfo ) const * pSource
+    ) noexcept -> VkFramebufferAttachmentsCreateInfo * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                          = VK_STRUCTURE_TYPE_FRAMEBUFFER_ATTACHMENTS_CREATE_INFO,
+                .pNext                          = nullptr,
+                .attachmentImageInfoCount       = pSource->attachmentImageInfoCount,
+                .pAttachmentImageInfos          = nullptr
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+    auto toVulkanFormat (
+            VkFramebufferAttachmentImageInfo              * pDestination,
+            Type ( FrameBufferAttachmentImageInfo ) const * pSource
+    ) noexcept -> VkFramebufferAttachmentImageInfo * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                          = VK_STRUCTURE_TYPE_FRAMEBUFFER_ATTACHMENT_IMAGE_INFO,
+                .pNext                          = nullptr,
+                .flags                          = pSource->flags,
+                .usage                          = pSource->usage,
+                .width                          = pSource->width,
+                .height                         = pSource->height,
+                .layerCount                     = pSource->layerCount,
+                .viewFormatCount                = pSource->viewFormatCount,
+                .pViewFormats                   = nullptr
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    auto prepareContext (
+            CreateFrameBufferContext              * pContext,
+            Type ( FrameBufferCreateInfo )  const * pSource
+    ) noexcept -> VkFramebufferCreateInfo * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pContext == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        auto pCurrent   = reinterpret_cast < Type ( GenericInStructure ) const * > ( pSource->pNext );
+        auto pCurrentVk = reinterpret_cast < VkBaseOutStructure * > ( toVulkanFormat ( & pContext->createInfo, pSource ) );
+
+        while ( pCurrent != nullptr ) {
+
+            switch ( pCurrent->structureType ) {
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+
+                case StructureTypeFrameBufferAttachmentsCreateInfo: {
+                    auto pFrameBufferAttachmentsCreateInfo = reinterpret_cast < Type ( FrameBufferAttachmentsCreateInfo ) const * > ( pCurrent );
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                            toVulkanFormat (
+                                    & pContext->attachmentsCreateInfo,
+                                    pFrameBufferAttachmentsCreateInfo
+                            )
+                    );
+
+                    pContext->attachmentsCreateInfo.pAttachmentImageInfos = & pContext->attachmentImageInfos[0];
+
+                    if ( pContext->attachmentsCreateInfo.attachmentImageInfoCount > engine :: vulkan :: config :: frameBufferAttachmentsImageInfoCount ) {
+                        __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, cds :: String :: f (
+                                "config :: frameBufferAttachmentsImageInfoCount = %d. Minimum Required = %d",
+                                engine :: vulkan :: config :: frameBufferAttachmentsImageInfoCount,
+                                pContext->attachmentsCreateInfo.attachmentImageInfoCount
+                        ))
+
+                        pContext->attachmentsCreateInfo.attachmentImageInfoCount = engine :: vulkan :: config :: frameBufferAttachmentsImageInfoCount;
+                    }
+
+                    for ( cds :: uint32 i = 0U; i < pContext->attachmentsCreateInfo.attachmentImageInfoCount; ++ i ) {
+                        (void) toVulkanFormat ( & pContext->attachmentImageInfos[i], & pFrameBufferAttachmentsCreateInfo->pAttachmentImageInfos[i] );
+                    }
+
+                    break;
+                }
+
+#endif
+
+                default:
+                    break;
+            }
+
+            pCurrentVk  = pCurrentVk->pNext == nullptr ? pCurrentVk : pCurrentVk->pNext;
+            pCurrent    = pCurrent->pNext;
+        }
+
+        pCurrentVk->pNext = nullptr;
+
+        return & pContext->createInfo;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    auto toVulkanFormat (
+            VkRenderPassBeginInfo              * pDestination,
+            Type ( RenderPassBeginInfo ) const * pSource
+    ) noexcept -> VkRenderPassBeginInfo * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                          = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO,
+                .pNext                          = nullptr,
+                .renderPass                     = pSource->renderPass,
+                .framebuffer                    = pSource->frameBuffer,
+                .renderArea                     = {
+                        .offset                         = {
+                                .x                              = pSource->renderArea.offset.x,
+                                .y                              = pSource->renderArea.offset.y
+                        },
+                        .extent                         = {
+                                .width                          = pSource->renderArea.extent.width,
+                                .height                         = pSource->renderArea.extent.height
+                        }
+                },
+                .clearValueCount                = pSource->clearValueCount,
+                .pClearValues                   = nullptr
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+    auto toVulkanFormat (
+            VkRenderPassAttachmentBeginInfo              * pDestination,
+            Type ( RenderPassAttachmentBeginInfo ) const * pSource
+    ) noexcept -> VkRenderPassAttachmentBeginInfo * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                          = VK_STRUCTURE_TYPE_RENDER_PASS_ATTACHMENT_BEGIN_INFO,
+                .pNext                          = nullptr,
+                .attachmentCount                = pSource->attachmentCount,
+                .pAttachments                   = pSource->pAttachments
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_SAMPLE_LOCATIONS_AVAILABLE
+    auto toVulkanFormat (
+            VkRenderPassSampleLocationsBeginInfoEXT              * pDestination,
+            Type ( RenderPassSampleLocationsBeginInfo ) const * pSource
+    ) noexcept -> VkRenderPassSampleLocationsBeginInfoEXT * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                                  = VK_STRUCTURE_TYPE_RENDER_PASS_SAMPLE_LOCATIONS_BEGIN_INFO_EXT,
+                .pNext                                  = nullptr,
+                .attachmentInitialSampleLocationsCount  = pSource->attachmentInitialSampleLocationsCount,
+                .pAttachmentInitialSampleLocations      = nullptr,
+                .postSubpassSampleLocationsCount        = pSource->postSubpassSampleLocationsCount,
+                .pPostSubpassSampleLocations            = nullptr
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_QUALCOMM_RENDER_PASS_TRANSFORM_AVAILABLE
+    auto toVulkanFormat (
+            VkRenderPassTransformBeginInfoQCOM              * pDestination,
+            Type ( RenderPassTransformBeginInfoQualcomm ) const * pSource
+    ) noexcept -> VkRenderPassTransformBeginInfoQCOM * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                                  = VK_STRUCTURE_TYPE_RENDER_PASS_TRANSFORM_BEGIN_INFO_QCOM,
+                .pNext                                  = nullptr,
+                .transform                              = static_cast < VkSurfaceTransformFlagBitsKHR > ( pSource->transform )
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_SAMPLE_LOCATIONS_AVAILABLE
+    auto toVulkanFormat (
+            VkAttachmentSampleLocationsEXT              * pDestination,
+            Type ( AttachmentSampleLocations ) const * pSource
+    ) noexcept -> VkAttachmentSampleLocationsEXT * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .attachmentIndex            = pSource->attachmentIndex,
+                .sampleLocationsInfo        = {
+                        .sType                      = VK_STRUCTURE_TYPE_SAMPLE_LOCATIONS_INFO_EXT,
+                        .pNext                      = nullptr,
+                        .sampleLocationsPerPixel    = static_cast < VkSampleCountFlagBits > ( pSource->sampleLocationsInfo.sampleLocationsPerPixel ),
+                        .sampleLocationGridSize     = {
+                                .width                      = pSource->sampleLocationsInfo.sampleLocationGridSize.width,
+                                .height                     = pSource->sampleLocationsInfo.sampleLocationGridSize.height
+                        },
+                        .sampleLocationsCount       = pSource->sampleLocationsInfo.sampleLocationsCount,
+                        .pSampleLocations           = nullptr
+                }
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_SAMPLE_LOCATIONS_AVAILABLE
+    auto toVulkanFormat (
+            VkSubpassSampleLocationsEXT              * pDestination,
+            Type ( SubpassSampleLocations ) const * pSource
+    ) noexcept -> VkSubpassSampleLocationsEXT * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .subpassIndex               = pSource->subpassIndex,
+                .sampleLocationsInfo        = {
+                        .sType                      = VK_STRUCTURE_TYPE_SAMPLE_LOCATIONS_INFO_EXT,
+                        .pNext                      = nullptr,
+                        .sampleLocationsPerPixel    = static_cast < VkSampleCountFlagBits > ( pSource->sampleLocationsInfo.sampleLocationsPerPixel ),
+                        .sampleLocationGridSize     = {
+                                .width                      = pSource->sampleLocationsInfo.sampleLocationGridSize.width,
+                                .height                     = pSource->sampleLocationsInfo.sampleLocationGridSize.height
+                        },
+                        .sampleLocationsCount       = pSource->sampleLocationsInfo.sampleLocationsCount,
+                        .pSampleLocations           = nullptr
+                }
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    auto prepareContext (
+            BeginRenderPassContext               * pContext,
+            Type ( RenderPassBeginInfo )   const * pSource
+    ) noexcept -> VkRenderPassBeginInfo * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pContext == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        auto pCurrent   = reinterpret_cast < Type ( GenericInStructure ) const * > ( pSource->pNext );
+        auto pCurrentVk = reinterpret_cast < VkBaseOutStructure * > ( toVulkanFormat ( & pContext->beginInfo, pSource ) );
+
+        while ( pCurrent != nullptr ) {
+
+            switch ( pCurrent->structureType ) {
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+
+            case StructureTypeDeviceGroupRenderPassBeginInfo: {
+                auto pDeviceGroupRenderPassBeginInfo = reinterpret_cast < Type ( DeviceGroupRenderPassBeginInfo ) const * > ( pCurrent );
+                pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                        toVulkanFormat (
+                                & pContext->deviceGroupRenderPassBeginInfo,
+                                pDeviceGroupRenderPassBeginInfo
+                        )
+                );
+
+                pContext->deviceGroupRenderPassBeginInfo.pDeviceRenderAreas = & pContext->deviceGroupDeviceRenderAreas[0];
+
+                if ( pContext->deviceGroupRenderPassBeginInfo.deviceRenderAreaCount > engine :: vulkan :: config :: deviceGroupRenderPassBeginDeviceRenderAreaCount ) {
+                    __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, cds :: String :: f (
+                            "config :: deviceGroupRenderPassBeginDeviceRenderAreaCount = %d. Minimum Required = %d",
+                            engine :: vulkan :: config :: deviceGroupRenderPassBeginDeviceRenderAreaCount,
+                            pContext->deviceGroupRenderPassBeginInfo.deviceRenderAreaCount
+                    ))
+
+                    pContext->deviceGroupRenderPassBeginInfo.deviceRenderAreaCount = engine :: vulkan :: config :: deviceGroupRenderPassBeginDeviceRenderAreaCount;
+                }
+
+                for ( cds :: uint32 i = 0U; i < pContext->deviceGroupRenderPassBeginInfo.deviceRenderAreaCount; ++ i ) {
+                    pContext->deviceGroupDeviceRenderAreas[i] = {
+                            .offset = {
+                                    .x      = pDeviceGroupRenderPassBeginInfo->pDeviceRenderAreas[i].offset.x,
+                                    .y      = pDeviceGroupRenderPassBeginInfo->pDeviceRenderAreas[i].offset.y
+                            },
+                            .extent = {
+                                    .width  = pDeviceGroupRenderPassBeginInfo->pDeviceRenderAreas[i].extent.width,
+                                    .height = pDeviceGroupRenderPassBeginInfo->pDeviceRenderAreas[i].extent.height
+                            }
+                    };
+                }
+
+                break;
+            }
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+
+            case StructureTypeRenderPassAttachmentBeginInfo:
+                pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                        toVulkanFormat (
+                                & pContext->attachmentBeginInfo,
+                                reinterpret_cast < Type ( RenderPassAttachmentBeginInfo ) const * > ( pCurrent )
+                        )
+                );
+                break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_SAMPLE_LOCATIONS_AVAILABLE
+
+            case StructureTypeRenderPassSampleLocationsBeginInfo: {
+                auto pRenderPassSampleLocationsBeginInfo = reinterpret_cast < Type ( RenderPassSampleLocationsBeginInfo ) const * > ( pCurrent );
+                pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                        toVulkanFormat (
+                                & pContext->sampleLocationsBeginInfo,
+                                pRenderPassSampleLocationsBeginInfo
+                        )
+                );
+
+                pContext->sampleLocationsBeginInfo.pAttachmentInitialSampleLocations = & pContext->attachmentInitialSampleLocations[0];
+
+                if ( pContext->sampleLocationsBeginInfo.attachmentInitialSampleLocationsCount > engine :: vulkan :: config :: renderPassSampleLocationsAttachmentInitialCount ) {
+                    __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, cds :: String :: f (
+                            "config :: renderPassSampleLocationsAttachmentInitialCount = %d. Minimum Required = %d",
+                            engine :: vulkan :: config :: renderPassSampleLocationsAttachmentInitialCount,
+                            pContext->sampleLocationsBeginInfo.attachmentInitialSampleLocationsCount
+                    ))
+
+                    pContext->sampleLocationsBeginInfo.attachmentInitialSampleLocationsCount = engine :: vulkan :: config :: renderPassSampleLocationsAttachmentInitialCount;
+                }
+
+                for ( cds :: uint32 i = 0U; i < pContext->sampleLocationsBeginInfo.attachmentInitialSampleLocationsCount; ++ i ) {
+                    (void) toVulkanFormat ( & pContext->attachmentInitialSampleLocations[i], & pRenderPassSampleLocationsBeginInfo->pAttachmentInitialSampleLocations[i] );
+
+                    pContext->attachmentInitialSampleLocations[i].sampleLocationsInfo.pSampleLocations = & pContext->attachmentInitialSampleLocationsLocations[i][0];
+
+                    if ( pContext->attachmentInitialSampleLocations[i].sampleLocationsInfo.sampleLocationsCount > engine :: vulkan :: config :: sampleLocationsInfoSampleLocationsCount ) {
+                        __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, cds :: String :: f (
+                                "config :: sampleLocationsInfoSampleLocationsCount = %d. Minimum Required = %d",
+                                engine :: vulkan :: config :: sampleLocationsInfoSampleLocationsCount,
+                                pContext->attachmentInitialSampleLocations[i].sampleLocationsInfo.sampleLocationsCount
+                        ))
+
+                        pContext->attachmentInitialSampleLocations[i].sampleLocationsInfo.sampleLocationsCount = engine :: vulkan :: config :: sampleLocationsInfoSampleLocationsCount;
+                    }
+
+                    for ( cds :: uint32 j = 0U; j < pContext->attachmentInitialSampleLocations[i].sampleLocationsInfo.sampleLocationsCount; ++ j ) {
+                        pContext->attachmentInitialSampleLocationsLocations[i][j] = {
+                                .x  = pRenderPassSampleLocationsBeginInfo->pAttachmentInitialSampleLocations[i].sampleLocationsInfo.pSampleLocations[j].x,
+                                .y  = pRenderPassSampleLocationsBeginInfo->pAttachmentInitialSampleLocations[i].sampleLocationsInfo.pSampleLocations[j].y
+                        };
+                    }
+                }
+
+                pContext->sampleLocationsBeginInfo.pPostSubpassSampleLocations = & pContext->postSubpassSampleLocations[0];
+
+                if ( pContext->sampleLocationsBeginInfo.postSubpassSampleLocationsCount > engine :: vulkan :: config :: renderPassSampleLocationsPostSubpassCount ) {
+                    __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, cds :: String :: f (
+                            "config :: renderPassSampleLocationsPostSubpassCount = %d. Minimum Required = %d",
+                            engine :: vulkan :: config :: renderPassSampleLocationsPostSubpassCount,
+                            pContext->sampleLocationsBeginInfo.postSubpassSampleLocationsCount
+                    ))
+
+                    pContext->sampleLocationsBeginInfo.postSubpassSampleLocationsCount = engine :: vulkan :: config :: renderPassSampleLocationsPostSubpassCount;
+                }
+
+                for ( cds :: uint32 i = 0U; i < pContext->sampleLocationsBeginInfo.postSubpassSampleLocationsCount; ++ i ) {
+                    (void) toVulkanFormat ( & pContext->postSubpassSampleLocations[i], & pRenderPassSampleLocationsBeginInfo->pPostSubpassSampleLocations[i] );
+
+                    pContext->postSubpassSampleLocations[i].sampleLocationsInfo.pSampleLocations = & pContext->postSubpassSampleLocationsLocations[i][0];
+
+                    if ( pContext->postSubpassSampleLocations[i].sampleLocationsInfo.sampleLocationsCount > engine :: vulkan :: config :: sampleLocationsInfoSampleLocationsCount ) {
+                        __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, cds :: String :: f (
+                                "config :: sampleLocationsInfoSampleLocationsCount = %d. Minimum Required = %d",
+                                engine :: vulkan :: config :: sampleLocationsInfoSampleLocationsCount,
+                                pContext->postSubpassSampleLocations[i].sampleLocationsInfo.sampleLocationsCount
+                        ))
+
+                        pContext->postSubpassSampleLocations[i].sampleLocationsInfo.sampleLocationsCount = engine :: vulkan :: config :: sampleLocationsInfoSampleLocationsCount;
+                    }
+
+                    for ( cds :: uint32 j = 0U; j < pContext->postSubpassSampleLocations[i].sampleLocationsInfo.sampleLocationsCount; ++ j ) {
+                        pContext->postSubpassSampleLocationsLocations[i][j] = {
+                                .x  = pRenderPassSampleLocationsBeginInfo->pPostSubpassSampleLocations[i].sampleLocationsInfo.pSampleLocations[j].x,
+                                .y  = pRenderPassSampleLocationsBeginInfo->pPostSubpassSampleLocations[i].sampleLocationsInfo.pSampleLocations[j].y
+                        };
+                    }
+                }
+
+                break;
+            }
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_QUALCOMM_RENDER_PASS_TRANSFORM_AVAILABLE
+
+            case StructureTypeRenderPassTransformBeginInfoQualcomm:
+                pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                        toVulkanFormat (
+                                & pContext->transformBeginInfo,
+                                reinterpret_cast < Type ( RenderPassTransformBeginInfoQualcomm ) const * > ( pCurrent )
+                        )
+                );
+                break;
+
+#endif
+
+                default:
+                    break;
+            }
+
+            pCurrentVk  = pCurrentVk->pNext == nullptr ? pCurrentVk : pCurrentVk->pNext;
+            pCurrent    = pCurrent->pNext;
+        }
+
+        pCurrentVk->pNext = nullptr;
+
+        pContext->beginInfo.pClearValues = & pContext->clearValues[0];
+
+        if ( pContext->beginInfo.clearValueCount > engine :: vulkan :: config :: renderPassBeginInfoClearValueCount ) {
+            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, cds :: String :: f (
+                    "config :: renderPassBeginInfoClearValueCount = %d. Minimum Required = %d",
+                    engine :: vulkan :: config :: renderPassBeginInfoClearValueCount,
+                    pContext->beginInfo.clearValueCount
+            ))
+
+            pContext->beginInfo.clearValueCount = engine :: vulkan :: config :: renderPassBeginInfoClearValueCount;
+        }
+
+        for ( cds :: uint32 i = 0U; i < pContext->beginInfo.clearValueCount; ++ i ) {
+            (void) std :: memcpy ( & pContext->clearValues[i], & pSource->pClearValues[i], sizeof ( pContext->clearValues[i] ) );
+        }
+
+        return & pContext->beginInfo;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+    auto toVulkanFormat (
+            VkSubpassBeginInfo              * pDestination,
+            Type ( SubpassBeginInfo ) const * pSource
+    ) noexcept -> VkSubpassBeginInfo * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType      = VK_STRUCTURE_TYPE_SUBPASS_BEGIN_INFO,
+                .pNext      = nullptr,
+                .contents   = static_cast < VkSubpassContents > ( pSource->contents )
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+    auto prepareContext (
+            BeginRenderPassContext               * pContext,
+            Type ( SubpassBeginInfo )      const * pSource
+    ) noexcept -> VkSubpassBeginInfo * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pContext == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        return toVulkanFormat ( & pContext->subpassBeginInfo, pSource );
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+    auto prepareContext (
+            NextSubpassContext                   * pContext,
+            Type ( SubpassBeginInfo )      const * pSource
+    ) noexcept -> VkSubpassBeginInfo * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pContext == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        return toVulkanFormat ( & pContext->beginInfo, pSource );
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+    auto toVulkanFormat (
+            VkSubpassEndInfo              * pDestination,
+            Type ( SubpassEndInfo ) const * pSource
+    ) noexcept -> VkSubpassEndInfo * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType      = VK_STRUCTURE_TYPE_SUBPASS_END_INFO,
+                .pNext      = nullptr
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_QUALCOMM_FRAGMENT_DENSITY_MAP_OFFSET_AVAILABLE
+    auto toVulkanFormat (
+            VkSubpassFragmentDensityMapOffsetEndInfoQCOM                  * pDestination,
+            Type ( SubpassFragmentDensityMapOffsetEndInfoQualcomm ) const * pSource
+    ) noexcept -> VkSubpassFragmentDensityMapOffsetEndInfoQCOM * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                      = VK_STRUCTURE_TYPE_SUBPASS_FRAGMENT_DENSITY_MAP_OFFSET_END_INFO_QCOM,
+                .pNext                      = nullptr,
+                .fragmentDensityOffsetCount = pSource->fragmentDensityOffsetCount,
+                .pFragmentDensityOffsets    = nullptr
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+    auto prepareContext (
+            NextSubpassContext                 * pContext,
+            Type ( SubpassEndInfo )      const * pSource
+    ) noexcept -> VkSubpassEndInfo * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pContext == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        auto pCurrent   = reinterpret_cast < Type ( GenericInStructure ) const * > ( pSource->pNext );
+        auto pCurrentVk = reinterpret_cast < VkBaseOutStructure * > ( toVulkanFormat ( & pContext->endInfo, pSource ) );
+
+        while ( pCurrent != nullptr ) {
+
+            switch ( pCurrent->structureType ) {
+
+#if __C_ENG_VULKAN_API_EXTENSION_QUALCOMM_FRAGMENT_DENSITY_MAP_OFFSET_AVAILABLE
+
+                case StructureTypeSubpassFragmentDensityMapOffsetEndInfoQualcomm: {
+                    auto pSubpassFragmentDensityMapOffsetEndInfo = reinterpret_cast < Type ( SubpassFragmentDensityMapOffsetEndInfoQualcomm ) const * > ( pCurrent );
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                            toVulkanFormat (
+                                    & pContext->fragmentDensityMapOffsetEndInfo,
+                                    pSubpassFragmentDensityMapOffsetEndInfo
+                            )
+                    );
+
+                    pContext->fragmentDensityMapOffsetEndInfo.pFragmentDensityOffsets = & pContext->fragmentDensityOffsets[0];
+
+                    if ( pContext->fragmentDensityMapOffsetEndInfo.fragmentDensityOffsetCount > engine :: vulkan :: config :: subpassFragmentDensityMapOffsetEndInfoOffsetCount ) {
+                        __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, cds :: String :: f (
+                                "config :: subpassFragmentDensityMapOffsetEndInfoOffsetCount = %d. Minimum Required = %d",
+                                engine :: vulkan :: config :: subpassFragmentDensityMapOffsetEndInfoOffsetCount,
+                                pContext->fragmentDensityMapOffsetEndInfo.fragmentDensityOffsetCount
+                        ))
+
+                        pContext->fragmentDensityMapOffsetEndInfo.fragmentDensityOffsetCount = engine :: vulkan :: config :: subpassFragmentDensityMapOffsetEndInfoOffsetCount;
+                    }
+
+                    for ( cds :: uint32 i = 0U; i < pContext->fragmentDensityMapOffsetEndInfo.fragmentDensityOffsetCount; ++ i ) {
+                        pContext->fragmentDensityOffsets[i] = {
+                                .x  = pSubpassFragmentDensityMapOffsetEndInfo->pFragmentDensityOffsets[i].x,
+                                .y  = pSubpassFragmentDensityMapOffsetEndInfo->pFragmentDensityOffsets[i].y
+                        };
+                    }
+
+                    break;
+                }
+
+#endif
+
+                default:
+                    break;
+            }
+
+            pCurrentVk  = pCurrentVk->pNext == nullptr ? pCurrentVk : pCurrentVk->pNext;
+            pCurrent    = pCurrent->pNext;
+        }
+
+        pCurrentVk->pNext = nullptr;
+
+        return & pContext->endInfo;
     }
 #endif
 

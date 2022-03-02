@@ -946,6 +946,55 @@ struct CreateRenderPass2Context {
 #endif
 };
 
+struct CreateFrameBufferContext {
+    DiagnosticContext                                       diag;
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    VkFramebufferCreateInfo                                 createInfo;
+#endif
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+    VkFramebufferAttachmentsCreateInfo                      attachmentsCreateInfo;
+    VkFramebufferAttachmentImageInfo                        attachmentImageInfos [ engine :: vulkan :: config :: frameBufferAttachmentsImageInfoCount ];
+#endif
+};
+
+struct BeginRenderPassContext {
+    DiagnosticContext                                       diag;
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    VkRenderPassBeginInfo                                   beginInfo;
+    VkClearValue                                            clearValues [ engine :: vulkan :: config :: renderPassBeginInfoClearValueCount ];
+#endif
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    VkDeviceGroupRenderPassBeginInfo                        deviceGroupRenderPassBeginInfo;
+    VkRect2D                                                deviceGroupDeviceRenderAreas [ engine :: vulkan :: config :: deviceGroupRenderPassBeginDeviceRenderAreaCount ];
+#endif
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+    VkRenderPassAttachmentBeginInfo                         attachmentBeginInfo;
+    VkSubpassBeginInfo                                      subpassBeginInfo;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_SAMPLE_LOCATIONS_AVAILABLE
+    VkRenderPassSampleLocationsBeginInfoEXT                 sampleLocationsBeginInfo;
+    VkAttachmentSampleLocationsEXT                          attachmentInitialSampleLocations [ engine :: vulkan :: config :: renderPassSampleLocationsAttachmentInitialCount ];
+    VkSampleLocationEXT                                     attachmentInitialSampleLocationsLocations [ engine :: vulkan :: config :: renderPassSampleLocationsAttachmentInitialCount ] [ engine :: vulkan :: config :: sampleLocationsInfoSampleLocationsCount ];
+    VkSubpassSampleLocationsEXT                             postSubpassSampleLocations [ engine :: vulkan :: config :: renderPassSampleLocationsPostSubpassCount ];
+    VkSampleLocationEXT                                     postSubpassSampleLocationsLocations [ engine :: vulkan :: config :: renderPassSampleLocationsPostSubpassCount ] [ engine :: vulkan :: config :: sampleLocationsInfoSampleLocationsCount ];
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_QUALCOMM_RENDER_PASS_TRANSFORM_AVAILABLE
+    VkRenderPassTransformBeginInfoQCOM                      transformBeginInfo;
+#endif
+};
+
+struct NextSubpassContext {
+    DiagnosticContext                                       diag;
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+    VkSubpassBeginInfo                                      beginInfo;
+    VkSubpassEndInfo                                        endInfo;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_QUALCOMM_FRAGMENT_DENSITY_MAP_OFFSET_AVAILABLE
+    VkSubpassFragmentDensityMapOffsetEndInfoQCOM            fragmentDensityMapOffsetEndInfo;
+    VkOffset2D                                              fragmentDensityOffsets [ engine :: vulkan :: config :: subpassFragmentDensityMapOffsetEndInfoOffsetCount ];
+#endif
+};
+
 union EnumerateSharedContext {
     EnumerateLayerPropertiesContext                                     layerProperties;
     EnumerateExtensionPropertiesContext                                 extensionProperties;
@@ -965,6 +1014,7 @@ union CreateSharedContext {
     CreateEventContext                                                  event;
     CreateRenderPassContext                                             renderPass;
     CreateRenderPass2Context                                            renderPass2;
+    CreateFrameBufferContext                                            frameBuffer;
 };
 
 union GetSharedContext {
@@ -985,6 +1035,7 @@ union AllocateSharedContext {
 union BeginSharedContext {
     BeginCommandBufferContext                                           commandBuffer;
     BeginCommandBufferRenderingContext                                  commandBufferRendering;
+    BeginRenderPassContext                                              renderPass;
 };
 
 union SubmitSharedContext {
@@ -993,6 +1044,7 @@ union SubmitSharedContext {
 
 union OthersSharedContext {
     RegisterEventContext                                                registerEvent;
+    NextSubpassContext                                                  nextSubpass;
 };
 
 union ImportFenceSharedContext {

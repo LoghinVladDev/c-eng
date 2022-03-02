@@ -201,7 +201,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
             Field ( WriteDescriptorSet,                                                    VkStructureType :: VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET ),
             Field ( CopyDescriptorSet,                                                     VkStructureType :: VK_STRUCTURE_TYPE_COPY_DESCRIPTOR_SET ),
 
-            Field ( FramebufferCreateInfo,                                                 VkStructureType :: VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO ),
+            Field ( FrameBufferCreateInfo,                                                 VkStructureType :: VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO ),
             Field ( RenderPassCreateInfo,                                                  VkStructureType :: VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO ),
 
             Field ( CommandPoolCreateInfo,                                                 VkStructureType :: VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO ),
@@ -365,10 +365,10 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
             Field ( SamplerReductionModeCreateInfo,                                        VkStructureType :: VK_STRUCTURE_TYPE_SAMPLER_REDUCTION_MODE_CREATE_INFO ),
 
             Field ( PhysicalDeviceVulkanMemoryModelFeatures,                               VkStructureType :: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_MEMORY_MODEL_FEATURES ),
-            Field ( PhysicalDeviceImagelessFramebufferFeatures,                            VkStructureType :: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGELESS_FRAMEBUFFER_FEATURES ),
+            Field ( PhysicalDeviceImagelessFrameBufferFeatures,                            VkStructureType :: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGELESS_FRAMEBUFFER_FEATURES ),
 
-            Field ( FramebufferAttachmentsCreateInfo,                                      VkStructureType :: VK_STRUCTURE_TYPE_FRAMEBUFFER_ATTACHMENTS_CREATE_INFO ),
-            Field ( FramebufferAttachmentImageInfo,                                        VkStructureType :: VK_STRUCTURE_TYPE_FRAMEBUFFER_ATTACHMENT_IMAGE_INFO ),
+            Field ( FrameBufferAttachmentsCreateInfo,                                      VkStructureType :: VK_STRUCTURE_TYPE_FRAMEBUFFER_ATTACHMENTS_CREATE_INFO ),
+            Field ( FrameBufferAttachmentImageInfo,                                        VkStructureType :: VK_STRUCTURE_TYPE_FRAMEBUFFER_ATTACHMENT_IMAGE_INFO ),
             Field ( RenderPassAttachmentBeginInfo,                                         VkStructureType :: VK_STRUCTURE_TYPE_RENDER_PASS_ATTACHMENT_BEGIN_INFO ),
 
             Field ( PhysicalDeviceUniformBufferStandardLayoutFeatures,                     VkStructureType :: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_UNIFORM_BUFFER_STANDARD_LAYOUT_FEATURES ),
@@ -1403,7 +1403,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
             Field ( PhysicalDeviceCoverageReductionModeFeaturesNVidia,                     VkStructureType :: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COVERAGE_REDUCTION_MODE_FEATURES_NV ),
             Field ( PipelineCoverageReductionStateCreateInfoNVidia,                        VkStructureType :: VK_STRUCTURE_TYPE_PIPELINE_COVERAGE_REDUCTION_STATE_CREATE_INFO_NV ),
-            Field ( FramebufferMixedSamplesCombinationNVidia,                              VkStructureType :: VK_STRUCTURE_TYPE_FRAMEBUFFER_MIXED_SAMPLES_COMBINATION_NV ),
+            Field ( FrameBufferMixedSamplesCombinationNVidia,                              VkStructureType :: VK_STRUCTURE_TYPE_FRAMEBUFFER_MIXED_SAMPLES_COMBINATION_NV ),
 
 #endif
 
@@ -3251,7 +3251,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
             Field ( Sampler,                        VkObjectType :: VK_OBJECT_TYPE_SAMPLER ),
             Field ( DescriptorPool,                 VkObjectType :: VK_OBJECT_TYPE_DESCRIPTOR_POOL ),
             Field ( DescriptorSet,                  VkObjectType :: VK_OBJECT_TYPE_DESCRIPTOR_SET ),
-            Field ( Framebuffer,                    VkObjectType :: VK_OBJECT_TYPE_FRAMEBUFFER ),
+            Field ( FrameBuffer,                    VkObjectType :: VK_OBJECT_TYPE_FRAMEBUFFER ),
             Field ( CommandPool,                    VkObjectType :: VK_OBJECT_TYPE_COMMAND_POOL )
         };
 
@@ -3801,6 +3801,72 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #define C_ENG_MAP_END
 #include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START ENUM ( FrameBufferCreateFlag, TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+            Field ( Imageless,  VkFramebufferCreateFlagBits :: VK_FRAMEBUFFER_CREATE_IMAGELESS_BIT ),
+#elif __C_ENG_VULKAN_API_EXTENSION_KHRONOS_IMAGELESS_FRAME_BUFFER_AVAILABLE
+            Field ( Imageless,  VkFramebufferCreateFlagBits :: VK_FRAMEBUFFER_CREATE_IMAGELESS_BIT_KHR ),
+#endif
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START ENUM ( ImageCreateFlag, TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( SparseBinding,                      VkImageCreateFlagBits :: VK_IMAGE_CREATE_SPARSE_BINDING_BIT ),
+            Field ( SparseResidency,                    VkImageCreateFlagBits :: VK_IMAGE_CREATE_SPARSE_RESIDENCY_BIT ),
+            Field ( SparseAliased,                      VkImageCreateFlagBits :: VK_IMAGE_CREATE_SPARSE_ALIASED_BIT ),
+            Field ( MutableFormat,                      VkImageCreateFlagBits :: VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT ),
+            Field ( CubeCompatible,                     VkImageCreateFlagBits :: VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT ),
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+            Field ( Alias,                              VkImageCreateFlagBits :: VK_IMAGE_CREATE_ALIAS_BIT ),
+            Field ( SplitInstanceBindRegions,           VkImageCreateFlagBits :: VK_IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT ),
+            Field ( 2DArrayCompatible,                  VkImageCreateFlagBits :: VK_IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT ),
+            Field ( BlockTexelViewCompatible,           VkImageCreateFlagBits :: VK_IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT ),
+            Field ( ExtendedUsage,                      VkImageCreateFlagBits :: VK_IMAGE_CREATE_EXTENDED_USAGE_BIT ),
+            Field ( Protected,                          VkImageCreateFlagBits :: VK_IMAGE_CREATE_PROTECTED_BIT ),
+            Field ( Disjoint,                           VkImageCreateFlagBits :: VK_IMAGE_CREATE_DISJOINT_BIT ),
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_CORNER_SAMPLED_IMAGE_AVAILABLE
+            Field ( CornerSampledNVidia,                VkImageCreateFlagBits :: VK_IMAGE_CREATE_CORNER_SAMPLED_BIT_NV ),
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_SAMPLE_LOCATIONS_AVAILABLE
+            Field ( SampleLocationsCompatibleDepth,     VkImageCreateFlagBits :: VK_IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT ),
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_FRAGMENT_DENSITY_MAP_AVAILABLE
+            Field ( Subsampled,                         VkImageCreateFlagBits :: VK_IMAGE_CREATE_SUBSAMPLED_BIT_EXT ),
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_QUALCOMM_FRAGMENT_DENSITY_MAP_OFFSET_AVAILABLE
+            Field ( FragmentDensityMapOffsetQualcomm,   VkImageCreateFlagBits :: VK_IMAGE_CREATE_FRAGMENT_DENSITY_MAP_OFFSET_BIT_QCOM ),
+#endif
+
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START ENUM ( SubpassContents, TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( Inline,                     VkSubpassContents :: VK_SUBPASS_CONTENTS_INLINE ),
+            Field ( SecondaryCommandBuffers,    VkSubpassContents :: VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
 #endif
 
 
@@ -3859,6 +3925,8 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_ALIAS ( RenderPassCreateFlags,          VkRenderPassCreateFlags );
         __C_ENG_ALIAS ( AttachmentDescriptionFlags,     VkAttachmentDescriptionFlags );
         __C_ENG_ALIAS ( SubpassDescriptionFlags,        VkSubpassDescriptionFlags );
+        __C_ENG_ALIAS ( FrameBufferCreateFlags,         VkFramebufferCreateFlags );
+        __C_ENG_ALIAS ( ImageCreateFlags,               VkImageCreateFlags );
 
         __C_ENG_ALIAS ( AllocationFunction,             PFN_vkAllocationFunction );
         __C_ENG_ALIAS ( ReallocationFunction,           PFN_vkReallocationFunction );
@@ -6602,7 +6670,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #define C_ENG_MAP_END
 #include <ObjectMapping.hpp>
 
-#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceImagelessFramebufferFeatures, NO_PARENT )
+#define C_ENG_MAP_START     STRUCT ( PhysicalDeviceImagelessFrameBufferFeatures, NO_PARENT )
 #include <ObjectMapping.hpp>
 
         Struct {
@@ -8362,7 +8430,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
             __C_ENG_TYPE ( PhysicalDeviceBufferDeviceAddressFeatures )                      bufferDeviceAddressFeatures;
             __C_ENG_TYPE ( PhysicalDeviceDescriptorIndexingFeatures )                       descriptorIndexingFeatures;
             __C_ENG_TYPE ( PhysicalDeviceHostQueryResetFeatures )                           hostQueryResetFeatures;
-            __C_ENG_TYPE ( PhysicalDeviceImagelessFramebufferFeatures )                     imagelessFramebufferFeatures;
+            __C_ENG_TYPE ( PhysicalDeviceImagelessFrameBufferFeatures )                     imagelessFramebufferFeatures;
             __C_ENG_TYPE ( PhysicalDeviceScalarBlockLayoutFeatures )                        scalarBlockLayoutFeatures;
             __C_ENG_TYPE ( PhysicalDeviceSeparateDepthStencilLayoutsFeatures )              separateDepthStencilLayoutsFeatures;
             __C_ENG_TYPE ( PhysicalDeviceShaderAtomicInt64Features )                        shaderAtomicInt64Features;
@@ -10443,6 +10511,196 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #endif
 
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( FrameBufferCreateInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )              structureType;
+            Type ( GenericStructure )   const * pNext;
+            Type ( FrameBufferCreateFlags )     flags;
+            Type ( RenderPassHandle )           renderPass;
+            cds :: uint32                       attachmentCount;
+            Type ( ImageViewHandle )    const * pAttachments;
+            cds :: uint32                       width;
+            cds :: uint32                       height;
+            cds :: uint32                       layers;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( FrameBufferAttachmentImageInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                          structureType;
+            Type ( GenericStructure )               const * pNext;
+            Type ( ImageCreateFlags )                       flags;
+            Type ( ImageUsageFlags )                        usage;
+            cds :: uint32                                   width;
+            cds :: uint32                                   height;
+            cds :: uint32                                   layerCount;
+            cds :: uint32                                   viewFormatCount;
+            Type ( Format )                         const * pViewFormats;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START STRUCT ( FrameBufferAttachmentsCreateInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                          structureType;
+            Type ( GenericStructure )               const * pNext;
+            cds :: uint32                                   attachmentImageInfoCount;
+            Type ( FrameBufferAttachmentImageInfo ) const * pAttachmentImageInfos;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( RenderPassBeginInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )              structureType;
+            Type ( GenericStructure )   const * pNext;
+            Type ( RenderPassHandle )           renderPass;
+            Type ( FrameBufferHandle )          frameBuffer;
+            Type ( Rect )                       renderArea;
+            cds :: uint32                       clearValueCount;
+            Type ( ClearValue )         const * pClearValues;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( RenderPassAttachmentBeginInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )              structureType;
+            Type ( GenericStructure )   const * pNext;
+            cds :: uint32                       attachmentCount;
+            Type ( ImageViewHandle )    const * pAttachments;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_SAMPLE_LOCATIONS_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( AttachmentSampleLocations, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            cds :: uint32                   attachmentIndex;
+            Type ( SampleLocationsInfo )    sampleLocationsInfo;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START STRUCT ( SubpassSampleLocations, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            cds :: uint32                   subpassIndex;
+            Type ( SampleLocationsInfo )    sampleLocationsInfo;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START STRUCT ( RenderPassSampleLocationsBeginInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                      structureType;
+            Type ( GenericStructure )           const * pNext;
+            cds :: uint32                               attachmentInitialSampleLocationsCount;
+            Type ( AttachmentSampleLocations )  const * pAttachmentInitialSampleLocations;
+            cds :: uint32                               postSubpassSampleLocationsCount;
+            Type ( SubpassSampleLocations )     const * pPostSubpassSampleLocations;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_QUALCOMM_RENDER_PASS_TRANSFORM_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( RenderPassTransformBeginInfoQualcomm, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )              structureType;
+            Type ( GenericStructure )   const * pNext;
+            Type ( SurfaceTransformFlag )       transform;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( SubpassBeginInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )              structureType;
+            Type ( GenericStructure )   const * pNext;
+            Type ( SubpassContents )            contents;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( SubpassEndInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )              structureType;
+            Type ( GenericStructure )   const * pNext;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_QUALCOMM_FRAGMENT_DENSITY_MAP_OFFSET_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( SubpassFragmentDensityMapOffsetEndInfoQualcomm, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )              structureType;
+            Type ( GenericStructure )   const * pNext;
+            cds :: uint32                       fragmentDensityOffsetCount;
+            Type ( Offset2D )           const * pFragmentDensityOffsets;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+
 #define C_ENG_MAP_START     HEADER
 #include <ObjectMapping.hpp>
 
@@ -10489,6 +10747,9 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         NoDiscard auto toString ( Type ( AttachmentDescriptionFlag ) ) noexcept -> cds :: StringLiteral;
         NoDiscard auto toString ( Type ( SubpassDescriptionFlag ) ) noexcept -> cds :: StringLiteral;
         NoDiscard auto toString ( Type ( PipelineBindPoint ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( FrameBufferCreateFlag ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( ImageCreateFlag ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( SubpassContents ) ) noexcept -> cds :: StringLiteral;
 
 #endif
 
@@ -10655,6 +10916,10 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         NoDiscard auto toString ( Type ( AttachmentReference ) const & ) noexcept -> cds :: String;
         NoDiscard auto toString ( Type ( SubpassDependency ) const & ) noexcept -> cds :: String;
 
+        NoDiscard auto toString ( Type ( FrameBufferCreateInfo ) const & ) noexcept -> cds :: String;
+
+        NoDiscard auto toString ( Type ( RenderPassBeginInfo ) const & ) noexcept -> cds :: String;
+
 #endif
 
 #if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
@@ -10718,7 +10983,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         NoDiscard auto toString ( Type ( PhysicalDeviceBufferDeviceAddressFeatures ) const & ) noexcept -> cds :: String;
         NoDiscard auto toString ( Type ( PhysicalDeviceDescriptorIndexingFeatures ) const & ) noexcept -> cds :: String;
         NoDiscard auto toString ( Type ( PhysicalDeviceHostQueryResetFeatures ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( PhysicalDeviceImagelessFramebufferFeatures ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( PhysicalDeviceImagelessFrameBufferFeatures ) const & ) noexcept -> cds :: String;
         NoDiscard auto toString ( Type ( PhysicalDeviceScalarBlockLayoutFeatures ) const & ) noexcept -> cds :: String;
         NoDiscard auto toString ( Type ( PhysicalDeviceSeparateDepthStencilLayoutsFeatures ) const & ) noexcept -> cds :: String;
         NoDiscard auto toString ( Type ( PhysicalDeviceShaderAtomicInt64Features ) const & ) noexcept -> cds :: String;
@@ -10739,6 +11004,13 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         NoDiscard auto toString ( Type ( SubpassDependency2 ) const & ) noexcept -> cds :: String;
         NoDiscard auto toString ( Type ( RenderPassCreateInfo2 ) const & ) noexcept -> cds :: String;
 
+        NoDiscard auto toString ( Type ( FrameBufferAttachmentImageInfo ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( FrameBufferAttachmentsCreateInfo ) const & ) noexcept -> cds :: String;
+
+        NoDiscard auto toString ( Type ( RenderPassAttachmentBeginInfo ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( SubpassBeginInfo ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( SubpassEndInfo ) const & ) noexcept -> cds :: String;
+
 #endif
 
 #if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
@@ -10749,8 +11021,22 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
+#if __C_ENG_VULKAN_API_EXTENSION_SAMPLE_LOCATIONS_AVAILABLE
+        NoDiscard auto toString ( Type ( AttachmentSampleLocations ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( SubpassSampleLocations ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( RenderPassSampleLocationsBeginInfo ) const & ) noexcept -> cds :: String;
+#endif
+
 #if __C_ENG_VULKAN_API_EXTENSION_FRAGMENT_DENSITY_MAP_AVAILABLE
         NoDiscard auto toString ( Type ( RenderPassFragmentDensityMapCreateInfo ) const & ) noexcept -> cds :: String;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_QUALCOMM_RENDER_PASS_TRANSFORM_AVAILABLE
+        NoDiscard auto toString ( Type ( RenderPassTransformBeginInfoQualcomm ) const & ) noexcept -> cds :: String;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_QUALCOMM_FRAGMENT_DENSITY_MAP_OFFSET_AVAILABLE
+        NoDiscard auto toString ( Type ( SubpassFragmentDensityMapOffsetEndInfoQualcomm ) const & ) noexcept -> cds :: String;
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_FRAGMENT_SHADING_RATE_AVAILABLE
@@ -10788,39 +11074,27 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_FENCE_WIN32_AVAILABLE
-
         NoDiscard auto toString ( Type ( ExportFenceWin32HandleInfo ) const & ) noexcept -> cds :: String;
-
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_FENCE_FD_AVAILABLE
-
         NoDiscard auto toString ( Type ( FenceGetFDInfo ) const & ) noexcept -> cds :: String;
-
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PERFORMANCE_QUERY_AVAILABLE
-
         NoDiscard auto toString ( Type ( PerformanceQuerySubmitInfo ) const & ) noexcept -> cds :: String;
-
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_WIN32_KEYED_MUTEX_AVAILABLE
-
         NoDiscard auto toString ( Type ( Win32KeyedMutexAcquireReleaseInfo ) const & ) noexcept -> cds :: String;
-
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_WIN32_KEYED_MUTEX_AVAILABLE
-
         NoDiscard auto toString ( Type ( Win32KeyedMutexAcquireReleaseInfoNVidia ) const & ) noexcept -> cds :: String;
-
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_SEMAPHORE_WIN32_AVAILABLE
-
         NoDiscard auto toString ( Type ( D3D12FenceSubmitInfo ) const & ) noexcept -> cds :: String;
-
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_PCI_BUS_INFO_AVAILABLE

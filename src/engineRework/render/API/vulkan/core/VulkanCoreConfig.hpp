@@ -63,6 +63,14 @@ namespace engine :: vulkan :: config {
     constexpr cds :: uint32 renderPassSubpassDependencyCount                    = 32U;
     constexpr cds :: uint32 renderPassSubpassDescriptionInputAttachmentCount    = 128U;
     constexpr cds :: uint32 renderPassSubpassDescriptionColorAttachmentCount    = 128U;
+
+    constexpr cds :: uint32 frameBufferAttachmentsImageInfoCount    = 256U;
+
+    constexpr cds :: uint32 renderPassBeginInfoClearValueCount                  = 64U;
+    constexpr cds :: uint32 renderPassSampleLocationsAttachmentInitialCount     = 32U;
+    constexpr cds :: uint32 renderPassSampleLocationsPostSubpassCount           = 32U;
+
+    constexpr cds :: uint32 subpassFragmentDensityMapOffsetEndInfoOffsetCount   = 256U;
 }
 
 #if defined ( __C_ENG_USE_DEFENSIVE_PROGRAMMING ) || !defined(NDEBUG)

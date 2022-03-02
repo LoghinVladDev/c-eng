@@ -329,7 +329,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
                     StructureTypePhysicalDeviceBufferDeviceAddressFeatures,
                     StructureTypePhysicalDeviceDescriptorIndexingFeatures,
                     StructureTypePhysicalDeviceHostQueryResetFeatures,
-                    StructureTypePhysicalDeviceImagelessFramebufferFeatures,
+                    StructureTypePhysicalDeviceImagelessFrameBufferFeatures,
                     StructureTypePhysicalDeviceScalarBlockLayoutFeatures,
                     StructureTypePhysicalDeviceSeparateDepthStencilLayoutsFeatures,
                     StructureTypePhysicalDeviceShaderAtomicInt64Features,
@@ -1048,7 +1048,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
                     deviceScalarBlockFeaturesPresent = true;
                 }
 
-                if ( chainElement->structureType == vulkan :: StructureTypePhysicalDeviceImagelessFramebufferFeatures ) {
+                if ( chainElement->structureType == vulkan :: StructureTypePhysicalDeviceImagelessFrameBufferFeatures ) {
                     deviceImagelessFramebufferFeaturesPresent = true;
                 }
 

@@ -778,6 +778,83 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         ) noexcept -> Type ( Result );
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+        NoDiscard MaybeUnused extern auto destroyRenderPass (
+                Type ( DeviceHandle ),
+                Type ( RenderPassHandle ),
+                Type ( AllocationCallbacks )    const *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+        NoDiscard MaybeUnused extern auto createFrameBuffer (
+                Type ( DeviceHandle ),
+                Type ( FrameBufferCreateInfo )  const *,
+                Type ( AllocationCallbacks )    const *,
+                Type ( FrameBufferHandle )            *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+        NoDiscard MaybeUnused extern auto destroyFrameBuffer (
+                Type ( DeviceHandle ),
+                Type ( FrameBufferHandle ),
+                Type ( AllocationCallbacks )    const *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+        NoDiscard MaybeUnused extern auto commandBufferBeginRenderPass (
+                Type ( CommandBufferHandle ),
+                Type ( RenderPassBeginInfo )    const *,
+                Type ( SubpassContents )
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+        NoDiscard MaybeUnused extern auto commandBufferBeginRenderPass (
+                Type ( CommandBufferHandle ),
+                Type ( RenderPassBeginInfo )    const *,
+                Type ( SubpassBeginInfo )       const *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+        NoDiscard MaybeUnused extern auto getRenderAreaGranularity (
+                Type ( DeviceHandle ),
+                Type ( RenderPassHandle ),
+                Type ( Extent2D )           *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+        NoDiscard MaybeUnused extern auto commandBufferNextSubpass (
+                Type ( CommandBufferHandle ),
+                Type ( SubpassContents )
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+        NoDiscard MaybeUnused extern auto commandBufferNextSubpass (
+                Type ( CommandBufferHandle ),
+                Type ( SubpassBeginInfo )   const *,
+                Type ( SubpassEndInfo )     const *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+        NoDiscard MaybeUnused extern auto commandBufferEndRenderPass (
+                Type ( CommandBufferHandle )
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+        NoDiscard MaybeUnused extern auto commandBufferEndRenderPass (
+                Type ( CommandBufferHandle ),
+                Type ( SubpassEndInfo )     const *
+        ) noexcept -> Type ( Result );
+#endif
+
     }
 
 }

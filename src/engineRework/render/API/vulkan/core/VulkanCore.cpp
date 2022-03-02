@@ -176,7 +176,7 @@ auto vulkan :: toString (
         case StructureTypeDescriptorSetAllocateInfo:                                                { asString = "StructureTypeDescriptorSetAllocateInfo";                                          break; }
         case StructureTypeWriteDescriptorSet:                                                       { asString = "StructureTypeWriteDescriptorSet";                                                 break; }
         case StructureTypeCopyDescriptorSet:                                                        { asString = "StructureTypeCopyDescriptorSet";                                                  break; }
-        case StructureTypeFramebufferCreateInfo:                                                    { asString = "StructureTypeFramebufferCreateInfo";                                              break; }
+        case StructureTypeFrameBufferCreateInfo:                                                    { asString = "StructureTypeFramebufferCreateInfo";                                              break; }
         case StructureTypeRenderPassCreateInfo:                                                     { asString = "StructureTypeRenderPassCreateInfo";                                               break; }
         case StructureTypeCommandPoolCreateInfo:                                                    { asString = "StructureTypeCommandPoolCreateInfo";                                              break; }
         case StructureTypeCommandBufferAllocateInfo:                                                { asString = "StructureTypeCommandBufferAllocateInfo";                                          break; }
@@ -292,9 +292,9 @@ auto vulkan :: toString (
         case StructureTypePhysicalDeviceSamplerFilterMinMaxProperties:                              { asString = "StructureTypePhysicalDeviceSamplerFilterMinMaxProperties";                        break; }
         case StructureTypeSamplerReductionModeCreateInfo:                                           { asString = "StructureTypeSamplerReductionModeCreateInfo";                                     break; }
         case StructureTypePhysicalDeviceVulkanMemoryModelFeatures:                                  { asString = "StructureTypePhysicalDeviceVulkanMemoryModelFeatures";                            break; }
-        case StructureTypePhysicalDeviceImagelessFramebufferFeatures:                               { asString = "StructureTypePhysicalDeviceImagelessFramebufferFeatures";                         break; }
-        case StructureTypeFramebufferAttachmentsCreateInfo:                                         { asString = "StructureTypeFramebufferAttachmentsCreateInfo";                                   break; }
-        case StructureTypeFramebufferAttachmentImageInfo:                                           { asString = "StructureTypeFramebufferAttachmentImageInfo";                                     break; }
+        case StructureTypePhysicalDeviceImagelessFrameBufferFeatures:                               { asString = "StructureTypePhysicalDeviceImagelessFramebufferFeatures";                         break; }
+        case StructureTypeFrameBufferAttachmentsCreateInfo:                                         { asString = "StructureTypeFramebufferAttachmentsCreateInfo";                                   break; }
+        case StructureTypeFrameBufferAttachmentImageInfo:                                           { asString = "StructureTypeFramebufferAttachmentImageInfo";                                     break; }
         case StructureTypeRenderPassAttachmentBeginInfo:                                            { asString = "StructureTypeRenderPassAttachmentBeginInfo";                                      break; }
         case StructureTypePhysicalDeviceUniformBufferStandardLayoutFeatures:                        { asString = "StructureTypePhysicalDeviceUniformBufferStandardLayoutFeatures";                  break; }
         case StructureTypePhysicalDeviceShaderSubgroupExtendedTypesFeatures:                        { asString = "StructureTypePhysicalDeviceShaderSubgroupExtendedTypesFeatures";                  break; }
@@ -1237,7 +1237,7 @@ auto vulkan :: toString (
 
         case StructureTypePhysicalDeviceCoverageReductionModeFeaturesNVidia:                     { asString = "StructureTypePhysicalDeviceCoverageReductionModeFeaturesNVidia";                     break; }
         case StructureTypePipelineCoverageReductionStateCreateInfoNVidia:                        { asString = "StructureTypePipelineCoverageReductionStateCreateInfoNVidia";                        break; }
-        case StructureTypeFramebufferMixedSamplesCombinationNVidia:                              { asString = "StructureTypeFramebufferMixedSamplesCombinationNVidia";                              break; }
+        case StructureTypeFrameBufferMixedSamplesCombinationNVidia:                              { asString = "StructureTypeFramebufferMixedSamplesCombinationNVidia";                              break; }
 
 #endif
 
@@ -4989,10 +4989,10 @@ auto vulkan :: toString (
 }
 
 auto vulkan :: toString (
-        __C_ENG_TYPE ( PhysicalDeviceImagelessFramebufferFeatures ) const & features
+        __C_ENG_TYPE ( PhysicalDeviceImagelessFrameBufferFeatures ) const & features
 ) noexcept -> String {
 
-    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceImagelessFramebufferFeatures ) ) " "
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceImagelessFrameBufferFeatures ) ) " "
            "{ type = "_s                                                + toString ( features.structureType ) +
            ", pNext = "                                                 + :: toString ( features.pNext ) +
            ", imagelessFramebuffer = "                                  + ( features.imagelessFramebuffer == VK_TRUE ? "true" : "false" ) +
@@ -6649,7 +6649,7 @@ auto vulkan :: toString (
         case ObjectTypeSampler:                        { asString = "VkSampler";                        break; }
         case ObjectTypeDescriptorPool:                 { asString = "VkDescriptorPool";                 break; }
         case ObjectTypeDescriptorSet:                  { asString = "VkDescriptorSet";                  break; }
-        case ObjectTypeFramebuffer:                    { asString = "VkFramebuffer";                    break; }
+        case ObjectTypeFrameBuffer:                    { asString = "VkFramebuffer";                    break; }
         case ObjectTypeCommandPool:                    { asString = "VkCommandPool";                    break; }
     }
 
@@ -9604,6 +9604,259 @@ auto vulkan :: toString (
            ", pNext = "                             + engine :: toString ( info.pNext ) +
            ", pFragmentShadingRateAttachment = "    + engine :: toString ( info.pFragmentShadingRateAttachment ) +
            ", shadingRateAttachmentTexelSize = "    + toString ( info.shadingRateAttachmentTexelSize ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( FrameBufferCreateFlag ) flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_IMAGELESS_FRAME_BUFFER_AVAILABLE
+        case FrameBufferCreateFlagImageless: { asString = "Imageless"; break; }
+#endif
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( ImageCreateFlag ) flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case ImageCreateFlagSparseBinding:                      { asString = "SparseBinding";                       break; }
+        case ImageCreateFlagSparseResidency:                    { asString = "SparseResidency";                     break; }
+        case ImageCreateFlagSparseAliased:                      { asString = "SparseAliased";                       break; }
+        case ImageCreateFlagMutableFormat:                      { asString = "MutableFormat";                       break; }
+        case ImageCreateFlagCubeCompatible:                     { asString = "CubeCompatible";                      break; }
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+        case ImageCreateFlagAlias:                              { asString = "Alias";                               break; }
+        case ImageCreateFlagSplitInstanceBindRegions:           { asString = "SplitInstanceBindRegions";            break; }
+        case ImageCreateFlag2DArrayCompatible:                  { asString = "2DArrayCompatible";                   break; }
+        case ImageCreateFlagBlockTexelViewCompatible:           { asString = "BlockTexelViewCompatible";            break; }
+        case ImageCreateFlagExtendedUsage:                      { asString = "ExtendedUsage";                       break; }
+        case ImageCreateFlagProtected:                          { asString = "Protected";                           break; }
+        case ImageCreateFlagDisjoint:                           { asString = "Disjoint";                            break; }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_CORNER_SAMPLED_IMAGE_AVAILABLE
+        case ImageCreateFlagCornerSampledNVidia:                { asString = "CornerSampledNVidia";                 break; }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_SAMPLE_LOCATIONS_AVAILABLE
+        case ImageCreateFlagSampleLocationsCompatibleDepth:     { asString = "SampleLocationsCompatibleDepth";      break; }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_FRAGMENT_DENSITY_MAP_AVAILABLE
+        case ImageCreateFlagSubsampled:                         { asString = "Subsampled";                          break; }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_QUALCOMM_FRAGMENT_DENSITY_MAP_OFFSET_AVAILABLE
+        case ImageCreateFlagFragmentDensityMapOffsetQualcomm:   { asString = "FragmentDensityMapOffsetQualcomm";    break; }
+#endif
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( FrameBufferCreateInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( FrameBufferCreateInfo ) " " +
+           "{ structureType = "_s                   + toString ( info.structureType ) +
+           ", pNext = "                             + engine :: toString ( info.pNext ) +
+           ", flags = "                             + "0b" + Long ( info.flags ).toString(2) +
+           ", renderPass = "                        + engine :: toString ( info.renderPass ) +
+           ", attachmentCount = "                   + info.attachmentCount +
+           ", attachments = "                       + :: toStringEngine ( info.attachmentCount, info.pAttachments ) +
+           ", width = "                             + info.width +
+           ", height = "                            + info.height +
+           ", layers = "                            + info.layers +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+auto vulkan :: toString (
+        Type ( FrameBufferAttachmentImageInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( FrameBufferAttachmentImageInfo ) " " +
+           "{ structureType = "_s                   + toString ( info.structureType ) +
+           ", pNext = "                             + engine :: toString ( info.pNext ) +
+           ", flags = "                             + "0b" + Long ( info.flags ).toString(2) +
+           ", usage = "                             + toString ( info.usage ) +
+           ", width = "                             + info.width +
+           ", height = "                            + info.height +
+           ", layerCount = "                        + info.layerCount +
+           ", viewFormatCount = "                   + info.viewFormatCount +
+           ", viewFormats = "                       + :: toStringVulkan ( info.viewFormatCount, info.pViewFormats ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+auto vulkan :: toString (
+        Type ( FrameBufferAttachmentsCreateInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( FrameBufferAttachmentsCreateInfo ) " " +
+           "{ structureType = "_s                   + toString ( info.structureType ) +
+           ", pNext = "                             + engine :: toString ( info.pNext ) +
+           ", attachmentImageInfoCount = "          + info.attachmentImageInfoCount +
+           ", attachmentImageInfos = "              + :: toStringVulkan ( info.attachmentImageInfoCount, info.pAttachmentImageInfos ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( SubpassContents ) contents
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( contents ) {
+        case SubpassContentsInline:                     { asString = "Inline";                      break; }
+        case SubpassContentsSecondaryCommandBuffers:    { asString = "Secondary Command Buffers";   break; }
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( RenderPassBeginInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( RenderPassBeginInfo ) " " +
+           "{ structureType = "_s                   + toString ( info.structureType ) +
+           ", pNext = "                             + engine :: toString ( info.pNext ) +
+           ", renderPass = "                        + engine :: toString ( info.renderPass ) +
+           ", frameBuffer = "                       + engine :: toString ( info.frameBuffer ) +
+           ", renderArea = "                        + toString ( info.renderArea ) +
+           ", clearValueCount = "                   + info.clearValueCount +
+           ", clearValues = "                       + :: toStringVulkan ( info.clearValueCount, info.pClearValues ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+auto vulkan :: toString (
+        Type ( RenderPassAttachmentBeginInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( RenderPassAttachmentBeginInfo ) " " +
+           "{ structureType = "_s                   + toString ( info.structureType ) +
+           ", pNext = "                             + engine :: toString ( info.pNext ) +
+           ", attachmentCount = "                   + info.attachmentCount +
+           ", attachments = "                       + :: toStringEngine ( info.attachmentCount, info.pAttachments ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_SAMPLE_LOCATIONS_AVAILABLE
+auto vulkan :: toString (
+        Type ( AttachmentSampleLocations ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( AttachmentSampleLocations ) " " +
+           "{ attachmentIndex = "_s     + info.attachmentIndex +
+           ", samplelocationsInfo = "   + toString ( info.sampleLocationsInfo ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_SAMPLE_LOCATIONS_AVAILABLE
+auto vulkan :: toString (
+        Type ( SubpassSampleLocations ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( SubpassSampleLocations ) " " +
+           "{ subpassIndex = "_s        + info.subpassIndex +
+           ", sampleLocationsInfo = "   + toString ( info.sampleLocationsInfo ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_SAMPLE_LOCATIONS_AVAILABLE
+auto vulkan :: toString (
+        Type ( RenderPassSampleLocationsBeginInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( RenderPassSampleLocationsBeginInfo ) " " +
+           "{ structureType = "_s                       + toString ( info.structureType ) +
+           ", pNext = "                                 + engine :: toString ( info.pNext ) +
+           ", attachmentInitialSampleLocationsCount = " + info.attachmentInitialSampleLocationsCount +
+           ", attachmentInitialSampleLocations = "      + :: toStringVulkan ( info.attachmentInitialSampleLocationsCount, info.pAttachmentInitialSampleLocations ) +
+           ", postSubpassSampleLocationsCount = "       + info.postSubpassSampleLocationsCount +
+           ", postSubpassSampleLocations = "            + :: toStringVulkan ( info.postSubpassSampleLocationsCount, info.pPostSubpassSampleLocations ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_QUALCOMM_RENDER_PASS_TRANSFORM_AVAILABLE
+auto vulkan :: toString (
+        Type ( RenderPassTransformBeginInfoQualcomm ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( RenderPassTransformBeginInfoQualcomm ) " " +
+           "{ structureType = "_s                       + toString ( info.structureType ) +
+           ", pNext = "                                 + engine :: toString ( info.pNext ) +
+           ", transform = "                             + toString ( info.transform ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+auto vulkan :: toString (
+        Type ( SubpassBeginInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( SubpassBeginInfo ) " " +
+           "{ structureType = "_s                       + toString ( info.structureType ) +
+           ", pNext = "                                 + engine :: toString ( info.pNext ) +
+           ", contents = "                              + toString ( info.contents ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+auto vulkan :: toString (
+        Type ( SubpassEndInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( SubpassEndInfo ) " " +
+           "{ structureType = "_s                       + toString ( info.structureType ) +
+           ", pNext = "                                 + engine :: toString ( info.pNext ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_QUALCOMM_FRAGMENT_DENSITY_MAP_OFFSET_AVAILABLE
+auto vulkan :: toString (
+        Type ( SubpassFragmentDensityMapOffsetEndInfoQualcomm ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( SubpassFragmentDensityMapOffsetEndInfoQualcomm ) " " +
+           "{ structureType = "_s                       + toString ( info.structureType ) +
+           ", pNext = "                                 + engine :: toString ( info.pNext ) +
+           ", fragmentDensityOffsetCount = "            + info.fragmentDensityOffsetCount +
+           ", fragmentDensityOffsets = "                + :: toStringVulkan ( info.fragmentDensityOffsetCount, info.pFragmentDensityOffsets ) +
            " }";
 }
 #endif

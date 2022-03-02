@@ -408,9 +408,9 @@ namespace engine :: vulkan {
 
 #if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
     extern auto fromVulkanFormat (
-            Type ( PhysicalDeviceImagelessFramebufferFeatures )       *,
+            Type ( PhysicalDeviceImagelessFrameBufferFeatures )       *,
             VkPhysicalDeviceImagelessFramebufferFeatures        const *
-    ) noexcept -> Type ( PhysicalDeviceImagelessFramebufferFeatures ) *;
+    ) noexcept -> Type ( PhysicalDeviceImagelessFrameBufferFeatures ) *;
 #endif
 
 #if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
@@ -500,7 +500,7 @@ namespace engine :: vulkan {
 #if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
     extern auto toVulkanFormat (
             VkPhysicalDeviceImagelessFramebufferFeatures              *,
-            Type ( PhysicalDeviceImagelessFramebufferFeatures ) const *
+            Type ( PhysicalDeviceImagelessFrameBufferFeatures ) const *
     ) noexcept -> VkPhysicalDeviceImagelessFramebufferFeatures *;
 #endif
 
@@ -2803,6 +2803,125 @@ namespace engine :: vulkan {
             VkSubpassDependency2              *,
             Type ( SubpassDependency2 ) const *
     ) noexcept -> VkSubpassDependency2 *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto prepareContext (
+            CreateFrameBufferContext               *,
+            Type ( FrameBufferCreateInfo )   const *
+    ) noexcept -> VkFramebufferCreateInfo *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto toVulkanFormat (
+            VkFramebufferCreateInfo              *,
+            Type ( FrameBufferCreateInfo ) const *
+    ) noexcept -> VkFramebufferCreateInfo *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+    extern auto toVulkanFormat (
+            VkFramebufferAttachmentsCreateInfo              *,
+            Type ( FrameBufferAttachmentsCreateInfo ) const *
+    ) noexcept -> VkFramebufferAttachmentsCreateInfo *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+    extern auto toVulkanFormat (
+            VkFramebufferAttachmentImageInfo              *,
+            Type ( FrameBufferAttachmentImageInfo ) const *
+    ) noexcept -> VkFramebufferAttachmentImageInfo *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto prepareContext (
+            BeginRenderPassContext               *,
+            Type ( RenderPassBeginInfo )   const *
+    ) noexcept -> VkRenderPassBeginInfo *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto toVulkanFormat (
+            VkRenderPassBeginInfo              *,
+            Type ( RenderPassBeginInfo ) const *
+    ) noexcept -> VkRenderPassBeginInfo *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+    extern auto toVulkanFormat (
+            VkRenderPassAttachmentBeginInfo              *,
+            Type ( RenderPassAttachmentBeginInfo ) const *
+    ) noexcept -> VkRenderPassAttachmentBeginInfo *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_SAMPLE_LOCATIONS_AVAILABLE
+    extern auto toVulkanFormat (
+            VkRenderPassSampleLocationsBeginInfoEXT           *,
+            Type ( RenderPassSampleLocationsBeginInfo ) const *
+    ) noexcept -> VkRenderPassSampleLocationsBeginInfoEXT *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_SAMPLE_LOCATIONS_AVAILABLE
+    extern auto toVulkanFormat (
+            VkAttachmentSampleLocationsEXT           *,
+            Type ( AttachmentSampleLocations ) const *
+    ) noexcept -> VkAttachmentSampleLocationsEXT *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_SAMPLE_LOCATIONS_AVAILABLE
+    extern auto toVulkanFormat (
+            VkSubpassSampleLocationsEXT           *,
+            Type ( SubpassSampleLocations ) const *
+    ) noexcept -> VkSubpassSampleLocationsEXT *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_QUALCOMM_RENDER_PASS_TRANSFORM_AVAILABLE
+    extern auto toVulkanFormat (
+            VkRenderPassTransformBeginInfoQCOM                  *,
+            Type ( RenderPassTransformBeginInfoQualcomm ) const *
+    ) noexcept -> VkRenderPassTransformBeginInfoQCOM *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+    extern auto prepareContext (
+            BeginRenderPassContext               *,
+            Type ( SubpassBeginInfo )      const *
+    ) noexcept -> VkSubpassBeginInfo *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+    extern auto toVulkanFormat (
+            VkSubpassBeginInfo              *,
+            Type ( SubpassBeginInfo ) const *
+    ) noexcept -> VkSubpassBeginInfo *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+    extern auto prepareContext (
+            NextSubpassContext                   *,
+            Type ( SubpassBeginInfo )      const *
+    ) noexcept -> VkSubpassBeginInfo *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+    extern auto prepareContext (
+            NextSubpassContext                   *,
+            Type ( SubpassEndInfo )        const *
+    ) noexcept -> VkSubpassEndInfo *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+    extern auto toVulkanFormat (
+            VkSubpassEndInfo              *,
+            Type ( SubpassEndInfo ) const *
+    ) noexcept -> VkSubpassEndInfo *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_QUALCOMM_FRAGMENT_DENSITY_MAP_OFFSET_AVAILABLE
+    extern auto toVulkanFormat (
+            VkSubpassFragmentDensityMapOffsetEndInfoQCOM                  *,
+            Type ( SubpassFragmentDensityMapOffsetEndInfoQualcomm ) const *
+    ) noexcept -> VkSubpassFragmentDensityMapOffsetEndInfoQCOM *;
 #endif
 
 }

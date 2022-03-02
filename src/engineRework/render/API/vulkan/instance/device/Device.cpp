@@ -84,8 +84,8 @@ static __C_ENG_TYPE ( PhysicalDeviceHostQueryResetFeatures ) hostQueryResetFeatu
     .structureType  = StructureTypePhysicalDeviceHostQueryResetFeatures
 };
 
-static __C_ENG_TYPE ( PhysicalDeviceImagelessFramebufferFeatures ) imagelessFramebufferFeatures {
-    .structureType  = StructureTypePhysicalDeviceImagelessFramebufferFeatures
+static __C_ENG_TYPE ( PhysicalDeviceImagelessFrameBufferFeatures ) imagelessFramebufferFeatures {
+    .structureType  = StructureTypePhysicalDeviceImagelessFrameBufferFeatures
 };
 
 static __C_ENG_TYPE ( PhysicalDeviceScalarBlockLayoutFeatures ) scalarBlockLayoutFeatures {
