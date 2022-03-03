@@ -11,7 +11,9 @@
 #include <CDS/HashSet>
 #include <CDS/Pair>
 #include <CDS/Array>
+#include <CDS/Path>
 #include <Queue.hpp>
+#include <ValidationCache.hpp>
 
 
 #define C_ENG_MAP_START     CLASS ( Device, ENGINE_PARENT ( VulkanRenderObject ) )
@@ -25,11 +27,13 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_PRE_DECLARE_CLASS ( PhysicalDeviceGroup );
 
         Class {
-            Field ( ENGINE_PRIMITIVE_TYPE ( DeviceHandle ),     handle,         DEFAULT_VALUE ( nullptr ),  GET_DEFAULT,    SET_NONE )
+            Field ( ENGINE_PRIMITIVE_TYPE ( DeviceHandle ),             handle,                 DEFAULT_VALUE ( nullptr ),  GET_DEFAULT,    SET_NONE )
 
-            Field ( ENGINE_PRIMITIVE_TYPE ( SurfaceHandle ),    surfaceHandle,  DEFAULT_VALUE ( nullptr ),  GET_DEFAULT,    SET_NONE )
-            Field ( ENGINE_TYPE ( PhysicalDevice const * ),     physicalDevice, DEFAULT_VALUE ( nullptr ),  GET_DEFAULT,    SET_NONE )
-            Field ( TYPE ( cds :: Array < Type ( Queue ) > ),   queues,         NO_INIT,                    GET_DEFAULT,    SET_NONE )
+            Field ( ENGINE_PRIMITIVE_TYPE ( SurfaceHandle ),            surfaceHandle,          DEFAULT_VALUE ( nullptr ),  GET_DEFAULT,    SET_NONE )
+            Field ( ENGINE_TYPE ( PhysicalDevice const * ),             physicalDevice,         DEFAULT_VALUE ( nullptr ),  GET_DEFAULT,    SET_NONE )
+            Field ( TYPE ( cds :: Array < Type ( Queue ) > ),           queues,                 NO_INIT,                    GET_DEFAULT,    SET_NONE )
+
+            Field ( ENGINE_TYPE ( ValidationCache ),                    validationCache,        NO_INIT,                    GET_DEFAULT,    SET_NONE )
 
         public:
             class Builder;
@@ -77,6 +81,9 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
             Field ( PRIMITIVE_TYPE ( bool ),                                            allFeatures,                    DEFAULT_VALUE ( false ),        GET_NONE,   SET_INLINE ( setUseAllFeatures ) )
             Field ( TYPE ( cds :: HashSet < Type ( GenericInStructure const * ) > ),    featureSets,                    NO_INIT,                        GET_NONE,   SET_INLINE ( setFeatureSets ) )
 
+            Field ( PRIMITIVE_TYPE ( bool ),                                            createValidationCache,          DEFAULT_VALUE ( false ),        GET_NONE,   SET_NONE )
+            Field ( TYPE ( cds :: Path ),                                               validationCachePath,            NO_INIT,                        GET_NONE,   SET_NONE )
+
 
         private:
             auto deviceCreateInfoAddQueueCreateInfos (
@@ -88,13 +95,15 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
             auto deviceCreateInfoAddFeatures ( Type ( DeviceCreateInfo ) *, bool * ) noexcept (false) -> Self &;
             auto deviceCreateInfoAddExtensions ( Type ( DeviceCreateInfo ) * ) noexcept (false) -> Self &;
 
-            __C_ENG_NO_DISCARD auto buildSingleDeviceToSurface () noexcept (false) -> Nester;
+            NoDiscard auto buildSingleDeviceToSurface () noexcept (false) -> Nester;
 
             auto addImplicitDeviceExtensions () noexcept (false) -> Self &;
             auto filterUnsupportedExtensions ( cds :: Collection < cds :: String > const & = cds :: HashSet < cds :: String > () ) noexcept (false) -> Self &;
 
         public:
-            __C_ENG_NO_DISCARD auto build () noexcept (false) -> Nester;
+            NoDiscard auto build () noexcept (false) -> Nester;
+
+            auto useValidationCache ( cds :: Path path = cds :: Path :: CWD ) noexcept -> Self &;
         };
 
     }

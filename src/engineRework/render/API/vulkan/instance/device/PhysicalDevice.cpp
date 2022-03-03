@@ -392,6 +392,7 @@ static inline auto refreshExtensions (
         __C_ENG_LOG_AND_THROW_DETAILED_API_CALL_EXCEPTION ( error, "enumeratePhysicalDeviceExtensionProperties", result );
     }
 
+
     for ( uint32 i = 0U; i < rDeviceWithExtensions.extensionArray.count; ++ i ) {
         (void) std :: memcpy (
                 & rDeviceWithExtensions.extensionArray.pExtensions[i].properties,
@@ -401,7 +402,11 @@ static inline auto refreshExtensions (
 
         rDeviceWithExtensions.extensionArray.pExtensions[i].enabled =
                 Type ( Settings ) :: instance().get (
-                        String ( deviceName ) +
+                        String ( deviceName ).forEach ( [](auto & c) {
+                            if ( " \t\n\r\f"_s.contains (c) ) {
+                                c = '_';
+                            }
+                        }) +
                         "_Extension_" +
                         rDeviceWithExtensions.extensionArray.pExtensions[i].properties.name +
                         "_enabled"

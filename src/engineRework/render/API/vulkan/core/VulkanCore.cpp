@@ -9860,3 +9860,111 @@ auto vulkan :: toString (
            " }";
 }
 #endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( ShaderModuleCreateInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( ShaderModuleCreateInfo ) " " +
+           "{ structureType = "_s                       + toString ( info.structureType ) +
+           ", pNext = "                                 + engine :: toString ( info.pNext ) +
+           ", flags = "                                 + "0b" + Long ( info.flags ).toString(2) +
+           ", codeSize = "                              + info.codeSize +
+           ", pCode = "                                 + engine :: toString ( info.pCode ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VALIDATION_CACHE_AVAILABLE
+auto vulkan :: toString (
+        Type ( ShaderModuleValidationCacheCreateInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( ShaderModuleValidationCacheCreateInfo ) " " +
+           "{ structureType = "_s                       + toString ( info.structureType ) +
+           ", pNext = "                                 + engine :: toString ( info.pNext ) +
+           ", validationCache = "                       + engine :: toString ( info.validationCache ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_COOPERATIVE_MATRIX_AVAILABLE
+auto vulkan :: toString (
+        Type ( ComponentTypeNVidia ) type
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( type ) {
+        case ComponentTypeNVidiaFloat16:    { asString = "Float 16";        break; }
+        case ComponentTypeNVidiaFloat32:    { asString = "Float 32";        break; }
+        case ComponentTypeNVidiaFloat64:    { asString = "Float 64";        break; }
+
+        case ComponentTypeNVidiaSInt8:      { asString = "Signed Int 8";    break; }
+        case ComponentTypeNVidiaSInt16:     { asString = "Signed Int 16";   break; }
+        case ComponentTypeNVidiaSInt32:     { asString = "Signed Int 32";   break; }
+        case ComponentTypeNVidiaSInt64:     { asString = "Signed Int 64";   break; }
+
+        case ComponentTypeNVidiaUInt8:      { asString = "Unsigned Int 8";  break; }
+        case ComponentTypeNVidiaUInt16:     { asString = "Unsigned Int 16"; break; }
+        case ComponentTypeNVidiaUInt32:     { asString = "Unsigned Int 32"; break; }
+        case ComponentTypeNVidiaUInt64:     { asString = "Unsigned Int 64"; break; }
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_COOPERATIVE_MATRIX_AVAILABLE
+auto vulkan :: toString (
+        Type ( ScopeNVidia ) scope
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( scope ) {
+        case ScopeNVidiaDevice:         { asString = "Device";          break; }
+        case ScopeNVidiaWorkgroup:      { asString = "Workgroup";       break; }
+        case ScopeNVidiaSubgroup:       { asString = "Subgroup";        break; }
+        case ScopeNVidiaQueueFamily:    { asString = "Queue Family";    break; }
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_COOPERATIVE_MATRIX_AVAILABLE
+auto vulkan :: toString (
+        Type ( CooperativeMatrixPropertiesNVidia ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( CooperativeMatrixPropertiesNVidia ) " " +
+           "{ structureType = "_s   + toString ( info.structureType ) +
+           ", pNext = "             + engine :: toString ( info.pNext ) +
+           ", NSize = "             + toString ( info.NSize ) +
+           ", MSize = "             + toString ( info.MSize ) +
+           ", KSize = "             + toString ( info.KSize ) +
+           ", AType = "             + toString ( info.AType ) +
+           ", BType = "             + toString ( info.BType ) +
+           ", CType = "             + toString ( info.CType ) +
+           ", DType = "             + toString ( info.DType ) +
+           ", scope = "             + toString ( info.scope ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VALIDATION_CACHE_AVAILABLE
+auto vulkan :: toString (
+        Type ( ValidationCacheCreateInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( ValidationCacheCreateInfo ) " " +
+           "{ structureType = "_s   + toString ( info.structureType ) +
+           ", pNext = "             + engine :: toString ( info.pNext ) +
+           ", flags = "             + "0b" + Long ( info.flags ).toString(2) +
+           ", initialDataSize = "   + info.initialDataSize +
+           ", pInitialData = "      + engine :: toString ( info.pInitialData ) +
+           " }";
+}
+#endif

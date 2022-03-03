@@ -1232,9 +1232,9 @@ auto Self :: deviceCreateInfoAddExtensions (
 }
 
 auto Self :: deviceCreateInfoAddQueueCreateInfos (
-        Type ( DeviceCreateInfo )                                   * pCreateInfo,
-        bool                                                          protectedMemoryEnabled,
-        bool                                                          preferExclusivity
+        Type ( DeviceCreateInfo )   * pCreateInfo,
+        bool                          protectedMemoryEnabled,
+        bool                          preferExclusivity
 ) noexcept (false) -> Self & {
 
     HashMap < Type ( QueueFlag ), uint32 > requiredQueueCounts;
@@ -1376,6 +1376,12 @@ auto Self :: buildSingleDeviceToSurface () noexcept (false) -> Nester {
     (void) this->addImplicitDeviceExtensions();
     (void) this->filterUnsupportedExtensions();
 
+    if ( this->_createValidationCache ) {
+#if __C_ENG_VULKAN_API_EXTENSION_VALIDATION_CACHE_AVAILABLE
+        this->_extensionNames.add ( VK_EXT_VALIDATION_CACHE_EXTENSION_NAME );
+#endif
+    }
+
     (void) this->deviceCreateInfoAddFeatures ( & deviceCreateInfo, & protectedMemoryEnabled );
     (void) this->deviceCreateInfoAddExtensions ( & deviceCreateInfo );
 
@@ -1436,6 +1442,10 @@ auto Self :: buildSingleDeviceToSurface () noexcept (false) -> Nester {
         );
     }
 
+    if ( this->_createValidationCache ) {
+        (void) device._validationCache.init ( & device, this->_validationCachePath );
+    }
+
     return device;
 }
 
@@ -1478,6 +1488,16 @@ auto Self :: filterUnsupportedExtensions ( Collection < String > const & mandato
     return * this;
 }
 
+auto Self :: useValidationCache (
+        Path path
+) noexcept -> Self & {
+
+    this->_createValidationCache    = true;
+    this->_validationCachePath      = std :: move ( path );
+
+    return * this;
+}
+
 #define C_ENG_MAP_END
 #include <ObjectMapping.hpp>
 
@@ -1488,6 +1508,8 @@ auto Self :: filterUnsupportedExtensions ( Collection < String > const & mandato
 auto Self :: clear () noexcept (false) -> Self & {
 
     if ( this->_handle != nullptr ) {
+
+        this->_validationCache.clear();
 
         auto result = vulkan :: destroyDevice (
                 this->_handle,

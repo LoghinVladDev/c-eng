@@ -2924,6 +2924,41 @@ namespace engine :: vulkan {
     ) noexcept -> VkSubpassFragmentDensityMapOffsetEndInfoQCOM *;
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto prepareContext (
+            CreateShaderModuleContext             *,
+            Type ( ShaderModuleCreateInfo ) const *
+    ) noexcept -> VkShaderModuleCreateInfo *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto toVulkanFormat (
+            VkShaderModuleCreateInfo              *,
+            Type ( ShaderModuleCreateInfo ) const *
+    ) noexcept -> VkShaderModuleCreateInfo *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VALIDATION_CACHE_AVAILABLE
+    extern auto toVulkanFormat (
+            VkShaderModuleValidationCacheCreateInfoEXT           *,
+            Type ( ShaderModuleValidationCacheCreateInfo ) const *
+    ) noexcept -> VkShaderModuleValidationCacheCreateInfoEXT *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_COOPERATIVE_MATRIX_AVAILABLE
+    extern auto fromVulkanFormat (
+            Type ( CooperativeMatrixPropertiesNVidia )        *,
+            VkCooperativeMatrixPropertiesNV             const *
+    ) noexcept -> Type ( CooperativeMatrixPropertiesNVidia ) *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VALIDATION_CACHE_AVAILABLE
+    extern auto toVulkanFormat (
+            VkValidationCacheCreateInfoEXT           *,
+            Type ( ValidationCacheCreateInfo ) const *
+    ) noexcept -> VkValidationCacheCreateInfoEXT *;
+#endif
+
 }
 
 #define C_ENG_MAP_END

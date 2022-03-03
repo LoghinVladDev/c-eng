@@ -855,9 +855,76 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         ) noexcept -> Type ( Result );
 #endif
 
-    }
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+        NoDiscard MaybeUnused extern auto createShaderModule (
+                Type ( DeviceHandle ),
+                Type ( ShaderModuleCreateInfo ) const *,
+                Type ( AllocationCallbacks )    const *,
+                Type ( ShaderModuleHandle )           *
+        ) noexcept -> Type ( Result );
+#endif
 
-}
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+        NoDiscard MaybeUnused extern auto destroyShaderModule (
+                Type ( DeviceHandle ),
+                Type ( ShaderModuleHandle ),
+                Type ( AllocationCallbacks )    const *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_EXTENDED_DYNAMIC_STATE_2_AVAILABLE
+        NoDiscard MaybeUnused extern auto commandBufferSetPatchControlPoints (
+                Type ( CommandBufferHandle ),
+                cds :: uint32
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_COOPERATIVE_MATRIX_AVAILABLE
+        NoDiscard MaybeUnused extern auto getPhysicalDeviceCooperativeMatrixPropertiesNVidia (
+                Type ( PhysicalDeviceHandle ),
+                cds :: uint32                               *,
+                Type ( CooperativeMatrixPropertiesNVidia )  * = nullptr
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VALIDATION_CACHE_AVAILABLE
+        NoDiscard MaybeUnused extern auto createValidationCache (
+                Type ( DeviceHandle ),
+                Type ( ValidationCacheCreateInfo )  const *,
+                Type ( AllocationCallbacks )        const *,
+                Type ( ValidationCacheHandle )            *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VALIDATION_CACHE_AVAILABLE
+        NoDiscard MaybeUnused extern auto mergeValidationCache (
+                Type ( DeviceHandle ),
+                Type ( ValidationCacheHandle ),
+                cds :: uint32,
+                Type ( ValidationCacheHandle )  const *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VALIDATION_CACHE_AVAILABLE
+        NoDiscard MaybeUnused extern auto getValidationCacheData (
+                Type ( DeviceHandle ),
+                Type ( ValidationCacheHandle ),
+                cds :: uint64 *,
+                void *                          = nullptr
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VALIDATION_CACHE_AVAILABLE
+        NoDiscard MaybeUnused extern auto destroyValidationCache (
+                Type ( DeviceHandle ),
+                Type ( ValidationCacheHandle ),
+                Type ( AllocationCallbacks )    const *
+        ) noexcept -> Type ( Result );
+#endif
+
+    } /// namespace vulkan
+
+} /// namespace engine
 
 #define C_ENG_MAP_END
 #include <ObjectMapping.hpp>

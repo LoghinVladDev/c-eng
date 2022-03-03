@@ -59,10 +59,17 @@ auto vulkan :: Self :: init () noexcept (false) -> Self & {
         }
     }
 
-    this->_device = Type ( Device ) :: Builder ()
+
+
+    auto builder = Type ( Device ) :: Builder ()
         .fromDevice ( pPhysicalDeviceToUse )
-        .toSurface ( this->_surfaceHandle )
-        .build();
+        .toSurface ( this->_surfaceHandle );
+
+    if ( this->instance().layerHandler().debugLayerEnabled() ) {
+        builder.useValidationCache();
+    }
+
+    this->_device = builder.build();
 
     this->_presentHandler = Type ( PresentHandler ) :: createSuitablePresentHandler (
             & this->_device,

@@ -85,6 +85,10 @@ private:
         constexpr auto data () noexcept -> SharedContext & {
             return this->pContext->data;
         }
+
+        constexpr auto operator -> () noexcept -> SharedContext & {
+            return this->pContext->data;
+        }
     };
 
 public:
@@ -148,7 +152,7 @@ private:
     static inline Mutex                                 lock;
 
 public:
-    static inline auto applyCallbacks (
+    static inline auto apply (
             Type ( AllocationCallbacks ) const * pAllocationCallbacks
     ) noexcept -> VkAllocationCallbacks const * {
         if ( pAllocationCallbacks == nullptr ) {
@@ -319,7 +323,7 @@ auto engine :: vulkan :: createInstance (
     if (
             auto result = vkCreateInstanceHandle (
                     prepareContext ( & context.data().create.instance, pCreateInfo ),
-                    AllocatorHandler :: applyCallbacks ( pAllocationCallbacks ),
+                    AllocatorHandler :: apply ( pAllocationCallbacks ),
                     pInstanceHandle
             ); result != VK_SUCCESS
     ) {
@@ -761,7 +765,7 @@ auto engine :: vulkan :: createDebugMessenger (
             vkCreateDebugUtilsMessengerEXTHandle (
                     instanceHandle,
                     toVulkanFormat ( & context.data().create.instance.debugMessenger, pCreateInfo ),
-                    AllocatorHandler :: applyCallbacks ( pAllocationCallbacks ),
+                    AllocatorHandler :: apply ( pAllocationCallbacks ),
                     pHandle
             )
     );
@@ -792,7 +796,7 @@ auto engine :: vulkan :: createSurface (
             glfwCreateWindowSurface (
                     instanceHandle,
                     pWindowHandle,
-                    AllocatorHandler :: applyCallbacks ( pAllocationCallbacks ),
+                    AllocatorHandler :: apply ( pAllocationCallbacks ),
                     pSurfaceHandle
             )
     );
@@ -827,7 +831,7 @@ auto engine :: vulkan :: createDevice (
             vkCreateDeviceHandle (
                     physicalDeviceHandle,
                     prepareContext ( & context.data().create.device, pCreateInfo ),
-                    AllocatorHandler :: applyCallbacks ( pAllocationCallbacks ),
+                    AllocatorHandler :: apply ( pAllocationCallbacks ),
                     pDeviceHandle
             )
     );
@@ -850,7 +854,7 @@ auto engine :: vulkan :: destroyInstance (
 
     __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( handle, vkDestroyInstance )
 
-    vkDestroyInstanceHandle ( handle, AllocatorHandler :: applyCallbacks ( pAllocationCallbacks ) );
+    vkDestroyInstanceHandle ( handle, AllocatorHandler :: apply ( pAllocationCallbacks ) );
     return ResultSuccess;
 }
 #endif
@@ -875,7 +879,7 @@ auto engine :: vulkan :: destroyDebugMessenger (
     vkDestroyDebugUtilsMessengerEXTHandle (
             instanceHandle,
             debugMessengerHandle,
-            AllocatorHandler :: applyCallbacks ( pAllocationCallbacks )
+            AllocatorHandler :: apply ( pAllocationCallbacks )
     );
 
     return ResultSuccess;
@@ -902,7 +906,7 @@ auto engine :: vulkan :: destroySurface (
     vkDestroySurfaceKHRHandle (
             instanceHandle,
             surfaceHandle,
-            AllocatorHandler :: applyCallbacks ( pAllocationCallbacks )
+            AllocatorHandler :: apply ( pAllocationCallbacks )
     );
 
     return ResultSuccess;
@@ -925,7 +929,7 @@ auto engine :: vulkan :: destroyDevice (
 
     __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkDestroyDevice )
 
-    vkDestroyDeviceHandle ( handle, AllocatorHandler :: applyCallbacks ( pAllocationCallbacks ) );
+    vkDestroyDeviceHandle ( handle, AllocatorHandler :: apply ( pAllocationCallbacks ) );
     return ResultSuccess;
 }
 #endif
@@ -1518,7 +1522,7 @@ auto engine :: vulkan :: getPhysicalDeviceSurfacePresentModes (
 
     if ( pPresentModes == nullptr ) {
         return static_cast < Type ( Result ) > (
-                vkGetPhysicalDeviceSurfacePresentModesKHR (
+                vkGetPhysicalDeviceSurfacePresentModesKHRHandle (
                         deviceHandle,
                         surfaceHandle,
                         pCount,
@@ -1722,7 +1726,7 @@ auto engine :: vulkan :: createSwapChain (
             vkCreateSwapchainKHRHandle (
                     deviceHandle,
                     prepareContext ( & context.data().create.swapChain, pCreateInfo ),
-                    AllocatorHandler :: applyCallbacks ( pAllocationCallbacks ),
+                    AllocatorHandler :: apply ( pAllocationCallbacks ),
                     pHandle
             )
     );
@@ -1749,7 +1753,7 @@ auto engine :: vulkan :: destroySwapChain (
     vkDestroySwapchainKHRHandle (
             deviceHandle,
             handle,
-            AllocatorHandler :: applyCallbacks ( pAllocationCallbacks )
+            AllocatorHandler :: apply ( pAllocationCallbacks )
     );
 
     return ResultSuccess;
@@ -1838,7 +1842,7 @@ auto engine :: vulkan :: createImageView (
             vkCreateImageViewHandle (
                     deviceHandle,
                     prepareContext ( & context.data().create.imageView, pCreateInfo ),
-                    AllocatorHandler :: applyCallbacks ( pAllocationCallbacks ),
+                    AllocatorHandler :: apply ( pAllocationCallbacks ),
                     pHandle
             )
     );
@@ -1865,7 +1869,7 @@ auto engine :: vulkan :: destroyImageView (
     vkDestroyImageViewHandle (
             deviceHandle,
             handle,
-            AllocatorHandler :: applyCallbacks ( pAllocationCallbacks )
+            AllocatorHandler :: apply ( pAllocationCallbacks )
     );
 
     return ResultSuccess;
@@ -1896,7 +1900,7 @@ auto engine :: vulkan :: createCommandPool (
             vkCreateCommandPoolHandle (
                     deviceHandle,
                     toVulkanFormat ( & context.data().create.commandPool.createInfo, pCreateInfo ),
-                    AllocatorHandler :: applyCallbacks ( pAllocationCallbacks ),
+                    AllocatorHandler :: apply ( pAllocationCallbacks ),
                     pHandle
             )
     );
@@ -1923,7 +1927,7 @@ auto engine :: vulkan :: destroyCommandPool (
     vkDestroyCommandPoolHandle (
             deviceHandle,
             handle,
-            AllocatorHandler :: applyCallbacks ( pAllocationCallbacks )
+            AllocatorHandler :: apply ( pAllocationCallbacks )
     );
 
     return ResultSuccess;
@@ -1948,7 +1952,7 @@ auto engine :: vulkan :: resetCommandPool (
     __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkResetCommandPool )
 
     return static_cast < Type ( Result ) > (
-            vkResetCommandPool (
+            vkResetCommandPoolHandle (
                     deviceHandle,
                     handle,
                     flags
@@ -2061,7 +2065,7 @@ auto engine :: vulkan :: beginCommandBuffer (
     auto context = ContextManager :: acquire();
 
     return static_cast < Type ( Result ) > (
-            vkBeginCommandBuffer (
+            vkBeginCommandBufferHandle (
                     commandBufferHandle,
                     prepareContext ( & context.data().begin.commandBuffer, pBeginInfo )
             )
@@ -2302,7 +2306,7 @@ auto engine :: vulkan :: createFence (
             vkCreateFenceHandle (
                     deviceHandle,
                     prepareContext ( & context.data().create.fence, pCreateInfo ),
-                    AllocatorHandler :: applyCallbacks ( pAllocationCallbacks ),
+                    AllocatorHandler :: apply ( pAllocationCallbacks ),
                     pHandle
             )
     );
@@ -2387,7 +2391,7 @@ auto engine :: vulkan :: destroyFence (
     vkDestroyFenceHandle (
             deviceHandle,
             fenceHandle,
-            AllocatorHandler :: applyCallbacks ( pAllocationCallbacks )
+            AllocatorHandler :: apply ( pAllocationCallbacks )
     );
 
     return ResultSuccess;
@@ -2496,7 +2500,7 @@ auto engine :: vulkan :: registerDeviceEvent (
             vkRegisterDeviceEventEXTHandle (
                     deviceHandle,
                     toVulkanFormat ( & context.data().other.registerEvent.deviceInfo, pEventInfo ),
-                    AllocatorHandler :: applyCallbacks ( pAllocationCallbacks ),
+                    AllocatorHandler :: apply ( pAllocationCallbacks ),
                     pHandle
             )
     );
@@ -2529,7 +2533,7 @@ auto engine :: vulkan :: registerDisplayEvent (
                     deviceHandle,
                     displayHandle,
                     toVulkanFormat ( & context.data().other.registerEvent.displayInfo, pEventInfo ),
-                    AllocatorHandler :: applyCallbacks ( pAllocationCallbacks ),
+                    AllocatorHandler :: apply ( pAllocationCallbacks ),
                     pHandle
             )
     );
@@ -2614,7 +2618,7 @@ auto engine :: vulkan :: createSemaphore (
             vkCreateSemaphoreHandle (
                     deviceHandle,
                     prepareContext ( & context.data().create.semaphore, pCreateInfo ),
-                    AllocatorHandler :: applyCallbacks ( pAllocationCallbacks ),
+                    AllocatorHandler :: apply ( pAllocationCallbacks ),
                     pHandle
             )
     );
@@ -2728,7 +2732,7 @@ auto engine :: vulkan :: destroySemaphore (
     vkDestroySemaphoreHandle (
             deviceHandle,
             semaphoreHandle,
-            AllocatorHandler :: applyCallbacks ( pAllocationCallbacks )
+            AllocatorHandler :: apply ( pAllocationCallbacks )
     );
 
     return ResultSuccess;
@@ -2935,7 +2939,7 @@ auto engine :: vulkan :: createEvent (
             vkCreateEventHandle (
                     deviceHandle,
                     toVulkanFormat ( & context.data().create.event.createInfo, pCreateInfo ),
-                    AllocatorHandler :: applyCallbacks ( pAllocationCallbacks ),
+                    AllocatorHandler :: apply ( pAllocationCallbacks ),
                     pHandle
             )
     );
@@ -2962,7 +2966,7 @@ auto engine :: vulkan :: destroyEvent (
     vkDestroyEventHandle (
             deviceHandle,
             handle,
-            AllocatorHandler :: applyCallbacks ( pAllocationCallbacks )
+            AllocatorHandler :: apply ( pAllocationCallbacks )
     );
 
     return ResultSuccess;
@@ -3525,7 +3529,7 @@ auto engine :: vulkan :: createRenderPass (
             vkCreateRenderPassHandle (
                     deviceHandle,
                     prepareContext ( & context.data().create.renderPass, pCreateInfo ),
-                    AllocatorHandler :: applyCallbacks ( pAllocationCallbacks ),
+                    AllocatorHandler :: apply ( pAllocationCallbacks ),
                     pHandle
             )
     );
@@ -3556,7 +3560,7 @@ auto engine :: vulkan :: createRenderPass (
             vkCreateRenderPass2Handle (
                     deviceHandle,
                     prepareContext ( & context.data().create.renderPass2, pCreateInfo ),
-                    AllocatorHandler :: applyCallbacks ( pAllocationCallbacks ),
+                    AllocatorHandler :: apply ( pAllocationCallbacks ),
                     pHandle
             )
     );
@@ -3583,7 +3587,7 @@ auto engine :: vulkan :: destroyRenderPass (
     vkDestroyRenderPassHandle (
             deviceHandle,
             renderPassHandle,
-            AllocatorHandler :: applyCallbacks ( pAllocationCallbacks )
+            AllocatorHandler :: apply ( pAllocationCallbacks )
     );
 
     return ResultSuccess;
@@ -3614,7 +3618,7 @@ auto engine :: vulkan :: createFrameBuffer (
             vkCreateFramebufferHandle (
                     deviceHandle,
                     prepareContext ( & context.data().create.frameBuffer, pCreateInfo ),
-                    AllocatorHandler :: applyCallbacks ( pAllocationCallbacks ),
+                    AllocatorHandler :: apply ( pAllocationCallbacks ),
                     pHandle
             )
     );
@@ -3643,7 +3647,7 @@ auto engine :: vulkan :: destroyFrameBuffer (
     vkDestroyFramebufferHandle (
             deviceHandle,
             handle,
-            AllocatorHandler :: applyCallbacks ( pAllocationCallbacks )
+            AllocatorHandler :: apply ( pAllocationCallbacks )
     );
 
     return ResultSuccess;
@@ -3831,6 +3835,275 @@ auto engine :: vulkan :: commandBufferEndRenderPass (
     vkCmdEndRenderPass2Handle (
             handle,
             prepareContext ( & context.data().other.nextSubpass, pInfo )
+    );
+
+    return ResultSuccess;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: createShaderModule (
+        Type ( DeviceHandle )                   deviceHandle,
+        Type ( ShaderModuleCreateInfo ) const * pCreateInfo,
+        Type ( AllocationCallbacks )    const * pAllocationCallbacks,
+        Type ( ShaderModuleHandle )           * pShaderModuleHandle
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || pCreateInfo == nullptr || pShaderModuleHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkCreateShaderModule )
+
+    auto context = ContextManager :: acquire();
+
+    return static_cast < Type ( Result ) > (
+            vkCreateShaderModuleHandle (
+                    deviceHandle,
+                    prepareContext ( & context.data().create.shaderModule, pCreateInfo ),
+                    AllocatorHandler :: apply ( pAllocationCallbacks ),
+                    pShaderModuleHandle
+            )
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: destroyShaderModule (
+        Type ( DeviceHandle )                   deviceHandle,
+        Type ( ShaderModuleHandle )             shaderModuleHandle,
+        Type ( AllocationCallbacks )    const * pAllocationCallbacks
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || shaderModuleHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkDestroyShaderModule )
+
+    vkDestroyShaderModuleHandle (
+            deviceHandle,
+            shaderModuleHandle,
+            AllocatorHandler :: apply ( pAllocationCallbacks )
+    );
+
+    return ResultSuccess;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_EXTENDED_DYNAMIC_STATE_2_AVAILABLE
+auto engine :: vulkan :: commandBufferSetPatchControlPoints (
+        Type ( CommandBufferHandle )    commandBufferHandle,
+        cds :: uint32                   patchControlPoints
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( commandBufferHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkCmdSetPatchControlPointsEXT )
+
+    vkCmdSetPatchControlPointsEXTHandle ( commandBufferHandle, patchControlPoints );
+    return ResultSuccess;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_COOPERATIVE_MATRIX_AVAILABLE
+auto engine :: vulkan :: getPhysicalDeviceCooperativeMatrixPropertiesNVidia (
+        Type ( PhysicalDeviceHandle )                 physicalDeviceHandle,
+        cds :: uint32                               * pCount,
+        Type ( CooperativeMatrixPropertiesNVidia )  * pProperties
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( physicalDeviceHandle == nullptr || pCount == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkGetPhysicalDeviceCooperativeMatrixPropertiesNV )
+
+    if ( pProperties == nullptr ) {
+        return static_cast < Type ( Result ) > (
+                vkGetPhysicalDeviceCooperativeMatrixPropertiesNVHandle (
+                        physicalDeviceHandle,
+                        pCount,
+                        nullptr
+                )
+        );
+    }
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( * pCount > engine :: vulkan :: config :: cooperativeMatrixPropertiesCount ) {
+        return ResultErrorConfigurationArraySizeSmall;
+    }
+
+#endif
+
+    auto context = ContextManager :: acquire();
+
+    if (
+            auto result = vkGetPhysicalDeviceCooperativeMatrixPropertiesNVHandle (
+                    physicalDeviceHandle,
+                    pCount,
+                    & context.data().get.physicalDeviceCooperativeMatrixProperties.properties[0]
+            ); result != VK_SUCCESS
+    ) {
+        return static_cast < Type ( Result ) > ( result );
+    }
+
+    for ( uint32 i = 0U; i < * pCount; ++ i ) {
+        (void) fromVulkanFormat ( & pProperties[i], & context.data().get.physicalDeviceCooperativeMatrixProperties.properties[0] );
+    }
+
+    return ResultSuccess;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VALIDATION_CACHE_AVAILABLE
+auto engine :: vulkan :: createValidationCache (
+        Type ( DeviceHandle )                       deviceHandle,
+        Type ( ValidationCacheCreateInfo )  const * pCreateInfo,
+        Type ( AllocationCallbacks )        const * pAllocationCallbacks,
+        Type ( ValidationCacheHandle )            * pHandle
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || pCreateInfo == nullptr || pHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkCreateValidationCacheEXT )
+
+    auto context = ContextManager :: acquire();
+
+    return static_cast < Type ( Result ) > (
+            vkCreateValidationCacheEXTHandle (
+                    deviceHandle,
+                    toVulkanFormat ( & context.data().create.validationCache.createInfo, pCreateInfo ),
+                    AllocatorHandler :: apply ( pAllocationCallbacks ),
+                    pHandle
+            )
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VALIDATION_CACHE_AVAILABLE
+auto engine :: vulkan :: mergeValidationCache (
+        Type ( DeviceHandle )                   deviceHandle,
+        Type ( ValidationCacheHandle )          destinationCacheHandle,
+        cds :: uint32                           sourceCacheCount,
+        Type ( ValidationCacheHandle )  const * pSourceCacheHandles
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || destinationCacheHandle == nullptr || sourceCacheCount == 0U || pSourceCacheHandles == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkMergeValidationCachesEXT )
+
+    return static_cast < Type ( Result ) > (
+            vkMergeValidationCachesEXTHandle (
+                    deviceHandle,
+                    destinationCacheHandle,
+                    sourceCacheCount,
+                    pSourceCacheHandles
+            )
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VALIDATION_CACHE_AVAILABLE
+auto engine :: vulkan :: getValidationCacheData (
+        Type ( DeviceHandle )           deviceHandle,
+        Type ( ValidationCacheHandle )  validationCacheHandle,
+        cds :: uint64 *                 pDataSize,
+        void *                          pData
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || validationCacheHandle == nullptr || pDataSize == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkGetValidationCacheDataEXT )
+
+    std :: size_t size;
+
+    if ( pData == nullptr ) {
+        if (
+                auto result = vkGetValidationCacheDataEXTHandle (
+                        deviceHandle,
+                        validationCacheHandle,
+                        & size,
+                        nullptr
+                ); result != VK_SUCCESS
+        ) {
+            return static_cast < Type ( Result ) > ( result );
+        }
+
+        * pDataSize = size;
+        return ResultSuccess;
+    }
+
+    size = * pDataSize;
+    return static_cast < Type ( Result ) > (
+            vkGetValidationCacheDataEXTHandle (
+                    deviceHandle,
+                    validationCacheHandle,
+                    & size,
+                    pData
+            )
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VALIDATION_CACHE_AVAILABLE
+auto engine :: vulkan :: destroyValidationCache (
+        Type ( DeviceHandle )                   deviceHandle,
+        Type ( ValidationCacheHandle )          validationCacheHandle,
+        Type ( AllocationCallbacks )    const * pAllocationCallbacks
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || validationCacheHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkDestroyValidationCacheEXT )
+
+    vkDestroyValidationCacheEXTHandle (
+            deviceHandle,
+            validationCacheHandle,
+            AllocatorHandler :: apply ( pAllocationCallbacks )
     );
 
     return ResultSuccess;

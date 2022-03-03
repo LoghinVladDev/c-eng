@@ -18449,5 +18449,160 @@ namespace engine :: vulkan {
     }
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    auto toVulkanFormat (
+            VkShaderModuleCreateInfo              * pDestination,
+            Type ( ShaderModuleCreateInfo ) const * pSource
+    ) noexcept -> VkShaderModuleCreateInfo * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                      = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO,
+                .pNext                      = nullptr,
+                .flags                      = pSource->flags,
+                .codeSize                   = static_cast < std :: size_t > ( pSource->codeSize ),
+                .pCode                      = pSource->pCode
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VALIDATION_CACHE_AVAILABLE
+    auto toVulkanFormat (
+            VkShaderModuleValidationCacheCreateInfoEXT              * pDestination,
+            Type ( ShaderModuleValidationCacheCreateInfo ) const * pSource
+    ) noexcept -> VkShaderModuleValidationCacheCreateInfoEXT * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                      = VK_STRUCTURE_TYPE_SHADER_MODULE_VALIDATION_CACHE_CREATE_INFO_EXT,
+                .pNext                      = nullptr,
+                .validationCache            = pSource->validationCache
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    auto prepareContext (
+            CreateShaderModuleContext             * pContext,
+            Type ( ShaderModuleCreateInfo ) const * pSource
+    ) noexcept -> VkShaderModuleCreateInfo * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pContext == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        auto pCurrent   = reinterpret_cast < Type ( GenericInStructure ) const * > ( pSource->pNext );
+        auto pCurrentVk = reinterpret_cast < VkBaseOutStructure * > ( toVulkanFormat ( & pContext->createInfo, pSource ) );
+
+        while ( pCurrent != nullptr ) {
+
+            switch ( pCurrent->structureType ) {
+
+#if __C_ENG_VULKAN_API_EXTENSION_VALIDATION_CACHE_AVAILABLE
+
+                case StructureTypeShaderModuleValidationCacheCreateInfo:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                            toVulkanFormat (
+                                    & pContext->validationCacheCreateInfo,
+                                    reinterpret_cast < Type ( ShaderModuleValidationCacheCreateInfo ) const * > ( pCurrent )
+                            )
+                    );
+                    break;
+
+#endif
+
+                default:
+                    break;
+            }
+
+            pCurrentVk  = pCurrentVk->pNext == nullptr ? pCurrentVk : pCurrentVk->pNext;
+            pCurrent    = pCurrent->pNext;
+        }
+
+        pCurrentVk->pNext = nullptr;
+
+        return & pContext->createInfo;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_COOPERATIVE_MATRIX_AVAILABLE
+    auto fromVulkanFormat (
+            Type ( CooperativeMatrixPropertiesNVidia )        * pDestination,
+            VkCooperativeMatrixPropertiesNV             const * pSource
+    ) noexcept -> Type ( CooperativeMatrixPropertiesNVidia ) * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .structureType  = StructureTypeCooperativeMatrixPropertiesNVidia,
+                .pNext          = nullptr,
+                .MSize          = pSource->MSize,
+                .NSize          = pSource->NSize,
+                .KSize          = pSource->KSize,
+                .AType          = static_cast < Type ( ComponentTypeNVidia ) > ( pSource->AType ),
+                .BType          = static_cast < Type ( ComponentTypeNVidia ) > ( pSource->BType ),
+                .CType          = static_cast < Type ( ComponentTypeNVidia ) > ( pSource->CType ),
+                .DType          = static_cast < Type ( ComponentTypeNVidia ) > ( pSource->DType ),
+                .scope          = static_cast < Type ( ScopeNVidia ) > ( pSource->scope )
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VALIDATION_CACHE_AVAILABLE
+    auto toVulkanFormat (
+            VkValidationCacheCreateInfoEXT              * pDestination,
+            Type ( ValidationCacheCreateInfo ) const * pSource
+    ) noexcept -> VkValidationCacheCreateInfoEXT * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                      = VK_STRUCTURE_TYPE_VALIDATION_CACHE_CREATE_INFO_EXT,
+                .pNext                      = nullptr,
+                .flags                      = pSource->flags,
+                .initialDataSize            = pSource->initialDataSize,
+                .pInitialData               = pSource->pInitialData
+        };
+
+        return pDestination;
+    }
+#endif
+
 }
 

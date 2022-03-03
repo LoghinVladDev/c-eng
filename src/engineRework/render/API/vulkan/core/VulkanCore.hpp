@@ -3870,6 +3870,44 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #endif
 
 
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_COOPERATIVE_MATRIX_AVAILABLE
+#define C_ENG_MAP_START ENUM ( ComponentTypeNVidia, TYPE ( cds :: uint8 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( Float16,    VkComponentTypeNV :: VK_COMPONENT_TYPE_FLOAT16_NV ),
+            Field ( Float32,    VkComponentTypeNV :: VK_COMPONENT_TYPE_FLOAT32_NV ),
+            Field ( Float64,    VkComponentTypeNV :: VK_COMPONENT_TYPE_FLOAT64_NV ),
+
+            Field ( SInt8,      VkComponentTypeNV :: VK_COMPONENT_TYPE_SINT8_NV ),
+            Field ( SInt16,     VkComponentTypeNV :: VK_COMPONENT_TYPE_SINT16_NV ),
+            Field ( SInt32,     VkComponentTypeNV :: VK_COMPONENT_TYPE_SINT32_NV ),
+            Field ( SInt64,     VkComponentTypeNV :: VK_COMPONENT_TYPE_SINT64_NV ),
+
+            Field ( UInt8,      VkComponentTypeNV :: VK_COMPONENT_TYPE_UINT8_NV ),
+            Field ( UInt16,     VkComponentTypeNV :: VK_COMPONENT_TYPE_UINT16_NV ),
+            Field ( UInt32,     VkComponentTypeNV :: VK_COMPONENT_TYPE_UINT32_NV ),
+            Field ( UInt64,     VkComponentTypeNV :: VK_COMPONENT_TYPE_UINT64_NV ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START ENUM ( ScopeNVidia, TYPE ( cds :: uint8 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( Device,         VkScopeNV :: VK_SCOPE_DEVICE_NV ),
+            Field ( Workgroup,      VkScopeNV :: VK_SCOPE_WORKGROUP_NV ),
+            Field ( Subgroup,       VkScopeNV :: VK_SCOPE_SUBGROUP_NV ),
+            Field ( QueueFamily,    VkScopeNV :: VK_SCOPE_QUEUE_FAMILY_NV ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+
 
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 
@@ -3900,6 +3938,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_ALIAS ( FenceHandle,                    VkFence );
         __C_ENG_ALIAS ( EventHandle,                    VkEvent );
         __C_ENG_ALIAS ( BufferHandle,                   VkBuffer );
+        __C_ENG_ALIAS ( ShaderModuleHandle,             VkShaderModule );
 
         __C_ENG_ALIAS ( InstanceCreateFlags,            VkInstanceCreateFlags );
         __C_ENG_ALIAS ( DebugMessengerCreateFlags,      VkDebugUtilsMessengerCreateFlagsEXT );
@@ -3927,6 +3966,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_ALIAS ( SubpassDescriptionFlags,        VkSubpassDescriptionFlags );
         __C_ENG_ALIAS ( FrameBufferCreateFlags,         VkFramebufferCreateFlags );
         __C_ENG_ALIAS ( ImageCreateFlags,               VkImageCreateFlags );
+        __C_ENG_ALIAS ( ShaderModuleCreateFlags,        VkShaderModuleCreateFlags );
 
         __C_ENG_ALIAS ( AllocationFunction,             PFN_vkAllocationFunction );
         __C_ENG_ALIAS ( ReallocationFunction,           PFN_vkReallocationFunction );
@@ -3951,6 +3991,11 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
         __C_ENG_ALIAS ( SemaphoreWaitFlags,                 VkSemaphoreWaitFlags );
 
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VALIDATION_CACHE_AVAILABLE
+        __C_ENG_ALIAS ( ValidationCacheHandle,              VkValidationCacheEXT );
+        __C_ENG_ALIAS ( ValidationCacheCreateFlags,         VkValidationCacheCreateFlagsEXT );
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_DEBUG_REPORT_AVAILABLE
@@ -10701,6 +10746,77 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #endif
 
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( ShaderModuleCreateInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )              structureType;
+            Type ( GenericStructure )   const * pNext;
+            Type ( ShaderModuleCreateFlags )    flags;
+            cds :: uint64                       codeSize;
+            cds :: uint32               const * pCode;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_VALIDATION_CACHE_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( ShaderModuleValidationCacheCreateInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )              structureType;
+            Type ( GenericStructure )   const * pNext;
+            Type ( ValidationCacheHandle )      validationCache;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_COOPERATIVE_MATRIX_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( CooperativeMatrixPropertiesNVidia, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )              structureType;
+            Type ( GenericStructure )   const * pNext;
+            cds :: uint32                       MSize;
+            cds :: uint32                       NSize;
+            cds :: uint32                       KSize;
+            Type ( ComponentTypeNVidia )        AType;
+            Type ( ComponentTypeNVidia )        BType;
+            Type ( ComponentTypeNVidia )        CType;
+            Type ( ComponentTypeNVidia )        DType;
+            Type ( ScopeNVidia )                scope;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_VALIDATION_CACHE_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( ValidationCacheCreateInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )              structureType;
+            Type ( GenericStructure )   const * pNext;
+            Type ( ValidationCacheCreateFlags ) flags;
+            cds :: uint64                       initialDataSize;
+            void                        const * pInitialData;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+
 #define C_ENG_MAP_START     HEADER
 #include <ObjectMapping.hpp>
 
@@ -10774,6 +10890,11 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
         NoDiscard auto toString ( Type ( SubmitFlag ) ) noexcept -> cds :: StringLiteral;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_COOPERATIVE_MATRIX_AVAILABLE
+        NoDiscard auto toString ( Type ( ComponentTypeNVidia ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( ScopeNVidia ) ) noexcept -> cds :: StringLiteral;
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_DISPLAY_CONTROL_AVAILABLE
@@ -10920,6 +11041,8 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
         NoDiscard auto toString ( Type ( RenderPassBeginInfo ) const & ) noexcept -> cds :: String;
 
+        NoDiscard auto toString ( Type ( ShaderModuleCreateInfo ) const & ) noexcept -> cds :: String;
+
 #endif
 
 #if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
@@ -11019,6 +11142,15 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceVulkan13Features ) const & ) noexcept -> cds :: String;
 
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VALIDATION_CACHE_AVAILABLE
+        NoDiscard auto toString ( Type ( ShaderModuleValidationCacheCreateInfo ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( ValidationCacheCreateInfo ) const & ) noexcept -> cds :: String;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_COOPERATIVE_MATRIX_AVAILABLE
+        NoDiscard auto toString ( Type ( CooperativeMatrixPropertiesNVidia ) const & ) noexcept -> cds :: String;
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_SAMPLE_LOCATIONS_AVAILABLE

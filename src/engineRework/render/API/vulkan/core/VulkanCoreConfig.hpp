@@ -13,8 +13,8 @@ namespace engine :: vulkan :: config {
     constexpr cds :: uint32 validationFeatureDisableCount   = 32U;
     constexpr cds :: uint32 validationCheckCount            = 16U;
 
-    constexpr cds :: uint32 layerCount          = 64U;
-    constexpr cds :: uint32 layerExtensionCount = 256U;
+    constexpr cds :: uint32 layerCount          = 128U;
+    constexpr cds :: uint32 layerExtensionCount = 512U;
 
     constexpr cds :: uint32 physicalDeviceCount         = 8U;
     constexpr cds :: uint32 physicalDeviceSurfaceCount  = 32U;
@@ -71,6 +71,8 @@ namespace engine :: vulkan :: config {
     constexpr cds :: uint32 renderPassSampleLocationsPostSubpassCount           = 32U;
 
     constexpr cds :: uint32 subpassFragmentDensityMapOffsetEndInfoOffsetCount   = 256U;
+
+    constexpr cds :: uint32 cooperativeMatrixPropertiesCount                    = 512U;
 }
 
 #if defined ( __C_ENG_USE_DEFENSIVE_PROGRAMMING ) || !defined(NDEBUG)

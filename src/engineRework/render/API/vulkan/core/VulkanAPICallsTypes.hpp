@@ -995,6 +995,30 @@ struct NextSubpassContext {
 #endif
 };
 
+struct CreateShaderModuleContext {
+    DiagnosticContext                                       diag;
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    VkShaderModuleCreateInfo                                createInfo;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_VALIDATION_CACHE_AVAILABLE
+    VkShaderModuleValidationCacheCreateInfoEXT              validationCacheCreateInfo;
+#endif
+};
+
+struct GetPhysicalDeviceCooperativeMatrixPropertiesContext {
+    DiagnosticContext                                       diag;
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_COOPERATIVE_MATRIX_AVAILABLE
+    VkCooperativeMatrixPropertiesNV                         properties [ engine :: vulkan :: config :: cooperativeMatrixPropertiesCount ];
+#endif
+};
+
+struct CreateValidationCacheContext {
+    DiagnosticContext                                       diag;
+#if __C_ENG_VULKAN_API_EXTENSION_VALIDATION_CACHE_AVAILABLE
+    VkValidationCacheCreateInfoEXT                          createInfo;
+#endif
+};
+
 union EnumerateSharedContext {
     EnumerateLayerPropertiesContext                                     layerProperties;
     EnumerateExtensionPropertiesContext                                 extensionProperties;
@@ -1015,12 +1039,15 @@ union CreateSharedContext {
     CreateRenderPassContext                                             renderPass;
     CreateRenderPass2Context                                            renderPass2;
     CreateFrameBufferContext                                            frameBuffer;
+    CreateShaderModuleContext                                           shaderModule;
+    CreateValidationCacheContext                                        validationCache;
 };
 
 union GetSharedContext {
     GetPhysicalDevicePropertiesContext                                  physicalDeviceProperties;
     GetPhysicalDeviceFeaturesContext                                    physicalDeviceFeatures;
     GetPhysicalDeviceQueueFamilyPropertiesContext                       physicalDeviceQueueFamilyProperties;
+    GetPhysicalDeviceCooperativeMatrixPropertiesContext                 physicalDeviceCooperativeMatrixProperties;
     GetDeviceQueueContext                                               deviceQueue;
     GetSurfaceContext                                                   surface;
     GetSwapChainContext                                                 swapChain;
