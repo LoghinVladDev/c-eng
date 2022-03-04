@@ -1019,6 +1019,33 @@ struct CreateValidationCacheContext {
 #endif
 };
 
+struct CreateComputePipelineContext {
+    DiagnosticContext                                       diag;
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    VkComputePipelineCreateInfo                             createInfos [ engine :: vulkan :: config :: computePipelineCount ];
+    VkSpecializationInfo                                    specializationInfos [ engine :: vulkan :: config :: computePipelineCount ];
+    VkSpecializationMapEntry                                specializationMapEntries [ engine :: vulkan :: config :: computePipelineCount ] [ engine :: vulkan :: config :: computePipelineCount ];
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_AMD_PIPELINE_COMPILER_CONTROL_AVAILABLE
+    VkPipelineCompilerControlCreateInfoAMD                  compilerControlCreateInfos [ engine :: vulkan :: config :: computePipelineCount ];
+#endif
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_PIPELINE_CREATION_FEEDBACK_AVAILABLE
+    VkPipelineCreationFeedbackCreateInfo_t                  feedbackCreateInfos [ engine :: vulkan :: config :: computePipelineCount ];
+    VkPipelineCreationFeedback_t                            feedbacks [ engine :: vulkan :: config :: computePipelineCount ];
+    VkPipelineCreationFeedback_t                            feedbackStageFeedbacks [ engine :: vulkan :: config :: computePipelineCount ] [ engine :: vulkan :: config :: computePipelineStageCreationFeedbackCount ];
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_HUAWEI_SUBPASS_SHADING_AVAILABLE
+    VkSubpassShadingPipelineCreateInfoHUAWEI                subpassShadingCreateInfos [ engine :: vulkan :: config :: computePipelineCount ];
+#endif
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_SUBGROUP_SIZE_CONTROL_AVAILABLE
+    VkPipelineShaderStageRequiredSubgroupSizeCreateInfo     requiredSubgroupSizeCreateInfos [ engine :: vulkan :: config :: computePipelineCount ];
+#endif
+};
+
+union CreatePipelineSharedContext {
+    CreateComputePipelineContext                                        compute;
+};
+
 union EnumerateSharedContext {
     EnumerateLayerPropertiesContext                                     layerProperties;
     EnumerateExtensionPropertiesContext                                 extensionProperties;
@@ -1041,6 +1068,7 @@ union CreateSharedContext {
     CreateFrameBufferContext                                            frameBuffer;
     CreateShaderModuleContext                                           shaderModule;
     CreateValidationCacheContext                                        validationCache;
+    CreatePipelineSharedContext                                         pipeline;
 };
 
 union GetSharedContext {

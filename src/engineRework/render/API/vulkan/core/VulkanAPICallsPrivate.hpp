@@ -136,6 +136,14 @@ using VkPhysicalDevicePipelineCreationCacheControlFeatures_t    = VkPhysicalDevi
 #endif
 
 #if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+using VkPipelineCreationFeedback_t                              = VkPipelineCreationFeedback;
+using VkPipelineCreationFeedbackCreateInfo_t                    = VkPipelineCreationFeedbackCreateInfo;
+#elif __C_ENG_VULKAN_API_EXTENSION_PIPELINE_CREATION_FEEDBACK_AVAILABLE
+using VkPipelineCreationFeedback_t                              = VkPipelineCreationFeedbackEXT;
+using VkPipelineCreationFeedbackCreateInfo_t                    = VkPipelineCreationFeedbackCreateInfoEXT;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 using VkPhysicalDevicePrivateDataFeatures_t                     = VkPhysicalDevicePrivateDataFeatures;
 #elif __C_ENG_VULKAN_API_EXTENSION_PRIVATE_DATA_AVAILABLE
 using VkPhysicalDevicePrivateDataFeatures_t                     = VkPhysicalDevicePrivateDataFeaturesEXT;
@@ -156,9 +164,11 @@ using VkPhysicalDeviceShaderTerminateInvocationFeatures_t       = VkPhysicalDevi
 #if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 using VkPhysicalDeviceSubgroupSizeControlFeatures_t             = VkPhysicalDeviceSubgroupSizeControlFeatures;
 using VkPhysicalDeviceSubgroupSizeControlProperties_t           = VkPhysicalDeviceSubgroupSizeControlProperties;
+using VkPipelineShaderStageRequiredSubgroupSizeCreateInfo_t     = VkPipelineShaderStageRequiredSubgroupSizeCreateInfo;
 #elif __C_ENG_VULKAN_API_EXTENSION_SUBGROUP_SIZE_CONTROL_AVAILABLE
 using VkPhysicalDeviceSubgroupSizeControlFeatures_t             = VkPhysicalDeviceSubgroupSizeControlFeaturesEXT;
 using VkPhysicalDeviceSubgroupSizeControlProperties_t           = VkPhysicalDeviceSubgroupSizeControlPropertiesEXT;
+using VkPipelineShaderStageRequiredSubgroupSizeCreateInfo_t     = VkPipelineShaderStageRequiredSubgroupSizeCreateInfoEXT;
 #endif
 
 #if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE

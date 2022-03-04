@@ -86,8 +86,8 @@ private:
             return this->pContext->data;
         }
 
-        constexpr auto operator -> () noexcept -> SharedContext & {
-            return this->pContext->data;
+        constexpr auto operator -> () noexcept -> SharedContext * {
+            return & this->pContext->data;
         }
     };
 
@@ -4105,6 +4105,52 @@ auto engine :: vulkan :: destroyValidationCache (
             validationCacheHandle,
             AllocatorHandler :: apply ( pAllocationCallbacks )
     );
+
+    return ResultSuccess;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: createComputePipelines (
+        Type ( DeviceHandle )                       deviceHandle,
+        Type ( PipelineCacheHandle )                pipelineCacheHandle,
+        cds :: uint32                               count,
+        Type ( ComputePipelineCreateInfo )  const * pCreateInfos,
+        Type ( AllocationCallbacks )        const * pAllocationCallbacks,
+        Type ( PipelineHandle )                   * pPipelineHandles
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if (
+            deviceHandle        == nullptr  ||
+            count               == 0U       ||
+            pCreateInfos        == nullptr  ||
+            pPipelineHandles    == nullptr
+    ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkCreateComputePipelines )
+
+    auto context = ContextManager :: acquire();
+
+    if (
+            auto result = vkCreateComputePipelinesHandle (
+                    deviceHandle,
+                    pipelineCacheHandle,
+                    count,
+                    & prepareContext ( & context->create.pipeline.compute, count, & pCreateInfos[0] ) [0],
+                    AllocatorHandler :: apply ( pAllocationCallbacks ),
+                    & pPipelineHandles [0]
+            ); result != VK_SUCCESS
+    ) {
+        return static_cast < Type ( Result ) > ( result );
+    }
+
+    extractContext ( count, & pCreateInfos[0], & context->create.pipeline.compute );
 
     return ResultSuccess;
 }

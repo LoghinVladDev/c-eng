@@ -9968,3 +9968,246 @@ auto vulkan :: toString (
            " }";
 }
 #endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( PipelineCreateFlag ) scope
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( scope ) {
+        case PipelineCreateFlagDisableOptimization:                         { asString = "Disable Optimization";                            break; }
+        case PipelineCreateFlagAllowDerivatives:                            { asString = "Allow Derivatives";                               break; }
+        case PipelineCreateFlagDerivative:                                  { asString = "Derivative";                                      break; }
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+        case PipelineCreateFlagViewIndexFromDeviceIndex:                    { asString = "View Index From Device Index";                    break; }
+        case PipelineCreateFlagDispatchBase:                                { asString = "Dispatch Base";                                   break; }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+        case PipelineCreateFlagFailOnPipelineCompileRequired:               { asString = "Fail On Pipeline Compile Required";               break; }
+        case PipelineCreateFlagEarlyReturnOnFailure:                        { asString = "Early Return On Failure";                         break; }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_FRAGMENT_SHADING_RATE_AVAILABLE && ( __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE )
+        case PipelineCreateFlagRenderingFragmentShadingRateAttachment:      { asString = "Rendering Fragment Shading Rate Attachment";      break; }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_FRAGMENT_DENSITY_MAP_AVAILABLE && ( __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE )
+        case PipelineCreateFlagRenderingFragmentDensityMapAttachment:       { asString = "Rendering Fragment Density Map Attachment";       break; }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_FRAGMENT_DENSITY_MAP_AVAILABLE
+        case PipelineCreateFlagRayTracingNoNullAnyHitShaders:               { asString = "Ray Tracing No Null Any Hit Shaders";             break; }
+        case PipelineCreateFlagRayTracingNoNullClosestHitShaders:           { asString = "Ray Tracing No Null Closest Hit Shaders";         break; }
+        case PipelineCreateFlagRayTracingNoNullMissShaders:                 { asString = "Ray Tracing No Null Miss Shaders";                break; }
+        case PipelineCreateFlagRayTracingNoNullIntersectionShaders:         { asString = "Ray Tracing No Null Intersection Shaders";        break; }
+        case PipelineCreateFlagRayTracingSkipTriangles:                     { asString = "Ray Tracing Skip Triangles";                      break; }
+        case PipelineCreateFlagRayTracingSkipAABBS:                         { asString = "Ray Tracing Skip AABBS";                          break; }
+        case PipelineCreateFlagRayTracingShaderGroupHandleCaptureReplay:    { asString = "Ray Tracing Shader Group Handle Capture Replay";  break; }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+        case PipelineCreateFlagDeferCompileNVidia:                          { asString = "Defer Compile NVidia";                            break; }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PIPELINE_EXECUTABLE_PROPERTIES_AVAILABLE
+        case PipelineCreateFlagCaptureStatistics:                           { asString = "Capture Statistics";                              break; }
+        case PipelineCreateFlagCaptureInternalRepresentations:              { asString = "Capture Internal Representations";                break; }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEVICE_GENERATED_COMMANDS_AVAILABLE
+        case PipelineCreateFlagIndirectBindableNVidia:                      { asString = "Indirect Bindable NVidia";                        break; }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PIPELINE_LIBRARY_AVAILABLE
+        case PipelineCreateFlagLibrary:                                     { asString = "Library";                                         break; }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_MOTION_BLUR_AVAILABLE
+        case PipelineCreateFlagRayTracingAllowMotionNVidia:                 { asString = "Ray Tracing Allow Motion NVidia";                 break; }
+#endif
+
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( PipelineShaderStageCreateFlag ) scope
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( scope ) {
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_SUBGROUP_SIZE_CONTROL_AVAILABLE
+        case PipelineShaderStageCreateFlagAllowVaryingSubgroupSize: { asString = "Allow Varying Subgroup Size"; break; }
+        case PipelineShaderStageCreateFlagRequireFullSubgroups:     { asString = "Require Full Subgroups";      break; }
+#endif
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( SpecializationMapEntry ) const & entry
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( SpecializationMapEntry ) " " +
+           "{ constantID = "_s  + entry.constantID +
+           ", offset = "        + entry.offset +
+           ", size = "          + entry.size +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( SpecializationInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( SpecializationInfo ) " " +
+           "{ mapEntryCount = "_s   + info.mapEntryCount +
+           ", mapEntries = "        + :: toStringVulkan ( info.mapEntryCount, info.pMapEntries ) +
+           ", dataSize = "          + info.dataSize +
+           ", pData = "             + engine :: toString ( info.pData ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( PipelineShaderStageCreateInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( PipelineShaderStageCreateInfo ) " " +
+           "{ structureType = "_s       + toString ( info.structureType ) +
+           ", pNext = "                 + engine :: toString ( info.pNext ) +
+           ", flags = "                 + "0b" + Long ( info.flags ).toString(2) +
+           ", stage = "                 + toString ( info.stage ) +
+           ", module = "                + engine :: toString ( info.module ) +
+           ", name = "                  + info.pName +
+           ", pSpecializationInfo = "   + engine :: toString ( info.pSpecializationInfo ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( ComputePipelineCreateInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( ComputePipelineCreateInfo ) " " +
+           "{ structureType = "_s       + toString ( info.structureType ) +
+           ", pNext = "                 + engine :: toString ( info.pNext ) +
+           ", flags = "                 + "0b" + Long ( info.flags ).toString(2) +
+           ", stage = "                 + toString ( info.stage ) +
+           ", layout = "                + engine :: toString ( info.layout ) +
+           ", basePipelineHandle = "    + engine :: toString ( info.basePipelineHandle ) +
+           ", basePipelineIndex = "     + info.basePipelineIndex +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( PipelineCompilerControlFlagAMD ) flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    (void) flag;
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_AMD_PIPELINE_COMPILER_CONTROL_AVAILABLE
+auto vulkan :: toString (
+        Type ( PipelineCompilerControlCreateInfoAMD ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( PipelineCompilerControlCreateInfoAMD ) " " +
+           "{ structureType = "_s       + toString ( info.structureType ) +
+           ", pNext = "                 + engine :: toString ( info.pNext ) +
+           ", compilerControlFlags = "  + "0b" + Long ( info.compilerControlFlags ).toString(2) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_PIPELINE_CREATION_FEEDBACK_AVAILABLE
+auto vulkan :: toString (
+        Type ( PipelineCreationFeedbackFlag ) flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case PipelineCreationFeedbackFlagValid:                     { asString = "Valid";                       break; }
+        case PipelineCreationFeedbackFlagApplicationPipelineCache:  { asString = "Application Pipeline Cache";  break; }
+        case PipelineCreationFeedbackFlagBasePipelineAcceleration:  { asString = "Base Pipeline Acceleration";  break; }
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_PIPELINE_CREATION_FEEDBACK_AVAILABLE
+auto vulkan :: toString (
+        Type ( PipelineCreationFeedback ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( PipelineCreationFeedback ) " " +
+           "{ flags = "_s   + "0b" + Long ( info.flags ).toString(2) +
+           ", duration = "  + info.duration +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_PIPELINE_CREATION_FEEDBACK_AVAILABLE
+auto vulkan :: toString (
+        Type ( PipelineCreationFeedbackCreateInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( PipelineCreationFeedbackCreateInfo ) " " +
+           "{ structureType = "_s                       + toString ( info.structureType ) +
+           ", pNext = "                                 + engine :: toString ( info.pNext ) +
+           ", pPipelineCreationFeedback = "             + engine :: toString ( info.pPipelineCreationFeedback ) +
+           ", pipelineStageCreationFeedbackCount = "    + info.pipelineStageCreationFeedbackCount +
+           ", pipelineStageCreationFeedbacks = "        + :: toStringVulkan ( info.pipelineStageCreationFeedbackCount, info.pPipelineStageCreationFeedbacks ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_HUAWEI_SUBPASS_SHADING_AVAILABLE
+auto vulkan :: toString (
+        Type ( SubpassShadingPipelineCreateInfoHuawei ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( SubpassShadingPipelineCreateInfoHuawei ) " " +
+           "{ structureType = "_s   + toString ( info.structureType ) +
+           ", pNext = "             + engine :: toString ( info.pNext ) +
+           ", renderPass = "        + engine :: toString ( info.renderPass ) +
+           ", subpass = "           + info.subpass +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_SUBGROUP_SIZE_CONTROL_AVAILABLE
+auto vulkan :: toString (
+        Type ( PipelineShaderStageRequiredSubgroupSizeCreateInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( PipelineShaderStageRequiredSubgroupSizeCreateInfo ) " " +
+           "{ structureType = "_s       + toString ( info.structureType ) +
+           ", pNext = "                 + engine :: toString ( info.pNext ) +
+           ", requiredSubgrouoSize = "  + info.requiredSubgroupSize +
+           " }";
+}
+#endif

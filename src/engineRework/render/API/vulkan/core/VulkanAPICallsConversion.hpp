@@ -2959,6 +2959,92 @@ namespace engine :: vulkan {
     ) noexcept -> VkValidationCacheCreateInfoEXT *;
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto prepareContext (
+            CreateComputePipelineContext             *,
+            cds :: uint32,
+            Type ( ComputePipelineCreateInfo ) const *
+    ) noexcept -> VkComputePipelineCreateInfo *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto extractContext (
+            cds :: uint32,
+            Type ( ComputePipelineCreateInfo )  const *,
+            CreateComputePipelineContext        const *
+    ) noexcept -> void;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto toVulkanFormat (
+            VkComputePipelineCreateInfo              *,
+            Type ( ComputePipelineCreateInfo ) const *
+    ) noexcept -> VkComputePipelineCreateInfo *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_AMD_PIPELINE_COMPILER_CONTROL_AVAILABLE
+    extern auto toVulkanFormat (
+            VkPipelineCompilerControlCreateInfoAMD              *,
+            Type ( PipelineCompilerControlCreateInfoAMD ) const *
+    ) noexcept -> VkPipelineCompilerControlCreateInfoAMD *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_PIPELINE_CREATION_FEEDBACK_AVAILABLE
+    extern auto toVulkanFormat (
+            VkPipelineCreationFeedbackCreateInfo_t            *,
+            Type ( PipelineCreationFeedbackCreateInfo ) const *
+    ) noexcept -> VkPipelineCreationFeedbackCreateInfo_t *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_PIPELINE_CREATION_FEEDBACK_AVAILABLE
+    extern auto toVulkanFormat (
+            VkPipelineCreationFeedback_t            *,
+            Type ( PipelineCreationFeedback ) const *
+    ) noexcept -> VkPipelineCreationFeedback_t *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_PIPELINE_CREATION_FEEDBACK_AVAILABLE
+    extern auto fromVulkanFormat (
+            Type ( PipelineCreationFeedback )       *,
+            VkPipelineCreationFeedback_t      const *
+    ) noexcept -> Type ( PipelineCreationFeedback ) *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_HUAWEI_SUBPASS_SHADING_AVAILABLE
+    extern auto toVulkanFormat (
+            VkSubpassShadingPipelineCreateInfoHUAWEI              *,
+            Type ( SubpassShadingPipelineCreateInfoHuawei ) const *
+    ) noexcept -> VkSubpassShadingPipelineCreateInfoHUAWEI *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto toVulkanFormat (
+            VkPipelineShaderStageCreateInfo              *,
+            Type ( PipelineShaderStageCreateInfo ) const *
+    ) noexcept -> VkPipelineShaderStageCreateInfo *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_SUBGROUP_SIZE_CONTROL_AVAILABLE
+    extern auto toVulkanFormat (
+            VkPipelineShaderStageRequiredSubgroupSizeCreateInfo_t            *,
+            Type ( PipelineShaderStageRequiredSubgroupSizeCreateInfo ) const *
+    ) noexcept -> VkPipelineShaderStageRequiredSubgroupSizeCreateInfo_t *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto toVulkanFormat (
+            VkSpecializationInfo              *,
+            Type ( SpecializationInfo ) const *
+    ) noexcept -> VkSpecializationInfo *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto toVulkanFormat (
+            VkSpecializationMapEntry              *,
+            Type ( SpecializationMapEntry ) const *
+    ) noexcept -> VkSpecializationMapEntry *;
+#endif
+
 }
 
 #define C_ENG_MAP_END

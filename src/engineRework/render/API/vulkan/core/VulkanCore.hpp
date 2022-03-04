@@ -3908,6 +3908,119 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #endif
 
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+#define C_ENG_MAP_START ENUM ( PipelineCreateFlag, TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( DisableOptimization,                        VkPipelineCreateFlagBits :: VK_PIPELINE_CREATE_DISABLE_OPTIMIZATION_BIT ),
+            Field ( AllowDerivatives,                           VkPipelineCreateFlagBits :: VK_PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT ),
+            Field ( Derivative,                                 VkPipelineCreateFlagBits :: VK_PIPELINE_CREATE_DERIVATIVE_BIT ),
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+            Field ( ViewIndexFromDeviceIndex,                   VkPipelineCreateFlagBits :: VK_PIPELINE_CREATE_VIEW_INDEX_FROM_DEVICE_INDEX_BIT ),
+            Field ( DispatchBase,                               VkPipelineCreateFlagBits :: VK_PIPELINE_CREATE_DISPATCH_BASE_BIT ),
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+            Field ( FailOnPipelineCompileRequired,              VkPipelineCreateFlagBits :: VK_PIPELINE_CREATE_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT ),
+            Field ( EarlyReturnOnFailure,                       VkPipelineCreateFlagBits :: VK_PIPELINE_CREATE_EARLY_RETURN_ON_FAILURE_BIT ),
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_FRAGMENT_SHADING_RATE_AVAILABLE && ( __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE )
+            Field ( RenderingFragmentShadingRateAttachment,     VkPipelineCreateFlagBits :: VK_PIPELINE_CREATE_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR ),
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_FRAGMENT_DENSITY_MAP_AVAILABLE && ( __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE )
+            Field ( RenderingFragmentDensityMapAttachment,      VkPipelineCreateFlagBits :: VK_PIPELINE_CREATE_RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT ),
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_RAY_TRACING_PIPELINE_AVAILABLE
+            Field ( RayTracingNoNullAnyHitShaders,              VkPipelineCreateFlagBits :: VK_PIPELINE_CREATE_RAY_TRACING_NO_NULL_ANY_HIT_SHADERS_BIT_KHR ),
+            Field ( RayTracingNoNullClosestHitShaders,          VkPipelineCreateFlagBits :: VK_PIPELINE_CREATE_RAY_TRACING_NO_NULL_CLOSEST_HIT_SHADERS_BIT_KHR ),
+            Field ( RayTracingNoNullMissShaders,                VkPipelineCreateFlagBits :: VK_PIPELINE_CREATE_RAY_TRACING_NO_NULL_MISS_SHADERS_BIT_KHR ),
+            Field ( RayTracingNoNullIntersectionShaders,        VkPipelineCreateFlagBits :: VK_PIPELINE_CREATE_RAY_TRACING_NO_NULL_INTERSECTION_SHADERS_BIT_KHR ),
+            Field ( RayTracingSkipTriangles,                    VkPipelineCreateFlagBits :: VK_PIPELINE_CREATE_RAY_TRACING_SKIP_TRIANGLES_BIT_KHR ),
+            Field ( RayTracingSkipAABBS,                        VkPipelineCreateFlagBits :: VK_PIPELINE_CREATE_RAY_TRACING_SKIP_AABBS_BIT_KHR ),
+            Field ( RayTracingShaderGroupHandleCaptureReplay,   VkPipelineCreateFlagBits :: VK_PIPELINE_CREATE_RAY_TRACING_SHADER_GROUP_HANDLE_CAPTURE_REPLAY_BIT_KHR ),
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+            Field ( DeferCompileNVidia,                         VkPipelineCreateFlagBits :: VK_PIPELINE_CREATE_DEFER_COMPILE_BIT_NV ),
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PIPELINE_EXECUTABLE_PROPERTIES_AVAILABLE
+            Field ( CaptureStatistics,                          VkPipelineCreateFlagBits :: VK_PIPELINE_CREATE_CAPTURE_STATISTICS_BIT_KHR ),
+            Field ( CaptureInternalRepresentations,             VkPipelineCreateFlagBits :: VK_PIPELINE_CREATE_CAPTURE_INTERNAL_REPRESENTATIONS_BIT_KHR ),
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEVICE_GENERATED_COMMANDS_AVAILABLE
+            Field ( IndirectBindableNVidia,                     VkPipelineCreateFlagBits :: VK_PIPELINE_CREATE_INDIRECT_BINDABLE_BIT_NV ),
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PIPELINE_LIBRARY_AVAILABLE
+            Field ( Library,                                    VkPipelineCreateFlagBits :: VK_PIPELINE_CREATE_LIBRARY_BIT_KHR ),
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_MOTION_BLUR_AVAILABLE
+            Field ( RayTracingAllowMotionNVidia,                VkPipelineCreateFlagBits :: VK_PIPELINE_CREATE_RAY_TRACING_ALLOW_MOTION_BIT_NV ),
+#endif
+
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START ENUM ( PipelineShaderStageCreateFlag, TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+            Field ( AllowVaryingSubgroupSize, VkPipelineShaderStageCreateFlagBits :: VK_PIPELINE_SHADER_STAGE_CREATE_ALLOW_VARYING_SUBGROUP_SIZE_BIT ),
+            Field ( RequireFullSubgroups,     VkPipelineShaderStageCreateFlagBits :: VK_PIPELINE_SHADER_STAGE_CREATE_REQUIRE_FULL_SUBGROUPS_BIT ),
+#elif __C_ENG_VULKAN_API_EXTENSION_SUBGROUP_SIZE_CONTROL_AVAILABLE
+            Field ( AllowVaryingSubgroupSize, VkPipelineShaderStageCreateFlagBits :: VK_PIPELINE_SHADER_STAGE_CREATE_ALLOW_VARYING_SUBGROUP_SIZE_BIT_EXT ),
+            Field ( RequireFullSubgroups,     VkPipelineShaderStageCreateFlagBits :: VK_PIPELINE_SHADER_STAGE_CREATE_REQUIRE_FULL_SUBGROUPS_BIT_EXT ),
+#endif
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_AMD_PIPELINE_COMPILER_CONTROL_AVAILABLE
+#define C_ENG_MAP_START ENUM ( PipelineCompilerControlFlagAMD, TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum { };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_PIPELINE_CREATION_FEEDBACK_AVAILABLE
+#define C_ENG_MAP_START ENUM ( PipelineCreationFeedbackFlag, TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+            Field ( Valid,                      VkPipelineCreationFeedbackFlagBits :: VK_PIPELINE_CREATION_FEEDBACK_VALID_BIT ),
+            Field ( ApplicationPipelineCache,   VkPipelineCreationFeedbackFlagBits :: VK_PIPELINE_CREATION_FEEDBACK_APPLICATION_PIPELINE_CACHE_HIT_BIT ),
+            Field ( BasePipelineAcceleration,   VkPipelineCreationFeedbackFlagBits :: VK_PIPELINE_CREATION_FEEDBACK_BASE_PIPELINE_ACCELERATION_BIT ),
+#else
+            Field ( Valid,                      VkPipelineCreationFeedbackFlagBits :: VK_PIPELINE_CREATION_FEEDBACK_VALID_BIT_EXT ),
+            Field ( ApplicationPipelineCache,   VkPipelineCreationFeedbackFlagBits :: VK_PIPELINE_CREATION_FEEDBACK_APPLICATION_PIPELINE_CACHE_HIT_BIT_EXT ),
+            Field ( BasePipelineAcceleration,   VkPipelineCreationFeedbackFlagBits :: VK_PIPELINE_CREATION_FEEDBACK_BASE_PIPELINE_ACCELERATION_BIT_EXT ),
+#endif
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+
 
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 
@@ -3939,6 +4052,9 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_ALIAS ( EventHandle,                    VkEvent );
         __C_ENG_ALIAS ( BufferHandle,                   VkBuffer );
         __C_ENG_ALIAS ( ShaderModuleHandle,             VkShaderModule );
+        __C_ENG_ALIAS ( PipelineCacheHandle,            VkPipelineCache );
+        __C_ENG_ALIAS ( PipelineHandle,                 VkPipeline );
+        __C_ENG_ALIAS ( PipelineLayoutHandle,           VkPipelineLayout );
 
         __C_ENG_ALIAS ( InstanceCreateFlags,            VkInstanceCreateFlags );
         __C_ENG_ALIAS ( DebugMessengerCreateFlags,      VkDebugUtilsMessengerCreateFlagsEXT );
@@ -3967,6 +4083,8 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_ALIAS ( FrameBufferCreateFlags,         VkFramebufferCreateFlags );
         __C_ENG_ALIAS ( ImageCreateFlags,               VkImageCreateFlags );
         __C_ENG_ALIAS ( ShaderModuleCreateFlags,        VkShaderModuleCreateFlags );
+        __C_ENG_ALIAS ( PipelineCreateFlags,            VkPipelineCreateFlags );
+        __C_ENG_ALIAS ( PipelineShaderStageCreateFlags, VkPipelineShaderStageCreateFlags );
 
         __C_ENG_ALIAS ( AllocationFunction,             PFN_vkAllocationFunction );
         __C_ENG_ALIAS ( ReallocationFunction,           PFN_vkReallocationFunction );
@@ -3988,9 +4106,15 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #endif
 
 #if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
-
         __C_ENG_ALIAS ( SemaphoreWaitFlags,                 VkSemaphoreWaitFlags );
+#endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_PIPELINE_CREATION_FEEDBACK_AVAILABLE
+        __C_ENG_ALIAS ( PipelineCreationFeedbackFlags,      VkPipelineCreationFeedbackFlags );
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_AMD_PIPELINE_COMPILER_CONTROL_AVAILABLE
+        __C_ENG_ALIAS ( PipelineCompilerControlFlagsAMD,    VkPipelineCompilerControlFlagsAMD );
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_VALIDATION_CACHE_AVAILABLE
@@ -10817,6 +10941,138 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #endif
 
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( SpecializationMapEntry, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            cds :: uint32   constantID;
+            cds :: uint32   offset;
+            cds :: uint32   size;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START STRUCT ( SpecializationInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            cds :: uint32                           mapEntryCount;
+            Type ( SpecializationMapEntry ) const * pMapEntries;
+            cds :: uint64                           dataSize;
+            void                            const * pData;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START STRUCT ( PipelineShaderStageCreateInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                          structureType;
+            Type ( GenericStructure )               const * pNext;
+            Type ( PipelineShaderStageCreateFlags )         flags;
+            Type ( ShaderStageFlag )                        stage;
+            Type ( ShaderModuleHandle )                     module;
+            char                                    const * pName;
+            Type ( SpecializationInfo )             const * pSpecializationInfo;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START STRUCT ( ComputePipelineCreateInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                          structureType;
+            Type ( GenericStructure )               const * pNext;
+            Type ( PipelineCreateFlags )                    flags;
+            Type ( PipelineShaderStageCreateInfo )          stage;
+            Type ( PipelineLayoutHandle )                   layout;
+            Type ( PipelineHandle )                         basePipelineHandle;
+            cds :: sint32                                   basePipelineIndex;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_AMD_PIPELINE_COMPILER_CONTROL_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( PipelineCompilerControlCreateInfoAMD, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                          structureType;
+            Type ( GenericStructure )               const * pNext;
+            Type ( PipelineCompilerControlFlagsAMD )        compilerControlFlags;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_PIPELINE_CREATION_FEEDBACK_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( PipelineCreationFeedback, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( PipelineCreationFeedbackFlags )  flags;
+            cds :: uint64                           duration;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START STRUCT ( PipelineCreationFeedbackCreateInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                          structureType;
+            Type ( GenericStructure )               const * pNext;
+            Type ( PipelineCreationFeedback )             * pPipelineCreationFeedback;
+            cds :: uint32                                   pipelineStageCreationFeedbackCount;
+            Type ( PipelineCreationFeedback )             * pPipelineStageCreationFeedbacks;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_HUAWEI_SUBPASS_SHADING_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( SubpassShadingPipelineCreateInfoHuawei, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )              structureType;
+            Type ( GenericStructure )   const * pNext;
+            Type ( RenderPassHandle )           renderPass;
+            cds :: uint32                       subpass;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_SUBGROUP_SIZE_CONTROL_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( PipelineShaderStageRequiredSubgroupSizeCreateInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )              structureType;
+            Type ( GenericStructure )   const * pNext;
+            cds :: uint32                       requiredSubgroupSize;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+
 #define C_ENG_MAP_START     HEADER
 #include <ObjectMapping.hpp>
 
@@ -10866,6 +11122,8 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         NoDiscard auto toString ( Type ( FrameBufferCreateFlag ) ) noexcept -> cds :: StringLiteral;
         NoDiscard auto toString ( Type ( ImageCreateFlag ) ) noexcept -> cds :: StringLiteral;
         NoDiscard auto toString ( Type ( SubpassContents ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( PipelineCreateFlag ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( PipelineShaderStageCreateFlag ) ) noexcept -> cds :: StringLiteral;
 
 #endif
 
@@ -10890,6 +11148,10 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
         NoDiscard auto toString ( Type ( SubmitFlag ) ) noexcept -> cds :: StringLiteral;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_AMD_PIPELINE_COMPILER_CONTROL_AVAILABLE
+        NoDiscard auto toString ( Type ( PipelineCompilerControlFlagAMD ) ) noexcept -> cds :: StringLiteral;
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_COOPERATIVE_MATRIX_AVAILABLE
@@ -10959,19 +11221,19 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PERFORMANCE_QUERY_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PerformanceCounterUnit ) ) noexcept -> cds :: StringLiteral;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PerformanceCounterScope ) ) noexcept -> cds :: StringLiteral;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PerformanceCounterStorage ) ) noexcept -> cds :: StringLiteral;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PerformanceCounterDescriptionFlag ) ) noexcept -> cds :: StringLiteral;
-
+        NoDiscard auto toString ( Type ( PerformanceCounterUnit ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( PerformanceCounterScope ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( PerformanceCounterStorage ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( PerformanceCounterDescriptionFlag ) ) noexcept -> cds :: StringLiteral;
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_DISPLAY_SURFACE_COUNTER_AVAILABLE
+        NoDiscard auto toString ( Type ( SurfaceCapabilities2 ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( SurfaceCounterFlag ) ) noexcept -> cds :: StringLiteral;
+#endif
 
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( SurfaceCapabilities2 ) const & ) noexcept -> cds :: String;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( SurfaceCounterFlag ) ) noexcept -> cds :: StringLiteral;
-
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_PIPELINE_CREATION_FEEDBACK_AVAILABLE
+        NoDiscard auto toString ( Type ( PipelineCreationFeedbackFlag ) ) noexcept -> cds :: StringLiteral;
 #endif
 
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
@@ -11042,6 +11304,11 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         NoDiscard auto toString ( Type ( RenderPassBeginInfo ) const & ) noexcept -> cds :: String;
 
         NoDiscard auto toString ( Type ( ShaderModuleCreateInfo ) const & ) noexcept -> cds :: String;
+        
+        NoDiscard auto toString ( Type ( ComputePipelineCreateInfo ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( PipelineShaderStageCreateInfo ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( SpecializationInfo ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( SpecializationMapEntry ) const & ) noexcept -> cds :: String;
 
 #endif
 
@@ -11084,14 +11351,11 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #endif
 
 #if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DEVICE_GROUP_AVAILABLE
-
         NoDiscard auto toString ( Type ( DeviceGroupCommandBufferBeginInfo ) const & ) noexcept -> cds :: String;
-
 #endif
 
 
 #if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
-
         NoDiscard auto toString ( Type ( ConformanceVersion ) const & ) noexcept -> cds :: String;
         NoDiscard auto toString ( Type ( PhysicalDeviceVulkan12Properties ) const & ) noexcept -> cds :: String;
         NoDiscard auto toString ( Type ( PhysicalDeviceDriverProperties ) const & ) noexcept -> cds :: String;
@@ -11133,15 +11397,20 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         NoDiscard auto toString ( Type ( RenderPassAttachmentBeginInfo ) const & ) noexcept -> cds :: String;
         NoDiscard auto toString ( Type ( SubpassBeginInfo ) const & ) noexcept -> cds :: String;
         NoDiscard auto toString ( Type ( SubpassEndInfo ) const & ) noexcept -> cds :: String;
-
 #endif
 
 #if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+        NoDiscard auto toString ( Type ( PhysicalDeviceVulkan13Properties ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( PhysicalDeviceVulkan13Features ) const & ) noexcept -> cds :: String;
+#endif
 
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceVulkan13Properties ) const & ) noexcept -> cds :: String;
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_PIPELINE_CREATION_FEEDBACK_AVAILABLE
+        NoDiscard auto toString ( Type ( PipelineCreationFeedback ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( PipelineCreationFeedbackCreateInfo ) const & ) noexcept -> cds :: String;
+#endif
 
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceVulkan13Features ) const & ) noexcept -> cds :: String;
-
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_SUBGROUP_SIZE_CONTROL_AVAILABLE
+        NoDiscard auto toString ( Type ( PipelineShaderStageRequiredSubgroupSizeCreateInfo ) const & ) noexcept -> cds :: String;
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_VALIDATION_CACHE_AVAILABLE
@@ -11151,6 +11420,10 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_COOPERATIVE_MATRIX_AVAILABLE
         NoDiscard auto toString ( Type ( CooperativeMatrixPropertiesNVidia ) const & ) noexcept -> cds :: String;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_AMD_PIPELINE_COMPILER_CONTROL_AVAILABLE
+        NoDiscard auto toString ( Type ( PipelineCompilerControlCreateInfoAMD ) const & ) noexcept -> cds :: String;
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_SAMPLE_LOCATIONS_AVAILABLE
@@ -11173,6 +11446,10 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_FRAGMENT_SHADING_RATE_AVAILABLE
         NoDiscard auto toString ( Type ( FragmentShadingRateAttachmentInfo ) const & ) noexcept -> cds :: String;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_HUAWEI_SUBPASS_SHADING_AVAILABLE
+        NoDiscard auto toString ( Type ( SubpassShadingPipelineCreateInfoHuawei ) const & ) noexcept -> cds :: String;
 #endif
 
 #if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE

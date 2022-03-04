@@ -18604,5 +18604,470 @@ namespace engine :: vulkan {
     }
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    auto prepareContext (
+            CreateComputePipelineContext             * pContext,
+            cds :: uint32                              count,
+            Type ( ComputePipelineCreateInfo ) const * pCreateInfos
+    ) noexcept -> VkComputePipelineCreateInfo * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pContext == nullptr || pCreateInfos == nullptr || count == 0U ) {
+            return nullptr;
+        }
+
+#endif
+
+        if ( count > engine :: vulkan :: config :: computePipelineCount ) {
+            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, cds :: String :: f (
+                    "config :: computePipelineCount = %d. Minimum Required = %d",
+                    engine :: vulkan :: config :: computePipelineCount,
+                    count
+            ))
+
+            count = engine :: vulkan :: config :: computePipelineCount;
+        }
+
+        for ( cds :: uint32 i = 0U; i < count; ++ i ) {
+
+            auto pCurrent   = reinterpret_cast < Type ( GenericInStructure ) const * > ( pCreateInfos[i].pNext );
+            auto pCurrentVk = reinterpret_cast < VkBaseOutStructure * > ( toVulkanFormat ( & pContext->createInfos[i], & pCreateInfos[i] ) );
+
+            while ( pCurrent != nullptr ) {
+
+                switch ( pCurrent->structureType ) {
+
+#if __C_ENG_VULKAN_API_EXTENSION_AMD_PIPELINE_COMPILER_CONTROL_AVAILABLE
+
+                    case StructureTypePipelineCompilerControlCreateInfoAMD:
+                        pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                                toVulkanFormat (
+                                        & pContext->compilerControlCreateInfos[i],
+                                        reinterpret_cast < Type ( PipelineCompilerControlCreateInfoAMD ) const * > ( pCurrent )
+                                )
+                        );
+                        break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_PIPELINE_CREATION_FEEDBACK_AVAILABLE
+
+                    case StructureTypePipelineCreationFeedbackCreateInfo: {
+                        auto pFeedbackCreateInfo = reinterpret_cast < Type ( PipelineCreationFeedbackCreateInfo ) const * > ( pCurrent );
+                        pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * >(
+                                toVulkanFormat (
+                                        & pContext->feedbackCreateInfos[i],
+                                        pFeedbackCreateInfo
+                                )
+                        );
+
+                        if ( pFeedbackCreateInfo->pPipelineCreationFeedback != nullptr ) {
+                            pContext->feedbackCreateInfos[i].pPipelineCreationFeedback = toVulkanFormat ( & pContext->feedbacks[i], pFeedbackCreateInfo->pPipelineCreationFeedback );
+                        }
+
+                        pContext->feedbackCreateInfos[i].pPipelineStageCreationFeedbacks = & pContext->feedbackStageFeedbacks[i][0];
+
+                        if ( pContext->feedbackCreateInfos[i].pipelineStageCreationFeedbackCount > engine :: vulkan :: config :: computePipelineStageCreationFeedbackCount ) {
+                            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, cds :: String :: f (
+                                    "config :: computePipelineStageCreationFeedbackCount = %d. Minimum Required = %d",
+                                    engine :: vulkan :: config :: computePipelineStageCreationFeedbackCount,
+                                    pContext->feedbackCreateInfos[i].pipelineStageCreationFeedbackCount
+                            ))
+
+                            pContext->feedbackCreateInfos[i].pipelineStageCreationFeedbackCount = engine :: vulkan :: config :: computePipelineStageCreationFeedbackCount;
+                        }
+
+                        for ( cds :: uint32 j = 0U; j < pContext->feedbackCreateInfos[i].pipelineStageCreationFeedbackCount; ++ j ) {
+                            (void) toVulkanFormat ( & pContext->feedbackStageFeedbacks[i][j], & pFeedbackCreateInfo->pPipelineStageCreationFeedbacks[j] );
+                        }
+
+                        break;
+                    }
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_HUAWEI_SUBPASS_SHADING_AVAILABLE
+
+                    case StructureTypeSubpassShadingPipelineCreateInfoHuawei:
+                        pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                                toVulkanFormat (
+                                        & pContext->subpassShadingCreateInfos[i],
+                                        reinterpret_cast < Type ( SubpassShadingPipelineCreateInfoHuawei ) const * > ( pCurrent )
+                                )
+                        );
+                        break;
+
+#endif
+
+                    default:
+                        break;
+                }
+
+                pCurrentVk  = pCurrentVk->pNext == nullptr ? pCurrentVk : pCurrentVk->pNext;
+                pCurrent    = pCurrent->pNext;
+            }
+
+            pCurrentVk->pNext = nullptr;
+
+            pCurrent    = reinterpret_cast < Type ( GenericInStructure ) const * > ( pCreateInfos[i].stage.pNext );
+            pCurrentVk  = reinterpret_cast < VkBaseOutStructure * > ( toVulkanFormat ( & pContext->createInfos[i].stage, & pCreateInfos[i].stage ) );
+
+            while ( pCurrent != nullptr ) {
+
+                switch ( pCurrent->structureType ) {
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_SUBGROUP_SIZE_CONTROL_AVAILABLE
+
+                    case StructureTypePipelineShaderStageRequiredSubgroupSizeCreateInfo:
+                        pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                                toVulkanFormat (
+                                        & pContext->requiredSubgroupSizeCreateInfos[i],
+                                        reinterpret_cast < Type ( PipelineShaderStageRequiredSubgroupSizeCreateInfo ) const * > ( pCurrent )
+                                )
+                        );
+                        break;
+
+#endif
+
+                    default:
+                        break;
+                }
+
+                pCurrentVk  = pCurrentVk->pNext == nullptr ? pCurrentVk : pCurrentVk->pNext;
+                pCurrent    = pCurrent->pNext;
+            }
+
+            pCurrentVk->pNext = nullptr;
+
+            if ( pCreateInfos[i].stage.pSpecializationInfo != nullptr ) {
+                pContext->createInfos[i].stage.pSpecializationInfo = toVulkanFormat ( & pContext->specializationInfos[i], pCreateInfos[i].stage.pSpecializationInfo );
+                pContext->specializationInfos[i].pMapEntries = & pContext->specializationMapEntries[i][0];
+
+                if ( pContext->specializationInfos[i].mapEntryCount > engine :: vulkan :: config :: computePipelineSpecializationMapEntryCount ) {
+                    __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, cds :: String :: f (
+                            "config :: computePipelineSpecializationMapEntryCount = %d. Minimum Required = %d",
+                            engine :: vulkan :: config :: computePipelineSpecializationMapEntryCount,
+                            pContext->specializationInfos[i].mapEntryCount
+                    ))
+
+                    pContext->specializationInfos[i].mapEntryCount = engine :: vulkan :: config :: computePipelineSpecializationMapEntryCount;
+                }
+
+                for ( cds :: uint32 j = 0U; j < pContext->specializationInfos[i].mapEntryCount; ++ j ) {
+                    (void) toVulkanFormat ( & pContext->specializationMapEntries[i][j], & pCreateInfos[i].stage.pSpecializationInfo->pMapEntries[j] );
+                }
+            }
+        }
+
+        return & pContext->createInfos[0];
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    auto extractContext (
+            cds :: uint32                               count,
+            Type ( ComputePipelineCreateInfo )  const * pCreateInfos,
+            CreateComputePipelineContext        const * pContext
+    ) noexcept -> void {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( count == 0U || pCreateInfos == nullptr || pContext == nullptr ) {
+            return;
+        }
+
+#endif
+
+        for ( cds :: uint32 i = 0U; i < count; ++ i ) {
+            auto pCurrent   = reinterpret_cast < Type ( GenericInStructure ) const * > ( pCreateInfos[i].pNext );
+
+            while ( pCurrent != nullptr ) {
+
+                switch ( pCurrent->structureType ) {
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_PIPELINE_CREATION_FEEDBACK_AVAILABLE
+
+                    case StructureTypePipelineCreationFeedbackCreateInfo: {
+                        auto pFeedbackCreateInfo = reinterpret_cast < Type ( PipelineCreationFeedbackCreateInfo ) const * > ( pCurrent );
+
+                        if ( pFeedbackCreateInfo->pPipelineCreationFeedback != nullptr ) {
+                            (void) fromVulkanFormat ( pFeedbackCreateInfo->pPipelineCreationFeedback, & pContext->feedbacks[i] );
+                        }
+
+                        for ( cds :: uint32 j = 0U; j < pFeedbackCreateInfo->pipelineStageCreationFeedbackCount; ++ j ) {
+                            (void) fromVulkanFormat ( & pFeedbackCreateInfo->pPipelineStageCreationFeedbacks[j], & pContext->feedbackStageFeedbacks[i][j] );
+                        }
+
+                        break;
+                    }
+
+#endif
+
+                    default:
+                        break;
+                }
+
+                pCurrent = pCurrent->pNext;
+            }
+        }
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    auto toVulkanFormat (
+            VkComputePipelineCreateInfo              * pDestination,
+            Type ( ComputePipelineCreateInfo ) const * pSource
+    ) noexcept -> VkComputePipelineCreateInfo * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        pDestination->sType                 = VK_STRUCTURE_TYPE_COMPUTE_PIPELINE_CREATE_INFO;
+        pDestination->pNext                 = nullptr;
+        pDestination->flags                 = pSource->flags;
+        pDestination->layout                = pSource->layout;
+        pDestination->basePipelineHandle    = pSource->basePipelineHandle;
+        pDestination->basePipelineIndex     = pSource->basePipelineIndex;
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_AMD_PIPELINE_COMPILER_CONTROL_AVAILABLE
+    auto toVulkanFormat (
+            VkPipelineCompilerControlCreateInfoAMD              * pDestination,
+            Type ( PipelineCompilerControlCreateInfoAMD ) const * pSource
+    ) noexcept -> VkPipelineCompilerControlCreateInfoAMD * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                      = VK_STRUCTURE_TYPE_PIPELINE_COMPILER_CONTROL_CREATE_INFO_AMD,
+                .pNext                      = nullptr,
+                .compilerControlFlags       = pSource->compilerControlFlags
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_PIPELINE_CREATION_FEEDBACK_AVAILABLE
+    auto toVulkanFormat (
+            VkPipelineCreationFeedbackCreateInfo_t            * pDestination,
+            Type ( PipelineCreationFeedbackCreateInfo ) const * pSource
+    ) noexcept -> VkPipelineCreationFeedbackCreateInfo_t * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+                .sType                              = VK_STRUCTURE_TYPE_PIPELINE_CREATION_FEEDBACK_CREATE_INFO,
+#elif __C_ENG_VULKAN_API_EXTENSION_PIPELINE_CREATION_FEEDBACK_AVAILABLE
+                .sType                              = VK_STRUCTURE_TYPE_PIPELINE_CREATION_FEEDBACK_CREATE_INFO_EXT,
+#endif
+                .pNext                              = nullptr,
+                .pPipelineCreationFeedback          = nullptr,
+                .pipelineStageCreationFeedbackCount = pSource->pipelineStageCreationFeedbackCount,
+                .pPipelineStageCreationFeedbacks    = nullptr
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_PIPELINE_CREATION_FEEDBACK_AVAILABLE
+    auto toVulkanFormat (
+            VkPipelineCreationFeedback_t            * pDestination,
+            Type ( PipelineCreationFeedback ) const * pSource
+    ) noexcept -> VkPipelineCreationFeedback_t * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .flags      = pSource->flags,
+                .duration   = pSource->duration
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_PIPELINE_CREATION_FEEDBACK_AVAILABLE
+    auto fromVulkanFormat (
+            Type ( PipelineCreationFeedback )         * pDestination,
+            VkPipelineCreationFeedback_t        const * pSource
+    ) noexcept -> Type ( PipelineCreationFeedback ) * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .flags      = pSource->flags,
+                .duration   = pSource->duration
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_HUAWEI_SUBPASS_SHADING_AVAILABLE
+    auto toVulkanFormat (
+            VkSubpassShadingPipelineCreateInfoHUAWEI              * pDestination,
+            Type ( SubpassShadingPipelineCreateInfoHuawei ) const * pSource
+    ) noexcept -> VkSubpassShadingPipelineCreateInfoHUAWEI * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                      = VK_STRUCTURE_TYPE_SUBPASS_SHADING_PIPELINE_CREATE_INFO_HUAWEI,
+                .pNext                      = nullptr,
+                .renderPass                 = pSource->renderPass,
+                .subpass                    = pSource->subpass
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    auto toVulkanFormat (
+            VkPipelineShaderStageCreateInfo              * pDestination,
+            Type ( PipelineShaderStageCreateInfo ) const * pSource
+    ) noexcept -> VkPipelineShaderStageCreateInfo * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                      = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO,
+                .pNext                      = nullptr,
+                .flags                      = pSource->flags,
+                .stage                      = static_cast < VkShaderStageFlagBits > ( pSource->stage ),
+                .module                     = pSource->module,
+                .pName                      = pSource->pName,
+                .pSpecializationInfo        = nullptr
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_SUBGROUP_SIZE_CONTROL_AVAILABLE
+    auto toVulkanFormat (
+            VkPipelineShaderStageRequiredSubgroupSizeCreateInfo_t            * pDestination,
+            Type ( PipelineShaderStageRequiredSubgroupSizeCreateInfo ) const * pSource
+    ) noexcept -> VkPipelineShaderStageRequiredSubgroupSizeCreateInfo_t * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+                .sType                      = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_REQUIRED_SUBGROUP_SIZE_CREATE_INFO,
+#elif __C_ENG_VULKAN_API_EXTENSION_PIPELINE_CREATION_FEEDBACK_AVAILABLE
+                .sType                      = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_REQUIRED_SUBGROUP_SIZE_CREATE_INFO_EXT,
+#endif
+                .pNext                      = nullptr,
+                .requiredSubgroupSize       = pSource->requiredSubgroupSize
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    auto toVulkanFormat (
+            VkSpecializationInfo              * pDestination,
+            Type ( SpecializationInfo ) const * pSource
+    ) noexcept -> VkSpecializationInfo * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .mapEntryCount  = pSource->mapEntryCount,
+                .pMapEntries    = nullptr,
+                .dataSize       = pSource->dataSize,
+                .pData          = pSource->pData
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    auto toVulkanFormat (
+            VkSpecializationMapEntry              * pDestination,
+            Type ( SpecializationMapEntry ) const * pSource
+    ) noexcept -> VkSpecializationMapEntry * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .constantID = pSource->constantID,
+                .offset     = pSource->offset,
+                .size       = pSource->size
+        };
+
+        return pDestination;
+    }
+#endif
+
 }
 
