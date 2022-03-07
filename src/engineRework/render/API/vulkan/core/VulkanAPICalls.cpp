@@ -92,12 +92,86 @@ private:
     };
 
 public:
+    static auto logContextSizes () noexcept -> void {
+
+#define LOG_CONTEXT_SIZE(_context, _depth) (void) Type ( Logger ) :: instance().debug ( String :: f ( "%sContext '%s' size : %d", (" "_s * (_depth * 4)).cStr(), # _context, sizeof ( _context ) ) );
+
+        LOG_CONTEXT_SIZE ( SharedContext, 0 )
+            LOG_CONTEXT_SIZE ( CommonContext, 1 )
+                LOG_CONTEXT_SIZE ( DiagnosticContext, 2 )
+            LOG_CONTEXT_SIZE ( CreateSharedContext, 1 )
+                LOG_CONTEXT_SIZE ( CreateInstanceContext, 2 )
+                LOG_CONTEXT_SIZE ( CreateDeviceContext, 2 )
+                LOG_CONTEXT_SIZE ( CreateSwapChainContext, 2 )
+                LOG_CONTEXT_SIZE ( CreateImageViewContext, 2 )
+                LOG_CONTEXT_SIZE ( CreateCommandPoolContext, 2 )
+                LOG_CONTEXT_SIZE ( CreateFenceContext, 2 )
+                LOG_CONTEXT_SIZE ( CreateSemaphoreContext, 2 )
+                LOG_CONTEXT_SIZE ( CreateEventContext, 2 )
+                LOG_CONTEXT_SIZE ( CreateRenderPassContext, 2 )
+                LOG_CONTEXT_SIZE ( CreateRenderPass2Context, 2 )
+                LOG_CONTEXT_SIZE ( CreateFrameBufferContext, 2 )
+                LOG_CONTEXT_SIZE ( CreateShaderModuleContext, 2 )
+                LOG_CONTEXT_SIZE ( CreateValidationCacheContext, 2 )
+                LOG_CONTEXT_SIZE ( CreatePipelineSharedContext, 2 )
+                    LOG_CONTEXT_SIZE ( CreateComputePipelineContext, 3 )
+                    LOG_CONTEXT_SIZE ( CreateGraphicsPipelineContext, 3 )
+            LOG_CONTEXT_SIZE ( EnumerateSharedContext, 1 )
+                LOG_CONTEXT_SIZE ( EnumerateLayerPropertiesContext, 2 )
+                LOG_CONTEXT_SIZE ( EnumerateExtensionPropertiesContext, 2 )
+                LOG_CONTEXT_SIZE ( EnumeratePhysicalDevicesContext, 2 )
+                LOG_CONTEXT_SIZE ( EnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersContext, 2 )
+                LOG_CONTEXT_SIZE ( EnumeratePhysicalDeviceGroupsContext, 2 )
+            LOG_CONTEXT_SIZE ( GetSharedContext, 1 )
+                LOG_CONTEXT_SIZE ( GetPhysicalDevicePropertiesContext, 2 )
+                LOG_CONTEXT_SIZE ( GetPhysicalDeviceFeaturesContext, 2 )
+                LOG_CONTEXT_SIZE ( GetPhysicalDeviceQueueFamilyPropertiesContext, 2 )
+                LOG_CONTEXT_SIZE ( GetPhysicalDeviceCooperativeMatrixPropertiesContext, 2 )
+                LOG_CONTEXT_SIZE ( GetDeviceQueueContext, 2 )
+                LOG_CONTEXT_SIZE ( GetSurfaceContext, 2 )
+                LOG_CONTEXT_SIZE ( GetSwapChainContext, 2 )
+                LOG_CONTEXT_SIZE ( GetFenceContext, 2 )
+                LOG_CONTEXT_SIZE ( GetSemaphoreContext, 2 )
+            LOG_CONTEXT_SIZE ( SetSharedContext, 1 )
+                LOG_CONTEXT_SIZE ( SetCommandBufferSharedContext, 2 )
+                    LOG_CONTEXT_SIZE ( SetCommandBufferEventContext, 3 )
+            LOG_CONTEXT_SIZE ( AllocateSharedContext, 1 )
+                LOG_CONTEXT_SIZE ( AllocateCommandBuffersContext, 2 )
+            LOG_CONTEXT_SIZE ( BeginSharedContext, 1 )
+                LOG_CONTEXT_SIZE ( BeginCommandBufferContext, 2 )
+                LOG_CONTEXT_SIZE ( BeginCommandBufferRenderingContext, 2 )
+                LOG_CONTEXT_SIZE ( BeginRenderPassContext, 2 )
+            LOG_CONTEXT_SIZE ( SubmitSharedContext, 1 )
+                LOG_CONTEXT_SIZE ( SubmitQueueContext, 2 )
+            LOG_CONTEXT_SIZE ( OthersSharedContext, 1 )
+                LOG_CONTEXT_SIZE ( RegisterEventContext, 2 )
+                LOG_CONTEXT_SIZE ( NextSubpassContext, 2 )
+            LOG_CONTEXT_SIZE ( ImportSharedContext, 1 )
+                LOG_CONTEXT_SIZE ( ImportFenceSharedContext, 2 )
+                LOG_CONTEXT_SIZE ( ImportSemaphoreSharedContext, 2 )
+            LOG_CONTEXT_SIZE ( WaitSharedContext, 1 )
+                LOG_CONTEXT_SIZE ( WaitSemaphoreContext, 2 )
+                LOG_CONTEXT_SIZE ( WaitCommandBufferSharedContext, 2 )
+                    LOG_CONTEXT_SIZE ( WaitCommandBufferEventContext, 3 )
+                    LOG_CONTEXT_SIZE ( WaitCommandBufferEvent2Context, 3 )
+            LOG_CONTEXT_SIZE ( SignalSharedContext, 1 )
+                LOG_CONTEXT_SIZE ( SignalSemaphoreContext, 2 )
+
+#undef LOG_CONTEXT_SIZE
+
+    }
+
     static auto acquire () noexcept -> ContextHolder {
 
         if ( firstCall ) {
             LockGuard guard ( contextLock );
 
             if ( firstCall ) {
+
+#ifndef NDEBUG
+                ContextManager :: logContextSizes ();
+#endif
+
                 for ( auto & context : contexts ) {
                     context.inUse = false;
 
@@ -4151,6 +4225,74 @@ auto engine :: vulkan :: createComputePipelines (
     }
 
     extractContext ( count, & pCreateInfos[0], & context->create.pipeline.compute );
+
+    return ResultSuccess;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_HUAWEI_SUBPASS_SHADING_AVAILABLE
+auto engine :: vulkan :: getDeviceSubpassShadingMaxWorkgroupSizeHuawei (
+        Type ( DeviceHandle )       deviceHandle,
+        Type ( RenderPassHandle )   renderPassHandle,
+        Type ( Extent2D )         * pMaxWorkgroupSize
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || renderPassHandle == nullptr || pMaxWorkgroupSize == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkGetDeviceSubpassShadingMaxWorkgroupSizeHUAWEI )
+
+    return static_cast < Type ( Result ) > (
+            vkGetDeviceSubpassShadingMaxWorkgroupSizeHUAWEIHandle (
+                    deviceHandle,
+                    renderPassHandle,
+                    pMaxWorkgroupSize
+            )
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: createGraphicsPipelines (
+        Type ( DeviceHandle )                       deviceHandle,
+        Type ( PipelineCacheHandle )                pipelineCacheHandle,
+        cds :: uint32                               count,
+        Type ( GraphicsPipelineCreateInfo ) const * pCreateInfos,
+        Type ( AllocationCallbacks )        const * pAllocationCallbacks,
+        Type ( PipelineHandle )                   * pPipelineHandles
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || count == 0U || pCreateInfos == nullptr || pPipelineHandles == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkCreateGraphicsPipelines )
+
+    auto context = ContextManager :: acquire();
+
+    if (
+            auto result = vkCreateGraphicsPipelinesHandle (
+                    deviceHandle,
+                    pipelineCacheHandle,
+                    count,
+                    prepareContext ( & context->create.pipeline.graphics, count, & pCreateInfos[0] ),
+                    AllocatorHandler :: apply ( pAllocationCallbacks ),
+                    & pPipelineHandles [0]
+            ); result != VK_SUCCESS
+    ) {
+        return static_cast < Type ( Result ) > ( result );
+    }
+
+    extractContext ( count,& pCreateInfos[0], & context->create.pipeline.graphics );
 
     return ResultSuccess;
 }

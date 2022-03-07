@@ -267,7 +267,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
             Field ( ImageViewUsageCreateInfo,                                              VkStructureType :: VK_STRUCTURE_TYPE_IMAGE_VIEW_USAGE_CREATE_INFO ),
 
-            Field ( PipelineTesselationDomainOriginStateCreateInfo,                        VkStructureType :: VK_STRUCTURE_TYPE_PIPELINE_TESSELLATION_DOMAIN_ORIGIN_STATE_CREATE_INFO ),
+            Field ( PipelineTessellationDomainOriginStateCreateInfo,                       VkStructureType :: VK_STRUCTURE_TYPE_PIPELINE_TESSELLATION_DOMAIN_ORIGIN_STATE_CREATE_INFO ),
 
             Field ( RenderPassMultiviewCreateInfo,                                         VkStructureType :: VK_STRUCTURE_TYPE_RENDER_PASS_MULTIVIEW_CREATE_INFO ),
             Field ( PhysicalDeviceMultiviewFeatures,                                       VkStructureType :: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_FEATURES ),
@@ -4021,6 +4021,575 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #endif
 
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+#define C_ENG_MAP_START ENUM ( VertexInputRate, TYPE ( cds :: uint8 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( Vertex,     VkVertexInputRate :: VK_VERTEX_INPUT_RATE_VERTEX ),
+            Field ( Instance,   VkVertexInputRate :: VK_VERTEX_INPUT_RATE_INSTANCE ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_DISCARD_RECTANGLES_AVAILABLE
+#define C_ENG_MAP_START ENUM ( DiscardRectangleMode, TYPE ( cds :: uint8 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( Inclusive,  VkDiscardRectangleModeEXT :: VK_DISCARD_RECTANGLE_MODE_INCLUSIVE_EXT ),
+            Field ( Exclusive,  VkDiscardRectangleModeEXT :: VK_DISCARD_RECTANGLE_MODE_EXCLUSIVE_EXT ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_FRAGMENT_SHADING_RATE_ENUMS_AVAILABLE
+#define C_ENG_MAP_START ENUM ( FragmentShadingRateNVidia, TYPE ( cds :: uint8 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( 1InvocationPerPixel,        VkFragmentShadingRateNV :: VK_FRAGMENT_SHADING_RATE_1_INVOCATION_PER_PIXEL_NV ),
+            Field ( 1InvocationPer1x2Pixels,    VkFragmentShadingRateNV :: VK_FRAGMENT_SHADING_RATE_1_INVOCATION_PER_1X2_PIXELS_NV ),
+            Field ( 1InvocationPer2x1Pixels,    VkFragmentShadingRateNV :: VK_FRAGMENT_SHADING_RATE_1_INVOCATION_PER_2X1_PIXELS_NV ),
+            Field ( 1InvocationPer2x2Pixels,    VkFragmentShadingRateNV :: VK_FRAGMENT_SHADING_RATE_1_INVOCATION_PER_2X2_PIXELS_NV ),
+            Field ( 1InvocationPer2x4Pixels,    VkFragmentShadingRateNV :: VK_FRAGMENT_SHADING_RATE_1_INVOCATION_PER_2X4_PIXELS_NV ),
+            Field ( 1InvocationPer4x2Pixels,    VkFragmentShadingRateNV :: VK_FRAGMENT_SHADING_RATE_1_INVOCATION_PER_4X2_PIXELS_NV ),
+            Field ( 1InvocationPer4x4Pixels,    VkFragmentShadingRateNV :: VK_FRAGMENT_SHADING_RATE_1_INVOCATION_PER_4X4_PIXELS_NV ),
+            Field ( 2InvocationsPerPixel,       VkFragmentShadingRateNV :: VK_FRAGMENT_SHADING_RATE_2_INVOCATIONS_PER_PIXEL_NV ),
+            Field ( 4InvocationsPerPixel,       VkFragmentShadingRateNV :: VK_FRAGMENT_SHADING_RATE_4_INVOCATIONS_PER_PIXEL_NV ),
+            Field ( 8InvocationsPerPixel,       VkFragmentShadingRateNV :: VK_FRAGMENT_SHADING_RATE_8_INVOCATIONS_PER_PIXEL_NV ),
+            Field ( 16InvocationsPerPixel,      VkFragmentShadingRateNV :: VK_FRAGMENT_SHADING_RATE_16_INVOCATIONS_PER_PIXEL_NV ),
+            Field ( NoInvocations,              VkFragmentShadingRateNV :: VK_FRAGMENT_SHADING_RATE_NO_INVOCATIONS_NV ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START ENUM ( FragmentShadingRateTypeNVidia, TYPE ( cds :: uint8 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( FragmentSize,   VkFragmentShadingRateTypeNV :: VK_FRAGMENT_SHADING_RATE_TYPE_FRAGMENT_SIZE_NV ),
+            Field ( Enums,          VkFragmentShadingRateTypeNV :: VK_FRAGMENT_SHADING_RATE_TYPE_ENUMS_NV ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_FRAGMENT_SHADING_RATE_AVAILABLE
+#define C_ENG_MAP_START ENUM ( FragmentShadingRateCombinerOperation, TYPE ( cds :: uint8 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( Keep,       VkFragmentShadingRateCombinerOpKHR :: VK_FRAGMENT_SHADING_RATE_COMBINER_OP_KEEP_KHR ),
+            Field ( Replace,    VkFragmentShadingRateCombinerOpKHR :: VK_FRAGMENT_SHADING_RATE_COMBINER_OP_REPLACE_KHR ),
+            Field ( Min,        VkFragmentShadingRateCombinerOpKHR :: VK_FRAGMENT_SHADING_RATE_COMBINER_OP_MIN_KHR ),
+            Field ( Max,        VkFragmentShadingRateCombinerOpKHR :: VK_FRAGMENT_SHADING_RATE_COMBINER_OP_MAX_KHR ),
+            Field ( Mul,        VkFragmentShadingRateCombinerOpKHR :: VK_FRAGMENT_SHADING_RATE_COMBINER_OP_MUL_KHR ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+#define C_ENG_MAP_START ENUM ( PrimitiveTopology, TYPE ( cds :: uint8 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( PointList,                  VkPrimitiveTopology :: VK_PRIMITIVE_TOPOLOGY_POINT_LIST ),
+            Field ( LineList,                   VkPrimitiveTopology :: VK_PRIMITIVE_TOPOLOGY_LINE_LIST ),
+            Field ( LineStrip,                  VkPrimitiveTopology :: VK_PRIMITIVE_TOPOLOGY_LINE_STRIP ),
+            Field ( TriangleList,               VkPrimitiveTopology :: VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST ),
+            Field ( TriangleStrip,              VkPrimitiveTopology :: VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP ),
+            Field ( TriangleFan,                VkPrimitiveTopology :: VK_PRIMITIVE_TOPOLOGY_TRIANGLE_FAN ),
+            Field ( LineListWithAdjacency,      VkPrimitiveTopology :: VK_PRIMITIVE_TOPOLOGY_LINE_LIST_WITH_ADJACENCY ),
+            Field ( LineStripWithAdjacency,     VkPrimitiveTopology :: VK_PRIMITIVE_TOPOLOGY_LINE_STRIP_WITH_ADJACENCY ),
+            Field ( TriangleListWithAdjacency,  VkPrimitiveTopology :: VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST_WITH_ADJACENCY ),
+            Field ( TriangleStripWithAdjacency, VkPrimitiveTopology :: VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP_WITH_ADJACENCY ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START ENUM ( PolygonMode, TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( Fill,                   VkPolygonMode :: VK_POLYGON_MODE_FILL ),
+            Field ( Line,                   VkPolygonMode :: VK_POLYGON_MODE_LINE ),
+            Field ( Point,                  VkPolygonMode :: VK_POLYGON_MODE_POINT ),
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_FILL_RECTANGLE_AVAILABLE
+            Field ( FillRectangleNVidia,    VkPolygonMode :: VK_POLYGON_MODE_FILL_RECTANGLE_NV ),
+#endif
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START ENUM ( CullModeFlag, TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( None,           VkCullModeFlagBits :: VK_CULL_MODE_NONE ),
+            Field ( Front,          VkCullModeFlagBits :: VK_CULL_MODE_FRONT_BIT ),
+            Field ( Back,           VkCullModeFlagBits :: VK_CULL_MODE_BACK_BIT ),
+            Field ( FrontAndBack,   VkCullModeFlagBits :: VK_CULL_MODE_FRONT_AND_BACK ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START ENUM ( FrontFace, TYPE ( cds :: uint8 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( CounterClockwise,   VkFrontFace :: VK_FRONT_FACE_COUNTER_CLOCKWISE ),
+            Field ( Clockwise,          VkFrontFace :: VK_FRONT_FACE_CLOCKWISE ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START ENUM ( CompareOperation, TYPE ( cds :: uint8 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( Never,          VkCompareOp :: VK_COMPARE_OP_NEVER ),
+            Field ( Less,           VkCompareOp :: VK_COMPARE_OP_LESS ),
+            Field ( Equal,          VkCompareOp :: VK_COMPARE_OP_EQUAL ),
+            Field ( LessOrEqual,    VkCompareOp :: VK_COMPARE_OP_LESS_OR_EQUAL ),
+            Field ( Greater,        VkCompareOp :: VK_COMPARE_OP_GREATER ),
+            Field ( NotEqual,       VkCompareOp :: VK_COMPARE_OP_NOT_EQUAL ),
+            Field ( GreaterOrEqual, VkCompareOp :: VK_COMPARE_OP_GREATER_OR_EQUAL ),
+            Field ( Always,         VkCompareOp :: VK_COMPARE_OP_ALWAYS ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START ENUM ( StencilOperation, TYPE ( cds :: uint8 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( Keep,               VkStencilOp :: VK_STENCIL_OP_KEEP ),
+            Field ( Zero,               VkStencilOp :: VK_STENCIL_OP_ZERO ),
+            Field ( Replace,            VkStencilOp :: VK_STENCIL_OP_REPLACE ),
+            Field ( IncrementAndClamp,  VkStencilOp :: VK_STENCIL_OP_INCREMENT_AND_CLAMP ),
+            Field ( DecrementAndClamp,  VkStencilOp :: VK_STENCIL_OP_DECREMENT_AND_CLAMP ),
+            Field ( Invert,             VkStencilOp :: VK_STENCIL_OP_INVERT ),
+            Field ( IncrementAndWrap,   VkStencilOp :: VK_STENCIL_OP_INCREMENT_AND_WRAP ),
+            Field ( DecrementAndWrap,   VkStencilOp :: VK_STENCIL_OP_DECREMENT_AND_WRAP ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START ENUM ( LogicOperation, TYPE ( cds :: uint8 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( Clear,          VkLogicOp :: VK_LOGIC_OP_CLEAR ),
+            Field ( And,            VkLogicOp :: VK_LOGIC_OP_AND ),
+            Field ( AndReverse,     VkLogicOp :: VK_LOGIC_OP_AND_REVERSE ),
+            Field ( Copy,           VkLogicOp :: VK_LOGIC_OP_COPY ),
+            Field ( AndInverted,    VkLogicOp :: VK_LOGIC_OP_AND_INVERTED ),
+            Field ( NoOperation,    VkLogicOp :: VK_LOGIC_OP_NO_OP ),
+            Field ( Xor,            VkLogicOp :: VK_LOGIC_OP_XOR ),
+            Field ( Or,             VkLogicOp :: VK_LOGIC_OP_OR ),
+            Field ( Nor,            VkLogicOp :: VK_LOGIC_OP_NOR ),
+            Field ( Equivalent,     VkLogicOp :: VK_LOGIC_OP_EQUIVALENT ),
+            Field ( Invert,         VkLogicOp :: VK_LOGIC_OP_INVERT ),
+            Field ( OrReverse,      VkLogicOp :: VK_LOGIC_OP_OR_REVERSE ),
+            Field ( CopyInverted,   VkLogicOp :: VK_LOGIC_OP_COPY_INVERTED ),
+            Field ( OrInverted,     VkLogicOp :: VK_LOGIC_OP_OR_INVERTED ),
+            Field ( Nand,           VkLogicOp :: VK_LOGIC_OP_NAND ),
+            Field ( Set,            VkLogicOp :: VK_LOGIC_OP_SET ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START ENUM ( PipelineColorBlendStateCreateFlag, TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+#if __C_ENG_VULKAN_API_EXTENSION_ARM_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_AVAILABLE
+            Field ( RasterizationOrderAttachmentAccessARM,  VkPipelineColorBlendStateCreateFlagBits :: VK_PIPELINE_COLOR_BLEND_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_BIT_ARM ),
+#endif
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START ENUM ( ColorComponentFlag, TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( R,  VkColorComponentFlagBits :: VK_COLOR_COMPONENT_R_BIT ),
+            Field ( G,  VkColorComponentFlagBits :: VK_COLOR_COMPONENT_G_BIT ),
+            Field ( B,  VkColorComponentFlagBits :: VK_COLOR_COMPONENT_B_BIT ),
+            Field ( A,  VkColorComponentFlagBits :: VK_COLOR_COMPONENT_A_BIT ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START ENUM ( BlendFactor, TYPE ( cds :: uint8 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( Zero,                       VkBlendFactor :: VK_BLEND_FACTOR_ZERO ),
+            Field ( One,                        VkBlendFactor :: VK_BLEND_FACTOR_ONE ),
+            Field ( SourceColor,                VkBlendFactor :: VK_BLEND_FACTOR_SRC_COLOR ),
+            Field ( OneMinusSourceColor,        VkBlendFactor :: VK_BLEND_FACTOR_ONE_MINUS_SRC_COLOR ),
+            Field ( DestinationColor,           VkBlendFactor :: VK_BLEND_FACTOR_DST_COLOR ),
+            Field ( OneMinusDestinationColor,   VkBlendFactor :: VK_BLEND_FACTOR_ONE_MINUS_DST_COLOR ),
+            Field ( SourceAlpha,                VkBlendFactor :: VK_BLEND_FACTOR_SRC_ALPHA ),
+            Field ( OneMinusSourceAlpha,        VkBlendFactor :: VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA ),
+            Field ( DestinationAlpha,           VkBlendFactor :: VK_BLEND_FACTOR_DST_ALPHA ),
+            Field ( OneMinusDestinationAlpha,   VkBlendFactor :: VK_BLEND_FACTOR_ONE_MINUS_DST_ALPHA ),
+            Field ( ConstantColor,              VkBlendFactor :: VK_BLEND_FACTOR_CONSTANT_COLOR ),
+            Field ( OneMinusConstantColor,      VkBlendFactor :: VK_BLEND_FACTOR_ONE_MINUS_CONSTANT_COLOR ),
+            Field ( ConstantAlpha,              VkBlendFactor :: VK_BLEND_FACTOR_CONSTANT_ALPHA ),
+            Field ( OneMinusConstantAlpha,      VkBlendFactor :: VK_BLEND_FACTOR_ONE_MINUS_CONSTANT_ALPHA ),
+            Field ( AlphaSaturate,              VkBlendFactor :: VK_BLEND_FACTOR_SRC_ALPHA_SATURATE ),
+            Field ( Source1Color,               VkBlendFactor :: VK_BLEND_FACTOR_SRC1_COLOR ),
+            Field ( OneMinusSource1Color,       VkBlendFactor :: VK_BLEND_FACTOR_ONE_MINUS_SRC1_COLOR ),
+            Field ( Source1Alpha,               VkBlendFactor :: VK_BLEND_FACTOR_SRC1_ALPHA ),
+            Field ( OneMinusSource1Alpha,       VkBlendFactor :: VK_BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START ENUM ( BlendOperation, TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( Add,                VkBlendOp :: VK_BLEND_OP_ADD ),
+            Field ( Subtract,           VkBlendOp :: VK_BLEND_OP_SUBTRACT ),
+            Field ( ReverseSubtract,    VkBlendOp :: VK_BLEND_OP_REVERSE_SUBTRACT ),
+            Field ( Min,                VkBlendOp :: VK_BLEND_OP_MIN ),
+            Field ( Max,                VkBlendOp :: VK_BLEND_OP_MAX ),
+#if __C_ENG_VULKAN_API_EXTENSION_BLEND_OPERATION_ADVANCED_AVAILABLE
+            Field ( Zero,               VkBlendOp :: VK_BLEND_OP_ZERO_EXT ),
+            Field ( Source,             VkBlendOp :: VK_BLEND_OP_SRC_EXT ),
+            Field ( Destination,        VkBlendOp :: VK_BLEND_OP_DST_EXT ),
+            Field ( SourceOver,         VkBlendOp :: VK_BLEND_OP_SRC_OVER_EXT ),
+            Field ( DestinationOver,    VkBlendOp :: VK_BLEND_OP_DST_OVER_EXT ),
+            Field ( SourceIn,           VkBlendOp :: VK_BLEND_OP_SRC_IN_EXT ),
+            Field ( DestinationIn,      VkBlendOp :: VK_BLEND_OP_DST_IN_EXT ),
+            Field ( SourceOut,          VkBlendOp :: VK_BLEND_OP_SRC_OUT_EXT ),
+            Field ( DestinationOut,     VkBlendOp :: VK_BLEND_OP_DST_OUT_EXT ),
+            Field ( SourceAtop,         VkBlendOp :: VK_BLEND_OP_SRC_ATOP_EXT ),
+            Field ( DestinationAtop,    VkBlendOp :: VK_BLEND_OP_DST_ATOP_EXT ),
+            Field ( Xor,                VkBlendOp :: VK_BLEND_OP_XOR_EXT ),
+            Field ( Multiply,           VkBlendOp :: VK_BLEND_OP_MULTIPLY_EXT ),
+            Field ( Screen,             VkBlendOp :: VK_BLEND_OP_SCREEN_EXT ),
+            Field ( Overlay,            VkBlendOp :: VK_BLEND_OP_OVERLAY_EXT ),
+            Field ( Darken,             VkBlendOp :: VK_BLEND_OP_DARKEN_EXT ),
+            Field ( Lighten,            VkBlendOp :: VK_BLEND_OP_LIGHTEN_EXT ),
+            Field ( ColorDodge,         VkBlendOp :: VK_BLEND_OP_COLORDODGE_EXT ),
+            Field ( ColorBurn,          VkBlendOp :: VK_BLEND_OP_COLORBURN_EXT ),
+            Field ( HardLight,          VkBlendOp :: VK_BLEND_OP_HARDLIGHT_EXT ),
+            Field ( SoftLight,          VkBlendOp :: VK_BLEND_OP_SOFTLIGHT_EXT ),
+            Field ( Difference,         VkBlendOp :: VK_BLEND_OP_DIFFERENCE_EXT ),
+            Field ( Exclusion,          VkBlendOp :: VK_BLEND_OP_EXCLUSION_EXT ),
+            Field ( Invert,             VkBlendOp :: VK_BLEND_OP_INVERT_EXT ),
+            Field ( InvertRGB,          VkBlendOp :: VK_BLEND_OP_INVERT_RGB_EXT ),
+            Field ( LinearDodge,        VkBlendOp :: VK_BLEND_OP_LINEARDODGE_EXT ),
+            Field ( LinearBurn,         VkBlendOp :: VK_BLEND_OP_LINEARBURN_EXT ),
+            Field ( VividLight,         VkBlendOp :: VK_BLEND_OP_VIVIDLIGHT_EXT ),
+            Field ( LinearLight,        VkBlendOp :: VK_BLEND_OP_LINEARLIGHT_EXT ),
+            Field ( PinLight,           VkBlendOp :: VK_BLEND_OP_PINLIGHT_EXT ),
+            Field ( HardMix,            VkBlendOp :: VK_BLEND_OP_HARDMIX_EXT ),
+            Field ( HSLHue,             VkBlendOp :: VK_BLEND_OP_HSL_HUE_EXT ),
+            Field ( HSLSaturation,      VkBlendOp :: VK_BLEND_OP_HSL_SATURATION_EXT ),
+            Field ( HSLColor,           VkBlendOp :: VK_BLEND_OP_HSL_COLOR_EXT ),
+            Field ( HSLLuminosity,      VkBlendOp :: VK_BLEND_OP_HSL_LUMINOSITY_EXT ),
+            Field ( Plus,               VkBlendOp :: VK_BLEND_OP_PLUS_EXT ),
+            Field ( PlusClamped,        VkBlendOp :: VK_BLEND_OP_PLUS_CLAMPED_EXT ),
+            Field ( PlusClampedAlpha,   VkBlendOp :: VK_BLEND_OP_PLUS_CLAMPED_ALPHA_EXT ),
+            Field ( PlusDarker,         VkBlendOp :: VK_BLEND_OP_PLUS_DARKER_EXT ),
+            Field ( Minus,              VkBlendOp :: VK_BLEND_OP_MINUS_EXT ),
+            Field ( MinusClamped,       VkBlendOp :: VK_BLEND_OP_MINUS_CLAMPED_EXT ),
+            Field ( Contrast,           VkBlendOp :: VK_BLEND_OP_CONTRAST_EXT ),
+            Field ( InvertedOVG,        VkBlendOp :: VK_BLEND_OP_INVERT_OVG_EXT ),
+            Field ( Red,                VkBlendOp :: VK_BLEND_OP_RED_EXT ),
+            Field ( Green,              VkBlendOp :: VK_BLEND_OP_GREEN_EXT ),
+            Field ( Blue,               VkBlendOp :: VK_BLEND_OP_BLUE_EXT ),
+#endif
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START ENUM ( DynamicState, TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( Viewport,                           VkDynamicState :: VK_DYNAMIC_STATE_VIEWPORT ),
+            Field ( Scissor,                            VkDynamicState :: VK_DYNAMIC_STATE_SCISSOR ),
+            Field ( LineWidth,                          VkDynamicState :: VK_DYNAMIC_STATE_LINE_WIDTH ),
+            Field ( DepthBias,                          VkDynamicState :: VK_DYNAMIC_STATE_DEPTH_BIAS ),
+            Field ( BlendConstants,                     VkDynamicState :: VK_DYNAMIC_STATE_BLEND_CONSTANTS ),
+            Field ( DepthBounds,                        VkDynamicState :: VK_DYNAMIC_STATE_DEPTH_BOUNDS ),
+            Field ( CompareMask,                        VkDynamicState :: VK_DYNAMIC_STATE_STENCIL_COMPARE_MASK ),
+            Field ( WriteMask,                          VkDynamicState :: VK_DYNAMIC_STATE_STENCIL_WRITE_MASK ),
+            Field ( Reference,                          VkDynamicState :: VK_DYNAMIC_STATE_STENCIL_REFERENCE ),
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+            Field ( CullMode,                           VkDynamicState :: VK_DYNAMIC_STATE_CULL_MODE ),
+            Field ( PrimitiveTopology,                  VkDynamicState :: VK_DYNAMIC_STATE_PRIMITIVE_TOPOLOGY ),
+            Field ( ViewportWithCount,                  VkDynamicState :: VK_DYNAMIC_STATE_VIEWPORT_WITH_COUNT ),
+            Field ( ScissorWithCount,                   VkDynamicState :: VK_DYNAMIC_STATE_SCISSOR_WITH_COUNT ),
+            Field ( VertexInputBindingString,           VkDynamicState :: VK_DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE ),
+            Field ( DepthTestEnable,                    VkDynamicState :: VK_DYNAMIC_STATE_DEPTH_TEST_ENABLE ),
+            Field ( DepthWriteEnable,                   VkDynamicState :: VK_DYNAMIC_STATE_DEPTH_WRITE_ENABLE ),
+            Field ( DepthCompareOperation,              VkDynamicState :: VK_DYNAMIC_STATE_DEPTH_COMPARE_OP ),
+            Field ( DepthBoundsTestEnable,              VkDynamicState :: VK_DYNAMIC_STATE_DEPTH_BOUNDS_TEST_ENABLE ),
+            Field ( StencilTestEnable,                  VkDynamicState :: VK_DYNAMIC_STATE_STENCIL_TEST_ENABLE ),
+            Field ( StencilOperation,                   VkDynamicState :: VK_DYNAMIC_STATE_STENCIL_OP ),
+            Field ( RasterizerDiscardEnable,            VkDynamicState :: VK_DYNAMIC_STATE_RASTERIZER_DISCARD_ENABLE ),
+            Field ( DepthBiasEnable,                    VkDynamicState :: VK_DYNAMIC_STATE_DEPTH_BIAS_ENABLE ),
+            Field ( PrimitiveRestartEnable,             VkDynamicState :: VK_DYNAMIC_STATE_PRIMITIVE_RESTART_ENABLE ),
+#else
+#if __C_ENG_VULKAN_API_EXTENSION_EXTENDED_DYNAMIC_STATE_AVAILABLE
+            Field ( CullMode,                           VkDynamicState :: VK_DYNAMIC_STATE_CULL_MODE_EXT ),
+            Field ( PrimitiveTopology,                  VkDynamicState :: VK_DYNAMIC_STATE_PRIMITIVE_TOPOLOGY_EXT ),
+            Field ( ViewportWithCount,                  VkDynamicState :: VK_DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT ),
+            Field ( ScissorWithCount,                   VkDynamicState :: VK_DYNAMIC_STATE_SCISSOR_WITH_COUNT_EXT ),
+            Field ( VertexInputBindingString,           VkDynamicState :: VK_DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE_EXT ),
+            Field ( DepthTestEnable,                    VkDynamicState :: VK_DYNAMIC_STATE_DEPTH_TEST_ENABLE_EXT ),
+            Field ( DepthWriteEnable,                   VkDynamicState :: VK_DYNAMIC_STATE_DEPTH_WRITE_ENABLE_EXT ),
+            Field ( DepthCompareOperation,              VkDynamicState :: VK_DYNAMIC_STATE_DEPTH_COMPARE_OP_EXT ),
+            Field ( DepthBoundsTestEnable,              VkDynamicState :: VK_DYNAMIC_STATE_DEPTH_BOUNDS_TEST_ENABLE_EXT ),
+            Field ( StencilTestEnable,                  VkDynamicState :: VK_DYNAMIC_STATE_STENCIL_TEST_ENABLE_EXT ),
+            Field ( StencilOperation,                   VkDynamicState :: VK_DYNAMIC_STATE_STENCIL_OP_EXT ),
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_EXTENDED_DYNAMIC_STATE_2_AVAILABLE
+            Field ( RasterizerDiscardEnable,            VkDynamicState :: VK_DYNAMIC_STATE_RASTERIZER_DISCARD_ENABLE_EXT ),
+            Field ( DepthBiasEnable,                    VkDynamicState :: VK_DYNAMIC_STATE_DEPTH_BIAS_ENABLE_EXT ),
+            Field ( PrimitiveRestartEnable,             VkDynamicState :: VK_DYNAMIC_STATE_PRIMITIVE_RESTART_ENABLE_EXT ),
+#endif
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_CLIP_SPACE_W_SCALING_AVAILABLE
+            Field ( ViewportWScalingNVidia,             VkDynamicState :: VK_DYNAMIC_STATE_VIEWPORT_W_SCALING_NV ),
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_DISCARD_RECTANGLES_AVAILABLE
+            Field ( DiscardRectangle,                   VkDynamicState :: VK_DYNAMIC_STATE_DISCARD_RECTANGLE_EXT ),
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_SAMPLE_LOCATIONS_AVAILABLE
+            Field ( SampleLocations,                    VkDynamicState :: VK_DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT ),
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_RAY_TRACING_PIPELINE_AVAILABLE
+            Field ( RayTracingPipelineStackSize,        VkDynamicState :: VK_DYNAMIC_STATE_RAY_TRACING_PIPELINE_STACK_SIZE_KHR ),
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SHADING_RATE_IMAGE_AVAILABLE
+            Field ( ViewportShadingRatePaletteNVidia,   VkDynamicState :: VK_DYNAMIC_STATE_VIEWPORT_SHADING_RATE_PALETTE_NV ),
+            Field ( ViewportCoarseSampleOrderNVidia,    VkDynamicState :: VK_DYNAMIC_STATE_VIEWPORT_COARSE_SAMPLE_ORDER_NV ),
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SCISSOR_EXCLUSIVE_AVAILABLE
+            Field ( ExclusiveScissorNVidia,             VkDynamicState :: VK_DYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV ),
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_FRAGMENT_SHADING_RATE_AVAILABLE
+            Field ( FragmentShadingRate,                VkDynamicState :: VK_DYNAMIC_STATE_FRAGMENT_SHADING_RATE_KHR ),
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_LINE_RASTERIZATION_AVAILABLE
+            Field ( LineStipple,                        VkDynamicState :: VK_DYNAMIC_STATE_LINE_STIPPLE_EXT ),
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_VERTEX_INPUT_DYNAMIC_STATE_AVAILABLE
+            Field ( VertexInput,                        VkDynamicState :: VK_DYNAMIC_STATE_VERTEX_INPUT_EXT ),
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_EXTENDED_DYNAMIC_STATE_2_AVAILABLE
+            Field ( PatchControlPoints,                 VkDynamicState :: VK_DYNAMIC_STATE_PATCH_CONTROL_POINTS_EXT ),
+            Field ( LogicOperation,                     VkDynamicState :: VK_DYNAMIC_STATE_LOGIC_OP_EXT ),
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_COLOR_WRITE_ENABLE_AVAILABLE
+            Field ( ColorWriteEnable,                   VkDynamicState :: VK_DYNAMIC_STATE_COLOR_WRITE_ENABLE_EXT ),
+#endif
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+#define C_ENG_MAP_START ENUM ( TessellationDomainOrigin,    TYPE ( cds :: uint8 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( UpperLeft,  VkTessellationDomainOrigin :: VK_TESSELLATION_DOMAIN_ORIGIN_UPPER_LEFT ),
+            Field ( LowerLeft,  VkTessellationDomainOrigin :: VK_TESSELLATION_DOMAIN_ORIGIN_LOWER_LEFT ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SHADING_RATE_IMAGE_AVAILABLE
+#define C_ENG_MAP_START ENUM ( CoarseSampleOrderTypeNVidia,    TYPE ( cds :: uint8 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( Default,        VkCoarseSampleOrderTypeNV :: VK_COARSE_SAMPLE_ORDER_TYPE_DEFAULT_NV ),
+            Field ( Custom,         VkCoarseSampleOrderTypeNV :: VK_COARSE_SAMPLE_ORDER_TYPE_CUSTOM_NV ),
+            Field ( PixelMajor,     VkCoarseSampleOrderTypeNV :: VK_COARSE_SAMPLE_ORDER_TYPE_PIXEL_MAJOR_NV ),
+            Field ( SampleMajor,    VkCoarseSampleOrderTypeNV :: VK_COARSE_SAMPLE_ORDER_TYPE_SAMPLE_MAJOR_NV ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START ENUM ( ShadingRatePaletteEntryNVidia,    TYPE ( cds :: uint8 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( NoInvocations,              VkShadingRatePaletteEntryNV :: VK_SHADING_RATE_PALETTE_ENTRY_NO_INVOCATIONS_NV ),
+            Field ( 16InvocationsPerPixel,      VkShadingRatePaletteEntryNV :: VK_SHADING_RATE_PALETTE_ENTRY_16_INVOCATIONS_PER_PIXEL_NV ),
+            Field ( 8InvocationsPerPixel,       VkShadingRatePaletteEntryNV :: VK_SHADING_RATE_PALETTE_ENTRY_8_INVOCATIONS_PER_PIXEL_NV ),
+            Field ( 4InvocationsPerPixel,       VkShadingRatePaletteEntryNV :: VK_SHADING_RATE_PALETTE_ENTRY_4_INVOCATIONS_PER_PIXEL_NV ),
+            Field ( 2InvocationsPerPixel,       VkShadingRatePaletteEntryNV :: VK_SHADING_RATE_PALETTE_ENTRY_2_INVOCATIONS_PER_PIXEL_NV ),
+            Field ( 1InvocationPerPixel,        VkShadingRatePaletteEntryNV :: VK_SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_PIXEL_NV ),
+            Field ( 1InvocationPer2x1Pixels,    VkShadingRatePaletteEntryNV :: VK_SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_2X1_PIXELS_NV ),
+            Field ( 1InvocationPer1x2Pixels,    VkShadingRatePaletteEntryNV :: VK_SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_1X2_PIXELS_NV ),
+            Field ( 1InvocationPer2x2Pixels,    VkShadingRatePaletteEntryNV :: VK_SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_2X2_PIXELS_NV ),
+            Field ( 1InvocationPer4x2Pixels,    VkShadingRatePaletteEntryNV :: VK_SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_4X2_PIXELS_NV ),
+            Field ( 1InvocationPer2x4Pixels,    VkShadingRatePaletteEntryNV :: VK_SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_2X4_PIXELS_NV ),
+            Field ( 1InvocationPer4x4Pixels,    VkShadingRatePaletteEntryNV :: VK_SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_4X4_PIXELS_NV ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_VIEWPORT_SWIZZLE_AVAILABLE
+#define C_ENG_MAP_START ENUM ( ViewportCoordinateSwizzleNVidia,    TYPE ( cds :: uint8 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( PositiveX,  VkViewportCoordinateSwizzleNV :: VK_VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_X_NV ),
+            Field ( NegativeX,  VkViewportCoordinateSwizzleNV :: VK_VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_X_NV ),
+            Field ( PositiveY,  VkViewportCoordinateSwizzleNV :: VK_VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_Y_NV ),
+            Field ( NegativeY,  VkViewportCoordinateSwizzleNV :: VK_VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_Y_NV ),
+            Field ( PositiveZ,  VkViewportCoordinateSwizzleNV :: VK_VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_Z_NV ),
+            Field ( NegativeZ,  VkViewportCoordinateSwizzleNV :: VK_VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_Z_NV ),
+            Field ( PositiveW,  VkViewportCoordinateSwizzleNV :: VK_VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_W_NV ),
+            Field ( NegativeW,  VkViewportCoordinateSwizzleNV :: VK_VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_W_NV ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_CONSERVATIVE_RASTERIZATION_AVAILABLE
+#define C_ENG_MAP_START ENUM ( ConservativeRasterizationMode,    TYPE ( cds :: uint8 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( Disabled,       VkConservativeRasterizationModeEXT :: VK_CONSERVATIVE_RASTERIZATION_MODE_DISABLED_EXT ),
+            Field ( Overestimate,   VkConservativeRasterizationModeEXT :: VK_CONSERVATIVE_RASTERIZATION_MODE_OVERESTIMATE_EXT ),
+            Field ( Underestimate,  VkConservativeRasterizationModeEXT :: VK_CONSERVATIVE_RASTERIZATION_MODE_UNDERESTIMATE_EXT ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_LINE_RASTERIZATION_AVAILABLE
+#define C_ENG_MAP_START ENUM ( LineRasterizationMode,    TYPE ( cds :: uint8 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( Default,            VkLineRasterizationModeEXT :: VK_LINE_RASTERIZATION_MODE_DEFAULT_EXT ),
+            Field ( Rectangular,        VkLineRasterizationModeEXT :: VK_LINE_RASTERIZATION_MODE_RECTANGULAR_EXT ),
+            Field ( Bresenham,          VkLineRasterizationModeEXT :: VK_LINE_RASTERIZATION_MODE_BRESENHAM_EXT ),
+            Field ( RectangularSmooth,  VkLineRasterizationModeEXT :: VK_LINE_RASTERIZATION_MODE_RECTANGULAR_SMOOTH_EXT ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_PROVOKING_VERTEX_AVAILABLE
+#define C_ENG_MAP_START ENUM ( ProvokingVertexMode, TYPE ( cds :: uint8 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( FirstVertex,    VkProvokingVertexModeEXT :: VK_PROVOKING_VERTEX_MODE_FIRST_VERTEX_EXT ),
+            Field ( LastVertex,     VkProvokingVertexModeEXT :: VK_PROVOKING_VERTEX_MODE_LAST_VERTEX_EXT ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_AMD_RASTERIZATION_ORDER_AVAILABLE
+#define C_ENG_MAP_START ENUM ( RasterizationOrderAMD, TYPE ( cds :: uint8 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( Strict,     VkRasterizationOrderAMD :: VK_RASTERIZATION_ORDER_STRICT_AMD ),
+            Field ( Relaxed,    VkRasterizationOrderAMD :: VK_RASTERIZATION_ORDER_RELAXED_AMD ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_FRAMEBUFFER_MIXED_SAMPLES_AVAILABLE
+#define C_ENG_MAP_START ENUM ( CoverageModulationModeNVidia, TYPE ( cds :: uint8 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( None,   VkCoverageModulationModeNV :: VK_COVERAGE_MODULATION_MODE_NONE_NV ),
+            Field ( RGB,    VkCoverageModulationModeNV :: VK_COVERAGE_MODULATION_MODE_RGB_NV ),
+            Field ( Alpha,  VkCoverageModulationModeNV :: VK_COVERAGE_MODULATION_MODE_ALPHA_NV ),
+            Field ( RGBA,   VkCoverageModulationModeNV :: VK_COVERAGE_MODULATION_MODE_RGBA_NV ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_COVERAGE_REDUCTION_MODE_AVAILABLE
+#define C_ENG_MAP_START ENUM ( CoverageReductionModeNVidia, TYPE ( cds :: uint8 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( Merge,      VkCoverageReductionModeNV :: VK_COVERAGE_REDUCTION_MODE_MERGE_NV ),
+            Field ( Truncate,   VkCoverageReductionModeNV :: VK_COVERAGE_REDUCTION_MODE_TRUNCATE_NV ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_BLEND_OPERATION_ADVANCED_AVAILABLE
+#define C_ENG_MAP_START ENUM ( BlendOverlap, TYPE ( cds :: uint8 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( Uncorrelated,   VkBlendOverlapEXT :: VK_BLEND_OVERLAP_UNCORRELATED_EXT ),
+            Field ( Disjoint,       VkBlendOverlapEXT :: VK_BLEND_OVERLAP_DISJOINT_EXT ),
+            Field ( Conjoint,       VkBlendOverlapEXT :: VK_BLEND_OVERLAP_CONJOINT_EXT ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
 
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 
@@ -4035,62 +4604,75 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_ALIAS ( DeviceSize, VkDeviceSize );
         __C_ENG_ALIAS ( Bool,       VkBool32 );
 
+        __C_ENG_ALIAS ( SampleMask, VkSampleMask );
+
         __C_ENG_ALIAS ( GenericStructure, void );
 
-        __C_ENG_ALIAS ( InstanceHandle,                 VkInstance );
-        __C_ENG_ALIAS ( PhysicalDeviceHandle,           VkPhysicalDevice );
-        __C_ENG_ALIAS ( DeviceHandle,                   VkDevice );
-        __C_ENG_ALIAS ( QueueHandle,                    VkQueue );
-        __C_ENG_ALIAS ( ImageHandle,                    VkImage );
-        __C_ENG_ALIAS ( ImageViewHandle,                VkImageView );
-        __C_ENG_ALIAS ( CommandBufferHandle,            VkCommandBuffer );
-        __C_ENG_ALIAS ( CommandPoolHandle,              VkCommandPool );
-        __C_ENG_ALIAS ( FrameBufferHandle,              VkFramebuffer );
-        __C_ENG_ALIAS ( RenderPassHandle,               VkRenderPass );
-        __C_ENG_ALIAS ( SemaphoreHandle,                VkSemaphore );
-        __C_ENG_ALIAS ( FenceHandle,                    VkFence );
-        __C_ENG_ALIAS ( EventHandle,                    VkEvent );
-        __C_ENG_ALIAS ( BufferHandle,                   VkBuffer );
-        __C_ENG_ALIAS ( ShaderModuleHandle,             VkShaderModule );
-        __C_ENG_ALIAS ( PipelineCacheHandle,            VkPipelineCache );
-        __C_ENG_ALIAS ( PipelineHandle,                 VkPipeline );
-        __C_ENG_ALIAS ( PipelineLayoutHandle,           VkPipelineLayout );
+        __C_ENG_ALIAS ( InstanceHandle,                         VkInstance );
+        __C_ENG_ALIAS ( PhysicalDeviceHandle,                   VkPhysicalDevice );
+        __C_ENG_ALIAS ( DeviceHandle,                           VkDevice );
+        __C_ENG_ALIAS ( QueueHandle,                            VkQueue );
+        __C_ENG_ALIAS ( ImageHandle,                            VkImage );
+        __C_ENG_ALIAS ( ImageViewHandle,                        VkImageView );
+        __C_ENG_ALIAS ( CommandBufferHandle,                    VkCommandBuffer );
+        __C_ENG_ALIAS ( CommandPoolHandle,                      VkCommandPool );
+        __C_ENG_ALIAS ( FrameBufferHandle,                      VkFramebuffer );
+        __C_ENG_ALIAS ( RenderPassHandle,                       VkRenderPass );
+        __C_ENG_ALIAS ( SemaphoreHandle,                        VkSemaphore );
+        __C_ENG_ALIAS ( FenceHandle,                            VkFence );
+        __C_ENG_ALIAS ( EventHandle,                            VkEvent );
+        __C_ENG_ALIAS ( BufferHandle,                           VkBuffer );
+        __C_ENG_ALIAS ( ShaderModuleHandle,                     VkShaderModule );
+        __C_ENG_ALIAS ( PipelineCacheHandle,                    VkPipelineCache );
+        __C_ENG_ALIAS ( PipelineHandle,                         VkPipeline );
+        __C_ENG_ALIAS ( PipelineLayoutHandle,                   VkPipelineLayout );
+        __C_ENG_ALIAS ( CullModeFlags,                          VkCullModeFlags );
 
-        __C_ENG_ALIAS ( InstanceCreateFlags,            VkInstanceCreateFlags );
-        __C_ENG_ALIAS ( DebugMessengerCreateFlags,      VkDebugUtilsMessengerCreateFlagsEXT );
-        __C_ENG_ALIAS ( DeviceCreateFlags,              VkDeviceCreateFlags );
-        __C_ENG_ALIAS ( DeviceQueueCreateFlags,         VkDeviceQueueCreateFlags );
-        __C_ENG_ALIAS ( SampleCountFlags,               VkSampleCountFlags );
-        __C_ENG_ALIAS ( ShaderStageFlags,               VkShaderStageFlags );
-        __C_ENG_ALIAS ( QueueFlags,                     VkQueueFlags );
-        __C_ENG_ALIAS ( PipelineStageFlags,             VkFlags64 );
-        __C_ENG_ALIAS ( AccessFlags,                    VkFlags64 );
-        __C_ENG_ALIAS ( ImageUsageFlags,                VkImageUsageFlags );
-        __C_ENG_ALIAS ( ImageViewCreateFlags,           VkImageViewCreateFlags );
-        __C_ENG_ALIAS ( ImageAspectFlags,               VkImageAspectFlags );
-        __C_ENG_ALIAS ( CommandPoolCreateFlags,         VkCommandPoolCreateFlags );
-        __C_ENG_ALIAS ( CommandPoolResetFlags,          VkCommandPoolResetFlags );
-        __C_ENG_ALIAS ( CommandBufferResetFlags,        VkCommandBufferResetFlags );
-        __C_ENG_ALIAS ( CommandBufferUsageFlags,        VkCommandBufferUsageFlags );
-        __C_ENG_ALIAS ( QueryControlFlags,              VkQueryControlFlags );
-        __C_ENG_ALIAS ( QueryPipelineStatisticFlags,    VkQueryPipelineStatisticFlags );
-        __C_ENG_ALIAS ( FenceCreateFlags,               VkFenceCreateFlags );
-        __C_ENG_ALIAS ( SemaphoreCreateFlags,           VkSemaphoreCreateFlags );
-        __C_ENG_ALIAS ( EventCreateFlags,               VkEventCreateFlags );
-        __C_ENG_ALIAS ( RenderPassCreateFlags,          VkRenderPassCreateFlags );
-        __C_ENG_ALIAS ( AttachmentDescriptionFlags,     VkAttachmentDescriptionFlags );
-        __C_ENG_ALIAS ( SubpassDescriptionFlags,        VkSubpassDescriptionFlags );
-        __C_ENG_ALIAS ( FrameBufferCreateFlags,         VkFramebufferCreateFlags );
-        __C_ENG_ALIAS ( ImageCreateFlags,               VkImageCreateFlags );
-        __C_ENG_ALIAS ( ShaderModuleCreateFlags,        VkShaderModuleCreateFlags );
-        __C_ENG_ALIAS ( PipelineCreateFlags,            VkPipelineCreateFlags );
-        __C_ENG_ALIAS ( PipelineShaderStageCreateFlags, VkPipelineShaderStageCreateFlags );
+        __C_ENG_ALIAS ( InstanceCreateFlags,                    VkInstanceCreateFlags );
+        __C_ENG_ALIAS ( DebugMessengerCreateFlags,              VkDebugUtilsMessengerCreateFlagsEXT );
+        __C_ENG_ALIAS ( DeviceCreateFlags,                      VkDeviceCreateFlags );
+        __C_ENG_ALIAS ( DeviceQueueCreateFlags,                 VkDeviceQueueCreateFlags );
+        __C_ENG_ALIAS ( SampleCountFlags,                       VkSampleCountFlags );
+        __C_ENG_ALIAS ( ShaderStageFlags,                       VkShaderStageFlags );
+        __C_ENG_ALIAS ( QueueFlags,                             VkQueueFlags );
+        __C_ENG_ALIAS ( PipelineStageFlags,                     VkFlags64 );
+        __C_ENG_ALIAS ( AccessFlags,                            VkFlags64 );
+        __C_ENG_ALIAS ( ImageUsageFlags,                        VkImageUsageFlags );
+        __C_ENG_ALIAS ( ImageViewCreateFlags,                   VkImageViewCreateFlags );
+        __C_ENG_ALIAS ( ImageAspectFlags,                       VkImageAspectFlags );
+        __C_ENG_ALIAS ( CommandPoolCreateFlags,                 VkCommandPoolCreateFlags );
+        __C_ENG_ALIAS ( CommandPoolResetFlags,                  VkCommandPoolResetFlags );
+        __C_ENG_ALIAS ( CommandBufferResetFlags,                VkCommandBufferResetFlags );
+        __C_ENG_ALIAS ( CommandBufferUsageFlags,                VkCommandBufferUsageFlags );
+        __C_ENG_ALIAS ( QueryControlFlags,                      VkQueryControlFlags );
+        __C_ENG_ALIAS ( QueryPipelineStatisticFlags,            VkQueryPipelineStatisticFlags );
+        __C_ENG_ALIAS ( FenceCreateFlags,                       VkFenceCreateFlags );
+        __C_ENG_ALIAS ( SemaphoreCreateFlags,                   VkSemaphoreCreateFlags );
+        __C_ENG_ALIAS ( EventCreateFlags,                       VkEventCreateFlags );
+        __C_ENG_ALIAS ( RenderPassCreateFlags,                  VkRenderPassCreateFlags );
+        __C_ENG_ALIAS ( AttachmentDescriptionFlags,             VkAttachmentDescriptionFlags );
+        __C_ENG_ALIAS ( SubpassDescriptionFlags,                VkSubpassDescriptionFlags );
+        __C_ENG_ALIAS ( FrameBufferCreateFlags,                 VkFramebufferCreateFlags );
+        __C_ENG_ALIAS ( ImageCreateFlags,                       VkImageCreateFlags );
+        __C_ENG_ALIAS ( ShaderModuleCreateFlags,                VkShaderModuleCreateFlags );
+        __C_ENG_ALIAS ( PipelineCreateFlags,                    VkPipelineCreateFlags );
+        __C_ENG_ALIAS ( PipelineShaderStageCreateFlags,         VkPipelineShaderStageCreateFlags );
+        __C_ENG_ALIAS ( PipelineVertexInputStateCreateFlags,    VkPipelineVertexInputStateCreateFlags );
+        __C_ENG_ALIAS ( PipelineInputAssemblyStateCreateFlags,  VkPipelineInputAssemblyStateCreateFlags );
+        __C_ENG_ALIAS ( PipelineTessellationStateCreateFlags,   VkPipelineTessellationStateCreateFlags );
+        __C_ENG_ALIAS ( PipelineViewportStateCreateFlags,       VkPipelineViewportStateCreateFlags );
+        __C_ENG_ALIAS ( PipelineRasterizationStateCreateFlags,  VkPipelineRasterizationStateCreateFlags );
+        __C_ENG_ALIAS ( PipelineMultisampleStateCreateFlags,    VkPipelineMultisampleStateCreateFlags );
+        __C_ENG_ALIAS ( PipelineDepthStencilStateCreateFlags,   VkPipelineDepthStencilStateCreateFlags );
+        __C_ENG_ALIAS ( PipelineColorBlendStateCreateFlags,     VkPipelineColorBlendStateCreateFlags );
+        __C_ENG_ALIAS ( ColorComponentFlags,                    VkColorComponentFlags );
+        __C_ENG_ALIAS ( PipelineDynamicStateCreateFlags,        VkPipelineDynamicStateCreateFlags );
 
-        __C_ENG_ALIAS ( AllocationFunction,             PFN_vkAllocationFunction );
-        __C_ENG_ALIAS ( ReallocationFunction,           PFN_vkReallocationFunction );
-        __C_ENG_ALIAS ( FreeFunction,                   PFN_vkFreeFunction );
-        __C_ENG_ALIAS ( InternalAllocationNotification, PFN_vkInternalAllocationNotification );
-        __C_ENG_ALIAS ( InternalFreeNotification,       PFN_vkInternalFreeNotification );
+        __C_ENG_ALIAS ( AllocationFunction,                     PFN_vkAllocationFunction );
+        __C_ENG_ALIAS ( ReallocationFunction,                   PFN_vkReallocationFunction );
+        __C_ENG_ALIAS ( FreeFunction,                           PFN_vkFreeFunction );
+        __C_ENG_ALIAS ( InternalAllocationNotification,         PFN_vkInternalAllocationNotification );
+        __C_ENG_ALIAS ( InternalFreeNotification,               PFN_vkInternalFreeNotification );
 
 #endif
 
@@ -4113,8 +4695,40 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_ALIAS ( PipelineCreationFeedbackFlags,      VkPipelineCreationFeedbackFlags );
 #endif
 
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_FRAMEBUFFER_MIXED_SAMPLES_AVAILABLE
+        __C_ENG_ALIAS ( PipelineCoverageModulationStateCreateFlagsNVidia,  VkPipelineCoverageModulationStateCreateFlagsNV );
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_FRAGMENT_COVERAGE_TO_COLOR_AVAILABLE
+        __C_ENG_ALIAS ( PipelineCoverageToColorStateCreateFlagsNVidia,  VkPipelineCoverageToColorStateCreateFlagsNV );
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_COVERAGE_REDUCTION_MODE_AVAILABLE
+        __C_ENG_ALIAS ( PipelineCoverageReductionStateCreateFlagsNVidia,  VkPipelineCoverageReductionStateCreateFlagsNV );
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_TRANSFORM_FEEDBACK_AVAILABLE
+        __C_ENG_ALIAS ( PipelineRasterizationStateStreamCreateFlags,  VkPipelineRasterizationStateStreamCreateFlagsEXT );
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_CONSERVATIVE_RASTERIZATION_AVAILABLE
+        __C_ENG_ALIAS ( PipelineRasterizationConservativeStateCreateFlags,  VkPipelineRasterizationConservativeStateCreateFlagsEXT );
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_DEPTH_CLIP_ENABLE_AVAILABLE
+        __C_ENG_ALIAS ( PipelineRasterizationDepthClipStateCreateFlags,  VkPipelineRasterizationDepthClipStateCreateFlagsEXT );
+#endif
+
 #if __C_ENG_VULKAN_API_EXTENSION_AMD_PIPELINE_COMPILER_CONTROL_AVAILABLE
         __C_ENG_ALIAS ( PipelineCompilerControlFlagsAMD,    VkPipelineCompilerControlFlagsAMD );
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_VIEWPORT_SWIZZLE_AVAILABLE
+        __C_ENG_ALIAS ( PipelineViewportSwizzleStateCreateFlagsNVidia,  VkPipelineViewportSwizzleStateCreateFlagsNV );
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_DISCARD_RECTANGLES_AVAILABLE
+        __C_ENG_ALIAS ( PipelineDiscardRectangleStateCreateFlags,   VkPipelineDiscardRectangleStateCreateFlagsEXT );
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_VALIDATION_CACHE_AVAILABLE
@@ -11073,6 +11687,760 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #endif
 
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( VertexInputBindingDescription, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            cds :: uint32               binding;
+            cds :: uint32               stride;
+            Type ( VertexInputRate )    inputRate;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START STRUCT ( VertexInputAttributeDescription, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            cds :: uint32               location;
+            cds :: uint32               binding;
+            Type ( Format )             format;
+            cds :: uint32               offset;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START STRUCT ( PipelineVertexInputStateCreateInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                                  structureType;
+            Type ( GenericStructure )                       const * pNext;
+            Type ( PipelineVertexInputStateCreateFlags )            flags;
+            cds :: uint32                                           vertexBindingDescriptionCount;
+            Type ( VertexInputBindingDescription )          const * pVertexBindingDescriptions;
+            cds :: uint32                                           vertexAttributeDescriptionCount;
+            Type ( VertexInputAttributeDescription )        const * pVertexAttributeDescriptions;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START STRUCT ( PipelineInputAssemblyStateCreateInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                                  structureType;
+            Type ( GenericStructure )                       const * pNext;
+            Type ( PipelineInputAssemblyStateCreateFlags )          flags;
+            Type ( PrimitiveTopology )                              topology;
+            Type ( Bool )                                           primitiveRestartEnable;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START STRUCT ( PipelineTessellationStateCreateInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                                  structureType;
+            Type ( GenericStructure )                       const * pNext;
+            Type ( PipelineTessellationStateCreateFlags )           flags;
+            cds :: uint32                                           patchControlPoints;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START STRUCT ( PipelineViewportStateCreateInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                              structureType;
+            Type ( GenericStructure )                   const * pNext;
+            Type ( PipelineViewportStateCreateFlags )           flags;
+            cds :: uint32                                       viewportCount;
+            Type ( Viewport )                           const * pViewports;
+            cds :: uint32                                       scissorCount;
+            Type ( Rect )                               const * pScissors;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START STRUCT ( PipelineRasterizationStateCreateInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                              structureType;
+            Type ( GenericStructure )                   const * pNext;
+            Type ( PipelineRasterizationStateCreateFlags )      flags;
+            Type ( Bool )                                       depthClampEnable;
+            Type ( Bool )                                       rasterizerDiscardEnable;
+            Type ( PolygonMode )                                polygonMode;
+            Type ( CullModeFlags )                              cullMode;
+            Type ( FrontFace )                                  frontFace;
+            Type ( Bool )                                       depthBiasEnable;
+            float                                               depthBiasConstantFactor;
+            float                                               depthBiasClamp;
+            float                                               depthBiasSlopeFactor;
+            float                                               lineWidth;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START STRUCT ( PipelineMultisampleStateCreateInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                              structureType;
+            Type ( GenericStructure )                   const * pNext;
+            Type ( PipelineMultisampleStateCreateFlags )        flags;
+            Type ( SampleCountFlag )                            rasterizationSamples;
+            Type ( Bool )                                       sampleShadingEnable;
+            float                                               minSampleShading;
+            Type ( SampleMask )                         const * pSampleMask;
+            Type ( Bool )                                       alphaToCoverageEnable;
+            Type ( Bool )                                       alphaToOneEnable;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START STRUCT ( StencilOperationState, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StencilOperation )   failOperation;
+            Type ( StencilOperation )   passOperation;
+            Type ( StencilOperation )   depthFailOperation;
+            Type ( CompareOperation )   compareOperation;
+            cds :: uint32               compareMask;
+            cds :: uint32               writeMask;
+            cds :: uint32               reference;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START STRUCT ( PipelineDepthStencilStateCreateInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                              structureType;
+            Type ( GenericStructure )                   const * pNext;
+            Type ( PipelineDepthStencilStateCreateFlags )       flags;
+            Type ( Bool )                                       depthTestEnable;
+            Type ( Bool )                                       depthWriteEnable;
+            Type ( CompareOperation )                           depthCompareOperation;
+            Type ( Bool )                                       depthBoundsTestEnable;
+            Type ( Bool )                                       stencilTestEnable;
+            Type ( StencilOperationState )                      front;
+            Type ( StencilOperationState )                      back;
+            float                                               minDepthBounds;
+            float                                               maxDepthBounds;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START STRUCT ( PipelineColorBlendAttachmentState, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( Bool )                   blendEnable;
+            Type ( BlendFactor )            sourceColorBlendFactor;
+            Type ( BlendFactor )            destinationColorBlendFactor;
+            Type ( BlendOperation )         colorBlendOperation;
+            Type ( BlendFactor )            sourceAlphaBlendFactor;
+            Type ( BlendFactor )            destinationAlphaBlendFactor;
+            Type ( BlendOperation )         alphaBlendOperation;
+            Type ( ColorComponentFlags )    colorWriteMask;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START STRUCT ( PipelineColorBlendStateCreateInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                              structureType;
+            Type ( GenericStructure )                   const * pNext;
+            Type ( PipelineColorBlendStateCreateFlags )         flags;
+            Type ( Bool )                                       logicOperationEnable;
+            Type ( LogicOperation )                             logicOperation;
+            cds :: uint32                                       attachmentCount;
+            Type ( PipelineColorBlendAttachmentState )  const * pAttachments;
+            float                                               blendConstants[4];
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START STRUCT ( PipelineDynamicStateCreateInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                              structureType;
+            Type ( GenericStructure )                   const * pNext;
+            Type ( PipelineDynamicStateCreateFlags )            flags;
+            cds :: uint32                                       dynamicStateCount;
+            Type ( DynamicState )                       const * pDynamicStates;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START STRUCT ( GraphicsPipelineCreateInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                                  structureType;
+            Type ( GenericStructure )                       const * pNext;
+            Type ( PipelineCreateFlags )                            flags;
+            cds :: uint32                                           stageCount;
+            Type ( PipelineShaderStageCreateInfo )          const * pStages;
+            Type ( PipelineVertexInputStateCreateInfo )     const * pVertexInputState;
+            Type ( PipelineInputAssemblyStateCreateInfo )   const * pInputAssemblyState;
+            Type ( PipelineTessellationStateCreateInfo )    const * pTessellationState;
+            Type ( PipelineViewportStateCreateInfo )        const * pViewportState;
+            Type ( PipelineRasterizationStateCreateInfo )   const * pRasterizationState;
+            Type ( PipelineMultisampleStateCreateInfo )     const * pMultisampleState;
+            Type ( PipelineDepthStencilStateCreateInfo )    const * pDepthStencilState;
+            Type ( PipelineColorBlendStateCreateInfo )      const * pColorBlendState;
+            Type ( PipelineDynamicStateCreateInfo )         const * pDynamicState;
+            Type ( PipelineLayoutHandle )                           layout;
+            Type ( RenderPassHandle )                               renderPass;
+            cds :: uint32                                           subpass;
+            Type ( PipelineHandle )                                 basePipelineHandle;
+            cds :: sint32                                           basePipelineIndex;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEVICE_GENERATED_COMMANDS_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( GraphicsShaderGroupCreateInfoNVidia, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                                  structureType;
+            Type ( GenericStructure )                       const * pNext;
+            cds :: uint32                                           stageCount;
+            Type ( PipelineShaderStageCreateInfo )          const * pStages;
+            Type ( PipelineVertexInputStateCreateInfo )     const * pVertexInputState;
+            Type ( PipelineTessellationStateCreateInfo )    const * pTessellationState;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START STRUCT ( GraphicsPipelineShaderGroupsCreateInfoNVidia, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                                  structureType;
+            Type ( GenericStructure )                       const * pNext;
+            cds :: uint32                                           groupCount;
+            Type ( GraphicsShaderGroupCreateInfoNVidia )    const * pGroups;
+            cds :: uint32                                           pipelineCount;
+            Type ( PipelineHandle )                         const * pPipelines;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_VERTEX_ATTRIBUTE_DIVISOR_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( VertexInputBindingDivisorDescription, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            cds :: uint32   binding;
+            cds :: uint32   divisor;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START STRUCT ( PipelineVertexInputDivisorStateCreateInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                                  structureType;
+            Type ( GenericStructure )                       const * pNext;
+            cds :: uint32                                           vertexBindingDivisorCount;
+            Type ( VertexInputBindingDivisorDescription )   const * pVertexBindingDivisors;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_DISCARD_RECTANGLES_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( PipelineDiscardRectangleStateCreateInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                                  structureType;
+            Type ( GenericStructure )                       const * pNext;
+            Type ( PipelineDiscardRectangleStateCreateFlags )       flags;
+            Type ( DiscardRectangleMode )                           discardRectangleMode;
+            cds :: uint32                                           discardRectangleCount;
+            Type ( Rect )                                   const * pDiscardRectangles;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_FRAGMENT_SHADING_RATE_ENUMS_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( PipelineFragmentShadingRateEnumStateCreateInfoNVidia, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                                  structureType;
+            Type ( GenericStructure )                       const * pNext;
+            Type ( FragmentShadingRateTypeNVidia )                  shadingRateType;
+            Type ( FragmentShadingRateNVidia )                      shadingRate;
+            Type ( FragmentShadingRateCombinerOperation )           combinerOperations[2];
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_FRAGMENT_SHADING_RATE_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( PipelineFragmentShadingRateStateCreateInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                                  structureType;
+            Type ( GenericStructure )                       const * pNext;
+            Type ( Extent2D )                                       fragmentSize;
+            Type ( FragmentShadingRateCombinerOperation )           combinerOperations[2];
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( PipelineRenderingCreateInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )              structureType;
+            Type ( GenericStructure )   const * pNext;
+            cds :: uint32                       viewMask;
+            cds :: uint32                       colorAttachmentCount;
+            Type ( Format )             const * pColorAttachmentFormats;
+            Type ( Format )                     depthAttachmentFormat;
+            Type ( Format )                     stencilAttachmentFormat;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_REPRESENTATIVE_FRAGMENT_TEST_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( PipelineRepresentativeFragmentTestStateCreateInfoNVidia, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )              structureType;
+            Type ( GenericStructure )   const * pNext;
+            Type ( Bool )                       representativeFragmentTestEnable;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( PipelineTessellationDomainOriginStateCreateInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )              structureType;
+            Type ( GenericStructure )   const * pNext;
+            Type ( TessellationDomainOrigin )   domainOrigin;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SHADING_RATE_IMAGE_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( CoarseSampleLocationNVidia, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            cds :: uint32   pixelX;
+            cds :: uint32   pixelY;
+            cds :: uint32   sample;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START STRUCT ( CoarseSampleOrderCustomNVidia, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( ShadingRatePaletteEntryNVidia )      shadingRate;
+            cds :: uint32                               sampleCount;
+            cds :: uint32                               sampleLocationCount;
+            Type ( CoarseSampleLocationNVidia ) const * pSampleLocations;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START STRUCT ( PipelineViewportCoarseSampleOrderStateCreateInfoNVidia, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                          structureType;
+            Type ( GenericStructure )               const * pNext;
+            Type ( CoarseSampleOrderTypeNVidia )            sampleOrderType;
+            cds :: uint32                                   customSampleOrderCount;
+            Type ( CoarseSampleOrderCustomNVidia )  const * pCustomSampleOrders;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START STRUCT ( ShadingRatePaletteNVidia, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            cds :: uint32                                   shadingRatePaletteEntryCount;
+            Type ( ShadingRatePaletteEntryNVidia )  const * pShadingRatePaletteEntries;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START STRUCT ( PipelineViewportShadingRateImageStateCreateInfoNVidia, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                          structureType;
+            Type ( GenericStructure )               const * pNext;
+            Type ( Bool )                                   shadingRateImageEnable;
+            cds :: uint32                                   viewportCount;
+            Type ( ShadingRatePaletteNVidia )       const * pShadingRatePalettes;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_DEPTH_CLIP_CONTROL_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( PipelineViewportDepthClipControlCreateInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )              structureType;
+            Type ( GenericStructure )   const * pNext;
+            Type ( Bool )                       negativeOneToOne;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SCISSOR_EXCLUSIVE_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( PipelineViewportExclusiveScissorStateCreateInfoNVidia, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )              structureType;
+            Type ( GenericStructure )   const * pNext;
+            cds :: uint32                       exclusiveScissorCount;
+            Type ( Rect )               const * pExclusiveScissors;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_VIEWPORT_SWIZZLE_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( ViewportSwizzleNVidia, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( ViewportCoordinateSwizzleNVidia )    x;
+            Type ( ViewportCoordinateSwizzleNVidia )    y;
+            Type ( ViewportCoordinateSwizzleNVidia )    z;
+            Type ( ViewportCoordinateSwizzleNVidia )    w;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START STRUCT ( PipelineViewportSwizzleStateCreateInfoNVidia, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                                          structureType;
+            Type ( GenericStructure )                               const * pNext;
+            Type ( PipelineViewportSwizzleStateCreateFlagsNVidia )          flags;
+            cds :: uint32                                                   viewportCount;
+            Type ( ViewportSwizzleNVidia )                          const * pViewportSwizzles;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_CLIP_SPACE_W_SCALING_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( ViewportWScalingNVidia, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            float xCoefficient;
+            float yCoefficient;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START STRUCT ( PipelineViewportWScalingStateCreateInfoNVidia, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                  structureType;
+            Type ( GenericStructure )       const * pNext;
+            Type ( Bool )                           viewportWScalingEnable;
+            cds :: uint32                           viewportCount;
+            Type ( ViewportWScalingNVidia ) const * pViewportWScalings;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_CONSERVATIVE_RASTERIZATION_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( PipelineRasterizationConservativeStateCreateInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                                              structureType;
+            Type ( GenericStructure )                                   const * pNext;
+            Type ( PipelineRasterizationConservativeStateCreateFlags )          flags;
+            Type ( ConservativeRasterizationMode )                              conservativeRasterizationMode;
+            float                                                               extraPrimitiveOverestimationSize;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_DEPTH_CLIP_ENABLE_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( PipelineRasterizationDepthClipStateCreateInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                                              structureType;
+            Type ( GenericStructure )                                   const * pNext;
+            Type ( PipelineRasterizationDepthClipStateCreateFlags )             flags;
+            Type ( Bool )                                                       depthClipEnable;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_LINE_RASTERIZATION_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( PipelineRasterizationLineStateCreateInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                  structureType;
+            Type ( GenericStructure )       const * pNext;
+            Type ( LineRasterizationMode )          lineRasterizationMode;
+            Type ( Bool )                           stippledLineEnable;
+            cds :: uint32                           lineStippleFactor;
+            cds :: uint16                           lineStipplePattern;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_PROVOKING_VERTEX_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( PipelineRasterizationProvokingVertexStateCreateInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                  structureType;
+            Type ( GenericStructure )       const * pNext;
+            Type ( ProvokingVertexMode )            provokingVertexMode;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_AMD_RASTERIZATION_ORDER_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( PipelineRasterizationStateRasterizationOrderAMD, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                  structureType;
+            Type ( GenericStructure )       const * pNext;
+            Type ( RasterizationOrderAMD )          rasterizationOrder;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_TRANSFORM_FEEDBACK_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( PipelineRasterizationStateStreamCreateInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                                      structureType;
+            Type ( GenericStructure )                           const * pNext;
+            Type ( PipelineRasterizationStateStreamCreateFlags )        flags;
+            cds :: uint32                                               rasterizationStream;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_FRAMEBUFFER_MIXED_SAMPLES_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( PipelineCoverageModulationStateCreateInfoNVidia, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                                      structureType;
+            Type ( GenericStructure )                           const * pNext;
+            Type ( PipelineCoverageModulationStateCreateFlagsNVidia )   flags;
+            Type ( CoverageModulationModeNVidia )                       coverageModulationMode;
+            Type ( Bool )                                               coverageModulationTableEnable;
+            cds :: uint32                                               coverageModulationTableCount;
+            float                                               const * pCoverageModulationTable;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_COVERAGE_REDUCTION_MODE_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( PipelineCoverageReductionStateCreateInfoNVidia, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                                      structureType;
+            Type ( GenericStructure )                           const * pNext;
+            Type ( PipelineCoverageReductionStateCreateFlagsNVidia )    flags;
+            Type ( CoverageReductionModeNVidia )                        coverageReductionMode;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_FRAGMENT_COVERAGE_TO_COLOR_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( PipelineCoverageToColorStateCreateInfoNVidia, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                                      structureType;
+            Type ( GenericStructure )                           const * pNext;
+            Type ( PipelineCoverageToColorStateCreateFlagsNVidia )      flags;
+            Type ( Bool )                                               coverageToColorEnable;
+            cds :: uint32                                               coverageToColorLocation;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_SAMPLE_LOCATIONS_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( PipelineSampleLocationsStateCreateInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                                      structureType;
+            Type ( GenericStructure )                           const * pNext;
+            Type ( Bool )                                               sampleLocationsEnable;
+            Type ( SampleLocationsInfo )                                sampleLocationsInfo;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_BLEND_OPERATION_ADVANCED_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( PipelineColorBlendAdvancedStateCreateInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                                      structureType;
+            Type ( GenericStructure )                           const * pNext;
+            Type ( Bool )                                               sourcePremultiplied;
+            Type ( Bool )                                               destinationPremultiplied;
+            Type ( BlendOverlap )                                       blendOverlap;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+
+#if __C_ENG_VULKAN_API_EXTENSION_COLOR_WRITE_ENABLE_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( PipelineColorWriteCreateInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                                      structureType;
+            Type ( GenericStructure )                           const * pNext;
+            cds :: uint32                                               attachmentCount;
+            Type ( Bool )                                       const * pColorWriteEnables;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+
 #define C_ENG_MAP_START     HEADER
 #include <ObjectMapping.hpp>
 
@@ -11124,6 +12492,19 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         NoDiscard auto toString ( Type ( SubpassContents ) ) noexcept -> cds :: StringLiteral;
         NoDiscard auto toString ( Type ( PipelineCreateFlag ) ) noexcept -> cds :: StringLiteral;
         NoDiscard auto toString ( Type ( PipelineShaderStageCreateFlag ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( VertexInputRate ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( PrimitiveTopology ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( PolygonMode ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( CullModeFlag ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( FrontFace ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( CompareOperation ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( StencilOperation ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( LogicOperation ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( PipelineColorBlendStateCreateFlag ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( ColorComponentFlag ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( BlendFactor ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( BlendOperation ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( DynamicState ) ) noexcept -> cds :: StringLiteral;
 
 #endif
 
@@ -11133,6 +12514,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         NoDiscard auto toString ( Type ( ExternalFenceHandleTypeFlag ) ) noexcept -> cds :: StringLiteral;
         NoDiscard auto toString ( Type ( FenceImportFlag ) ) noexcept -> cds :: StringLiteral;
         NoDiscard auto toString ( Type ( SemaphoreImportFlag ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( TessellationDomainOrigin ) ) noexcept -> cds :: StringLiteral;
 
 #endif
 
@@ -11150,13 +12532,63 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         NoDiscard auto toString ( Type ( SubmitFlag ) ) noexcept -> cds :: StringLiteral;
 #endif
 
+#if __C_ENG_VULKAN_API_EXTENSION_CONSERVATIVE_RASTERIZATION_AVAILABLE
+        NoDiscard auto toString ( Type ( ConservativeRasterizationMode ) ) noexcept -> cds :: StringLiteral;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_FRAMEBUFFER_MIXED_SAMPLES_AVAILABLE
+        NoDiscard auto toString ( Type ( CoverageModulationModeNVidia ) ) noexcept -> cds :: StringLiteral;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_BLEND_OPERATION_ADVANCED_AVAILABLE
+        NoDiscard auto toString ( Type ( BlendOverlap ) ) noexcept -> cds :: StringLiteral;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_COVERAGE_REDUCTION_MODE_AVAILABLE
+        NoDiscard auto toString ( Type ( CoverageReductionModeNVidia ) ) noexcept -> cds :: StringLiteral;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_AMD_RASTERIZATION_ORDER_AVAILABLE
+        NoDiscard auto toString ( Type ( RasterizationOrderAMD ) ) noexcept -> cds :: StringLiteral;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_PROVOKING_VERTEX_AVAILABLE
+        NoDiscard auto toString ( Type ( ProvokingVertexMode ) ) noexcept -> cds :: StringLiteral;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_LINE_RASTERIZATION_AVAILABLE
+        NoDiscard auto toString ( Type ( LineRasterizationMode ) ) noexcept -> cds :: StringLiteral;
+#endif
+
 #if __C_ENG_VULKAN_API_EXTENSION_AMD_PIPELINE_COMPILER_CONTROL_AVAILABLE
         NoDiscard auto toString ( Type ( PipelineCompilerControlFlagAMD ) ) noexcept -> cds :: StringLiteral;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_VIEWPORT_SWIZZLE_AVAILABLE
+        NoDiscard auto toString ( Type ( ViewportCoordinateSwizzleNVidia ) ) noexcept -> cds :: StringLiteral;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_FRAGMENT_SHADING_RATE_ENUMS_AVAILABLE
+        NoDiscard auto toString ( Type ( FragmentShadingRateNVidia ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( FragmentShadingRateTypeNVidia ) ) noexcept -> cds :: StringLiteral;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_FRAGMENT_SHADING_RATE_AVAILABLE
+        NoDiscard auto toString ( Type ( FragmentShadingRateCombinerOperation ) ) noexcept -> cds :: StringLiteral;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_DISCARD_RECTANGLES_AVAILABLE
+        NoDiscard auto toString ( Type ( DiscardRectangleMode ) ) noexcept -> cds :: StringLiteral;
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_COOPERATIVE_MATRIX_AVAILABLE
         NoDiscard auto toString ( Type ( ComponentTypeNVidia ) ) noexcept -> cds :: StringLiteral;
         NoDiscard auto toString ( Type ( ScopeNVidia ) ) noexcept -> cds :: StringLiteral;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SHADING_RATE_IMAGE_AVAILABLE
+        NoDiscard auto toString ( Type ( CoarseSampleOrderTypeNVidia ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( ShadingRatePaletteEntryNVidia ) ) noexcept -> cds :: StringLiteral;
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_DISPLAY_CONTROL_AVAILABLE
@@ -11310,6 +12742,21 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         NoDiscard auto toString ( Type ( SpecializationInfo ) const & ) noexcept -> cds :: String;
         NoDiscard auto toString ( Type ( SpecializationMapEntry ) const & ) noexcept -> cds :: String;
 
+        NoDiscard auto toString ( Type ( GraphicsPipelineCreateInfo ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( PipelineVertexInputStateCreateInfo ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( PipelineInputAssemblyStateCreateInfo ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( PipelineTessellationStateCreateInfo ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( PipelineViewportStateCreateInfo ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( PipelineRasterizationStateCreateInfo ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( PipelineMultisampleStateCreateInfo ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( PipelineDepthStencilStateCreateInfo ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( PipelineColorBlendStateCreateInfo ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( PipelineDynamicStateCreateInfo ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( VertexInputBindingDescription ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( VertexInputAttributeDescription ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( StencilOperationState ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( PipelineColorBlendAttachmentState ) const & ) noexcept -> cds :: String;
+
 #endif
 
 #if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
@@ -11347,6 +12794,8 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         NoDiscard auto toString ( Type ( InputAttachmentAspectReference ) const & ) noexcept -> cds :: String;
         NoDiscard auto toString ( Type ( RenderPassInputAttachmentAspectCreateInfo ) const & ) noexcept -> cds :: String;
         NoDiscard auto toString ( Type ( RenderPassMultiviewCreateInfo ) const & ) noexcept -> cds :: String;
+
+        NoDiscard auto toString ( Type ( PipelineTessellationDomainOriginStateCreateInfo ) const & ) noexcept -> cds :: String;
 
 #endif
 
@@ -11409,8 +12858,64 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         NoDiscard auto toString ( Type ( PipelineCreationFeedbackCreateInfo ) const & ) noexcept -> cds :: String;
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE
+        NoDiscard auto toString ( Type ( PipelineRenderingCreateInfo ) const & ) noexcept -> cds :: String;
+#endif
+
 #if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_SUBGROUP_SIZE_CONTROL_AVAILABLE
         NoDiscard auto toString ( Type ( PipelineShaderStageRequiredSubgroupSizeCreateInfo ) const & ) noexcept -> cds :: String;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_FRAMEBUFFER_MIXED_SAMPLES_AVAILABLE
+        NoDiscard auto toString ( Type ( PipelineCoverageModulationStateCreateInfoNVidia ) const & ) noexcept -> cds :: String;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_COLOR_WRITE_ENABLE_AVAILABLE
+        NoDiscard auto toString ( Type ( PipelineColorWriteCreateInfo ) const & ) noexcept -> cds :: String;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_BLEND_OPERATION_ADVANCED_AVAILABLE
+        NoDiscard auto toString ( Type ( PipelineColorBlendAdvancedStateCreateInfo ) const & ) noexcept -> cds :: String;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_SAMPLE_LOCATIONS_AVAILABLE
+        NoDiscard auto toString ( Type ( PipelineSampleLocationsStateCreateInfo ) const & ) noexcept -> cds :: String;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_COVERAGE_REDUCTION_MODE_AVAILABLE
+        NoDiscard auto toString ( Type ( PipelineCoverageReductionStateCreateInfoNVidia ) const & ) noexcept -> cds :: String;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_FRAGMENT_COVERAGE_TO_COLOR_AVAILABLE
+        NoDiscard auto toString ( Type ( PipelineCoverageToColorStateCreateInfoNVidia ) const & ) noexcept -> cds :: String;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_AMD_RASTERIZATION_ORDER_AVAILABLE
+        NoDiscard auto toString ( Type ( PipelineRasterizationStateRasterizationOrderAMD ) const & ) noexcept -> cds :: String;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_TRANSFORM_FEEDBACK_AVAILABLE
+        NoDiscard auto toString ( Type ( PipelineRasterizationStateStreamCreateInfo ) const & ) noexcept -> cds :: String;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_PROVOKING_VERTEX_AVAILABLE
+        NoDiscard auto toString ( Type ( PipelineRasterizationProvokingVertexStateCreateInfo ) const & ) noexcept -> cds :: String;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_DEPTH_CLIP_CONTROL_AVAILABLE
+        NoDiscard auto toString ( Type ( PipelineViewportDepthClipControlCreateInfo ) const & ) noexcept -> cds :: String;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_LINE_RASTERIZATION_AVAILABLE
+        NoDiscard auto toString ( Type ( PipelineRasterizationLineStateCreateInfo ) const & ) noexcept -> cds :: String;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_CONSERVATIVE_RASTERIZATION_AVAILABLE
+        NoDiscard auto toString ( Type ( PipelineRasterizationConservativeStateCreateInfo ) const & ) noexcept -> cds :: String;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_REPRESENTATIVE_FRAGMENT_TEST_AVAILABLE
+        NoDiscard auto toString ( Type ( PipelineRepresentativeFragmentTestStateCreateInfoNVidia ) const & ) noexcept -> cds :: String;
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_VALIDATION_CACHE_AVAILABLE
@@ -11418,8 +12923,44 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         NoDiscard auto toString ( Type ( ValidationCacheCreateInfo ) const & ) noexcept -> cds :: String;
 #endif
 
+#if __C_ENG_VULKAN_API_EXTENSION_VERTEX_ATTRIBUTE_DIVISOR_AVAILABLE
+        NoDiscard auto toString ( Type ( PipelineVertexInputDivisorStateCreateInfo ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( VertexInputBindingDivisorDescription ) const & ) noexcept -> cds :: String;
+#endif
+
 #if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_COOPERATIVE_MATRIX_AVAILABLE
         NoDiscard auto toString ( Type ( CooperativeMatrixPropertiesNVidia ) const & ) noexcept -> cds :: String;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SCISSOR_EXCLUSIVE_AVAILABLE
+        NoDiscard auto toString ( Type ( PipelineViewportExclusiveScissorStateCreateInfoNVidia ) const & ) noexcept -> cds :: String;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_CLIP_SPACE_W_SCALING_AVAILABLE
+        NoDiscard auto toString ( Type ( ViewportWScalingNVidia ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( PipelineViewportWScalingStateCreateInfoNVidia ) const & ) noexcept -> cds :: String;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_VIEWPORT_SWIZZLE_AVAILABLE
+        NoDiscard auto toString ( Type ( ViewportSwizzleNVidia ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( PipelineViewportSwizzleStateCreateInfoNVidia ) const & ) noexcept -> cds :: String;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SHADING_RATE_IMAGE_AVAILABLE
+        NoDiscard auto toString ( Type ( CoarseSampleLocationNVidia ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( CoarseSampleOrderCustomNVidia ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( PipelineViewportCoarseSampleOrderStateCreateInfoNVidia ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( ShadingRatePaletteNVidia ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( PipelineViewportShadingRateImageStateCreateInfoNVidia ) const & ) noexcept -> cds :: String;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_FRAGMENT_SHADING_RATE_AVAILABLE
+        NoDiscard auto toString ( Type ( PipelineFragmentShadingRateStateCreateInfo ) const & ) noexcept -> cds :: String;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEVICE_GENERATED_COMMANDS_AVAILABLE
+        NoDiscard auto toString ( Type ( GraphicsShaderGroupCreateInfoNVidia ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( GraphicsPipelineShaderGroupsCreateInfoNVidia ) const & ) noexcept -> cds :: String;
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_AMD_PIPELINE_COMPILER_CONTROL_AVAILABLE
@@ -11453,7 +12994,6 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #endif
 
 #if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
-
         NoDiscard auto toString ( Type ( SemaphoreSubmitInfo ) const & ) noexcept -> cds :: String;
         NoDiscard auto toString ( Type ( CommandBufferSubmitInfo ) const & ) noexcept -> cds :: String;
         NoDiscard auto toString ( Type ( SubmitInfo2 ) const & ) noexcept -> cds :: String;
@@ -11462,7 +13002,6 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         NoDiscard auto toString ( Type ( BufferMemoryBarrier2 ) const & ) noexcept -> cds :: String;
         NoDiscard auto toString ( Type ( ImageMemoryBarrier2 ) const & ) noexcept -> cds :: String;
         NoDiscard auto toString ( Type ( DependencyInfo ) const & ) noexcept -> cds :: String;
-
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_VALIDATION_FLAGS_AVAILABLE
@@ -11559,9 +13098,8 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_DISCARD_RECTANGLES_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceDiscardRectangleProperties ) const & ) noexcept -> cds :: String;
-
+        NoDiscard auto toString ( Type ( PhysicalDeviceDiscardRectangleProperties ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( PipelineDiscardRectangleStateCreateInfo ) const & ) noexcept -> cds :: String;
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_EXTERNAL_MEMORY_HOST_AVAILABLE
@@ -11589,9 +13127,8 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_FRAGMENT_SHADING_RATE_ENUMS_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceFragmentShadingRateEnumsPropertiesNVidia ) const & ) noexcept -> cds :: String;
-
+        NoDiscard auto toString ( Type ( PhysicalDeviceFragmentShadingRateEnumsPropertiesNVidia ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( PipelineFragmentShadingRateEnumStateCreateInfoNVidia ) const & ) noexcept -> cds :: String;
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_FRAGMENT_SHADING_RATE_AVAILABLE
@@ -11865,7 +13402,8 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #if __C_ENG_VULKAN_API_EXTENSION_DEPTH_CLIP_ENABLE_AVAILABLE
 
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceDepthClipEnableFeatures ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( PhysicalDeviceDepthClipEnableFeatures ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( PipelineRasterizationDepthClipStateCreateInfo ) const & ) noexcept -> cds :: String;
 
 #endif
 

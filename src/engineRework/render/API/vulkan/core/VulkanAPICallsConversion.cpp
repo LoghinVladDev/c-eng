@@ -5,44 +5,11 @@
 #include <VulkanAPICallsConversion.hpp>
 #include <VulkanAPICallsPrivate.hpp>
 #include <VulkanAPICallsTypes.hpp>
+#include <VulkanAPICallsConversionContextDiagnosis.hpp>
 #include <CDS/String>
 
 #define C_ENG_MAP_START     SOURCE
 #include <ObjectMapping.hpp>
-
-#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
-
-#if defined(__CDS_compiler_clang) || defined(__CDS_compiler_gcc)
-
-#define __C_ENG_DIAG_SET_CONTEXT_ERROR(_pContext, _error, ...)   _pContext->diag = {        \
-    .error      = _error,                                                                   \
-    .file       = __FILE__,                                                                 \
-    .function   = __PRETTY_FUNCTION__,                                                      \
-    .line       = __LINE__,                                                                 \
-    .pMessage   = (__VA_ARGS__).copy()                                                      \
-};
-
-#elif defined(__CDS_compiler_MinGW)
-
-#define __C_ENG_DIAG_SET_CONTEXT_ERROR(_pContext, _error, ...)   _pContext->diag = {    \
-    .error      = _error,                                                               \
-    .file       = __FILE__,                                                             \
-    .function   = __PRETTY_FUNCTION__,                                                  \
-    .line       = __LINE__,                                                             \
-    .pMessage   = (__VA_ARGS__).copy()                                                  \
-};
-
-#else
-
-#error Define The __C_ENG_DIAG_SET_CONTEXT_ERROR macro set for the selected compiler
-
-#endif
-
-#else
-
-#define __C_ENG_DIAG_SET_CONTEXT_ERROR(_pContext, _error, ...)
-
-#endif
 
 
 namespace engine :: vulkan {

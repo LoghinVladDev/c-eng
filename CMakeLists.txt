@@ -249,6 +249,7 @@ set (
         src/engineRework/render/API/vulkan/core/VulkanAPICalls.cpp
 
         src/engineRework/render/API/vulkan/core/VulkanAPICallsConversion.cpp
+        src/engineRework/render/API/vulkan/core/VulkanAPICallsConversion2.cpp
         src/engineRework/render/API/vulkan/core/VulkanAPICallsConversion.hpp
 
         src/engineRework/render/API/vulkan/core/VulkanAPIExceptions.hpp

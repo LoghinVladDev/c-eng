@@ -922,12 +922,32 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         ) noexcept -> Type ( Result );
 #endif
 
+
+#if __C_ENG_VULKAN_API_EXTENSION_HUAWEI_SUBPASS_SHADING_AVAILABLE
+        NoDiscard MaybeUnused extern auto getDeviceSubpassShadingMaxWorkgroupSizeHuawei (
+                Type ( DeviceHandle ),
+                Type ( RenderPassHandle ),
+                Type ( Extent2D )           *
+        ) noexcept -> Type ( Result );
+#endif
+
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
         NoDiscard MaybeUnused extern auto createComputePipelines (
                 Type ( DeviceHandle ),
                 Type ( PipelineCacheHandle ),
                 cds :: uint32,
                 Type ( ComputePipelineCreateInfo )  const *,
+                Type ( AllocationCallbacks )        const *,
+                Type ( PipelineHandle )                   *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+        NoDiscard MaybeUnused extern auto createGraphicsPipelines (
+                Type ( DeviceHandle ),
+                Type ( PipelineCacheHandle ),
+                cds :: uint32,
+                Type ( GraphicsPipelineCreateInfo ) const *,
                 Type ( AllocationCallbacks )        const *,
                 Type ( PipelineHandle )                   *
         ) noexcept -> Type ( Result );

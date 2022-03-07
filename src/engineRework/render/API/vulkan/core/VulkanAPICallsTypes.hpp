@@ -1038,12 +1038,178 @@ struct CreateComputePipelineContext {
     VkSubpassShadingPipelineCreateInfoHUAWEI                subpassShadingCreateInfos [ engine :: vulkan :: config :: computePipelineCount ];
 #endif
 #if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_SUBGROUP_SIZE_CONTROL_AVAILABLE
-    VkPipelineShaderStageRequiredSubgroupSizeCreateInfo     requiredSubgroupSizeCreateInfos [ engine :: vulkan :: config :: computePipelineCount ];
+    VkPipelineShaderStageRequiredSubgroupSizeCreateInfo_t   requiredSubgroupSizeCreateInfos [ engine :: vulkan :: config :: computePipelineCount ];
+#endif
+};
+
+struct CreateGraphicsPipelineContext {
+    DiagnosticContext                                           diag;
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    VkGraphicsPipelineCreateInfo                                createInfos [ engine :: vulkan :: config :: graphicsPipelineCount ];
+    VkPipelineShaderStageCreateInfo                             shaderStageCreateInfos [ engine :: vulkan :: config :: graphicsPipelineCount ] [ engine :: vulkan :: config :: graphicsPipelineShaderStageCount ];
+    VkSpecializationInfo                                        shaderStageSpecializationInfos [ engine :: vulkan :: config :: graphicsPipelineCount ] [ engine :: vulkan :: config :: graphicsPipelineShaderStageCount ];
+    VkSpecializationMapEntry                                    shaderStageSpecializationMapEntries [ engine :: vulkan :: config :: graphicsPipelineCount ] [ engine :: vulkan :: config :: graphicsPipelineShaderStageCount ] [ engine :: vulkan :: config :: graphicsPipelineSpecializationMapEntryCount ];
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_SUBGROUP_SIZE_CONTROL_AVAILABLE
+    VkPipelineShaderStageRequiredSubgroupSizeCreateInfo_t       requiredSubgroupSizeCreateInfos [ engine :: vulkan :: config :: graphicsPipelineCount ] [ engine :: vulkan :: config :: graphicsPipelineShaderStageCount ];
+#endif
+
+    VkPipelineVertexInputStateCreateInfo                        vertexInputStateCreateInfos [ engine :: vulkan :: config :: graphicsPipelineCount ];
+    VkVertexInputBindingDescription                             vertexInputBindingDescriptions [ engine :: vulkan :: config :: graphicsPipelineCount ] [ engine :: vulkan :: config :: graphicsPipelineVertexInputBindingCount ];
+    VkVertexInputAttributeDescription                           vertexInputAttributeDescriptions [ engine :: vulkan :: config :: graphicsPipelineCount ] [ engine :: vulkan :: config :: graphicsPipelineVertexInputAttributeCount ];
+#if __C_ENG_VULKAN_API_EXTENSION_VERTEX_ATTRIBUTE_DIVISOR_AVAILABLE
+    VkPipelineVertexInputDivisorStateCreateInfoEXT              vertexInputDivisorStateCreateInfos [ engine :: vulkan :: config :: graphicsPipelineCount ];
+    VkVertexInputBindingDivisorDescriptionEXT                   vertexInputDivisorDescriptions [ engine :: vulkan :: config :: graphicsPipelineCount ] [ engine :: vulkan :: config :: graphicsPipelineVertexInputBindingDivisorCount ];
+#endif
+
+    VkPipelineInputAssemblyStateCreateInfo                      inputAssemblyStateCreateInfos [ engine :: vulkan :: config :: graphicsPipelineCount ];
+
+    VkPipelineTessellationStateCreateInfo                       tessellationStateCreateInfos [ engine :: vulkan :: config :: graphicsPipelineCount ];
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    VkPipelineTessellationDomainOriginStateCreateInfo           tessellationDomainOriginStateCreateInfos [ engine :: vulkan :: config :: graphicsPipelineCount ];
+#endif
+
+    VkPipelineViewportStateCreateInfo                           viewportStateCreateInfos [ engine :: vulkan :: config :: graphicsPipelineCount ];
+    VkViewport                                                  viewportStateViewports [ engine :: vulkan :: config :: graphicsPipelineCount ] [ engine :: vulkan :: config :: graphicsPipelineViewportCount ];
+    VkRect2D                                                    viewportStateScissors [ engine :: vulkan :: config :: graphicsPipelineCount ] [ engine :: vulkan :: config :: graphicsPipelineScissorCount ];
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SHADING_RATE_IMAGE_AVAILABLE
+    VkPipelineViewportCoarseSampleOrderStateCreateInfoNV        viewportCoarseSampleOrderStateCreateInfos [ engine :: vulkan :: config :: graphicsPipelineCount ];
+    VkCoarseSampleOrderCustomNV                                 viewportCoarseSampleCustomOrders [ engine :: vulkan :: config :: graphicsPipelineCount ] [ engine :: vulkan :: config :: graphicsPipelineViewportCustomSampleOrderCount ];
+    VkCoarseSampleLocationNV                                    viewportCoarseSampleCustomLocations [ engine :: vulkan :: config :: graphicsPipelineCount ] [ engine :: vulkan :: config :: graphicsPipelineViewportCustomSampleOrderCount ] [ engine :: vulkan :: config :: graphicsPipelineViewportCustomSampleLocationCount ];
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_DEPTH_CLIP_CONTROL_AVAILABLE
+    VkPipelineViewportDepthClipControlCreateInfoEXT             viewportDepthClipControlCreateInfos [ engine :: vulkan :: config :: graphicsPipelineCount ];
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SCISSOR_EXCLUSIVE_AVAILABLE
+    VkPipelineViewportExclusiveScissorStateCreateInfoNV         viewportExclusiveScissorStateCreateInfos [ engine :: vulkan :: config :: graphicsPipelineCount ];
+    VkRect2D                                                    viewportExclusiveScissors [ engine :: vulkan :: config :: graphicsPipelineCount ] [ engine :: vulkan :: config :: graphicsPipelineScissorCount ];
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SHADING_RATE_IMAGE_AVAILABLE
+    VkPipelineViewportShadingRateImageStateCreateInfoNV         viewportShadingRateImageStateCreateInfos [ engine :: vulkan :: config :: graphicsPipelineCount ];
+    VkShadingRatePaletteNV                                      viewportShadingRatePalettes [ engine :: vulkan :: config :: graphicsPipelineCount ] [ engine :: vulkan :: config :: graphicsPipelineViewportCount ];
+    VkShadingRatePaletteEntryNV                                 viewportShadingRatePaletteEntries [ engine :: vulkan :: config :: graphicsPipelineCount ] [ engine :: vulkan :: config :: graphicsPipelineViewportCount ] [ engine :: vulkan :: config :: graphicsPipelineViewportShadingRatePaletteEntryCount ];
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_VIEWPORT_SWIZZLE_AVAILABLE
+    VkPipelineViewportSwizzleStateCreateInfoNV                  viewportSwizzleStateCreateInfos [ engine :: vulkan :: config :: graphicsPipelineCount ];
+    VkViewportSwizzleNV                                         viewportSwizzles [ engine :: vulkan :: config :: graphicsPipelineCount ] [ engine :: vulkan :: config :: graphicsPipelineViewportCount ];
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_CLIP_SPACE_W_SCALING_AVAILABLE
+    VkPipelineViewportWScalingStateCreateInfoNV                 viewportWScalingStateCreateInfos [ engine :: vulkan :: config :: graphicsPipelineCount ];
+    VkViewportWScalingNV                                        viewportWScalings [ engine :: vulkan :: config :: graphicsPipelineCount ] [ engine :: vulkan :: config :: graphicsPipelineViewportCount ];
+#endif
+
+    VkPipelineRasterizationStateCreateInfo                      rasterizationStateCreateInfos [ engine :: vulkan :: config :: graphicsPipelineCount ];
+#if __C_ENG_VULKAN_API_EXTENSION_CONSERVATIVE_RASTERIZATION_AVAILABLE
+    VkPipelineRasterizationConservativeStateCreateInfoEXT       rasterizationConservativeStateCreateInfos [ engine :: vulkan :: config :: graphicsPipelineCount ];
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_DEPTH_CLIP_ENABLE_AVAILABLE
+    VkPipelineRasterizationDepthClipStateCreateInfoEXT          rasterizationDepthClipStateCreateInfos [ engine :: vulkan :: config :: graphicsPipelineCount ];
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_LINE_RASTERIZATION_AVAILABLE
+    VkPipelineRasterizationLineStateCreateInfoEXT               rasterizationLineStateCreateInfos [ engine :: vulkan :: config :: graphicsPipelineCount ];
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_PROVOKING_VERTEX_AVAILABLE
+    VkPipelineRasterizationProvokingVertexStateCreateInfoEXT    rasterizationProvokingVertexStateCreateInfos [ engine :: vulkan :: config :: graphicsPipelineCount ];
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_AMD_RASTERIZATION_ORDER_AVAILABLE
+    VkPipelineRasterizationStateRasterizationOrderAMD           rasterizationStateRasterizationOrders [ engine :: vulkan :: config :: graphicsPipelineCount ];
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_TRANSFORM_FEEDBACK_AVAILABLE
+    VkPipelineRasterizationStateStreamCreateInfoEXT             rasterizationStateStreamCreateInfos [ engine :: vulkan :: config :: graphicsPipelineCount ];
+#endif
+
+    VkPipelineMultisampleStateCreateInfo                        multisampleStateCreateInfos [ engine :: vulkan :: config :: graphicsPipelineCount ];
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_FRAMEBUFFER_MIXED_SAMPLES_AVAILABLE
+    VkPipelineCoverageModulationStateCreateInfoNV               multisampleCoverageModulationCreateInfos [ engine :: vulkan :: config :: graphicsPipelineCount ];
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_COVERAGE_REDUCTION_MODE_AVAILABLE
+    VkPipelineCoverageReductionStateCreateInfoNV                multisampleCoverageReductionCreateInfos [ engine :: vulkan :: config :: graphicsPipelineCount ];
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_FRAGMENT_COVERAGE_TO_COLOR_AVAILABLE
+    VkPipelineCoverageToColorStateCreateInfoNV                  multisampleCoverageToColorCreateInfos [ engine :: vulkan :: config :: graphicsPipelineCount ];
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_SAMPLE_LOCATIONS_AVAILABLE
+    VkPipelineSampleLocationsStateCreateInfoEXT                 multisampleSampleLocationsCreateInfos [ engine :: vulkan :: config :: graphicsPipelineCount ];
+    VkSampleLocationEXT                                         multisampleSampleLocations [ engine :: vulkan :: config :: graphicsPipelineCount ] [ engine :: vulkan :: config :: graphicsPipelineMultisampleSampleLocations ];
+#endif
+
+    VkPipelineDepthStencilStateCreateInfo                       depthStencilStateCreateInfos [ engine :: vulkan :: config :: graphicsPipelineCount ];
+
+    VkPipelineColorBlendStateCreateInfo                         colorBlendStateCreateInfos [ engine :: vulkan :: config :: graphicsPipelineCount ];
+    VkPipelineColorBlendAttachmentState                         colorBlendStateAttachments [ engine :: vulkan :: config :: graphicsPipelineCount ] [ engine :: vulkan :: config :: graphicsPipelineColorBlendAttachmentCount ];
+#if __C_ENG_VULKAN_API_EXTENSION_BLEND_OPERATION_ADVANCED_AVAILABLE
+    VkPipelineColorBlendAdvancedStateCreateInfoEXT              colorBlendAdvancedStateCreateInfos [ engine :: vulkan :: config :: graphicsPipelineCount ];
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_COLOR_WRITE_ENABLE_AVAILABLE
+    VkPipelineColorWriteCreateInfoEXT                           colorBlendColorWriteCreateInfos [ engine :: vulkan :: config :: graphicsPipelineCount ];
+#endif
+
+    VkPipelineDynamicStateCreateInfo                            dynamicStateCreateInfos [ engine :: vulkan :: config :: graphicsPipelineCount ];
+    VkDynamicState                                              dynamicStateStates [ engine :: vulkan :: config :: graphicsPipelineCount ] [ engine :: vulkan :: config :: graphicsPipelineDynamicStateCount ];
+
+
+#if ( __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE ) && ( __C_ENG_VULKAN_API_EXTENSION_AMD_MIXED_ATTACHMENT_SAMPLES_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_NVIDIA_FRAMEBUFFER_MIXED_SAMPLES_AVAILABLE )
+    VkAttachmentSampleCountInfoAMD                              attachmentSampleCountInfos [ engine :: vulkan :: config :: graphicsPipelineCount ];
+    VkSampleCountFlagBits                                       attachmentSamples [ engine :: vulkan :: config :: graphicsPipelineCount ][ engine :: vulkan :: config :: sampleCountAttachmentSamplesCount ];
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEVICE_GENERATED_COMMANDS_AVAILABLE
+    VkGraphicsPipelineShaderGroupsCreateInfoNV                  pipelineShaderGroupsCreateInfos [ engine :: vulkan :: config :: graphicsPipelineCount ];
+    VkGraphicsShaderGroupCreateInfoNV                           graphicsShaderGroupCreateInfos [ engine :: vulkan :: config :: graphicsPipelineCount ] [ engine :: vulkan :: config :: graphicsPipelineShaderGroupCount ];
+
+    VkPipelineShaderStageCreateInfo                             shaderGroupStageCreateInfos [ engine :: vulkan :: config :: graphicsPipelineCount ] [ engine :: vulkan :: config :: graphicsPipelineShaderGroupCount ] [ engine :: vulkan :: config :: graphicsPipelineShaderStageCount ];
+    VkSpecializationInfo                                        shaderGroupShaderStageSpecializationInfos [ engine :: vulkan :: config :: graphicsPipelineCount ] [ engine :: vulkan :: config :: graphicsPipelineShaderGroupCount ] [ engine :: vulkan :: config :: graphicsPipelineShaderStageCount ];
+    VkSpecializationMapEntry                                    shaderGroupShaderStageSpecializationMapEntries [ engine :: vulkan :: config :: graphicsPipelineCount ] [ engine :: vulkan :: config :: graphicsPipelineShaderGroupCount ] [ engine :: vulkan :: config :: graphicsPipelineShaderStageCount ] [ engine :: vulkan :: config :: graphicsPipelineSpecializationMapEntryCount ];
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_SUBGROUP_SIZE_CONTROL_AVAILABLE
+    VkPipelineShaderStageRequiredSubgroupSizeCreateInfo_t       shaderGroupRequiredSubgroupSizeCreateInfos [ engine :: vulkan :: config :: graphicsPipelineCount ] [ engine :: vulkan :: config :: graphicsPipelineShaderGroupCount ] [ engine :: vulkan :: config :: graphicsPipelineShaderStageCount ];
+#endif
+
+    VkPipelineVertexInputStateCreateInfo                        shaderGroupVertexInputStateCreateInfos [ engine :: vulkan :: config :: graphicsPipelineCount ] [ engine :: vulkan :: config :: graphicsPipelineShaderGroupCount ];
+    VkVertexInputBindingDescription                             shaderGroupVertexInputBindingDescriptions [ engine :: vulkan :: config :: graphicsPipelineCount ] [ engine :: vulkan :: config :: graphicsPipelineShaderGroupCount ] [ engine :: vulkan :: config :: graphicsPipelineVertexInputBindingCount ];
+    VkVertexInputAttributeDescription                           shaderGroupVertexInputAttributeDescriptions [ engine :: vulkan :: config :: graphicsPipelineCount ] [ engine :: vulkan :: config :: graphicsPipelineShaderGroupCount ] [ engine :: vulkan :: config :: graphicsPipelineVertexInputAttributeCount ];
+#if __C_ENG_VULKAN_API_EXTENSION_VERTEX_ATTRIBUTE_DIVISOR_AVAILABLE
+    VkPipelineVertexInputDivisorStateCreateInfoEXT              shaderGroupVertexInputDivisorStateCreateInfos [ engine :: vulkan :: config :: graphicsPipelineCount ] [ engine :: vulkan :: config :: graphicsPipelineShaderGroupCount ];
+    VkVertexInputBindingDivisorDescriptionEXT                   shaderGroupVertexInputDivisorDescriptions [ engine :: vulkan :: config :: graphicsPipelineCount ] [ engine :: vulkan :: config :: graphicsPipelineShaderGroupCount ] [ engine :: vulkan :: config :: graphicsPipelineVertexInputBindingDivisorCount ];
+#endif
+
+    VkPipelineTessellationStateCreateInfo                       shaderGroupTessellationStateCreateInfos [ engine :: vulkan :: config :: graphicsPipelineCount ] [ engine :: vulkan :: config :: graphicsPipelineShaderGroupCount ];
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    VkPipelineTessellationDomainOriginStateCreateInfo           shaderGroupTessellationDomainOriginStateCreateInfos [ engine :: vulkan :: config :: graphicsPipelineCount ] [ engine :: vulkan :: config :: graphicsPipelineShaderGroupCount ];
+#endif
+#endif
+#if ( __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE ||__C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE ) && __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXPERIMENTAL_MULTIVIEW_PER_VIEW_ATTRIBUTES_AVAILABLE
+    VkMultiviewPerViewAttributesInfoNVX                         multiviewPerViewAttributesInfos [ engine :: vulkan :: config :: graphicsPipelineCount ];
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_AMD_PIPELINE_COMPILER_CONTROL_AVAILABLE
+    VkPipelineCompilerControlCreateInfoAMD                      pipelineCompilerControlCreateInfos [ engine :: vulkan :: config :: graphicsPipelineCount ];
+#endif
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_PIPELINE_CREATION_FEEDBACK_AVAILABLE
+    VkPipelineCreationFeedbackCreateInfo_t                      pipelineCreationFeedbackCreateInfos [ engine :: vulkan :: config :: graphicsPipelineCount ];
+    VkPipelineCreationFeedback_t                                pipelineCreationFeedbacks [ engine :: vulkan :: config :: graphicsPipelineCount ];
+    VkPipelineCreationFeedback_t                                pipelineCreationStageFeedbacks [ engine :: vulkan :: config :: graphicsPipelineCount ] [ engine :: vulkan :: config :: graphicsPipelineStageCreationFeedbackCount ];
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_DISCARD_RECTANGLES_AVAILABLE
+    VkPipelineDiscardRectangleStateCreateInfoEXT                discardRectangleStateCreateInfos [ engine :: vulkan :: config :: graphicsPipelineCount ];
+    VkRect2D                                                    discardRectanglesRectangles [ engine :: vulkan :: config :: graphicsPipelineCount ] [ engine :: vulkan :: config :: graphicsPipelineDiscardRectanglesCount ];
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_FRAGMENT_SHADING_RATE_ENUMS_AVAILABLE
+    VkPipelineFragmentShadingRateEnumStateCreateInfoNV          fragmentShadingRateEnumStateCreateInfos [ engine :: vulkan :: config :: graphicsPipelineCount ];
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_FRAGMENT_SHADING_RATE_AVAILABLE
+    VkPipelineFragmentShadingRateStateCreateInfoKHR             fragmentShadingRateStateCreateInfos [ engine :: vulkan :: config :: graphicsPipelineCount ];
+#endif
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE
+    VkPipelineRenderingCreateInfo_t                             dynamicRenderingCreateInfos [ engine :: vulkan :: config :: graphicsPipelineCount ];
+    VkFormat                                                    dynamicRenderingColorAttachmentFormats [ engine :: vulkan :: config :: graphicsPipelineCount ] [ engine :: vulkan :: config :: graphicsPipelineDynamicRenderingColorAttachmentCount ];
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_REPRESENTATIVE_FRAGMENT_TEST_AVAILABLE
+    VkPipelineRepresentativeFragmentTestStateCreateInfoNV       representativeFragmentTestStateCreateInfos [ engine :: vulkan :: config :: graphicsPipelineCount ];
+#endif
+
 #endif
 };
 
 union CreatePipelineSharedContext {
     CreateComputePipelineContext                                        compute;
+    CreateGraphicsPipelineContext                                       graphics;
 };
 
 union EnumerateSharedContext {

@@ -3045,6 +3045,344 @@ namespace engine :: vulkan {
     ) noexcept -> VkSpecializationMapEntry *;
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto prepareContext (
+            CreateGraphicsPipelineContext             *,
+            cds :: uint32,
+            Type ( GraphicsPipelineCreateInfo ) const *
+    ) noexcept -> VkGraphicsPipelineCreateInfo *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto extractContext (
+            cds :: uint32,
+            Type ( GraphicsPipelineCreateInfo )  const *,
+            CreateGraphicsPipelineContext        const *
+    ) noexcept -> void;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto toVulkanFormat (
+            VkGraphicsPipelineCreateInfo              *,
+            Type ( GraphicsPipelineCreateInfo ) const *
+    ) noexcept -> VkGraphicsPipelineCreateInfo *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEVICE_GENERATED_COMMANDS_AVAILABLE
+    extern auto toVulkanFormat (
+            VkGraphicsPipelineShaderGroupsCreateInfoNV                  *,
+            Type ( GraphicsPipelineShaderGroupsCreateInfoNVidia ) const *
+    ) noexcept -> VkGraphicsPipelineShaderGroupsCreateInfoNV *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEVICE_GENERATED_COMMANDS_AVAILABLE
+    extern auto toVulkanFormat (
+            VkGraphicsShaderGroupCreateInfoNV                  *,
+            Type ( GraphicsShaderGroupCreateInfoNVidia ) const *
+    ) noexcept -> VkGraphicsShaderGroupCreateInfoNV *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto toVulkanFormat (
+            VkPipelineVertexInputStateCreateInfo              *,
+            Type ( PipelineVertexInputStateCreateInfo ) const *
+    ) noexcept -> VkPipelineVertexInputStateCreateInfo *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto toVulkanFormat (
+            VkVertexInputBindingDescription              *,
+            Type ( VertexInputBindingDescription ) const *
+    ) noexcept -> VkVertexInputBindingDescription *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto toVulkanFormat (
+            VkVertexInputAttributeDescription              *,
+            Type ( VertexInputAttributeDescription ) const *
+    ) noexcept -> VkVertexInputAttributeDescription *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VERTEX_ATTRIBUTE_DIVISOR_AVAILABLE
+    extern auto toVulkanFormat (
+            VkPipelineVertexInputDivisorStateCreateInfoEXT           *,
+            Type ( PipelineVertexInputDivisorStateCreateInfo ) const *
+    ) noexcept -> VkPipelineVertexInputDivisorStateCreateInfoEXT *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VERTEX_ATTRIBUTE_DIVISOR_AVAILABLE
+    extern auto toVulkanFormat (
+            VkVertexInputBindingDivisorDescriptionEXT           *,
+            Type ( VertexInputBindingDivisorDescription ) const *
+    ) noexcept -> VkVertexInputBindingDivisorDescriptionEXT *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto toVulkanFormat (
+            VkPipelineTessellationStateCreateInfo              *,
+            Type ( PipelineTessellationStateCreateInfo ) const *
+    ) noexcept -> VkPipelineTessellationStateCreateInfo *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    extern auto toVulkanFormat (
+            VkPipelineTessellationDomainOriginStateCreateInfo              *,
+            Type ( PipelineTessellationDomainOriginStateCreateInfo ) const *
+    ) noexcept -> VkPipelineTessellationDomainOriginStateCreateInfo *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_DISCARD_RECTANGLES_AVAILABLE
+    extern auto toVulkanFormat (
+            VkPipelineDiscardRectangleStateCreateInfoEXT           *,
+            Type ( PipelineDiscardRectangleStateCreateInfo ) const *
+    ) noexcept -> VkPipelineDiscardRectangleStateCreateInfoEXT *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_FRAGMENT_SHADING_RATE_ENUMS_AVAILABLE
+    extern auto toVulkanFormat (
+            VkPipelineFragmentShadingRateEnumStateCreateInfoNV                  *,
+            Type ( PipelineFragmentShadingRateEnumStateCreateInfoNVidia ) const *
+    ) noexcept -> VkPipelineFragmentShadingRateEnumStateCreateInfoNV *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_FRAGMENT_SHADING_RATE_AVAILABLE
+    extern auto toVulkanFormat (
+            VkPipelineFragmentShadingRateStateCreateInfoKHR           *,
+            Type ( PipelineFragmentShadingRateStateCreateInfo ) const *
+    ) noexcept -> VkPipelineFragmentShadingRateStateCreateInfoKHR *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE
+    extern auto toVulkanFormat (
+            VkPipelineRenderingCreateInfo_t            *,
+            Type ( PipelineRenderingCreateInfo ) const *
+    ) noexcept -> VkPipelineRenderingCreateInfo_t *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_REPRESENTATIVE_FRAGMENT_TEST_AVAILABLE
+    extern auto toVulkanFormat (
+            VkPipelineRepresentativeFragmentTestStateCreateInfoNV                  *,
+            Type ( PipelineRepresentativeFragmentTestStateCreateInfoNVidia ) const *
+    ) noexcept -> VkPipelineRepresentativeFragmentTestStateCreateInfoNV *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto toVulkanFormat (
+            VkPipelineInputAssemblyStateCreateInfo              *,
+            Type ( PipelineInputAssemblyStateCreateInfo ) const *
+    ) noexcept -> VkPipelineInputAssemblyStateCreateInfo *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto toVulkanFormat (
+            VkPipelineViewportStateCreateInfo              *,
+            Type ( PipelineViewportStateCreateInfo ) const *
+    ) noexcept -> VkPipelineViewportStateCreateInfo *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SHADING_RATE_IMAGE_AVAILABLE
+    extern auto toVulkanFormat (
+            VkPipelineViewportCoarseSampleOrderStateCreateInfoNV                  *,
+            Type ( PipelineViewportCoarseSampleOrderStateCreateInfoNVidia ) const *
+    ) noexcept -> VkPipelineViewportCoarseSampleOrderStateCreateInfoNV *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SHADING_RATE_IMAGE_AVAILABLE
+    extern auto toVulkanFormat (
+            VkCoarseSampleOrderCustomNV                  *,
+            Type ( CoarseSampleOrderCustomNVidia ) const *
+    ) noexcept -> VkCoarseSampleOrderCustomNV *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SHADING_RATE_IMAGE_AVAILABLE
+    extern auto toVulkanFormat (
+            VkCoarseSampleLocationNV                  *,
+            Type ( CoarseSampleLocationNVidia ) const *
+    ) noexcept -> VkCoarseSampleLocationNV *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_DEPTH_CLIP_CONTROL_AVAILABLE
+    extern auto toVulkanFormat (
+            VkPipelineViewportDepthClipControlCreateInfoEXT           *,
+            Type ( PipelineViewportDepthClipControlCreateInfo ) const *
+    ) noexcept -> VkPipelineViewportDepthClipControlCreateInfoEXT *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SCISSOR_EXCLUSIVE_AVAILABLE
+    extern auto toVulkanFormat (
+            VkPipelineViewportExclusiveScissorStateCreateInfoNV                  *,
+            Type ( PipelineViewportExclusiveScissorStateCreateInfoNVidia ) const *
+    ) noexcept -> VkPipelineViewportExclusiveScissorStateCreateInfoNV *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SHADING_RATE_IMAGE_AVAILABLE
+    extern auto toVulkanFormat (
+            VkPipelineViewportShadingRateImageStateCreateInfoNV                  *,
+            Type ( PipelineViewportShadingRateImageStateCreateInfoNVidia ) const *
+    ) noexcept -> VkPipelineViewportShadingRateImageStateCreateInfoNV *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SHADING_RATE_IMAGE_AVAILABLE
+    extern auto toVulkanFormat (
+            VkShadingRatePaletteNV                  *,
+            Type ( ShadingRatePaletteNVidia ) const *
+    ) noexcept -> VkShadingRatePaletteNV *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_VIEWPORT_SWIZZLE_AVAILABLE
+    extern auto toVulkanFormat (
+            VkPipelineViewportSwizzleStateCreateInfoNV                  *,
+            Type ( PipelineViewportSwizzleStateCreateInfoNVidia ) const *
+    ) noexcept -> VkPipelineViewportSwizzleStateCreateInfoNV *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_VIEWPORT_SWIZZLE_AVAILABLE
+    extern auto toVulkanFormat (
+            VkViewportSwizzleNV                  *,
+            Type ( ViewportSwizzleNVidia ) const *
+    ) noexcept -> VkViewportSwizzleNV *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_CLIP_SPACE_W_SCALING_AVAILABLE
+    extern auto toVulkanFormat (
+            VkPipelineViewportWScalingStateCreateInfoNV                  *,
+            Type ( PipelineViewportWScalingStateCreateInfoNVidia ) const *
+    ) noexcept -> VkPipelineViewportWScalingStateCreateInfoNV *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_CLIP_SPACE_W_SCALING_AVAILABLE
+    extern auto toVulkanFormat (
+            VkViewportWScalingNV                  *,
+            Type ( ViewportWScalingNVidia ) const *
+    ) noexcept -> VkViewportWScalingNV *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto toVulkanFormat (
+            VkPipelineRasterizationStateCreateInfo              *,
+            Type ( PipelineRasterizationStateCreateInfo ) const *
+    ) noexcept -> VkPipelineRasterizationStateCreateInfo *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_CONSERVATIVE_RASTERIZATION_AVAILABLE
+    extern auto toVulkanFormat (
+            VkPipelineRasterizationConservativeStateCreateInfoEXT           *,
+            Type ( PipelineRasterizationConservativeStateCreateInfo ) const *
+    ) noexcept -> VkPipelineRasterizationConservativeStateCreateInfoEXT *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_DEPTH_CLIP_ENABLE_AVAILABLE
+    extern auto toVulkanFormat (
+            VkPipelineRasterizationDepthClipStateCreateInfoEXT           *,
+            Type ( PipelineRasterizationDepthClipStateCreateInfo ) const *
+    ) noexcept -> VkPipelineRasterizationDepthClipStateCreateInfoEXT *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_LINE_RASTERIZATION_AVAILABLE
+    extern auto toVulkanFormat (
+            VkPipelineRasterizationLineStateCreateInfoEXT           *,
+            Type ( PipelineRasterizationLineStateCreateInfo ) const *
+    ) noexcept -> VkPipelineRasterizationLineStateCreateInfoEXT *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_PROVOKING_VERTEX_AVAILABLE
+    extern auto toVulkanFormat (
+            VkPipelineRasterizationProvokingVertexStateCreateInfoEXT           *,
+            Type ( PipelineRasterizationProvokingVertexStateCreateInfo ) const *
+    ) noexcept -> VkPipelineRasterizationProvokingVertexStateCreateInfoEXT *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_AMD_RASTERIZATION_ORDER_AVAILABLE
+    extern auto toVulkanFormat (
+            VkPipelineRasterizationStateRasterizationOrderAMD              *,
+            Type ( PipelineRasterizationStateRasterizationOrderAMD ) const *
+    ) noexcept -> VkPipelineRasterizationStateRasterizationOrderAMD *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_TRANSFORM_FEEDBACK_AVAILABLE
+    extern auto toVulkanFormat (
+            VkPipelineRasterizationStateStreamCreateInfoEXT           *,
+            Type ( PipelineRasterizationStateStreamCreateInfo ) const *
+    ) noexcept -> VkPipelineRasterizationStateStreamCreateInfoEXT *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto toVulkanFormat (
+            VkPipelineMultisampleStateCreateInfo              *,
+            Type ( PipelineMultisampleStateCreateInfo ) const *
+    ) noexcept -> VkPipelineMultisampleStateCreateInfo *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_FRAMEBUFFER_MIXED_SAMPLES_AVAILABLE
+    extern auto toVulkanFormat (
+            VkPipelineCoverageModulationStateCreateInfoNV                  *,
+            Type ( PipelineCoverageModulationStateCreateInfoNVidia ) const *
+    ) noexcept -> VkPipelineCoverageModulationStateCreateInfoNV *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_COVERAGE_REDUCTION_MODE_AVAILABLE
+    extern auto toVulkanFormat (
+            VkPipelineCoverageReductionStateCreateInfoNV                  *,
+            Type ( PipelineCoverageReductionStateCreateInfoNVidia ) const *
+    ) noexcept -> VkPipelineCoverageReductionStateCreateInfoNV *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_FRAGMENT_COVERAGE_TO_COLOR_AVAILABLE
+    extern auto toVulkanFormat (
+            VkPipelineCoverageToColorStateCreateInfoNV                  *,
+            Type ( PipelineCoverageToColorStateCreateInfoNVidia ) const *
+    ) noexcept -> VkPipelineCoverageToColorStateCreateInfoNV *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_SAMPLE_LOCATIONS_AVAILABLE
+    extern auto toVulkanFormat (
+            VkPipelineSampleLocationsStateCreateInfoEXT           *,
+            Type ( PipelineSampleLocationsStateCreateInfo ) const *
+    ) noexcept -> VkPipelineSampleLocationsStateCreateInfoEXT *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto toVulkanFormat (
+            VkPipelineDepthStencilStateCreateInfo              *,
+            Type ( PipelineDepthStencilStateCreateInfo ) const *
+    ) noexcept -> VkPipelineDepthStencilStateCreateInfo *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto toVulkanFormat (
+            VkPipelineColorBlendStateCreateInfo              *,
+            Type ( PipelineColorBlendStateCreateInfo ) const *
+    ) noexcept -> VkPipelineColorBlendStateCreateInfo *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_BLEND_OPERATION_ADVANCED_AVAILABLE
+    extern auto toVulkanFormat (
+            VkPipelineColorBlendAdvancedStateCreateInfoEXT           *,
+            Type ( PipelineColorBlendAdvancedStateCreateInfo ) const *
+    ) noexcept -> VkPipelineColorBlendAdvancedStateCreateInfoEXT *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_COLOR_WRITE_ENABLE_AVAILABLE
+    extern auto toVulkanFormat (
+            VkPipelineColorWriteCreateInfoEXT           *,
+            Type ( PipelineColorWriteCreateInfo ) const *
+    ) noexcept -> VkPipelineColorWriteCreateInfoEXT *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto toVulkanFormat (
+            VkPipelineColorBlendAttachmentState              *,
+            Type ( PipelineColorBlendAttachmentState ) const *
+    ) noexcept -> VkPipelineColorBlendAttachmentState *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto toVulkanFormat (
+            VkPipelineDynamicStateCreateInfo              *,
+            Type ( PipelineDynamicStateCreateInfo ) const *
+    ) noexcept -> VkPipelineDynamicStateCreateInfo *;
+#endif
+
 }
 
 #define C_ENG_MAP_END

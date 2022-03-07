@@ -225,7 +225,7 @@ auto vulkan :: toString (
         case StructureTypePhysicalDevicePointClippingProperties:                                    { asString = "StructureTypePhysicalDevicePointClippingProperties";                              break; }
         case StructureTypeRenderPassInputAttachmentAspectCreateInfo:                                { asString = "StructureTypeRenderPassInputAttachmentAspectCreateInfo";                          break; }
         case StructureTypeImageViewUsageCreateInfo:                                                 { asString = "StructureTypeImageViewUsageCreateInfo";                                           break; }
-        case StructureTypePipelineTesselationDomainOriginStateCreateInfo:                           { asString = "StructureTypePipelineTesselationDomainOriginStateCreateInfo";                     break; }
+        case StructureTypePipelineTessellationDomainOriginStateCreateInfo:                          { asString = "StructureTypePipelineTesselationDomainOriginStateCreateInfo";                     break; }
         case StructureTypeRenderPassMultiviewCreateInfo:                                            { asString = "StructureTypeRenderPassMultiviewCreateInfo";                                      break; }
         case StructureTypePhysicalDeviceMultiviewFeatures:                                          { asString = "StructureTypePhysicalDeviceMultiviewFeatures";                                    break; }
         case StructureTypePhysicalDeviceMultiviewProperties:                                        { asString = "StructureTypePhysicalDeviceMultiviewProperties";                                  break; }
@@ -9108,7 +9108,7 @@ auto vulkan :: toString (
         Type ( ClearColorValue ) const & value
 ) noexcept -> String {
 
-    return __C_ENG_STRINGIFY ( ClearColorValue ) " " +
+    return __C_ENG_STRINGIFY ( Type ( ClearColorValue ) ) " " +
             "{ float32 = "_s    + :: toStringRegular ( 4, & value.float32[0] ) +
             ", int32 = "        + :: toStringRegular ( 4, & value.int32[0] ) +
             ", uint32 = "       + :: toStringRegular ( 4, & value.uint32[0] ) +
@@ -9121,7 +9121,7 @@ auto vulkan :: toString (
         Type ( ClearDepthStencilValue ) const & value
 ) noexcept -> String {
 
-    return __C_ENG_STRINGIFY ( ClearDepthStencilValue ) " " +
+    return __C_ENG_STRINGIFY ( Type ( ClearDepthStencilValue ) ) " " +
             "{ depth = "_s      + value.depth +
             ", stencil = "      + value.stencil +
             " }";
@@ -9133,7 +9133,7 @@ auto vulkan :: toString (
         Type ( ClearValue ) const & value
 ) noexcept -> String {
 
-    return __C_ENG_STRINGIFY ( ClearValue ) " " +
+    return __C_ENG_STRINGIFY ( Type ( ClearValue ) ) " " +
             "{ color = "_s          + toString ( value.color ) +
             " OR depthStencil = "   + toString ( value.depthStencil ) +
             " }";
@@ -9145,7 +9145,7 @@ auto vulkan :: toString (
         Type ( RenderingAttachmentInfo ) const & info
 ) noexcept -> String {
 
-    return __C_ENG_STRINGIFY ( RenderingAttachmentInfo ) " " +
+    return __C_ENG_STRINGIFY ( Type ( RenderingAttachmentInfo ) ) " " +
            "{ structureType = "_s               + toString ( info.structureType ) +
            ", pNext = "                         + engine :: toString ( info.pNext ) +
            ", imageView = "                     + engine :: toString ( info.imageView ) +
@@ -9165,7 +9165,7 @@ auto vulkan :: toString (
         Type ( RenderingInfo ) const & info
 ) noexcept -> String {
 
-    return __C_ENG_STRINGIFY ( RenderingInfo ) " " +
+    return __C_ENG_STRINGIFY ( Type ( RenderingInfo ) ) " " +
            "{ structureType = "_s               + toString ( info.structureType ) +
            ", pNext = "                         + engine :: toString ( info.pNext ) +
            ", flags = "                         + "0b" + Long ( info.flags ).toString(2) +
@@ -9185,7 +9185,7 @@ auto vulkan :: toString (
         Type ( DeviceGroupRenderPassBeginInfo ) const & info
 ) noexcept -> String {
 
-    return __C_ENG_STRINGIFY ( DeviceGroupRenderPassBeginInfo ) " " +
+    return __C_ENG_STRINGIFY ( Type ( DeviceGroupRenderPassBeginInfo ) ) " " +
            "{ structureType = "_s               + toString ( info.structureType ) +
            ", pNext = "                         + engine :: toString ( info.pNext ) +
            ", deviceMask = "                    + info.deviceMask +
@@ -9200,7 +9200,7 @@ auto vulkan :: toString (
         Type ( RenderingFragmentDensityMapAttachmentInfo ) const & info
 ) noexcept -> String {
 
-    return __C_ENG_STRINGIFY ( RenderingFragmentDensityMapAttachmentInfo ) " " +
+    return __C_ENG_STRINGIFY ( Type ( RenderingFragmentDensityMapAttachmentInfo ) ) " " +
            "{ structureType = "_s               + toString ( info.structureType ) +
            ", pNext = "                         + engine :: toString ( info.pNext ) +
            ", imageView = "                     + engine :: toString ( info.imageView ) +
@@ -9214,7 +9214,7 @@ auto vulkan :: toString (
         Type ( RenderingFragmentShadingRateAttachmentInfo ) const & info
 ) noexcept -> String {
 
-    return __C_ENG_STRINGIFY ( RenderingFragmentShadingRateAttachmentInfo ) " " +
+    return __C_ENG_STRINGIFY ( Type ( RenderingFragmentShadingRateAttachmentInfo ) ) " " +
            "{ structureType = "_s                   + toString ( info.structureType ) +
            ", pNext = "                             + engine :: toString ( info.pNext ) +
            ", imageView = "                         + engine :: toString ( info.imageView ) +
@@ -9312,7 +9312,7 @@ auto vulkan :: toString (
         Type ( AttachmentDescription ) const & description
 ) noexcept -> String {
 
-    return __C_ENG_STRINGIFY ( AttachmentDescription ) " " +
+    return __C_ENG_STRINGIFY ( Type ( AttachmentDescription ) ) " " +
            "{ flags = "_s                           + "0b" + Long ( description.flags ).toString(2) +
            ", format = "                            + toString ( description.format ) +
            ", samples = "                           + toString ( description.samples ) +
@@ -9331,7 +9331,7 @@ auto vulkan :: toString (
         Type ( AttachmentReference ) const & description
 ) noexcept -> String {
 
-    return __C_ENG_STRINGIFY ( AttachmentReference ) " " +
+    return __C_ENG_STRINGIFY ( Type ( AttachmentReference ) ) " " +
            "{ attachment = "_s                      + description.attachment +
            ", layout = "                            + toString ( description.layout ) +
            " }";
@@ -9343,7 +9343,7 @@ auto vulkan :: toString (
         Type ( SubpassDescription ) const & description
 ) noexcept -> String {
 
-    return __C_ENG_STRINGIFY ( SubpassDescription ) " " +
+    return __C_ENG_STRINGIFY ( Type ( SubpassDescription ) ) " " +
            "{ flags = "_s                           + "0b" + Long ( description.flags ).toString(2) +
            ", pipelineBindPoint = "                 + toString ( description.pipelineBindPoint ) +
            ", inputAttachmentCount = "              + description.inputAttachmentCount +
@@ -9363,7 +9363,7 @@ auto vulkan :: toString (
         Type ( SubpassDependency ) const & dependency
 ) noexcept -> String {
 
-    return __C_ENG_STRINGIFY ( SubpassDependency ) " " +
+    return __C_ENG_STRINGIFY ( Type ( SubpassDependency ) ) " " +
            "{ sourceSubpass = "_s       + dependency.sourceSubpass +
            ", destinationSubpass = "    + dependency.destinationSubpass +
            ", sourceStageMask = "       + "0b" + Long ( static_cast < cds :: uint64 > ( dependency.sourceStageMask ) ).toString(2) +
@@ -9380,7 +9380,7 @@ auto vulkan :: toString (
         Type ( RenderPassCreateInfo ) const & info
 ) noexcept -> String {
 
-    return __C_ENG_STRINGIFY ( RenderPassCreateInfo ) " " +
+    return __C_ENG_STRINGIFY ( Type ( RenderPassCreateInfo ) ) " " +
            "{ structureType = "_s                   + toString ( info.structureType ) +
            ", pNext = "                             + engine :: toString ( info.pNext ) +
            ", flags = "                             + "0b" + Long ( info.flags ).toString(2) +
@@ -9399,7 +9399,7 @@ auto vulkan :: toString (
         Type ( RenderPassFragmentDensityMapCreateInfo ) const & info
 ) noexcept -> String {
 
-    return __C_ENG_STRINGIFY ( RenderPassFragmentDensityMapCreateInfo ) " " +
+    return __C_ENG_STRINGIFY ( Type ( RenderPassFragmentDensityMapCreateInfo ) ) " " +
            "{ structureType = "_s                   + toString ( info.structureType ) +
            ", pNext = "                             + engine :: toString ( info.pNext ) +
            ", fragmentDensityMapAttachment = "      + toString ( info.fragmentDensityMapAttachment ) +
@@ -9412,7 +9412,7 @@ auto vulkan :: toString (
         Type ( RenderPassInputAttachmentAspectCreateInfo ) const & info
 ) noexcept -> String {
 
-    return __C_ENG_STRINGIFY ( RenderPassInputAttachmentAspectCreateInfo ) " " +
+    return __C_ENG_STRINGIFY ( Type ( RenderPassInputAttachmentAspectCreateInfo ) ) " " +
            "{ structureType = "_s                   + toString ( info.structureType ) +
            ", pNext = "                             + engine :: toString ( info.pNext ) +
            ", aspectReferenceCount = "              + info.aspectReferenceCount +
@@ -9426,7 +9426,7 @@ auto vulkan :: toString (
         Type ( InputAttachmentAspectReference ) const & reference
 ) noexcept -> String {
 
-    return __C_ENG_STRINGIFY ( InputAttachmentAspectReference ) " " +
+    return __C_ENG_STRINGIFY ( Type ( InputAttachmentAspectReference ) ) " " +
            "{ subpass = "_s                     + reference.subpass +
            ", inputAttachmentIndex = "          + reference.inputAttachmentIndex +
            ", aspectMask = "                    + "0b" + Long ( reference.aspectMask ).toString(2) +
@@ -9439,7 +9439,7 @@ auto vulkan :: toString (
         Type ( RenderPassMultiviewCreateInfo ) const & info
 ) noexcept -> String {
 
-    return __C_ENG_STRINGIFY ( RenderPassMultiviewCreateInfo ) " " +
+    return __C_ENG_STRINGIFY ( Type ( RenderPassMultiviewCreateInfo ) ) " " +
            "{ structureType = "_s                   + toString ( info.structureType ) +
            ", pNext = "                             + engine :: toString ( info.pNext ) +
            ", subpassCount = "                      + info.subpassCount +
@@ -9457,7 +9457,7 @@ auto vulkan :: toString (
         Type ( AttachmentDescription2 ) const & description
 ) noexcept -> String {
 
-    return __C_ENG_STRINGIFY ( AttachmentDescription2 ) " " +
+    return __C_ENG_STRINGIFY ( Type ( AttachmentDescription2 ) ) " " +
            "{ structureType = "_s                   + toString ( description.structureType ) +
            ", pNext = "                             + engine :: toString ( description.pNext ) +
            ", flags = "                             + "0b" + Long ( description.flags ).toString(2) +
@@ -9478,7 +9478,7 @@ auto vulkan :: toString (
         Type ( AttachmentDescriptionStencilLayout ) const & layout
 ) noexcept -> String {
 
-    return __C_ENG_STRINGIFY ( AttachmentDescriptionStencilLayout ) " " +
+    return __C_ENG_STRINGIFY ( Type ( AttachmentDescriptionStencilLayout ) ) " " +
            "{ structureType = "_s                   + toString ( layout.structureType ) +
            ", pNext = "                             + engine :: toString ( layout.pNext ) +
            ", stencilInitialLayout = "              + toString ( layout.stencilInitialLayout ) +
@@ -9492,7 +9492,7 @@ auto vulkan :: toString (
         Type ( AttachmentReferenceStencilLayout ) const & layout
 ) noexcept -> String {
 
-    return __C_ENG_STRINGIFY ( AttachmentReferenceStencilLayout ) " " +
+    return __C_ENG_STRINGIFY ( Type ( AttachmentReferenceStencilLayout ) ) " " +
            "{ structureType = "_s                   + toString ( layout.structureType ) +
            ", pNext = "                             + engine :: toString ( layout.pNext ) +
            ", stencilLayout = "                     + toString ( layout.stencilLayout ) +
@@ -9505,7 +9505,7 @@ auto vulkan :: toString (
         Type ( AttachmentReference2 ) const & reference
 ) noexcept -> String {
 
-    return __C_ENG_STRINGIFY ( AttachmentReference2 ) " " +
+    return __C_ENG_STRINGIFY ( Type ( AttachmentReference2 ) ) " " +
            "{ structureType = "_s                   + toString ( reference.structureType ) +
            ", pNext = "                             + engine :: toString ( reference.pNext ) +
            ", attachment = "                        + reference.attachment +
@@ -9520,7 +9520,7 @@ auto vulkan :: toString (
         Type ( SubpassDescription2 ) const & description
 ) noexcept -> String {
 
-    return __C_ENG_STRINGIFY ( SubpassDescription2 ) " " +
+    return __C_ENG_STRINGIFY ( Type ( SubpassDescription2 ) ) " " +
            "{ structureType = "_s                   + toString ( description.structureType ) +
            ", pNext = "                             + engine :: toString ( description.pNext ) +
            ", flags = "                             + "0b" + Long ( description.flags ).toString(2) +
@@ -9543,7 +9543,7 @@ auto vulkan :: toString (
         Type ( SubpassDescriptionDepthStencilResolve ) const & resolve
 ) noexcept -> String {
 
-    return __C_ENG_STRINGIFY ( SubpassDescriptionDepthStencilResolve ) " " +
+    return __C_ENG_STRINGIFY ( Type ( SubpassDescriptionDepthStencilResolve ) ) " " +
            "{ structureType = "_s                   + toString ( resolve.structureType ) +
            ", pNext = "                             + engine :: toString ( resolve.pNext ) +
            ", depthResolveMode = "                  + toString ( resolve.depthResolveMode ) +
@@ -9558,7 +9558,7 @@ auto vulkan :: toString (
         Type ( SubpassDependency2 ) const & dependency
 ) noexcept -> String {
 
-    return __C_ENG_STRINGIFY ( SubpassDependency2 ) " " +
+    return __C_ENG_STRINGIFY ( Type ( SubpassDependency2 ) ) " " +
            "{ structureType = "_s       + toString ( dependency.structureType ) +
            ", pNext = "                 + engine :: toString ( dependency.pNext ) +
            "{ sourceSubpass = "_s       + dependency.sourceSubpass +
@@ -9578,7 +9578,7 @@ auto vulkan :: toString (
         Type ( RenderPassCreateInfo2 ) const & info
 ) noexcept -> String {
 
-    return __C_ENG_STRINGIFY ( RenderPassCreateInfo2 ) " " +
+    return __C_ENG_STRINGIFY ( Type ( RenderPassCreateInfo2 ) ) " " +
            "{ structureType = "_s                   + toString ( info.structureType ) +
            ", pNext = "                             + engine :: toString ( info.pNext ) +
            ", flags = "                             + "0b" + Long ( info.flags ).toString(2) +
@@ -9599,7 +9599,7 @@ auto vulkan :: toString (
         Type ( FragmentShadingRateAttachmentInfo ) const & info
 ) noexcept -> String {
 
-    return __C_ENG_STRINGIFY ( FragmentShadingRateAttachmentInfo ) " " +
+    return __C_ENG_STRINGIFY ( Type ( FragmentShadingRateAttachmentInfo ) ) " " +
            "{ structureType = "_s                   + toString ( info.structureType ) +
            ", pNext = "                             + engine :: toString ( info.pNext ) +
            ", pFragmentShadingRateAttachment = "    + engine :: toString ( info.pFragmentShadingRateAttachment ) +
@@ -9675,7 +9675,7 @@ auto vulkan :: toString (
         Type ( FrameBufferCreateInfo ) const & info
 ) noexcept -> String {
 
-    return __C_ENG_STRINGIFY ( FrameBufferCreateInfo ) " " +
+    return __C_ENG_STRINGIFY ( Type ( FrameBufferCreateInfo ) ) " " +
            "{ structureType = "_s                   + toString ( info.structureType ) +
            ", pNext = "                             + engine :: toString ( info.pNext ) +
            ", flags = "                             + "0b" + Long ( info.flags ).toString(2) +
@@ -9694,7 +9694,7 @@ auto vulkan :: toString (
         Type ( FrameBufferAttachmentImageInfo ) const & info
 ) noexcept -> String {
 
-    return __C_ENG_STRINGIFY ( FrameBufferAttachmentImageInfo ) " " +
+    return __C_ENG_STRINGIFY ( Type ( FrameBufferAttachmentImageInfo ) ) " " +
            "{ structureType = "_s                   + toString ( info.structureType ) +
            ", pNext = "                             + engine :: toString ( info.pNext ) +
            ", flags = "                             + "0b" + Long ( info.flags ).toString(2) +
@@ -9713,7 +9713,7 @@ auto vulkan :: toString (
         Type ( FrameBufferAttachmentsCreateInfo ) const & info
 ) noexcept -> String {
 
-    return __C_ENG_STRINGIFY ( FrameBufferAttachmentsCreateInfo ) " " +
+    return __C_ENG_STRINGIFY ( Type ( FrameBufferAttachmentsCreateInfo ) ) " " +
            "{ structureType = "_s                   + toString ( info.structureType ) +
            ", pNext = "                             + engine :: toString ( info.pNext ) +
            ", attachmentImageInfoCount = "          + info.attachmentImageInfoCount +
@@ -9743,7 +9743,7 @@ auto vulkan :: toString (
         Type ( RenderPassBeginInfo ) const & info
 ) noexcept -> String {
 
-    return __C_ENG_STRINGIFY ( RenderPassBeginInfo ) " " +
+    return __C_ENG_STRINGIFY ( Type ( RenderPassBeginInfo ) ) " " +
            "{ structureType = "_s                   + toString ( info.structureType ) +
            ", pNext = "                             + engine :: toString ( info.pNext ) +
            ", renderPass = "                        + engine :: toString ( info.renderPass ) +
@@ -9760,7 +9760,7 @@ auto vulkan :: toString (
         Type ( RenderPassAttachmentBeginInfo ) const & info
 ) noexcept -> String {
 
-    return __C_ENG_STRINGIFY ( RenderPassAttachmentBeginInfo ) " " +
+    return __C_ENG_STRINGIFY ( Type ( RenderPassAttachmentBeginInfo ) ) " " +
            "{ structureType = "_s                   + toString ( info.structureType ) +
            ", pNext = "                             + engine :: toString ( info.pNext ) +
            ", attachmentCount = "                   + info.attachmentCount +
@@ -9774,7 +9774,7 @@ auto vulkan :: toString (
         Type ( AttachmentSampleLocations ) const & info
 ) noexcept -> String {
 
-    return __C_ENG_STRINGIFY ( AttachmentSampleLocations ) " " +
+    return __C_ENG_STRINGIFY ( Type ( AttachmentSampleLocations ) ) " " +
            "{ attachmentIndex = "_s     + info.attachmentIndex +
            ", samplelocationsInfo = "   + toString ( info.sampleLocationsInfo ) +
            " }";
@@ -9786,7 +9786,7 @@ auto vulkan :: toString (
         Type ( SubpassSampleLocations ) const & info
 ) noexcept -> String {
 
-    return __C_ENG_STRINGIFY ( SubpassSampleLocations ) " " +
+    return __C_ENG_STRINGIFY ( Type ( SubpassSampleLocations ) ) " " +
            "{ subpassIndex = "_s        + info.subpassIndex +
            ", sampleLocationsInfo = "   + toString ( info.sampleLocationsInfo ) +
            " }";
@@ -9798,7 +9798,7 @@ auto vulkan :: toString (
         Type ( RenderPassSampleLocationsBeginInfo ) const & info
 ) noexcept -> String {
 
-    return __C_ENG_STRINGIFY ( RenderPassSampleLocationsBeginInfo ) " " +
+    return __C_ENG_STRINGIFY ( Type ( RenderPassSampleLocationsBeginInfo ) ) " " +
            "{ structureType = "_s                       + toString ( info.structureType ) +
            ", pNext = "                                 + engine :: toString ( info.pNext ) +
            ", attachmentInitialSampleLocationsCount = " + info.attachmentInitialSampleLocationsCount +
@@ -9814,7 +9814,7 @@ auto vulkan :: toString (
         Type ( RenderPassTransformBeginInfoQualcomm ) const & info
 ) noexcept -> String {
 
-    return __C_ENG_STRINGIFY ( RenderPassTransformBeginInfoQualcomm ) " " +
+    return __C_ENG_STRINGIFY ( Type ( RenderPassTransformBeginInfoQualcomm ) ) " " +
            "{ structureType = "_s                       + toString ( info.structureType ) +
            ", pNext = "                                 + engine :: toString ( info.pNext ) +
            ", transform = "                             + toString ( info.transform ) +
@@ -9827,7 +9827,7 @@ auto vulkan :: toString (
         Type ( SubpassBeginInfo ) const & info
 ) noexcept -> String {
 
-    return __C_ENG_STRINGIFY ( SubpassBeginInfo ) " " +
+    return __C_ENG_STRINGIFY ( Type ( SubpassBeginInfo ) ) " " +
            "{ structureType = "_s                       + toString ( info.structureType ) +
            ", pNext = "                                 + engine :: toString ( info.pNext ) +
            ", contents = "                              + toString ( info.contents ) +
@@ -9840,7 +9840,7 @@ auto vulkan :: toString (
         Type ( SubpassEndInfo ) const & info
 ) noexcept -> String {
 
-    return __C_ENG_STRINGIFY ( SubpassEndInfo ) " " +
+    return __C_ENG_STRINGIFY ( Type ( SubpassEndInfo ) ) " " +
            "{ structureType = "_s                       + toString ( info.structureType ) +
            ", pNext = "                                 + engine :: toString ( info.pNext ) +
            " }";
@@ -9852,7 +9852,7 @@ auto vulkan :: toString (
         Type ( SubpassFragmentDensityMapOffsetEndInfoQualcomm ) const & info
 ) noexcept -> String {
 
-    return __C_ENG_STRINGIFY ( SubpassFragmentDensityMapOffsetEndInfoQualcomm ) " " +
+    return __C_ENG_STRINGIFY ( Type ( SubpassFragmentDensityMapOffsetEndInfoQualcomm ) ) " " +
            "{ structureType = "_s                       + toString ( info.structureType ) +
            ", pNext = "                                 + engine :: toString ( info.pNext ) +
            ", fragmentDensityOffsetCount = "            + info.fragmentDensityOffsetCount +
@@ -9866,7 +9866,7 @@ auto vulkan :: toString (
         Type ( ShaderModuleCreateInfo ) const & info
 ) noexcept -> String {
 
-    return __C_ENG_STRINGIFY ( ShaderModuleCreateInfo ) " " +
+    return __C_ENG_STRINGIFY ( Type ( ShaderModuleCreateInfo ) ) " " +
            "{ structureType = "_s                       + toString ( info.structureType ) +
            ", pNext = "                                 + engine :: toString ( info.pNext ) +
            ", flags = "                                 + "0b" + Long ( info.flags ).toString(2) +
@@ -9881,7 +9881,7 @@ auto vulkan :: toString (
         Type ( ShaderModuleValidationCacheCreateInfo ) const & info
 ) noexcept -> String {
 
-    return __C_ENG_STRINGIFY ( ShaderModuleValidationCacheCreateInfo ) " " +
+    return __C_ENG_STRINGIFY ( Type ( ShaderModuleValidationCacheCreateInfo ) ) " " +
            "{ structureType = "_s                       + toString ( info.structureType ) +
            ", pNext = "                                 + engine :: toString ( info.pNext ) +
            ", validationCache = "                       + engine :: toString ( info.validationCache ) +
@@ -9939,7 +9939,7 @@ auto vulkan :: toString (
         Type ( CooperativeMatrixPropertiesNVidia ) const & info
 ) noexcept -> String {
 
-    return __C_ENG_STRINGIFY ( CooperativeMatrixPropertiesNVidia ) " " +
+    return __C_ENG_STRINGIFY ( Type ( CooperativeMatrixPropertiesNVidia ) ) " " +
            "{ structureType = "_s   + toString ( info.structureType ) +
            ", pNext = "             + engine :: toString ( info.pNext ) +
            ", NSize = "             + toString ( info.NSize ) +
@@ -9959,7 +9959,7 @@ auto vulkan :: toString (
         Type ( ValidationCacheCreateInfo ) const & info
 ) noexcept -> String {
 
-    return __C_ENG_STRINGIFY ( ValidationCacheCreateInfo ) " " +
+    return __C_ENG_STRINGIFY ( Type ( ValidationCacheCreateInfo ) ) " " +
            "{ structureType = "_s   + toString ( info.structureType ) +
            ", pNext = "             + engine :: toString ( info.pNext ) +
            ", flags = "             + "0b" + Long ( info.flags ).toString(2) +
@@ -10059,7 +10059,7 @@ auto vulkan :: toString (
         Type ( SpecializationMapEntry ) const & entry
 ) noexcept -> String {
 
-    return __C_ENG_STRINGIFY ( SpecializationMapEntry ) " " +
+    return __C_ENG_STRINGIFY ( Type ( SpecializationMapEntry ) ) " " +
            "{ constantID = "_s  + entry.constantID +
            ", offset = "        + entry.offset +
            ", size = "          + entry.size +
@@ -10072,7 +10072,7 @@ auto vulkan :: toString (
         Type ( SpecializationInfo ) const & info
 ) noexcept -> String {
 
-    return __C_ENG_STRINGIFY ( SpecializationInfo ) " " +
+    return __C_ENG_STRINGIFY ( Type ( SpecializationInfo ) ) " " +
            "{ mapEntryCount = "_s   + info.mapEntryCount +
            ", mapEntries = "        + :: toStringVulkan ( info.mapEntryCount, info.pMapEntries ) +
            ", dataSize = "          + info.dataSize +
@@ -10086,7 +10086,7 @@ auto vulkan :: toString (
         Type ( PipelineShaderStageCreateInfo ) const & info
 ) noexcept -> String {
 
-    return __C_ENG_STRINGIFY ( PipelineShaderStageCreateInfo ) " " +
+    return __C_ENG_STRINGIFY ( Type ( PipelineShaderStageCreateInfo ) ) " " +
            "{ structureType = "_s       + toString ( info.structureType ) +
            ", pNext = "                 + engine :: toString ( info.pNext ) +
            ", flags = "                 + "0b" + Long ( info.flags ).toString(2) +
@@ -10103,7 +10103,7 @@ auto vulkan :: toString (
         Type ( ComputePipelineCreateInfo ) const & info
 ) noexcept -> String {
 
-    return __C_ENG_STRINGIFY ( ComputePipelineCreateInfo ) " " +
+    return __C_ENG_STRINGIFY ( Type ( ComputePipelineCreateInfo ) ) " " +
            "{ structureType = "_s       + toString ( info.structureType ) +
            ", pNext = "                 + engine :: toString ( info.pNext ) +
            ", flags = "                 + "0b" + Long ( info.flags ).toString(2) +
@@ -10133,7 +10133,7 @@ auto vulkan :: toString (
         Type ( PipelineCompilerControlCreateInfoAMD ) const & info
 ) noexcept -> String {
 
-    return __C_ENG_STRINGIFY ( PipelineCompilerControlCreateInfoAMD ) " " +
+    return __C_ENG_STRINGIFY ( Type ( PipelineCompilerControlCreateInfoAMD ) ) " " +
            "{ structureType = "_s       + toString ( info.structureType ) +
            ", pNext = "                 + engine :: toString ( info.pNext ) +
            ", compilerControlFlags = "  + "0b" + Long ( info.compilerControlFlags ).toString(2) +
@@ -10163,7 +10163,7 @@ auto vulkan :: toString (
         Type ( PipelineCreationFeedback ) const & info
 ) noexcept -> String {
 
-    return __C_ENG_STRINGIFY ( PipelineCreationFeedback ) " " +
+    return __C_ENG_STRINGIFY ( Type ( PipelineCreationFeedback ) ) " " +
            "{ flags = "_s   + "0b" + Long ( info.flags ).toString(2) +
            ", duration = "  + info.duration +
            " }";
@@ -10175,7 +10175,7 @@ auto vulkan :: toString (
         Type ( PipelineCreationFeedbackCreateInfo ) const & info
 ) noexcept -> String {
 
-    return __C_ENG_STRINGIFY ( PipelineCreationFeedbackCreateInfo ) " " +
+    return __C_ENG_STRINGIFY ( Type ( PipelineCreationFeedbackCreateInfo ) ) " " +
            "{ structureType = "_s                       + toString ( info.structureType ) +
            ", pNext = "                                 + engine :: toString ( info.pNext ) +
            ", pPipelineCreationFeedback = "             + engine :: toString ( info.pPipelineCreationFeedback ) +
@@ -10190,7 +10190,7 @@ auto vulkan :: toString (
         Type ( SubpassShadingPipelineCreateInfoHuawei ) const & info
 ) noexcept -> String {
 
-    return __C_ENG_STRINGIFY ( SubpassShadingPipelineCreateInfoHuawei ) " " +
+    return __C_ENG_STRINGIFY ( Type ( SubpassShadingPipelineCreateInfoHuawei ) ) " " +
            "{ structureType = "_s   + toString ( info.structureType ) +
            ", pNext = "             + engine :: toString ( info.pNext ) +
            ", renderPass = "        + engine :: toString ( info.renderPass ) +
@@ -10204,10 +10204,1384 @@ auto vulkan :: toString (
         Type ( PipelineShaderStageRequiredSubgroupSizeCreateInfo ) const & info
 ) noexcept -> String {
 
-    return __C_ENG_STRINGIFY ( PipelineShaderStageRequiredSubgroupSizeCreateInfo ) " " +
+    return __C_ENG_STRINGIFY ( Type ( PipelineShaderStageRequiredSubgroupSizeCreateInfo ) ) " " +
            "{ structureType = "_s       + toString ( info.structureType ) +
            ", pNext = "                 + engine :: toString ( info.pNext ) +
-           ", requiredSubgrouoSize = "  + info.requiredSubgroupSize +
+           ", requiredSubgroupSize = "  + info.requiredSubgroupSize +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( VertexInputRate ) rate
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( rate ) {
+        case VertexInputRateVertex:     { asString = "Vertex";      break; }
+        case VertexInputRateInstance:   { asString = "Instance";    break; }
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_DISCARD_RECTANGLES_AVAILABLE
+auto vulkan :: toString (
+        Type ( DiscardRectangleMode ) mode
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( mode ) {
+        case DiscardRectangleModeInclusive: { asString = "Inclusive";   break; }
+        case DiscardRectangleModeExclusive: { asString = "Exclusive";   break; }
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_FRAGMENT_SHADING_RATE_ENUMS_AVAILABLE
+auto vulkan :: toString (
+        Type ( FragmentShadingRateNVidia ) rate
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( rate ) {
+        case FragmentShadingRateNVidia1InvocationPerPixel:      { asString = "1 Invocation Per Pixel";      break; }
+        case FragmentShadingRateNVidia1InvocationPer1x2Pixels:  { asString = "1 Invocation Per 1x2 Pixels"; break; }
+        case FragmentShadingRateNVidia1InvocationPer2x1Pixels:  { asString = "1 Invocation Per 2x1 Pixels"; break; }
+        case FragmentShadingRateNVidia1InvocationPer2x2Pixels:  { asString = "1 Invocation Per 2x2 Pixels"; break; }
+        case FragmentShadingRateNVidia1InvocationPer4x2Pixels:  { asString = "1 Invocation Per 4x2 Pixels"; break; }
+        case FragmentShadingRateNVidia1InvocationPer2x4Pixels:  { asString = "1 Invocation Per 2x4 Pixels"; break; }
+        case FragmentShadingRateNVidia1InvocationPer4x4Pixels:  { asString = "1 Invocation Per 4x4 Pixels"; break; }
+        case FragmentShadingRateNVidia2InvocationsPerPixel:     { asString = "2 Invocations Per Pixel";     break; }
+        case FragmentShadingRateNVidia4InvocationsPerPixel:     { asString = "4 Invocations Per Pixel";     break; }
+        case FragmentShadingRateNVidia8InvocationsPerPixel:     { asString = "8 Invocations Per Pixel";     break; }
+        case FragmentShadingRateNVidia16InvocationsPerPixel:    { asString = "16 Invocations Per Pixel";    break; }
+        case FragmentShadingRateNVidiaNoInvocations:            { asString = "No Invocations";              break; }
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_FRAGMENT_SHADING_RATE_ENUMS_AVAILABLE
+auto vulkan :: toString (
+        Type ( FragmentShadingRateTypeNVidia ) type
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( type ) {
+        case FragmentShadingRateTypeNVidiaFragmentSize: { asString = "Fragment Size";   break; }
+        case FragmentShadingRateTypeNVidiaEnums:        { asString = "Enums";           break; }
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_FRAGMENT_SHADING_RATE_AVAILABLE
+auto vulkan :: toString (
+        Type ( FragmentShadingRateCombinerOperation ) operation
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( operation ) {
+        case FragmentShadingRateCombinerOperationKeep:      { asString = "Keep";    break; }
+        case FragmentShadingRateCombinerOperationReplace:   { asString = "Replace"; break; }
+        case FragmentShadingRateCombinerOperationMin:       { asString = "Min";     break; }
+        case FragmentShadingRateCombinerOperationMax:       { asString = "Max";     break; }
+        case FragmentShadingRateCombinerOperationMul:       { asString = "Mul";     break; }
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( PrimitiveTopology ) topology
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( topology ) {
+        case PrimitiveTopologyPointList:                    { asString = "Point List";                      break; }
+        case PrimitiveTopologyLineList:                     { asString = "Line List";                       break; }
+        case PrimitiveTopologyLineStrip:                    { asString = "Line Strip";                      break; }
+        case PrimitiveTopologyTriangleList:                 { asString = "Triangle List";                   break; }
+        case PrimitiveTopologyTriangleStrip:                { asString = "Triangle Strip";                  break; }
+        case PrimitiveTopologyTriangleFan:                  { asString = "Triangle Fan";                    break; }
+        case PrimitiveTopologyLineListWithAdjacency:        { asString = "Line List With Adjacency";        break; }
+        case PrimitiveTopologyLineStripWithAdjacency:       { asString = "Line Strip With Adjacency";       break; }
+        case PrimitiveTopologyTriangleListWithAdjacency:    { asString = "Triangle List With Adjacency";    break; }
+        case PrimitiveTopologyTriangleStripWithAdjacency:   { asString = "Triangle Strip With Adjacency";   break; }
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( PolygonMode ) mode
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( mode ) {
+        case PolygonModeFill:                   { asString = "Polygon Mode Fill";           break; }
+        case PolygonModeLine:                   { asString = "Polygon Mode Line";           break; }
+        case PolygonModePoint:                  { asString = "Polygon Mode Point";          break; }
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_FILL_RECTANGLE_AVAILABLE
+        case PolygonModeFillRectangleNVidia:    { asString = "Polygon Mode Fill Rectangle"; break; }
+#endif
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( CullModeFlag ) flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case CullModeFlagNone:          { asString = "None";            break; }
+        case CullModeFlagFront:         { asString = "Front";           break; }
+        case CullModeFlagBack:          { asString = "Back";            break; }
+        case CullModeFlagFrontAndBack:  { asString = "Front And Back";  break; }
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( FrontFace ) face
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( face ) {
+        case FrontFaceClockwise:        { asString = "Clockwise";           break; }
+        case FrontFaceCounterClockwise: { asString = "Counter Clockwise";   break; }
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( CompareOperation ) operation
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( operation ) {
+        case CompareOperationNever:             { asString = "Never";               break; }
+        case CompareOperationLess:              { asString = "Less";                break; }
+        case CompareOperationEqual:             { asString = "Equal";               break; }
+        case CompareOperationLessOrEqual:       { asString = "Less Or Equal";       break; }
+        case CompareOperationGreater:           { asString = "Greater";             break; }
+        case CompareOperationNotEqual:          { asString = "Not Equal";           break; }
+        case CompareOperationGreaterOrEqual:    { asString = "Greater Or Equal";    break; }
+        case CompareOperationAlways:            { asString = "Always";              break; }
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( StencilOperation ) operation
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( operation ) {
+        case StencilOperationKeep:              { asString = "Keep";                break; }
+        case StencilOperationZero:              { asString = "Zero";                break; }
+        case StencilOperationReplace:           { asString = "Replace";             break; }
+        case StencilOperationIncrementAndClamp: { asString = "Increment And Clamp"; break; }
+        case StencilOperationDecrementAndClamp: { asString = "Decrement And Clamp"; break; }
+        case StencilOperationInvert:            { asString = "Invert";              break; }
+        case StencilOperationIncrementAndWrap:  { asString = "Increment And Wrap";  break; }
+        case StencilOperationDecrementAndWrap:  { asString = "Decrement And Wrap";  break; }
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( LogicOperation ) operation
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( operation ) {
+        case LogicOperationClear:           { asString = "Clear";           break; }
+        case LogicOperationAnd:             { asString = "And";             break; }
+        case LogicOperationAndReverse:      { asString = "AndReverse";      break; }
+        case LogicOperationCopy:            { asString = "Copy";            break; }
+        case LogicOperationAndInverted:     { asString = "AndInverted";     break; }
+        case LogicOperationNoOperation:     { asString = "NoOperation";     break; }
+        case LogicOperationXor:             { asString = "Xor";             break; }
+        case LogicOperationOr:              { asString = "Or";              break; }
+        case LogicOperationNor:             { asString = "Nor";             break; }
+        case LogicOperationEquivalent:      { asString = "Equivalent";      break; }
+        case LogicOperationInvert:          { asString = "Invert";          break; }
+        case LogicOperationOrReverse:       { asString = "OrReverse";       break; }
+        case LogicOperationCopyInverted:    { asString = "CopyInverted";    break; }
+        case LogicOperationOrInverted:      { asString = "OrInverted";      break; }
+        case LogicOperationNand:            { asString = "Nand";            break; }
+        case LogicOperationSet:             { asString = "Set";             break; }
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( PipelineColorBlendStateCreateFlag ) flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case PipelineColorBlendStateCreateFlagRasterizationOrderAttachmentAccessARM:    { asString = "Rasterization Order Attachment Access";   break; }
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( ColorComponentFlag ) flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case ColorComponentFlagR:   { asString = "Red";     break; }
+        case ColorComponentFlagG:   { asString = "Green";   break; }
+        case ColorComponentFlagB:   { asString = "Blue";    break; }
+        case ColorComponentFlagA:   { asString = "Alpha";   break; }
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( BlendFactor ) flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case BlendFactorZero:                       { asString = "Zero";                        break; }
+        case BlendFactorOne:                        { asString = "One";                         break; }
+        case BlendFactorSourceColor:                { asString = "Source Color";                break; }
+        case BlendFactorOneMinusSourceColor:        { asString = "One Minus Source Color";      break; }
+        case BlendFactorDestinationColor:           { asString = "Destination Color";           break; }
+        case BlendFactorOneMinusDestinationColor:   { asString = "One Minus Destination Color"; break; }
+        case BlendFactorSourceAlpha:                { asString = "Source Alpha";                break; }
+        case BlendFactorOneMinusSourceAlpha:        { asString = "One Minus Source Alpha";      break; }
+        case BlendFactorDestinationAlpha:           { asString = "Destination Alpha";           break; }
+        case BlendFactorOneMinusDestinationAlpha:   { asString = "One Minus Destination Alpha"; break; }
+        case BlendFactorConstantColor:              { asString = "Constant Color";              break; }
+        case BlendFactorOneMinusConstantColor:      { asString = "One Minus Constant Color";    break; }
+        case BlendFactorConstantAlpha:              { asString = "Constant Alpha";              break; }
+        case BlendFactorOneMinusConstantAlpha:      { asString = "One Minus Constant Alpha";    break; }
+        case BlendFactorAlphaSaturate:              { asString = "Alpha Saturate";              break; }
+        case BlendFactorSource1Color:               { asString = "Source1 Color";               break; }
+        case BlendFactorOneMinusSource1Color:       { asString = "One Minus Source1 Color";     break; }
+        case BlendFactorSource1Alpha:               { asString = "Source1 Alpha";               break; }
+        case BlendFactorOneMinusSource1Alpha:       { asString = "One Minus Source1 Alpha";     break; }
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( BlendOperation ) operation
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( operation ) {
+        case BlendOperationAdd:                 { asString = "Add";                     break; }
+        case BlendOperationSubtract:            { asString = "Subtract";                break; }
+        case BlendOperationReverseSubtract:     { asString = "Reverse Subtract";        break; }
+        case BlendOperationMin:                 { asString = "Min";                     break; }
+        case BlendOperationMax:                 { asString = "Max";                     break; }
+#if __C_ENG_VULKAN_API_EXTENSION_BLEND_OPERATION_ADVANCED_AVAILABLE
+        case BlendOperationZero:                { asString = "Zero";                    break; }
+        case BlendOperationSource:              { asString = "Source";                  break; }
+        case BlendOperationDestination:         { asString = "Destination";             break; }
+        case BlendOperationSourceOver:          { asString = "Source Over";             break; }
+        case BlendOperationDestinationOver:     { asString = "Destination Over";        break; }
+        case BlendOperationSourceIn:            { asString = "Source In";               break; }
+        case BlendOperationDestinationIn:       { asString = "Destination In";          break; }
+        case BlendOperationSourceOut:           { asString = "Source Out";              break; }
+        case BlendOperationDestinationOut:      { asString = "Destination Out";         break; }
+        case BlendOperationSourceAtop:          { asString = "Source Atop";             break; }
+        case BlendOperationDestinationAtop:     { asString = "Destination Atop";        break; }
+        case BlendOperationXor:                 { asString = "Xor";                     break; }
+        case BlendOperationMultiply:            { asString = "Multiply";                break; }
+        case BlendOperationScreen:              { asString = "Screen";                  break; }
+        case BlendOperationOverlay:             { asString = "Overlay";                 break; }
+        case BlendOperationDarken:              { asString = "Darken";                  break; }
+        case BlendOperationLighten:             { asString = "Lighten";                 break; }
+        case BlendOperationColorDodge:          { asString = "Color Dodge";             break; }
+        case BlendOperationColorBurn:           { asString = "Color Burn";              break; }
+        case BlendOperationHardLight:           { asString = "Hard Light";              break; }
+        case BlendOperationSoftLight:           { asString = "Soft Light";              break; }
+        case BlendOperationDifference:          { asString = "Difference";              break; }
+        case BlendOperationExclusion:           { asString = "Exclusion";               break; }
+        case BlendOperationInvert:              { asString = "Invert";                  break; }
+        case BlendOperationInvertRGB:           { asString = "Invert RGB";              break; }
+        case BlendOperationLinearDodge:         { asString = "Linear Dodge";            break; }
+        case BlendOperationLinearBurn:          { asString = "Linear Burn";             break; }
+        case BlendOperationVividLight:          { asString = "Vivid Light";             break; }
+        case BlendOperationLinearLight:         { asString = "Linear Light";            break; }
+        case BlendOperationPinLight:            { asString = "Pin Light";               break; }
+        case BlendOperationHardMix:             { asString = "Hard Mix";                break; }
+        case BlendOperationHSLHue:              { asString = "HSL Hue";                 break; }
+        case BlendOperationHSLSaturation:       { asString = "HSL Saturation";          break; }
+        case BlendOperationHSLColor:            { asString = "HSL Color";               break; }
+        case BlendOperationHSLLuminosity:       { asString = "HSL Luminosity";          break; }
+        case BlendOperationPlus:                { asString = "Plus";                    break; }
+        case BlendOperationPlusClamped:         { asString = "Plus Clamped";            break; }
+        case BlendOperationPlusClampedAlpha:    { asString = "Plus Clamped Alpha";      break; }
+        case BlendOperationPlusDarker:          { asString = "Plus Darker";             break; }
+        case BlendOperationMinus:               { asString = "Minus";                   break; }
+        case BlendOperationMinusClamped:        { asString = "Minus Clamped";           break; }
+        case BlendOperationContrast:            { asString = "Contrast";                break; }
+        case BlendOperationInvertedOVG:         { asString = "Inverted OVG";            break; }
+        case BlendOperationRed:                 { asString = "Red";                     break; }
+        case BlendOperationGreen:               { asString = "Green";                   break; }
+        case BlendOperationBlue:                { asString = "Blue";                    break; }
+#endif
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( DynamicState ) state
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( state ) {
+        case DynamicStateViewport:                          { asString = "Viewport";                        break; }
+        case DynamicStateScissor:                           { asString = "Scissor";                         break; }
+        case DynamicStateLineWidth:                         { asString = "Line Width";                      break; }
+        case DynamicStateDepthBias:                         { asString = "Depth Bias";                      break; }
+        case DynamicStateBlendConstants:                    { asString = "Blend Constants";                 break; }
+        case DynamicStateDepthBounds:                       { asString = "Depth Bounds";                    break; }
+        case DynamicStateCompareMask:                       { asString = "Compare Mask";                    break; }
+        case DynamicStateWriteMask:                         { asString = "Write Mask";                      break; }
+        case DynamicStateReference:                         { asString = "Reference";                       break; }
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_EXTENDED_DYNAMIC_STATE_AVAILABLE
+        case DynamicStateCullMode:                          { asString = "Cull Mode";                       break; }
+        case DynamicStatePrimitiveTopology:                 { asString = "Primitive Topology";              break; }
+        case DynamicStateViewportWithCount:                 { asString = "Viewport With Count";             break; }
+        case DynamicStateScissorWithCount:                  { asString = "Scissor With Count";              break; }
+        case DynamicStateVertexInputBindingString:          { asString = "Vertex Input Binding String";     break; }
+        case DynamicStateDepthTestEnable:                   { asString = "Depth Test Enable";               break; }
+        case DynamicStateDepthWriteEnable:                  { asString = "Depth Write Enable";              break; }
+        case DynamicStateDepthCompareOperation:             { asString = "Depth Compare Operation";         break; }
+        case DynamicStateDepthBoundsTestEnable:             { asString = "Depth Bounds Test Enable";        break; }
+        case DynamicStateStencilTestEnable:                 { asString = "Stencil Test Enable";             break; }
+        case DynamicStateRasterizerDiscardEnable:           { asString = "Rasterizer Discard Enable";       break; }
+#endif
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_EXTENDED_DYNAMIC_STATE_2_AVAILABLE
+        case DynamicStateStencilOperation:                  { asString = "Stencil Operation";               break; }
+        case DynamicStateDepthBiasEnable:                   { asString = "Depth Bias Enable";               break; }
+        case DynamicStatePrimitiveRestartEnable:            { asString = "Primitive Restart Enable";        break; }
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_CLIP_SPACE_W_SCALING_AVAILABLE
+        case DynamicStateViewportWScalingNVidia:            { asString = "Viewport W Scaling";              break; }
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_DISCARD_RECTANGLES_AVAILABLE
+        case DynamicStateDiscardRectangle:                  { asString = "Discard Rectangle";               break; }
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_SAMPLE_LOCATIONS_AVAILABLE
+        case DynamicStateSampleLocations:                   { asString = "Sample Locations";                break; }
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_RAY_TRACING_PIPELINE_AVAILABLE
+        case DynamicStateRayTracingPipelineStackSize:       { asString = "Ray Tracing Pipeline Stack Size"; break; }
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SHADING_RATE_IMAGE_AVAILABLE
+        case DynamicStateViewportShadingRatePaletteNVidia:  { asString = "Viewport Shading Rate Palette";   break; }
+        case DynamicStateViewportCoarseSampleOrderNVidia:   { asString = "Viewport Coarse Sample Order";    break; }
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SCISSOR_EXCLUSIVE_AVAILABLE
+        case DynamicStateExclusiveScissorNVidia:            { asString = "Exclusive Scissor";               break; }
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_FRAGMENT_SHADING_RATE_AVAILABLE
+        case DynamicStateFragmentShadingRate:               { asString = "Fragment Shading Rate";           break; }
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_LINE_RASTERIZATION_AVAILABLE
+        case DynamicStateLineStipple:                       { asString = "Line Stipple";                    break; }
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_VERTEX_INPUT_DYNAMIC_STATE_AVAILABLE
+        case DynamicStateVertexInput:                       { asString = "Vertex Input";                    break; }
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_EXTENDED_DYNAMIC_STATE_2_AVAILABLE
+        case DynamicStatePatchControlPoints:                { asString = "Patch Control Points";            break; }
+        case DynamicStateLogicOperation:                    { asString = "Logic Operation";                 break; }
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_COLOR_WRITE_ENABLE_AVAILABLE
+        case DynamicStateColorWriteEnable:                  { asString = "Color Write Enable";              break; }
+#endif
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+auto vulkan :: toString (
+        Type ( TessellationDomainOrigin ) origin
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( origin ) {
+        case TessellationDomainOriginLowerLeft:   { asString = "Lower Left";   break; }
+        case TessellationDomainOriginUpperLeft:   { asString = "Upper Left";   break; }
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SHADING_RATE_IMAGE_AVAILABLE
+auto vulkan :: toString (
+        Type ( CoarseSampleOrderTypeNVidia ) type
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( type ) {
+        case CoarseSampleOrderTypeNVidiaCustom:         { asString = "Custom";          break; }
+        case CoarseSampleOrderTypeNVidiaDefault:        { asString = "Default";         break; }
+        case CoarseSampleOrderTypeNVidiaPixelMajor:     { asString = "Pixel Major";     break; }
+        case CoarseSampleOrderTypeNVidiaSampleMajor:    { asString = "Sample Major";    break; }
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SHADING_RATE_IMAGE_AVAILABLE
+auto vulkan :: toString (
+        Type ( ShadingRatePaletteEntryNVidia ) type
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( type ) {
+        case ShadingRatePaletteEntryNVidiaNoInvocations:                { asString = "No Invocations";              break; }
+        case ShadingRatePaletteEntryNVidia16InvocationsPerPixel:        { asString = "16 Invocations Per Pixel";    break; }
+        case ShadingRatePaletteEntryNVidia8InvocationsPerPixel:         { asString = "8 Invocations Per Pixel";     break; }
+        case ShadingRatePaletteEntryNVidia4InvocationsPerPixel:         { asString = "4 Invocations Per Pixel";     break; }
+        case ShadingRatePaletteEntryNVidia2InvocationsPerPixel:         { asString = "2 Invocations Per Pixel";     break; }
+        case ShadingRatePaletteEntryNVidia1InvocationPerPixel:          { asString = "1 Invocation Per Pixel";      break; }
+        case ShadingRatePaletteEntryNVidia1InvocationPer2x1Pixels:      { asString = "1 Invocation Per 2x1 Pixels"; break; }
+        case ShadingRatePaletteEntryNVidia1InvocationPer1x2Pixels:      { asString = "1 Invocation Per 1x2 Pixels"; break; }
+        case ShadingRatePaletteEntryNVidia1InvocationPer2x2Pixels:      { asString = "1 Invocation Per 2x2 Pixels"; break; }
+        case ShadingRatePaletteEntryNVidia1InvocationPer4x2Pixels:      { asString = "1 Invocation Per 4x2 Pixels"; break; }
+        case ShadingRatePaletteEntryNVidia1InvocationPer2x4Pixels:      { asString = "1 Invocation Per 2x4 Pixels"; break; }
+        case ShadingRatePaletteEntryNVidia1InvocationPer4x4Pixels:      { asString = "1 Invocation Per 4x4 Pixels"; break; }
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_VIEWPORT_SWIZZLE_AVAILABLE
+auto vulkan :: toString (
+        Type ( ViewportCoordinateSwizzleNVidia ) type
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( type ) {
+        case ViewportCoordinateSwizzleNVidiaPositiveX: { asString = "Positive X"; break; }
+        case ViewportCoordinateSwizzleNVidiaNegativeX: { asString = "Negative X"; break; }
+        case ViewportCoordinateSwizzleNVidiaPositiveY: { asString = "Positive Y"; break; }
+        case ViewportCoordinateSwizzleNVidiaNegativeY: { asString = "Negative Y"; break; }
+        case ViewportCoordinateSwizzleNVidiaPositiveZ: { asString = "Positive Z"; break; }
+        case ViewportCoordinateSwizzleNVidiaNegativeZ: { asString = "Negative Z"; break; }
+        case ViewportCoordinateSwizzleNVidiaPositiveW: { asString = "Positive W"; break; }
+        case ViewportCoordinateSwizzleNVidiaNegativeW: { asString = "Negative W"; break; }
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_CONSERVATIVE_RASTERIZATION_AVAILABLE
+auto vulkan :: toString (
+        Type ( ConservativeRasterizationMode ) mode
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( mode ) {
+        case ConservativeRasterizationModeDisabled:         { asString = "Disabled";        break; }
+        case ConservativeRasterizationModeOverestimate:     { asString = "Overestimate";    break; }
+        case ConservativeRasterizationModeUnderestimate:    { asString = "Underestimate";   break; }
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_LINE_RASTERIZATION_AVAILABLE
+auto vulkan :: toString (
+        Type ( LineRasterizationMode ) mode
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( mode ) {
+        case LineRasterizationModeDefault:              { asString = "Default";             break; }
+        case LineRasterizationModeRectangular:          { asString = "Rectangular";         break; }
+        case LineRasterizationModeBresenham:            { asString = "Bresenham";           break; }
+        case LineRasterizationModeRectangularSmooth:    { asString = "Rectangular Smooth";  break; }
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_PROVOKING_VERTEX_AVAILABLE
+auto vulkan :: toString (
+        Type ( ProvokingVertexMode ) mode
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( mode ) {
+        case ProvokingVertexModeFirstVertex:    { asString = "First Vertex";    break; }
+        case ProvokingVertexModeLastVertex:     { asString = "Last Vertex";     break; }
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_AMD_RASTERIZATION_ORDER_AVAILABLE
+auto vulkan :: toString (
+        Type ( RasterizationOrderAMD ) mode
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( mode ) {
+        case RasterizationOrderAMDRelaxed:    { asString = "Relaxed";    break; }
+        case RasterizationOrderAMDStrict:     { asString = "Strict";     break; }
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_FRAMEBUFFER_MIXED_SAMPLES_AVAILABLE
+auto vulkan :: toString (
+        Type ( CoverageModulationModeNVidia ) mode
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( mode ) {
+        case CoverageModulationModeNVidiaNone:  { asString = "None";    break; }
+        case CoverageModulationModeNVidiaRGB:   { asString = "RGB";     break; }
+        case CoverageModulationModeNVidiaAlpha: { asString = "Alpha";   break; }
+        case CoverageModulationModeNVidiaRGBA:  { asString = "RGBA";    break; }
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_COVERAGE_REDUCTION_MODE_AVAILABLE
+auto vulkan :: toString (
+        Type ( CoverageReductionModeNVidia ) mode
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( mode ) {
+        case CoverageReductionModeNVidiaMerge:      { asString = "Merge";       break; }
+        case CoverageReductionModeNVidiaTruncate:   { asString = "Truncate";    break; }
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_BLEND_OPERATION_ADVANCED_AVAILABLE
+auto vulkan :: toString (
+        Type ( BlendOverlap ) overlap
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( overlap ) {
+        case BlendOverlapConjoint:      { asString = "Conjoint";        break; }
+        case BlendOverlapDisjoint:      { asString = "Disjoint";        break; }
+        case BlendOverlapUncorrelated:  { asString = "Uncorrelated";    break; }
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( VertexInputBindingDescription ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( VertexInputBindingDescription ) ) " " +
+           "{ binding = "_s + info.binding +
+           ", stride = "    + info.stride +
+           ", inputRate = " + toString ( info.inputRate ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( VertexInputAttributeDescription ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( VertexInputAttributeDescription ) ) " " +
+           "{ location = "_s    + info.location +
+           ", binding = "       + info.binding +
+           ", format = "        + toString ( info.format ) +
+           ", offset = "        + info.offset +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( PipelineVertexInputStateCreateInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( PipelineVertexInputStateCreateInfo ) ) " " +
+           "{ structureType = "_s                   + toString ( info.structureType ) +
+           ", pNext = "                             + engine :: toString ( info.pNext ) +
+           ", flags = "                             + "0b" + Long ( info.flags ).toString(2) +
+           ", vertexBindingDescriptionCount = "     + info.vertexBindingDescriptionCount +
+           ", VertexBindingDescriptions = "         + :: toStringVulkan ( info.vertexBindingDescriptionCount, info.pVertexBindingDescriptions ) +
+           ", vertexAttributeDescriptionCount = "   + info.vertexAttributeDescriptionCount +
+           ", VertexAttributeDescriptions = "       + :: toStringVulkan ( info.vertexAttributeDescriptionCount, info.pVertexAttributeDescriptions ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( PipelineInputAssemblyStateCreateInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( PipelineInputAssemblyStateCreateInfo ) ) " " +
+           "{ structureType = "_s                   + toString ( info.structureType ) +
+           ", pNext = "                             + engine :: toString ( info.pNext ) +
+           ", flags = "                             + "0b" + Long ( info.flags ).toString(2) +
+           ", topology = "                          + toString ( info.topology ) +
+           ", primitiveRestartEnable = "            + ( info.primitiveRestartEnable == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( PipelineTessellationStateCreateInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( PipelineTessellationStateCreateInfo ) ) " " +
+           "{ structureType = "_s                   + toString ( info.structureType ) +
+           ", pNext = "                             + engine :: toString ( info.pNext ) +
+           ", flags = "                             + "0b" + Long ( info.flags ).toString(2) +
+           ", patchControlPoints = "                + info.patchControlPoints +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( PipelineViewportStateCreateInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( PipelineViewportStateCreateInfo ) ) " " +
+           "{ structureType = "_s                   + toString ( info.structureType ) +
+           ", pNext = "                             + engine :: toString ( info.pNext ) +
+           ", flags = "                             + "0b" + Long ( info.flags ).toString(2) +
+           ", viewportCount = "                     + info.viewportCount +
+           ", viewports = "                         + :: toStringVulkan ( info.viewportCount, info.pViewports ) +
+           ", scissorCount = "                      + info.scissorCount +
+           ", scissors = "                          + :: toStringVulkan ( info.scissorCount, info.pScissors ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( PipelineRasterizationStateCreateInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( PipelineRasterizationStateCreateInfo ) ) " " +
+           "{ structureType = "_s                   + toString ( info.structureType ) +
+           ", pNext = "                             + engine :: toString ( info.pNext ) +
+           ", flags = "                             + "0b" + Long ( info.flags ).toString(2) +
+           ", depthClampEnable = "                  + ( info.depthClampEnable == VK_TRUE ? "true" : "false" ) +
+           ", rasterizerDiscardEnable = "           + ( info.rasterizerDiscardEnable == VK_TRUE ? "true" : "false" ) +
+           ", polygonMode = "                       + toString ( info.polygonMode ) +
+           ", cullMode = "                          + "0b" + Long ( info.cullMode ).toString(2) +
+           ", frontFace = "                         + toString ( info.frontFace ) +
+           ", depthBiasEnable = "                   + ( info.depthBiasEnable == VK_TRUE ? "true" : "false" ) +
+           ", depthBiasConstantFactor = "           + info.depthBiasConstantFactor +
+           ", depthBiasClamp = "                    + info.depthBiasClamp +
+           ", depthBiasSlopeFactor = "              + info.depthBiasSlopeFactor +
+           ", lineWidth = "                         + info.lineWidth +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( PipelineMultisampleStateCreateInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( PipelineMultisampleStateCreateInfo ) ) " " +
+           "{ structureType = "_s                   + toString ( info.structureType ) +
+           ", pNext = "                             + engine :: toString ( info.pNext ) +
+           ", flags = "                             + "0b" + Long ( info.flags ).toString(2) +
+           ", rasterizationSamples = "              + toString ( info.rasterizationSamples ) +
+           ", sampleShadingEnable = "               + ( info.sampleShadingEnable == VK_TRUE ? "true" : "false" ) +
+           ", minSampleShading = "                  + info.minSampleShading +
+           ", pSampleMask = "                       + engine :: toString ( info.pSampleMask ) +
+           ", alphaToCoverageEnable = "             + ( info.alphaToCoverageEnable == VK_TRUE ? "true" : "false" ) +
+           ", alphaToOneEnable = "                  + ( info.alphaToOneEnable == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( StencilOperationState ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( StencilOperationState ) ) " " +
+           "{ failOperation = "_s       + toString ( info.failOperation ) +
+           ", passOperation = "         + toString ( info.passOperation ) +
+           ", depthFailOperation = "    + toString ( info.depthFailOperation ) +
+           ", compareOperation = "      + toString ( info.compareOperation ) +
+           ", compareMask = "           + info.compareMask +
+           ", writeMask = "             + info.writeMask +
+           ", reference = "             + info.reference +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( PipelineDepthStencilStateCreateInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( PipelineDepthStencilStateCreateInfo ) ) " " +
+           "{ structureType = "_s                   + toString ( info.structureType ) +
+           ", pNext = "                             + engine :: toString ( info.pNext ) +
+           ", flags = "                             + "0b" + Long ( info.flags ).toString(2) +
+           ", depthTestEnable = "                   + ( info.depthTestEnable == VK_TRUE ? "true" : "false" ) +
+           ", depthWriteEnable = "                  + ( info.depthWriteEnable == VK_TRUE ? "true" : "false" ) +
+           ", depthCompareOperation = "             + toString ( info.depthCompareOperation ) +
+           ", depthBoundsTestEnable = "             + ( info.depthBoundsTestEnable == VK_TRUE ? "true" : "false" ) +
+           ", stencilTestEnable = "                 + ( info.stencilTestEnable == VK_TRUE ? "true" : "false" ) +
+           ", front = "                             + toString ( info.front ) +
+           ", back = "                              + toString ( info.back ) +
+           ", minDepthBounds = "                    + info.minDepthBounds +
+           ", maxDepthBounds = "                    + info.maxDepthBounds +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( PipelineColorBlendAttachmentState ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( PipelineColorBlendAttachmentState ) ) " " +
+           "{ blendEnable = "_s                   + ( info.blendEnable == VK_TRUE ? "true" : "false" ) +
+           ", sourceColorBlendFactor = "          + toString ( info.sourceColorBlendFactor ) +
+           ", destinationColorBlendFactor = "     + toString ( info.destinationColorBlendFactor ) +
+           ", colorBlendOperation = "             + toString ( info.colorBlendOperation ) +
+           ", sourceAlphaBlendFactor = "          + toString ( info.sourceAlphaBlendFactor ) +
+           ", destinationAlphaBlendFactor = "     + toString ( info.destinationAlphaBlendFactor ) +
+           ", alphaBlendOperation = "             + toString ( info.alphaBlendOperation ) +
+           ", colorWriteMask = "                  + "0b" + Long ( info.colorWriteMask ).toString(2) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( PipelineColorBlendStateCreateInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( PipelineColorBlendStateCreateInfo ) ) " " +
+           "{ structureType = "_s                   + toString ( info.structureType ) +
+           ", pNext = "                             + engine :: toString ( info.pNext ) +
+           ", flags = "                             + "0b" + Long ( info.flags ).toString(2) +
+           ", logicOperationEnable = "              + ( info.logicOperationEnable == VK_TRUE ? "true" : "false" ) +
+           ", logicOperation = "                    + toString ( info.logicOperation ) +
+           ", attachmentCount = "                   + info.attachmentCount +
+           ", attachments = "                       + :: toStringVulkan ( info.attachmentCount, info.pAttachments ) +
+           ", blendConstants = "                    + :: toStringRegular ( 4, & info.blendConstants[0] ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( PipelineDynamicStateCreateInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( PipelineDynamicStateCreateInfo ) ) " " +
+           "{ structureType = "_s                   + toString ( info.structureType ) +
+           ", pNext = "                             + engine :: toString ( info.pNext ) +
+           ", flags = "                             + "0b" + Long ( info.flags ).toString(2) +
+           ", dynamicStateCount = "                 + info.dynamicStateCount +
+           ", dynamicStates = "                     + :: toStringVulkan ( info.dynamicStateCount, info.pDynamicStates ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( GraphicsPipelineCreateInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( GraphicsPipelineCreateInfo ) ) " " +
+           "{ structureType = "_s                   + toString ( info.structureType ) +
+           ", pNext = "                             + engine :: toString ( info.pNext ) +
+           ", flags = "                             + "0b" + Long ( info.flags ).toString(2) +
+           ", stageCount = "                        + info.stageCount +
+           ", stages = "                            + :: toStringVulkan ( info.stageCount, info.pStages ) +
+           ", pVertexInputState = "                 + engine :: toString ( info.pVertexInputState ) +
+           ", pInputAssemblyState = "               + engine :: toString ( info.pInputAssemblyState ) +
+           ", pTessellationState = "                + engine :: toString ( info.pTessellationState ) +
+           ", pViewportState = "                    + engine :: toString ( info.pViewportState ) +
+           ", pRasterizationState = "               + engine :: toString ( info.pRasterizationState ) +
+           ", pMultisampleState = "                 + engine :: toString ( info.pMultisampleState ) +
+           ", pDepthStencilState = "                + engine :: toString ( info.pDepthStencilState ) +
+           ", pColorBlendState = "                  + engine :: toString ( info.pColorBlendState ) +
+           ", layout = "                            + engine :: toString ( info.layout ) +
+           ", renderPass = "                        + engine :: toString ( info.renderPass ) +
+           ", subpass = "                           + info.subpass +
+           ", basePipelineHandle = "                + engine :: toString ( info.basePipelineHandle ) +
+           ", basePipelineIndex = "                 + info.basePipelineIndex +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEVICE_GENERATED_COMMANDS_AVAILABLE
+auto vulkan :: toString (
+        Type ( GraphicsShaderGroupCreateInfoNVidia ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( GraphicsShaderGroupCreateInfoNVidia ) ) " " +
+           "{ structureType = "_s                   + toString ( info.structureType ) +
+           ", pNext = "                             + engine :: toString ( info.pNext ) +
+           ", stageCount = "                        + info.stageCount +
+           ", stages = "                            + :: toStringVulkan ( info.stageCount, info.pStages ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEVICE_GENERATED_COMMANDS_AVAILABLE
+auto vulkan :: toString (
+        Type ( GraphicsPipelineShaderGroupsCreateInfoNVidia ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( GraphicsPipelineShaderGroupsCreateInfoNVidia ) ) " " +
+           "{ structureType = "_s                   + toString ( info.structureType ) +
+           ", pNext = "                             + engine :: toString ( info.pNext ) +
+           ", groupCount = "                        + info.groupCount +
+           ", groups = "                            + :: toStringVulkan ( info.groupCount, info.pGroups ) +
+           ", pipelineCount = "                     + info.pipelineCount +
+           ", pipelines = "                         + :: toStringEngine ( info.pipelineCount, info.pPipelines ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VERTEX_ATTRIBUTE_DIVISOR_AVAILABLE
+auto vulkan :: toString (
+        Type ( VertexInputBindingDivisorDescription ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( VertexInputBindingDivisorDescription ) ) " " +
+           "{ binding = "_s     + info.binding +
+           ", divisor = "       + info.divisor +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VERTEX_ATTRIBUTE_DIVISOR_AVAILABLE
+auto vulkan :: toString (
+        Type ( PipelineVertexInputDivisorStateCreateInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( PipelineVertexInputDivisorStateCreateInfo ) ) " " +
+           "{ structureType = "_s                   + toString ( info.structureType ) +
+           ", pNext = "                             + engine :: toString ( info.pNext ) +
+           ", vertexBindingDivisorCount = "         + info.vertexBindingDivisorCount +
+           ", vertexBindingDivisors = "             + :: toStringVulkan ( info.vertexBindingDivisorCount, info.pVertexBindingDivisors ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_DISCARD_RECTANGLES_AVAILABLE
+auto vulkan :: toString (
+        Type ( PipelineDiscardRectangleStateCreateInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( PipelineDiscardRectangleStateCreateInfo ) ) " " +
+           "{ structureType = "_s                   + toString ( info.structureType ) +
+           ", pNext = "                             + engine :: toString ( info.pNext ) +
+           ", flags = "                             + "0b" + Long ( info.flags ).toString(2) +
+           ", discardRectangleMode = "              + toString ( info.discardRectangleMode ) +
+           ", discardRectangleCount = "             + info.discardRectangleCount +
+           ", discardRectangles = "                 + :: toStringVulkan ( info.discardRectangleCount, info.pDiscardRectangles ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_FRAGMENT_SHADING_RATE_ENUMS_AVAILABLE
+auto vulkan :: toString (
+        Type ( PipelineFragmentShadingRateEnumStateCreateInfoNVidia ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( PipelineFragmentShadingRateEnumStateCreateInfoNVidia ) ) " " +
+           "{ structureType = "_s                   + toString ( info.structureType ) +
+           ", pNext = "                             + engine :: toString ( info.pNext ) +
+           ", shadingRateType = "                   + toString ( info.shadingRateType ) +
+           ", shadingRate = "                       + toString ( info.shadingRate ) +
+           ", combinerOperations = "                + :: toStringVulkan ( 2, & info.combinerOperations[0] ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_FRAGMENT_SHADING_RATE_AVAILABLE
+auto vulkan :: toString (
+        Type ( PipelineFragmentShadingRateStateCreateInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( PipelineFragmentShadingRateStateCreateInfo ) ) " " +
+           "{ structureType = "_s                   + toString ( info.structureType ) +
+           ", pNext = "                             + engine :: toString ( info.pNext ) +
+           ", fragmentSize = "                      + toString ( info.fragmentSize ) +
+           ", combinerOperations = "                + :: toStringVulkan ( 2, & info.combinerOperations[0] ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE
+auto vulkan :: toString (
+        Type ( PipelineRenderingCreateInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( PipelineFragmentShadingRateStateCreateInfo ) ) " " +
+           "{ structureType = "_s                   + toString ( info.structureType ) +
+           ", pNext = "                             + engine :: toString ( info.pNext ) +
+           ", viewMask = "                          + info.viewMask +
+           ", colorAttachmentCount = "              + info.colorAttachmentCount +
+           ", colorAttachmentFormats = "            + :: toStringVulkan ( info.colorAttachmentCount, info.pColorAttachmentFormats ) +
+           ", depthAttachmentFormat = "             + toString ( info.depthAttachmentFormat ) +
+           ", stencilAttachmentFormat = "           + toString ( info.stencilAttachmentFormat ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_REPRESENTATIVE_FRAGMENT_TEST_AVAILABLE
+auto vulkan :: toString (
+        Type ( PipelineRepresentativeFragmentTestStateCreateInfoNVidia ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( PipelineRepresentativeFragmentTestStateCreateInfoNVidia ) ) " " +
+           "{ structureType = "_s                   + toString ( info.structureType ) +
+           ", pNext = "                             + engine :: toString ( info.pNext ) +
+           ", representativeFragmentTestEnable = "  + ( info.representativeFragmentTestEnable == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+auto vulkan :: toString (
+        Type ( PipelineTessellationDomainOriginStateCreateInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( PipelineTessellationDomainOriginStateCreateInfo ) ) " " +
+           "{ structureType = "_s                   + toString ( info.structureType ) +
+           ", pNext = "                             + engine :: toString ( info.pNext ) +
+           ", domainOrigin = "                      + toString ( info.domainOrigin ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SHADING_RATE_IMAGE_AVAILABLE
+auto vulkan :: toString (
+        Type ( CoarseSampleLocationNVidia ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( CoarseSampleLocationNVidia ) ) " " +
+           "{ pixelX = "_s  + info.pixelX +
+           ", pixelY = "    + info.pixelY +
+           ", sample = "    + info.sample +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SHADING_RATE_IMAGE_AVAILABLE
+auto vulkan :: toString (
+        Type ( CoarseSampleOrderCustomNVidia ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( CoarseSampleOrderCustomNVidia ) ) " " +
+           "{ shadingRate = "_s         + toString ( info.shadingRate ) +
+           ", sampleCount = "           + info.sampleCount +
+           ", sampleLocationCount = "   + info.sampleLocationCount +
+           ", sampleLocations = "       + :: toStringVulkan ( info.sampleLocationCount, info.pSampleLocations ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SHADING_RATE_IMAGE_AVAILABLE
+auto vulkan :: toString (
+        Type ( PipelineViewportCoarseSampleOrderStateCreateInfoNVidia ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( PipelineViewportCoarseSampleOrderStateCreateInfoNVidia ) ) " " +
+           "{ structureType = "_s                   + toString ( info.structureType ) +
+           ", pNext = "                             + engine :: toString ( info.pNext ) +
+           ", sampleOrderType = "                   + toString ( info.sampleOrderType ) +
+           ", customSampleOrderCount = "            + info.customSampleOrderCount +
+           ", customSampleOrders = "                + :: toStringVulkan ( info.customSampleOrderCount, info.pCustomSampleOrders ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SHADING_RATE_IMAGE_AVAILABLE
+auto vulkan :: toString (
+        Type ( ShadingRatePaletteNVidia ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( ShadingRatePaletteNVidia ) ) " " +
+           "{ shadingRatePaletteEntryCount = "_s    + info.shadingRatePaletteEntryCount +
+           ", pShadingRatePaletteEntries = "        + :: toStringVulkan ( info.shadingRatePaletteEntryCount, info.pShadingRatePaletteEntries ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SHADING_RATE_IMAGE_AVAILABLE
+auto vulkan :: toString (
+        Type ( PipelineViewportShadingRateImageStateCreateInfoNVidia ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( PipelineViewportShadingRateImageStateCreateInfoNVidia ) ) " " +
+           "{ structureType = "_s                   + toString ( info.structureType ) +
+           ", pNext = "                             + engine :: toString ( info.pNext ) +
+           ", shadingRateImageEnable = "            + ( info.shadingRateImageEnable == VK_TRUE ? "true" : "false" ) +
+           ", viewportCount = "                     + info.viewportCount +
+           ", pShadingRatePalettes = "              + :: toStringVulkan ( info.viewportCount, info.pShadingRatePalettes ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_DEPTH_CLIP_CONTROL_AVAILABLE
+auto vulkan :: toString (
+        Type ( PipelineViewportDepthClipControlCreateInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( PipelineViewportDepthClipControlCreateInfo ) ) " " +
+           "{ structureType = "_s                   + toString ( info.structureType ) +
+           ", pNext = "                             + engine :: toString ( info.pNext ) +
+           ", negativeOneToOne = "                  + ( info.negativeOneToOne == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SCISSOR_EXCLUSIVE_AVAILABLE
+auto vulkan :: toString (
+        Type ( PipelineViewportExclusiveScissorStateCreateInfoNVidia ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( PipelineViewportExclusiveScissorStateCreateInfoNVidia ) ) " " +
+           "{ structureType = "_s                   + toString ( info.structureType ) +
+           ", pNext = "                             + engine :: toString ( info.pNext ) +
+           ", exclusiveScissorCount = "             + info.exclusiveScissorCount +
+           ", exclusiveScissors = "                 + :: toStringVulkan ( info.exclusiveScissorCount, info.pExclusiveScissors ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_VIEWPORT_SWIZZLE_AVAILABLE
+auto vulkan :: toString (
+        Type ( ViewportSwizzleNVidia ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( ViewportSwizzleNVidia ) ) " " +
+           "{ x = "_s   + toString ( info.x ) +
+           ", y = "     + toString ( info.y ) +
+           ", z = "     + toString ( info.z ) +
+           ", w = "     + toString ( info.w ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SCISSOR_EXCLUSIVE_AVAILABLE
+auto vulkan :: toString (
+        Type ( PipelineViewportSwizzleStateCreateInfoNVidia ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( PipelineViewportSwizzleStateCreateInfoNVidia ) ) " " +
+           "{ structureType = "_s                   + toString ( info.structureType ) +
+           ", pNext = "                             + engine :: toString ( info.pNext ) +
+           ", flags = "                             + "0b" + Long ( info.flags ).toString(2) +
+           ", viewportCount = "                     + info.viewportCount +
+           ", viewportSwizzles = "                  + :: toStringVulkan ( info.viewportCount, info.pViewportSwizzles ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_CLIP_SPACE_W_SCALING_AVAILABLE
+auto vulkan :: toString (
+        Type ( ViewportWScalingNVidia ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( ViewportSwizzleNVidia ) ) " " +
+           "{ xCoefficient = "_s   + toString ( info.xCoefficient ) +
+           ", yCoefficient = "     + toString ( info.yCoefficient ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_CLIP_SPACE_W_SCALING_AVAILABLE
+auto vulkan :: toString (
+        Type ( PipelineViewportWScalingStateCreateInfoNVidia ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( PipelineViewportWScalingStateCreateInfoNVidia ) ) " " +
+           "{ structureType = "_s                   + toString ( info.structureType ) +
+           ", pNext = "                             + engine :: toString ( info.pNext ) +
+           ", viewportWScalingEnable = "            + ( info.viewportWScalingEnable == VK_TRUE ? "true" : "false" ) +
+           ", viewportCount = "                     + info.viewportCount +
+           ", viewportWScalings = "                 + :: toStringVulkan ( info.viewportCount, info.pViewportWScalings ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_CONSERVATIVE_RASTERIZATION_AVAILABLE
+auto vulkan :: toString (
+        Type ( PipelineRasterizationConservativeStateCreateInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( PipelineRasterizationConservativeStateCreateInfo ) ) " " +
+           "{ structureType = "_s                   + toString ( info.structureType ) +
+           ", pNext = "                             + engine :: toString ( info.pNext ) +
+           ", flags = "                             + "0b" + Long ( info.flags ).toString(2) +
+           ", conservativeRasterizationMode = "     + toString ( info.conservativeRasterizationMode ) +
+           ", extraPrimitiveOverestimationSize = "  + info.extraPrimitiveOverestimationSize +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_DEPTH_CLIP_ENABLE_AVAILABLE
+auto vulkan :: toString (
+        Type ( PipelineRasterizationDepthClipStateCreateInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( PipelineRasterizationDepthClipStateCreateInfo ) ) " " +
+           "{ structureType = "_s                   + toString ( info.structureType ) +
+           ", pNext = "                             + engine :: toString ( info.pNext ) +
+           ", flags = "                             + "0b" + Long ( info.flags ).toString(2) +
+           ", depthClipEnable = "                   + ( info.depthClipEnable == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_LINE_RASTERIZATION_AVAILABLE
+auto vulkan :: toString (
+        Type ( PipelineRasterizationLineStateCreateInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( PipelineRasterizationLineStateCreateInfo ) ) " " +
+           "{ structureType = "_s                   + toString ( info.structureType ) +
+           ", pNext = "                             + engine :: toString ( info.pNext ) +
+           ", lineRasterizationMode = "             + toString ( info.lineRasterizationMode ) +
+           ", stippledLineEnable = "                + ( info.stippledLineEnable == VK_TRUE ? "true" : "false" ) +
+           ", lineStippleFactor = "                 + info.lineStippleFactor +
+           ", lineStipplePattern = "                + info.lineStipplePattern +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_PROVOKING_VERTEX_AVAILABLE
+auto vulkan :: toString (
+        Type ( PipelineRasterizationProvokingVertexStateCreateInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( PipelineRasterizationProvokingVertexStateCreateInfo ) ) " " +
+           "{ structureType = "_s                   + toString ( info.structureType ) +
+           ", pNext = "                             + engine :: toString ( info.pNext ) +
+           ", provokingVertexMode = "               + toString ( info.provokingVertexMode ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_AMD_RASTERIZATION_ORDER_AVAILABLE
+auto vulkan :: toString (
+        Type ( PipelineRasterizationStateRasterizationOrderAMD ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( PipelineRasterizationStateRasterizationOrderAMD ) ) " " +
+           "{ structureType = "_s                   + toString ( info.structureType ) +
+           ", pNext = "                             + engine :: toString ( info.pNext ) +
+           ", rasterizationOrder = "                + toString ( info.rasterizationOrder ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_TRANSFORM_FEEDBACK_AVAILABLE
+auto vulkan :: toString (
+        Type ( PipelineRasterizationStateStreamCreateInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( PipelineRasterizationStateStreamCreateInfo ) ) " " +
+           "{ structureType = "_s                   + toString ( info.structureType ) +
+           ", pNext = "                             + engine :: toString ( info.pNext ) +
+           ", flags = "                             + "0b" + Long ( info.flags ).toString(2) +
+           ", rasterizationStream = "               + info.rasterizationStream +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_FRAMEBUFFER_MIXED_SAMPLES_AVAILABLE
+auto vulkan :: toString (
+        Type ( PipelineCoverageModulationStateCreateInfoNVidia ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( PipelineCoverageModulationStateCreateInfoNVidia ) ) " " +
+           "{ structureType = "_s                   + toString ( info.structureType ) +
+           ", pNext = "                             + engine :: toString ( info.pNext ) +
+           ", flags = "                             + "0b" + Long ( info.flags ).toString(2) +
+           ", coverageModulationMode = "            + toString ( info.coverageModulationMode ) +
+           ", coverageModulationTableEnable = "     + ( info.coverageModulationTableEnable == VK_TRUE ? "true" : "false" ) +
+           ", coverageModulationTableCount = "      + info.coverageModulationTableCount +
+           ", coverageModulationTable = "           + :: toStringRegular ( info.coverageModulationTableCount, info.pCoverageModulationTable ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_COVERAGE_REDUCTION_MODE_AVAILABLE
+auto vulkan :: toString (
+        Type ( PipelineCoverageReductionStateCreateInfoNVidia ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( PipelineCoverageReductionStateCreateInfoNVidia ) ) " " +
+           "{ structureType = "_s                   + toString ( info.structureType ) +
+           ", pNext = "                             + engine :: toString ( info.pNext ) +
+           ", flags = "                             + "0b" + Long ( info.flags ).toString(2) +
+           ", coverageReductionMode = "             + toString ( info.coverageReductionMode ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_FRAGMENT_COVERAGE_TO_COLOR_AVAILABLE
+auto vulkan :: toString (
+        Type ( PipelineCoverageToColorStateCreateInfoNVidia ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( PipelineCoverageToColorStateCreateInfoNVidia ) ) " " +
+           "{ structureType = "_s                   + toString ( info.structureType ) +
+           ", pNext = "                             + engine :: toString ( info.pNext ) +
+           ", flags = "                             + "0b" + Long ( info.flags ).toString(2) +
+           ", coverageToColorEnable = "             + ( info.coverageToColorEnable == VK_TRUE ? "true" : "false" ) +
+           ", coverageToColorLocation = "           + info.coverageToColorLocation +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_SAMPLE_LOCATIONS_AVAILABLE
+auto vulkan :: toString (
+        Type ( PipelineSampleLocationsStateCreateInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( PipelineSampleLocationsStateCreateInfo ) ) " " +
+           "{ structureType = "_s                   + toString ( info.structureType ) +
+           ", pNext = "                             + engine :: toString ( info.pNext ) +
+           ", sampleLocationsEnable = "             + ( info.sampleLocationsEnable == VK_TRUE ? "true" : "false" ) +
+           ", sampleLocationsInfo = "               + toString ( info.sampleLocationsInfo ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_BLEND_OPERATION_ADVANCED_AVAILABLE
+auto vulkan :: toString (
+        Type ( PipelineColorBlendAdvancedStateCreateInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( PipelineColorBlendAdvancedStateCreateInfo ) ) " " +
+           "{ structureType = "_s                   + toString ( info.structureType ) +
+           ", pNext = "                             + engine :: toString ( info.pNext ) +
+           ", sourcePremultiplied = "               + ( info.sourcePremultiplied == VK_TRUE ? "true" : "false" ) +
+           ", destinationPremultiplied = "          + ( info.destinationPremultiplied == VK_TRUE ? "true" : "false" ) +
+           ", blendOverlap = "                      + toString ( info.blendOverlap ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_COLOR_WRITE_ENABLE_AVAILABLE
+auto vulkan :: toString (
+        Type ( PipelineColorWriteCreateInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( PipelineColorWriteCreateInfo ) ) " " +
+           "{ structureType = "_s                   + toString ( info.structureType ) +
+           ", pNext = "                             + engine :: toString ( info.pNext ) +
+           ", attachmentCount = "                   + info.attachmentCount +
+           ", colorWriteEnables = "                 + :: toStringRegular ( info.attachmentCount, info.pColorWriteEnables ) +
            " }";
 }
 #endif

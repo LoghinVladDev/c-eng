@@ -223,10 +223,12 @@ using VkPhysicalDeviceZeroInitializeWorkgroupMemoryFeatures_t   = VkPhysicalDevi
 using VkCommandBufferInheritanceRenderingInfo_t                 = VkCommandBufferInheritanceRenderingInfo;
 using VkRenderingInfo_t                                         = VkRenderingInfo;
 using VkRenderingAttachmentInfo_t                               = VkRenderingAttachmentInfo;
+using VkPipelineRenderingCreateInfo_t                           = VkPipelineRenderingCreateInfo;
 #elif __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE
 using VkCommandBufferInheritanceRenderingInfo_t                 = VkCommandBufferInheritanceRenderingInfoKHR;
 using VkRenderingInfo_t                                         = VkRenderingInfoKHR;
 using VkRenderingAttachmentInfo_t                               = VkRenderingAttachmentInfoKHR;
+using VkPipelineRenderingCreateInfo_t                           = VkPipelineRenderingCreateInfoKHR;
 #endif
 
 #if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE

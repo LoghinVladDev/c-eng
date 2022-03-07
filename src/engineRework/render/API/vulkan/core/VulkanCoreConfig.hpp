@@ -74,11 +74,31 @@ namespace engine :: vulkan :: config {
 
     constexpr cds :: uint32 cooperativeMatrixPropertiesCount                    = 512U;
 
-    constexpr cds :: uint32 pipelineCount                                       = 32U;
+    constexpr cds :: uint32 pipelineCount                                       = 8U;
+    constexpr cds :: uint32 pipelineStageCreationFeedbackCount                  = 64U;
 
     constexpr cds :: uint32 computePipelineCount                                = pipelineCount;
-    constexpr cds :: uint32 computePipelineStageCreationFeedbackCount           = 64U;
+    constexpr cds :: uint32 computePipelineStageCreationFeedbackCount           = pipelineStageCreationFeedbackCount;
     constexpr cds :: uint32 computePipelineSpecializationMapEntryCount          = 128U;
+
+    constexpr cds :: uint32 graphicsPipelineCount                                   = pipelineCount;
+    constexpr cds :: uint32 graphicsPipelineShaderStageCount                        = 16U;
+    constexpr cds :: uint32 graphicsPipelineSpecializationMapEntryCount             = 128U;
+    constexpr cds :: uint32 graphicsPipelineVertexInputBindingCount                 = 32U;
+    constexpr cds :: uint32 graphicsPipelineVertexInputAttributeCount               = 32U;
+    constexpr cds :: uint32 graphicsPipelineVertexInputBindingDivisorCount          = 64U;
+    constexpr cds :: uint32 graphicsPipelineViewportCount                           = 8U;
+    constexpr cds :: uint32 graphicsPipelineScissorCount                            = 16U;
+    constexpr cds :: uint32 graphicsPipelineViewportCustomSampleOrderCount          = 32U;
+    constexpr cds :: uint32 graphicsPipelineViewportCustomSampleLocationCount       = 4U;
+    constexpr cds :: uint32 graphicsPipelineViewportShadingRatePaletteEntryCount    = 8U;
+    constexpr cds :: uint32 graphicsPipelineMultisampleSampleLocations              = 64U;
+    constexpr cds :: uint32 graphicsPipelineColorBlendAttachmentCount               = 32U;
+    constexpr cds :: uint32 graphicsPipelineShaderGroupCount                        = 6U;
+    constexpr cds :: uint32 graphicsPipelineStageCreationFeedbackCount              = pipelineStageCreationFeedbackCount;
+    constexpr cds :: uint32 graphicsPipelineDiscardRectanglesCount                  = 128U;
+    constexpr cds :: uint32 graphicsPipelineDynamicRenderingColorAttachmentCount    = 128U;
+    constexpr cds :: uint32 graphicsPipelineDynamicStateCount                       = 32U;
 }
 
 #if defined ( __C_ENG_USE_DEFENSIVE_PROGRAMMING ) || !defined(NDEBUG)
