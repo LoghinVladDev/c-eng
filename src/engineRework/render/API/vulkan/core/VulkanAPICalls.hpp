@@ -953,6 +953,29 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         ) noexcept -> Type ( Result );
 #endif
 
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+        NoDiscard MaybeUnused extern auto createRayTracingPipelinesNVidia (
+                Type ( DeviceHandle ),
+                Type ( PipelineCacheHandle ),
+                cds :: uint32,
+                Type ( RayTracingPipelineCreateInfoNVidia ) const *,
+                Type ( AllocationCallbacks )                const *,
+                Type ( PipelineHandle )                           *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_RAY_TRACING_PIPELINE_AVAILABLE
+        NoDiscard MaybeUnused extern auto createRayTracingPipelines (
+                Type ( DeviceHandle ),
+                Type ( DeferredOperationHandle ),
+                Type ( PipelineCacheHandle ),
+                cds :: uint32,
+                Type ( RayTracingPipelineCreateInfo )       const *,
+                Type ( AllocationCallbacks )                const *,
+                Type ( PipelineHandle )                           *
+        ) noexcept -> Type ( Result );
+#endif
+
     } /// namespace vulkan
 
 } /// namespace engine

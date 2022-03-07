@@ -11585,3 +11585,128 @@ auto vulkan :: toString (
            " }";
 }
 #endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_RAY_TRACING_PIPELINE_AVAILABLE
+auto vulkan :: toString (
+        Type ( RayTracingShaderGroupType )  type
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( type ) {
+        case RayTracingShaderGroupTypeGeneral:              { asString = "General";                 break; }
+        case RayTracingShaderGroupTypeTrianglesHitGroup:    { asString = "Triangles Hit Group";     break; }
+        case RayTracingShaderGroupTypeProceduralHitGroup:   { asString = "Procedural Hit Group";    break; }
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+auto vulkan :: toString (
+        Type ( RayTracingShaderGroupCreateInfoNVidia ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( RayTracingShaderGroupCreateInfoNVidia ) ) " " +
+           "{ structureType = "_s                   + toString ( info.structureType ) +
+           ", pNext = "                             + engine :: toString ( info.pNext ) +
+           ", type = "                              + toString ( info.type ) +
+           ", generalShader = "                     + info.generalShader +
+           ", closestHitShader = "                  + info.closestHitShader +
+           ", anyHitShader = "                      + info.anyHitShader +
+           ", intersectionShader = "                + info.intersectionShader +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+auto vulkan :: toString (
+        Type ( RayTracingPipelineCreateInfoNVidia ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( RayTracingPipelineCreateInfoNVidia ) ) " " +
+           "{ structureType = "_s                   + toString ( info.structureType ) +
+           ", pNext = "                             + engine :: toString ( info.pNext ) +
+           ", flags = "                             + "0b" + Long ( info.flags ).toString(2) +
+           ", stageCount = "                        + info.stageCount +
+           ", stages = "                            + :: toStringVulkan ( info.stageCount, info.pStages ) +
+           ", groupCount = "                        + info.groupCount +
+           ", groups = "                            + :: toStringVulkan ( info.groupCount, info.pGroups ) +
+           ", maxRecursionDepth = "                 + info.maxRecursionDepth +
+           ", layout = "                            + engine :: toString ( info.layout ) +
+           ", basePipelineHandle = "                + engine :: toString ( info.basePipelineHandle ) +
+           ", basePipelineIndex = "                 + engine :: toString ( info.basePipelineIndex ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_RAY_TRACING_PIPELINE_AVAILABLE
+auto vulkan :: toString (
+        Type ( RayTracingShaderGroupCreateInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( RayTracingShaderGroupCreateInfo ) ) " " +
+           "{ structureType = "_s                   + toString ( info.structureType ) +
+           ", pNext = "                             + engine :: toString ( info.pNext ) +
+           ", type = "                              + toString ( info.type ) +
+           ", generalShader = "                     + info.generalShader +
+           ", closestHitShader = "                  + info.closestHitShader +
+           ", anyHitShader = "                      + info.anyHitShader +
+           ", intersectionShader = "                + info.intersectionShader +
+           ", pShaderGroupCaptureReplayHandle = "   + engine :: toString ( info.pShaderGroupCaptureReplayHandle ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_RAY_TRACING_PIPELINE_AVAILABLE
+auto vulkan :: toString (
+        Type ( PipelineLibraryCreateInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( PipelineLibraryCreateInfo ) ) " " +
+           "{ structureType = "_s   + toString ( info.structureType ) +
+           ", pNext = "             + engine :: toString ( info.pNext ) +
+           ", libraryCount = "      + info.libraryCount +
+           ", libraries = "         + :: toStringEngine ( info.libraryCount, info.pLibraries ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_RAY_TRACING_PIPELINE_AVAILABLE
+auto vulkan :: toString (
+        Type ( RayTracingPipelineInterfaceCreateInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( RayTracingPipelineInterfaceCreateInfo ) ) " " +
+           "{ structureType = "_s                   + toString ( info.structureType ) +
+           ", pNext = "                             + engine :: toString ( info.pNext ) +
+           ", maxPipelineRayPayloadSize = "         + info.maxPipelineRayPayloadSize +
+           ", maxPipelineRayHitAttributeSize = "    + info.maxPipelineRayHitAttributeSize +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_RAY_TRACING_PIPELINE_AVAILABLE
+auto vulkan :: toString (
+        Type ( RayTracingPipelineCreateInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( RayTracingPipelineCreateInfo ) ) " " +
+           "{ structureType = "_s                   + toString ( info.structureType ) +
+           ", pNext = "                             + engine :: toString ( info.pNext ) +
+           ", flags = "                             + "0b" + Long ( info.flags ).toString(2) +
+           ", stageCount = "                        + info.stageCount +
+           ", stages = "                            + :: toStringVulkan ( info.stageCount, info.pStages ) +
+           ", groupCount = "                        + info.groupCount +
+           ", groups = "                            + :: toStringVulkan ( info.groupCount, info.pGroups ) +
+           ", maxRecursionDepth = "                 + info.maxPipelineRayRecursionDepth +
+           ", pLibraryInfo = "                      + engine :: toString ( info.pLibraryInfo ) +
+           ", pLibraryInterface = "                 + engine :: toString ( info.pLibraryInterface ) +
+           ", pDynamicState = "                     + engine :: toString ( info.pDynamicState ) +
+           ", layout = "                            + engine :: toString ( info.layout ) +
+           ", basePipelineHandle = "                + engine :: toString ( info.basePipelineHandle ) +
+           ", basePipelineIndex = "                 + engine :: toString ( info.basePipelineIndex ) +
+           " }";
+}
+#endif

@@ -76,14 +76,17 @@ namespace engine :: vulkan :: config {
 
     constexpr cds :: uint32 pipelineCount                                       = 8U;
     constexpr cds :: uint32 pipelineStageCreationFeedbackCount                  = 64U;
+    constexpr cds :: uint32 pipelineShaderStageCount                            = 16U;
+    constexpr cds :: uint32 pipelineSpecializationMapEntryCount                 = 128U;
+    constexpr cds :: uint32 pipelineDynamicStateCount                           = 256U;
 
     constexpr cds :: uint32 computePipelineCount                                = pipelineCount;
     constexpr cds :: uint32 computePipelineStageCreationFeedbackCount           = pipelineStageCreationFeedbackCount;
-    constexpr cds :: uint32 computePipelineSpecializationMapEntryCount          = 128U;
+    constexpr cds :: uint32 computePipelineSpecializationMapEntryCount          = pipelineSpecializationMapEntryCount;
 
     constexpr cds :: uint32 graphicsPipelineCount                                   = pipelineCount;
-    constexpr cds :: uint32 graphicsPipelineShaderStageCount                        = 16U;
-    constexpr cds :: uint32 graphicsPipelineSpecializationMapEntryCount             = 128U;
+    constexpr cds :: uint32 graphicsPipelineShaderStageCount                        = pipelineShaderStageCount;
+    constexpr cds :: uint32 graphicsPipelineSpecializationMapEntryCount             = pipelineSpecializationMapEntryCount;
     constexpr cds :: uint32 graphicsPipelineVertexInputBindingCount                 = 32U;
     constexpr cds :: uint32 graphicsPipelineVertexInputAttributeCount               = 32U;
     constexpr cds :: uint32 graphicsPipelineVertexInputBindingDivisorCount          = 64U;
@@ -98,7 +101,14 @@ namespace engine :: vulkan :: config {
     constexpr cds :: uint32 graphicsPipelineStageCreationFeedbackCount              = pipelineStageCreationFeedbackCount;
     constexpr cds :: uint32 graphicsPipelineDiscardRectanglesCount                  = 128U;
     constexpr cds :: uint32 graphicsPipelineDynamicRenderingColorAttachmentCount    = 128U;
-    constexpr cds :: uint32 graphicsPipelineDynamicStateCount                       = 32U;
+    constexpr cds :: uint32 graphicsPipelineDynamicStateCount                       = pipelineDynamicStateCount;
+
+    constexpr cds :: uint32 rayTracingPipelineCount                                 = pipelineCount;
+    constexpr cds :: uint32 rayTracingPipelineStageCreationFeedbackCount            = pipelineStageCreationFeedbackCount;
+    constexpr cds :: uint32 rayTracingPipelineShaderStageCount                      = pipelineShaderStageCount;
+    constexpr cds :: uint32 rayTracingPipelineSpecializationMapEntryCount           = pipelineSpecializationMapEntryCount;
+    constexpr cds :: uint32 rayTracingPipelineShaderGroupCount                      = 64U;
+    constexpr cds :: uint32 rayTracingPipelineDynamicStateCount                     = pipelineDynamicStateCount;
 }
 
 #if defined ( __C_ENG_USE_DEFENSIVE_PROGRAMMING ) || !defined(NDEBUG)

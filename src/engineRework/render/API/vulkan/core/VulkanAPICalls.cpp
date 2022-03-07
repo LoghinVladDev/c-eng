@@ -116,6 +116,9 @@ public:
                 LOG_CONTEXT_SIZE ( CreatePipelineSharedContext, 2 )
                     LOG_CONTEXT_SIZE ( CreateComputePipelineContext, 3 )
                     LOG_CONTEXT_SIZE ( CreateGraphicsPipelineContext, 3 )
+                    LOG_CONTEXT_SIZE ( CreateRayTracingPipelineSharedContext, 3 )
+                        LOG_CONTEXT_SIZE ( CreateRayTracingPipelineNVidiaContext, 3 )
+                        LOG_CONTEXT_SIZE ( CreateRayTracingPipelineContext, 3 )
             LOG_CONTEXT_SIZE ( EnumerateSharedContext, 1 )
                 LOG_CONTEXT_SIZE ( EnumerateLayerPropertiesContext, 2 )
                 LOG_CONTEXT_SIZE ( EnumerateExtensionPropertiesContext, 2 )
@@ -4293,6 +4296,90 @@ auto engine :: vulkan :: createGraphicsPipelines (
     }
 
     extractContext ( count,& pCreateInfos[0], & context->create.pipeline.graphics );
+
+    return ResultSuccess;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+auto engine :: vulkan :: createRayTracingPipelinesNVidia (
+        Type ( DeviceHandle )                               deviceHandle,
+        Type ( PipelineCacheHandle )                        pipelineCacheHandle,
+        cds :: uint32                                       count,
+        Type ( RayTracingPipelineCreateInfoNVidia ) const * pCreateInfos,
+        Type ( AllocationCallbacks )                const * pAllocationCallbacks,
+        Type ( PipelineHandle )                           * pPipelineHandles
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || count == 0U || pCreateInfos == nullptr || pPipelineHandles == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkCreateRayTracingPipelinesNV )
+
+    auto context = ContextManager :: acquire();
+
+    if (
+            auto result = vkCreateRayTracingPipelinesNVHandle (
+                    deviceHandle,
+                    pipelineCacheHandle,
+                    count,
+                    prepareContext ( & context->create.pipeline.rayTracing.nVidiaPipeline, count, & pCreateInfos[0] ),
+                    AllocatorHandler :: apply ( pAllocationCallbacks ),
+                    & pPipelineHandles [0]
+            ); result != VK_SUCCESS
+    ) {
+        return static_cast < Type ( Result ) > ( result );
+    }
+
+    extractContext ( count, & pCreateInfos[0], & context->create.pipeline.rayTracing.nVidiaPipeline );
+
+    return ResultSuccess;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_RAY_TRACING_PIPELINE_AVAILABLE
+auto engine :: vulkan :: createRayTracingPipelines (
+        Type ( DeviceHandle )                               deviceHandle,
+        Type ( DeferredOperationHandle )                    deferredOperationHandle,
+        Type ( PipelineCacheHandle )                        pipelineCacheHandle,
+        cds :: uint32                                       count,
+        Type ( RayTracingPipelineCreateInfo )       const * pCreateInfos,
+        Type ( AllocationCallbacks )                const * pAllocationCallbacks,
+        Type ( PipelineHandle )                           * pPipelineHandles
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || count == 0U || pCreateInfos == nullptr || pPipelineHandles == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkCreateRayTracingPipelinesKHR )
+
+    auto context = ContextManager :: acquire();
+
+    if (
+            auto result = vkCreateRayTracingPipelinesKHRHandle (
+                    deviceHandle,
+                    deferredOperationHandle,
+                    pipelineCacheHandle,
+                    count,
+                    prepareContext ( & context->create.pipeline.rayTracing.pipeline, count, & pCreateInfos[0] ),
+                    AllocatorHandler :: apply ( pAllocationCallbacks ),
+                    & pPipelineHandles [0]
+            ); result != VK_SUCCESS
+    ) {
+        return static_cast < Type ( Result ) > ( result );
+    }
+
+    extractContext ( count, & pCreateInfos[0], & context->create.pipeline.rayTracing.pipeline );
 
     return ResultSuccess;
 }

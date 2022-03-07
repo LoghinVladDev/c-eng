@@ -4590,6 +4590,20 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #include <ObjectMapping.hpp>
 #endif
 
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_RAY_TRACING_PIPELINE_AVAILABLE
+#define C_ENG_MAP_START ENUM ( RayTracingShaderGroupType, TYPE ( cds :: uint8 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( General,            VkRayTracingShaderGroupTypeKHR :: VK_RAY_TRACING_SHADER_GROUP_TYPE_GENERAL_KHR ),
+            Field ( TrianglesHitGroup,  VkRayTracingShaderGroupTypeKHR :: VK_RAY_TRACING_SHADER_GROUP_TYPE_TRIANGLES_HIT_GROUP_KHR ),
+            Field ( ProceduralHitGroup, VkRayTracingShaderGroupTypeKHR :: VK_RAY_TRACING_SHADER_GROUP_TYPE_PROCEDURAL_HIT_GROUP_KHR ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
 
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 
@@ -4693,6 +4707,10 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_PIPELINE_CREATION_FEEDBACK_AVAILABLE
         __C_ENG_ALIAS ( PipelineCreationFeedbackFlags,      VkPipelineCreationFeedbackFlags );
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DEFERRED_HOST_OPERATIONS_AVAILABLE
+        __C_ENG_ALIAS ( DeferredOperationHandle,  VkDeferredOperationKHR );
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_FRAMEBUFFER_MIXED_SAMPLES_AVAILABLE
@@ -12441,6 +12459,113 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #endif
 
 
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( RayTracingShaderGroupCreateInfoNVidia, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                                      structureType;
+            Type ( GenericStructure )                           const * pNext;
+            Type ( RayTracingShaderGroupType )                          type;
+            cds :: uint32                                               generalShader;
+            cds :: uint32                                               closestHitShader;
+            cds :: uint32                                               anyHitShader;
+            cds :: uint32                                               intersectionShader;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START STRUCT ( RayTracingPipelineCreateInfoNVidia, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                                      structureType;
+            Type ( GenericStructure )                           const * pNext;
+            Type ( PipelineCreateFlags )                                flags;
+            cds :: uint32                                               stageCount;
+            Type ( PipelineShaderStageCreateInfo )              const * pStages;
+            cds :: uint32                                               groupCount;
+            Type ( RayTracingShaderGroupCreateInfoNVidia )      const * pGroups;
+            cds :: uint32                                               maxRecursionDepth;
+            Type ( PipelineLayoutHandle )                               layout;
+            Type ( PipelineHandle )                                     basePipelineHandle;
+            cds :: sint32                                               basePipelineIndex;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_RAY_TRACING_PIPELINE_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( RayTracingShaderGroupCreateInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                                      structureType;
+            Type ( GenericStructure )                           const * pNext;
+            Type ( RayTracingShaderGroupType )                          type;
+            cds :: uint32                                               generalShader;
+            cds :: uint32                                               closestHitShader;
+            cds :: uint32                                               anyHitShader;
+            cds :: uint32                                               intersectionShader;
+            void                                                const * pShaderGroupCaptureReplayHandle;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START STRUCT ( PipelineLibraryCreateInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                                      structureType;
+            Type ( GenericStructure )                           const * pNext;
+            cds :: uint32                                               libraryCount;
+            Type ( PipelineHandle )                             const * pLibraries;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START STRUCT ( RayTracingPipelineInterfaceCreateInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                                      structureType;
+            Type ( GenericStructure )                           const * pNext;
+            cds :: uint32                                               maxPipelineRayPayloadSize;
+            cds :: uint32                                               maxPipelineRayHitAttributeSize;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START STRUCT ( RayTracingPipelineCreateInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                                      structureType;
+            Type ( GenericStructure )                           const * pNext;
+            Type ( PipelineCreateFlags )                                flags;
+            cds :: uint32                                               stageCount;
+            Type ( PipelineShaderStageCreateInfo )              const * pStages;
+            cds :: uint32                                               groupCount;
+            Type ( RayTracingShaderGroupCreateInfo )            const * pGroups;
+            cds :: uint32                                               maxPipelineRayRecursionDepth;
+            Type ( PipelineLibraryCreateInfo )                  const * pLibraryInfo;
+            Type ( RayTracingPipelineInterfaceCreateInfo )      const * pLibraryInterface;
+            Type ( PipelineDynamicStateCreateInfo )             const * pDynamicState;
+            Type ( PipelineLayoutHandle )                               layout;
+            Type ( PipelineHandle )                                     basePipelineHandle;
+            cds :: sint32                                               basePipelineIndex;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+
 #define C_ENG_MAP_START     HEADER
 #include <ObjectMapping.hpp>
 
@@ -12566,6 +12691,10 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_VIEWPORT_SWIZZLE_AVAILABLE
         NoDiscard auto toString ( Type ( ViewportCoordinateSwizzleNVidia ) ) noexcept -> cds :: StringLiteral;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_RAY_TRACING_PIPELINE_AVAILABLE
+        NoDiscard auto toString ( Type ( RayTracingShaderGroupType ) ) noexcept -> cds :: StringLiteral;
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_FRAGMENT_SHADING_RATE_ENUMS_AVAILABLE
@@ -12864,6 +12993,18 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_SUBGROUP_SIZE_CONTROL_AVAILABLE
         NoDiscard auto toString ( Type ( PipelineShaderStageRequiredSubgroupSizeCreateInfo ) const & ) noexcept -> cds :: String;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_RAY_TRACING_PIPELINE_AVAILABLE
+        NoDiscard auto toString ( Type ( RayTracingPipelineCreateInfo ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( RayTracingShaderGroupCreateInfo ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( PipelineLibraryCreateInfo ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( RayTracingPipelineInterfaceCreateInfo ) const & ) noexcept -> cds :: String;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+        NoDiscard auto toString ( Type ( RayTracingShaderGroupCreateInfoNVidia ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( RayTracingPipelineCreateInfoNVidia ) const & ) noexcept -> cds :: String;
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_FRAMEBUFFER_MIXED_SAMPLES_AVAILABLE

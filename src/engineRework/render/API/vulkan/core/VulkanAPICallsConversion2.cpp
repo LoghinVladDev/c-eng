@@ -2569,4 +2569,657 @@ namespace engine :: vulkan {
     }
 #endif
 
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+    auto extractContext (
+            cds :: uint32                                count,
+            Type ( RayTracingPipelineCreateInfoNVidia )  const * pCreateInfos,
+            CreateRayTracingPipelineNVidiaContext        const * pContext
+    ) noexcept -> void {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( count == 0U || pCreateInfos == nullptr || pContext == nullptr ) {
+            return;
+        }
+
+#endif
+
+        for ( cds :: uint32 i = 0U; i < count; ++ i ) {
+            auto pCurrent   = reinterpret_cast < Type ( GenericInStructure ) const * > ( pCreateInfos[i].pNext );
+
+            while ( pCurrent != nullptr ) {
+
+                switch ( pCurrent->structureType ) {
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_PIPELINE_CREATION_FEEDBACK_AVAILABLE
+
+                    case StructureTypePipelineCreationFeedbackCreateInfo: {
+                        auto pFeedbackCreateInfo = reinterpret_cast < Type ( PipelineCreationFeedbackCreateInfo ) const * > ( pCurrent );
+
+                        if ( pFeedbackCreateInfo->pPipelineCreationFeedback != nullptr ) {
+                            (void) fromVulkanFormat ( pFeedbackCreateInfo->pPipelineCreationFeedback, & pContext->pipelineCreationFeedbacks[i] );
+                        }
+
+                        for ( cds :: uint32 j = 0U; j < pFeedbackCreateInfo->pipelineStageCreationFeedbackCount; ++ j ) {
+                            (void) fromVulkanFormat ( & pFeedbackCreateInfo->pPipelineStageCreationFeedbacks[j], & pContext->pipelineCreationStageFeedbacks[i][j] );
+                        }
+
+                        break;
+                    }
+
+#endif
+
+                    default:
+                        break;
+                }
+
+                pCurrent = pCurrent->pNext;
+            }
+        }
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+    auto prepareContext (
+            CreateRayTracingPipelineNVidiaContext             * pContext,
+            cds :: uint32                                       count,
+            Type ( RayTracingPipelineCreateInfoNVidia ) const * pCreateInfos
+    ) noexcept -> VkRayTracingPipelineCreateInfoNV * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pContext == nullptr || count == 0U || pCreateInfos == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        if ( count > engine :: vulkan :: config :: rayTracingPipelineCount ) {
+            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, String :: f (
+                    "config :: rayTracingPipelineCount = %d. Minimum Required = %d",
+                    engine :: vulkan :: config :: rayTracingPipelineCount,
+                    count
+            ))
+
+            count = engine :: vulkan :: config :: rayTracingPipelineCount;
+        }
+
+        for ( uint32 i = 0U; i < count; ++ i ) {
+
+            auto pCurrent   = reinterpret_cast < Type ( GenericInStructure ) const * > ( pCreateInfos[i].pNext );
+            auto pCurrentVk = reinterpret_cast < VkBaseOutStructure * > ( toVulkanFormat ( & pContext->createInfos[i], & pCreateInfos[i] ) );
+
+            while ( pCurrent != nullptr ) {
+
+                switch ( pCurrent->structureType ) {
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_PIPELINE_CREATION_FEEDBACK_AVAILABLE
+
+                    case StructureTypePipelineCreationFeedbackCreateInfo: {
+                        auto pFeedbackCreateInfo = reinterpret_cast < Type ( PipelineCreationFeedbackCreateInfo ) const * > ( pCurrent );
+                        pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                                toVulkanFormat (
+                                        & pContext->pipelineCreationFeedbackCreateInfos[i],
+                                        pFeedbackCreateInfo
+                                )
+                        );
+
+                        if ( pFeedbackCreateInfo->pPipelineCreationFeedback != nullptr ) {
+                            pContext->pipelineCreationFeedbackCreateInfos[i].pPipelineCreationFeedback = toVulkanFormat (
+                                    & pContext->pipelineCreationFeedbacks[i],
+                                    pFeedbackCreateInfo->pPipelineCreationFeedback
+                            );
+                        }
+
+                        pContext->pipelineCreationFeedbackCreateInfos[i].pPipelineStageCreationFeedbacks = & pContext->pipelineCreationStageFeedbacks[i][0];
+
+                        if ( pContext->pipelineCreationFeedbackCreateInfos[i].pipelineStageCreationFeedbackCount > engine :: vulkan :: config :: rayTracingPipelineStageCreationFeedbackCount ) {
+                            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, String :: f (
+                                    "config :: rayTracingPipelineStageCreationFeedbackCount = %d. Minimum Required = %d",
+                                    engine :: vulkan :: config :: rayTracingPipelineStageCreationFeedbackCount,
+                                    pContext->pipelineCreationFeedbackCreateInfos[i].pipelineStageCreationFeedbackCount
+                            ))
+
+                            pContext->pipelineCreationFeedbackCreateInfos[i].pipelineStageCreationFeedbackCount = engine :: vulkan :: config :: rayTracingPipelineStageCreationFeedbackCount;
+                        }
+
+                        for ( uint32 j = 0U; j < pContext->pipelineCreationFeedbackCreateInfos[i].pipelineStageCreationFeedbackCount; ++ j ) {
+                            (void) toVulkanFormat ( & pContext->pipelineCreationStageFeedbacks[i][j], & pFeedbackCreateInfo->pPipelineStageCreationFeedbacks[j] );
+                        }
+
+                        break;
+                    }
+
+#endif
+
+                    default:
+                        break;
+                }
+
+                pCurrentVk  = pCurrentVk->pNext == nullptr ? pCurrentVk : pCurrentVk->pNext;
+                pCurrent    = pCurrent->pNext;
+            }
+
+            pCurrentVk->pNext = nullptr;
+
+            pContext->createInfos[i].pStages = & pContext->shaderStageCreateInfos[i][0];
+
+            if ( pContext->createInfos[i].stageCount > engine :: vulkan :: config :: rayTracingPipelineShaderStageCount ) {
+                __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, String :: f (
+                        "config :: rayTracingPipelineShaderStageCount = %d. Minimum Required = %d",
+                        engine :: vulkan :: config :: rayTracingPipelineShaderStageCount,
+                        pContext->createInfos[i].stageCount
+                ))
+
+                pContext->createInfos[i].stageCount = engine :: vulkan :: config :: rayTracingPipelineShaderStageCount;
+            }
+
+            for ( uint32 j = 0U; j < pContext->createInfos[i].stageCount; ++ j ) {
+                pCurrent    = reinterpret_cast < Type ( GenericInStructure ) const * > ( pCreateInfos[i].pStages[j].pNext );
+                pCurrentVk  = reinterpret_cast < VkBaseOutStructure * > ( toVulkanFormat ( & pContext->shaderStageCreateInfos[i][j], & pCreateInfos->pStages[j] ) );
+
+                while ( pCurrent != nullptr ) {
+
+                    switch ( pCurrent->structureType ) {
+
+#if __C_ENG_VULKAN_API_EXTENSION_SUBGROUP_SIZE_CONTROL_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+
+                        case StructureTypePipelineShaderStageRequiredSubgroupSizeCreateInfo:
+                            pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                                    toVulkanFormat (
+                                            & pContext->requiredSubgroupSizeCreateInfos[i][j],
+                                            reinterpret_cast < Type ( PipelineShaderStageRequiredSubgroupSizeCreateInfo ) const * > ( pCurrent )
+                                    )
+                            );
+                            break;
+
+#endif
+
+                        default:
+                            break;
+                    }
+
+                    pCurrentVk  = pCurrentVk->pNext == nullptr ? pCurrentVk : pCurrentVk->pNext;
+                    pCurrent    = pCurrent->pNext;
+                }
+
+                if ( pCreateInfos[i].pStages[j].pSpecializationInfo != nullptr ) {
+                    pContext->shaderStageCreateInfos[i][j].pSpecializationInfo = toVulkanFormat (
+                            & pContext->shaderStageSpecializationInfos[i][j],
+                            pCreateInfos[i].pStages[j].pSpecializationInfo
+                    );
+
+                    pContext->shaderStageSpecializationInfos[i][j].pMapEntries = & pContext->shaderStageSpecializationMapEntries[i][j][0];
+
+                    if ( pContext->shaderStageSpecializationInfos[i][j].mapEntryCount > engine :: vulkan :: config :: graphicsPipelineSpecializationMapEntryCount ) {
+                        __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, String :: f (
+                                "config :: graphicsPipelineSpecializationMapEntryCount = %d. Minimum Required = %d",
+                                engine :: vulkan :: config :: graphicsPipelineSpecializationMapEntryCount,
+                                pContext->shaderStageSpecializationInfos[i][j].mapEntryCount
+                        ))
+
+                        pContext->shaderStageSpecializationInfos[i][j].mapEntryCount = engine :: vulkan :: config :: graphicsPipelineSpecializationMapEntryCount;
+                    }
+
+                    for ( uint32 k = 0U; k < pContext->shaderStageSpecializationInfos[i][j].mapEntryCount; ++ k ) {
+                        (void) toVulkanFormat ( & pContext->shaderStageSpecializationMapEntries[i][j][k], & pCreateInfos[i].pStages[j].pSpecializationInfo->pMapEntries[k] );
+                    }
+                }
+
+                pCurrentVk->pNext = nullptr;
+            }
+
+            pContext->createInfos[i].pGroups = & pContext->shaderGroupCreateInfos[i][0];
+
+            if ( pContext->createInfos[i].groupCount > engine :: vulkan :: config :: rayTracingPipelineShaderGroupCount ) {
+                __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, String :: f (
+                        "config :: rayTracingPipelineShaderGroupCount = %d. Minimum Required = %d",
+                        engine :: vulkan :: config :: rayTracingPipelineShaderGroupCount,
+                        pContext->createInfos[i].groupCount
+                ))
+
+                pContext->createInfos[i].groupCount = engine :: vulkan :: config :: rayTracingPipelineShaderGroupCount;
+            }
+
+            for ( uint32 j = 0U; j < pContext->createInfos[i].groupCount; ++ j ) {
+                (void) toVulkanFormat ( & pContext->shaderGroupCreateInfos[i][j], & pCreateInfos[i].pGroups[j] );
+            }
+        }
+
+        return & pContext->createInfos[0];
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+    auto toVulkanFormat (
+            VkRayTracingPipelineCreateInfoNV              * pDestination,
+            Type ( RayTracingPipelineCreateInfoNVidia ) const * pSource
+    ) noexcept -> VkRayTracingPipelineCreateInfoNV * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType              = VK_STRUCTURE_TYPE_RAY_TRACING_PIPELINE_CREATE_INFO_NV,
+                .pNext              = nullptr,
+                .flags              = pSource->flags,
+                .stageCount         = pSource->stageCount,
+                .pStages            = nullptr,
+                .groupCount         = pSource->groupCount,
+                .pGroups            = nullptr,
+                .maxRecursionDepth  = pSource->maxRecursionDepth,
+                .layout             = pSource->layout,
+                .basePipelineHandle = pSource->basePipelineHandle,
+                .basePipelineIndex  = pSource->basePipelineIndex
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+    auto toVulkanFormat (
+            VkRayTracingShaderGroupCreateInfoNV                  * pDestination,
+            Type ( RayTracingShaderGroupCreateInfoNVidia ) const * pSource
+    ) noexcept -> VkRayTracingShaderGroupCreateInfoNV * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType              = VK_STRUCTURE_TYPE_RAY_TRACING_SHADER_GROUP_CREATE_INFO_NV,
+                .pNext              = nullptr,
+                .type               = static_cast < VkRayTracingShaderGroupTypeKHR > ( pSource->type ),
+                .generalShader      = pSource->generalShader,
+                .closestHitShader   = pSource->closestHitShader,
+                .anyHitShader       = pSource->anyHitShader,
+                .intersectionShader = pSource->intersectionShader
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_RAY_TRACING_PIPELINE_AVAILABLE
+    auto extractContext (
+            cds :: uint32                                  count,
+            Type ( RayTracingPipelineCreateInfo )  const * pCreateInfos,
+            CreateRayTracingPipelineContext        const * pContext
+    ) noexcept -> void {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( count == 0U || pCreateInfos == nullptr || pContext == nullptr ) {
+            return;
+        }
+
+#endif
+
+        for ( cds :: uint32 i = 0U; i < count; ++ i ) {
+            auto pCurrent   = reinterpret_cast < Type ( GenericInStructure ) const * > ( pCreateInfos[i].pNext );
+
+            while ( pCurrent != nullptr ) {
+
+                switch ( pCurrent->structureType ) {
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_PIPELINE_CREATION_FEEDBACK_AVAILABLE
+
+                    case StructureTypePipelineCreationFeedbackCreateInfo: {
+                        auto pFeedbackCreateInfo = reinterpret_cast < Type ( PipelineCreationFeedbackCreateInfo ) const * > ( pCurrent );
+
+                        if ( pFeedbackCreateInfo->pPipelineCreationFeedback != nullptr ) {
+                            (void) fromVulkanFormat ( pFeedbackCreateInfo->pPipelineCreationFeedback, & pContext->pipelineCreationFeedbacks[i] );
+                        }
+
+                        for ( cds :: uint32 j = 0U; j < pFeedbackCreateInfo->pipelineStageCreationFeedbackCount; ++ j ) {
+                            (void) fromVulkanFormat ( & pFeedbackCreateInfo->pPipelineStageCreationFeedbacks[j], & pContext->pipelineCreationStageFeedbacks[i][j] );
+                        }
+
+                        break;
+                    }
+
+#endif
+
+                    default:
+                        break;
+                }
+
+                pCurrent = pCurrent->pNext;
+            }
+        }
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_RAY_TRACING_PIPELINE_AVAILABLE
+    auto prepareContext (
+            CreateRayTracingPipelineContext             * pContext,
+            cds :: uint32                                 count,
+            Type ( RayTracingPipelineCreateInfo ) const * pCreateInfos
+    ) noexcept -> VkRayTracingPipelineCreateInfoKHR * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pContext == nullptr || count == 0U || pCreateInfos == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        if ( count > engine :: vulkan :: config :: rayTracingPipelineCount ) {
+            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, String :: f (
+                    "config :: rayTracingPipelineCount = %d. Minimum Required = %d",
+                    engine :: vulkan :: config :: rayTracingPipelineCount,
+                    count
+            ))
+
+            count = engine :: vulkan :: config :: rayTracingPipelineCount;
+        }
+
+        for ( uint32 i = 0U; i < count; ++ i ) {
+
+            auto pCurrent   = reinterpret_cast < Type ( GenericInStructure ) const * > ( pCreateInfos[i].pNext );
+            auto pCurrentVk = reinterpret_cast < VkBaseOutStructure * > ( toVulkanFormat ( & pContext->createInfos[i], & pCreateInfos[i] ) );
+
+            while ( pCurrent != nullptr ) {
+
+                switch ( pCurrent->structureType ) {
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_PIPELINE_CREATION_FEEDBACK_AVAILABLE
+
+                    case StructureTypePipelineCreationFeedbackCreateInfo: {
+                        auto pFeedbackCreateInfo = reinterpret_cast < Type ( PipelineCreationFeedbackCreateInfo ) const * > ( pCurrent );
+                        pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                                toVulkanFormat (
+                                        & pContext->pipelineCreationFeedbackCreateInfos[i],
+                                        pFeedbackCreateInfo
+                                )
+                        );
+
+                        if ( pFeedbackCreateInfo->pPipelineCreationFeedback != nullptr ) {
+                            pContext->pipelineCreationFeedbackCreateInfos[i].pPipelineCreationFeedback = toVulkanFormat (
+                                    & pContext->pipelineCreationFeedbacks[i],
+                                    pFeedbackCreateInfo->pPipelineCreationFeedback
+                            );
+                        }
+
+                        pContext->pipelineCreationFeedbackCreateInfos[i].pPipelineStageCreationFeedbacks = & pContext->pipelineCreationStageFeedbacks[i][0];
+
+                        if ( pContext->pipelineCreationFeedbackCreateInfos[i].pipelineStageCreationFeedbackCount > engine :: vulkan :: config :: rayTracingPipelineStageCreationFeedbackCount ) {
+                            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, String :: f (
+                                    "config :: rayTracingPipelineStageCreationFeedbackCount = %d. Minimum Required = %d",
+                                    engine :: vulkan :: config :: rayTracingPipelineStageCreationFeedbackCount,
+                                    pContext->pipelineCreationFeedbackCreateInfos[i].pipelineStageCreationFeedbackCount
+                            ))
+
+                            pContext->pipelineCreationFeedbackCreateInfos[i].pipelineStageCreationFeedbackCount = engine :: vulkan :: config :: rayTracingPipelineStageCreationFeedbackCount;
+                        }
+
+                        for ( uint32 j = 0U; j < pContext->pipelineCreationFeedbackCreateInfos[i].pipelineStageCreationFeedbackCount; ++ j ) {
+                            (void) toVulkanFormat ( & pContext->pipelineCreationStageFeedbacks[i][j], & pFeedbackCreateInfo->pPipelineStageCreationFeedbacks[j] );
+                        }
+
+                        break;
+                    }
+
+#endif
+
+                    default:
+                        break;
+                }
+
+                pCurrentVk  = pCurrentVk->pNext == nullptr ? pCurrentVk : pCurrentVk->pNext;
+                pCurrent    = pCurrent->pNext;
+            }
+
+            pCurrentVk->pNext = nullptr;
+
+            pContext->createInfos[i].pStages = & pContext->shaderStageCreateInfos[i][0];
+
+            if ( pContext->createInfos[i].stageCount > engine :: vulkan :: config :: rayTracingPipelineShaderStageCount ) {
+                __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, String :: f (
+                        "config :: rayTracingPipelineShaderStageCount = %d. Minimum Required = %d",
+                        engine :: vulkan :: config :: rayTracingPipelineShaderStageCount,
+                        pContext->createInfos[i].stageCount
+                ))
+
+                pContext->createInfos[i].stageCount = engine :: vulkan :: config :: rayTracingPipelineShaderStageCount;
+            }
+
+            for ( uint32 j = 0U; j < pContext->createInfos[i].stageCount; ++ j ) {
+                pCurrent    = reinterpret_cast < Type ( GenericInStructure ) const * > ( pCreateInfos[i].pStages[j].pNext );
+                pCurrentVk  = reinterpret_cast < VkBaseOutStructure * > ( toVulkanFormat ( & pContext->shaderStageCreateInfos[i][j], & pCreateInfos->pStages[j] ) );
+
+                while ( pCurrent != nullptr ) {
+
+                    switch ( pCurrent->structureType ) {
+
+#if __C_ENG_VULKAN_API_EXTENSION_SUBGROUP_SIZE_CONTROL_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+
+                        case StructureTypePipelineShaderStageRequiredSubgroupSizeCreateInfo:
+                            pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                                    toVulkanFormat (
+                                            & pContext->requiredSubgroupSizeCreateInfos[i][j],
+                                            reinterpret_cast < Type ( PipelineShaderStageRequiredSubgroupSizeCreateInfo ) const * > ( pCurrent )
+                                    )
+                            );
+                            break;
+
+#endif
+
+                        default:
+                            break;
+                    }
+
+                    pCurrentVk  = pCurrentVk->pNext == nullptr ? pCurrentVk : pCurrentVk->pNext;
+                    pCurrent    = pCurrent->pNext;
+                }
+
+                if ( pCreateInfos[i].pStages[j].pSpecializationInfo != nullptr ) {
+                    pContext->shaderStageCreateInfos[i][j].pSpecializationInfo = toVulkanFormat (
+                            & pContext->shaderStageSpecializationInfos[i][j],
+                            pCreateInfos[i].pStages[j].pSpecializationInfo
+                    );
+
+                    pContext->shaderStageSpecializationInfos[i][j].pMapEntries = & pContext->shaderStageSpecializationMapEntries[i][j][0];
+
+                    if ( pContext->shaderStageSpecializationInfos[i][j].mapEntryCount > engine :: vulkan :: config :: graphicsPipelineSpecializationMapEntryCount ) {
+                        __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, String :: f (
+                                "config :: graphicsPipelineSpecializationMapEntryCount = %d. Minimum Required = %d",
+                                engine :: vulkan :: config :: graphicsPipelineSpecializationMapEntryCount,
+                                pContext->shaderStageSpecializationInfos[i][j].mapEntryCount
+                        ))
+
+                        pContext->shaderStageSpecializationInfos[i][j].mapEntryCount = engine :: vulkan :: config :: graphicsPipelineSpecializationMapEntryCount;
+                    }
+
+                    for ( uint32 k = 0U; k < pContext->shaderStageSpecializationInfos[i][j].mapEntryCount; ++ k ) {
+                        (void) toVulkanFormat ( & pContext->shaderStageSpecializationMapEntries[i][j][k], & pCreateInfos[i].pStages[j].pSpecializationInfo->pMapEntries[k] );
+                    }
+                }
+
+                pCurrentVk->pNext = nullptr;
+            }
+
+            pContext->createInfos[i].pGroups = & pContext->shaderGroupCreateInfos[i][0];
+
+            if ( pContext->createInfos[i].groupCount > engine :: vulkan :: config :: rayTracingPipelineShaderGroupCount ) {
+                __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, String :: f (
+                        "config :: rayTracingPipelineShaderGroupCount = %d. Minimum Required = %d",
+                        engine :: vulkan :: config :: rayTracingPipelineShaderGroupCount,
+                        pContext->createInfos[i].groupCount
+                ))
+
+                pContext->createInfos[i].groupCount = engine :: vulkan :: config :: rayTracingPipelineShaderGroupCount;
+            }
+
+            for ( uint32 j = 0U; j < pContext->createInfos[i].groupCount; ++ j ) {
+                (void) toVulkanFormat ( & pContext->shaderGroupCreateInfos[i][j], & pCreateInfos[i].pGroups[j] );
+            }
+
+            if ( pCreateInfos[i].pLibraryInfo != nullptr ) {
+                pContext->createInfos[i].pLibraryInfo = toVulkanFormat (
+                        & pContext->libraryCreateInfos[i],
+                        pCreateInfos[i].pLibraryInfo
+                );
+            }
+
+            if ( pCreateInfos[i].pLibraryInterface != nullptr ) {
+                pContext->createInfos[i].pLibraryInterface = toVulkanFormat (
+                        & pContext->interfaceCreateInfos[i],
+                        pCreateInfos[i].pLibraryInterface
+                );
+            }
+
+            if ( pCreateInfos[i].pDynamicState != nullptr ) {
+                pContext->createInfos[i].pDynamicState = toVulkanFormat (
+                        & pContext->dynamicStateCreateInfos[i],
+                        pCreateInfos[i].pDynamicState
+                );
+
+                pContext->dynamicStateCreateInfos[i].pDynamicStates = & pContext->dynamicStateStates[i][0];
+
+                if ( pContext->dynamicStateCreateInfos[i].dynamicStateCount > engine :: vulkan :: config :: rayTracingPipelineDynamicStateCount ) {
+                    __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, String :: f (
+                            "config :: rayTracingPipelineDynamicStateCount = %d. Minimum Required = %d",
+                            engine :: vulkan :: config :: rayTracingPipelineDynamicStateCount,
+                            pContext->dynamicStateCreateInfos[i].dynamicStateCount
+                    ))
+
+                    pContext->dynamicStateCreateInfos[i].dynamicStateCount = engine :: vulkan :: config :: rayTracingPipelineDynamicStateCount;
+                }
+
+                for ( uint32 j = 0U; j < pContext->dynamicStateCreateInfos[i].dynamicStateCount; ++ j ) {
+                    pContext->dynamicStateStates[i][j] = static_cast < VkDynamicState > ( pCreateInfos[i].pDynamicState->pDynamicStates[j] );
+                }
+            }
+        }
+
+        return & pContext->createInfos[0];
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_RAY_TRACING_PIPELINE_AVAILABLE
+    auto toVulkanFormat (
+            VkRayTracingPipelineCreateInfoKHR                  * pDestination,
+            Type ( RayTracingPipelineCreateInfo ) const * pSource
+    ) noexcept -> VkRayTracingPipelineCreateInfoKHR * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                          = VK_STRUCTURE_TYPE_RAY_TRACING_PIPELINE_CREATE_INFO_KHR,
+                .pNext                          = nullptr,
+                .flags                          = pSource->flags,
+                .stageCount                     = pSource->stageCount,
+                .pStages                        = nullptr,
+                .groupCount                     = pSource->groupCount,
+                .pGroups                        = nullptr,
+                .maxPipelineRayRecursionDepth   = pSource->maxPipelineRayRecursionDepth,
+                .pLibraryInfo                   = nullptr,
+                .pLibraryInterface              = nullptr,
+                .pDynamicState                  = nullptr,
+                .layout                         = pSource->layout,
+                .basePipelineHandle             = pSource->basePipelineHandle,
+                .basePipelineIndex              = pSource->basePipelineIndex
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_RAY_TRACING_PIPELINE_AVAILABLE
+    auto toVulkanFormat (
+            VkRayTracingShaderGroupCreateInfoKHR                  * pDestination,
+            Type ( RayTracingShaderGroupCreateInfo ) const * pSource
+    ) noexcept -> VkRayTracingShaderGroupCreateInfoKHR * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                              = VK_STRUCTURE_TYPE_RAY_TRACING_SHADER_GROUP_CREATE_INFO_KHR,
+                .pNext                              = nullptr,
+                .type                               = static_cast < VkRayTracingShaderGroupTypeKHR > ( pSource->type ),
+                .generalShader                      = pSource->generalShader,
+                .closestHitShader                   = pSource->closestHitShader,
+                .anyHitShader                       = pSource->anyHitShader,
+                .intersectionShader                 = pSource->intersectionShader,
+                .pShaderGroupCaptureReplayHandle    = pSource->pShaderGroupCaptureReplayHandle
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_RAY_TRACING_PIPELINE_AVAILABLE
+    auto toVulkanFormat (
+            VkPipelineLibraryCreateInfoKHR                  * pDestination,
+            Type ( PipelineLibraryCreateInfo ) const * pSource
+    ) noexcept -> VkPipelineLibraryCreateInfoKHR * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                              = VK_STRUCTURE_TYPE_PIPELINE_LIBRARY_CREATE_INFO_KHR,
+                .pNext                              = nullptr,
+                .libraryCount                       = pSource->libraryCount,
+                .pLibraries                         = nullptr
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_RAY_TRACING_PIPELINE_AVAILABLE
+    auto toVulkanFormat (
+            VkRayTracingPipelineInterfaceCreateInfoKHR                  * pDestination,
+            Type ( RayTracingPipelineInterfaceCreateInfo ) const * pSource
+    ) noexcept -> VkRayTracingPipelineInterfaceCreateInfoKHR * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                              = VK_STRUCTURE_TYPE_RAY_TRACING_PIPELINE_INTERFACE_CREATE_INFO_KHR,
+                .pNext                              = nullptr,
+                .maxPipelineRayPayloadSize          = pSource->maxPipelineRayPayloadSize,
+                .maxPipelineRayHitAttributeSize     = pSource->maxPipelineRayHitAttributeSize
+        };
+
+        return pDestination;
+    }
+#endif
+
 }

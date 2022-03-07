@@ -1207,9 +1207,74 @@ struct CreateGraphicsPipelineContext {
 #endif
 };
 
+struct CreateRayTracingPipelineNVidiaContext {
+    DiagnosticContext                                           diag;
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+    VkRayTracingPipelineCreateInfoNV                            createInfos [ engine :: vulkan :: config :: rayTracingPipelineCount ];
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    VkPipelineShaderStageCreateInfo                             shaderStageCreateInfos [ engine :: vulkan :: config :: rayTracingPipelineCount ] [ engine :: vulkan :: config :: rayTracingPipelineShaderStageCount ];
+    VkSpecializationInfo                                        shaderStageSpecializationInfos [ engine :: vulkan :: config :: rayTracingPipelineCount ] [ engine :: vulkan :: config :: rayTracingPipelineShaderStageCount ];
+    VkSpecializationMapEntry                                    shaderStageSpecializationMapEntries [ engine :: vulkan :: config :: rayTracingPipelineCount ] [ engine :: vulkan :: config :: rayTracingPipelineShaderStageCount ] [ engine :: vulkan :: config :: rayTracingPipelineSpecializationMapEntryCount ];
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_SUBGROUP_SIZE_CONTROL_AVAILABLE
+    VkPipelineShaderStageRequiredSubgroupSizeCreateInfo_t       requiredSubgroupSizeCreateInfos [ engine :: vulkan :: config :: rayTracingPipelineCount ] [ engine :: vulkan :: config :: rayTracingPipelineShaderStageCount ];
+#endif
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+    VkRayTracingShaderGroupCreateInfoNV                         shaderGroupCreateInfos [ engine :: vulkan :: config :: rayTracingPipelineCount ] [ engine :: vulkan :: config :: rayTracingPipelineShaderGroupCount ];
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_PIPELINE_CREATION_FEEDBACK_AVAILABLE
+    VkPipelineCreationFeedbackCreateInfo_t                      pipelineCreationFeedbackCreateInfos [ engine :: vulkan :: config :: rayTracingPipelineCount ];
+    VkPipelineCreationFeedback_t                                pipelineCreationFeedbacks [ engine :: vulkan :: config :: rayTracingPipelineCount ];
+    VkPipelineCreationFeedback_t                                pipelineCreationStageFeedbacks [ engine :: vulkan :: config :: rayTracingPipelineCount ] [ engine :: vulkan :: config :: rayTracingPipelineStageCreationFeedbackCount ];
+#endif
+};
+
+struct CreateRayTracingPipelineContext {
+    DiagnosticContext                                           diag;
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_RAY_TRACING_PIPELINE_AVAILABLE
+    VkRayTracingPipelineCreateInfoKHR                           createInfos [ engine :: vulkan :: config :: rayTracingPipelineCount ];
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    VkPipelineShaderStageCreateInfo                             shaderStageCreateInfos [ engine :: vulkan :: config :: rayTracingPipelineCount ] [ engine :: vulkan :: config :: rayTracingPipelineShaderStageCount ];
+    VkSpecializationInfo                                        shaderStageSpecializationInfos [ engine :: vulkan :: config :: rayTracingPipelineCount ] [ engine :: vulkan :: config :: rayTracingPipelineShaderStageCount ];
+    VkSpecializationMapEntry                                    shaderStageSpecializationMapEntries [ engine :: vulkan :: config :: rayTracingPipelineCount ] [ engine :: vulkan :: config :: rayTracingPipelineShaderStageCount ] [ engine :: vulkan :: config :: rayTracingPipelineSpecializationMapEntryCount ];
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_SUBGROUP_SIZE_CONTROL_AVAILABLE
+    VkPipelineShaderStageRequiredSubgroupSizeCreateInfo_t       requiredSubgroupSizeCreateInfos [ engine :: vulkan :: config :: rayTracingPipelineCount ] [ engine :: vulkan :: config :: rayTracingPipelineShaderStageCount ];
+#endif
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_RAY_TRACING_PIPELINE_AVAILABLE
+    VkRayTracingShaderGroupCreateInfoKHR                        shaderGroupCreateInfos [ engine :: vulkan :: config :: rayTracingPipelineCount ] [ engine :: vulkan :: config :: rayTracingPipelineShaderGroupCount ];
+    VkPipelineLibraryCreateInfoKHR                              libraryCreateInfos [ engine :: vulkan :: config :: rayTracingPipelineCount ];
+    VkRayTracingPipelineInterfaceCreateInfoKHR                  interfaceCreateInfos [ engine :: vulkan :: config :: rayTracingPipelineCount ];
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    VkPipelineDynamicStateCreateInfo                            dynamicStateCreateInfos [ engine :: vulkan :: config :: rayTracingPipelineCount ];
+    VkDynamicState                                              dynamicStateStates [ engine :: vulkan :: config :: rayTracingPipelineCount ] [ engine :: vulkan :: config :: rayTracingPipelineDynamicStateCount ];
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_PIPELINE_CREATION_FEEDBACK_AVAILABLE
+    VkPipelineCreationFeedbackCreateInfo_t                      pipelineCreationFeedbackCreateInfos [ engine :: vulkan :: config :: rayTracingPipelineCount ];
+    VkPipelineCreationFeedback_t                                pipelineCreationFeedbacks [ engine :: vulkan :: config :: rayTracingPipelineCount ];
+    VkPipelineCreationFeedback_t                                pipelineCreationStageFeedbacks [ engine :: vulkan :: config :: rayTracingPipelineCount ] [ engine :: vulkan :: config :: rayTracingPipelineStageCreationFeedbackCount ];
+#endif
+};
+
+union CreateRayTracingPipelineSharedContext {
+    CreateRayTracingPipelineNVidiaContext   nVidiaPipeline;
+    CreateRayTracingPipelineContext         pipeline;
+};
+
 union CreatePipelineSharedContext {
     CreateComputePipelineContext                                        compute;
     CreateGraphicsPipelineContext                                       graphics;
+    CreateRayTracingPipelineSharedContext                               rayTracing;
 };
 
 union EnumerateSharedContext {

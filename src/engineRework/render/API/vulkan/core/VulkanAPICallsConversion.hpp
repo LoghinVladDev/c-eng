@@ -3383,6 +3383,80 @@ namespace engine :: vulkan {
     ) noexcept -> VkPipelineDynamicStateCreateInfo *;
 #endif
 
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+    extern auto prepareContext (
+            CreateRayTracingPipelineNVidiaContext             *,
+            cds :: uint32,
+            Type ( RayTracingPipelineCreateInfoNVidia ) const *
+    ) noexcept -> VkRayTracingPipelineCreateInfoNV *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+    extern auto extractContext (
+            cds :: uint32,
+            Type ( RayTracingPipelineCreateInfoNVidia ) const *,
+            CreateRayTracingPipelineNVidiaContext       const *
+    ) noexcept -> void;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+    extern auto toVulkanFormat (
+            VkRayTracingPipelineCreateInfoNV                  *,
+            Type ( RayTracingPipelineCreateInfoNVidia ) const *
+    ) noexcept -> VkRayTracingPipelineCreateInfoNV *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+    extern auto toVulkanFormat (
+            VkRayTracingShaderGroupCreateInfoNV                  *,
+            Type ( RayTracingShaderGroupCreateInfoNVidia ) const *
+    ) noexcept -> VkRayTracingShaderGroupCreateInfoNV *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_RAY_TRACING_PIPELINE_AVAILABLE
+    extern auto prepareContext (
+            CreateRayTracingPipelineContext             *,
+            cds :: uint32,
+            Type ( RayTracingPipelineCreateInfo ) const *
+    ) noexcept -> VkRayTracingPipelineCreateInfoKHR *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_RAY_TRACING_PIPELINE_AVAILABLE
+    extern auto extractContext (
+            cds :: uint32,
+            Type ( RayTracingPipelineCreateInfo ) const *,
+            CreateRayTracingPipelineContext       const *
+    ) noexcept -> void;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_RAY_TRACING_PIPELINE_AVAILABLE
+    extern auto toVulkanFormat (
+            VkRayTracingPipelineCreateInfoKHR           *,
+            Type ( RayTracingPipelineCreateInfo ) const *
+    ) noexcept -> VkRayTracingPipelineCreateInfoKHR *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_RAY_TRACING_PIPELINE_AVAILABLE
+    extern auto toVulkanFormat (
+            VkRayTracingShaderGroupCreateInfoKHR           *,
+            Type ( RayTracingShaderGroupCreateInfo ) const *
+    ) noexcept -> VkRayTracingShaderGroupCreateInfoKHR *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_RAY_TRACING_PIPELINE_AVAILABLE
+    extern auto toVulkanFormat (
+            VkPipelineLibraryCreateInfoKHR           *,
+            Type ( PipelineLibraryCreateInfo ) const *
+    ) noexcept -> VkPipelineLibraryCreateInfoKHR *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_RAY_TRACING_PIPELINE_AVAILABLE
+    extern auto toVulkanFormat (
+            VkRayTracingPipelineInterfaceCreateInfoKHR           *,
+            Type ( RayTracingPipelineInterfaceCreateInfo ) const *
+    ) noexcept -> VkRayTracingPipelineInterfaceCreateInfoKHR *;
+#endif
+
 }
 
 #define C_ENG_MAP_END
