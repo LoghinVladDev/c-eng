@@ -3222,4 +3222,328 @@ namespace engine :: vulkan {
     }
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    auto prepareContext (
+            CreatePipelineCacheContext                * pContext,
+            Type ( PipelineCacheCreateInfo )    const * pSource
+    ) noexcept -> VkPipelineCacheCreateInfo * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pContext == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        return toVulkanFormat ( & pContext->createInfo, pSource );
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    auto toVulkanFormat (
+            VkPipelineCacheCreateInfo                  * pDestination,
+            Type ( PipelineCacheCreateInfo ) const * pSource
+    ) noexcept -> VkPipelineCacheCreateInfo * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                              = VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO,
+                .pNext                              = nullptr,
+                .flags                              = pSource->flags,
+                .initialDataSize                    = pSource->initialDataSize,
+                .pInitialData                       = pSource->pInitialData
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PIPELINE_EXECUTABLE_PROPERTIES_AVAILABLE
+    auto toVulkanFormat (
+            VkPipelineInfoKHR           * pDestination,
+            Type ( PipelineInfo ) const * pSource
+    ) noexcept -> VkPipelineInfoKHR * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                              = VK_STRUCTURE_TYPE_PIPELINE_INFO_KHR,
+                .pNext                              = nullptr,
+                .pipeline                           = pSource->pipeline
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PIPELINE_EXECUTABLE_PROPERTIES_AVAILABLE
+    auto fromVulkanFormat (
+            Type ( PipelineExecutableProperties )         * pDestination,
+            VkPipelineExecutablePropertiesKHR       const * pSource
+    ) noexcept -> Type ( PipelineExecutableProperties ) * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        pDestination->structureType = StructureTypePipelineExecutableProperties;
+        pDestination->pNext         = nullptr;
+        pDestination->stages        = pSource->stages;
+        pDestination->subgroupSize  = pSource->subgroupSize;
+
+        (void) std :: memcpy ( & pDestination->name[0],         & pSource->name[0],         VK_MAX_DESCRIPTION_SIZE * sizeof ( pDestination->name[0] ) );
+        (void) std :: memcpy ( & pDestination->description[0],  & pSource->description[0],  VK_MAX_DESCRIPTION_SIZE * sizeof ( pDestination->description[0] ) );
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PIPELINE_EXECUTABLE_PROPERTIES_AVAILABLE
+    auto prepareContext (
+            GetPipelinePropertiesContext  * pContext,
+            Type ( PipelineInfo )   const * pSource
+    ) noexcept -> VkPipelineInfoKHR * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pContext == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        return toVulkanFormat ( & pContext->info, pSource );
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PIPELINE_EXECUTABLE_PROPERTIES_AVAILABLE
+    auto extractContext (
+            cds :: uint32                                   count,
+            Type ( PipelineExecutableProperties )         * pProperties,
+            GetPipelinePropertiesContext            const * pContext
+    ) noexcept -> void {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pContext == nullptr || pProperties == nullptr ) {
+            return;
+        }
+
+#endif
+
+        for ( uint32 i = 0U; i < count; ++ i ) {
+            (void) fromVulkanFormat ( & pProperties[i], & pContext->properties[i] );
+        }
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PIPELINE_EXECUTABLE_PROPERTIES_AVAILABLE
+    auto toVulkanFormat (
+            VkPipelineExecutableInfoKHR           * pDestination,
+            Type ( PipelineExecutableInfo ) const * pSource
+    ) noexcept -> VkPipelineExecutableInfoKHR * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                              = VK_STRUCTURE_TYPE_PIPELINE_EXECUTABLE_INFO_KHR,
+                .pNext                              = nullptr,
+                .pipeline                           = pSource->pipeline,
+                .executableIndex                    = pSource->executableIndex
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PIPELINE_EXECUTABLE_PROPERTIES_AVAILABLE
+    auto fromVulkanFormat (
+            Type ( PipelineExecutableStatistic )         * pDestination,
+            VkPipelineExecutableStatisticKHR       const * pSource
+    ) noexcept -> Type ( PipelineExecutableStatistic ) * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        pDestination->structureType = StructureTypePipelineExecutableStatistic;
+        pDestination->pNext         = nullptr;
+
+        (void) std :: memcpy ( & pDestination->name[0],         & pSource->name[0],         VK_MAX_DESCRIPTION_SIZE * sizeof ( pDestination->name[0] ) );
+        (void) std :: memcpy ( & pDestination->description[0],  & pSource->description[0],  VK_MAX_DESCRIPTION_SIZE * sizeof ( pDestination->description[0] ) );
+
+        pDestination->format        = static_cast < Type ( PipelineExecutableStatisticFormat ) > ( pSource->format );
+
+        switch ( pSource->format ) {
+            case VK_PIPELINE_EXECUTABLE_STATISTIC_FORMAT_BOOL32_KHR:    pDestination->value.b   = pSource->value.b32;   break;
+            case VK_PIPELINE_EXECUTABLE_STATISTIC_FORMAT_FLOAT64_KHR:   pDestination->value.f64 = pSource->value.f64;   break;
+            case VK_PIPELINE_EXECUTABLE_STATISTIC_FORMAT_INT64_KHR:     pDestination->value.s64 = pSource->value.i64;   break;
+            case VK_PIPELINE_EXECUTABLE_STATISTIC_FORMAT_UINT64_KHR:    pDestination->value.u64 = pSource->value.u64;   break;
+            default:
+                break;
+        }
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PIPELINE_EXECUTABLE_PROPERTIES_AVAILABLE
+    auto fromVulkanFormat (
+            Type ( PipelineExecutableInternalRepresentation )         * pDestination,
+            VkPipelineExecutableInternalRepresentationKHR       const * pSource
+    ) noexcept -> Type ( PipelineExecutableInternalRepresentation ) * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        pDestination->structureType = StructureTypePipelineExecutableInternalRepresentation;
+        pDestination->pNext         = nullptr;
+        pDestination->isText        = pSource->isText;
+        pDestination->dataSize      = pSource->dataSize;
+        pDestination->pData         = pSource->pData;
+
+        (void) std :: memcpy ( & pDestination->name[0],         & pSource->name[0],         VK_MAX_DESCRIPTION_SIZE * sizeof ( pDestination->name[0] ) );
+        (void) std :: memcpy ( & pDestination->description[0],  & pSource->description[0],  VK_MAX_DESCRIPTION_SIZE * sizeof ( pDestination->description[0] ) );
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PIPELINE_EXECUTABLE_PROPERTIES_AVAILABLE
+    auto prepareContext (
+            GetPipelineStatisticsContext            * pContext,
+            Type ( PipelineExecutableInfo )   const * pSource
+    ) noexcept -> VkPipelineExecutableInfoKHR * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pContext == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        return toVulkanFormat ( & pContext->info, pSource );
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PIPELINE_EXECUTABLE_PROPERTIES_AVAILABLE
+    auto prepareContext (
+            GetPipelineInternalRepresentationsContext   * pContext,
+            Type ( PipelineExecutableInfo )       const * pSource
+    ) noexcept -> VkPipelineExecutableInfoKHR * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pContext == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        return toVulkanFormat ( & pContext->info, pSource );
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PIPELINE_EXECUTABLE_PROPERTIES_AVAILABLE
+    auto extractContext (
+            cds :: uint32                                  count,
+            Type ( PipelineExecutableStatistic )         * pProperties,
+            GetPipelineStatisticsContext           const * pContext
+    ) noexcept -> void {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pContext == nullptr || pProperties == nullptr ) {
+            return;
+        }
+
+#endif
+
+        for ( uint32 i = 0U; i < count; ++ i ) {
+            (void) fromVulkanFormat ( & pProperties[i], & pContext->statistics[i] );
+        }
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PIPELINE_EXECUTABLE_PROPERTIES_AVAILABLE
+    auto extractContext (
+            cds :: uint32                                               count,
+            Type ( PipelineExecutableInternalRepresentation )         * pProperties,
+            GetPipelineInternalRepresentationsContext           const * pContext
+    ) noexcept -> void {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pContext == nullptr || pProperties == nullptr ) {
+            return;
+        }
+
+#endif
+
+        for ( uint32 i = 0U; i < count; ++ i ) {
+            (void) fromVulkanFormat ( & pProperties[i], & pContext->internalRepresentations[i] );
+        }
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PIPELINE_EXECUTABLE_PROPERTIES_AVAILABLE
+    auto prepareContext (
+            GetPipelineInternalRepresentationsContext                     * pContext,
+            uint32                                                          count,
+            Type ( PipelineExecutableInternalRepresentation )             * pSource
+    ) noexcept -> VkPipelineExecutableInternalRepresentationKHR * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pContext == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        for ( uint32 i = 0U; i < count; ++ i ) {
+            pContext->internalRepresentations[i].sType      = VK_STRUCTURE_TYPE_PIPELINE_EXECUTABLE_INTERNAL_REPRESENTATION_KHR;
+            pContext->internalRepresentations[i].isText     = pSource[i].isText;
+            pContext->internalRepresentations[i].dataSize   = pSource[i].dataSize;
+            pContext->internalRepresentations[i].pData      = pSource[i].pData;
+        }
+
+        return & pContext->internalRepresentations[0];
+    }
+#endif
+
 }

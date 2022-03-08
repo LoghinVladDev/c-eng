@@ -1266,6 +1266,44 @@ struct CreateRayTracingPipelineContext {
 #endif
 };
 
+struct CreatePipelineCacheContext {
+    DiagnosticContext                                           diag;
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    VkPipelineCacheCreateInfo                                   createInfo;
+#endif
+};
+
+struct GetPipelineCommonContext {
+    DiagnosticContext                                           diag;
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PIPELINE_EXECUTABLE_PROPERTIES_AVAILABLE
+    VkPipelineInfoKHR                                           info;
+#endif
+};
+
+struct GetPipelinePropertiesContext {
+    DiagnosticContext                                           diag;
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PIPELINE_EXECUTABLE_PROPERTIES_AVAILABLE
+    VkPipelineInfoKHR                                           info;
+    VkPipelineExecutablePropertiesKHR                           properties [ engine :: vulkan :: config :: pipelineExecutablePropertiesCount ];
+#endif
+};
+
+struct GetPipelineStatisticsContext {
+    DiagnosticContext                                           diag;
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PIPELINE_EXECUTABLE_PROPERTIES_AVAILABLE
+    VkPipelineExecutableInfoKHR                                 info;
+    VkPipelineExecutableStatisticKHR                            statistics [ engine :: vulkan :: config :: pipelineExecutableStatisticsCount ];
+#endif
+};
+
+struct GetPipelineInternalRepresentationsContext {
+    DiagnosticContext                                           diag;
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PIPELINE_EXECUTABLE_PROPERTIES_AVAILABLE
+    VkPipelineExecutableInfoKHR                                 info;
+    VkPipelineExecutableInternalRepresentationKHR               internalRepresentations [ engine :: vulkan :: config :: pipelineExecutableInternalRepresentationCount ];
+#endif
+};
+
 union CreateRayTracingPipelineSharedContext {
     CreateRayTracingPipelineNVidiaContext   nVidiaPipeline;
     CreateRayTracingPipelineContext         pipeline;
@@ -1275,6 +1313,7 @@ union CreatePipelineSharedContext {
     CreateComputePipelineContext                                        compute;
     CreateGraphicsPipelineContext                                       graphics;
     CreateRayTracingPipelineSharedContext                               rayTracing;
+    CreatePipelineCacheContext                                          cache;
 };
 
 union EnumerateSharedContext {
@@ -1302,6 +1341,13 @@ union CreateSharedContext {
     CreatePipelineSharedContext                                         pipeline;
 };
 
+union GetPipelineSharedContext {
+    GetPipelineCommonContext                                            common;
+    GetPipelinePropertiesContext                                        properties;
+    GetPipelineStatisticsContext                                        statistics;
+    GetPipelineInternalRepresentationsContext                           internalRepresentations;
+};
+
 union GetSharedContext {
     GetPhysicalDevicePropertiesContext                                  physicalDeviceProperties;
     GetPhysicalDeviceFeaturesContext                                    physicalDeviceFeatures;
@@ -1312,6 +1358,7 @@ union GetSharedContext {
     GetSwapChainContext                                                 swapChain;
     GetFenceContext                                                     fence;
     GetSemaphoreContext                                                 semaphore;
+    GetPipelineSharedContext                                            pipeline;
 };
 
 union AllocateSharedContext {

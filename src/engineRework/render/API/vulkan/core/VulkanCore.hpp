@@ -437,9 +437,9 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
             Field ( BufferImageCopy,                                                       VkStructureType :: VK_STRUCTURE_TYPE_BUFFER_IMAGE_COPY_2 ),
             Field ( ImageResolve,                                                          VkStructureType :: VK_STRUCTURE_TYPE_IMAGE_RESOLVE_2 ),
 
-            Field ( PhysicalDeviceSubgroupSizeControlFeatures,                             VkStructureType :: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_SIZE_CONTROL_PROPERTIES ),
-            Field ( PhysicalDeviceSubgroupSizeControlProperties,                           VkStructureType :: VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_REQUIRED_SUBGROUP_SIZE_CREATE_INFO ),
-            Field ( PipelineShaderStageRequiredSubgroupSizeCreateInfo,                     VkStructureType :: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_SIZE_CONTROL_FEATURES ),
+            Field ( PhysicalDeviceSubgroupSizeControlFeatures,                             VkStructureType :: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_SIZE_CONTROL_FEATURES ),
+            Field ( PhysicalDeviceSubgroupSizeControlProperties,                           VkStructureType :: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_SIZE_CONTROL_PROPERTIES ),
+            Field ( PipelineShaderStageRequiredSubgroupSizeCreateInfo,                     VkStructureType :: VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_REQUIRED_SUBGROUP_SIZE_CREATE_INFO ),
 
             Field ( PhysicalDeviceInlineUniformBlockFeatures,                              VkStructureType :: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_INLINE_UNIFORM_BLOCK_FEATURES ),
             Field ( PhysicalDeviceInlineUniformBlockProperties,                            VkStructureType :: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_INLINE_UNIFORM_BLOCK_PROPERTIES ),
@@ -4604,6 +4604,78 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #include <ObjectMapping.hpp>
 #endif
 
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_RAY_TRACING_PIPELINE_AVAILABLE
+#define C_ENG_MAP_START ENUM ( ShaderGroupShader, TYPE ( cds :: uint8 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( General,        VkShaderGroupShaderKHR :: VK_SHADER_GROUP_SHADER_GENERAL_KHR ),
+            Field ( ClosestHit,     VkShaderGroupShaderKHR :: VK_SHADER_GROUP_SHADER_CLOSEST_HIT_KHR ),
+            Field ( AnyHit,         VkShaderGroupShaderKHR :: VK_SHADER_GROUP_SHADER_ANY_HIT_KHR ),
+            Field ( Intersection,   VkShaderGroupShaderKHR :: VK_SHADER_GROUP_SHADER_INTERSECTION_KHR ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+#define C_ENG_MAP_START ENUM ( PipelineCacheCreateFlag, TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+            Field ( ExternallySynchronized,     VkPipelineCacheCreateFlagBits :: VK_PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT ),
+#elif __C_ENG_VULKAN_API_EXTENSION_PIPELINE_CREATION_CACHE_CONTROL_AVAILABLE
+            Field ( ExternallySynchronized,     VkPipelineCacheCreateFlagBits :: VK_PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT_EXT ),
+#endif
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+#define C_ENG_MAP_START ENUM ( PipelineCacheHeaderVersionValue, NO_TYPE )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( One,    VkPipelineCacheHeaderVersion :: VK_PIPELINE_CACHE_HEADER_VERSION_ONE ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PIPELINE_EXECUTABLE_PROPERTIES_AVAILABLE
+#define C_ENG_MAP_START ENUM ( PipelineExecutableStatisticFormat, TYPE ( cds :: uint8 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( Bool,       VkPipelineExecutableStatisticFormatKHR :: VK_PIPELINE_EXECUTABLE_STATISTIC_FORMAT_BOOL32_KHR ),
+            Field ( SInt64,     VkPipelineExecutableStatisticFormatKHR :: VK_PIPELINE_EXECUTABLE_STATISTIC_FORMAT_INT64_KHR ),
+            Field ( UInt64,     VkPipelineExecutableStatisticFormatKHR :: VK_PIPELINE_EXECUTABLE_STATISTIC_FORMAT_UINT64_KHR ),
+            Field ( Float64,    VkPipelineExecutableStatisticFormatKHR :: VK_PIPELINE_EXECUTABLE_STATISTIC_FORMAT_FLOAT64_KHR ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_AMD_SHADER_INFO_AVAILABLE
+#define C_ENG_MAP_START ENUM ( ShaderInfoTypeAMD, TYPE ( cds :: uint8 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( Statistics,     VkShaderInfoTypeAMD :: VK_SHADER_INFO_TYPE_STATISTICS_AMD ),
+            Field ( Binary,         VkShaderInfoTypeAMD :: VK_SHADER_INFO_TYPE_BINARY_AMD ),
+            Field ( Disassembly,    VkShaderInfoTypeAMD :: VK_SHADER_INFO_TYPE_DISASSEMBLY_AMD ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
 
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 
@@ -4681,6 +4753,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_ALIAS ( PipelineColorBlendStateCreateFlags,     VkPipelineColorBlendStateCreateFlags );
         __C_ENG_ALIAS ( ColorComponentFlags,                    VkColorComponentFlags );
         __C_ENG_ALIAS ( PipelineDynamicStateCreateFlags,        VkPipelineDynamicStateCreateFlags );
+        __C_ENG_ALIAS ( PipelineCacheCreateFlags,               VkPipelineCacheCreateFlags );
 
         __C_ENG_ALIAS ( AllocationFunction,                     PFN_vkAllocationFunction );
         __C_ENG_ALIAS ( ReallocationFunction,                   PFN_vkReallocationFunction );
@@ -12565,6 +12638,159 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #include <ObjectMapping.hpp>
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( PipelineCacheCreateInfo,   NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )              structureType;
+            Type ( GenericStructure )   const * pNext;
+            Type ( PipelineCacheCreateFlags )   flags;
+            cds :: uint64                       initialDataSize;
+            void                        const * pInitialData;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( PipelineCacheHeaderVersionOne,   NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            cds :: uint32                               headerSize;
+            Type ( PipelineCacheHeaderVersionValue )    headerVersion;
+            cds :: uint32                               vendorID;
+            cds :: uint32                               deviceID;
+            cds :: uint8                                pipelineCacheUUID [ VK_UUID_SIZE ];
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PIPELINE_EXECUTABLE_PROPERTIES_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( PipelineInfo,   NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )              structureType;
+            Type ( GenericStructure )   const * pNext;
+            Type ( PipelineHandle )             pipeline;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START STRUCT ( PipelineExecutableProperties,   NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )              structureType;
+            Type ( GenericStructure )   const * pNext;
+            Type ( ShaderStageFlags )           stages;
+            char                                name [ VK_MAX_DESCRIPTION_SIZE ];
+            char                                description [ VK_MAX_DESCRIPTION_SIZE ];
+            cds :: uint32                       subgroupSize;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START UNION ( PipelineExecutableStatisticValue,   NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Union {
+            bool        b;
+
+            cds :: sint64   s64;
+            cds :: uint64   u64;
+
+            double      f64;
+            double      d;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START STRUCT ( PipelineExecutableStatistic,   NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                      structureType;
+            Type ( GenericStructure )           const * pNext;
+            char                                        name [ VK_MAX_DESCRIPTION_SIZE ];
+            char                                        description [ VK_MAX_DESCRIPTION_SIZE ];
+            Type ( PipelineExecutableStatisticFormat )  format;
+            Type ( PipelineExecutableStatisticValue )   value;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START STRUCT ( PipelineExecutableInfo,   NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                      structureType;
+            Type ( GenericStructure )           const * pNext;
+            Type ( PipelineHandle )                     pipeline;
+            cds :: uint32                               executableIndex;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START STRUCT ( PipelineExecutableInternalRepresentation,   NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                      structureType;
+            Type ( GenericStructure )           const * pNext;
+            char                                        name [ VK_MAX_DESCRIPTION_SIZE ];
+            char                                        description [ VK_MAX_DESCRIPTION_SIZE ];
+            Type ( Bool )                               isText;
+            cds :: uint64                               dataSize;
+            void                                      * pData;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_AMD_SHADER_INFO_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( ShaderResourceUsageAMD,   NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            cds :: uint32   numUsedVgrps;
+            cds :: uint32   numUsedSgrps;
+            cds :: uint32   ldsSizePerLogicalWorkGroup;
+            cds :: uint64   ldsUsageSizeInBytes;
+            cds :: uint64   scratchMemUsageInBytes;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START STRUCT ( ShaderStatisticsInfoAMD,   NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( ShaderStageFlags )       shaderStageMask;
+            Type ( ShaderResourceUsageAMD ) resourceUsage;
+            cds :: uint32                   numPhysicalVgrps;
+            cds :: uint32                   numPhysicalSgrps;
+            cds :: uint32                   numAvailableVgrps;
+            cds :: uint32                   numAvailableSgrps;
+            cds :: uint32                   computeWorkGroupSize[3];
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
 
 #define C_ENG_MAP_START     HEADER
 #include <ObjectMapping.hpp>
@@ -12630,6 +12856,8 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         NoDiscard auto toString ( Type ( BlendFactor ) ) noexcept -> cds :: StringLiteral;
         NoDiscard auto toString ( Type ( BlendOperation ) ) noexcept -> cds :: StringLiteral;
         NoDiscard auto toString ( Type ( DynamicState ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( PipelineCacheCreateFlag ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( PipelineCacheHeaderVersionValue ) ) noexcept -> cds :: StringLiteral;
 
 #endif
 
@@ -12657,6 +12885,10 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         NoDiscard auto toString ( Type ( SubmitFlag ) ) noexcept -> cds :: StringLiteral;
 #endif
 
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PIPELINE_EXECUTABLE_PROPERTIES_AVAILABLE
+        NoDiscard auto toString ( Type ( PipelineExecutableStatisticFormat ) ) noexcept -> cds :: StringLiteral;
+#endif
+
 #if __C_ENG_VULKAN_API_EXTENSION_CONSERVATIVE_RASTERIZATION_AVAILABLE
         NoDiscard auto toString ( Type ( ConservativeRasterizationMode ) ) noexcept -> cds :: StringLiteral;
 #endif
@@ -12679,6 +12911,10 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #if __C_ENG_VULKAN_API_EXTENSION_PROVOKING_VERTEX_AVAILABLE
         NoDiscard auto toString ( Type ( ProvokingVertexMode ) ) noexcept -> cds :: StringLiteral;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_RAY_TRACING_PIPELINE_AVAILABLE
+        NoDiscard auto toString ( Type ( ShaderGroupShader ) ) noexcept -> cds :: StringLiteral;
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_LINE_RASTERIZATION_AVAILABLE
@@ -12764,9 +13000,11 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_AMD_SHADER_CORE_PROPERTIES_2_AVAILABLE
+        NoDiscard auto toString ( Type ( ShaderCorePropertiesFlagAMD ) ) noexcept -> cds :: StringLiteral;
+#endif
 
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( ShaderCorePropertiesFlagAMD ) ) noexcept -> cds :: StringLiteral;
-
+#if __C_ENG_VULKAN_API_EXTENSION_AMD_SHADER_INFO_AVAILABLE
+        NoDiscard auto toString ( Type ( ShaderInfoTypeAMD ) ) noexcept -> cds :: StringLiteral;
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_GLOBAL_PRIORITY_AVAILABLE
@@ -12885,6 +13123,9 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         NoDiscard auto toString ( Type ( VertexInputAttributeDescription ) const & ) noexcept -> cds :: String;
         NoDiscard auto toString ( Type ( StencilOperationState ) const & ) noexcept -> cds :: String;
         NoDiscard auto toString ( Type ( PipelineColorBlendAttachmentState ) const & ) noexcept -> cds :: String;
+
+        NoDiscard auto toString ( Type ( PipelineCacheCreateInfo ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( PipelineCacheHeaderVersionOne ) const & ) noexcept -> cds :: String;
 
 #endif
 
@@ -13005,6 +13246,19 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
         NoDiscard auto toString ( Type ( RayTracingShaderGroupCreateInfoNVidia ) const & ) noexcept -> cds :: String;
         NoDiscard auto toString ( Type ( RayTracingPipelineCreateInfoNVidia ) const & ) noexcept -> cds :: String;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PIPELINE_EXECUTABLE_PROPERTIES_AVAILABLE
+        NoDiscard auto toString ( Type ( PipelineInfo ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( PipelineExecutableProperties ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( PipelineExecutableStatistic ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( PipelineExecutableInfo ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( PipelineExecutableInternalRepresentation ) const & ) noexcept -> cds :: String;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_AMD_SHADER_INFO_AVAILABLE
+        NoDiscard auto toString ( Type ( ShaderResourceUsageAMD ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( ShaderStatisticsInfoAMD ) const & ) noexcept -> cds :: String;
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_FRAMEBUFFER_MIXED_SAMPLES_AVAILABLE

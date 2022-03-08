@@ -976,6 +976,151 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         ) noexcept -> Type ( Result );
 #endif
 
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_RAY_TRACING_PIPELINE_AVAILABLE
+        NoDiscard MaybeUnused extern auto getRayTracingShaderGroupHandles (
+                Type ( DeviceHandle ),
+                Type ( PipelineHandle ),
+                cds :: uint32,
+                cds :: uint32,
+                cds :: uint64,
+                void *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_RAY_TRACING_PIPELINE_AVAILABLE
+        NoDiscard MaybeUnused extern auto getRayTracingCaptureReplayShaderGroupHandles (
+                Type ( DeviceHandle ),
+                Type ( PipelineHandle ),
+                cds :: uint32,
+                cds :: uint32,
+                cds :: uint64,
+                void *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+        NoDiscard MaybeUnused extern auto compileDeferredNVidia (
+                Type ( DeviceHandle ),
+                Type ( PipelineHandle ),
+                cds :: uint32
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_RAY_TRACING_PIPELINE_AVAILABLE
+        NoDiscard MaybeUnused extern auto getRayTracingShaderGroupStackSize (
+                Type ( DeviceHandle ),
+                Type ( PipelineHandle ),
+                cds :: uint32,
+                Type ( ShaderGroupShader ),
+                Type ( DeviceSize )         *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_RAY_TRACING_PIPELINE_AVAILABLE
+        NoDiscard MaybeUnused extern auto commandBufferSetRayTracingPipelineStackSize (
+                Type ( CommandBufferHandle ),
+                cds :: uint32
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+        NoDiscard MaybeUnused extern auto destroyPipeline (
+                Type ( DeviceHandle ),
+                Type ( PipelineHandle ),
+                Type ( AllocationCallbacks )    const *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+        NoDiscard MaybeUnused extern auto createPipelineCache (
+                Type ( DeviceHandle ),
+                Type ( PipelineCacheCreateInfo )    const *,
+                Type ( AllocationCallbacks )        const *,
+                Type ( PipelineCacheHandle )              *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+        NoDiscard MaybeUnused extern auto mergePipelineCaches (
+                Type ( DeviceHandle ),
+                Type ( PipelineCacheHandle ),
+                cds :: uint32,
+                Type ( PipelineCacheHandle )  const *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+        NoDiscard MaybeUnused extern auto getPipelineCacheData (
+                Type ( DeviceHandle ),
+                Type ( PipelineCacheHandle ),
+                cds :: uint64                   *,
+                void                            * = nullptr
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+        NoDiscard MaybeUnused extern auto destroyPipelineCache (
+                Type ( DeviceHandle ),
+                Type ( PipelineCacheHandle ),
+                Type ( AllocationCallbacks )    const *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+        NoDiscard MaybeUnused extern auto commandBufferBindPipeline (
+                Type ( CommandBufferHandle ),
+                Type ( PipelineBindPoint ),
+                Type ( PipelineHandle )
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEVICE_GENERATED_COMMANDS_AVAILABLE
+        NoDiscard MaybeUnused extern auto commandBufferBindPipelineShaderGroup (
+                Type ( CommandBufferHandle ),
+                Type ( PipelineBindPoint ),
+                Type ( PipelineHandle ),
+                cds :: uint32
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PIPELINE_EXECUTABLE_PROPERTIES_AVAILABLE
+        NoDiscard MaybeUnused extern auto getPipelineExecutableProperties (
+                Type ( DeviceHandle ),
+                Type ( PipelineInfo )                   const *,
+                cds :: uint32                                 *,
+                Type ( PipelineExecutableProperties )         *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PIPELINE_EXECUTABLE_PROPERTIES_AVAILABLE
+        NoDiscard MaybeUnused extern auto getPipelineExecutableStatistics (
+                Type ( DeviceHandle ),
+                Type ( PipelineExecutableInfo )        const *,
+                cds :: uint32                                *,
+                Type ( PipelineExecutableStatistic )         *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PIPELINE_EXECUTABLE_PROPERTIES_AVAILABLE
+        NoDiscard MaybeUnused extern auto getPipelineExecutableInternalRepresentations (
+                Type ( DeviceHandle ),
+                Type ( PipelineExecutableInfo )                     const *,
+                cds :: uint32                                             *,
+                Type ( PipelineExecutableInternalRepresentation )         *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_AMD_SHADER_INFO_AVAILABLE
+        extern auto getShaderInfoAMD (
+                Type ( DeviceHandle ),
+                Type ( PipelineHandle ),
+                Type ( ShaderStageFlag ),
+                Type ( ShaderInfoTypeAMD ),
+                cds :: uint64               *,
+                void                        *
+        ) noexcept -> Type ( Result );
+#endif
+
     } /// namespace vulkan
 
 } /// namespace engine

@@ -19007,7 +19007,7 @@ namespace engine :: vulkan {
                 .dataSize       = pSource->dataSize,
                 .pData          = pSource->pData
         };
-
+        
         return pDestination;
     }
 #endif

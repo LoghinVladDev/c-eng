@@ -117,8 +117,8 @@ public:
                     LOG_CONTEXT_SIZE ( CreateComputePipelineContext, 3 )
                     LOG_CONTEXT_SIZE ( CreateGraphicsPipelineContext, 3 )
                     LOG_CONTEXT_SIZE ( CreateRayTracingPipelineSharedContext, 3 )
-                        LOG_CONTEXT_SIZE ( CreateRayTracingPipelineNVidiaContext, 3 )
-                        LOG_CONTEXT_SIZE ( CreateRayTracingPipelineContext, 3 )
+                        LOG_CONTEXT_SIZE ( CreateRayTracingPipelineNVidiaContext, 4 )
+                        LOG_CONTEXT_SIZE ( CreateRayTracingPipelineContext, 4 )
             LOG_CONTEXT_SIZE ( EnumerateSharedContext, 1 )
                 LOG_CONTEXT_SIZE ( EnumerateLayerPropertiesContext, 2 )
                 LOG_CONTEXT_SIZE ( EnumerateExtensionPropertiesContext, 2 )
@@ -4382,5 +4382,597 @@ auto engine :: vulkan :: createRayTracingPipelines (
     extractContext ( count, & pCreateInfos[0], & context->create.pipeline.rayTracing.pipeline );
 
     return ResultSuccess;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_RAY_TRACING_PIPELINE_AVAILABLE
+auto engine :: vulkan :: getRayTracingShaderGroupHandles (
+        Type ( DeviceHandle )   deviceHandle,
+        Type ( PipelineHandle ) pipelineHandle,
+        cds :: uint32           firstGroup,
+        cds :: uint32           groupCount,
+        cds :: uint64           dataSize,
+        void                  * pData
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || pipelineHandle == nullptr || pData == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkGetRayTracingShaderGroupHandlesKHR )
+
+    return static_cast < Type ( Result ) > (
+            vkGetRayTracingShaderGroupHandlesKHRHandle (
+                    deviceHandle,
+                    pipelineHandle,
+                    firstGroup,
+                    groupCount,
+                    dataSize,
+                    pData
+            )
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_RAY_TRACING_PIPELINE_AVAILABLE
+auto engine :: vulkan :: getRayTracingCaptureReplayShaderGroupHandles (
+        Type ( DeviceHandle )   deviceHandle,
+        Type ( PipelineHandle ) pipelineHandle,
+        cds :: uint32           firstGroup,
+        cds :: uint32           groupCount,
+        cds :: uint64           dataSize,
+        void                  * pData
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || pipelineHandle == nullptr || pData == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkGetRayTracingCaptureReplayShaderGroupHandlesKHR )
+
+    return static_cast < Type ( Result ) > (
+            vkGetRayTracingCaptureReplayShaderGroupHandlesKHRHandle (
+                    deviceHandle,
+                    pipelineHandle,
+                    firstGroup,
+                    groupCount,
+                    dataSize,
+                    pData
+            )
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+auto engine :: vulkan :: compileDeferredNVidia (
+        Type ( DeviceHandle )   deviceHandle,
+        Type ( PipelineHandle ) pipelineHandle,
+        cds :: uint32           shader
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || pipelineHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkCompileDeferredNV )
+
+    return static_cast < Type ( Result ) > (
+            vkCompileDeferredNVHandle (
+                    deviceHandle,
+                    pipelineHandle,
+                    shader
+            )
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_RAY_TRACING_PIPELINE_AVAILABLE
+auto engine :: vulkan :: getRayTracingShaderGroupStackSize (
+        Type ( DeviceHandle )       deviceHandle,
+        Type ( PipelineHandle )     pipelineHandle,
+        cds :: uint32               group,
+        Type ( ShaderGroupShader )  groupShader,
+        Type ( DeviceSize )       * pSize
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || pipelineHandle == nullptr || pSize == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkGetRayTracingShaderGroupStackSizeKHR )
+
+    VkDeviceSize size = vkGetRayTracingShaderGroupStackSizeKHRHandle (
+            deviceHandle,
+            pipelineHandle,
+            group,
+            static_cast < VkShaderGroupShaderKHR > ( groupShader )
+    );
+
+    * pSize = size;
+
+    return ResultSuccess;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_RAY_TRACING_PIPELINE_AVAILABLE
+auto engine :: vulkan :: commandBufferSetRayTracingPipelineStackSize (
+        Type ( CommandBufferHandle )    commandBufferHandle,
+        cds :: uint32                   pipelineStackSize
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( commandBufferHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkCmdSetRayTracingPipelineStackSizeKHR )
+
+    vkCmdSetRayTracingPipelineStackSizeKHRHandle (
+            commandBufferHandle,
+            pipelineStackSize
+    );
+
+    return ResultSuccess;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: destroyPipeline (
+        Type ( DeviceHandle )                   deviceHandle,
+        Type ( PipelineHandle )                 pipelineHandle,
+        Type ( AllocationCallbacks )    const * pAllocationCallbacks
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || pipelineHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkDestroyPipeline )
+
+    vkDestroyPipelineHandle (
+            deviceHandle,
+            pipelineHandle,
+            AllocatorHandler :: apply ( pAllocationCallbacks )
+    );
+
+    return ResultSuccess;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: createPipelineCache (
+        Type ( DeviceHandle )                       deviceHandle,
+        Type ( PipelineCacheCreateInfo )    const * pCreateInfo,
+        Type ( AllocationCallbacks )        const * pAllocationCallbacks,
+        Type ( PipelineCacheHandle )              * pHandle
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || pCreateInfo == nullptr || pHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkCreatePipelineCache )
+
+    auto context = ContextManager :: acquire();
+
+    return static_cast < Type ( Result ) > (
+            vkCreatePipelineCacheHandle (
+                    deviceHandle,
+                    prepareContext ( & context->create.pipeline.cache, pCreateInfo ),
+                    AllocatorHandler :: apply ( pAllocationCallbacks ),
+                    pHandle
+            )
+    );
+
+    return ResultSuccess;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: mergePipelineCaches (
+        Type ( DeviceHandle )                       deviceHandle,
+        Type ( PipelineCacheHandle )                destinationCacheHandle,
+        cds :: uint32                               sourceCacheCount,
+        Type ( PipelineCacheHandle )        const * pSourceCacheHandles
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || destinationCacheHandle == nullptr || pSourceCacheHandles == nullptr || sourceCacheCount == 0U ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkMergePipelineCaches )
+
+    return static_cast < Type ( Result ) > (
+            vkMergePipelineCachesHandle (
+                    deviceHandle,
+                    destinationCacheHandle,
+                    sourceCacheCount,
+                    pSourceCacheHandles
+            )
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: getPipelineCacheData (
+        Type ( DeviceHandle )                       deviceHandle,
+        Type ( PipelineCacheHandle )                cacheHandle,
+        cds :: uint64                             * pSize,
+        void                                      * pData
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || cacheHandle == nullptr || pSize == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkGetPipelineCacheData )
+
+    std :: size_t size = 0U;
+
+    if ( pData == nullptr ) {
+
+        if (
+                auto result = vkGetPipelineCacheDataHandle (
+                        deviceHandle,
+                        cacheHandle,
+                        & size,
+                        nullptr
+                ); result != VK_SUCCESS
+        ) {
+            return static_cast < Type ( Result ) > ( result );
+        }
+
+        * pSize = size;
+        return ResultSuccess;
+    }
+
+    size = * pSize;
+
+    return static_cast < Type ( Result ) > (
+            vkGetPipelineCacheDataHandle (
+                    deviceHandle,
+                    cacheHandle,
+                    & size,
+                    pData
+            )
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: destroyPipelineCache (
+        Type ( DeviceHandle )                   deviceHandle,
+        Type ( PipelineCacheHandle )            cacheHandle,
+        Type ( AllocationCallbacks )    const * pAllocationCallbacks
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || cacheHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkDestroyPipelineCache )
+
+    vkDestroyPipelineCacheHandle (
+            deviceHandle,
+            cacheHandle,
+            AllocatorHandler :: apply ( pAllocationCallbacks )
+    );
+
+    return ResultSuccess;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: commandBufferBindPipeline (
+        Type ( CommandBufferHandle )    commandBufferHandle,
+        Type ( PipelineBindPoint )      bindPoint,
+        Type ( PipelineHandle )         pipelineHandle
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( commandBufferHandle == nullptr || pipelineHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkCmdBindPipeline )
+
+    vkCmdBindPipeline (
+            commandBufferHandle,
+            static_cast < VkPipelineBindPoint > ( bindPoint ),
+            pipelineHandle
+    );
+
+    return ResultSuccess;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEVICE_GENERATED_COMMANDS_AVAILABLE
+auto engine :: vulkan :: commandBufferBindPipelineShaderGroup (
+        Type ( CommandBufferHandle )    commandBufferHandle,
+        Type ( PipelineBindPoint )      bindPoint,
+        Type ( PipelineHandle )         pipelineHandle,
+        cds :: uint32                   groupIndex
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( commandBufferHandle == nullptr || pipelineHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkCmdBindPipelineShaderGroupNV )
+
+    vkCmdBindPipelineShaderGroupNVHandle (
+            commandBufferHandle,
+            static_cast < VkPipelineBindPoint > ( bindPoint ),
+            pipelineHandle,
+            groupIndex
+    );
+
+    return ResultSuccess;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PIPELINE_EXECUTABLE_PROPERTIES_AVAILABLE
+auto engine :: vulkan :: getPipelineExecutableProperties (
+        Type ( DeviceHandle )                           deviceHandle,
+        Type ( PipelineInfo )                   const * pPipelineInfo,
+        cds :: uint32                                 * pCount,
+        Type ( PipelineExecutableProperties )         * pProperties
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || pPipelineInfo == nullptr || pCount == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkGetPipelineExecutablePropertiesKHR )
+
+    auto context = ContextManager :: acquire();
+
+    if ( pProperties == nullptr ) {
+        return static_cast < Type ( Result ) > (
+                vkGetPipelineExecutablePropertiesKHRHandle (
+                        deviceHandle,
+                        prepareContext ( & context->get.pipeline.properties, pPipelineInfo ),
+                        pCount,
+                        nullptr
+                )
+        );
+    }
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( * pCount > engine :: vulkan :: config :: pipelineExecutablePropertiesCount ) {
+        return ResultErrorConfigurationArraySizeSmall;
+    }
+
+#endif
+
+    if (
+            auto result = vkGetPipelineExecutablePropertiesKHRHandle (
+                    deviceHandle,
+                    prepareContext ( & context->get.pipeline.properties, pPipelineInfo ),
+                    pCount,
+                    & context->get.pipeline.properties.properties[0]
+            ); result != VK_SUCCESS
+    ) {
+        return static_cast < Type ( Result ) > ( result );
+    }
+
+    extractContext ( * pCount, & pProperties[0], & context->get.pipeline.properties );
+    return ResultSuccess;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PIPELINE_EXECUTABLE_PROPERTIES_AVAILABLE
+auto engine :: vulkan :: getPipelineExecutableStatistics (
+        Type ( DeviceHandle )                           deviceHandle,
+        Type ( PipelineExecutableInfo )         const * pPipelineExecutableInfo,
+        cds :: uint32                                 * pCount,
+        Type ( PipelineExecutableStatistic )          * pStatistics
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || pPipelineExecutableInfo == nullptr || pCount == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkGetPipelineExecutableStatisticsKHR )
+
+    auto context = ContextManager :: acquire();
+
+    if ( pStatistics == nullptr ) {
+        return static_cast < Type ( Result ) > (
+                vkGetPipelineExecutableStatisticsKHRHandle (
+                        deviceHandle,
+                        prepareContext ( & context->get.pipeline.statistics, pPipelineExecutableInfo ),
+                        pCount,
+                        nullptr
+                )
+        );
+    }
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( * pCount > engine :: vulkan :: config :: pipelineExecutableStatisticsCount ) {
+        return ResultErrorConfigurationArraySizeSmall;
+    }
+
+#endif
+
+    if (
+            auto result = vkGetPipelineExecutableStatisticsKHRHandle (
+                    deviceHandle,
+                    prepareContext ( & context->get.pipeline.statistics, pPipelineExecutableInfo ),
+                    pCount,
+                    & context->get.pipeline.statistics.statistics[0]
+            ); result != VK_SUCCESS
+    ) {
+        return static_cast < Type ( Result ) > ( result );
+    }
+
+    extractContext ( * pCount, & pStatistics[0], & context->get.pipeline.statistics );
+    return ResultSuccess;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PIPELINE_EXECUTABLE_PROPERTIES_AVAILABLE
+auto engine :: vulkan :: getPipelineExecutableInternalRepresentations (
+        Type ( DeviceHandle )                                   deviceHandle,
+        Type ( PipelineExecutableInfo )                 const * pPipelineExecutableInfo,
+        cds :: uint32                                         * pCount,
+        Type ( PipelineExecutableInternalRepresentation )     * pRepresentations
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || pPipelineExecutableInfo == nullptr || pCount == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkGetPipelineExecutableInternalRepresentationsKHR )
+
+    auto context = ContextManager :: acquire();
+
+    if ( pRepresentations == nullptr ) {
+        return static_cast < Type ( Result ) > (
+                vkGetPipelineExecutableInternalRepresentationsKHRHandle (
+                        deviceHandle,
+                        prepareContext ( & context->get.pipeline.internalRepresentations, pPipelineExecutableInfo ),
+                        pCount,
+                        nullptr
+                )
+        );
+    }
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( * pCount > engine :: vulkan :: config :: pipelineExecutableInternalRepresentationCount ) {
+        return ResultErrorConfigurationArraySizeSmall;
+    }
+
+#endif
+
+    if (
+            auto result = vkGetPipelineExecutableInternalRepresentationsKHRHandle (
+                    deviceHandle,
+                    prepareContext ( & context->get.pipeline.internalRepresentations, pPipelineExecutableInfo ),
+                    pCount,
+                    prepareContext ( & context->get.pipeline.internalRepresentations, * pCount, pRepresentations )
+            ); result != VK_SUCCESS
+    ) {
+        return static_cast < Type ( Result ) > ( result );
+    }
+
+    extractContext ( * pCount, & pRepresentations[0], & context->get.pipeline.internalRepresentations );
+    return ResultSuccess;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_AMD_SHADER_INFO_AVAILABLE
+auto engine :: vulkan :: getShaderInfoAMD (
+        Type ( DeviceHandle )         deviceHandle,
+        Type ( PipelineHandle )       pipelineHandle,
+        Type ( ShaderStageFlag )      shaderStage,
+        Type ( ShaderInfoTypeAMD )    infoType,
+        cds :: uint64               * pDataSize,
+        void                        * pData
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || pipelineHandle == nullptr || pDataSize == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkGetShaderInfoAMD )
+
+    if ( pData == nullptr ) {
+        std :: size_t size;
+
+        if (
+                auto result = vkGetShaderInfoAMDHandle (
+                        deviceHandle,
+                        pipelineHandle,
+                        static_cast < VkShaderStageFlagBits > ( shaderStage ),
+                        static_cast < VkShaderInfoTypeAMD > ( infoType ),
+                        & size,
+                        nullptr
+                ); result != VK_SUCCESS
+        ) {
+            return static_cast < Type ( Result ) > ( result );
+        }
+
+        * pDataSize = size;
+        return ResultSuccess;
+    }
+
+    std :: size_t size = * pDataSize;
+
+    return static_cast < Type ( Result ) > (
+            vkGetShaderInfoAMDHandle (
+                    deviceHandle,
+                    pipelineHandle,
+                    static_cast < VkShaderStageFlagBits > ( shaderStage ),
+                    static_cast < VkShaderInfoTypeAMD > ( infoType ),
+                    & size,
+                    pData
+            )
+    );
 }
 #endif

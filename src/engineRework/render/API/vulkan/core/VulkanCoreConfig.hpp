@@ -109,6 +109,11 @@ namespace engine :: vulkan :: config {
     constexpr cds :: uint32 rayTracingPipelineSpecializationMapEntryCount           = pipelineSpecializationMapEntryCount;
     constexpr cds :: uint32 rayTracingPipelineShaderGroupCount                      = 64U;
     constexpr cds :: uint32 rayTracingPipelineDynamicStateCount                     = pipelineDynamicStateCount;
+
+    constexpr cds :: uint32 pipelineExecutableItemCount                             = 256U;
+    constexpr cds :: uint32 pipelineExecutablePropertiesCount                       = pipelineExecutableItemCount;
+    constexpr cds :: uint32 pipelineExecutableStatisticsCount                       = pipelineExecutableItemCount;
+    constexpr cds :: uint32 pipelineExecutableInternalRepresentationCount           = pipelineExecutableItemCount;
 }
 
 #if defined ( __C_ENG_USE_DEFENSIVE_PROGRAMMING ) || !defined(NDEBUG)

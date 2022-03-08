@@ -11603,6 +11603,24 @@ auto vulkan :: toString (
 }
 #endif
 
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_RAY_TRACING_PIPELINE_AVAILABLE
+auto vulkan :: toString (
+        Type ( ShaderGroupShader )  type
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( type ) {
+        case ShaderGroupShaderGeneral:      { asString = "General";         break; }
+        case ShaderGroupShaderAnyHit:       { asString = "Any Hit";         break; }
+        case ShaderGroupShaderClosestHit:   { asString = "Closest Hit";     break; }
+        case ShaderGroupShaderIntersection: { asString = "Intersection";    break; }
+    }
+
+    return asString;
+}
+#endif
+
 #if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
 auto vulkan :: toString (
         Type ( RayTracingShaderGroupCreateInfoNVidia ) const & info
@@ -11707,6 +11725,228 @@ auto vulkan :: toString (
            ", layout = "                            + engine :: toString ( info.layout ) +
            ", basePipelineHandle = "                + engine :: toString ( info.basePipelineHandle ) +
            ", basePipelineIndex = "                 + engine :: toString ( info.basePipelineIndex ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( PipelineCacheCreateFlag )  type
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( type ) {
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_PIPELINE_CREATION_CACHE_CONTROL_AVAILABLE
+        case PipelineCacheCreateFlagExternallySynchronized: { asString = "Externally Synchronized"; break; }
+#endif
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( PipelineCacheHeaderVersionValue )  type
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( type ) {
+        case PipelineCacheHeaderVersionValueOne:    { asString = "Version One"; break; }
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( PipelineCacheCreateInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( PipelineCacheCreateInfo ) ) " " +
+           "{ structureType = "_s                   + toString ( info.structureType ) +
+           ", pNext = "                             + engine :: toString ( info.pNext ) +
+           ", flags = "                             + "0b" + Long ( info.flags ).toString(2) +
+           ", initialDataSize = "                   + info.initialDataSize +
+           ", pInitialData = "                      + engine :: toString ( info.pInitialData ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( PipelineCacheHeaderVersionOne ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( PipelineCacheHeaderVersionOne ) ) " " +
+           "{ headerSize = "_s      + info.headerSize +
+           ", headerVersion = "     + toString ( info.headerVersion ) +
+           ", vendorID = "          + info.vendorID +
+           ", deviceID = "          + info.deviceID +
+           ", pipelineCacheUUID = " + :: toStringRegular ( VK_UUID_SIZE, & info.pipelineCacheUUID[0] ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PIPELINE_EXECUTABLE_PROPERTIES_AVAILABLE
+auto vulkan :: toString (
+        Type ( PipelineInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( PipelineInfo ) ) " " +
+            "{ structureType = "_s                  + toString ( info.structureType ) +
+            ", pNext = "                            + engine :: toString ( info.pNext ) +
+            ", pipeline = "                         + engine :: toString ( info.pipeline ) +
+            " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PIPELINE_EXECUTABLE_PROPERTIES_AVAILABLE
+auto vulkan :: toString (
+        Type ( PipelineExecutableProperties ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( PipelineExecutableProperties ) ) " " +
+            "{ structureType = "_s                  + toString ( info.structureType ) +
+            ", pNext = "                            + engine :: toString ( info.pNext ) +
+            ", stages = "                           + "0b" + Long ( info.stages ).toString(2) +
+            ", name = "                             + info.name +
+            ", description = "                      + info.description +
+            ", subgroupSize = "                     + info.subgroupSize +
+            " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PIPELINE_EXECUTABLE_PROPERTIES_AVAILABLE
+auto vulkan :: toString (
+        Type ( PipelineExecutableStatisticFormat )  format
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( format ) {
+        case PipelineExecutableStatisticFormatBool:     { asString = "Bool";    break; }
+        case PipelineExecutableStatisticFormatSInt64:   { asString = "SInt64";  break; }
+        case PipelineExecutableStatisticFormatUInt64:   { asString = "UInt64";  break; }
+        case PipelineExecutableStatisticFormatFloat64:  { asString = "Float64"; break; }
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PIPELINE_EXECUTABLE_PROPERTIES_AVAILABLE
+auto vulkan :: toString (
+        Type ( PipelineExecutableInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( PipelineExecutableInfo ) ) " " +
+           "{ structureType = "_s                  + toString ( info.structureType ) +
+           ", pNext = "                            + engine :: toString ( info.pNext ) +
+           ", pipeline = "                         + engine :: toString ( info.pipeline ) +
+           ", executableIndex = "                  + info.executableIndex +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PIPELINE_EXECUTABLE_PROPERTIES_AVAILABLE
+auto vulkan :: toString (
+        Type ( PipelineExecutableStatistic ) const & info
+) noexcept -> String {
+
+    auto valueAsString = [] (
+            Type ( PipelineExecutableStatisticFormat )  format,
+            Type ( PipelineExecutableStatisticValue )   value
+    ) -> String {
+        switch ( format ) {
+            case PipelineExecutableStatisticFormatBool:
+                return value.b ? "true" : "false";
+            case PipelineExecutableStatisticFormatFloat64:
+                return String::f ( "%llf", value.d );
+            case PipelineExecutableStatisticFormatSInt64:
+                return Long ( value.s64 ).toString();
+            case PipelineExecutableStatisticFormatUInt64:
+                return String::f ( "%zu", value.u64 );
+        }
+
+        return "Undefined";
+    };
+
+    return __C_ENG_STRINGIFY ( Type ( PipelineExecutableStatistic ) ) " " +
+           "{ structureType = "_s                  + toString ( info.structureType ) +
+           ", pNext = "                            + engine :: toString ( info.pNext ) +
+           ", name = "                             + info.name +
+           ", description = "                      + info.description +
+           ", value = "                            + valueAsString ( info.format, info.value ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PIPELINE_EXECUTABLE_PROPERTIES_AVAILABLE
+auto vulkan :: toString (
+        Type ( PipelineExecutableInternalRepresentation ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( PipelineExecutableInternalRepresentation ) ) " " +
+           "{ structureType = "_s                  + toString ( info.structureType ) +
+           ", pNext = "                            + engine :: toString ( info.pNext ) +
+           ", name = "                             + info.name +
+           ", description = "                      + info.description +
+           ", isText = "                           + ( info.isText == VK_TRUE ? "true" : "false" ) +
+           ", dataSize = "                         + info.dataSize +
+           ", pData = "                            + engine :: toString ( info.pData ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_AMD_SHADER_INFO_AVAILABLE
+auto vulkan :: toString (
+        Type ( ShaderInfoTypeAMD )  format
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( format ) {
+        case ShaderInfoTypeAMDStatistics:   { asString = "Statistics";  break; }
+        case ShaderInfoTypeAMDBinary:       { asString = "Binary";      break; }
+        case ShaderInfoTypeAMDDisassembly:  { asString = "Disassembly"; break; }
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_AMD_SHADER_INFO_AVAILABLE
+auto vulkan :: toString (
+        Type ( ShaderResourceUsageAMD ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( ShaderResourceUsageAMD ) ) " " +
+           "{ numUsedVgrps = "_s                  + info.numUsedVgrps +
+           ", numUsedSgrps = "                    + info.numUsedSgrps +
+           ", ldsSizePerLogicalWorkGroup = "      + info.ldsSizePerLogicalWorkGroup +
+           ", ldsUsageSizeInBytes = "             + info.ldsUsageSizeInBytes +
+           ", scratchMemUsageInBytes = "          + info.scratchMemUsageInBytes +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_AMD_SHADER_INFO_AVAILABLE
+auto vulkan :: toString (
+        Type ( ShaderStatisticsInfoAMD ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( ShaderStatisticsInfoAMD ) ) " " +
+           "{ shaderStageMask = "_s               + "0b" + Long ( info.shaderStageMask ).toString(2) +
+           ", resourceUsage = "                   + toString ( info.resourceUsage ) +
+           ", numPhysicalVgrps = "                + info.numPhysicalVgrps +
+           ", numPhysicalSgrps = "                + info.numPhysicalSgrps +
+           ", numAvailableVgrps = "               + info.numAvailableVgrps +
+           ", numAvailableSgrps = "               + info.numAvailableSgrps +
+           ", computeWorkgroupSize = "            + :: toStringRegular ( 3, & info.computeWorkGroupSize[0] ) +
            " }";
 }
 #endif

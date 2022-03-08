@@ -3457,6 +3457,108 @@ namespace engine :: vulkan {
     ) noexcept -> VkRayTracingPipelineInterfaceCreateInfoKHR *;
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto prepareContext (
+            CreatePipelineCacheContext             *,
+            Type ( PipelineCacheCreateInfo ) const *
+    ) noexcept -> VkPipelineCacheCreateInfo *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto toVulkanFormat (
+            VkPipelineCacheCreateInfo              *,
+            Type ( PipelineCacheCreateInfo ) const *
+    ) noexcept -> VkPipelineCacheCreateInfo *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PIPELINE_EXECUTABLE_PROPERTIES_AVAILABLE
+    extern auto toVulkanFormat (
+            VkPipelineInfoKHR           *,
+            Type ( PipelineInfo ) const *
+    ) noexcept -> VkPipelineInfoKHR *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PIPELINE_EXECUTABLE_PROPERTIES_AVAILABLE
+    extern auto toVulkanFormat (
+            VkPipelineExecutableInfoKHR           *,
+            Type ( PipelineExecutableInfo ) const *
+    ) noexcept -> VkPipelineExecutableInfoKHR *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PIPELINE_EXECUTABLE_PROPERTIES_AVAILABLE
+    extern auto fromVulkanFormat (
+            Type ( PipelineExecutableStatistic )         *,
+            VkPipelineExecutableStatisticKHR       const *
+    ) noexcept -> Type ( PipelineExecutableStatistic ) *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PIPELINE_EXECUTABLE_PROPERTIES_AVAILABLE
+    extern auto fromVulkanFormat (
+            Type ( PipelineExecutableProperties )         *,
+            VkPipelineExecutablePropertiesKHR       const *
+    ) noexcept -> Type ( PipelineExecutableProperties ) *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PIPELINE_EXECUTABLE_PROPERTIES_AVAILABLE
+    extern auto fromVulkanFormat (
+            Type ( PipelineExecutableInternalRepresentation )         *,
+            VkPipelineExecutableInternalRepresentationKHR       const *
+    ) noexcept -> Type ( PipelineExecutableInternalRepresentation ) *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PIPELINE_EXECUTABLE_PROPERTIES_AVAILABLE
+    extern auto prepareContext (
+            GetPipelinePropertiesContext      *,
+            Type ( PipelineInfo )       const *
+    ) noexcept -> VkPipelineInfoKHR *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PIPELINE_EXECUTABLE_PROPERTIES_AVAILABLE
+    extern auto prepareContext (
+            GetPipelineStatisticsContext          *,
+            Type ( PipelineExecutableInfo ) const *
+    ) noexcept -> VkPipelineExecutableInfoKHR *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PIPELINE_EXECUTABLE_PROPERTIES_AVAILABLE
+    extern auto prepareContext (
+            GetPipelineInternalRepresentationsContext         *,
+            Type ( PipelineExecutableInfo )             const *
+    ) noexcept -> VkPipelineExecutableInfoKHR *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PIPELINE_EXECUTABLE_PROPERTIES_AVAILABLE
+    extern auto prepareContext (
+            GetPipelineInternalRepresentationsContext                 *,
+            cds :: uint32,
+            Type ( PipelineExecutableInternalRepresentation )         *
+    ) noexcept -> VkPipelineExecutableInternalRepresentationKHR *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PIPELINE_EXECUTABLE_PROPERTIES_AVAILABLE
+    extern auto extractContext (
+            cds :: uint32,
+            Type ( PipelineExecutableProperties )         *,
+            GetPipelinePropertiesContext            const *
+    ) noexcept -> void;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PIPELINE_EXECUTABLE_PROPERTIES_AVAILABLE
+    extern auto extractContext (
+            cds :: uint32,
+            Type ( PipelineExecutableStatistic )          *,
+            GetPipelineStatisticsContext            const *
+    ) noexcept -> void;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PIPELINE_EXECUTABLE_PROPERTIES_AVAILABLE
+    extern auto extractContext (
+            cds :: uint32,
+            Type ( PipelineExecutableInternalRepresentation )          *,
+            GetPipelineInternalRepresentationsContext            const *
+    ) noexcept -> void;
+#endif
+
 }
 
 #define C_ENG_MAP_END
