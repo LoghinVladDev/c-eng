@@ -2,10 +2,10 @@
 // Created by loghin on 07.03.2022.
 //
 
-#include <VulkanAPICallsConversion.hpp>
-#include <VulkanAPICallsPrivate.hpp>
-#include <VulkanAPICallsTypes.hpp>
-#include <VulkanAPICallsConversionContextDiagnosis.hpp>
+#include <calls/VulkanAPICallsConversion.hpp>
+#include <calls/VulkanAPICallsPrivate.hpp>
+#include <calls/VulkanAPICallsTypes.hpp>
+#include <calls/VulkanAPICallsConversionContextDiagnosis.hpp>
 #include <CDS/String>
 
 using namespace cds;

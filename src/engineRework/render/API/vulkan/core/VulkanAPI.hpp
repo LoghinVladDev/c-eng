@@ -3,7 +3,7 @@
 
 #include <VulkanCore.hpp>
 #include <VulkanCoreConfig.hpp>
-#include <VulkanAPICalls.hpp>
+#include <calls/VulkanAPICalls.hpp>
 #include <VulkanAPIExceptions.hpp>
 
 #endif // __C_ENG_VULKAN_API_HPP__

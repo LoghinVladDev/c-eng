@@ -2,13 +2,14 @@
 // Created by loghin on 16.02.2022.
 //
 
-#include <VulkanAPI.hpp>
-#include <VulkanAPICallsPrivate.hpp>
-#include <VulkanAPICallsConversion.hpp>
-#include <VulkanAPICallsTypes.hpp>
+#include <calls/VulkanAPICallsPrivate.hpp>
+#include <calls/VulkanAPICallsConversion.hpp>
 #include <CDS/Mutex>
-#include <CDS/LockGuard>
-#include <Logger.hpp>
+
+#include <calls/util/AllocationHandler.hpp>
+#include <calls/util/ContextManager.hpp>
+#include <calls/util/APICaller.hpp>
+#include <calls/util/LastCreatedInstance.hpp>
 
 #define C_ENG_MAP_START     SOURCE
 #include <ObjectMapping.hpp>
@@ -16,236 +17,6 @@
 using namespace cds;
 using namespace engine;
 using namespace vulkan;
-
-
-#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
-class ContextManager {
-private:
-    struct Context {
-    private:
-        bool            inUse;
-        friend class ContextManager;
-
-    public:
-        SharedContext   data;
-    };
-
-    static inline Context   contexts [ engine :: vulkan :: config :: contextCount ];
-    static inline Mutex     contextLock;
-    static inline bool      firstCall = true;
-
-    class ContextHolder {
-    private:
-        friend class ContextManager;
-        Context * pContext { nullptr };
-
-        explicit ContextHolder ( Context * pContext ) noexcept :
-                pContext ( pContext ) {
-
-        }
-
-    public:
-        ~ContextHolder () noexcept {
-            LockGuard guard ( contextLock );
-            this->pContext->inUse = false;
-
-#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
-            if ( this->pContext->data.common.diag.error != ResultSuccess ) {
-                Type ( Logger ) :: instance().error ( String::f (
-                    "API Error logged in context at release : %s, in %s -> %s : %d ---> %s",
-                    toString ( pContext->data.common.diag.error ),
-                    pContext->data.common.diag.file,
-                    pContext->data.common.diag.function,
-                    pContext->data.common.diag.line,
-                    pContext->data.common.diag.pMessage == nullptr ? "no details given" : pContext->data.common.diag.pMessage->cStr()
-                ));
-
-                cds :: Memory :: instance().destroy ( pContext->data.common.diag.pMessage );
-
-                this->pContext->data.common.diag.error = ResultSuccess;
-            }
-#endif
-
-        }
-
-        ContextHolder ( ContextHolder && holder ) noexcept :
-                pContext ( cds :: exchange ( holder.pContext, nullptr ) ) {
-
-        }
-
-        inline auto operator = ( ContextHolder && holder ) noexcept -> ContextHolder & {
-            if ( this == & holder ) {
-                return * this;
-            }
-
-            this->pContext = cds :: exchange ( holder.pContext, nullptr );
-            return * this;
-        }
-
-        constexpr auto data () noexcept -> SharedContext & {
-            return this->pContext->data;
-        }
-
-        constexpr auto operator -> () noexcept -> SharedContext * {
-            return & this->pContext->data;
-        }
-    };
-
-public:
-    static auto logContextSizes () noexcept -> void {
-
-#define LOG_CONTEXT_SIZE(_context, _depth) (void) Type ( Logger ) :: instance().debug ( String :: f ( "%sContext '%s' size : %d", (" "_s * (_depth * 4)).cStr(), # _context, sizeof ( _context ) ) );
-
-        LOG_CONTEXT_SIZE ( SharedContext, 0 )
-            LOG_CONTEXT_SIZE ( CommonContext, 1 )
-                LOG_CONTEXT_SIZE ( DiagnosticContext, 2 )
-            LOG_CONTEXT_SIZE ( CreateSharedContext, 1 )
-                LOG_CONTEXT_SIZE ( CreateInstanceContext, 2 )
-                LOG_CONTEXT_SIZE ( CreateDeviceContext, 2 )
-                LOG_CONTEXT_SIZE ( CreateSwapChainContext, 2 )
-                LOG_CONTEXT_SIZE ( CreateImageViewContext, 2 )
-                LOG_CONTEXT_SIZE ( CreateCommandPoolContext, 2 )
-                LOG_CONTEXT_SIZE ( CreateFenceContext, 2 )
-                LOG_CONTEXT_SIZE ( CreateSemaphoreContext, 2 )
-                LOG_CONTEXT_SIZE ( CreateEventContext, 2 )
-                LOG_CONTEXT_SIZE ( CreateRenderPassContext, 2 )
-                LOG_CONTEXT_SIZE ( CreateRenderPass2Context, 2 )
-                LOG_CONTEXT_SIZE ( CreateFrameBufferContext, 2 )
-                LOG_CONTEXT_SIZE ( CreateShaderModuleContext, 2 )
-                LOG_CONTEXT_SIZE ( CreateValidationCacheContext, 2 )
-                LOG_CONTEXT_SIZE ( CreatePipelineSharedContext, 2 )
-                    LOG_CONTEXT_SIZE ( CreateComputePipelineContext, 3 )
-                    LOG_CONTEXT_SIZE ( CreateGraphicsPipelineContext, 3 )
-                    LOG_CONTEXT_SIZE ( CreateRayTracingPipelineSharedContext, 3 )
-                        LOG_CONTEXT_SIZE ( CreateRayTracingPipelineNVidiaContext, 4 )
-                        LOG_CONTEXT_SIZE ( CreateRayTracingPipelineContext, 4 )
-            LOG_CONTEXT_SIZE ( EnumerateSharedContext, 1 )
-                LOG_CONTEXT_SIZE ( EnumerateLayerPropertiesContext, 2 )
-                LOG_CONTEXT_SIZE ( EnumerateExtensionPropertiesContext, 2 )
-                LOG_CONTEXT_SIZE ( EnumeratePhysicalDevicesContext, 2 )
-                LOG_CONTEXT_SIZE ( EnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersContext, 2 )
-                LOG_CONTEXT_SIZE ( EnumeratePhysicalDeviceGroupsContext, 2 )
-            LOG_CONTEXT_SIZE ( GetSharedContext, 1 )
-                LOG_CONTEXT_SIZE ( GetPhysicalDevicePropertiesContext, 2 )
-                LOG_CONTEXT_SIZE ( GetPhysicalDeviceFeaturesContext, 2 )
-                LOG_CONTEXT_SIZE ( GetPhysicalDeviceQueueFamilyPropertiesContext, 2 )
-                LOG_CONTEXT_SIZE ( GetPhysicalDeviceCooperativeMatrixPropertiesContext, 2 )
-                LOG_CONTEXT_SIZE ( GetDeviceQueueContext, 2 )
-                LOG_CONTEXT_SIZE ( GetSurfaceContext, 2 )
-                LOG_CONTEXT_SIZE ( GetSwapChainContext, 2 )
-                LOG_CONTEXT_SIZE ( GetFenceContext, 2 )
-                LOG_CONTEXT_SIZE ( GetSemaphoreContext, 2 )
-            LOG_CONTEXT_SIZE ( SetSharedContext, 1 )
-                LOG_CONTEXT_SIZE ( SetCommandBufferSharedContext, 2 )
-                    LOG_CONTEXT_SIZE ( SetCommandBufferEventContext, 3 )
-            LOG_CONTEXT_SIZE ( AllocateSharedContext, 1 )
-                LOG_CONTEXT_SIZE ( AllocateCommandBuffersContext, 2 )
-            LOG_CONTEXT_SIZE ( BeginSharedContext, 1 )
-                LOG_CONTEXT_SIZE ( BeginCommandBufferContext, 2 )
-                LOG_CONTEXT_SIZE ( BeginCommandBufferRenderingContext, 2 )
-                LOG_CONTEXT_SIZE ( BeginRenderPassContext, 2 )
-            LOG_CONTEXT_SIZE ( SubmitSharedContext, 1 )
-                LOG_CONTEXT_SIZE ( SubmitQueueContext, 2 )
-            LOG_CONTEXT_SIZE ( OthersSharedContext, 1 )
-                LOG_CONTEXT_SIZE ( RegisterEventContext, 2 )
-                LOG_CONTEXT_SIZE ( NextSubpassContext, 2 )
-            LOG_CONTEXT_SIZE ( ImportSharedContext, 1 )
-                LOG_CONTEXT_SIZE ( ImportFenceSharedContext, 2 )
-                LOG_CONTEXT_SIZE ( ImportSemaphoreSharedContext, 2 )
-            LOG_CONTEXT_SIZE ( WaitSharedContext, 1 )
-                LOG_CONTEXT_SIZE ( WaitSemaphoreContext, 2 )
-                LOG_CONTEXT_SIZE ( WaitCommandBufferSharedContext, 2 )
-                    LOG_CONTEXT_SIZE ( WaitCommandBufferEventContext, 3 )
-                    LOG_CONTEXT_SIZE ( WaitCommandBufferEvent2Context, 3 )
-            LOG_CONTEXT_SIZE ( SignalSharedContext, 1 )
-                LOG_CONTEXT_SIZE ( SignalSemaphoreContext, 2 )
-
-#undef LOG_CONTEXT_SIZE
-
-    }
-
-    static auto acquire () noexcept -> ContextHolder {
-
-        if ( firstCall ) {
-            LockGuard guard ( contextLock );
-
-            if ( firstCall ) {
-
-#ifndef NDEBUG
-                ContextManager :: logContextSizes ();
-#endif
-
-                for ( auto & context : contexts ) {
-                    context.inUse = false;
-
-#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
-                    context.data.common.diag.error = ResultSuccess;
-#endif
-
-                }
-            }
-
-            firstCall = false;
-        }
-
-        while ( true ) {
-            LockGuard guard ( contextLock );
-            for ( auto & context : contexts ) {
-                if ( ! context.inUse ) {
-                    context.inUse = true;
-                    return ContextHolder ( & context );
-                }
-            }
-        }
-    }
-};
-#endif
-
-
-#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
-class LastCreatedInstance {
-private:
-    static inline Type ( InstanceHandle ) instance;
-    static inline Mutex lock;
-
-public:
-    static inline auto acquire () noexcept -> Type ( InstanceHandle ) {
-        /* read lock might be irrelevant, guarding against incomplete pointers to instance
-         * a null instance / a valid instance = OK */
-        LockGuard guard ( lock );
-        return instance;
-    }
-
-    static inline auto set ( Type ( InstanceHandle ) handle ) noexcept -> void {
-        LockGuard guard ( lock );
-        instance = handle;
-    }
-};
-
-class AllocatorHandler {
-private:
-    static inline VkAllocationCallbacks                 callbacks {};
-    static inline Type ( AllocationCallbacks )  const * pApplicationAllocationCallbacks { nullptr };
-    static inline Mutex                                 lock;
-
-public:
-    static inline auto apply (
-            Type ( AllocationCallbacks ) const * pAllocationCallbacks
-    ) noexcept -> VkAllocationCallbacks const * {
-        if ( pAllocationCallbacks == nullptr ) {
-            return nullptr;
-        }
-
-        if ( pApplicationAllocationCallbacks == pAllocationCallbacks ) {
-            return & callbacks;
-        }
-
-        LockGuard guard ( lock );
-        pApplicationAllocationCallbacks = pAllocationCallbacks;
-        return toVulkanFormat ( & callbacks, pApplicationAllocationCallbacks );
-    }
-};
-#endif
 
 
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
@@ -261,9 +32,8 @@ auto engine :: vulkan :: enumerateInstanceVersion (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_FUNCTION_R ( vkEnumerateInstanceVersion )
-    return static_cast < vulkan :: Type ( Result ) > (
-            vkEnumerateInstanceVersionHandle (
+    return static_cast < Type ( Result ) > (
+            APICaller.vkEnumerateInstanceVersion (
                     pVersion
             )
     );
@@ -355,17 +125,15 @@ auto engine :: vulkan :: getDeviceFunctionAddress (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R (
-            LastCreatedInstance :: acquire(),
-            vkGetDeviceProcAddr
-    )
-
-    * pFunctionHandle = reinterpret_cast < void * > (
-            vkGetDeviceProcAddrHandle (
+    if (
+            auto result = APICaller.vkGetDeviceProcAddr (
+                    reinterpret_cast < void (**)() > ( pFunctionHandle ),
                     deviceHandle,
                     functionName
-            )
-    );
+            ); result != ResultSuccess
+    ) {
+        return result;
+    }
 
     if ( * pFunctionHandle == nullptr ) {
         return ResultErrorFunctionHandleNotFound;
@@ -393,21 +161,20 @@ auto engine :: vulkan :: createInstance (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_FUNCTION_R ( vkCreateInstance )
-
     auto context = ContextManager :: acquire();
 
     if (
-            auto result = vkCreateInstanceHandle (
-                    prepareContext ( & context.data().create.instance, pCreateInfo ),
+            auto result = APICaller.vkCreateInstance (
+                    prepareContext ( & context->create.instance, pCreateInfo ),
                     AllocatorHandler :: apply ( pAllocationCallbacks ),
                     pInstanceHandle
-            ); result != VK_SUCCESS
+            ); result != ResultSuccess
     ) {
-        return static_cast < Type ( Result ) > ( result );
+        return result;
     }
 
     LastCreatedInstance :: set ( * pInstanceHandle );
+    APICaller.setInstanceExtensions ( * pInstanceHandle, & context->create.instance.instance );
     return ResultSuccess;
 }
 #endif
@@ -426,14 +193,10 @@ auto engine :: vulkan :: enumerateInstanceLayerProperties (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_FUNCTION_R ( vkEnumerateInstanceLayerProperties )
-
     if ( pProperties == nullptr ) {
-        return static_cast < Type ( Result ) > (
-                vkEnumerateInstanceLayerPropertiesHandle (
-                        pCount,
-                        nullptr
-                )
+        return APICaller.vkEnumerateInstanceLayerProperties (
+                pCount,
+                nullptr
         );
     }
 
@@ -448,12 +211,12 @@ auto engine :: vulkan :: enumerateInstanceLayerProperties (
     auto context = ContextManager :: acquire();
 
     if (
-            auto result = vkEnumerateInstanceLayerPropertiesHandle (
+            auto result = APICaller.vkEnumerateInstanceLayerProperties (
                     pCount,
                     & context.data().enumerate.layerProperties.properties[0]
-            ); result != VK_SUCCESS
+            ); result != ResultSuccess
     ) {
-        return static_cast < Type ( Result ) > ( result );
+        return result;
     }
 
     for ( uint32 i = 0U; i < * pCount; ++ i ) {
@@ -479,15 +242,11 @@ auto engine :: vulkan :: enumeratePhysicalDeviceLayerProperties (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkEnumerateDeviceLayerProperties )
-
     if ( pProperties == nullptr ) {
-        return static_cast < Type ( Result ) > (
-                vkEnumerateDeviceLayerPropertiesHandle (
-                        physicalDeviceHandle,
-                        pCount,
-                        nullptr
-                )
+        return APICaller.vkEnumerateDeviceLayerProperties (
+                physicalDeviceHandle,
+                pCount,
+                nullptr
         );
     }
 
@@ -502,13 +261,13 @@ auto engine :: vulkan :: enumeratePhysicalDeviceLayerProperties (
     auto context = ContextManager :: acquire();
 
     if (
-        auto result = vkEnumerateDeviceLayerPropertiesHandle (
+        auto result = APICaller.vkEnumerateDeviceLayerProperties (
                 physicalDeviceHandle,
                 pCount,
                 & context.data().enumerate.layerProperties.properties[0]
-        ); result != VK_SUCCESS
+        ); result != ResultSuccess
     ) {
-        return static_cast < Type ( Result ) > ( result );
+        return result;
     }
 
     for ( uint32 i = 0U; i < * pCount; ++ i ) {
@@ -534,15 +293,11 @@ auto engine :: vulkan :: enumerateInstanceExtensionProperties (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkEnumerateInstanceExtensionProperties )
-
     if ( pProperties == nullptr ) {
-        return static_cast < Type ( Result ) > (
-                vkEnumerateInstanceExtensionPropertiesHandle (
-                        layerName,
-                        pCount,
-                        nullptr
-                )
+        return APICaller.vkEnumerateInstanceExtensionProperties (
+                layerName,
+                pCount,
+                nullptr
         );
     }
 
@@ -557,13 +312,13 @@ auto engine :: vulkan :: enumerateInstanceExtensionProperties (
     auto context = ContextManager :: acquire();
 
     if (
-        auto result = vkEnumerateInstanceExtensionPropertiesHandle (
+        auto result = APICaller.vkEnumerateInstanceExtensionProperties (
                 layerName,
                 pCount,
                 & context.data().enumerate.extensionProperties.properties[0]
-        ); result != VK_SUCCESS
+        ); result != ResultSuccess
     ) {
-        return static_cast < Type ( Result ) > ( result );
+        return result;
     }
 
     for ( uint32 i = 0U; i < * pCount; ++ i ) {
@@ -589,15 +344,11 @@ auto engine :: vulkan :: enumeratePhysicalDevices (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( handle, vkEnumeratePhysicalDevices )
-
     if ( pDevices == nullptr ) {
-        return static_cast < Type ( Result ) > (
-                vkEnumeratePhysicalDevicesHandle (
-                        handle,
-                        pCount,
-                        nullptr
-                )
+        return APICaller.vkEnumeratePhysicalDevices (
+                handle,
+                pCount,
+                nullptr
         );
     }
 
@@ -612,13 +363,13 @@ auto engine :: vulkan :: enumeratePhysicalDevices (
     auto context = ContextManager :: acquire();
 
     if (
-            auto result = vkEnumeratePhysicalDevicesHandle (
+            auto result = APICaller.vkEnumeratePhysicalDevices (
                     handle,
                     pCount,
                     & context.data().enumerate.physicalDevices.devices[0]
-            ); result != VK_SUCCESS
+            ); result != ResultSuccess
     ) {
-        return static_cast < Type ( Result ) > ( result );
+        return result;
     }
 
     (void) std :: memcpy ( & pDevices[0], & context.data().enumerate.physicalDevices.devices[0], sizeof ( Type ( PhysicalDeviceHandle ) ) * ( * pCount ) );
@@ -644,17 +395,13 @@ auto engine :: vulkan :: enumeratePhysicalDeviceQueueFamilyPerformanceQueryCount
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR )
-
     if ( pCounters == nullptr && pDescriptions == nullptr ) {
-        return static_cast < Type ( Result ) > (
-                vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHRHandle (
-                        physicalDeviceHandle,
-                        queueFamilyIndex,
-                        pCount,
-                        nullptr,
-                        nullptr
-                )
+        return APICaller.vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR (
+                physicalDeviceHandle,
+                queueFamilyIndex,
+                pCount,
+                nullptr,
+                nullptr
         );
     }
 
@@ -669,15 +416,15 @@ auto engine :: vulkan :: enumeratePhysicalDeviceQueueFamilyPerformanceQueryCount
     auto context = ContextManager :: acquire();
 
     if (
-            auto result = vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHRHandle (
+            auto result = APICaller.vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR (
                     physicalDeviceHandle,
                     queueFamilyIndex,
                     pCount,
                     & context.data().enumerate.physicalDeviceQueueFamilyPerformanceQueryCounters.counters[0],
                     & context.data().enumerate.physicalDeviceQueueFamilyPerformanceQueryCounters.descriptions[0]
-            ); result != VK_SUCCESS
+            ); result != ResultSuccess
     ) {
-        return static_cast < Type ( Result ) > ( result );
+        return result;
     }
 
     for ( uint32 i = 0U; i < * pCount; ++ i ) {
@@ -704,15 +451,11 @@ auto engine :: vulkan :: enumeratePhysicalDeviceGroups (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkEnumeratePhysicalDeviceGroups )
-
     if ( pProperties == nullptr ) {
-        return static_cast < Type ( Result ) > (
-                vkEnumeratePhysicalDeviceGroupsHandle (
-                        instanceHandle,
-                        pCount,
-                        nullptr
-                )
+        return APICaller.vkEnumeratePhysicalDeviceGroups (
+                instanceHandle,
+                pCount,
+                nullptr
         );
     }
 
@@ -727,13 +470,13 @@ auto engine :: vulkan :: enumeratePhysicalDeviceGroups (
     auto context = ContextManager :: acquire();
 
     if (
-            auto result = vkEnumeratePhysicalDeviceGroupsHandle (
+            auto result = APICaller.vkEnumeratePhysicalDeviceGroups (
                     instanceHandle,
                     pCount,
                     & context.data().enumerate.physicalDeviceGroups.properties [0]
-            ); result != VK_SUCCESS
+            ); result != ResultSuccess
     ) {
-        return static_cast < Type ( Result ) > ( result );
+        return result;
     }
 
     for ( uint32 i = 0U; i< * pCount; ++ i ) {
@@ -776,16 +519,12 @@ auto engine :: vulkan :: enumeratePhysicalDeviceExtensionProperties (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkEnumerateDeviceExtensionProperties )
-
     if ( pProperties == nullptr ) {
-        return static_cast < Type ( Result ) > (
-                vkEnumerateDeviceExtensionPropertiesHandle (
-                        handle,
-                        layerName,
-                        pCount,
-                        nullptr
-                )
+        return APICaller.vkEnumerateDeviceExtensionProperties (
+                handle,
+                layerName,
+                pCount,
+                nullptr
         );
     }
 
@@ -800,14 +539,14 @@ auto engine :: vulkan :: enumeratePhysicalDeviceExtensionProperties (
     auto context = ContextManager :: acquire();
 
     if (
-            auto result = vkEnumerateDeviceExtensionPropertiesHandle (
+            auto result = APICaller.vkEnumerateDeviceExtensionProperties (
                     handle,
                     layerName,
                     pCount,
                     & context.data().enumerate.extensionProperties.properties[0]
-            ); result != VK_SUCCESS
+            ); result != ResultSuccess
     ) {
-        return static_cast < Type ( Result ) > ( result );
+        return result;
     }
 
     for ( uint32 i = 0U; i < * pCount; ++ i ) {
@@ -834,17 +573,13 @@ auto engine :: vulkan :: createDebugMessenger (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( instanceHandle, vkCreateDebugUtilsMessengerEXT )
-
     auto context = ContextManager :: acquire();
 
-    return static_cast < Type ( Result ) > (
-            vkCreateDebugUtilsMessengerEXTHandle (
-                    instanceHandle,
-                    toVulkanFormat ( & context.data().create.instance.debugMessenger, pCreateInfo ),
-                    AllocatorHandler :: apply ( pAllocationCallbacks ),
-                    pHandle
-            )
+    return APICaller.vkCreateDebugUtilsMessengerEXT (
+            instanceHandle,
+            toVulkanFormat ( & context.data().create.instance.debugMessenger, pCreateInfo ),
+            AllocatorHandler :: apply ( pAllocationCallbacks ),
+            pHandle
     );
 }
 #endif
@@ -900,17 +635,13 @@ auto engine :: vulkan :: createDevice (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkCreateDevice )
-
     auto context = ContextManager :: acquire();
 
-    return static_cast < Type ( Result ) > (
-            vkCreateDeviceHandle (
-                    physicalDeviceHandle,
-                    prepareContext ( & context.data().create.device, pCreateInfo ),
-                    AllocatorHandler :: apply ( pAllocationCallbacks ),
-                    pDeviceHandle
-            )
+    return APICaller.vkCreateDevice (
+            physicalDeviceHandle,
+            prepareContext ( & context.data().create.device, pCreateInfo ),
+            AllocatorHandler :: apply ( pAllocationCallbacks ),
+            pDeviceHandle
     );
 }
 #endif
@@ -929,10 +660,7 @@ auto engine :: vulkan :: destroyInstance (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( handle, vkDestroyInstance )
-
-    vkDestroyInstanceHandle ( handle, AllocatorHandler :: apply ( pAllocationCallbacks ) );
-    return ResultSuccess;
+    return APICaller.vkDestroyInstance ( handle, AllocatorHandler :: apply ( pAllocationCallbacks ) );
 }
 #endif
 
@@ -951,15 +679,11 @@ auto engine :: vulkan :: destroyDebugMessenger (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( instanceHandle, vkDestroyDebugUtilsMessengerEXT )
-
-    vkDestroyDebugUtilsMessengerEXTHandle (
+    return APICaller.vkDestroyDebugUtilsMessengerEXT (
             instanceHandle,
             debugMessengerHandle,
             AllocatorHandler :: apply ( pAllocationCallbacks )
     );
-
-    return ResultSuccess;
 }
 #endif
 
@@ -978,15 +702,11 @@ auto engine :: vulkan :: destroySurface (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( instanceHandle, vkDestroySurfaceKHR )
-
-    vkDestroySurfaceKHRHandle (
+    return APICaller.vkDestroySurfaceKHR (
             instanceHandle,
             surfaceHandle,
             AllocatorHandler :: apply ( pAllocationCallbacks )
     );
-
-    return ResultSuccess;
 }
 #endif
 
@@ -1004,10 +724,10 @@ auto engine :: vulkan :: destroyDevice (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkDestroyDevice )
-
-    vkDestroyDeviceHandle ( handle, AllocatorHandler :: apply ( pAllocationCallbacks ) );
-    return ResultSuccess;
+    return APICaller.vkDestroyDevice (
+            handle,
+            AllocatorHandler :: apply ( pAllocationCallbacks )
+    );
 }
 #endif
 
@@ -1024,15 +744,16 @@ auto engine :: vulkan :: getPhysicalDeviceProperties (
     }
 
 #endif
-
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkGetPhysicalDeviceProperties )
-
     auto context = ContextManager :: acquire();
 
-    vkGetPhysicalDevicePropertiesHandle (
-            handle,
-            & context.data().get.physicalDeviceProperties.properties.properties
-    );
+    if (
+            auto result = APICaller.vkGetPhysicalDeviceProperties (
+                    handle,
+                    & context.data().get.physicalDeviceProperties.properties.properties
+            ); result != ResultSuccess
+    ) {
+        return result;
+    }
 
     (void) fromVulkanFormat (
             pProperties,
@@ -1057,14 +778,16 @@ auto engine :: vulkan :: getPhysicalDeviceFeatures (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkGetPhysicalDeviceFeatures )
-
     auto context = ContextManager :: acquire();
 
-    vkGetPhysicalDeviceFeaturesHandle (
-            physicalDeviceHandle,
-            & context.data().get.physicalDeviceFeatures.features.features
-    );
+    if (
+            auto result = APICaller.vkGetPhysicalDeviceFeatures (
+                    physicalDeviceHandle,
+                    & context.data().get.physicalDeviceFeatures.features.features
+            ); result != ResultSuccess
+    ) {
+        return result;
+    }
 
     (void) fromVulkanFormat ( pFeatures, & context.data().get.physicalDeviceFeatures.features.features );
     return ResultSuccess;
@@ -1085,17 +808,18 @@ auto engine :: vulkan :: getPhysicalDeviceProperties (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkGetPhysicalDeviceProperties )
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkGetPhysicalDeviceProperties2 )
-
     auto context = ContextManager :: acquire();
 
 #if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
 
-    vkGetPhysicalDevicePropertiesHandle (
-            handle,
-            & context.data().get.physicalDeviceProperties.properties.properties
-    );
+    if (
+            auto result = APICaller.vkGetPhysicalDeviceProperties (
+                    handle,
+                    & context.data().get.physicalDeviceProperties.properties.properties
+            ); result != ResultSuccess
+    ) {
+        return result;
+    }
 
     if (
         auto version = uInt32ToInstanceVersion ( context.data().get.physicalDeviceProperties.properties.properties.apiVersion );
@@ -1106,10 +830,14 @@ auto engine :: vulkan :: getPhysicalDeviceProperties (
 
 #endif
 
-    vkGetPhysicalDeviceProperties2Handle (
-            handle,
-            prepareContext ( & context.data().get.physicalDeviceProperties, pProperties )
-    );
+    if (
+            auto result = APICaller.vkGetPhysicalDeviceProperties2 (
+                    handle,
+                    prepareContext ( & context.data().get.physicalDeviceProperties, pProperties )
+            ); result != ResultSuccess
+    ) {
+        return result;
+    }
 
     extractContext ( pProperties, & context.data().get.physicalDeviceProperties );
     return ResultSuccess;
@@ -1130,17 +858,18 @@ auto engine :: vulkan :: getPhysicalDeviceFeatures (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkGetPhysicalDeviceProperties )
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkGetPhysicalDeviceFeatures2 )
-
     auto context = ContextManager :: acquire();
 
 #if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
 
-    vkGetPhysicalDevicePropertiesHandle (
-            physicalDeviceHandle,
-            & context.data().get.physicalDeviceProperties.properties.properties
-    );
+    if (
+            auto result = APICaller.vkGetPhysicalDeviceProperties (
+                    physicalDeviceHandle,
+                    & context.data().get.physicalDeviceProperties.properties.properties
+            ); result != ResultSuccess
+    ) {
+        return result;
+    }
 
     if (
         auto version = uInt32ToInstanceVersion ( context.data().get.physicalDeviceProperties.properties.properties.apiVersion );
@@ -1151,10 +880,14 @@ auto engine :: vulkan :: getPhysicalDeviceFeatures (
 
 #endif
 
-    vkGetPhysicalDeviceFeatures2Handle (
-            physicalDeviceHandle,
-            prepareContext ( & context.data().get.physicalDeviceFeatures, pFeatures )
-    );
+    if (
+            auto result = APICaller.vkGetPhysicalDeviceFeatures2 (
+                    physicalDeviceHandle,
+                    prepareContext ( & context.data().get.physicalDeviceFeatures, pFeatures )
+            ); result != ResultSuccess
+    ) {
+        return result;
+    }
 
     extractContext ( pFeatures, & context.data().get.physicalDeviceFeatures );
     return ResultSuccess;
@@ -1243,16 +976,12 @@ auto engine :: vulkan :: getPhysicalDeviceQueueFamilyProperties (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkGetPhysicalDeviceQueueFamilyProperties )
-
     if ( pProperties == nullptr ) {
-        vkGetPhysicalDeviceQueueFamilyPropertiesHandle (
+        return APICaller.vkGetPhysicalDeviceQueueFamilyProperties (
                 physicalDeviceHandle,
                 pCount,
                 nullptr
         );
-
-        return ResultSuccess;
     }
 
 #if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
@@ -1265,11 +994,15 @@ auto engine :: vulkan :: getPhysicalDeviceQueueFamilyProperties (
 
     auto context = ContextManager :: acquire();
 
-    vkGetPhysicalDeviceQueueFamilyPropertiesHandle (
-            physicalDeviceHandle,
-            pCount,
-            & context.data().get.physicalDeviceQueueFamilyProperties.properties[0]
-    );
+    if (
+            auto result = APICaller.vkGetPhysicalDeviceQueueFamilyProperties (
+                    physicalDeviceHandle,
+                    pCount,
+                    & context.data().get.physicalDeviceQueueFamilyProperties.properties[0]
+            ); result != ResultSuccess
+    ) {
+        return result;
+    }
 
     for ( uint32 i = 0U; i < * pCount; ++ i ) {
         (void) fromVulkanFormat ( & pProperties[i], & context.data().get.physicalDeviceQueueFamilyProperties.properties[i] );
@@ -1294,16 +1027,12 @@ auto engine :: vulkan :: getPhysicalDeviceQueueFamilyProperties (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkGetPhysicalDeviceQueueFamilyProperties2 )
-
     if ( pProperties == nullptr ) {
-        vkGetPhysicalDeviceQueueFamilyProperties2Handle (
+        return APICaller.vkGetPhysicalDeviceQueueFamilyProperties2 (
                 physicalDeviceHandle,
                 pCount,
                 nullptr
         );
-
-        return ResultSuccess;
     }
 
 #if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
@@ -1316,11 +1045,15 @@ auto engine :: vulkan :: getPhysicalDeviceQueueFamilyProperties (
 
     auto context = ContextManager :: acquire();
 
-    vkGetPhysicalDeviceQueueFamilyProperties2Handle (
-            physicalDeviceHandle,
-            pCount,
-            prepareContext ( & context.data().get.physicalDeviceQueueFamilyProperties, * pCount, pProperties )
-    );
+    if (
+            auto result = APICaller.vkGetPhysicalDeviceQueueFamilyProperties2 (
+                    physicalDeviceHandle,
+                    pCount,
+                    prepareContext ( & context.data().get.physicalDeviceQueueFamilyProperties, * pCount, pProperties )
+            ); result != ResultSuccess
+    ) {
+        return result;
+    }
 
     extractContext (
             * pCount,
@@ -1347,10 +1080,8 @@ auto engine :: vulkan :: getPhysicalDeviceQueueFamilyDetails (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkGetPhysicalDeviceQueueFamilyProperties2 )
-
     if ( pDetails == nullptr ) {
-        vkGetPhysicalDeviceQueueFamilyProperties2Handle (
+        return APICaller.vkGetPhysicalDeviceQueueFamilyProperties (
                 handle,
                 pCount,
                 nullptr
@@ -1408,19 +1139,17 @@ auto engine :: vulkan :: getPhysicalDeviceSurfaceSupport (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkGetPhysicalDeviceSurfaceSupportKHR )
-
     Type ( Bool ) support = VK_FALSE;
 
     if (
-            auto result = vkGetPhysicalDeviceSurfaceSupportKHRHandle (
+            auto result = APICaller.vkGetPhysicalDeviceSurfaceSupportKHR (
                     deviceHandle,
                     queueFamilyIndex,
                     surfaceHandle,
                     & support
-            ); result != VK_SUCCESS
+            ); result != ResultSuccess
     ) {
-        return static_cast < Type ( Result ) > ( result );
+        return result;
     }
 
     * pSupport = support == VK_TRUE;
@@ -1445,16 +1174,12 @@ auto engine :: vulkan :: getDeviceQueue (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkGetDeviceQueue )
-
-    vkGetDeviceQueueHandle (
+    return APICaller.vkGetDeviceQueue (
             deviceHandle,
             queueFamilyIndex,
             queueIndex,
             pQueueHandle
     );
-
-    return ResultSuccess;
 }
 #endif
 
@@ -1473,17 +1198,13 @@ auto engine :: vulkan :: getDeviceQueue (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkGetDeviceQueue2 )
-
     auto context = ContextManager :: acquire();
 
-    vkGetDeviceQueue2Handle (
+    return APICaller.vkGetDeviceQueue2 (
             deviceHandle,
             toVulkanFormat ( & context.data().get.deviceQueue.info2, pQueueInfo ),
             pQueueHandle
     );
-
-    return ResultSuccess;
 }
 #endif
 
@@ -1502,18 +1223,16 @@ auto engine :: vulkan :: getPhysicalDeviceSurfaceCapabilities (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkGetPhysicalDeviceSurfaceCapabilitiesKHR )
-
     auto context = ContextManager :: acquire();
 
     if (
-            auto result = vkGetPhysicalDeviceSurfaceCapabilitiesKHRHandle (
+            auto result = APICaller.vkGetPhysicalDeviceSurfaceCapabilitiesKHR (
                     deviceHandle,
                     surfaceHandle,
                     & context.data().get.surface.capabilities
-            ); result != VK_SUCCESS
+            ); result != ResultSuccess
     ) {
-        return static_cast < Type ( Result ) > ( result );
+        return result;
     }
 
     (void) fromVulkanFormat ( pSurfaceCapabilities, & context.data().get.surface.capabilities );
@@ -1537,16 +1256,12 @@ auto engine :: vulkan :: getPhysicalDeviceSurfaceFormats (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkGetPhysicalDeviceSurfaceFormatsKHR )
-
     if ( pFormats == nullptr ) {
-        return static_cast < Type ( Result ) > (
-                vkGetPhysicalDeviceSurfaceFormatsKHRHandle (
-                        deviceHandle,
-                        surfaceHandle,
-                        pCount,
-                        nullptr
-                )
+        return APICaller.vkGetPhysicalDeviceSurfaceFormatsKHR (
+                deviceHandle,
+                surfaceHandle,
+                pCount,
+                nullptr
         );
     }
 
@@ -1561,14 +1276,14 @@ auto engine :: vulkan :: getPhysicalDeviceSurfaceFormats (
     auto context = ContextManager :: acquire();
 
     if (
-            auto result = vkGetPhysicalDeviceSurfaceFormatsKHRHandle (
+            auto result = APICaller.vkGetPhysicalDeviceSurfaceFormatsKHR (
                     deviceHandle,
                     surfaceHandle,
                     pCount,
                     & context.data().get.surface.formats[0]
-            ); result != VK_SUCCESS
+            ); result != ResultSuccess
     ) {
-        return static_cast < Type ( Result ) > ( result );
+        return result;
     }
 
     for ( uint32 i = 0U; i < * pCount; ++ i ) {
@@ -1595,16 +1310,12 @@ auto engine :: vulkan :: getPhysicalDeviceSurfacePresentModes (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkGetPhysicalDeviceSurfacePresentModesKHR )
-
     if ( pPresentModes == nullptr ) {
-        return static_cast < Type ( Result ) > (
-                vkGetPhysicalDeviceSurfacePresentModesKHRHandle (
-                        deviceHandle,
-                        surfaceHandle,
-                        pCount,
-                        nullptr
-                )
+        return APICaller.vkGetPhysicalDeviceSurfacePresentModesKHR (
+                deviceHandle,
+                surfaceHandle,
+                pCount,
+                nullptr
         );
     }
 
@@ -1619,14 +1330,14 @@ auto engine :: vulkan :: getPhysicalDeviceSurfacePresentModes (
     auto context = ContextManager :: acquire();
 
     if (
-            auto result = vkGetPhysicalDeviceSurfacePresentModesKHRHandle (
+            auto result = APICaller.vkGetPhysicalDeviceSurfacePresentModesKHR (
                     deviceHandle,
                     surfaceHandle,
                     pCount,
                     & context.data().get.surface.presentModes[0]
-            ); result != VK_SUCCESS
+            ); result != ResultSuccess
     ) {
-        return static_cast < Type ( Result ) > ( result );
+        return result;
     }
 
     for ( uint32 i = 0U; i < * pCount; ++ i ) {
@@ -1652,18 +1363,16 @@ auto engine :: vulkan :: getPhysicalDeviceSurfaceCapabilities (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkGetPhysicalDeviceSurfaceCapabilities2EXT )
-
     auto context = ContextManager :: acquire();
 
     if (
-            auto result = vkGetPhysicalDeviceSurfaceCapabilities2EXTHandle (
+            auto result = APICaller.vkGetPhysicalDeviceSurfaceCapabilities2EXT (
                     deviceHandle,
                     surfaceHandle,
                     & context.data().get.surface.capabilities2
-            ); result != VK_SUCCESS
+            ); result != ResultSuccess
     ) {
-        return static_cast < Type ( Result ) > ( result );
+        return result;
     }
 
     (void) fromVulkanFormat ( pSurfaceCapabilities, & context.data().get.surface.capabilities2 );
@@ -1687,18 +1396,14 @@ auto engine :: vulkan :: getPhysicalDeviceSurfaceFormats (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkGetPhysicalDeviceSurfaceFormats2KHR )
-
     auto context = ContextManager :: acquire();
 
     if ( pFormats == nullptr ) {
-        return static_cast < Type ( Result ) > (
-                vkGetPhysicalDeviceSurfaceFormats2KHRHandle (
-                        deviceHandle,
-                        prepareContext ( & context.data().get.surface, pSurfaceInfo ),
-                        pCount,
-                        nullptr
-                )
+        return APICaller.vkGetPhysicalDeviceSurfaceFormats2KHR (
+                deviceHandle,
+                prepareContext ( & context.data().get.surface, pSurfaceInfo ),
+                pCount,
+                nullptr
         );
     }
 
@@ -1707,14 +1412,14 @@ auto engine :: vulkan :: getPhysicalDeviceSurfaceFormats (
     }
 
     if (
-            auto result = vkGetPhysicalDeviceSurfaceFormats2KHRHandle (
+            auto result = APICaller.vkGetPhysicalDeviceSurfaceFormats2KHR (
                     deviceHandle,
                     prepareContext ( & context.data().get.surface, pSurfaceInfo ),
                     pCount,
                     & context.data().get.surface.formats2[0]
-            ); result != VK_SUCCESS
+            ); result != ResultSuccess
     ) {
-        return static_cast < Type ( Result ) > ( result );
+        return result;
     }
 
     for ( uint32 i = 0U; i < * pCount; ++ i ) {
@@ -1741,18 +1446,14 @@ auto engine :: vulkan :: getPhysicalDeviceSurfacePresentModes (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkGetPhysicalDeviceSurfacePresentModes2EXT )
-
     auto context = ContextManager :: acquire();
 
     if ( pPresentModes == nullptr ) {
-        return static_cast < Type ( Result ) > (
-                vkGetPhysicalDeviceSurfacePresentModes2EXTHandle (
-                        deviceHandle,
-                        prepareContext ( & context.data().get.surface.surfaceInfo2, pSurfaceInfo ),
-                        pCount,
-                        nullptr
-                )
+        return APICaller.vkGetPhysicalDeviceSurfacePresentModes2EXT (
+                deviceHandle,
+                prepareContext ( & context.data().get.surface.surfaceInfo2, pSurfaceInfo ),
+                pCount,
+                nullptr
         );
     }
 
@@ -1761,14 +1462,14 @@ auto engine :: vulkan :: getPhysicalDeviceSurfacePresentModes (
     }
 
     if (
-            auto result = vkGetPhysicalDeviceSurfacePresentModes2EXTHandle (
+            auto result = APICaller.vkGetPhysicalDeviceSurfacePresentModes2EXT (
                     deviceHandle,
                     prepareContext ( & context.data().get.surface.surfaceInfo2, pSurfaceInfo ),
                     pCount,
                     & context.data().get.surface.presentModes[0]
-            ); result != VK_SUCCESS
+            ); result != ResultSuccess
     ) {
-        return static_cast < Type ( Result ) > ( result );
+        return result;
     }
 
     for ( uint32 i = 0U; i < * pCount; ++ i ) {
@@ -1795,17 +1496,13 @@ auto engine :: vulkan :: createSwapChain (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkCreateSwapchainKHR )
-
     auto context = ContextManager :: acquire();
 
-    return static_cast < Type ( Result ) > (
-            vkCreateSwapchainKHRHandle (
-                    deviceHandle,
-                    prepareContext ( & context.data().create.swapChain, pCreateInfo ),
-                    AllocatorHandler :: apply ( pAllocationCallbacks ),
-                    pHandle
-            )
+    return APICaller.vkCreateSwapchainKHR (
+            deviceHandle,
+            prepareContext ( & context.data().create.swapChain, pCreateInfo ),
+            AllocatorHandler :: apply ( pAllocationCallbacks ),
+            pHandle
     );
 }
 #endif
@@ -1825,15 +1522,11 @@ auto engine :: vulkan :: destroySwapChain (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkDestroySwapchainKHR )
-
-    vkDestroySwapchainKHRHandle (
+    return APICaller.vkDestroySwapchainKHR (
             deviceHandle,
             handle,
             AllocatorHandler :: apply ( pAllocationCallbacks )
     );
-
-    return ResultSuccess;
 }
 #endif
 
@@ -1853,16 +1546,12 @@ auto engine :: vulkan :: getSwapChainImages (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkGetSwapchainImagesKHR )
-
     if ( pImageHandles == nullptr ) {
-        return static_cast < Type ( Result ) > (
-                vkGetSwapchainImagesKHRHandle (
-                        deviceHandle,
-                        swapChainHandle,
-                        pCount,
-                        nullptr
-                )
+        return APICaller.vkGetSwapchainImagesKHR (
+                deviceHandle,
+                swapChainHandle,
+                pCount,
+                nullptr
         );
     }
 
@@ -1877,14 +1566,14 @@ auto engine :: vulkan :: getSwapChainImages (
     auto context = ContextManager :: acquire();
 
     if (
-            auto result = vkGetSwapchainImagesKHRHandle (
+            auto result = APICaller.vkGetSwapchainImagesKHR (
                     deviceHandle,
                     swapChainHandle,
                     pCount,
                     & context.data().get.swapChain.images[0]
-            ); result != VK_SUCCESS
+            ); result != ResultSuccess
     ) {
-        return static_cast < Type ( Result ) > ( result );
+        return result;
     }
 
     for ( uint32 i = 0U; i < * pCount; ++ i ) {
@@ -1911,17 +1600,13 @@ auto engine :: vulkan :: createImageView (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkCreateImageView )
-
     auto context = ContextManager :: acquire();
 
-    return static_cast < Type ( Result ) > (
-            vkCreateImageViewHandle (
-                    deviceHandle,
-                    prepareContext ( & context.data().create.imageView, pCreateInfo ),
-                    AllocatorHandler :: apply ( pAllocationCallbacks ),
-                    pHandle
-            )
+    return APICaller.vkCreateImageView (
+            deviceHandle,
+            prepareContext ( & context.data().create.imageView, pCreateInfo ),
+            AllocatorHandler :: apply ( pAllocationCallbacks ),
+            pHandle
     );
 }
 #endif
@@ -1941,15 +1626,11 @@ auto engine :: vulkan :: destroyImageView (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkDestroyImageView )
-
-    vkDestroyImageViewHandle (
+    return APICaller.vkDestroyImageView (
             deviceHandle,
             handle,
             AllocatorHandler :: apply ( pAllocationCallbacks )
     );
-
-    return ResultSuccess;
 }
 #endif
 
@@ -1969,17 +1650,13 @@ auto engine :: vulkan :: createCommandPool (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkCreateCommandPool )
-
     auto context = ContextManager :: acquire();
 
-    return static_cast < Type ( Result ) > (
-            vkCreateCommandPoolHandle (
-                    deviceHandle,
-                    toVulkanFormat ( & context.data().create.commandPool.createInfo, pCreateInfo ),
-                    AllocatorHandler :: apply ( pAllocationCallbacks ),
-                    pHandle
-            )
+    return APICaller.vkCreateCommandPool (
+            deviceHandle,
+            toVulkanFormat ( & context.data().create.commandPool.createInfo, pCreateInfo ),
+            AllocatorHandler :: apply ( pAllocationCallbacks ),
+            pHandle
     );
 }
 #endif
@@ -1999,15 +1676,11 @@ auto engine :: vulkan :: destroyCommandPool (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkDestroyCommandPool )
-
-    vkDestroyCommandPoolHandle (
+    return APICaller.vkDestroyCommandPool (
             deviceHandle,
             handle,
             AllocatorHandler :: apply ( pAllocationCallbacks )
     );
-
-    return ResultSuccess;
 }
 #endif
 
@@ -2026,14 +1699,10 @@ auto engine :: vulkan :: resetCommandPool (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkResetCommandPool )
-
-    return static_cast < Type ( Result ) > (
-            vkResetCommandPoolHandle (
-                    deviceHandle,
-                    handle,
-                    flags
-            )
+    return APICaller.vkResetCommandPool (
+            deviceHandle,
+            handle,
+            flags
     );
 }
 #endif
@@ -2053,16 +1722,12 @@ auto engine :: vulkan :: allocateCommandBuffers (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkAllocateCommandBuffers )
-
     auto context = ContextManager :: acquire();
 
-    return static_cast < Type ( Result ) > (
-            vkAllocateCommandBuffersHandle (
-                    deviceHandle,
-                    toVulkanFormat ( & context.data().allocate.commandBuffers.allocateInfo, pAllocateInfo ),
-                    & pHandles [0]
-            )
+    return APICaller.vkAllocateCommandBuffers (
+            deviceHandle,
+            toVulkanFormat ( & context.data().allocate.commandBuffers.allocateInfo, pAllocateInfo ),
+            & pHandles [0]
     );
 }
 #endif
@@ -2081,15 +1746,11 @@ auto engine :: vulkan :: resetCommandBuffer (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkResetCommandBuffer )
-
     auto context = ContextManager :: acquire();
 
-    return static_cast < Type ( Result ) > (
-            vkResetCommandBufferHandle (
-                    handle,
-                    flags
-            )
+    return APICaller.vkResetCommandBuffer (
+            handle,
+            flags
     );
 }
 #endif
@@ -2110,16 +1771,12 @@ auto engine :: vulkan :: freeCommandBuffers (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkFreeCommandBuffers )
-
-    vkFreeCommandBuffersHandle (
+    return APICaller.vkFreeCommandBuffers (
             deviceHandle,
             commandPoolHandle,
             commandBufferCount,
             pCommandBuffers
     );
-
-    return ResultSuccess;
 }
 #endif
 
@@ -2137,15 +1794,11 @@ auto engine :: vulkan :: beginCommandBuffer (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkBeginCommandBuffer )
-
     auto context = ContextManager :: acquire();
 
-    return static_cast < Type ( Result ) > (
-            vkBeginCommandBufferHandle (
-                    commandBufferHandle,
-                    prepareContext ( & context.data().begin.commandBuffer, pBeginInfo )
-            )
+    return APICaller.vkBeginCommandBuffer (
+            commandBufferHandle,
+            prepareContext ( & context.data().begin.commandBuffer, pBeginInfo )
     );
 }
 #endif
@@ -2163,9 +1816,7 @@ auto engine :: vulkan :: endCommandBuffer (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkEndCommandBuffer )
-
-    return static_cast < Type ( Result ) > ( vkEndCommandBufferHandle ( commandBufferHandle ) );
+    return APICaller.vkEndCommandBuffer ( commandBufferHandle );
 }
 #endif
 
@@ -2184,15 +1835,11 @@ auto engine :: vulkan :: trimCommandPool (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkTrimCommandPool )
-
-    vkTrimCommandPoolHandle (
+    return APICaller.vkTrimCommandPool (
             deviceHandle,
             handle,
             flags
     );
-
-    return ResultSuccess;
 }
 #endif
 
@@ -2216,17 +1863,13 @@ auto engine :: vulkan :: queueSubmit (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkQueueSubmit )
-
     auto context = ContextManager :: acquire();
 
-    return static_cast < Type ( Result ) > (
-            vkQueueSubmitHandle (
-                    queueHandle,
-                    submitCount,
-                    prepareContext ( & context.data().submit.queue, submitCount, & pSubmits[0] ),
-                    fenceHandle
-            )
+    return APICaller.vkQueueSubmit (
+            queueHandle,
+            submitCount,
+            prepareContext ( & context.data().submit.queue, submitCount, & pSubmits[0] ),
+            fenceHandle
     );
 }
 #endif
@@ -2246,15 +1889,11 @@ auto engine :: vulkan :: commandBufferExecuteCommands (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkCmdExecuteCommands )
-
-    vkCmdExecuteCommandsHandle (
+    return APICaller.vkCmdExecuteCommands (
             primaryCommandBufferHandle,
             commandBufferCount,
             pSecondaryCommandBufferHandles
     );
-
-    return ResultSuccess;
 }
 #endif
 
@@ -2278,61 +1917,25 @@ auto engine :: vulkan :: queueSubmit (
 
 #endif
 
-#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE && __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
-
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_2_R ( LastCreatedInstance :: acquire(), vkQueueSubmit2, KHR )
-
     auto context = ContextManager :: acquire();
 
-    if ( vkQueueSubmit2Handle != nullptr ) {
-        return static_cast < Type ( Result ) > (
-                vkQueueSubmit2Handle (
-                        queueHandle,
-                        submitCount,
-                        prepareContext ( & context.data().submit.queue, submitCount, & pSubmits [0] ),
-                        fenceHandle
-                )
-        );
-    }
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
-    return static_cast < Type ( Result ) > (
-            vkQueueSubmit2KHRHandle (
-                    queueHandle,
-                    submitCount,
-                    reinterpret_cast < VkSubmitInfo2KHR * > ( prepareContext ( & context.data().submit.queue, submitCount, & pSubmits [0] ) ),
-                    fenceHandle
-            )
+    return APICaller.vkQueueSubmit2 (
+            queueHandle,
+            submitCount,
+            prepareContext ( & context.data().submit.queue, submitCount, & pSubmits[0] ),
+            fenceHandle
     );
-
-#elif __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
-
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkQueueSubmit2 )
-
-    auto context = ContextManager :: acquire();
-
-    return static_cast < Type ( Result ) > (
-                vkQueueSubmit2Handle (
-                        queueHandle,
-                        submitCount,
-                        prepareContext ( & context.data().submit.queue, submitCount, & pSubmits [0] ),
-                        fenceHandle
-                )
-        );
 
 #elif __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
 
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkQueueSubmit2KHR )
-
-    auto context = ContextManager :: acquire();
-
-    return static_cast < Type ( Result ) > (
-                vkQueueSubmit2HandleKHR (
-                        queueHandle,
-                        submitCount,
-                        prepareContext ( & context.data().submit.queue, submitCount, & pSubmits [0] ),
-                        fenceHandle
-                )
-        );
+    return APICaller.vkQueueSubmit2KHR (
+            queueHandle,
+            submitCount,
+            prepareContext ( & context.data().submit.queue, submitCount, & pSubmits [0] ),
+            fenceHandle
+    );
 
 #endif
 }
@@ -2352,10 +1955,7 @@ auto engine :: vulkan :: commandBufferSetDeviceMask (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkCmdSetDeviceMask )
-
-    vkCmdSetDeviceMaskHandle ( commandBufferHandle, deviceMask );
-    return ResultSuccess;
+    return APICaller.vkCmdSetDeviceMask ( commandBufferHandle, deviceMask );
 }
 #endif
 
@@ -2375,17 +1975,13 @@ auto engine :: vulkan :: createFence (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkCreateFence )
-
     auto context = ContextManager :: acquire();
 
-    return static_cast < Type ( Result ) > (
-            vkCreateFenceHandle (
-                    deviceHandle,
-                    prepareContext ( & context.data().create.fence, pCreateInfo ),
-                    AllocatorHandler :: apply ( pAllocationCallbacks ),
-                    pHandle
-            )
+    return APICaller.vkCreateFence (
+            deviceHandle,
+            prepareContext ( & context.data().create.fence, pCreateInfo ),
+            AllocatorHandler :: apply ( pAllocationCallbacks ),
+            pHandle
     );
 }
 #endif
@@ -2405,16 +2001,12 @@ auto engine :: vulkan :: getFenceWin32Handle (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkGetFenceWin32HandleKHR )
-
     auto context = ContextManager :: acquire ();
 
-    return static_cast < Type ( Result ) > (
-            vkGetFenceWin32HandleKHRHandle (
-                    deviceHandle,
-                    toVulkanFormat ( & context.data().get.fence.win32HandleInfo, pInfo ),
-                    pHandle
-            )
+    return APICaller.vkGetFenceWin32HandleKHR (
+            deviceHandle,
+            toVulkanFormat ( & context.data().get.fence.win32HandleInfo, pInfo ),
+            pHandle
     );
 }
 #endif
@@ -2434,16 +2026,12 @@ auto engine :: vulkan :: getFenceFD (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkGetFenceFdKHR )
-
     auto context = ContextManager :: acquire ();
 
-    return static_cast < Type ( Result ) > (
-            vkGetFenceFdKHRHandle (
-                    deviceHandle,
-                    toVulkanFormat ( & context.data().get.fence.fdInfo, pInfo ),
-                    pHandle
-            )
+    return APICaller.vkGetFenceFdKHR (
+            deviceHandle,
+            toVulkanFormat ( & context.data().get.fence.fdInfo, pInfo ),
+            pHandle
     );
 }
 #endif
@@ -2463,15 +2051,11 @@ auto engine :: vulkan :: destroyFence (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkDestroyFence )
-
-    vkDestroyFenceHandle (
+    return APICaller.vkDestroyFence (
             deviceHandle,
             fenceHandle,
             AllocatorHandler :: apply ( pAllocationCallbacks )
     );
-
-    return ResultSuccess;
 }
 #endif
 
@@ -2489,9 +2073,7 @@ auto engine :: vulkan :: getFenceStatus (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkGetFenceStatus )
-
-    return static_cast < Type ( Result ) > ( vkGetFenceStatusHandle ( deviceHandle, fenceHandle ) );
+    return APICaller.vkGetFenceStatus ( deviceHandle, fenceHandle );
 }
 #endif
 
@@ -2510,14 +2092,10 @@ auto engine :: vulkan :: resetFences (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkResetFences )
-
-    return static_cast < Type ( Result ) > (
-            vkResetFencesHandle (
-                    deviceHandle,
-                    count,
-                    pFences
-            )
+    return APICaller.vkResetFences (
+            deviceHandle,
+            count,
+            pFences
     );
 }
 #endif
@@ -2539,16 +2117,12 @@ auto engine :: vulkan :: waitForFences (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkWaitForFences )
-
-    return static_cast < Type ( Result ) > (
-            vkWaitForFencesHandle (
-                    deviceHandle,
-                    count,
-                    pFences,
-                    waitForAll ? VK_TRUE : VK_FALSE,
-                    timeout
-            )
+    return APICaller.vkWaitForFences (
+            deviceHandle,
+            count,
+            pFences,
+            waitForAll ? VK_TRUE : VK_FALSE,
+            timeout
     );
 }
 #endif
@@ -2569,17 +2143,13 @@ auto engine :: vulkan :: registerDeviceEvent (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkRegisterDeviceEventEXT )
-
     auto context = ContextManager :: acquire();
 
-    return static_cast < Type ( Result ) > (
-            vkRegisterDeviceEventEXTHandle (
-                    deviceHandle,
-                    toVulkanFormat ( & context.data().other.registerEvent.deviceInfo, pEventInfo ),
-                    AllocatorHandler :: apply ( pAllocationCallbacks ),
-                    pHandle
-            )
+    return APICaller.vkRegisterDeviceEventEXT (
+            deviceHandle,
+            toVulkanFormat ( & context.data().other.registerEvent.deviceInfo, pEventInfo ),
+            AllocatorHandler :: apply ( pAllocationCallbacks ),
+            pHandle
     );
 }
 #endif
@@ -2601,18 +2171,14 @@ auto engine :: vulkan :: registerDisplayEvent (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkRegisterDisplayEventEXT )
-
     auto context = ContextManager :: acquire();
 
-    return static_cast < Type ( Result ) > (
-            vkRegisterDisplayEventEXTHandle (
-                    deviceHandle,
-                    displayHandle,
-                    toVulkanFormat ( & context.data().other.registerEvent.displayInfo, pEventInfo ),
-                    AllocatorHandler :: apply ( pAllocationCallbacks ),
-                    pHandle
-            )
+    return APICaller.vkRegisterDisplayEventEXT (
+            deviceHandle,
+            displayHandle,
+            toVulkanFormat ( & context.data().other.registerEvent.displayInfo, pEventInfo ),
+            AllocatorHandler :: apply ( pAllocationCallbacks ),
+            pHandle
     );
 }
 #endif
@@ -2631,15 +2197,11 @@ auto engine :: vulkan :: importFenceWin32Handle (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkImportFenceWin32HandleKHR )
-
     auto context = ContextManager :: acquire();
 
-    return static_cast < Type ( Result ) > (
-            vkImportFenceWin32HandleKHRHandle (
-                    deviceHandle,
-                    toVulkanFormat ( & context.data()._import.fence.win32.info, pInfo )
-            )
+    return APICaller.vkImportFenceWin32HandleKHR (
+            deviceHandle,
+            toVulkanFormat ( & context.data()._import.fence.win32.info, pInfo )
     );
 }
 #endif
@@ -2658,15 +2220,11 @@ auto engine :: vulkan :: importFenceFd (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkImportFenceFdKHR )
-
     auto context = ContextManager :: acquire();
 
-    return static_cast < Type ( Result ) > (
-            vkImportFenceFdKHRHandle (
-                    deviceHandle,
-                    toVulkanFormat ( & context.data()._import.fence.fd.info, pInfo )
-            )
+    return APICaller.vkImportFenceFdKHR (
+            deviceHandle,
+            toVulkanFormat ( & context.data()._import.fence.fd.info, pInfo )
     );
 }
 #endif
@@ -2687,17 +2245,13 @@ auto engine :: vulkan :: createSemaphore (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkCreateSemaphore )
-
     auto context = ContextManager :: acquire();
 
-    return static_cast < Type ( Result ) > (
-            vkCreateSemaphoreHandle (
-                    deviceHandle,
-                    prepareContext ( & context.data().create.semaphore, pCreateInfo ),
-                    AllocatorHandler :: apply ( pAllocationCallbacks ),
-                    pHandle
-            )
+    return APICaller.vkCreateSemaphore (
+            deviceHandle,
+            prepareContext ( & context.data().create.semaphore, pCreateInfo ),
+            AllocatorHandler :: apply ( pAllocationCallbacks ),
+            pHandle
     );
 }
 #endif
@@ -2717,16 +2271,12 @@ auto engine :: vulkan :: getSemaphoreWin32Handle (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkGetSemaphoreWin32HandleKHR )
-
     auto context = ContextManager :: acquire();
 
-    return static_cast < Type ( Result ) > (
-            vkGetSemaphoreWin32HandleKHRHandle (
-                    deviceHandle,
-                    toVulkanFormat ( & context.data().get.semaphore.win32HandleInfo, pInfo ),
-                    pHandle
-            )
+    return APICaller.vkGetSemaphoreWin32HandleKHR (
+            deviceHandle,
+            toVulkanFormat ( & context.data().get.semaphore.win32HandleInfo, pInfo ),
+            pHandle
     );
 }
 #endif
@@ -2746,16 +2296,12 @@ auto engine :: vulkan :: getSemaphoreFd (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkGetSemaphoreFdKHR )
-
     auto context = ContextManager :: acquire();
 
-    return static_cast < Type ( Result ) > (
-            vkGetSemaphoreFdKHRHandle (
-                    deviceHandle,
-                    toVulkanFormat ( & context.data().get.semaphore.fdInfo, pInfo ),
-                    pFd
-            )
+    return APICaller.vkGetSemaphoreFdKHR (
+            deviceHandle,
+            toVulkanFormat ( & context.data().get.semaphore.fdInfo, pInfo ),
+            pFd
     );
 }
 #endif
@@ -2775,16 +2321,12 @@ auto engine :: vulkan :: getSemaphoreZirconHandleGoogle (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkGetSemaphoreZirconHandleFUCHSIA )
-
     auto context = ContextManager :: acquire();
 
-    return static_cast < Type ( Result ) > (
-            vkGetSemaphoreZirconHandleFUCHSIAHandle (
-                    deviceHandle,
-                    toVulkanFormat ( & context.data().get.semaphore.zirconHandleInfo, pInfo ),
-                    pHandle
-            )
+    return APICaller.vkGetSemaphoreZirconHandleFUCHSIA (
+            deviceHandle,
+            toVulkanFormat ( & context.data().get.semaphore.zirconHandleInfo, pInfo ),
+            pHandle
     );
 }
 #endif
@@ -2804,15 +2346,11 @@ auto engine :: vulkan :: destroySemaphore (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkDestroySemaphore )
-
-    vkDestroySemaphoreHandle (
+    return APICaller.vkDestroySemaphore (
             deviceHandle,
             semaphoreHandle,
             AllocatorHandler :: apply ( pAllocationCallbacks )
     );
-
-    return ResultSuccess;
 }
 #endif
 
@@ -2831,21 +2369,19 @@ auto engine :: vulkan :: getSemaphoreCounterValue (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkGetSemaphoreCounterValue )
-
     uint64_t value = 0U;
 
     if (
-            auto result = vkGetSemaphoreCounterValueHandle (
+            auto result = APICaller.vkGetSemaphoreCounterValue (
                     deviceHandle,
                     semaphoreHandle,
                     & value
-            ); result != VK_SUCCESS
+            ); result != ResultSuccess
     ) {
         return static_cast < Type ( Result ) > ( result );
     }
 
-    * pValue = static_cast < uint64 > ( value );
+    * pValue = value;
 
     return ResultSuccess;
 }
@@ -2870,16 +2406,12 @@ auto engine :: vulkan :: waitSemaphores (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkWaitSemaphores )
-
     auto context = ContextManager :: acquire();
 
-    return static_cast < Type ( Result ) > (
-            vkWaitSemaphoresHandle (
-                    deviceHandle,
-                    prepareContext ( & context.data().wait.semaphore, pWaitInfo ),
-                    static_cast < uint64_t > ( timeout )
-            )
+    return APICaller.vkWaitSemaphores (
+            deviceHandle,
+            prepareContext ( & context.data().wait.semaphore, pWaitInfo ),
+            static_cast < uint64_t > ( timeout )
     );
 }
 #endif
@@ -2898,15 +2430,11 @@ auto engine :: vulkan :: signalSemaphore (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkSignalSemaphore )
-
     auto context = ContextManager :: acquire();
 
-    return static_cast < Type ( Result ) > (
-            vkSignalSemaphoreHandle (
-                    deviceHandle,
-                    toVulkanFormat ( & context.data().signal.semaphore.info, pSignalInfo )
-            )
+    return APICaller.vkSignalSemaphore (
+            deviceHandle,
+            toVulkanFormat ( & context.data().signal.semaphore.info, pSignalInfo )
     );
 }
 #endif
@@ -2925,15 +2453,11 @@ auto engine :: vulkan :: importSemaphoreWin32Handle (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkImportSemaphoreWin32HandleKHR )
-
     auto context = ContextManager :: acquire();
 
-    return static_cast < Type ( Result ) > (
-            vkImportSemaphoreWin32HandleKHRHandle (
-                    deviceHandle,
-                    toVulkanFormat ( & context.data()._import.semaphore.win32.info, pInfo )
-            )
+    return APICaller.vkImportSemaphoreWin32HandleKHR (
+            deviceHandle,
+            toVulkanFormat ( & context.data()._import.semaphore.win32.info, pInfo )
     );
 }
 #endif
@@ -2952,15 +2476,11 @@ auto engine :: vulkan :: importSemaphoreFd (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkImportSemaphoreFdKHR )
-
     auto context = ContextManager :: acquire();
 
-    return static_cast < Type ( Result ) > (
-            vkImportSemaphoreFdKHRHandle (
-                    deviceHandle,
-                    toVulkanFormat ( & context.data()._import.semaphore.fd.info, pInfo )
-            )
+    return APICaller.vkImportSemaphoreFdKHR (
+            deviceHandle,
+            toVulkanFormat ( & context.data()._import.semaphore.fd.info, pInfo )
     );
 }
 #endif
@@ -2979,15 +2499,11 @@ auto engine :: vulkan :: importSemaphoreZirconHandleGoogle (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkImportSemaphoreZirconHandleFUCHSIA )
-
     auto context = ContextManager :: acquire();
 
-    return static_cast < Type ( Result ) > (
-            vkImportSemaphoreZirconHandleFUCHSIAHandle (
-                    deviceHandle,
-                    toVulkanFormat ( & context.data()._import.semaphore.zircon.info, pInfo )
-            )
+    return APICaller.vkImportSemaphoreZirconHandleFUCHSIA (
+            deviceHandle,
+            toVulkanFormat ( & context.data()._import.semaphore.zircon.info, pInfo )
     );
 }
 #endif
@@ -3008,17 +2524,13 @@ auto engine :: vulkan :: createEvent (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkCreateEvent )
-
     auto context = ContextManager :: acquire();
 
-    return static_cast < Type ( Result ) > (
-            vkCreateEventHandle (
-                    deviceHandle,
-                    toVulkanFormat ( & context.data().create.event.createInfo, pCreateInfo ),
-                    AllocatorHandler :: apply ( pAllocationCallbacks ),
-                    pHandle
-            )
+    return APICaller.vkCreateEvent (
+            deviceHandle,
+            toVulkanFormat ( & context.data().create.event.createInfo, pCreateInfo ),
+            AllocatorHandler :: apply ( pAllocationCallbacks ),
+            pHandle
     );
 }
 #endif
@@ -3038,15 +2550,11 @@ auto engine :: vulkan :: destroyEvent (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkDestroyEvent )
-
-    vkDestroyEventHandle (
+    return APICaller.vkDestroyEvent (
             deviceHandle,
             handle,
             AllocatorHandler :: apply ( pAllocationCallbacks )
     );
-
-    return ResultSuccess;
 }
 #endif
 
@@ -3064,13 +2572,9 @@ auto engine :: vulkan :: getEventStatus (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkGetEventStatus )
-
-    return static_cast < Type ( Result ) > (
-            vkGetEventStatusHandle (
-                    deviceHandle,
-                    handle
-            )
+    return APICaller.vkGetEventStatus (
+            deviceHandle,
+            handle
     );
 }
 #endif
@@ -3089,13 +2593,9 @@ auto engine :: vulkan :: setEvent (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkSetEvent )
-
-    return static_cast < Type ( Result ) > (
-            vkSetEventHandle (
-                    deviceHandle,
-                    handle
-            )
+    return APICaller.vkSetEvent (
+            deviceHandle,
+            handle
     );
 }
 #endif
@@ -3114,13 +2614,9 @@ auto engine :: vulkan :: resetEvent (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkResetEvent )
-
-    return static_cast < Type ( Result ) > (
-            vkResetEventHandle (
-                    deviceHandle,
-                    handle
-            )
+    return APICaller.vkResetEvent (
+            deviceHandle,
+            handle
     );
 }
 #endif
@@ -3140,57 +2636,23 @@ auto engine :: vulkan :: commandBufferSetEvent (
 
 #endif
 
-#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE && __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
-
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_2_R ( LastCreatedInstance :: acquire(), vkCmdSetEvent2, KHR )
-
     auto context = ContextManager :: acquire();
 
-    if ( vkCmdSetEvent2Handle != nullptr ) {
-        vkCmdSetEvent2Handle (
-                commandBufferHandle,
-                eventHandle,
-                prepareContext ( & context.data().set.commandBuffer.event, pDependencyInfo )
-        );
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
-        return ResultSuccess;
-    }
-
-    vkCmdSetEvent2KHRHandle (
+    return APICaller.vkCmdSetEvent2 (
             commandBufferHandle,
             eventHandle,
             prepareContext ( & context.data().set.commandBuffer.event, pDependencyInfo )
     );
-
-    return ResultSuccess;
-
-#elif __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
-
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkCmdSetEvent2 )
-
-    auto context = ContextManager :: acquire();
-
-    vkCmdSetEvent2Handle (
-            commandBufferHandle,
-            eventHandle,
-            prepareContext ( & context.data().set.commandBuffer.event, pDependencyInfo )
-    );
-
-    return ResultSuccess;
 
 #elif __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
 
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkCmdSetEvent2KHR )
-
-    auto context = ContextManager :: acquire();
-
-    vkCmdSetEvent2KHRHandle (
+    return APICaller.vkCmdSetEvent2KHR (
             commandBufferHandle,
             eventHandle,
             prepareContext ( & context.data().set.commandBuffer.event, pDependencyInfo )
     );
-
-    return ResultSuccess;
 
 #endif
 }
@@ -3211,15 +2673,11 @@ auto engine :: vulkan :: commandBufferSetEvent (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkCmdSetEvent )
-
-    vkCmdSetEventHandle (
+    return APICaller.vkCmdSetEvent (
             commandBufferHandle,
             eventHandle,
             flags
     );
-
-    return ResultSuccess;
 }
 #endif
 
@@ -3238,63 +2696,29 @@ auto engine :: vulkan :: commandBufferResetEvent (
 
 #endif
 
-#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE && __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_2_R ( LastCreatedInstance :: acquire(), vkCmdResetEvent2, KHR )
-
-    if ( vkCmdResetEvent2Handle != nullptr ) {
-        vkCmdResetEvent2Handle (
-                commandBufferHandle,
-                eventHandle,
-                flags
-        );
-
-        return ResultSuccess;
-    }
-
-    vkCmdResetEvent2KHRHandle (
+    return APICaller.vkCmdResetEvent2 (
             commandBufferHandle,
             eventHandle,
             flags
     );
-
-    return ResultSuccess;
-
-#elif __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
-
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkCmdResetEvent2 )
-
-    vkCmdResetEvent2Handle (
-            commandBufferHandle,
-            eventHandle,
-            flags
-    );
-
-    return ResultSuccess;
 
 #elif __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
 
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkCmdResetEvent2KHR )
-
-    vkCmdResetEvent2KHRHandle (
+    return APICaller.vkCmdResetEvent2KHR (
             commandBufferHandle,
             eventHandle,
             flags
     );
-
-    return ResultSuccess;
 
 #else
 
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkCmdResetEvent )
-
-    vkCmdResetEventHandle (
+    return APICaller.vkCmdResetEvent (
             commandBufferHandle,
             eventHandle,
             flags
     );
-
-    return ResultSuccess;
 
 #endif
 }
@@ -3316,65 +2740,25 @@ auto engine :: vulkan :: commandBufferWaitEvents (
 
 #endif
 
-#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE && __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
-
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_2_R ( LastCreatedInstance :: acquire(), vkCmdWaitEvents2, KHR )
-
     auto context = ContextManager :: acquire();
 
-    if ( vkCmdWaitEvents2Handle != nullptr ) {
-        vkCmdWaitEvents2Handle (
-                commandBufferHandle,
-                eventCount,
-                pEventHandles,
-                prepareContext ( & context.data().wait.commandBuffer.event2, eventCount, pDependencyInfos )
-        );
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
-        return ResultSuccess;
-    }
-
-    vkCmdWaitEvents2KHRHandle (
+    return APICaller.vkCmdWaitEvents2 (
             commandBufferHandle,
             eventCount,
             pEventHandles,
             prepareContext ( & context.data().wait.commandBuffer.event2, eventCount, pDependencyInfos )
     );
-
-    return ResultSuccess;
-
-#elif __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
-
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkCmdWaitEvents2 )
-
-    auto context = ContextManager :: acquire();
-
-    if ( vkCmdWaitEvents2Handle != nullptr ) {
-        vkCmdWaitEvents2Handle (
-                commandBufferHandle,
-                eventCount,
-                pEventHandles,
-                prepareContext ( & context.data().wait.commandBuffer.event2, eventCount, pDependencyInfos )
-        );
-
-        return ResultSuccess;
-    }
-
-    return ResultSuccess;
 
 #elif __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
 
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkCmdWaitEvents2KHR )
-
-    auto context = ContextManager :: acquire();
-
-    vkCmdWaitEvents2KHRHandle (
+    return APICaller.vkCmdWaitEvents2KHR (
             commandBufferHandle,
             eventCount,
             pEventHandles,
             prepareContext ( & context.data().wait.commandBuffer.event2, eventCount, pDependencyInfos )
     );
-
-    return ResultSuccess;
 
 #endif
 }
@@ -3413,11 +2797,9 @@ auto engine :: vulkan :: commandBufferWaitEvents (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkCmdWaitEvents )
-
     auto context = ContextManager :: acquire();
 
-    vkCmdWaitEventsHandle (
+    return APICaller.vkCmdWaitEvents (
             commandBufferHandle,
             eventCount,
             pEventHandles,
@@ -3430,8 +2812,6 @@ auto engine :: vulkan :: commandBufferWaitEvents (
             imageMemoryBarrierCount,
             prepareContext ( & context.data().wait.commandBuffer.event, imageMemoryBarrierCount, pImageMemoryBarriers )
     );
-
-    return ResultSuccess;
 }
 #endif
 
@@ -3448,9 +2828,7 @@ auto engine :: vulkan :: queueWaitIdle (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkQueueWaitIdle )
-
-    return static_cast < Type ( Result ) > ( vkQueueWaitIdleHandle ( handle ) );
+    return APICaller.vkQueueWaitIdle ( handle );
 }
 #endif
 
@@ -3467,9 +2845,7 @@ auto engine :: vulkan :: deviceWaitIdle (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkDeviceWaitIdle )
-
-    return static_cast < Type ( Result ) > ( vkDeviceWaitIdleHandle ( handle ) );
+    return APICaller.vkDeviceWaitIdle ( handle );
 }
 #endif
 
@@ -3487,53 +2863,21 @@ auto engine :: vulkan :: commandBufferBeginRendering (
 
 #endif
 
-#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE && __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE
-
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_2_R ( LastCreatedInstance :: acquire(), vkCmdBeginRendering, KHR )
-
     auto context = ContextManager :: acquire();
 
-    if ( vkCmdBeginRenderingHandle != nullptr ) {
-        vkCmdBeginRenderingHandle (
-                handle,
-                prepareContext ( & context.data().begin.commandBufferRendering, pRenderingInfo )
-        );
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
-        return ResultSuccess;
-    }
-
-    vkCmdBeginRenderingKHRHandle (
+    return APICaller.vkCmdBeginRendering (
             handle,
             prepareContext ( & context.data().begin.commandBufferRendering, pRenderingInfo )
     );
 
-    return ResultSuccess;
-
-#elif __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
-
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkCmdBeginRendering )
-
-    auto context = ContextManager :: acquire();
-
-    vkCmdBeginRenderingHandle (
-                handle,
-                prepareContext ( & context.data().begin.commandBufferRendering, pRenderingInfo )
-    );
-
-    return ResultSuccess;
-
 #elif __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE
 
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkCmdBeginRenderingKHR )
-
-    auto context = ContextManager :: acquire();
-
-    vkCmdBeginRenderingKHRHandle (
-                handle,
-                prepareContext ( & context.data().begin.commandBufferRendering, pRenderingInfo )
+    return APICaller.vkCmdBeginRenderingKHR (
+            handle,
+            prepareContext ( & context.data().begin.commandBufferRendering, pRenderingInfo )
     );
-
-    return ResultSuccess;
 
 #endif
 }
@@ -3552,31 +2896,13 @@ auto engine :: vulkan :: commandBufferEndRendering (
 
 #endif
 
-#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE && __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_2_R ( LastCreatedInstance :: acquire(), vkCmdEndRendering, KHR )
-
-    if ( vkCmdEndRenderingHandle != nullptr ) {
-        vkCmdEndRenderingHandle ( handle );
-        return ResultSuccess;
-    }
-
-    vkCmdEndRenderingKHRHandle ( handle );
-    return ResultSuccess;
-
-#elif __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
-
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkCmdEndRendering )
-
-    vkCmdEndRenderingHandle ( handle );
-    return ResultSuccess;
+    return APICaller.vkCmdEndRendering ( handle );
 
 #elif __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE
 
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkCmdEndRenderingKHR )
-
-    vkCmdEndRenderingKHRHandle ( handle );
-    return ResultSuccess;
+    return APICaller.vkCmdEndRenderingKHR ( handle );
 
 #endif
 }
@@ -3598,17 +2924,13 @@ auto engine :: vulkan :: createRenderPass (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkCreateRenderPass )
-
     auto context = ContextManager :: acquire();
 
-    return static_cast < Type ( Result ) > (
-            vkCreateRenderPassHandle (
-                    deviceHandle,
-                    prepareContext ( & context.data().create.renderPass, pCreateInfo ),
-                    AllocatorHandler :: apply ( pAllocationCallbacks ),
-                    pHandle
-            )
+    return APICaller.vkCreateRenderPass (
+            deviceHandle,
+            prepareContext ( & context.data().create.renderPass, pCreateInfo ),
+            AllocatorHandler :: apply ( pAllocationCallbacks ),
+            pHandle
     );
 }
 #endif
@@ -3629,17 +2951,13 @@ auto engine :: vulkan :: createRenderPass (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkCreateRenderPass2 )
-
     auto context = ContextManager :: acquire();
 
-    return static_cast < Type ( Result ) > (
-            vkCreateRenderPass2Handle (
-                    deviceHandle,
-                    prepareContext ( & context.data().create.renderPass2, pCreateInfo ),
-                    AllocatorHandler :: apply ( pAllocationCallbacks ),
-                    pHandle
-            )
+    return APICaller.vkCreateRenderPass2 (
+            deviceHandle,
+            prepareContext ( & context.data().create.renderPass2, pCreateInfo ),
+            AllocatorHandler :: apply ( pAllocationCallbacks ),
+            pHandle
     );
 }
 #endif
@@ -3659,15 +2977,11 @@ auto engine :: vulkan :: destroyRenderPass (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkDestroyRenderPass )
-
-    vkDestroyRenderPassHandle (
+    return APICaller.vkDestroyRenderPass (
             deviceHandle,
             renderPassHandle,
             AllocatorHandler :: apply ( pAllocationCallbacks )
     );
-
-    return ResultSuccess;
 }
 #endif
 
@@ -3687,17 +3001,13 @@ auto engine :: vulkan :: createFrameBuffer (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkCreateFramebuffer )
-
     auto context = ContextManager :: acquire();
 
-    return static_cast < Type ( Result ) > (
-            vkCreateFramebufferHandle (
-                    deviceHandle,
-                    prepareContext ( & context.data().create.frameBuffer, pCreateInfo ),
-                    AllocatorHandler :: apply ( pAllocationCallbacks ),
-                    pHandle
-            )
+    return APICaller.vkCreateFramebuffer (
+            deviceHandle,
+            prepareContext ( & context.data().create.frameBuffer, pCreateInfo ),
+            AllocatorHandler :: apply ( pAllocationCallbacks ),
+            pHandle
     );
 }
 #endif
@@ -3717,17 +3027,13 @@ auto engine :: vulkan :: destroyFrameBuffer (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkDestroyFramebuffer )
-
     auto context = ContextManager :: acquire();
 
-    vkDestroyFramebufferHandle (
+    return APICaller.vkDestroyFramebuffer (
             deviceHandle,
             handle,
             AllocatorHandler :: apply ( pAllocationCallbacks )
     );
-
-    return ResultSuccess;
 }
 #endif
 
@@ -3746,17 +3052,13 @@ auto engine :: vulkan :: commandBufferBeginRenderPass (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkCmdBeginRenderPass )
-
     auto context = ContextManager :: acquire();
 
-    vkCmdBeginRenderPassHandle (
+    return APICaller.vkCmdBeginRenderPass (
             commandBufferHandle,
             prepareContext ( & context.data().begin.renderPass, pInfo ),
             static_cast < VkSubpassContents > ( subpassContents )
     );
-
-    return ResultSuccess;
 }
 #endif
 
@@ -3775,17 +3077,13 @@ auto engine :: vulkan :: commandBufferBeginRenderPass (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkCmdBeginRenderPass2 )
-
     auto context = ContextManager :: acquire();
 
-    vkCmdBeginRenderPass2Handle (
+    return APICaller.vkCmdBeginRenderPass2 (
             commandBufferHandle,
             prepareContext ( & context.data().begin.renderPass, pRenderPassBeginInfo ),
             prepareContext ( & context.data().begin.renderPass, pSubpassBeginInfo )
     );
-
-    return ResultSuccess;
 }
 #endif
 
@@ -3804,15 +3102,11 @@ auto engine :: vulkan :: getRenderAreaGranularity (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkGetRenderAreaGranularity )
-
-    vkGetRenderAreaGranularityHandle (
+    return APICaller.vkGetRenderAreaGranularity (
             deviceHandle,
             renderPassHandle,
             pGranularity
     );
-
-    return ResultSuccess;
 }
 #endif
 
@@ -3830,14 +3124,10 @@ auto engine :: vulkan :: commandBufferNextSubpass (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkCmdNextSubpass )
-
-    vkCmdNextSubpassHandle (
+    return APICaller.vkCmdNextSubpass (
             commandBufferHandle,
             static_cast < VkSubpassContents > ( contents )
     );
-
-    return ResultSuccess;
 }
 #endif
 
@@ -3856,17 +3146,13 @@ auto engine :: vulkan :: commandBufferNextSubpass (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkCmdNextSubpass2 )
-
     auto context = ContextManager :: acquire();
 
-    vkCmdNextSubpass2Handle (
+    return APICaller.vkCmdNextSubpass2 (
             commandBufferHandle,
             prepareContext ( & context.data().other.nextSubpass, pBeginInfo ),
             prepareContext ( & context.data().other.nextSubpass, pEndInfo )
     );
-
-    return ResultSuccess;
 }
 #endif
 
@@ -3883,11 +3169,7 @@ auto engine :: vulkan :: commandBufferEndRenderPass (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkCmdEndRenderPass )
-
-    vkCmdEndRenderPassHandle ( handle );
-
-    return ResultSuccess;
+    return APICaller.vkCmdEndRenderPass ( handle );
 }
 #endif
 
@@ -3905,16 +3187,12 @@ auto engine :: vulkan :: commandBufferEndRenderPass (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkCmdEndRenderPass2 )
-
     auto context = ContextManager :: acquire();
 
-    vkCmdEndRenderPass2Handle (
+    return APICaller.vkCmdEndRenderPass2 (
             handle,
             prepareContext ( & context.data().other.nextSubpass, pInfo )
     );
-
-    return ResultSuccess;
 }
 #endif
 
@@ -3934,17 +3212,13 @@ auto engine :: vulkan :: createShaderModule (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkCreateShaderModule )
-
     auto context = ContextManager :: acquire();
 
-    return static_cast < Type ( Result ) > (
-            vkCreateShaderModuleHandle (
-                    deviceHandle,
-                    prepareContext ( & context.data().create.shaderModule, pCreateInfo ),
-                    AllocatorHandler :: apply ( pAllocationCallbacks ),
-                    pShaderModuleHandle
-            )
+    return APICaller.vkCreateShaderModule (
+            deviceHandle,
+            prepareContext ( & context.data().create.shaderModule, pCreateInfo ),
+            AllocatorHandler :: apply ( pAllocationCallbacks ),
+            pShaderModuleHandle
     );
 }
 #endif
@@ -3964,15 +3238,11 @@ auto engine :: vulkan :: destroyShaderModule (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkDestroyShaderModule )
-
-    vkDestroyShaderModuleHandle (
+    return APICaller.vkDestroyShaderModule (
             deviceHandle,
             shaderModuleHandle,
             AllocatorHandler :: apply ( pAllocationCallbacks )
     );
-
-    return ResultSuccess;
 }
 #endif
 
@@ -3990,10 +3260,7 @@ auto engine :: vulkan :: commandBufferSetPatchControlPoints (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkCmdSetPatchControlPointsEXT )
-
-    vkCmdSetPatchControlPointsEXTHandle ( commandBufferHandle, patchControlPoints );
-    return ResultSuccess;
+    return APICaller.vkCmdSetPatchControlPointsEXT ( commandBufferHandle, patchControlPoints );
 }
 #endif
 
@@ -4012,15 +3279,11 @@ auto engine :: vulkan :: getPhysicalDeviceCooperativeMatrixPropertiesNVidia (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkGetPhysicalDeviceCooperativeMatrixPropertiesNV )
-
     if ( pProperties == nullptr ) {
-        return static_cast < Type ( Result ) > (
-                vkGetPhysicalDeviceCooperativeMatrixPropertiesNVHandle (
-                        physicalDeviceHandle,
-                        pCount,
-                        nullptr
-                )
+        return APICaller.vkGetPhysicalDeviceCooperativeMatrixPropertiesNV (
+                physicalDeviceHandle,
+                pCount,
+                nullptr
         );
     }
 
@@ -4035,13 +3298,13 @@ auto engine :: vulkan :: getPhysicalDeviceCooperativeMatrixPropertiesNVidia (
     auto context = ContextManager :: acquire();
 
     if (
-            auto result = vkGetPhysicalDeviceCooperativeMatrixPropertiesNVHandle (
+            auto result = APICaller.vkGetPhysicalDeviceCooperativeMatrixPropertiesNV (
                     physicalDeviceHandle,
                     pCount,
                     & context.data().get.physicalDeviceCooperativeMatrixProperties.properties[0]
-            ); result != VK_SUCCESS
+            ); result != ResultSuccess
     ) {
-        return static_cast < Type ( Result ) > ( result );
+        return result;
     }
 
     for ( uint32 i = 0U; i < * pCount; ++ i ) {
@@ -4068,17 +3331,13 @@ auto engine :: vulkan :: createValidationCache (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkCreateValidationCacheEXT )
-
     auto context = ContextManager :: acquire();
 
-    return static_cast < Type ( Result ) > (
-            vkCreateValidationCacheEXTHandle (
-                    deviceHandle,
-                    toVulkanFormat ( & context.data().create.validationCache.createInfo, pCreateInfo ),
-                    AllocatorHandler :: apply ( pAllocationCallbacks ),
-                    pHandle
-            )
+    return APICaller.vkCreateValidationCacheEXT (
+            deviceHandle,
+            toVulkanFormat ( & context.data().create.validationCache.createInfo, pCreateInfo ),
+            AllocatorHandler :: apply ( pAllocationCallbacks ),
+            pHandle
     );
 }
 #endif
@@ -4099,15 +3358,11 @@ auto engine :: vulkan :: mergeValidationCache (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkMergeValidationCachesEXT )
-
-    return static_cast < Type ( Result ) > (
-            vkMergeValidationCachesEXTHandle (
-                    deviceHandle,
-                    destinationCacheHandle,
-                    sourceCacheCount,
-                    pSourceCacheHandles
-            )
+    return APICaller.vkMergeValidationCachesEXT (
+            deviceHandle,
+            destinationCacheHandle,
+            sourceCacheCount,
+            pSourceCacheHandles
     );
 }
 #endif
@@ -4128,20 +3383,18 @@ auto engine :: vulkan :: getValidationCacheData (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkGetValidationCacheDataEXT )
-
     std :: size_t size;
 
     if ( pData == nullptr ) {
         if (
-                auto result = vkGetValidationCacheDataEXTHandle (
+                auto result = APICaller.vkGetValidationCacheDataEXT (
                         deviceHandle,
                         validationCacheHandle,
                         & size,
                         nullptr
-                ); result != VK_SUCCESS
+                ); result != ResultSuccess
         ) {
-            return static_cast < Type ( Result ) > ( result );
+            return result;
         }
 
         * pDataSize = size;
@@ -4149,13 +3402,11 @@ auto engine :: vulkan :: getValidationCacheData (
     }
 
     size = * pDataSize;
-    return static_cast < Type ( Result ) > (
-            vkGetValidationCacheDataEXTHandle (
-                    deviceHandle,
-                    validationCacheHandle,
-                    & size,
-                    pData
-            )
+    return APICaller.vkGetValidationCacheDataEXT (
+            deviceHandle,
+            validationCacheHandle,
+            & size,
+            pData
     );
 }
 #endif
@@ -4175,15 +3426,11 @@ auto engine :: vulkan :: destroyValidationCache (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkDestroyValidationCacheEXT )
-
-    vkDestroyValidationCacheEXTHandle (
+    return APICaller.vkDestroyValidationCacheEXT (
             deviceHandle,
             validationCacheHandle,
             AllocatorHandler :: apply ( pAllocationCallbacks )
     );
-
-    return ResultSuccess;
 }
 #endif
 
@@ -4210,21 +3457,19 @@ auto engine :: vulkan :: createComputePipelines (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkCreateComputePipelines )
-
     auto context = ContextManager :: acquire();
 
     if (
-            auto result = vkCreateComputePipelinesHandle (
+            auto result = APICaller.vkCreateComputePipelines (
                     deviceHandle,
                     pipelineCacheHandle,
                     count,
                     & prepareContext ( & context->create.pipeline.compute, count, & pCreateInfos[0] ) [0],
                     AllocatorHandler :: apply ( pAllocationCallbacks ),
                     & pPipelineHandles [0]
-            ); result != VK_SUCCESS
+            ); result != ResultSuccess
     ) {
-        return static_cast < Type ( Result ) > ( result );
+        return result;
     }
 
     extractContext ( count, & pCreateInfos[0], & context->create.pipeline.compute );
@@ -4248,14 +3493,10 @@ auto engine :: vulkan :: getDeviceSubpassShadingMaxWorkgroupSizeHuawei (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkGetDeviceSubpassShadingMaxWorkgroupSizeHUAWEI )
-
-    return static_cast < Type ( Result ) > (
-            vkGetDeviceSubpassShadingMaxWorkgroupSizeHUAWEIHandle (
-                    deviceHandle,
-                    renderPassHandle,
-                    pMaxWorkgroupSize
-            )
+    return APICaller.vkGetDeviceSubpassShadingMaxWorkgroupSizeHUAWEI (
+            deviceHandle,
+            renderPassHandle,
+            pMaxWorkgroupSize
     );
 }
 #endif
@@ -4278,21 +3519,19 @@ auto engine :: vulkan :: createGraphicsPipelines (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkCreateGraphicsPipelines )
-
     auto context = ContextManager :: acquire();
 
     if (
-            auto result = vkCreateGraphicsPipelinesHandle (
+            auto result = APICaller.vkCreateGraphicsPipelines (
                     deviceHandle,
                     pipelineCacheHandle,
                     count,
                     prepareContext ( & context->create.pipeline.graphics, count, & pCreateInfos[0] ),
                     AllocatorHandler :: apply ( pAllocationCallbacks ),
                     & pPipelineHandles [0]
-            ); result != VK_SUCCESS
+            ); result != ResultSuccess
     ) {
-        return static_cast < Type ( Result ) > ( result );
+        return result;
     }
 
     extractContext ( count,& pCreateInfos[0], & context->create.pipeline.graphics );
@@ -4319,21 +3558,19 @@ auto engine :: vulkan :: createRayTracingPipelinesNVidia (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkCreateRayTracingPipelinesNV )
-
     auto context = ContextManager :: acquire();
 
     if (
-            auto result = vkCreateRayTracingPipelinesNVHandle (
+            auto result = APICaller.vkCreateRayTracingPipelinesNV (
                     deviceHandle,
                     pipelineCacheHandle,
                     count,
                     prepareContext ( & context->create.pipeline.rayTracing.nVidiaPipeline, count, & pCreateInfos[0] ),
                     AllocatorHandler :: apply ( pAllocationCallbacks ),
                     & pPipelineHandles [0]
-            ); result != VK_SUCCESS
+            ); result != ResultSuccess
     ) {
-        return static_cast < Type ( Result ) > ( result );
+        return result;
     }
 
     extractContext ( count, & pCreateInfos[0], & context->create.pipeline.rayTracing.nVidiaPipeline );
@@ -4361,12 +3598,10 @@ auto engine :: vulkan :: createRayTracingPipelines (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkCreateRayTracingPipelinesKHR )
-
     auto context = ContextManager :: acquire();
 
     if (
-            auto result = vkCreateRayTracingPipelinesKHRHandle (
+            auto result = APICaller.vkCreateRayTracingPipelinesKHR (
                     deviceHandle,
                     deferredOperationHandle,
                     pipelineCacheHandle,
@@ -4374,9 +3609,9 @@ auto engine :: vulkan :: createRayTracingPipelines (
                     prepareContext ( & context->create.pipeline.rayTracing.pipeline, count, & pCreateInfos[0] ),
                     AllocatorHandler :: apply ( pAllocationCallbacks ),
                     & pPipelineHandles [0]
-            ); result != VK_SUCCESS
+            ); result != ResultSuccess
     ) {
-        return static_cast < Type ( Result ) > ( result );
+        return result;
     }
 
     extractContext ( count, & pCreateInfos[0], & context->create.pipeline.rayTracing.pipeline );
@@ -4403,17 +3638,13 @@ auto engine :: vulkan :: getRayTracingShaderGroupHandles (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkGetRayTracingShaderGroupHandlesKHR )
-
-    return static_cast < Type ( Result ) > (
-            vkGetRayTracingShaderGroupHandlesKHRHandle (
-                    deviceHandle,
-                    pipelineHandle,
-                    firstGroup,
-                    groupCount,
-                    dataSize,
-                    pData
-            )
+    return APICaller.vkGetRayTracingShaderGroupHandlesKHR (
+            deviceHandle,
+            pipelineHandle,
+            firstGroup,
+            groupCount,
+            dataSize,
+            pData
     );
 }
 #endif
@@ -4436,17 +3667,13 @@ auto engine :: vulkan :: getRayTracingCaptureReplayShaderGroupHandles (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkGetRayTracingCaptureReplayShaderGroupHandlesKHR )
-
-    return static_cast < Type ( Result ) > (
-            vkGetRayTracingCaptureReplayShaderGroupHandlesKHRHandle (
-                    deviceHandle,
-                    pipelineHandle,
-                    firstGroup,
-                    groupCount,
-                    dataSize,
-                    pData
-            )
+    return APICaller.vkGetRayTracingCaptureReplayShaderGroupHandlesKHR (
+            deviceHandle,
+            pipelineHandle,
+            firstGroup,
+            groupCount,
+            dataSize,
+            pData
     );
 }
 #endif
@@ -4466,14 +3693,10 @@ auto engine :: vulkan :: compileDeferredNVidia (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkCompileDeferredNV )
-
-    return static_cast < Type ( Result ) > (
-            vkCompileDeferredNVHandle (
-                    deviceHandle,
-                    pipelineHandle,
-                    shader
-            )
+    return APICaller.vkCompileDeferredNV (
+            deviceHandle,
+            pipelineHandle,
+            shader
     );
 }
 #endif
@@ -4495,14 +3718,19 @@ auto engine :: vulkan :: getRayTracingShaderGroupStackSize (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkGetRayTracingShaderGroupStackSizeKHR )
+    VkDeviceSize size;
 
-    VkDeviceSize size = vkGetRayTracingShaderGroupStackSizeKHRHandle (
-            deviceHandle,
-            pipelineHandle,
-            group,
-            static_cast < VkShaderGroupShaderKHR > ( groupShader )
-    );
+    if (
+            auto result = APICaller.vkGetRayTracingShaderGroupStackSizeKHR (
+                    & size,
+                    deviceHandle,
+                    pipelineHandle,
+                    group,
+                    static_cast < VkShaderGroupShaderKHR > ( groupShader )
+            ); result != ResultSuccess
+    ) {
+        return result;
+    }
 
     * pSize = size;
 
@@ -4524,14 +3752,10 @@ auto engine :: vulkan :: commandBufferSetRayTracingPipelineStackSize (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkCmdSetRayTracingPipelineStackSizeKHR )
-
-    vkCmdSetRayTracingPipelineStackSizeKHRHandle (
+    return APICaller.vkCmdSetRayTracingPipelineStackSizeKHR (
             commandBufferHandle,
             pipelineStackSize
     );
-
-    return ResultSuccess;
 }
 #endif
 
@@ -4550,15 +3774,11 @@ auto engine :: vulkan :: destroyPipeline (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkDestroyPipeline )
-
-    vkDestroyPipelineHandle (
+    return APICaller.vkDestroyPipeline (
             deviceHandle,
             pipelineHandle,
             AllocatorHandler :: apply ( pAllocationCallbacks )
     );
-
-    return ResultSuccess;
 }
 #endif
 
@@ -4578,20 +3798,14 @@ auto engine :: vulkan :: createPipelineCache (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkCreatePipelineCache )
-
     auto context = ContextManager :: acquire();
 
-    return static_cast < Type ( Result ) > (
-            vkCreatePipelineCacheHandle (
-                    deviceHandle,
-                    prepareContext ( & context->create.pipeline.cache, pCreateInfo ),
-                    AllocatorHandler :: apply ( pAllocationCallbacks ),
-                    pHandle
-            )
+    return APICaller.vkCreatePipelineCache (
+            deviceHandle,
+            prepareContext ( & context->create.pipeline.cache, pCreateInfo ),
+            AllocatorHandler :: apply ( pAllocationCallbacks ),
+            pHandle
     );
-
-    return ResultSuccess;
 }
 #endif
 
@@ -4611,15 +3825,11 @@ auto engine :: vulkan :: mergePipelineCaches (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkMergePipelineCaches )
-
-    return static_cast < Type ( Result ) > (
-            vkMergePipelineCachesHandle (
-                    deviceHandle,
-                    destinationCacheHandle,
-                    sourceCacheCount,
-                    pSourceCacheHandles
-            )
+    return APICaller.vkMergePipelineCaches (
+            deviceHandle,
+            destinationCacheHandle,
+            sourceCacheCount,
+            pSourceCacheHandles
     );
 }
 #endif
@@ -4640,21 +3850,19 @@ auto engine :: vulkan :: getPipelineCacheData (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkGetPipelineCacheData )
-
     std :: size_t size = 0U;
 
     if ( pData == nullptr ) {
 
         if (
-                auto result = vkGetPipelineCacheDataHandle (
+                auto result = APICaller.vkGetPipelineCacheData (
                         deviceHandle,
                         cacheHandle,
                         & size,
                         nullptr
-                ); result != VK_SUCCESS
+                ); result != ResultSuccess
         ) {
-            return static_cast < Type ( Result ) > ( result );
+            return result;
         }
 
         * pSize = size;
@@ -4663,13 +3871,11 @@ auto engine :: vulkan :: getPipelineCacheData (
 
     size = * pSize;
 
-    return static_cast < Type ( Result ) > (
-            vkGetPipelineCacheDataHandle (
-                    deviceHandle,
-                    cacheHandle,
-                    & size,
-                    pData
-            )
+    return APICaller.vkGetPipelineCacheData (
+            deviceHandle,
+            cacheHandle,
+            & size,
+            pData
     );
 }
 #endif
@@ -4689,15 +3895,11 @@ auto engine :: vulkan :: destroyPipelineCache (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkDestroyPipelineCache )
-
-    vkDestroyPipelineCacheHandle (
+    return APICaller.vkDestroyPipelineCache (
             deviceHandle,
             cacheHandle,
             AllocatorHandler :: apply ( pAllocationCallbacks )
     );
-
-    return ResultSuccess;
 }
 #endif
 
@@ -4716,15 +3918,11 @@ auto engine :: vulkan :: commandBufferBindPipeline (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkCmdBindPipeline )
-
-    vkCmdBindPipeline (
+    return APICaller.vkCmdBindPipeline (
             commandBufferHandle,
             static_cast < VkPipelineBindPoint > ( bindPoint ),
             pipelineHandle
     );
-
-    return ResultSuccess;
 }
 #endif
 
@@ -4744,16 +3942,12 @@ auto engine :: vulkan :: commandBufferBindPipelineShaderGroup (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_INSTANCE_FUNCTION_R ( LastCreatedInstance :: acquire(), vkCmdBindPipelineShaderGroupNV )
-
-    vkCmdBindPipelineShaderGroupNVHandle (
+    return APICaller.vkCmdBindPipelineShaderGroupNV (
             commandBufferHandle,
             static_cast < VkPipelineBindPoint > ( bindPoint ),
             pipelineHandle,
             groupIndex
     );
-
-    return ResultSuccess;
 }
 #endif
 
@@ -4773,18 +3967,14 @@ auto engine :: vulkan :: getPipelineExecutableProperties (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkGetPipelineExecutablePropertiesKHR )
-
     auto context = ContextManager :: acquire();
 
     if ( pProperties == nullptr ) {
-        return static_cast < Type ( Result ) > (
-                vkGetPipelineExecutablePropertiesKHRHandle (
-                        deviceHandle,
-                        prepareContext ( & context->get.pipeline.properties, pPipelineInfo ),
-                        pCount,
-                        nullptr
-                )
+        return APICaller.vkGetPipelineExecutablePropertiesKHR (
+                deviceHandle,
+                prepareContext ( & context->get.pipeline.properties, pPipelineInfo ),
+                pCount,
+                nullptr
         );
     }
 
@@ -4797,14 +3987,14 @@ auto engine :: vulkan :: getPipelineExecutableProperties (
 #endif
 
     if (
-            auto result = vkGetPipelineExecutablePropertiesKHRHandle (
+            auto result = APICaller.vkGetPipelineExecutablePropertiesKHR (
                     deviceHandle,
                     prepareContext ( & context->get.pipeline.properties, pPipelineInfo ),
                     pCount,
                     & context->get.pipeline.properties.properties[0]
-            ); result != VK_SUCCESS
+            ); result != ResultSuccess
     ) {
-        return static_cast < Type ( Result ) > ( result );
+        return result;
     }
 
     extractContext ( * pCount, & pProperties[0], & context->get.pipeline.properties );
@@ -4828,18 +4018,14 @@ auto engine :: vulkan :: getPipelineExecutableStatistics (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkGetPipelineExecutableStatisticsKHR )
-
     auto context = ContextManager :: acquire();
 
     if ( pStatistics == nullptr ) {
-        return static_cast < Type ( Result ) > (
-                vkGetPipelineExecutableStatisticsKHRHandle (
-                        deviceHandle,
-                        prepareContext ( & context->get.pipeline.statistics, pPipelineExecutableInfo ),
-                        pCount,
-                        nullptr
-                )
+        return APICaller.vkGetPipelineExecutableStatisticsKHR (
+                deviceHandle,
+                prepareContext ( & context->get.pipeline.statistics, pPipelineExecutableInfo ),
+                pCount,
+                nullptr
         );
     }
 
@@ -4852,14 +4038,14 @@ auto engine :: vulkan :: getPipelineExecutableStatistics (
 #endif
 
     if (
-            auto result = vkGetPipelineExecutableStatisticsKHRHandle (
+            auto result = APICaller.vkGetPipelineExecutableStatisticsKHR (
                     deviceHandle,
                     prepareContext ( & context->get.pipeline.statistics, pPipelineExecutableInfo ),
                     pCount,
                     & context->get.pipeline.statistics.statistics[0]
-            ); result != VK_SUCCESS
+            ); result != ResultSuccess
     ) {
-        return static_cast < Type ( Result ) > ( result );
+        return result;
     }
 
     extractContext ( * pCount, & pStatistics[0], & context->get.pipeline.statistics );
@@ -4883,18 +4069,14 @@ auto engine :: vulkan :: getPipelineExecutableInternalRepresentations (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkGetPipelineExecutableInternalRepresentationsKHR )
-
     auto context = ContextManager :: acquire();
 
     if ( pRepresentations == nullptr ) {
-        return static_cast < Type ( Result ) > (
-                vkGetPipelineExecutableInternalRepresentationsKHRHandle (
-                        deviceHandle,
-                        prepareContext ( & context->get.pipeline.internalRepresentations, pPipelineExecutableInfo ),
-                        pCount,
-                        nullptr
-                )
+        return APICaller.vkGetPipelineExecutableInternalRepresentationsKHR (
+                deviceHandle,
+                prepareContext ( & context->get.pipeline.internalRepresentations, pPipelineExecutableInfo ),
+                pCount,
+                nullptr
         );
     }
 
@@ -4907,14 +4089,14 @@ auto engine :: vulkan :: getPipelineExecutableInternalRepresentations (
 #endif
 
     if (
-            auto result = vkGetPipelineExecutableInternalRepresentationsKHRHandle (
+            auto result = APICaller.vkGetPipelineExecutableInternalRepresentationsKHR (
                     deviceHandle,
                     prepareContext ( & context->get.pipeline.internalRepresentations, pPipelineExecutableInfo ),
                     pCount,
                     prepareContext ( & context->get.pipeline.internalRepresentations, * pCount, pRepresentations )
-            ); result != VK_SUCCESS
+            ); result != ResultSuccess
     ) {
-        return static_cast < Type ( Result ) > ( result );
+        return result;
     }
 
     extractContext ( * pCount, & pRepresentations[0], & context->get.pipeline.internalRepresentations );
@@ -4940,22 +4122,20 @@ auto engine :: vulkan :: getShaderInfoAMD (
 
 #endif
 
-    __C_ENG_LOOKUP_VULKAN_DEVICE_FUNCTION_R ( deviceHandle, vkGetShaderInfoAMD )
-
     if ( pData == nullptr ) {
         std :: size_t size;
 
         if (
-                auto result = vkGetShaderInfoAMDHandle (
+                auto result = APICaller.vkGetShaderInfoAMD (
                         deviceHandle,
                         pipelineHandle,
                         static_cast < VkShaderStageFlagBits > ( shaderStage ),
                         static_cast < VkShaderInfoTypeAMD > ( infoType ),
                         & size,
                         nullptr
-                ); result != VK_SUCCESS
+                ); result != ResultSuccess
         ) {
-            return static_cast < Type ( Result ) > ( result );
+            return result;
         }
 
         * pDataSize = size;
@@ -4964,15 +4144,23 @@ auto engine :: vulkan :: getShaderInfoAMD (
 
     std :: size_t size = * pDataSize;
 
-    return static_cast < Type ( Result ) > (
-            vkGetShaderInfoAMDHandle (
-                    deviceHandle,
-                    pipelineHandle,
-                    static_cast < VkShaderStageFlagBits > ( shaderStage ),
-                    static_cast < VkShaderInfoTypeAMD > ( infoType ),
-                    & size,
-                    pData
-            )
+    return APICaller.vkGetShaderInfoAMD (
+            deviceHandle,
+            pipelineHandle,
+            static_cast < VkShaderStageFlagBits > ( shaderStage ),
+            static_cast < VkShaderInfoTypeAMD > ( infoType ),
+            & size,
+            pData
     );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: optimizeForSingleDevice (
+        Type ( DeviceHandle )               handle,
+        Type ( DeviceCreateInfo )   const * pCreateInfo
+) noexcept -> Type ( Result ) {
+    APICaller.acquireHandlesForDevice ( handle, pCreateInfo );
+    return ResultSuccess;
 }
 #endif

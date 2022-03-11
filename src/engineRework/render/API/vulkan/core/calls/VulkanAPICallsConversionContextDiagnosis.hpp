@@ -5,9 +5,9 @@
 #ifndef __C_ENG_VULKAN_API_CALLS_CONVERSION_CONTEXT_DIAGNOSIS_HPP__
 #define __C_ENG_VULKAN_API_CALLS_CONVERSION_CONTEXT_DIAGNOSIS_HPP__
 
-#include <VulkanAPICallsConversion.hpp>
-#include <VulkanAPICallsPrivate.hpp>
-#include <VulkanAPICallsTypes.hpp>
+#include <calls/VulkanAPICallsConversion.hpp>
+#include <calls/VulkanAPICallsPrivate.hpp>
+#include <calls/VulkanAPICallsTypes.hpp>
 
 #if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
 

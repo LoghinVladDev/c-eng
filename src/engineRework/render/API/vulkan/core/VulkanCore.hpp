@@ -8,7 +8,7 @@
 #include <Preprocess.hpp>
 #include <CDS/Limits>
 
-#include <VulkanAPIDetails.hpp>
+#include <details/VulkanAPIDetails.hpp>
 
 #include <Core.hpp>
 

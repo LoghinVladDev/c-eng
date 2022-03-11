@@ -1407,6 +1407,8 @@ auto Self :: buildSingleDeviceToSurface () noexcept (false) -> Nester {
         );
     }
 
+    (void) vulkan :: optimizeForSingleDevice ( device._handle, & deviceCreateInfo );
+
     uint32 totalUsedQueues = 0U;
     for ( uint32 i = 0U; i < globals :: queueCreateInfoCount; ++ i ) {
         totalUsedQueues += globals :: queueCreateInfos[i].queueCount;

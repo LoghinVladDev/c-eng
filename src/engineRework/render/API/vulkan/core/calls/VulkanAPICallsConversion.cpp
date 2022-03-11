@@ -2,10 +2,10 @@
 // Created by loghin on 16.02.2022.
 //
 
-#include <VulkanAPICallsConversion.hpp>
-#include <VulkanAPICallsPrivate.hpp>
-#include <VulkanAPICallsTypes.hpp>
-#include <VulkanAPICallsConversionContextDiagnosis.hpp>
+#include <calls/VulkanAPICallsConversion.hpp>
+#include <calls/VulkanAPICallsPrivate.hpp>
+#include <calls/VulkanAPICallsTypes.hpp>
+#include <calls/VulkanAPICallsConversionContextDiagnosis.hpp>
 #include <CDS/String>
 
 #define C_ENG_MAP_START     SOURCE

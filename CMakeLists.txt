@@ -245,28 +245,28 @@ set (
         src/engineRework/render/API/vulkan/core/VulkanCore.cpp
         src/engineRework/render/API/vulkan/core/VulkanCore.hpp
 
-        src/engineRework/render/API/vulkan/core/VulkanAPICalls.hpp
-        src/engineRework/render/API/vulkan/core/VulkanAPICalls.cpp
+        src/engineRework/render/API/vulkan/core/calls/VulkanAPICalls.hpp
+        src/engineRework/render/API/vulkan/core/calls/VulkanAPICalls.cpp
 
-        src/engineRework/render/API/vulkan/core/VulkanAPICallsConversion.cpp
-        src/engineRework/render/API/vulkan/core/VulkanAPICallsConversion2.cpp
-        src/engineRework/render/API/vulkan/core/VulkanAPICallsConversion.hpp
+        src/engineRework/render/API/vulkan/core/calls/VulkanAPICallsConversion.cpp
+        src/engineRework/render/API/vulkan/core/calls/VulkanAPICallsConversion2.cpp
+        src/engineRework/render/API/vulkan/core/calls/VulkanAPICallsConversion.hpp
 
         src/engineRework/render/API/vulkan/core/VulkanAPIExceptions.hpp
 
-        src/engineRework/render/API/vulkan/core/VulkanAPIDetails.hpp
-        src/engineRework/render/API/vulkan/core/VulkanAPIExtensionDetails.hpp
-        src/engineRework/render/API/vulkan/core/VulkanAPIKhronosExtensionDetails.hpp
-        src/engineRework/render/API/vulkan/core/VulkanAPIAMDExtensionDetails.hpp
-        src/engineRework/render/API/vulkan/core/VulkanAPINVidiaExtensionDetails.hpp
-        src/engineRework/render/API/vulkan/core/VulkanAPIGoogleExtensionDetails.hpp
-        src/engineRework/render/API/vulkan/core/VulkanAPIAppleExtensionDetails.hpp
-        src/engineRework/render/API/vulkan/core/VulkanAPIIntelExtensionDetails.hpp
-        src/engineRework/render/API/vulkan/core/VulkanAPIQualcommExtensionDetails.hpp
-        src/engineRework/render/API/vulkan/core/VulkanAPIARMExtensionDetails.hpp
-        src/engineRework/render/API/vulkan/core/VulkanAPIValveExtensionDetails.hpp
-        src/engineRework/render/API/vulkan/core/VulkanAPIHuaweiExtensionDetails.hpp
-        src/engineRework/render/API/vulkan/core/VulkanAPIBlackberryExtensionDetails.hpp
+        src/engineRework/render/API/vulkan/core/details/VulkanAPIDetails.hpp
+        src/engineRework/render/API/vulkan/core/details/VulkanAPIExtensionDetails.hpp
+        src/engineRework/render/API/vulkan/core/details/VulkanAPIKhronosExtensionDetails.hpp
+        src/engineRework/render/API/vulkan/core/details/VulkanAPIAMDExtensionDetails.hpp
+        src/engineRework/render/API/vulkan/core/details/VulkanAPINVidiaExtensionDetails.hpp
+        src/engineRework/render/API/vulkan/core/details/VulkanAPIGoogleExtensionDetails.hpp
+        src/engineRework/render/API/vulkan/core/details/VulkanAPIAppleExtensionDetails.hpp
+        src/engineRework/render/API/vulkan/core/details/VulkanAPIIntelExtensionDetails.hpp
+        src/engineRework/render/API/vulkan/core/details/VulkanAPIQualcommExtensionDetails.hpp
+        src/engineRework/render/API/vulkan/core/details/VulkanAPIARMExtensionDetails.hpp
+        src/engineRework/render/API/vulkan/core/details/VulkanAPIValveExtensionDetails.hpp
+        src/engineRework/render/API/vulkan/core/details/VulkanAPIHuaweiExtensionDetails.hpp
+        src/engineRework/render/API/vulkan/core/details/VulkanAPIBlackberryExtensionDetails.hpp
 )
 
 set (

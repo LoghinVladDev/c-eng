@@ -5,7 +5,7 @@
 #ifndef C_ENG_VULKANAPICALLSTYPES_HPP
 #define C_ENG_VULKANAPICALLSTYPES_HPP
 
-#include <VulkanAPICallsPrivate.hpp>
+#include "VulkanAPICallsPrivate.hpp"
 
 #if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
 #include <CDS/String>

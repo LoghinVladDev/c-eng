@@ -123,6 +123,13 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #endif
 
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+        NoDiscard extern auto optimizeForSingleDevice (
+                Type ( DeviceHandle ),
+                Type ( DeviceCreateInfo )   const *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
         NoDiscard extern auto destroyInstance (
                 Type ( InstanceHandle ),
                 Type ( AllocationCallbacks ) const *

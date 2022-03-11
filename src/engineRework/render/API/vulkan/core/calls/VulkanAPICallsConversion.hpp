@@ -5,8 +5,8 @@
 #ifndef __C_ENG_VULKAN_API_CALLS_CONVERSION_HPP__
 #define __C_ENG_VULKAN_API_CALLS_CONVERSION_HPP__
 
-#include <VulkanAPICallsPrivate.hpp>
-#include <VulkanAPICallsTypes.hpp>
+#include <calls/VulkanAPICallsPrivate.hpp>
+#include <calls/VulkanAPICallsTypes.hpp>
 
 #define C_ENG_MAP_START     HEADER
 #include <ObjectMapping.hpp>

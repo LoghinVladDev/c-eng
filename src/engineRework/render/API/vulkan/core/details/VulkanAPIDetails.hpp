@@ -85,19 +85,19 @@
 #endif
 
 
-#include <VulkanAPIExtensionDetails.hpp>
-#include <VulkanAPIKhronosExtensionDetails.hpp>
-#include <VulkanAPIAMDExtensionDetails.hpp>
-#include <VulkanAPINVidiaExtensionDetails.hpp>
-#include <VulkanAPIGoogleExtensionDetails.hpp>
-#include <VulkanAPIAppleExtensionDetails.hpp>
-#include <VulkanAPIIntelExtensionDetails.hpp>
-#include <VulkanAPIQualcommExtensionDetails.hpp>
-#include <VulkanAPIARMExtensionDetails.hpp>
-#include <VulkanAPIValveExtensionDetails.hpp>
-#include <VulkanAPIHuaweiExtensionDetails.hpp>
-#include <VulkanAPIBlackberryExtensionDetails.hpp>
-#include <VulkanAPIPowerVRExtensionDetails.hpp>
+#include <details/VulkanAPIExtensionDetails.hpp>
+#include <details/VulkanAPIKhronosExtensionDetails.hpp>
+#include <details/VulkanAPIAMDExtensionDetails.hpp>
+#include <details/VulkanAPINVidiaExtensionDetails.hpp>
+#include <details/VulkanAPIGoogleExtensionDetails.hpp>
+#include <details/VulkanAPIAppleExtensionDetails.hpp>
+#include <details/VulkanAPIIntelExtensionDetails.hpp>
+#include <details/VulkanAPIQualcommExtensionDetails.hpp>
+#include <details/VulkanAPIARMExtensionDetails.hpp>
+#include <details/VulkanAPIValveExtensionDetails.hpp>
+#include <details/VulkanAPIHuaweiExtensionDetails.hpp>
+#include <details/VulkanAPIBlackberryExtensionDetails.hpp>
+#include <details/VulkanAPIPowerVRExtensionDetails.hpp>
 
 
 #endif //__C_ENG_VULKAN_API_DETAILS_HPP__
