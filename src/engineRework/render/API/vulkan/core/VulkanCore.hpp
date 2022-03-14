@@ -4676,6 +4676,127 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #include <ObjectMapping.hpp>
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+#define C_ENG_MAP_START ENUM ( MemoryPropertyFlag, TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( DeviceLocal,        VkMemoryPropertyFlagBits :: VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT ),
+            Field ( HostVisible,        VkMemoryPropertyFlagBits :: VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT ),
+            Field ( HostCoherent,       VkMemoryPropertyFlagBits :: VK_MEMORY_PROPERTY_HOST_COHERENT_BIT ),
+            Field ( HostCached,         VkMemoryPropertyFlagBits :: VK_MEMORY_PROPERTY_HOST_CACHED_BIT ),
+            Field ( LazilyAllocated,    VkMemoryPropertyFlagBits :: VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT ),
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+            Field ( ProtectedBit,       VkMemoryPropertyFlagBits :: VK_MEMORY_PROPERTY_PROTECTED_BIT ),
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_AMD_DEVICE_COHERENT_MEMORY_AVAILABLE
+            Field ( DeviceCoherentAMD,  VkMemoryPropertyFlagBits :: VK_MEMORY_PROPERTY_DEVICE_COHERENT_BIT_AMD ),
+            Field ( DeviceUncachedAMD,  VkMemoryPropertyFlagBits :: VK_MEMORY_PROPERTY_DEVICE_UNCACHED_BIT_AMD ),
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXTERNAL_MEMORY_RDMA_AVAILABLE
+            Field ( RDMACapableNVidia,  VkMemoryPropertyFlagBits :: VK_MEMORY_PROPERTY_RDMA_CAPABLE_BIT_NV ),
+#endif
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+#define C_ENG_MAP_START ENUM ( MemoryHeapFlag, TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( DeviceLocal,        VkMemoryHeapFlagBits :: VK_MEMORY_HEAP_DEVICE_LOCAL_BIT ),
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+            Field ( MultiInstance,      VkMemoryHeapFlagBits :: VK_MEMORY_HEAP_MULTI_INSTANCE_BIT ),
+#endif
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+#define C_ENG_MAP_START ENUM ( ExternalMemoryHandleTypeFlag, TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( OpaqueFd,                   VkExternalMemoryHandleTypeFlagBits :: VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT ),
+            Field ( OpaqueWin32,                VkExternalMemoryHandleTypeFlagBits :: VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT ),
+            Field ( OpaqueWin32KMT,             VkExternalMemoryHandleTypeFlagBits :: VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT ),
+            Field ( D3D11Texture,               VkExternalMemoryHandleTypeFlagBits :: VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_BIT ),
+            Field ( D3D11TextureKMT,            VkExternalMemoryHandleTypeFlagBits :: VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_KMT_BIT ),
+            Field ( D3D12Heap,                  VkExternalMemoryHandleTypeFlagBits :: VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP_BIT ),
+            Field ( D3D12Resource,              VkExternalMemoryHandleTypeFlagBits :: VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT ),
+#if __C_ENG_VULKAN_API_EXTENSION_EXTERNAL_DMA_BUFFER_AVAILABLE
+            Field ( DMABuffer,                  VkExternalMemoryHandleTypeFlagBits :: VK_EXTERNAL_MEMORY_HANDLE_TYPE_DMA_BUF_BIT_EXT ),
+#endif
+#if __C_ENG_VULKAN_API_ANDROID_EXTERNAL_MEMORY_ANDROID_HARDWARE_BUFFER_AVAILABLE
+            Field ( HardwareBufferAndroid,      VkExternalMemoryHandleTypeFlagBits :: VK_EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID ),
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_EXTERNAL_MEMORY_HOST_AVAILABLE
+            Field ( HostAllocation,             VkExternalMemoryHandleTypeFlagBits :: VK_EXTERNAL_MEMORY_HANDLE_TYPE_HOST_ALLOCATION_BIT_EXT ),
+            Field ( HostMappedForeignMemory,    VkExternalMemoryHandleTypeFlagBits :: VK_EXTERNAL_MEMORY_HANDLE_TYPE_HOST_MAPPED_FOREIGN_MEMORY_BIT_EXT ),
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_GOOGLE_FUCHSIA_EXTERNAL_MEMORY_AVAILABLE
+            Field ( ZirconVMOFuchsia,           VkExternalMemoryHandleTypeFlagBits :: VK_EXTERNAL_MEMORY_HANDLE_TYPE_ZIRCON_VMO_BIT_FUCHSIA ),
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXTERNAL_MEMORY_RDMA_AVAILABLE
+            Field ( RDMAAddress,                VkExternalMemoryHandleTypeFlagBits :: VK_EXTERNAL_MEMORY_HANDLE_TYPE_RDMA_ADDRESS_BIT_NV ),
+#endif
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXTERNAL_MEMORY_AVAILABLE
+#define C_ENG_MAP_START ENUM ( ExternalMemoryHandleTypeFlagNVidia, TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( OpaqueWin32,                VkExternalMemoryHandleTypeFlagBitsNV :: VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT_NV ),
+            Field ( OpaqueWin32KMT,             VkExternalMemoryHandleTypeFlagBitsNV :: VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT_NV ),
+            Field ( D3D11Image,                 VkExternalMemoryHandleTypeFlagBitsNV :: VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_IMAGE_BIT_NV ),
+            Field ( D3D11ImageKMT,              VkExternalMemoryHandleTypeFlagBitsNV :: VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_IMAGE_KMT_BIT_NV ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+#define C_ENG_MAP_START ENUM ( MemoryAllocateFlag, TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+            Field ( DeviceMask,                 VkMemoryAllocateFlagBits :: VK_MEMORY_ALLOCATE_DEVICE_MASK_BIT ),
+            Field ( DeviceAddress,              VkMemoryAllocateFlagBits :: VK_MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT ),
+            Field ( DeviceAddressCaptureReplay, VkMemoryAllocateFlagBits :: VK_MEMORY_ALLOCATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT ),
+#endif
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+#define C_ENG_MAP_START ENUM ( PeerMemoryFeatureFlag, TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( CopySource,         VkPeerMemoryFeatureFlagBits :: VK_PEER_MEMORY_FEATURE_COPY_SRC_BIT ),
+            Field ( CopyDestination,    VkPeerMemoryFeatureFlagBits :: VK_PEER_MEMORY_FEATURE_COPY_DST_BIT ),
+            Field ( GenericSource,      VkPeerMemoryFeatureFlagBits :: VK_PEER_MEMORY_FEATURE_GENERIC_SRC_BIT ),
+            Field ( GenericDestination, VkPeerMemoryFeatureFlagBits :: VK_PEER_MEMORY_FEATURE_GENERIC_DST_BIT ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
 
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 
@@ -4712,7 +4833,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_ALIAS ( PipelineCacheHandle,                    VkPipelineCache );
         __C_ENG_ALIAS ( PipelineHandle,                         VkPipeline );
         __C_ENG_ALIAS ( PipelineLayoutHandle,                   VkPipelineLayout );
-        __C_ENG_ALIAS ( CullModeFlags,                          VkCullModeFlags );
+        __C_ENG_ALIAS ( DeviceMemoryHandle,                     VkDeviceMemory );
 
         __C_ENG_ALIAS ( InstanceCreateFlags,                    VkInstanceCreateFlags );
         __C_ENG_ALIAS ( DebugMessengerCreateFlags,              VkDebugUtilsMessengerCreateFlagsEXT );
@@ -4754,6 +4875,10 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_ALIAS ( ColorComponentFlags,                    VkColorComponentFlags );
         __C_ENG_ALIAS ( PipelineDynamicStateCreateFlags,        VkPipelineDynamicStateCreateFlags );
         __C_ENG_ALIAS ( PipelineCacheCreateFlags,               VkPipelineCacheCreateFlags );
+        __C_ENG_ALIAS ( MemoryPropertyFlags,                    VkMemoryPropertyFlags );
+        __C_ENG_ALIAS ( MemoryHeapFlags,                        VkMemoryHeapFlags );
+        __C_ENG_ALIAS ( CullModeFlags,                          VkCullModeFlags );
+        __C_ENG_ALIAS ( MemoryMapFlags,                         VkMemoryMapFlags );
 
         __C_ENG_ALIAS ( AllocationFunction,                     PFN_vkAllocationFunction );
         __C_ENG_ALIAS ( ReallocationFunction,                   PFN_vkReallocationFunction );
@@ -4771,6 +4896,9 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_ALIAS ( FenceImportFlags,                   VkFenceImportFlags );
         __C_ENG_ALIAS ( SemaphoreImportFlags,               VkSemaphoreImportFlags );
         __C_ENG_ALIAS ( ExternalSemaphoreHandleTypeFlags,   VkExternalSemaphoreHandleTypeFlags );
+        __C_ENG_ALIAS ( ExternalMemoryHandleTypeFlags,      VkExternalMemoryHandleTypeFlags );
+        __C_ENG_ALIAS ( MemoryAllocateFlags,                VkMemoryAllocateFlags );
+        __C_ENG_ALIAS ( PeerMemoryFeatureFlags,             VkPeerMemoryFeatureFlags );
 
 #endif
 
@@ -4786,8 +4914,16 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_ALIAS ( DeferredOperationHandle,  VkDeferredOperationKHR );
 #endif
 
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXTERNAL_MEMORY_AVAILABLE
+        __C_ENG_ALIAS ( ExternalMemoryHandleTypeFlagsNVidia,  VkExternalMemoryHandleTypeFlagsNV );
+#endif
+
 #if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_FRAMEBUFFER_MIXED_SAMPLES_AVAILABLE
         __C_ENG_ALIAS ( PipelineCoverageModulationStateCreateFlagsNVidia,  VkPipelineCoverageModulationStateCreateFlagsNV );
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXTERNAL_MEMORY_RDMA_AVAILABLE
+        __C_ENG_ALIAS ( RemoteAddressNVidia,  VkRemoteAddressNV );
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_FRAGMENT_COVERAGE_TO_COLOR_AVAILABLE
@@ -12792,6 +12928,440 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #endif
 
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( MemoryType, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( MemoryPropertyFlags )    propertyFlags;
+            cds :: uint32                   heapIndex;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START STRUCT ( MemoryHeap, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( DeviceSize )         size;
+            Type ( MemoryHeapFlags )    flags;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START STRUCT ( PhysicalDeviceMemoryProperties, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            cds :: uint32       memoryTypeCount;
+            Type ( MemoryType ) memoryTypes [ VK_MAX_MEMORY_TYPES ];
+            cds :: uint32       memoryHeapCount;
+            Type ( MemoryHeap ) memoryHeaps [ VK_MAX_MEMORY_HEAPS ];
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( PhysicalDeviceMemoryProperties2, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                  structureType;
+            Type ( GenericStructure )             * pNext;
+            Type ( PhysicalDeviceMemoryProperties ) properties;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_MEMORY_BUDGET_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( PhysicalDeviceMemoryBudgetProperties, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                  structureType;
+            Type ( GenericStructure )             * pNext;
+            Type ( DeviceSize )                     heapBudget [ VK_MAX_MEMORY_HEAPS ];
+            Type ( DeviceSize )                     heapUsage [ VK_MAX_MEMORY_HEAPS ];
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( MemoryAllocateInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )              structureType;
+            Type ( GenericStructure )   const * pNext;
+            Type ( DeviceSize )                 allocationSize;
+            cds :: uint32                       memoryTypeIndex;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEDICATED_ALLOCATION_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( DedicatedAllocationMemoryAllocateInfoNVidia, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )              structureType;
+            Type ( GenericStructure )   const * pNext;
+            Type ( ImageHandle )                image;
+            Type ( BufferHandle )               buffer;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( ExportMemoryAllocateInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                          structureType;
+            Type ( GenericStructure )               const * pNext;
+            Type ( ExternalMemoryHandleTypeFlags )          handleTypes;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXTERNAL_MEMORY_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( ExportMemoryAllocateInfoNVidia, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                          structureType;
+            Type ( GenericStructure )               const * pNext;
+            Type ( ExternalMemoryHandleTypeFlagsNVidia )    handleTypes;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_MEMORY_WIN32_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( ExportMemoryWin32HandleInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                          structureType;
+            Type ( GenericStructure )               const * pNext;
+            SECURITY_ATTRIBUTES                     const * pAttributes;
+            DWORD                                           dwAccess;
+            LPCWSTR                                         name;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_MEMORY_WIN32_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( MemoryGetWin32HandleInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                          structureType;
+            Type ( GenericStructure )               const * pNext;
+            Type ( DeviceMemoryHandle )                     memory;
+            Type ( ExternalMemoryHandleTypeFlag )           handleType;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXTERNAL_MEMORY_WIN32_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( ExportMemoryWin32HandleInfoNVidia, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                          structureType;
+            Type ( GenericStructure )               const * pNext;
+            SECURITY_ATTRIBUTES                     const * pAttributes;
+            DWORD                                           dwAccess;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_ANDROID_EXTERNAL_MEMORY_ANDROID_HARDWARE_BUFFER_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( ImportAndroidHardwareBufferInfoAndroid, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )              structureType;
+            Type ( GenericStructure )   const * pNext;
+            AHardwareBuffer                   * buffer;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_GOOGLE_FUCHSIA_BUFFER_COLLECTION_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( ImportMemoryBufferCollectionFuchsia, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                      structureType;
+            Type ( GenericStructure )           const * pNext;
+            Type ( BufferCollectionFuchsiaHandle )      collection;
+            cds :: uint32                               index;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_MEMORY_FD_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( ImportMemoryFdInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                      structureType;
+            Type ( GenericStructure )           const * pNext;
+            Type ( ExternalMemoryHandleTypeFlag )       handleType;
+            int                                         fd;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_EXTERNAL_MEMORY_HOST_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( ImportMemoryHostPointerInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                      structureType;
+            Type ( GenericStructure )           const * pNext;
+            Type ( ExternalMemoryHandleTypeFlag )       handleType;
+            void                                      * pHostPointer;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_MEMORY_WIN32_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( ImportMemoryWin32HandleInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                      structureType;
+            Type ( GenericStructure )           const * pNext;
+            Type ( ExternalMemoryHandleTypeFlag )       handleType;
+            HANDLE                                      handle;
+            LPCWSTR                                     name;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START STRUCT ( MemoryWin32HandleProperties, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                      structureType;
+            Type ( GenericStructure )                 * pNext;
+            cds :: uint32                               memoryTypeBits;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXTERNAL_MEMORY_WIN32_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( ImportMemoryWin32HandleInfoNVidia, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                          structureType;
+            Type ( GenericStructure )               const * pNext;
+            Type ( ExternalMemoryHandleTypeFlagsNVidia )    handleType;
+            HANDLE                                          handle;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_GOOGLE_FUCHSIA_EXTERNAL_MEMORY_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( ImportMemoryZirconHandleFuchsia, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                      structureType;
+            Type ( GenericStructure )           const * pNext;
+            Type ( ExternalMemoryHandleTypeFlag )       handleType;
+            zx_handle_t                                 handle;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( MemoryAllocateFlagsInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                      structureType;
+            Type ( GenericStructure )           const * pNext;
+            Type ( MemoryAllocateFlags )                flags;
+            cds :: uint32                               deviceMask;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( MemoryDedicatedAllocateInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                      structureType;
+            Type ( GenericStructure )           const * pNext;
+            Type ( ImageHandle )                        image;
+            Type ( BufferHandle )                       buffer;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( MemoryOpaqueCaptureAddressAllocateInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                      structureType;
+            Type ( GenericStructure )           const * pNext;
+            cds :: uint64                               opaqueCaptureAddress;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_MEMORY_PRIORITY_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( MemoryPriorityAllocateInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                      structureType;
+            Type ( GenericStructure )           const * pNext;
+            float                                       priority;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_MEMORY_FD_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( MemoryGetFdInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                      structureType;
+            Type ( GenericStructure )           const * pNext;
+            Type ( DeviceMemoryHandle )                 memory;
+            Type ( ExternalMemoryHandleTypeFlag )       handleType;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_MEMORY_FD_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( MemoryFdProperties, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                      structureType;
+            Type ( GenericStructure )                 * pNext;
+            cds :: uint32                               memoryTypeBits;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_EXTERNAL_MEMORY_HOST_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( MemoryHostPointerProperties, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                      structureType;
+            Type ( GenericStructure )                 * pNext;
+            cds :: uint32                               memoryTypeBits;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXTERNAL_MEMORY_RDMA_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( MemoryGetRemoteAddressInfoNVidia, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                      structureType;
+            Type ( GenericStructure )           const * pNext;
+            Type ( DeviceMemoryHandle )                 memory;
+            Type ( ExternalMemoryHandleTypeFlag )       handleType;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( MappedMemoryRange, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                      structureType;
+            Type ( GenericStructure )           const * pNext;
+            Type ( DeviceMemoryHandle )                 memory;
+            Type ( DeviceSize )                         offset;
+            Type ( DeviceSize )                         size;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( DeviceMemoryOpaqueCaptureAddressInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                      structureType;
+            Type ( GenericStructure )           const * pNext;
+            Type ( DeviceMemoryHandle )                 memory;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+
 #define C_ENG_MAP_START     HEADER
 #include <ObjectMapping.hpp>
 
@@ -12858,6 +13428,8 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         NoDiscard auto toString ( Type ( DynamicState ) ) noexcept -> cds :: StringLiteral;
         NoDiscard auto toString ( Type ( PipelineCacheCreateFlag ) ) noexcept -> cds :: StringLiteral;
         NoDiscard auto toString ( Type ( PipelineCacheHeaderVersionValue ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( MemoryPropertyFlag ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( MemoryHeapFlag ) ) noexcept -> cds :: StringLiteral;
 
 #endif
 
@@ -12868,6 +13440,9 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         NoDiscard auto toString ( Type ( FenceImportFlag ) ) noexcept -> cds :: StringLiteral;
         NoDiscard auto toString ( Type ( SemaphoreImportFlag ) ) noexcept -> cds :: StringLiteral;
         NoDiscard auto toString ( Type ( TessellationDomainOrigin ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( ExternalMemoryHandleTypeFlag ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( MemoryAllocateFlag ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( PeerMemoryFeatureFlag ) ) noexcept -> cds :: StringLiteral;
 
 #endif
 
@@ -12940,6 +13515,10 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_FRAGMENT_SHADING_RATE_AVAILABLE
         NoDiscard auto toString ( Type ( FragmentShadingRateCombinerOperation ) ) noexcept -> cds :: StringLiteral;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXTERNAL_MEMORY_AVAILABLE
+        NoDiscard auto toString ( Type ( ExternalMemoryHandleTypeFlagNVidia ) ) noexcept -> cds :: StringLiteral;
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_DISCARD_RECTANGLES_AVAILABLE
@@ -13127,6 +13706,13 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         NoDiscard auto toString ( Type ( PipelineCacheCreateInfo ) const & ) noexcept -> cds :: String;
         NoDiscard auto toString ( Type ( PipelineCacheHeaderVersionOne ) const & ) noexcept -> cds :: String;
 
+        NoDiscard auto toString ( Type ( MemoryType ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( MemoryHeap ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( PhysicalDeviceMemoryProperties ) const & ) noexcept -> cds :: String;
+
+        NoDiscard auto toString ( Type ( MemoryAllocateInfo ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( MappedMemoryRange ) const & ) noexcept -> cds :: String;
+
 #endif
 
 #if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
@@ -13166,6 +13752,10 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         NoDiscard auto toString ( Type ( RenderPassMultiviewCreateInfo ) const & ) noexcept -> cds :: String;
 
         NoDiscard auto toString ( Type ( PipelineTessellationDomainOriginStateCreateInfo ) const & ) noexcept -> cds :: String;
+
+        NoDiscard auto toString ( Type ( PhysicalDeviceMemoryProperties2 ) const & ) noexcept -> cds :: String;
+
+        NoDiscard auto toString ( Type ( ExportMemoryAllocateInfo ) const & ) noexcept -> cds :: String;
 
 #endif
 
@@ -13216,6 +13806,8 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         NoDiscard auto toString ( Type ( RenderPassAttachmentBeginInfo ) const & ) noexcept -> cds :: String;
         NoDiscard auto toString ( Type ( SubpassBeginInfo ) const & ) noexcept -> cds :: String;
         NoDiscard auto toString ( Type ( SubpassEndInfo ) const & ) noexcept -> cds :: String;
+
+        NoDiscard auto toString ( Type ( DeviceMemoryOpaqueCaptureAddressInfo ) const & ) noexcept -> cds :: String;
 #endif
 
 #if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
@@ -13261,12 +13853,79 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         NoDiscard auto toString ( Type ( ShaderStatisticsInfoAMD ) const & ) noexcept -> cds :: String;
 #endif
 
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEDICATED_ALLOCATION_AVAILABLE
+        NoDiscard auto toString ( Type ( DedicatedAllocationMemoryAllocateInfoNVidia ) const & ) noexcept -> cds :: String;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXTERNAL_MEMORY_AVAILABLE
+        NoDiscard auto toString ( Type ( ExportMemoryAllocateInfoNVidia ) const & ) noexcept -> cds :: String;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_MEMORY_WIN32_AVAILABLE
+        NoDiscard auto toString ( Type ( ExportMemoryWin32HandleInfo ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( ImportMemoryWin32HandleInfo ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( MemoryGetWin32HandleInfo ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( MemoryWin32HandleProperties ) const & ) noexcept -> cds :: String;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXTERNAL_MEMORY_WIN32_AVAILABLE
+        NoDiscard auto toString ( Type ( ExportMemoryWin32HandleInfoNVidia ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( ImportMemoryWin32HandleInfoNVidia ) const & ) noexcept -> cds :: String;
+#endif
+
+#if __C_ENG_VULKAN_API_ANDROID_EXTERNAL_MEMORY_ANDROID_HARDWARE_BUFFER_AVAILABLE
+        NoDiscard auto toString ( Type ( ImportAndroidHardwareBufferInfoAndroid ) const & ) noexcept -> cds :: String;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_GOOGLE_FUCHSIA_BUFFER_COLLECTION_AVAILABLE
+        NoDiscard auto toString ( Type ( ImportMemoryBufferCollectionFuchsia ) const & ) noexcept -> cds :: String;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_MEMORY_FD_AVAILABLE
+        NoDiscard auto toString ( Type ( ImportMemoryFdInfo ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( MemoryGetFdInfo ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( MemoryFdProperties ) const & ) noexcept -> cds :: String;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_EXTERNAL_MEMORY_HOST_AVAILABLE
+        NoDiscard auto toString ( Type ( ImportMemoryHostPointerInfo ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( MemoryHostPointerProperties ) const & ) noexcept -> cds :: String;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_GOOGLE_FUCHSIA_EXTERNAL_MEMORY_AVAILABLE
+        NoDiscard auto toString ( Type ( ImportMemoryZirconHandleFuchsia ) const & ) noexcept -> cds :: String;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXTERNAL_MEMORY_RDMA_AVAILABLE
+        NoDiscard auto toString ( Type ( MemoryGetRemoteAddressInfoNVidia ) const & ) noexcept -> cds :: String;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+        NoDiscard auto toString ( Type ( MemoryAllocateFlagsInfo ) const & ) noexcept -> cds :: String;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+        NoDiscard auto toString ( Type ( MemoryDedicatedAllocateInfo ) const & ) noexcept -> cds :: String;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+        NoDiscard auto toString ( Type ( MemoryOpaqueCaptureAddressAllocateInfo ) const & ) noexcept -> cds :: String;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_MEMORY_PRIORITY_AVAILABLE
+        NoDiscard auto toString ( Type ( MemoryPriorityAllocateInfo ) const & ) noexcept -> cds :: String;
+#endif
+
 #if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_FRAMEBUFFER_MIXED_SAMPLES_AVAILABLE
         NoDiscard auto toString ( Type ( PipelineCoverageModulationStateCreateInfoNVidia ) const & ) noexcept -> cds :: String;
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_COLOR_WRITE_ENABLE_AVAILABLE
         NoDiscard auto toString ( Type ( PipelineColorWriteCreateInfo ) const & ) noexcept -> cds :: String;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_MEMORY_BUDGET_AVAILABLE
+        NoDiscard auto toString ( Type ( PhysicalDeviceMemoryBudgetProperties ) const & ) noexcept -> cds :: String;
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_BLEND_OPERATION_ADVANCED_AVAILABLE

@@ -2471,6 +2471,16 @@ namespace engine :: vulkan {
 #include <calls/util/APICallerGenerator.hpp>
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+#define CALL_POINT CALL ( vkGetPhysicalDeviceMemoryProperties, INSTANCE, NO_EXTENSION )
+#include <calls/util/APICallerGenerator.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+#define CALL_POINT CALL ( vkGetPhysicalDeviceMemoryProperties2, INSTANCE, NO_EXTENSION )
+#include <calls/util/APICallerGenerator.hpp>
+#endif
+
     public:
         inline auto acquireHandlesForDevice (
                 engine :: vulkan :: Type ( DeviceHandle )               handle,

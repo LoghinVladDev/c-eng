@@ -3559,7 +3559,253 @@ namespace engine :: vulkan {
     ) noexcept -> void;
 #endif
 
-}
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto fromVulkanFormat (
+            Type ( PhysicalDeviceMemoryProperties )         *,
+            VkPhysicalDeviceMemoryProperties          const *
+    ) noexcept -> Type ( PhysicalDeviceMemoryProperties ) *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    extern auto prepareContext (
+            GetPhysicalDeviceMemoryPropertiesContext          *,
+            Type ( PhysicalDeviceMemoryProperties2 )    const *
+    ) noexcept -> VkPhysicalDeviceMemoryProperties2 *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    extern auto extractContext (
+            Type ( PhysicalDeviceMemoryProperties2 )          *,
+            GetPhysicalDeviceMemoryPropertiesContext    const *
+    ) noexcept -> void;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto toVulkanFormat (
+            VkPhysicalDeviceMemoryProperties              *,
+            Type ( PhysicalDeviceMemoryProperties ) const *
+    ) noexcept -> VkPhysicalDeviceMemoryProperties *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    extern auto toVulkanFormat (
+            VkPhysicalDeviceMemoryProperties2              *,
+            Type ( PhysicalDeviceMemoryProperties2 ) const *
+    ) noexcept -> VkPhysicalDeviceMemoryProperties2 *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_MEMORY_BUDGET_AVAILABLE
+    extern auto toVulkanFormat (
+            VkPhysicalDeviceMemoryBudgetPropertiesEXT           *,
+            Type ( PhysicalDeviceMemoryBudgetProperties ) const *
+    ) noexcept -> VkPhysicalDeviceMemoryBudgetPropertiesEXT *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    extern auto fromVulkanFormat (
+            Type ( PhysicalDeviceMemoryProperties2 )         *,
+            VkPhysicalDeviceMemoryProperties2          const *
+    ) noexcept -> Type ( PhysicalDeviceMemoryProperties2 ) *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_MEMORY_BUDGET_AVAILABLE
+    extern auto fromVulkanFormat (
+            Type ( PhysicalDeviceMemoryBudgetProperties )            *,
+            VkPhysicalDeviceMemoryBudgetPropertiesEXT          const *
+    ) noexcept -> Type ( PhysicalDeviceMemoryBudgetProperties ) *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto prepareContext (
+            AllocateMemoryContext                *,
+            Type ( MemoryAllocateInfo )    const *
+    ) noexcept -> VkMemoryAllocateInfo *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto toVulkanFormat (
+            VkMemoryAllocateInfo              *,
+            Type ( MemoryAllocateInfo ) const *
+    ) noexcept -> VkMemoryAllocateInfo *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEDICATED_ALLOCATION_AVAILABLE
+    extern auto toVulkanFormat (
+            VkDedicatedAllocationMemoryAllocateInfoNV                  *,
+            Type ( DedicatedAllocationMemoryAllocateInfoNVidia ) const *
+    ) noexcept -> VkDedicatedAllocationMemoryAllocateInfoNV *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    extern auto toVulkanFormat (
+            VkExportMemoryAllocateInfo              *,
+            Type ( ExportMemoryAllocateInfo ) const *
+    ) noexcept -> VkExportMemoryAllocateInfo *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    extern auto toVulkanFormat (
+            VkMemoryAllocateFlagsInfo              *,
+            Type ( MemoryAllocateFlagsInfo ) const *
+    ) noexcept -> VkMemoryAllocateFlagsInfo *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    extern auto toVulkanFormat (
+            VkMemoryDedicatedAllocateInfo              *,
+            Type ( MemoryDedicatedAllocateInfo ) const *
+    ) noexcept -> VkMemoryDedicatedAllocateInfo *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+    extern auto toVulkanFormat (
+            VkMemoryOpaqueCaptureAddressAllocateInfo              *,
+            Type ( MemoryOpaqueCaptureAddressAllocateInfo ) const *
+    ) noexcept -> VkMemoryOpaqueCaptureAddressAllocateInfo *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_MEMORY_PRIORITY_AVAILABLE
+    extern auto toVulkanFormat (
+            VkMemoryPriorityAllocateInfoEXT           *,
+            Type ( MemoryPriorityAllocateInfo ) const *
+    ) noexcept -> VkMemoryPriorityAllocateInfoEXT *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXTERNAL_MEMORY_AVAILABLE
+    extern auto toVulkanFormat (
+            VkExportMemoryAllocateInfoNV                  *,
+            Type ( ExportMemoryAllocateInfoNVidia ) const *
+    ) noexcept -> VkExportMemoryAllocateInfoNV *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_MEMORY_WIN32_AVAILABLE
+    extern auto toVulkanFormat (
+            VkExportMemoryWin32HandleInfoKHR           *,
+            Type ( ExportMemoryWin32HandleInfo ) const *
+    ) noexcept -> VkExportMemoryWin32HandleInfoKHR *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_MEMORY_WIN32_AVAILABLE
+    extern auto toVulkanFormat (
+            VkImportMemoryWin32HandleInfoKHR           *,
+            Type ( ImportMemoryWin32HandleInfo ) const *
+    ) noexcept -> VkImportMemoryWin32HandleInfoKHR *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXTERNAL_MEMORY_WIN32_AVAILABLE
+    extern auto toVulkanFormat (
+            VkExportMemoryWin32HandleInfoNV                  *,
+            Type ( ExportMemoryWin32HandleInfoNVidia ) const *
+    ) noexcept -> VkExportMemoryWin32HandleInfoNV *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXTERNAL_MEMORY_WIN32_AVAILABLE
+    extern auto toVulkanFormat (
+            VkImportMemoryWin32HandleInfoNV                  *,
+            Type ( ImportMemoryWin32HandleInfoNVidia ) const *
+    ) noexcept -> VkImportMemoryWin32HandleInfoNV *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_MEMORY_FD_AVAILABLE
+    extern auto toVulkanFormat (
+            VkImportMemoryFdInfoKHR           *,
+            Type ( ImportMemoryFdInfo ) const *
+    ) noexcept -> VkImportMemoryFdInfoKHR *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_EXTERNAL_MEMORY_HOST_AVAILABLE
+    extern auto toVulkanFormat (
+            VkImportMemoryHostPointerInfoEXT           *,
+            Type ( ImportMemoryHostPointerInfo ) const *
+    ) noexcept -> VkImportMemoryHostPointerInfoEXT *;
+#endif
+
+#if __C_ENG_VULKAN_API_ANDROID_EXTERNAL_MEMORY_ANDROID_HARDWARE_BUFFER_AVAILABLE
+    extern auto toVulkanFormat (
+            VkImportAndroidHardwareBufferInfoANDROID              *,
+            Type ( ImportAndroidHardwareBufferInfoAndroid ) const *
+    ) noexcept -> VkImportAndroidHardwareBufferInfoANDROID *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_GOOGLE_FUCHSIA_BUFFER_COLLECTION_AVAILABLE
+    extern auto toVulkanFormat (
+            VkImportMemoryBufferCollectionFUCHSIA              *,
+            Type ( ImportMemoryBufferCollectionFuchsia ) const *
+    ) noexcept -> VkImportMemoryBufferCollectionFUCHSIA *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_GOOGLE_FUCHSIA_EXTERNAL_MEMORY_AVAILABLE
+    extern auto toVulkanFormat (
+            VkImportMemoryZirconHandleInfoFUCHSIA              *,
+            Type ( ImportMemoryZirconHandleInfoFuchsia ) const *
+    ) noexcept -> VkImportMemoryZirconHandleInfoFUCHSIA *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_MEMORY_WIN32_AVAILABLE
+    extern auto toVulkanFormat (
+            VkMemoryGetWin32HandleInfoKHR           *,
+            Type ( MemoryGetWin32HandleInfo ) const *
+    ) noexcept -> VkMemoryGetWin32HandleInfoKHR *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_MEMORY_WIN32_AVAILABLE
+    extern auto fromVulkanFormat (
+            Type ( MemoryWin32HandleProperties )     *,
+            VkMemoryWin32HandlePropertiesKHR   const *
+    ) noexcept -> Type ( MemoryWin32HandleProperties ) *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_MEMORY_FD_AVAILABLE
+    extern auto toVulkanFormat (
+            VkMemoryGetFdInfoKHR           *,
+            Type ( MemoryGetFdInfo ) const *
+    ) noexcept -> VkMemoryGetFdInfoKHR *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_MEMORY_FD_AVAILABLE
+    extern auto fromVulkanFormat (
+            Type ( MemoryFdProperties )     *,
+            VkMemoryFdPropertiesKHR   const *
+    ) noexcept -> Type ( MemoryFdProperties ) *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_EXTERNAL_MEMORY_HOST_AVAILABLE
+    extern auto fromVulkanFormat (
+            Type ( MemoryHostPointerProperties )     *,
+            VkMemoryHostPointerPropertiesEXT   const *
+    ) noexcept -> Type ( MemoryHostPointerProperties ) *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXTERNAL_MEMORY_RDMA_AVAILABLE
+    extern auto toVulkanFormat (
+            VkMemoryGetRemoteAddressInfoNV                  *,
+            Type ( MemoryGetRemoteAddressInfoNVidia ) const *
+    ) noexcept -> VkMemoryGetRemoteAddressInfoNV *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto prepareContext (
+            FlushMappedMemoryRangesContext        *,
+            cds :: uint32,
+            Type ( MappedMemoryRange )      const *
+    ) noexcept -> VkMappedMemoryRange *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto toVulkanFormat (
+            VkMappedMemoryRange              *,
+            Type ( MappedMemoryRange ) const *
+    ) noexcept -> VkMappedMemoryRange *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+    extern auto toVulkanFormat (
+            VkDeviceMemoryOpaqueCaptureAddressInfo              *,
+            Type ( DeviceMemoryOpaqueCaptureAddressInfo ) const *
+    ) noexcept -> VkDeviceMemoryOpaqueCaptureAddressInfo *;
+#endif
+
+} // namespace engine :: vulkan
 
 #define C_ENG_MAP_END
 #include <ObjectMapping.hpp>

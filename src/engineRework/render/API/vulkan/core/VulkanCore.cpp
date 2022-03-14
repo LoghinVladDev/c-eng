@@ -11950,3 +11950,537 @@ auto vulkan :: toString (
            " }";
 }
 #endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( MemoryPropertyFlag )  flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case MemoryPropertyFlagDeviceLocal:         { asString = "Device Local";        break; }
+        case MemoryPropertyFlagHostVisible:         { asString = "Host Visible";        break; }
+        case MemoryPropertyFlagHostCoherent:        { asString = "Host Coherent";       break; }
+        case MemoryPropertyFlagHostCached:          { asString = "Host Cached";         break; }
+        case MemoryPropertyFlagLazilyAllocated:     { asString = "Lazily Allocated";    break; }
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+        case MemoryPropertyFlagProtectedBit:        { asString = "Protected Bit";       break; }
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_AMD_DEVICE_COHERENT_MEMORY_AVAILABLE
+        case MemoryPropertyFlagDeviceCoherentAMD:   { asString = "Device Coherent AMD"; break; }
+        case MemoryPropertyFlagDeviceUncachedAMD:   { asString = "Device Uncached AMD"; break; }
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXTERNAL_MEMORY_RDMA_AVAILABLE
+        case MemoryPropertyFlagRDMACapableNVidia:   { asString = "RDMA Capable NVidia"; break; }
+#endif
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( MemoryHeapFlag )  flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case MemoryHeapFlagDeviceLocal:         { asString = "Device Local";        break; }
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+        case MemoryHeapFlagMultiInstance:       { asString = "Multi Instance";      break; }
+#endif
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( MemoryType ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( MemoryType ) ) " " +
+           "{ propertyFlags = "_s             + "0b" + Long ( info.propertyFlags ).toString(2) +
+           ", heapIndex = "                   + info.heapIndex +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( MemoryHeap ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( MemoryHeap ) ) " " +
+           "{ size = "_s                + toString ( info.size ) +
+           ", flags = "                 + "0b" + Long ( info.flags ).toString(2) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( PhysicalDeviceMemoryProperties ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( PhysicalDeviceMemoryProperties ) ) " " +
+           "{ memoryTypeCount = "_s + info.memoryTypeCount +
+           ", memoryTypes = "       + :: toStringVulkan ( info.memoryTypeCount, & info.memoryTypes[0] ) +
+           ", memoryHeapCount = "   + info.memoryHeapCount +
+           ", memoryHeaps = "       + :: toStringVulkan ( info.memoryHeapCount, & info.memoryHeaps[0] ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+auto vulkan :: toString (
+        Type ( PhysicalDeviceMemoryProperties2 ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( PhysicalDeviceMemoryProperties2 ) ) " " +
+           "{ structureType = "_s   + toString ( info.structureType ) +
+           ", pNext = "             + engine :: toString ( info.pNext ) +
+           ", properties = "        + toString ( info.properties ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_MEMORY_BUDGET_AVAILABLE
+auto vulkan :: toString (
+        Type ( PhysicalDeviceMemoryBudgetProperties ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( PhysicalDeviceMemoryBudgetProperties ) ) " " +
+           "{ structureType = "_s   + toString ( info.structureType ) +
+           ", pNext = "             + engine :: toString ( info.pNext ) +
+           ", heapBudget = "        + :: toStringVulkan ( VK_MAX_MEMORY_HEAPS, & info.heapBudget[0] ) +
+           ", heapUsage = "         + :: toStringVulkan ( VK_MAX_MEMORY_HEAPS, & info.heapUsage[0] ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( MemoryAllocateInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( MemoryAllocateInfo ) ) " " +
+           "{ structureType = "_s   + toString ( info.structureType ) +
+           ", pNext = "             + engine :: toString ( info.pNext ) +
+           ", allocationSize = "    + engine :: toString ( info.allocationSize ) +
+           ", memoryTypeIndex = "   + info.memoryTypeIndex +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+auto vulkan :: toString (
+        Type ( ExternalMemoryHandleTypeFlag )  flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case ExternalMemoryHandleTypeFlagOpaqueFd:                  { asString = "Opaque Fd";                   break; }
+        case ExternalMemoryHandleTypeFlagOpaqueWin32:               { asString = "Opaque Win 32";               break; }
+        case ExternalMemoryHandleTypeFlagOpaqueWin32KMT:            { asString = "Opaque Win 32 KMT";           break; }
+        case ExternalMemoryHandleTypeFlagD3D11Texture:              { asString = "D3D11 Texture";               break; }
+        case ExternalMemoryHandleTypeFlagD3D11TextureKMT:           { asString = "D3D11 Texture KMT";           break; }
+        case ExternalMemoryHandleTypeFlagD3D12Heap:                 { asString = "D3D12 Heap";                  break; }
+        case ExternalMemoryHandleTypeFlagD3D12Resource:             { asString = "D3D12 Resource";              break; }
+#if __C_ENG_VULKAN_API_EXTENSION_EXTERNAL_DMA_BUFFER_AVAILABLE
+        case ExternalMemoryHandleTypeFlagDMABuffer:                 { asString = "DMA Buffer";                  break; }
+#endif
+#if __C_ENG_VULKAN_API_ANDROID_EXTERNAL_MEMORY_ANDROID_HARDWARE_BUFFER_AVAILABLE
+        case ExternalMemoryHandleTypeFlagHardwareBufferAndroid:     { asString = "Hardware Buffer Android";     break; }
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_EXTERNAL_MEMORY_HOST_AVAILABLE
+        case ExternalMemoryHandleTypeFlagHostAllocation:            { asString = "Host Allocation";             break; }
+        case ExternalMemoryHandleTypeFlagHostMappedForeignMemory:   { asString = "Host Mapped Foreign Memory";  break; }
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_GOOGLE_FUCHSIA_EXTERNAL_MEMORY_AVAILABLE
+        case ExternalMemoryHandleTypeFlagZirconVMOFuchsia:          { asString = "Zircon VMO Fuchsia";          break; }
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXTERNAL_MEMORY_RDMA_AVAILABLE
+        case ExternalMemoryHandleTypeFlagRDMAAddress:               { asString = "RDMA Address";                break; }
+#endif
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXTERNAL_MEMORY_AVAILABLE
+auto vulkan :: toString (
+        Type ( ExternalMemoryHandleTypeFlagNVidia )  flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case ExternalMemoryHandleTypeFlagNVidiaOpaqueWin32:             { asString = "Opaque Win 32";               break; }
+        case ExternalMemoryHandleTypeFlagNVidiaOpaqueWin32KMT:          { asString = "Opaque Win 32 KMT";           break; }
+        case ExternalMemoryHandleTypeFlagNVidiaD3D11Image:              { asString = "D3D11 Image";               break; }
+        case ExternalMemoryHandleTypeFlagNVidiaD3D11ImageKMT:           { asString = "D3D11 Image KMT";           break; }
+
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+auto vulkan :: toString (
+        Type ( MemoryAllocateFlag )  flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+        case MemoryAllocateFlagDeviceMask:                  { asString = "Device Mask";                     break; }
+        case MemoryAllocateFlagDeviceAddress:               { asString = "Device Address";                  break; }
+        case MemoryAllocateFlagDeviceAddressCaptureReplay:  { asString = "Device Address Capture Replay";   break; }
+#endif
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEDICATED_ALLOCATION_AVAILABLE
+auto vulkan :: toString (
+        Type ( DedicatedAllocationMemoryAllocateInfoNVidia ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( DedicatedAllocationMemoryAllocateInfoNVidia ) ) " " +
+           "{ structureType = "_s   + toString ( info.structureType ) +
+           ", pNext = "             + engine :: toString ( info.pNext ) +
+           ", image = "             + engine :: toString ( info.image ) +
+           ", buffer = "            + engine :: toString ( info.buffer ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+auto vulkan :: toString (
+        Type ( ExportMemoryAllocateInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( ExportMemoryAllocateInfo ) ) " " +
+           "{ structureType = "_s   + toString ( info.structureType ) +
+           ", pNext = "             + engine :: toString ( info.pNext ) +
+           ", handleTypes = "       + "0b" + Long ( info.handleTypes ).toString(2) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXTERNAL_MEMORY_AVAILABLE
+auto vulkan :: toString (
+        Type ( ExportMemoryAllocateInfoNVidia ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( ExportMemoryAllocateInfoNVidia ) ) " " +
+           "{ structureType = "_s   + toString ( info.structureType ) +
+           ", pNext = "             + engine :: toString ( info.pNext ) +
+           ", handleTypes = "       + "0b" + Long ( info.handleTypes ).toString(2) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_MEMORY_WIN32_AVAILABLE
+auto vulkan :: toString (
+        Type ( ExportMemoryWin32HandleInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( ExportMemoryWin32HandleInfo ) ) " " +
+           "{ structureType = "_s   + toString ( info.structureType ) +
+           ", pNext = "             + engine :: toString ( info.pNext ) +
+           ", pAttributes = "       + engine :: toString ( info.pAttributes ) +
+           ", dwAccess = "          + info.dwAccess +
+           ", name = "              + info.name +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXTERNAL_MEMORY_WIN32_AVAILABLE
+auto vulkan :: toString (
+        Type ( ExportMemoryWin32HandleInfoNVidia ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( ExportMemoryWin32HandleInfoNVidia ) ) " " +
+           "{ structureType = "_s   + toString ( info.structureType ) +
+           ", pNext = "             + engine :: toString ( info.pNext ) +
+           ", pAttributes = "       + engine :: toString ( info.pAttributes ) +
+           ", dwAccess = "          + info.dwAccess +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_ANDROID_EXTERNAL_MEMORY_ANDROID_HARDWARE_BUFFER_AVAILABLE
+auto vulkan :: toString (
+        Type ( ImportAndroidHardwareBufferInfoAndroid ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( ImportAndroidHardwareBufferInfoAndroid ) ) " " +
+           "{ structureType = "_s   + toString ( info.structureType ) +
+           ", pNext = "             + engine :: toString ( info.pNext ) +
+           ", buffer = "            + engine :: toString ( info.buffer ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_GOOGLE_FUCHSIA_BUFFER_COLLECTION_AVAILABLE
+auto vulkan :: toString (
+        Type ( ImportMemoryBufferCollectionFuchsia ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( ImportMemoryBufferCollectionFuchsia ) ) " " +
+           "{ structureType = "_s   + toString ( info.structureType ) +
+           ", pNext = "             + engine :: toString ( info.pNext ) +
+           ", collection = "        + engine :: toString ( info.collection ) +
+           ", index = "             + info.index +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_MEMORY_FD_AVAILABLE
+auto vulkan :: toString (
+        Type ( ImportMemoryFdInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( ImportMemoryFdInfo ) ) " " +
+           "{ structureType = "_s   + toString ( info.structureType ) +
+           ", pNext = "             + engine :: toString ( info.pNext ) +
+           ", handleType = "        + toString ( info.handleType ) +
+           ", fd = "                + info.fd +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_EXTERNAL_MEMORY_HOST_AVAILABLE
+auto vulkan :: toString (
+        Type ( ImportMemoryHostPointerInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( ImportMemoryHostPointerInfo ) ) " " +
+           "{ structureType = "_s   + toString ( info.structureType ) +
+           ", pNext = "             + engine :: toString ( info.pNext ) +
+           ", handleType = "        + toString ( info.handleType ) +
+           ", pHostPointer = "      + engine :: toString ( info.pHostPointer ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXTERNAL_MEMORY_WIN32_AVAILABLE
+auto vulkan :: toString (
+        Type ( ImportMemoryWin32HandleInfoNVidia ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( ImportMemoryWin32HandleInfoNVidia ) ) " " +
+           "{ structureType = "_s   + toString ( info.structureType ) +
+           ", pNext = "             + engine :: toString ( info.pNext ) +
+           ", handleType = "        + "0b" + Long ( info.handleType ).toString(2) +
+           ", handle = "            + engine :: toString ( info.handle ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_GOOGLE_FUCHSIA_EXTERNAL_MEMORY_AVAILABLE
+auto vulkan :: toString (
+        Type ( ImportMemoryZirconHandleFuchsia ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( ImportMemoryZirconHandleFuchsia ) ) " " +
+           "{ structureType = "_s   + toString ( info.structureType ) +
+           ", pNext = "             + engine :: toString ( info.pNext ) +
+           ", handleType = "        + engine :: toString ( info.handleType ) +
+           ", handle = "            + engine :: toString ( info.handle ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+auto vulkan :: toString (
+        Type ( MemoryAllocateFlagsInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( MemoryAllocateFlagsInfo ) ) " " +
+           "{ structureType = "_s   + toString ( info.structureType ) +
+           ", pNext = "             + engine :: toString ( info.pNext ) +
+           ", flags = "             + "0b" + Long ( info.flags ).toString(2) +
+           ", deviceMask = "        + info.deviceMask +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+auto vulkan :: toString (
+        Type ( MemoryDedicatedAllocateInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( MemoryDedicatedAllocateInfo ) ) " " +
+           "{ structureType = "_s   + toString ( info.structureType ) +
+           ", pNext = "             + engine :: toString ( info.pNext ) +
+           ", image = "             + engine :: toString ( info.image ) +
+           ", buffer = "            + engine :: toString ( info.buffer ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+auto vulkan :: toString (
+        Type ( MemoryOpaqueCaptureAddressAllocateInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( MemoryOpaqueCaptureAddressAllocateInfo ) ) " " +
+           "{ structureType = "_s       + toString ( info.structureType ) +
+           ", pNext = "                 + engine :: toString ( info.pNext ) +
+           ", opaqueCaptureAddress = "  + info.opaqueCaptureAddress +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_MEMORY_PRIORITY_AVAILABLE
+auto vulkan :: toString (
+        Type ( MemoryPriorityAllocateInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( MemoryPriorityAllocateInfo ) ) " " +
+           "{ structureType = "_s       + toString ( info.structureType ) +
+           ", pNext = "                 + engine :: toString ( info.pNext ) +
+           ", priority = "              + info.priority +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_MEMORY_WIN32_AVAILABLE
+auto vulkan :: toString (
+        Type ( MemoryGetWin32HandleInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( MemoryGetWin32HandleInfo ) ) " " +
+           "{ structureType = "_s       + toString ( info.structureType ) +
+           ", pNext = "                 + engine :: toString ( info.pNext ) +
+           ", memory = "                + engine :: toString ( info.memory ) +
+           ", handleType = "            + toString ( info.handleType ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_MEMORY_WIN32_AVAILABLE
+auto vulkan :: toString (
+        Type ( MemoryWin32HandleProperties ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( MemoryWin32HandleProperties ) ) " " +
+           "{ structureType = "_s       + toString ( info.structureType ) +
+           ", pNext = "                 + engine :: toString ( info.pNext ) +
+           ", memoryTypeBits = "        + info.memoryTypeBits +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_MEMORY_FD_AVAILABLE
+auto vulkan :: toString (
+        Type ( MemoryGetFdInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( MemoryGetFdInfo ) ) " " +
+           "{ structureType = "_s       + toString ( info.structureType ) +
+           ", pNext = "                 + engine :: toString ( info.pNext ) +
+           ", memory = "                + engine :: toString ( info.memory ) +
+           ", handleType = "            + toString ( info.handleType ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_MEMORY_FD_AVAILABLE
+auto vulkan :: toString (
+        Type ( MemoryFdProperties ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( MemoryFdProperties ) ) " " +
+           "{ structureType = "_s       + toString ( info.structureType ) +
+           ", pNext = "                 + engine :: toString ( info.pNext ) +
+           ", memoryTypeBits = "        + info.memoryTypeBits +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_EXTERNAL_MEMORY_HOST_AVAILABLE
+auto vulkan :: toString (
+        Type ( MemoryHostPointerProperties ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( MemoryHostPointerProperties ) ) " " +
+           "{ structureType = "_s       + toString ( info.structureType ) +
+           ", pNext = "                 + engine :: toString ( info.pNext ) +
+           ", memoryTypeBits = "        + info.memoryTypeBits +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXTERNAL_MEMORY_RDMA_AVAILABLE
+auto vulkan :: toString (
+        Type ( MemoryGetRemoteAddressInfoNVidia ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( MemoryGetRemoteAddressInfoNVidia ) ) " " +
+           "{ structureType = "_s       + toString ( info.structureType ) +
+           ", pNext = "                 + engine :: toString ( info.pNext ) +
+           ", memory = "                + engine :: toString ( info.memory ) +
+           ", handleType = "            + toString ( info.handleType ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( MappedMemoryRange ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( MappedMemoryRange ) ) " " +
+           "{ structureType = "_s       + toString ( info.structureType ) +
+           ", pNext = "                 + engine :: toString ( info.pNext ) +
+           ", memory = "                + engine :: toString ( info.memory ) +
+           ", offset = "                + engine :: toString ( info.offset ) +
+           ", size = "                  + engine :: toString ( info.size ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+auto vulkan :: toString (
+        Type ( PeerMemoryFeatureFlag )  flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case PeerMemoryFeatureFlagCopySource:           { asString = "Copy Source";         break; }
+        case PeerMemoryFeatureFlagCopyDestination:      { asString = "Copy Destination";    break; }
+        case PeerMemoryFeatureFlagGenericSource:        { asString = "Generic Source";      break; }
+        case PeerMemoryFeatureFlagGenericDestination:   { asString = "Generic Destination"; break; }
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+auto vulkan :: toString (
+        Type ( DeviceMemoryOpaqueCaptureAddressInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( DeviceMemoryOpaqueCaptureAddressInfo ) ) " " +
+           "{ structureType = "_s       + toString ( info.structureType ) +
+           ", pNext = "                 + engine :: toString ( info.pNext ) +
+           ", memory = "                + engine :: toString ( info.memory ) +
+           " }";
+}
+#endif

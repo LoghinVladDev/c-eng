@@ -749,7 +749,7 @@ auto engine :: vulkan :: getPhysicalDeviceProperties (
     if (
             auto result = APICaller.vkGetPhysicalDeviceProperties (
                     handle,
-                    & context.data().get.physicalDeviceProperties.properties.properties
+                    & context.data().get.physicalDevice.properties.properties.properties
             ); result != ResultSuccess
     ) {
         return result;
@@ -757,7 +757,7 @@ auto engine :: vulkan :: getPhysicalDeviceProperties (
 
     (void) fromVulkanFormat (
             pProperties,
-            & context.data().get.physicalDeviceProperties.properties.properties
+            & context.data().get.physicalDevice.properties.properties.properties
     );
 
     return ResultSuccess;
@@ -783,13 +783,13 @@ auto engine :: vulkan :: getPhysicalDeviceFeatures (
     if (
             auto result = APICaller.vkGetPhysicalDeviceFeatures (
                     physicalDeviceHandle,
-                    & context.data().get.physicalDeviceFeatures.features.features
+                    & context.data().get.physicalDevice.features.features.features
             ); result != ResultSuccess
     ) {
         return result;
     }
 
-    (void) fromVulkanFormat ( pFeatures, & context.data().get.physicalDeviceFeatures.features.features );
+    (void) fromVulkanFormat ( pFeatures, & context.data().get.physicalDevice.features.features.features );
     return ResultSuccess;
 }
 #endif
@@ -815,14 +815,14 @@ auto engine :: vulkan :: getPhysicalDeviceProperties (
     if (
             auto result = APICaller.vkGetPhysicalDeviceProperties (
                     handle,
-                    & context.data().get.physicalDeviceProperties.properties.properties
+                    & context.data().get.physicalDevice.properties.properties.properties
             ); result != ResultSuccess
     ) {
         return result;
     }
 
     if (
-        auto version = uInt32ToInstanceVersion ( context.data().get.physicalDeviceProperties.properties.properties.apiVersion );
+        auto version = uInt32ToInstanceVersion ( context.data().get.physicalDevice.properties.properties.properties.apiVersion );
             vulkan :: compare ( version, versionConstants :: version11 ) == CompareResultLess
     ) {
         return ResultErrorIncompatibleVersion;
@@ -833,13 +833,13 @@ auto engine :: vulkan :: getPhysicalDeviceProperties (
     if (
             auto result = APICaller.vkGetPhysicalDeviceProperties2 (
                     handle,
-                    prepareContext ( & context.data().get.physicalDeviceProperties, pProperties )
+                    prepareContext ( & context.data().get.physicalDevice.properties, pProperties )
             ); result != ResultSuccess
     ) {
         return result;
     }
 
-    extractContext ( pProperties, & context.data().get.physicalDeviceProperties );
+    extractContext ( pProperties, & context.data().get.physicalDevice.properties );
     return ResultSuccess;
 }
 #endif
@@ -865,14 +865,14 @@ auto engine :: vulkan :: getPhysicalDeviceFeatures (
     if (
             auto result = APICaller.vkGetPhysicalDeviceProperties (
                     physicalDeviceHandle,
-                    & context.data().get.physicalDeviceProperties.properties.properties
+                    & context.data().get.physicalDevice.properties.properties.properties
             ); result != ResultSuccess
     ) {
         return result;
     }
 
     if (
-        auto version = uInt32ToInstanceVersion ( context.data().get.physicalDeviceProperties.properties.properties.apiVersion );
+        auto version = uInt32ToInstanceVersion ( context.data().get.physicalDevice.properties.properties.properties.apiVersion );
             vulkan :: compare ( version, versionConstants :: version11 ) == CompareResultLess
     ) {
         return ResultErrorIncompatibleVersion;
@@ -883,13 +883,13 @@ auto engine :: vulkan :: getPhysicalDeviceFeatures (
     if (
             auto result = APICaller.vkGetPhysicalDeviceFeatures2 (
                     physicalDeviceHandle,
-                    prepareContext ( & context.data().get.physicalDeviceFeatures, pFeatures )
+                    prepareContext ( & context.data().get.physicalDevice.features, pFeatures )
             ); result != ResultSuccess
     ) {
         return result;
     }
 
-    extractContext ( pFeatures, & context.data().get.physicalDeviceFeatures );
+    extractContext ( pFeatures, & context.data().get.physicalDevice.features );
     return ResultSuccess;
 }
 #endif
@@ -998,14 +998,14 @@ auto engine :: vulkan :: getPhysicalDeviceQueueFamilyProperties (
             auto result = APICaller.vkGetPhysicalDeviceQueueFamilyProperties (
                     physicalDeviceHandle,
                     pCount,
-                    & context.data().get.physicalDeviceQueueFamilyProperties.properties[0]
+                    & context.data().get.physicalDevice.queueFamilyProperties.properties[0]
             ); result != ResultSuccess
     ) {
         return result;
     }
 
     for ( uint32 i = 0U; i < * pCount; ++ i ) {
-        (void) fromVulkanFormat ( & pProperties[i], & context.data().get.physicalDeviceQueueFamilyProperties.properties[i] );
+        (void) fromVulkanFormat ( & pProperties[i], & context.data().get.physicalDevice.queueFamilyProperties.properties[i] );
     }
 
     return ResultSuccess;
@@ -1049,7 +1049,7 @@ auto engine :: vulkan :: getPhysicalDeviceQueueFamilyProperties (
             auto result = APICaller.vkGetPhysicalDeviceQueueFamilyProperties2 (
                     physicalDeviceHandle,
                     pCount,
-                    prepareContext ( & context.data().get.physicalDeviceQueueFamilyProperties, * pCount, pProperties )
+                    prepareContext ( & context.data().get.physicalDevice.queueFamilyProperties, * pCount, pProperties )
             ); result != ResultSuccess
     ) {
         return result;
@@ -1058,7 +1058,7 @@ auto engine :: vulkan :: getPhysicalDeviceQueueFamilyProperties (
     extractContext (
             * pCount,
             & pProperties[0],
-            & context.data().get.physicalDeviceQueueFamilyProperties
+            & context.data().get.physicalDevice.queueFamilyProperties
     );
 
     return ResultSuccess;
@@ -3301,14 +3301,14 @@ auto engine :: vulkan :: getPhysicalDeviceCooperativeMatrixPropertiesNVidia (
             auto result = APICaller.vkGetPhysicalDeviceCooperativeMatrixPropertiesNV (
                     physicalDeviceHandle,
                     pCount,
-                    & context.data().get.physicalDeviceCooperativeMatrixProperties.properties[0]
+                    & context.data().get.physicalDevice.cooperativeMatrixProperties.properties[0]
             ); result != ResultSuccess
     ) {
         return result;
     }
 
     for ( uint32 i = 0U; i < * pCount; ++ i ) {
-        (void) fromVulkanFormat ( & pProperties[i], & context.data().get.physicalDeviceCooperativeMatrixProperties.properties[0] );
+        (void) fromVulkanFormat ( & pProperties[i], & context.data().get.physicalDevice.cooperativeMatrixProperties.properties[0] );
     }
 
     return ResultSuccess;
@@ -4161,6 +4161,525 @@ auto engine :: vulkan :: optimizeForSingleDevice (
         Type ( DeviceCreateInfo )   const * pCreateInfo
 ) noexcept -> Type ( Result ) {
     APICaller.acquireHandlesForDevice ( handle, pCreateInfo );
+    return ResultSuccess;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: getPhysicalDeviceMemoryProperties (
+        Type ( PhysicalDeviceHandle )               physicalDeviceHandle,
+        Type ( PhysicalDeviceMemoryProperties )   * pProperties
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( physicalDeviceHandle == nullptr || pProperties == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    auto context = ContextManager :: acquire();
+
+    if (
+            auto result = APICaller.vkGetPhysicalDeviceMemoryProperties (
+                    physicalDeviceHandle,
+                    & context->get.physicalDevice.memory.properties
+            ); result != ResultSuccess
+    ) {
+        return result;
+    }
+
+    (void) fromVulkanFormat ( pProperties, & context->get.physicalDevice.memory.properties );
+    return ResultSuccess;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+auto engine :: vulkan :: getPhysicalDeviceMemoryProperties (
+        Type ( PhysicalDeviceHandle )               physicalDeviceHandle,
+        Type ( PhysicalDeviceMemoryProperties2 )  * pProperties
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( physicalDeviceHandle == nullptr || pProperties == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    auto context = ContextManager :: acquire();
+
+    if (
+            auto result = APICaller.vkGetPhysicalDeviceMemoryProperties2 (
+                    physicalDeviceHandle,
+                    prepareContext ( & context->get.physicalDevice.memory, pProperties )
+            ); result != ResultSuccess
+    ) {
+        return result;
+    }
+
+    extractContext ( pProperties, & context->get.physicalDevice.memory );
+    return ResultSuccess;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: allocateMemory (
+        Type ( DeviceHandle )                   deviceHandle,
+        Type ( MemoryAllocateInfo )     const * pAllocateInfo,
+        Type ( AllocationCallbacks )    const * pAllocationCallbacks,
+        Type ( DeviceMemoryHandle )           * pHandle
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || pAllocateInfo == nullptr || pHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    auto context = ContextManager :: acquire();
+
+    return APICaller.vkAllocateMemory (
+            deviceHandle,
+            prepareContext ( & context->allocate.memory, pAllocateInfo ),
+            AllocatorHandler :: apply ( pAllocationCallbacks ),
+            pHandle
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_PAGEABLE_DEVICE_LOCAL_MEMORY_AVAILABLE
+auto engine :: vulkan :: setDeviceMemoryPriority (
+        Type ( DeviceHandle )       deviceHandle,
+        Type ( DeviceMemoryHandle ) memoryHandle,
+        float                       priority
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || memoryHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    return APICaller.vkSetDeviceMemoryPriorityEXT (
+            deviceHandle,
+            memoryHandle,
+            priority
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_MEMORY_WIN32_AVAILABLE
+auto engine :: vulkan :: getMemoryWin32Handle (
+                Type ( DeviceHandle )                       deviceHandle,
+                Type ( MemoryGetWin32HandleInfo )   const * pInfo,
+                HANDLE                                    * pHandle
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || pInfo == nullptr || pHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    auto context = ContextManager :: acquire ();
+
+    return APICaller.vkGetMemoryWin32Handle (
+            deviceHandle,
+            toVulkanFormat ( & context->get.memory.win32.info, pInfo ),
+            pHandle
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXTERNAL_MEMORY_WIN32_AVAILABLE
+auto engine :: vulkan :: getMemoryWin32HandleNVidia (
+                Type ( DeviceHandle )                       deviceHandle,
+                Type ( DeviceMemoryHandle )                 memoryHandle,
+                Type ( ExternalMemoryHandleTypeFlagNVidia ) type,
+                HANDLE                                    * pHandle
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || memoryHandle == nullptr || pHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    return APICaller.vkGetMemoryWin32HandleNV (
+            deviceHandle,
+            memoryHandle,
+            static_cast < VkExternalMemoryHandleTypeFlagsNV > ( type ),
+            pHandle
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_MEMORY_WIN32_AVAILABLE
+auto engine :: vulkan :: getMemoryWin32HandleProperties (
+                Type ( DeviceHandle )                   deviceHandle,
+                Type ( ExternalmemoryHandleTypeFlag )   type,
+                HANDLE                                  handle,
+                Type ( MemoryWin32HandleProperties )  * pProperties
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || handle == nullptr || pProperties == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    auto context = ContextManager :: acquire ();
+
+    if (
+            auto result = APICaller.vkGetMemoryWin32Handle (
+                    deviceHandle,
+                    static_cast < VkExternalMemoryHandleTypeFlagBits > ( type ),
+                    handle
+                    & context->get.memory.win32.properties
+            ); result != ResultSuccess
+    ) {
+        return result;
+    }
+
+    (void) fromVulkanFormat ( pProperties, & context->get.memory.win32.properties );
+    return ResultSuccess;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_MEMORY_FD_AVAILABLE
+auto engine :: vulkan :: getMemoryFd (
+        Type ( DeviceHandle )               deviceHandle,
+        Type ( MemoryGetFdInfo )    const * pInfo,
+        int                               * pFd
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || pInfo == nullptr || pFd == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    auto context = ContextManager :: acquire ();
+
+    return APICaller.vkGetMemoryFdKHR (
+            deviceHandle,
+            toVulkanFormat ( & context->get.memory.fd.info, pInfo ),
+            pFd
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_MEMORY_FD_AVAILABLE
+auto engine :: vulkan :: getMemoryFdProperties (
+        Type ( DeviceHandle )                    deviceHandle,
+        Type ( ExternalMemoryHandleTypeFlag )    type,
+        int                                      fd,
+        Type ( MemoryFdProperties )            * pProperties
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || pProperties == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    auto context = ContextManager :: acquire ();
+
+    if (
+            auto result = APICaller.vkGetMemoryFdPropertiesKHR(
+                    deviceHandle,
+                    static_cast < VkExternalMemoryHandleTypeFlagBits > ( type ),
+                    fd,
+                    & context->get.memory.fd.properties
+            ); result != ResultSuccess
+    ) {
+        return result;
+    }
+
+    (void) fromVulkanFormat ( pProperties, & context->get.memory.fd.properties );
+    return ResultSuccess;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_EXTERNAL_MEMORY_HOST_AVAILABLE
+auto engine :: vulkan :: getMemoryHostPointerProperties (
+        Type ( DeviceHandle )                       deviceHandle,
+        Type ( ExternalMemoryHandleTypeFlag )       type,
+        void                                const * pHostPointer,
+        Type ( MemoryHostPointerProperties )      * pProperties
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || pProperties == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    auto context = ContextManager :: acquire ();
+
+    if (
+            auto result = APICaller.vkGetMemoryHostPointerPropertiesEXT (
+                    deviceHandle,
+                    static_cast < VkExternalMemoryHandleTypeFlagBits > ( type ),
+                    pHostPointer,
+                    & context->get.memory.platformIndependent.properties
+            ); result != ResultSuccess
+    ) {
+        return result;
+    }
+
+    (void) fromVulkanFormat ( pProperties, & context->get.memory.platformIndependent.properties );
+    return ResultSuccess;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXTERNAL_MEMORY_RDMA_AVAILABLE
+auto engine :: vulkan :: getMemoryRemoteAddressNVidia (
+        Type ( DeviceHandle )                               deviceHandle,
+        Type ( MemoryGetRemoteAddressInfoNVidia )   const * pInfo,
+        Type ( RemoteAddressNVidia )                      * pAddress
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || pInfo == nullptr || pAddress == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    auto context = ContextManager :: acquire ();
+
+    return APICaller.vkGetMemoryRemoteAddressNV (
+            deviceHandle,
+            toVulkanFormat ( & context->get.memory.platformIndependent.remoteAddress, pInfo ),
+            pAddress
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: freeMemory (
+        Type ( DeviceHandle )                   deviceHandle,
+        Type ( DeviceMemoryHandle )             memoryHandle,
+        Type ( AllocationCallbacks )    const * pAllocationCallbacks
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || pAllocationCallbacks == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    return APICaller.vkFreeMemory (
+            deviceHandle,
+            memoryHandle,
+            AllocatorHandler :: apply ( pAllocationCallbacks )
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: mapMemory (
+        Type ( DeviceHandle )                   deviceHandle,
+        Type ( DeviceMemoryHandle )             memoryHandle,
+        Type ( DeviceSize )                     offset,
+        Type ( DeviceSize )                     size,
+        Type ( MemoryMapFlags )                 flags,
+        void                                 ** ppData
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || memoryHandle == nullptr || ppData == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    return APICaller.vkMapMemory (
+            deviceHandle,
+            memoryHandle,
+            offset,
+            size,
+            flags,
+            ppData
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: flushMappedMemoryRanges (
+        Type ( DeviceHandle )               deviceHandle,
+        cds :: uint32                       memoryRangeCount,
+        Type ( MappedMemoryRange )  const * pMemoryRanges
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || pMemoryRanges == nullptr || memoryRangeCount == 0U ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    auto context = ContextManager :: acquire();
+
+    return APICaller.vkFlushMappedMemoryRanges (
+            deviceHandle,
+            memoryRangeCount,
+            prepareContext ( & context->other.flushMappedMemoryRanges, memoryRangeCount, pMemoryRanges )
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: invalidateMappedMemoryRanges (
+        Type ( DeviceHandle )               deviceHandle,
+        cds :: uint32                       memoryRangeCount,
+        Type ( MappedMemoryRange )  const * pMemoryRanges
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || pMemoryRanges == nullptr || memoryRangeCount == 0U ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    auto context = ContextManager :: acquire();
+
+    return APICaller.vkInvalidateMappedMemoryRanges (
+            deviceHandle,
+            memoryRangeCount,
+            prepareContext ( & context->other.flushMappedMemoryRanges, memoryRangeCount, pMemoryRanges )
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: unmapMemory (
+        Type ( DeviceHandle )               deviceHandle,
+        Type ( DeviceMemoryHandle )         deviceMemoryHandle
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || deviceMemoryHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    return APICaller.vkUnmapMemory (
+            deviceHandle,
+            deviceMemoryHandle
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: getDeviceMemoryCommitment (
+        Type ( DeviceHandle )               deviceHandle,
+        Type ( DeviceMemoryHandle )         deviceMemoryHandle,
+        Type ( DeviceSize )               * pCommittedMemoryInBytes
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || deviceMemoryHandle == nullptr || pCommittedMemoryInBytes == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    return APICaller.vkGetDeviceMemoryCommitment (
+            deviceHandle,
+            deviceMemoryHandle,
+            pCommittedMemoryInBytes
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+auto engine :: vulkan :: getDeviceGroupPeerMemoryFeatures (
+        Type ( DeviceHandle )               deviceHandle,
+        cds :: uint32                       heapIndex,
+        cds :: uint32                       localDeviceIndex,
+        cds :: uint32                       remoteDeviceIndex,
+        Type ( PeerMemoryFeatureFlags )   * pPeerMemoryFeatures
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || pPeerMemoryFeatures == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    return APICaller.vkGetDeviceGroupPeerMemoryFeatures (
+            deviceHandle,
+            heapIndex,
+            localDeviceIndex,
+            remoteDeviceIndex,
+            pPeerMemoryFeatures
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+auto engine :: vulkan :: getDeviceMemoryOpaqueCaptureAddress (
+        Type ( DeviceHandle )                                   deviceHandle,
+        Type ( DeviceMemoryOpaqueCaptureAddressInfo )   const * pInfo,
+        cds :: uint64                                         * pResult
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || pInfo == nullptr || pResult == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    auto context = ContextManager :: acquire();
+
+    uint64_t result;
+
+    if (
+            auto lResult = APICaller.vkGetDeviceMemoryOpaqueCaptureAddress (
+                    & result,
+                    deviceHandle,
+                    toVulkanFormat ( & context->get.memory.platformIndependent.opaqueInfo, pInfo )
+            ); lResult != ResultSuccess
+    ) {
+        return lResult;
+    }
+
+    * pResult = result;
     return ResultSuccess;
 }
 #endif

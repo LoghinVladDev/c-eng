@@ -114,6 +114,9 @@ namespace engine :: vulkan :: config {
     constexpr cds :: uint32 pipelineExecutablePropertiesCount                       = pipelineExecutableItemCount;
     constexpr cds :: uint32 pipelineExecutableStatisticsCount                       = pipelineExecutableItemCount;
     constexpr cds :: uint32 pipelineExecutableInternalRepresentationCount           = pipelineExecutableItemCount;
+
+
+    constexpr cds :: uint32 flushMappedRangeCount                                   = 2048U;
 }
 
 #if defined ( __C_ENG_USE_DEFENSIVE_PROGRAMMING ) || !defined(NDEBUG)

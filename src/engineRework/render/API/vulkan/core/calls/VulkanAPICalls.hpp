@@ -1118,13 +1118,205 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_AMD_SHADER_INFO_AVAILABLE
-        extern auto getShaderInfoAMD (
+        NoDiscard MaybeUnused extern auto getShaderInfoAMD (
                 Type ( DeviceHandle ),
                 Type ( PipelineHandle ),
                 Type ( ShaderStageFlag ),
                 Type ( ShaderInfoTypeAMD ),
                 cds :: uint64               *,
                 void                        *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+        NoDiscard MaybeUnused extern auto getPhysicalDeviceMemoryProperties (
+                Type ( PhysicalDeviceHandle ),
+                Type ( PhysicalDeviceMemoryProperties ) *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+        NoDiscard MaybeUnused extern auto getPhysicalDeviceMemoryProperties (
+                Type ( PhysicalDeviceHandle ),
+                Type ( PhysicalDeviceMemoryProperties2 ) *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+        NoDiscard MaybeUnused extern auto allocateMemory (
+                Type ( DeviceHandle ),
+                Type ( MemoryAllocateInfo )     const *,
+                Type ( AllocationCallbacks )    const *,
+                Type ( DeviceMemoryHandle )           *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_PAGEABLE_DEVICE_LOCAL_MEMORY_AVAILABLE
+        NoDiscard MaybeUnused extern auto setDeviceMemoryPriority (
+                Type ( DeviceHandle ),
+                Type ( DeviceMemoryHandle ),
+                float
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_MEMORY_WIN32_AVAILABLE
+        NoDiscard MaybeUnused extern auto getMemoryWin32Handle (
+                Type ( DeviceHandle ),
+                Type ( MemoryGetWin32HandleInfo )   const *,
+                HANDLE                                    *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXTERNAL_MEMORY_WIN32_AVAILABLE
+        NoDiscard MaybeUnused extern auto getMemoryWin32HandleNVidia (
+                Type ( DeviceHandle ),
+                Type ( DeviceMemoryHandle ),
+                Type ( ExternalMemoryHandleTypeFlagNVidia ),
+                HANDLE                                    *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_MEMORY_WIN32_AVAILABLE
+        NoDiscard MaybeUnused extern auto getMemoryWin32HandleProperties (
+                Type ( DeviceHandle ),
+                Type ( ExternalmemoryHandleTypeFlag ),
+                HANDLE,
+                Type ( MemoryWin32HandleProperties )    *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_MEMORY_FD_AVAILABLE
+        NoDiscard MaybeUnused extern auto getMemoryFd (
+                Type ( DeviceHandle ),
+                Type ( MemoryGetFdInfo )    const *,
+                int                               *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_MEMORY_FD_AVAILABLE
+        NoDiscard MaybeUnused extern auto getMemoryFdProperties (
+                Type ( DeviceHandle ),
+                Type ( ExternalMemoryHandleTypeFlag ),
+                int,
+                Type ( MemoryFdProperties )             *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_EXTERNAL_MEMORY_HOST_AVAILABLE
+        NoDiscard MaybeUnused extern auto getMemoryHostPointerProperties (
+                Type ( DeviceHandle ),
+                Type ( ExternalMemoryHandleTypeFlag ),
+                void                                    const *,
+                Type ( MemoryHostPointerProperties )          *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_ANDROID_EXTERNAL_MEMORY_ANDROID_HARDWARE_BUFFER_AVAILABLE
+        NoDiscard MaybeUnused extern auto getMemoryAndroidHardwareBufferInfoAndroid (
+                Type ( DeviceHandle ),
+                Type ( MemoryGetAndroidHardwareBufferInfoAndroid )  const *,
+                AHardwareBuffer                                          **
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_ANDROID_EXTERNAL_MEMORY_ANDROID_HARDWARE_BUFFER_AVAILABLE
+        NoDiscard MaybeUnused extern auto getAndroidHardwareBufferPropertiesAndroid (
+                Type ( DeviceHandle ),
+                AHardwareBuffer                                 const *,
+                Type ( AndroidHardwareBufferPropertiesAndroid )       *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXTERNAL_MEMORY_RDMA_AVAILABLE
+        NoDiscard MaybeUnused extern auto getMemoryRemoteAddressNVidia (
+                Type ( DeviceHandle ),
+                Type ( MemoryGetRemoteAddressInfoNVidia )   const *,
+                Type ( RemoteAddressNVidia )                      *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_GOOGLE_FUCHSIA_EXTERNAL_MEMORY_AVAILABLE
+        NoDiscard MaybeUnused extern auto getMemoryZirconHandlePropertiesFuchsia (
+                Type ( DeviceHandle ),
+                Type ( ExternalMemoryHandleTypeFlag ),
+                zx_handle_t,
+                Type ( MemoryZirconHandlePropertiesFuchsia ) *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_GOOGLE_FUCHSIA_EXTERNAL_MEMORY_AVAILABLE
+        NoDiscard MaybeUnused extern auto getMemoryZirconHandleFuchsia (
+                Type ( DeviceHandle ),
+                Type ( MemoryGetZirconHandleInfoFuchsia )   const *,
+                zx_handle_t                                       *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+        NoDiscard MaybeUnused extern auto freeMemory (
+                Type ( DeviceHandle ),
+                Type ( DeviceMemoryHandle ),
+                Type ( AllocationCallbacks )    const *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+        NoDiscard MaybeUnused extern auto mapMemory (
+                Type ( DeviceHandle ),
+                Type ( DeviceMemoryHandle ),
+                Type ( DeviceSize ),
+                Type ( DeviceSize ),
+                Type ( MemoryMapFlags ),
+                void                        **
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+        NoDiscard MaybeUnused extern auto flushMappedMemoryRanges (
+                Type ( DeviceHandle ),
+                cds :: uint32,
+                Type ( MappedMemoryRange )  const *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+        NoDiscard MaybeUnused extern auto invalidateMappedMemoryRanges (
+                Type ( DeviceHandle ),
+                cds :: uint32,
+                Type ( MappedMemoryRange )  const *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+        NoDiscard MaybeUnused extern auto unmapMemory (
+                Type ( DeviceHandle ),
+                Type ( DeviceMemoryHandle )
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+        NoDiscard MaybeUnused extern auto getDeviceMemoryCommitment (
+                Type ( DeviceHandle ),
+                Type ( DeviceMemoryHandle ),
+                Type ( DeviceSize )         *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+        NoDiscard MaybeUnused extern auto getDeviceGroupPeerMemoryFeatures (
+                Type ( DeviceHandle ),
+                cds :: uint32,
+                cds :: uint32,
+                cds :: uint32,
+                Type ( PeerMemoryFeatureFlags ) *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+        NoDiscard MaybeUnused extern auto getDeviceMemoryOpaqueCaptureAddress (
+                Type ( DeviceHandle ),
+                Type ( DeviceMemoryOpaqueCaptureAddressInfo )   const *,
+                cds :: uint64                                         *
         ) noexcept -> Type ( Result );
 #endif
 

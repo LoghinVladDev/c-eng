@@ -1304,6 +1304,108 @@ struct GetPipelineInternalRepresentationsContext {
 #endif
 };
 
+struct GetPhysicalDeviceMemoryPropertiesContext {
+    DiagnosticContext                                           diag;
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    VkPhysicalDeviceMemoryProperties                            properties;
+#endif
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    VkPhysicalDeviceMemoryProperties2                           properties2;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_MEMORY_BUDGET_AVAILABLE
+    VkPhysicalDeviceMemoryBudgetPropertiesEXT                   budgetProperties;
+#endif
+};
+
+struct AllocateMemoryContext {
+    DiagnosticContext                                           diag;
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    VkMemoryAllocateInfo                                        info;
+#endif
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    VkMemoryAllocateFlagsInfo                                   flagsInfo;
+    VkMemoryDedicatedAllocateInfo                               dedicatedInfo;
+    VkExportMemoryAllocateInfo                                  exportInfo;
+#endif
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+    VkMemoryOpaqueCaptureAddressAllocateInfo                    opaqueCaptureAddressInfo;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_MEMORY_PRIORITY_AVAILABLE
+    VkMemoryPriorityAllocateInfoEXT                             priorityInfo;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXTERNAL_MEMORY_AVAILABLE
+    VkExportMemoryAllocateInfoNV                                exportInfoNVidia;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_MEMORY_WIN32_AVAILABLE
+    VkExportMemoryWin32HandleInfoKHR                            exportInfoWin32;
+    VkImportMemoryWin32HandleInfoKHR                            importInfoWin32;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXTERNAL_MEMORY_WIN32_AVAILABLE
+    VkExportMemoryWin32HandleInfoNV                             exportInfoWin32NVidia;
+    VkImportMemoryWin32HandleInfoNV                             importInfoWin32NVidia;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_MEMORY_FD_AVAILABLE
+    VkImportMemoryFdInfoKHR                                     importInfoFd;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_EXTERNAL_MEMORY_HOST_AVAILABLE
+    VkImportMemoryHostPointerInfoEXT                            importHostInfo;
+#endif
+#if __C_ENG_VULKAN_API_ANDROID_EXTERNAL_MEMORY_ANDROID_HARDWARE_BUFFER_AVAILABLE
+    VkImportAndroidHardwareBufferInfoANDROID                    importHardwareBufferAndroid;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_GOOGLE_FUCHSIA_BUFFER_COLLECTION_AVAILABLE
+    VkImportMemoryBufferCollectionFUCHSIA                       importBufferCollectionFuchsia;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_GOOGLE_FUCHSIA_EXTERNAL_MEMORY_AVAILABLE
+    VkImportMemoryZirconHandleInfoFUCHSIA                       importInfoFuchsia;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEDICATED_ALLOCATION_AVAILABLE
+    VkDedicatedAllocationMemoryAllocateInfoNV                   dedicatedInfoNVidia;
+#endif
+};
+
+struct GetMemoryWin32Context {
+    DiagnosticContext                                           diag;
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_MEMORY_WIN32_AVAILABLE
+    VkMemoryGetWin32HandleInfoKHR                               info;
+    VkMemoryWin32HandlePropertiesKHR                            properties;
+#endif
+};
+
+struct GetMemoryFdContext {
+    DiagnosticContext                                           diag;
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_MEMORY_FD_AVAILABLE
+    VkMemoryGetFdInfoKHR                                        info;
+    VkMemoryFdPropertiesKHR                                     properties;
+#endif
+};
+
+struct GetMemoryPlatformIndependentContext {
+    DiagnosticContext                                           diag;
+#if __C_ENG_VULKAN_API_EXTENSION_EXTERNAL_MEMORY_HOST_AVAILABLE
+    VkMemoryHostPointerPropertiesEXT                            properties;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXTERNAL_MEMORY_RDMA_AVAILABLE
+    VkMemoryGetRemoteAddressInfoNV                              remoteAddress;
+#endif
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+    VkDeviceMemoryOpaqueCaptureAddressInfo                      opaqueInfo;
+#endif
+};
+
+struct FlushMappedMemoryRangesContext {
+    DiagnosticContext                                           diag;
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    VkMappedMemoryRange                                         ranges [ engine :: vulkan :: config :: flushMappedRangeCount ];
+#endif
+};
+
+union GetMemorySharedContext {
+    GetMemoryWin32Context                   win32;
+    GetMemoryFdContext                      fd;
+    GetMemoryPlatformIndependentContext     platformIndependent;
+};
+
 union CreateRayTracingPipelineSharedContext {
     CreateRayTracingPipelineNVidiaContext   nVidiaPipeline;
     CreateRayTracingPipelineContext         pipeline;
@@ -1348,21 +1450,28 @@ union GetPipelineSharedContext {
     GetPipelineInternalRepresentationsContext                           internalRepresentations;
 };
 
+union GetPhysicalDeviceSharedContext {
+    GetPhysicalDevicePropertiesContext                                  properties;
+    GetPhysicalDeviceFeaturesContext                                    features;
+    GetPhysicalDeviceQueueFamilyPropertiesContext                       queueFamilyProperties;
+    GetPhysicalDeviceCooperativeMatrixPropertiesContext                 cooperativeMatrixProperties;
+    GetPhysicalDeviceMemoryPropertiesContext                            memory;
+};
+
 union GetSharedContext {
-    GetPhysicalDevicePropertiesContext                                  physicalDeviceProperties;
-    GetPhysicalDeviceFeaturesContext                                    physicalDeviceFeatures;
-    GetPhysicalDeviceQueueFamilyPropertiesContext                       physicalDeviceQueueFamilyProperties;
-    GetPhysicalDeviceCooperativeMatrixPropertiesContext                 physicalDeviceCooperativeMatrixProperties;
+    GetPhysicalDeviceSharedContext                                      physicalDevice;
     GetDeviceQueueContext                                               deviceQueue;
     GetSurfaceContext                                                   surface;
     GetSwapChainContext                                                 swapChain;
     GetFenceContext                                                     fence;
     GetSemaphoreContext                                                 semaphore;
     GetPipelineSharedContext                                            pipeline;
+    GetMemorySharedContext                                              memory;
 };
 
 union AllocateSharedContext {
     AllocateCommandBuffersContext                                       commandBuffers;
+    AllocateMemoryContext                                               memory;
 };
 
 union BeginSharedContext {
@@ -1378,6 +1487,7 @@ union SubmitSharedContext {
 union OthersSharedContext {
     RegisterEventContext                                                registerEvent;
     NextSubpassContext                                                  nextSubpass;
+    FlushMappedMemoryRangesContext                                      flushMappedMemoryRanges;
 };
 
 union ImportFenceSharedContext {

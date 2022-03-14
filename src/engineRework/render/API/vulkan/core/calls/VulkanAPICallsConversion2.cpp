@@ -3546,4 +3546,1111 @@ namespace engine :: vulkan {
     }
 #endif
 
-}
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    auto fromVulkanFormat (
+            Type ( PhysicalDeviceMemoryProperties )         * pDestination,
+            VkPhysicalDeviceMemoryProperties          const * pSource
+    ) noexcept -> Type ( PhysicalDeviceMemoryProperties ) * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        pDestination->memoryTypeCount = pSource->memoryTypeCount;
+        pDestination->memoryHeapCount = pSource->memoryHeapCount;
+
+        (void) std :: memcpy ( & pDestination->memoryTypes[0], & pSource->memoryTypes[0], sizeof ( pDestination->memoryTypes[0] ) * VK_MAX_MEMORY_TYPES );
+        (void) std :: memcpy ( & pDestination->memoryHeaps[0], & pSource->memoryHeaps[0], sizeof ( pDestination->memoryHeaps[0] ) * VK_MAX_MEMORY_HEAPS );
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    extern auto prepareContext (
+            GetPhysicalDeviceMemoryPropertiesContext          * pContext,
+            Type ( PhysicalDeviceMemoryProperties2 )    const * pSource
+    ) noexcept -> VkPhysicalDeviceMemoryProperties2 * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pContext == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        auto pCurrent   = reinterpret_cast < Type ( GenericInStructure ) const * > ( pSource->pNext );
+        auto pCurrentVk = reinterpret_cast < VkBaseOutStructure * > ( toVulkanFormat ( & pContext->properties2, pSource ) );
+
+        while ( pCurrent != nullptr ) {
+
+            switch ( pCurrent->structureType ) {
+
+#if __C_ENG_VULKAN_API_EXTENSION_MEMORY_BUDGET_AVAILABLE
+
+                case StructureTypePhysicalDeviceMemoryBudgetProperties:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                            toVulkanFormat (
+                                    & pContext->budgetProperties,
+                                    reinterpret_cast < Type ( PhysicalDeviceMemoryBudgetProperties ) const * > ( pCurrent )
+                            )
+                    );
+                    break;
+
+#endif
+
+                default:
+                    break;
+            }
+
+            pCurrentVk  = pCurrentVk->pNext == nullptr ? pCurrentVk : pCurrentVk->pNext;
+            pCurrent    = pCurrent->pNext;
+        }
+
+        pCurrentVk->pNext = nullptr;
+
+        return & pContext->properties2;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto toVulkanFormat (
+            VkPhysicalDeviceMemoryProperties              * pDestination,
+            Type ( PhysicalDeviceMemoryProperties ) const * pSource
+    ) noexcept -> VkPhysicalDeviceMemoryProperties * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        pDestination->memoryTypeCount   = pSource->memoryTypeCount;
+        pDestination->memoryHeapCount   = pSource->memoryHeapCount;
+
+        (void) std :: memcpy ( & pDestination->memoryTypes[0], & pSource->memoryTypes[0], sizeof ( pDestination->memoryTypes[0] ) * VK_MAX_MEMORY_TYPES );
+        (void) std :: memcpy ( & pDestination->memoryHeaps[0], & pSource->memoryHeaps[0], sizeof ( pDestination->memoryHeaps[0] ) * VK_MAX_MEMORY_HEAPS );
+
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    extern auto toVulkanFormat (
+            VkPhysicalDeviceMemoryProperties2              * pDestination,
+            Type ( PhysicalDeviceMemoryProperties2 ) const * pSource
+    ) noexcept -> VkPhysicalDeviceMemoryProperties2 * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        pDestination->sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_PROPERTIES_2;
+        pDestination->pNext = nullptr;
+        (void) toVulkanFormat ( & pDestination->memoryProperties, & pSource->properties );
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_MEMORY_BUDGET_AVAILABLE
+    extern auto toVulkanFormat (
+            VkPhysicalDeviceMemoryBudgetPropertiesEXT           * pDestination,
+            Type ( PhysicalDeviceMemoryBudgetProperties ) const * pSource
+    ) noexcept -> VkPhysicalDeviceMemoryBudgetPropertiesEXT * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        pDestination->sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_BUDGET_PROPERTIES_EXT;
+        pDestination->pNext = nullptr;
+
+        (void) std :: memcpy ( & pDestination->heapBudget[0],   & pSource->heapBudget[0],   sizeof ( pDestination->heapBudget[0] ) * VK_MAX_MEMORY_HEAPS );
+        (void) std :: memcpy ( & pDestination->heapUsage[0],    & pSource->heapUsage[0],    sizeof ( pDestination->heapUsage[0] ) * VK_MAX_MEMORY_HEAPS );
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    extern auto extractContext (
+            Type ( PhysicalDeviceMemoryProperties2 )          * pDestination,
+            GetPhysicalDeviceMemoryPropertiesContext    const * pContext
+    ) noexcept -> void {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pContext == nullptr ) {
+            return;
+        }
+
+#endif
+
+        auto pCurrent = reinterpret_cast < Type ( GenericOutStructure ) * > ( fromVulkanFormat ( pDestination, & pContext->properties2 )->pNext );
+
+        while ( pCurrent != nullptr ) {
+
+            switch ( pCurrent->structureType ) {
+
+#if __C_ENG_VULKAN_API_EXTENSION_MEMORY_BUDGET_AVAILABLE
+
+                case StructureTypePhysicalDeviceMemoryBudgetProperties:
+                    (void) fromVulkanFormat (
+                            reinterpret_cast < Type ( PhysicalDeviceMemoryBudgetProperties ) * > ( pCurrent ),
+                            & pContext->budgetProperties
+                    );
+                    break;
+
+#endif
+
+                default:
+                    break;
+            }
+
+            pCurrent = pCurrent->pNext;
+        }
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    auto fromVulkanFormat (
+            Type ( PhysicalDeviceMemoryProperties2 )         * pDestination,
+            VkPhysicalDeviceMemoryProperties2          const * pSource
+    ) noexcept -> Type ( PhysicalDeviceMemoryProperties2 ) * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        pDestination->structureType = StructureTypePhysicalDeviceMemoryProperties;
+
+        (void) fromVulkanFormat ( & pDestination->properties, & pSource->memoryProperties );
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_MEMORY_BUDGET_AVAILABLE
+    auto fromVulkanFormat (
+            Type ( PhysicalDeviceMemoryBudgetProperties )         * pDestination,
+            VkPhysicalDeviceMemoryBudgetPropertiesEXT          const * pSource
+    ) noexcept -> Type ( PhysicalDeviceMemoryBudgetProperties ) * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        pDestination->structureType = StructureTypePhysicalDeviceMemoryBudgetProperties;
+
+        (void) std :: memcpy ( & pDestination->heapBudget[0],   & pSource->heapBudget[0],   sizeof ( pDestination->heapBudget[0] ) * VK_MAX_MEMORY_HEAPS );
+        (void) std :: memcpy ( & pDestination->heapUsage[0],    & pSource->heapUsage[0],    sizeof ( pDestination->heapUsage[0] ) * VK_MAX_MEMORY_HEAPS );
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    auto prepareContext (
+            AllocateMemoryContext                * pContext,
+            Type ( MemoryAllocateInfo )    const * pSource
+    ) noexcept -> VkMemoryAllocateInfo * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pContext == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        auto pCurrent   = reinterpret_cast < Type ( GenericInStructure ) const * > ( pSource->pNext );
+        auto pCurrentVk = reinterpret_cast < VkBaseOutStructure * > ( toVulkanFormat ( & pContext->info, pSource ) );
+
+        while ( pCurrent != nullptr ) {
+
+            switch ( pCurrent->structureType ) {
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEDICATED_ALLOCATION_AVAILABLE
+
+                case StructureTypeDedicatedAllocationMemoryAllocateInfoNVidia:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                            toVulkanFormat (
+                                    & pContext->dedicatedInfoNVidia,
+                                    reinterpret_cast < Type ( DedicatedAllocationMemoryAllocateInfoNVidia ) const * > ( pCurrent )
+                            )
+                    );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+
+                case StructureTypeExportMemoryAllocateInfo:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                            toVulkanFormat (
+                                    & pContext->exportInfo,
+                                    reinterpret_cast < Type ( ExportMemoryAllocateInfo ) const * > ( pCurrent )
+                            )
+                    );
+                    break;
+
+                case StructureTypeMemoryAllocateFlagsInfo:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                            toVulkanFormat (
+                                    & pContext->flagsInfo,
+                                    reinterpret_cast < Type ( MemoryAllocateFlagsInfo ) const * > ( pCurrent )
+                            )
+                    );
+                    break;
+
+                case StructureTypeMemoryDedicatedAllocateInfo:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                            toVulkanFormat (
+                                    & pContext->dedicatedInfo,
+                                    reinterpret_cast < Type ( MemoryDedicatedAllocateInfo ) const * > ( pCurrent )
+                            )
+                    );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+
+                case StructureTypeMemoryOpaqueCaptureAddressAllocateInfo:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                            toVulkanFormat (
+                                    & pContext->opaqueCaptureAddressInfo,
+                                    reinterpret_cast < Type ( MemoryOpaqueCaptureAddressAllocateInfo ) const * > ( pCurrent )
+                            )
+                    );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_MEMORY_PRIORITY_AVAILABLE
+
+                case StructureTypeMemoryPriorityAllocateInfo:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                            toVulkanFormat (
+                                    & pContext->priorityInfo,
+                                    reinterpret_cast < Type ( MemoryPriorityAllocateInfo ) const * > ( pCurrent )
+                            )
+                    );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXTERNAL_MEMORY_AVAILABLE
+
+                case StructureTypeExportMemoryAllocateInfoNVidia:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                            toVulkanFormat (
+                                    & pContext->exportInfoNVidia,
+                                    reinterpret_cast < Type ( ExportMemoryAllocateInfoNVidia ) const * > ( pCurrent )
+                            )
+                    );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_MEMORY_WIN32_AVAILABLE
+
+                case StructureTypeExportMemoryWin32HandleInfo:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                            toVulkanFormat (
+                                    & pContext->exportInfoWin32,
+                                    reinterpret_cast < Type ( ExportMemoryWin32HandleInfo ) const * > ( pCurrent )
+                            )
+                    );
+                    break;
+
+                case StructureTypeImportMemoryWin32HandleInfo:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                            toVulkanFormat (
+                                    & pContext->importInfoWin32,
+                                    reinterpret_cast < Type ( ImportMemoryWin32HandleInfo ) const * > ( pCurrent )
+                            )
+                    );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXTERNAL_MEMORY_WIN32_AVAILABLE
+
+                case StructureTypeExportMemoryWin32HandleInfoNVidia:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                            toVulkanFormat (
+                                    & pContext->exportInfoWin32NVidia,
+                                    reinterpret_cast < Type ( ExportMemoryWin32HandleInfoNVidia ) const * > ( pCurrent )
+                            )
+                    );
+                    break;
+
+                case StructureTypeImportMemoryWin32HandleInfoNVidia:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                            toVulkanFormat (
+                                    & pContext->importInfoWin32NVidia,
+                                    reinterpret_cast < Type ( ImportMemoryWin32HandleInfoNVidia ) const * > ( pCurrent )
+                            )
+                    );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_MEMORY_FD_AVAILABLE
+
+                case StructureTypeImportMemoryFdInfo:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                            toVulkanFormat (
+                                    & pContext->importInfoFd,
+                                    reinterpret_cast < Type ( ImportMemoryFdInfo ) const * > ( pCurrent )
+                            )
+                    );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_EXTERNAL_MEMORY_HOST_AVAILABLE
+
+                case StructureTypeImportMemoryHostPointerInfo:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                            toVulkanFormat (
+                                    & pContext->importHostInfo,
+                                    reinterpret_cast < Type ( ImportMemoryHostPointerInfo ) const * > ( pCurrent )
+                            )
+                    );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_ANDROID_EXTERNAL_MEMORY_ANDROID_HARDWARE_BUFFER_AVAILABLE
+
+                case StructureTypeImportAndroidHardwareBufferInfoAndroid:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                            toVulkanFormat (
+                                    & pContext->importHardwareBufferAndroid,
+                                    reinterpret_cast < Type ( ImportAndroidHardwareBufferInfoAndroid ) const * > ( pCurrent )
+                            )
+                    );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_GOOGLE_FUCHSIA_BUFFER_COLLECTION_AVAILABLE
+
+                case StructureTypeImportMemoryBufferCollectionFuchsia:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                            toVulkanFormat (
+                                    & pContext->importBufferCollectionFuchsia,
+                                    reinterpret_cast < Type ( ImportMemoryBufferCollectionFuchsia ) const * > ( pCurrent )
+                            )
+                    );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_GOOGLE_FUCHSIA_EXTERNAL_MEMORY_AVAILABLE
+
+                case StructureTypeImportMemoryZirconHandleInfoFuchsia:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                            toVulkanFormat (
+                                    & pContext->importInfoFuchsia,
+                                    reinterpret_cast < Type ( ImportMemoryZirconHandleInfoFuchsia ) const * > ( pCurrent )
+                            )
+                    );
+                    break;
+
+#endif
+
+                default:
+                    break;
+            }
+
+            pCurrentVk  = pCurrentVk->pNext == nullptr ? pCurrentVk : pCurrentVk->pNext;
+            pCurrent    = pCurrent->pNext;
+        }
+
+        pCurrentVk->pNext = nullptr;
+
+        return & pContext->info;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEDICATED_ALLOCATION_AVAILABLE
+    extern auto toVulkanFormat (
+            VkDedicatedAllocationMemoryAllocateInfoNV                  * pDestination,
+            Type ( DedicatedAllocationMemoryAllocateInfoNVidia ) const * pSource
+    ) noexcept -> VkDedicatedAllocationMemoryAllocateInfoNV * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+            .sType      = VK_STRUCTURE_TYPE_DEDICATED_ALLOCATION_MEMORY_ALLOCATE_INFO_NV,
+            .pNext      = nullptr,
+            .image      = pSource->image,
+            .buffer     = pSource->buffer
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    extern auto toVulkanFormat (
+            VkExportMemoryAllocateInfo              * pDestination,
+            Type ( ExportMemoryAllocateInfo ) const * pSource
+    ) noexcept -> VkExportMemoryAllocateInfo * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+            .sType          = VK_STRUCTURE_TYPE_EXPORT_MEMORY_ALLOCATE_INFO,
+            .pNext          = nullptr,
+            .handleTypes    = pSource->handleTypes
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXTERNAL_MEMORY_AVAILABLE
+    extern auto toVulkanFormat (
+            VkExportMemoryAllocateInfoNV                  * pDestination,
+            Type ( ExportMemoryAllocateInfoNVidia ) const * pSource
+    ) noexcept -> VkExportMemoryAllocateInfoNV * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+            .sType          = VK_STRUCTURE_TYPE_EXPORT_MEMORY_ALLOCATE_INFO_NV,
+            .pNext          = nullptr,
+            .handleTypes    = pSource->handleTypes
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_MEMORY_WIN32_AVAILABLE
+    extern auto toVulkanFormat (
+            VkExportMemoryWin32HandleInfoKHR           * pDestination,
+            Type ( ExportMemoryWin32HandleInfo ) const * pSource
+    ) noexcept -> VkExportMemoryWin32HandleInfoKHR * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+            .sType          = VK_STRUCTURE_TYPE_EXPORT_MEMORY_WIN32_HANDLE_INFO_KHR,
+            .pNext          = nullptr,
+            .pAttributes    = pSource->pAttributes,
+            .dwAccess       = pSource->dwAccess,
+            .name           = pSource->name
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_MEMORY_FD_AVAILABLE
+    extern auto toVulkanFormat (
+            VkImportMemoryFdInfoKHR           * pDestination,
+            Type ( ImportMemoryFdInfo ) const * pSource
+    ) noexcept -> VkImportMemoryFdInfoKHR * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+            .sType          = VK_STRUCTURE_TYPE_IMPORT_MEMORY_WIN32_HANDLE_INFO_KHR,
+            .pNext          = nullptr,
+            .handleType     = static_cast < VkExternalMemoryHandleTypeFlagBits > ( pSource->handleType ),
+            .fd             = pSource->fd
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_MEMORY_WIN32_AVAILABLE
+    extern auto toVulkanFormat (
+            VkImportMemoryWin32HandleInfoKHR           * pDestination,
+            Type ( ImportMemoryWin32HandleInfo ) const * pSource
+    ) noexcept -> VkImportMemoryWin32HandleInfoKHR * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+            .sType          = VK_STRUCTURE_TYPE_IMPORT_MEMORY_WIN32_HANDLE_INFO_KHR,
+            .pNext          = nullptr,
+            .handleType     = static_cast < VkExternalMemoryHandleTypeFlagBits > ( pSource->handleType ),
+            .handle         = pSource->handle,
+            .name           = pSource->name
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXTERNAL_MEMORY_WIN32_AVAILABLE
+    extern auto toVulkanFormat (
+            VkExportMemoryWin32HandleInfoNV           * pDestination,
+            Type ( ExportMemoryWin32HandleInfoNVidia ) const * pSource
+    ) noexcept -> VkExportMemoryWin32HandleInfoNV * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+            .sType          = VK_STRUCTURE_TYPE_EXPORT_MEMORY_WIN32_HANDLE_INFO_NV,
+            .pNext          = nullptr,
+            .pAttributes    = pSource->pAttributes,
+            .dwAccess       = pSource->dwAccess
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXTERNAL_MEMORY_WIN32_AVAILABLE
+    extern auto toVulkanFormat (
+            VkImportMemoryWin32HandleInfoNV           * pDestination,
+            Type ( ImportMemoryWin32HandleInfoNVidia ) const * pSource
+    ) noexcept -> VkImportMemoryWin32HandleInfoNV * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+            .sType          = VK_STRUCTURE_TYPE_IMPORT_MEMORY_WIN32_HANDLE_INFO_NV,
+            .pNext          = nullptr,
+            .handleType     = static_cast < VkExternalMemoryHandleTypeFlagBits > ( pSource->handleType ),
+            .handle         = pSource->handle
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_ANDROID_EXTERNAL_MEMORY_ANDROID_HARDWARE_BUFFER_AVAILABLE
+    extern auto toVulkanFormat (
+            VkImportAndroidHardwareBufferInfoANDROID              * pDestination,
+            Type ( ImportAndroidHardwareBufferInfoAndroid ) const * pSource
+    ) noexcept -> VkImportAndroidHardwareBufferInfoANDROID * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+            .sType          = VK_STRUCTURE_TYPE_IMPORT_ANDROID_HARDWARE_BUFFER_INFO_ANDROID,
+            .pNext          = nullptr,
+            .buffer         = pSource->buffer
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_GOOGLE_FUCHSIA_BUFFER_COLLECTION_AVAILABLE
+    extern auto toVulkanFormat (
+            VkImportMemoryBufferCollectionFUCHSIA              * pDestination,
+            Type ( ImportMemoryBufferCollectionFuchsia ) const * pSource
+    ) noexcept -> VkImportMemoryBufferCollectionFUCHSIA * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+            .sType          = VK_STRUCTURE_TYPE_IMPORT_MEMORY_BUFFER_COLLECTION_FUCHSIA,
+            .pNext          = nullptr,
+            .collection     = pSource->collection,
+            .index          = pSource->index
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_EXTERNAL_MEMORY_HOST_AVAILABLE
+    extern auto toVulkanFormat (
+            VkImportMemoryHostPointerInfoEXT           * pDestination,
+            Type ( ImportMemoryHostPointerInfo ) const * pSource
+    ) noexcept -> VkImportMemoryHostPointerInfoEXT * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+            .sType          = VK_STRUCTURE_TYPE_IMPORT_MEMORY_HOST_POINTER_INFO_EXT,
+            .pNext          = nullptr,
+            .handleType     = static_cast < VkExternalMemoryHandleTypeFlagBits > ( pSource->handleType ),
+            .pHostPointer   = pSource->pHostPointer
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_GOOGLE_FUCHSIA_EXTERNAL_MEMORY_AVAILABLE
+    extern auto toVulkanFormat (
+            VkImportMemoryZirconHandleInfoFUCHSIA           * pDestination,
+            Type ( ImportMemoryZirconHandleInfoFuchsia ) const * pSource
+    ) noexcept -> VkImportMemoryZirconHandleInfoFUCHSIA * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+            .sType          = VK_STRUCTURE_TYPE_IMPORT_MEMORY_ZIRCON_HANDLE_INFO_FUCHSIA,
+            .pNext          = nullptr,
+            .handleType     = static_cast < VkExternalMemoryHandleTypeFlagBits > ( pSource->handleType ),
+            .handle         = pSource->handle
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    extern auto toVulkanFormat (
+            VkMemoryAllocateFlagsInfo              * pDestination,
+            Type ( MemoryAllocateFlagsInfo ) const * pSource
+    ) noexcept -> VkMemoryAllocateFlagsInfo * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+            .sType          = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_FLAGS_INFO,
+            .pNext          = nullptr,
+            .flags          = pSource->flags,
+            .deviceMask     = pSource->deviceMask
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    extern auto toVulkanFormat (
+            VkMemoryDedicatedAllocateInfo              * pDestination,
+            Type ( MemoryDedicatedAllocateInfo ) const * pSource
+    ) noexcept -> VkMemoryDedicatedAllocateInfo * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+            .sType          = VK_STRUCTURE_TYPE_MEMORY_DEDICATED_ALLOCATE_INFO,
+            .pNext          = nullptr,
+            .image          = pSource->image,
+            .buffer         = pSource->buffer
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+    extern auto toVulkanFormat (
+            VkMemoryOpaqueCaptureAddressAllocateInfo              * pDestination,
+            Type ( MemoryOpaqueCaptureAddressAllocateInfo ) const * pSource
+    ) noexcept -> VkMemoryOpaqueCaptureAddressAllocateInfo * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+            .sType                  = VK_STRUCTURE_TYPE_MEMORY_OPAQUE_CAPTURE_ADDRESS_ALLOCATE_INFO,
+            .pNext                  = nullptr,
+            .opaqueCaptureAddress   = pSource->opaqueCaptureAddress,
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_MEMORY_PRIORITY_AVAILABLE
+    extern auto toVulkanFormat (
+            VkMemoryPriorityAllocateInfoEXT           * pDestination,
+            Type ( MemoryPriorityAllocateInfo ) const * pSource
+    ) noexcept -> VkMemoryPriorityAllocateInfoEXT * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+            .sType                  = VK_STRUCTURE_TYPE_MEMORY_OPAQUE_CAPTURE_ADDRESS_ALLOCATE_INFO,
+            .pNext                  = nullptr,
+            .priority               = pSource->priority,
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto toVulkanFormat (
+            VkMemoryAllocateInfo              * pDestination,
+            Type ( MemoryAllocateInfo ) const * pSource
+    ) noexcept -> VkMemoryAllocateInfo * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+            .sType                  = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO,
+            .pNext                  = nullptr,
+            .allocationSize         = pSource->allocationSize,
+            .memoryTypeIndex        = pSource->memoryTypeIndex
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_MEMORY_WIN32_AVAILABLE
+    extern auto toVulkanFormat (
+            VkMemoryGetWin32HandleInfoKHR           * pDestination,
+            Type ( MemoryGetWin32HandleInfo ) const * pSource
+    ) noexcept -> VkMemoryGetWin32HandleInfoKHR * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+            .sType                  = VK_STRUCTURE_TYPE_MEMORY_GET_WIN32_HANDLE_INFO_KHR,
+            .pNext                  = nullptr,
+            .memory                 = pSource->memory,
+            .handleType             = static_cast < VkExternalMemoryHandleTypeFlagBits > ( pSource->handleType )
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_MEMORY_WIN32_AVAILABLE
+    extern auto fromVulkanFormat (
+            Type ( MemoryWin32HandleProperties )     * pDestination,
+            VkMemoryWin32HandlePropertiesKHR   const * pSource
+    ) noexcept -> Type ( MemoryWin32HandleProperties ) * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+            .structureType          = StructureTypeMemoryWin32HandleProperties,
+            .pNext                  = nullptr,
+            .memoryTypeBits         = pSource->memoryTypeBits
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_MEMORY_FD_AVAILABLE
+    extern auto toVulkanFormat (
+            VkMemoryGetFdInfoKHR           * pDestination,
+            Type ( MemoryGetFdInfo ) const * pSource
+    ) noexcept -> VkMemoryGetFdInfoKHR * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+            .sType                  = VK_STRUCTURE_TYPE_MEMORY_GET_FD_INFO_KHR,
+            .pNext                  = nullptr,
+            .memory                 = pSource->memory,
+            .handleType             = static_cast < VkExternalMemoryHandleTypeFlagBits > ( pSource->handleType )
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_MEMORY_FD_AVAILABLE
+    extern auto fromVulkanFormat (
+            Type ( MemoryFdProperties )     * pDestination,
+            VkMemoryFdPropertiesKHR   const * pSource
+    ) noexcept -> Type ( MemoryFdProperties ) * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+            .structureType          = StructureTypeMemoryFdProperties,
+            .pNext                  = nullptr,
+            .memoryTypeBits         = pSource->memoryTypeBits
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_EXTERNAL_MEMORY_HOST_AVAILABLE
+    extern auto fromVulkanFormat (
+            Type ( MemoryHostPointerProperties )     * pDestination,
+            VkMemoryHostPointerPropertiesEXT   const * pSource
+    ) noexcept -> Type ( MemoryHostPointerProperties ) * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+            .structureType          = StructureTypeMemoryHostPointerProperties,
+            .pNext                  = nullptr,
+            .memoryTypeBits         = pSource->memoryTypeBits
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXTERNAL_MEMORY_RDMA_AVAILABLE
+    extern auto toVulkanFormat (
+            VkMemoryGetRemoteAddressInfoNV                  * pDestination,
+            Type ( MemoryGetRemoteAddressInfoNVidia ) const * pSource
+    ) noexcept -> VkMemoryGetRemoteAddressInfoNV * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                  = VK_STRUCTURE_TYPE_MEMORY_GET_REMOTE_ADDRESS_INFO_NV,
+                .pNext                  = nullptr,
+                .memory                 = pSource->memory,
+                .handleType             = static_cast < VkExternalMemoryHandleTypeFlagBits > ( pSource->handleType )
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    auto prepareContext (
+            FlushMappedMemoryRangesContext        * pContext,
+            cds :: uint32                           count,
+            Type ( MappedMemoryRange )      const * pRanges
+    ) noexcept -> VkMappedMemoryRange * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pContext == nullptr || count == 0U || pRanges == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        if ( count > engine :: vulkan :: config :: flushMappedRangeCount ) {
+            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, String :: f (
+                    "config :: flushMappedRangeCount = %d. Minimum Required = %d",
+                    engine :: vulkan :: config :: flushMappedRangeCount,
+                    count
+            ))
+
+            count = engine :: vulkan :: config :: flushMappedRangeCount;
+        }
+
+        for ( cds :: uint32 i = 0U; i < count; ++ i ) {
+            (void) toVulkanFormat ( & pContext->ranges[0], & pRanges[0] );
+        }
+
+        return & pContext->ranges[0];
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto toVulkanFormat (
+            VkMappedMemoryRange              * pDestination,
+            Type ( MappedMemoryRange ) const * pSource
+    ) noexcept -> VkMappedMemoryRange * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                  = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE,
+                .pNext                  = nullptr,
+                .memory                 = pSource->memory,
+                .offset                 = pSource->offset,
+                .size                   = pSource->size
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+    extern auto toVulkanFormat (
+            VkDeviceMemoryOpaqueCaptureAddressInfo              * pDestination,
+            Type ( DeviceMemoryOpaqueCaptureAddressInfo ) const * pSource
+    ) noexcept -> VkDeviceMemoryOpaqueCaptureAddressInfo * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                  = VK_STRUCTURE_TYPE_DEVICE_MEMORY_OPAQUE_CAPTURE_ADDRESS_INFO,
+                .pNext                  = nullptr,
+                .memory                 = pSource->memory
+        };
+
+        return pDestination;
+    }
+#endif
+
+} // namespace vulkan :: engine
