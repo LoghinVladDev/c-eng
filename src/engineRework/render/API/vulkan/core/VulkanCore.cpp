@@ -4572,6 +4572,8 @@ auto vulkan :: toString (
 #endif
 
     }
+
+    return asString;
 }
 
 auto vulkan :: toString (
@@ -8206,15 +8208,15 @@ auto vulkan :: toString (
 
 #if __C_ENG_VULKAN_BETA_EXTENSIONS_ENABLED && __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_DECODE_QUEUE_AVAILABLE
 
-        case AccessFlagShaderStorageRead:                   { asString = "ShaderStorageRead";                   break; }
-        case AccessFlagShaderStorageWrite:                  { asString = "ShaderStorageWrite";                  break; }
+        case AccessFlagVideoDecodeRead:                     { asString = "VideoDecodeRead";                     break; }
+        case AccessFlagVideoDecodeWrite:                    { asString = "VideoDecodeWrite";                    break; }
 
 #endif
 
 #if __C_ENG_VULKAN_BETA_EXTENSIONS_ENABLED && __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_ENCODE_QUEUE_AVAILABLE
 
-        case AccessFlagShaderStorageRead:                   { asString = "ShaderStorageRead";                   break; }
-        case AccessFlagShaderStorageWrite:                  { asString = "ShaderStorageWrite";                  break; }
+        case AccessFlagVideoEncodeRead:                     { asString = "VideoEncodeRead";                     break; }
+        case AccessFlagVideoEncodeWrite:                    { asString = "VideoEncodeWrite";                    break; }
 
 #endif
 
@@ -12481,6 +12483,298 @@ auto vulkan :: toString (
            "{ structureType = "_s       + toString ( info.structureType ) +
            ", pNext = "                 + engine :: toString ( info.pNext ) +
            ", memory = "                + engine :: toString ( info.memory ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( BufferUsageFlag )  flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case BufferUsageFlagTransferSource:                             { asString = "Transfer Source";                                 break; }
+        case BufferUsageFlagTransferDestination:                        { asString = "Transfer Destination";                            break; }
+        case BufferUsageFlagUniformTexelBuffer:                         { asString = "Uniform Texel Buffer";                            break; }
+        case BufferUsageFlagStorageTexelBuffer:                         { asString = "Storage Texel Buffer";                            break; }
+        case BufferUsageFlagUniformBuffer:                              { asString = "Uniform Buffer";                                  break; }
+        case BufferUsageFlagStorageBuffer:                              { asString = "Storage Buffer";                                  break; }
+        case BufferUsageFlagIndexBuffer:                                { asString = "Index Buffer";                                    break; }
+        case BufferUsageFlagVertexBuffer:                               { asString = "Vertex Buffer";                                   break; }
+        case BufferUsageFlagIndirectBuffer:                             { asString = "Indirect Buffer";                                 break; }
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+        case BufferUsageFlagShaderDeviceAddress:                        { asString = "Shader Device Address";                           break; }
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_DECODE_QUEUE_AVAILABLE && __C_ENG_VULKAN_BETA_EXTENSIONS_ENABLED
+        case BufferUsageFlagVideoDecodeSource:                          { asString = "Video Decode Source";                             break; }
+        case BufferUsageFlagVideoDecodeDestination:                     { asString = "Video Decode Destination";                        break; }
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_ENCODE_QUEUE_AVAILABLE && __C_ENG_VULKAN_BETA_EXTENSIONS_ENABLED
+        case BufferUsageFlagVideoEncodeSource:                          { asString = "Video Encode Source";                             break; }
+        case BufferUsageFlagVideoEncodeDestination:                     { asString = "Video Encode Destination";                        break; }
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_TRANSFORM_FEEDBACK_AVAILABLE
+        case BufferUsageFlagTransformFeedbackBuffer:                    { asString = "Transform Feedback Buffer";                       break; }
+        case BufferUsageFlagTransformFeedbackCounterBuffer:             { asString = "Transform Feedback Counter Buffer";               break; }
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_CONDITIONAL_RENDERING_AVAILABLE
+        case BufferUsageFlagConditionalRendering:                       { asString = "Conditional Rendering";                           break; }
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+        case BufferUsageFlagAccelerationStructureBuildInputReadOnly:    { asString = "Acceleration Structure Build Input Read Only";    break; }
+        case BufferUsageFlagAccelerationStructureStorage:               { asString = "Acceleration Structure Storage";                  break; }
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_RAY_TRACING_PIPELINE_AVAILABLE
+        case BufferUsageFlagShaderBindingTable:                         { asString = "Shader Binding Table";                            break; }
+#endif
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( BufferCreateFlag )  flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case BufferCreateFlagSparseBinding:                 { asString = "Sparse Binding";                  break; }
+        case BufferCreateFlagSparseResidency:               { asString = "Sparse Residency";                break; }
+        case BufferCreateFlagSparseAliased:                 { asString = "Sparse Aliased";                  break; }
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+        case BufferCreateFlagProtected:                     { asString = "Protected";                       break; }
+#endif
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+        case BufferCreateFlagDeviceAddressCaptureReplay:    { asString = "Device Address Capture Replay";   break; }
+#endif
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( BufferCreateInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( BufferCreateInfo ) ) " " +
+           "{ structureType = "_s       + toString ( info.structureType ) +
+           ", pNext = "                 + engine :: toString ( info.pNext ) +
+           ", flags = "                 + "0b" + Long ( info.flags ).toString(2) +
+           ", size = "                  + toString ( info.size ) +
+           ", usage = "                 + "0b" + Long ( info.usage ).toString(2) +
+           ", sharingMode = "           + toString ( info.sharingMode ) +
+           ", queueFamilyIndexCount = " + info.queueFamilyIndexCount +
+           ", queueFamilyIndices = "    + :: toStringRegular ( info.queueFamilyIndexCount, info.pQueueFamilyIndices ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VIDEO_DECODE_H264_AVAILABLE
+auto vulkan :: toString (
+        Type ( VideoDecodeH264PictureLayoutFlag )  flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case VideoDecodeH264PictureLayoutFlagProgressive:                   { asString = "Progressive";                     break; }
+        case VideoDecodeH264PictureLayoutFlagInterlacedInterleavedLines:    { asString = "Interlaced Interleaved Lines";    break; }
+        case VideoDecodeH264PictureLayoutFlagInterlacedSeparatePlanes:      { asString = "Interlaced Separate Planes";      break; }
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_QUEUE_AVAILABLE
+auto vulkan :: toString (
+        Type ( VideoChromaSubsamplingFlag )  flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case VideoChromaSubsamplingFlagInvalid:     { asString = "Invalid";         break; }
+        case VideoChromaSubsamplingFlagMonochrome:  { asString = "Monochrome";      break; }
+        case VideoChromaSubsamplingFlag420:         { asString = "420";             break; }
+        case VideoChromaSubsamplingFlag422:         { asString = "422";             break; }
+        case VideoChromaSubsamplingFlag444:         { asString = "444";             break; }
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_QUEUE_AVAILABLE
+auto vulkan :: toString (
+        Type ( VideoComponentBitDepthFlag )  flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case VideoComponentBitDepthFlagInvalid: { asString = "Invalid"; break; }
+        case VideoComponentBitDepthFlag8:       { asString = "8";       break; }
+        case VideoComponentBitDepthFlag10:      { asString = "10";      break; }
+        case VideoComponentBitDepthFlag12:      { asString = "12";      break; }
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_GOOGLE_FUCHSIA_BUFFER_COLLECTION_AVAILABLE
+auto vulkan :: toString (
+        Type ( BufferCollectionBufferCreateInfoFuchsia ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( BufferCollectionBufferCreateInfoFuchsia ) ) " " +
+           "{ structureType = "_s       + toString ( info.structureType ) +
+           ", pNext = "                 + engine :: toString ( info.pNext ) +
+           ", collection = "            + engine :: toString ( info.collection ) +
+           ", index = "                 + info.index +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_BUFFER_DEVICE_ADDRESS_AVAILABLE
+auto vulkan :: toString (
+        Type ( BufferDeviceAddressCreateInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( BufferDeviceAddressCreateInfo ) ) " " +
+           "{ structureType = "_s       + toString ( info.structureType ) +
+           ", pNext = "                 + engine :: toString ( info.pNext ) +
+           ", collection = "            + engine :: toString ( info.deviceAddress ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+auto vulkan :: toString (
+        Type ( BufferOpaqueCaptureAddressCreateInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( BufferOpaqueCaptureAddressCreateInfo ) ) " " +
+           "{ structureType = "_s       + toString ( info.structureType ) +
+           ", pNext = "                 + engine :: toString ( info.pNext ) +
+           ", opaqueCaptureAddress = "  + info.opaqueCaptureAddress +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEDICATED_ALLOCATION_AVAILABLE
+auto vulkan :: toString (
+        Type ( DedicatedAllocationBufferCreateInfoNVidia ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( DedicatedAllocationBufferCreateInfoNVidia ) ) " " +
+           "{ structureType = "_s       + toString ( info.structureType ) +
+           ", pNext = "                 + engine :: toString ( info.pNext ) +
+           ", dedicatedAllocation = "   + ( info.dedicatedAllocation == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+auto vulkan :: toString (
+        Type ( ExternalMemoryBufferCreateInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( ExternalMemoryBufferCreateInfo ) ) " " +
+           "{ structureType = "_s       + toString ( info.structureType ) +
+           ", pNext = "                 + engine :: toString ( info.pNext ) +
+           ", handleTypes = "           + "0b" + Long ( info.handleTypes ).toString(2) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VIDEO_DECODE_H264_AVAILABLE
+auto vulkan :: toString (
+        Type ( VideoDecodeH264Profile ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( VideoDecodeH264Profile ) ) " " +
+           "{ structureType = "_s       + toString ( info.structureType ) +
+           ", pNext = "                 + engine :: toString ( info.pNext ) +
+           ", stdProfileIdc = "         + (int) info.stdProfileIdc +
+           ", pictureLayout = "         + toString ( info.pictureLayout ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VIDEO_DECODE_H265_AVAILABLE
+auto vulkan :: toString (
+        Type ( VideoDecodeH265Profile ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( VideoDecodeH265Profile ) ) " " +
+           "{ structureType = "_s       + toString ( info.structureType ) +
+           ", pNext = "                 + engine :: toString ( info.pNext ) +
+           ", stdProfileIdc = "         + (int) info.stdProfileIdc +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VIDEO_ENCODE_H264_AVAILABLE
+auto vulkan :: toString (
+        Type ( VideoEncodeH264Profile ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( VideoEncodeH264Profile ) ) " " +
+           "{ structureType = "_s       + toString ( info.structureType ) +
+           ", pNext = "                 + engine :: toString ( info.pNext ) +
+           ", stdProfileIdc = "         + (int) info.stdProfileIdc +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VIDEO_ENCODE_H265_AVAILABLE
+auto vulkan :: toString (
+        Type ( VideoEncodeH265Profile ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( VideoEncodeH265Profile ) ) " " +
+           "{ structureType = "_s       + toString ( info.structureType ) +
+           ", pNext = "                 + engine :: toString ( info.pNext ) +
+           ", stdProfileIdc = "         + (int) info.stdProfileIdc +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_QUEUE_AVAILABLE
+auto vulkan :: toString (
+        Type ( VideoProfile ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( VideoProfile ) ) " " +
+           "{ structureType = "_s       + toString ( info.structureType ) +
+           ", pNext = "                 + engine :: toString ( info.pNext ) +
+           ", videoCodecOperation = "   + toString ( info.videoCodecOperation ) +
+           ", chromaSubsampling = "     + "0b" + Long ( info.chromaSubsampling ).toString(2) +
+           ", lumaBitDepth = "          + "0b" + Long ( info.lumaBitDepth ).toString(2) +
+           ", chromaBitDepth = "        + "0b" + Long ( info.chromaBitDepth ).toString(2) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_QUEUE_AVAILABLE
+auto vulkan :: toString (
+        Type ( VideoProfiles ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( VideoProfile ) ) " " +
+           "{ structureType = "_s       + toString ( info.structureType ) +
+           ", pNext = "                 + engine :: toString ( info.pNext ) +
+           ", profileCount = "          + info.profileCount +
+           ", profiles = "              + :: toStringVulkan ( info.profileCount, info.pProfiles ) +
            " }";
 }
 #endif

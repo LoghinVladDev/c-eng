@@ -1320,6 +1320,23 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         ) noexcept -> Type ( Result );
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+        NoDiscard MaybeUnused extern auto createBuffer (
+                Type ( DeviceHandle ),
+                Type ( BufferCreateInfo )       const *,
+                Type ( AllocationCallbacks )    const *,
+                Type ( BufferHandle )                 *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+        NoDiscard MaybeUnused extern auto destroyBuffer (
+                Type ( DeviceHandle ),
+                Type ( BufferHandle ),
+                Type ( AllocationCallbacks )    const *
+        ) noexcept -> Type ( Result );
+#endif
+
     } /// namespace vulkan
 
 } /// namespace engine

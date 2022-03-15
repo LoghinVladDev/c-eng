@@ -5,6 +5,7 @@
 #ifndef __C_ENG_PREPROCESS_HPP__
 #define __C_ENG_PREPROCESS_HPP__ /* NOLINT(bugprone-reserved-identifier) */
 
+#define VK_ENABLE_BETA_EXTENSIONS
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 #include <GLFW/glfw3native.h>

@@ -3005,7 +3005,7 @@ auto engine :: vulkan :: createFrameBuffer (
 
     return APICaller.vkCreateFramebuffer (
             deviceHandle,
-            prepareContext ( & context.data().create.frameBuffer, pCreateInfo ),
+            prepareContext ( & context.data().create.buffer.frame, pCreateInfo ),
             AllocatorHandler :: apply ( pAllocationCallbacks ),
             pHandle
     );
@@ -4681,5 +4681,57 @@ auto engine :: vulkan :: getDeviceMemoryOpaqueCaptureAddress (
 
     * pResult = result;
     return ResultSuccess;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: createBuffer (
+        Type ( DeviceHandle )                   deviceHandle,
+        Type ( BufferCreateInfo )       const * pCreateInfo,
+        Type ( AllocationCallbacks )    const * pAllocationCallbacks,
+        Type ( BufferHandle )                 * pHandle
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || pCreateInfo == nullptr || pHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    auto context = ContextManager :: acquire();
+
+    return APICaller.vkCreateBuffer (
+            deviceHandle,
+            prepareContext ( & context->create.buffer.buffer, pCreateInfo ),
+            AllocatorHandler ::apply ( pAllocationCallbacks ),
+            pHandle
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: destroyBuffer (
+        Type ( DeviceHandle )                   deviceHandle,
+        Type ( BufferHandle )                   bufferHandle,
+        Type ( AllocationCallbacks )    const * pAllocationCallbacks
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || bufferHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    auto context = ContextManager :: acquire();
+
+    return APICaller.vkDestroyBuffer (
+            deviceHandle,
+            bufferHandle,
+            AllocatorHandler ::apply ( pAllocationCallbacks )
+    );
 }
 #endif

@@ -558,22 +558,22 @@ struct GetPhysicalDeviceFeaturesContext {
 };
 
 struct GetPhysicalDeviceQueueFamilyPropertiesContext {
-    DiagnosticContext                           diag;
+    DiagnosticContext                               diag;
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
-    VkQueueFamilyProperties                     properties [ engine :: vulkan :: config :: queueFamilyCount ];
+    VkQueueFamilyProperties                         properties [ engine :: vulkan :: config :: queueFamilyCount ];
 #endif
 #if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
-    VkQueueFamilyProperties2                    properties2 [ engine :: vulkan :: config :: queueFamilyCount ];
+    VkQueueFamilyProperties2                        properties2 [ engine :: vulkan :: config :: queueFamilyCount ];
 #endif
 #if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEVICE_DIAGNOSTIC_CHECKPOINTS_AVAILABLE
-    VkQueueFamilyCheckpointPropertiesNV         checkpoints [ engine :: vulkan :: config :: queueFamilyCount ];
+    VkQueueFamilyCheckpointPropertiesNV             checkpoints [ engine :: vulkan :: config :: queueFamilyCount ];
 #endif
 #if __C_ENG_VULKAN_API_EXTENSION_GLOBAL_PRIORITY_QUERY_AVAILABLE
-    VkQueueFamilyGlobalPriorityPropertiesEXT    globalPriorities [ engine :: vulkan :: config :: queueFamilyCount ];
+    VkQueueFamilyGlobalPriorityPropertiesEXT        globalPriorities [ engine :: vulkan :: config :: queueFamilyCount ];
 #endif
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_QUEUE_AVAILABLE
-    VkQueueFamilyQueryResultStatusPropertiesKHR queryResultStatuses [ engine :: vulkan :: config :: queueFamilyCount ];
-    VkVideoQueueFamilyPropertiesKHR             videoQueues [ engine :: vulkan :: config :: queueFamilyCount ];
+    VkQueueFamilyQueryResultStatusProperties2KHR    queryResultStatuses [ engine :: vulkan :: config :: queueFamilyCount ];
+    VkVideoQueueFamilyProperties2KHR                videoQueues [ engine :: vulkan :: config :: queueFamilyCount ];
 #endif
 };
 
@@ -1400,6 +1400,45 @@ struct FlushMappedMemoryRangesContext {
 #endif
 };
 
+struct CreateBufferContext {
+    DiagnosticContext                                           diag;
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    VkBufferCreateInfo                                          createInfo;
+#endif
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    VkExternalMemoryBufferCreateInfo                            externalMemoryCreateInfo;
+#endif
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+    VkBufferOpaqueCaptureAddressCreateInfo                      opaqueCaptureAddressCreateInfo;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_GOOGLE_FUCHSIA_BUFFER_COLLECTION_AVAILABLE
+    VkBufferCollectionBufferCreateInfoFUCHSIA                   bufferCollectionCreateInfo;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_BUFFER_DEVICE_ADDRESS_AVAILABLE
+    VkBufferDeviceAddressCreateInfoEXT                          deviceAddressCreateInfo;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEDICATED_ALLOCATION_AVAILABLE
+    VkDedicatedAllocationBufferCreateInfoNV                     dedicatedAllocationCreateInfo;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_VIDEO_DECODE_H264_AVAILABLE
+    VkVideoDecodeH264ProfileEXT                                 decodeH264Profile;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_VIDEO_DECODE_H265_AVAILABLE
+    VkVideoDecodeH265ProfileEXT                                 decodeH265Profile;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_VIDEO_ENCODE_H264_AVAILABLE
+    VkVideoEncodeH264ProfileEXT                                 encodeH264Profile;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_VIDEO_ENCODE_H265_AVAILABLE
+    VkVideoEncodeH265ProfileEXT                                 encodeH265Profile;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_QUEUE_AVAILABLE
+    VkVideoProfileKHR                                           videoProfile;
+    VkVideoProfileKHR                                           videoProfilesProfiles [ engine :: vulkan :: config :: videoProfileCount ];
+    VkVideoProfilesKHR                                          videoProfiles;
+#endif
+};
+
 union GetMemorySharedContext {
     GetMemoryWin32Context                   win32;
     GetMemoryFdContext                      fd;
@@ -1426,6 +1465,11 @@ union EnumerateSharedContext {
     EnumeratePhysicalDeviceGroupsContext                                physicalDeviceGroups;
 };
 
+union CreateBufferSharedContext {
+    CreateBufferContext                                                 buffer;
+    CreateFrameBufferContext                                            frame;
+};
+
 union CreateSharedContext {
     CreateInstanceContext                                               instance;
     CreateDeviceContext                                                 device;
@@ -1437,10 +1481,10 @@ union CreateSharedContext {
     CreateEventContext                                                  event;
     CreateRenderPassContext                                             renderPass;
     CreateRenderPass2Context                                            renderPass2;
-    CreateFrameBufferContext                                            frameBuffer;
     CreateShaderModuleContext                                           shaderModule;
     CreateValidationCacheContext                                        validationCache;
     CreatePipelineSharedContext                                         pipeline;
+    CreateBufferSharedContext                                           buffer;
 };
 
 union GetPipelineSharedContext {

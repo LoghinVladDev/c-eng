@@ -117,6 +117,7 @@ namespace engine :: vulkan :: config {
 
 
     constexpr cds :: uint32 flushMappedRangeCount                                   = 2048U;
+    constexpr cds :: uint32 videoProfileCount                                       = 128U;
 }
 
 #if defined ( __C_ENG_USE_DEFENSIVE_PROGRAMMING ) || !defined(NDEBUG)

@@ -3571,7 +3571,7 @@ namespace engine :: vulkan {
 #endif
 
 #if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
-    extern auto prepareContext (
+    auto prepareContext (
             GetPhysicalDeviceMemoryPropertiesContext          * pContext,
             Type ( PhysicalDeviceMemoryProperties2 )    const * pSource
     ) noexcept -> VkPhysicalDeviceMemoryProperties2 * {
@@ -3619,7 +3619,7 @@ namespace engine :: vulkan {
 #endif
 
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
-    extern auto toVulkanFormat (
+    auto toVulkanFormat (
             VkPhysicalDeviceMemoryProperties              * pDestination,
             Type ( PhysicalDeviceMemoryProperties ) const * pSource
     ) noexcept -> VkPhysicalDeviceMemoryProperties * {
@@ -3644,7 +3644,7 @@ namespace engine :: vulkan {
 #endif
 
 #if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
-    extern auto toVulkanFormat (
+    auto toVulkanFormat (
             VkPhysicalDeviceMemoryProperties2              * pDestination,
             Type ( PhysicalDeviceMemoryProperties2 ) const * pSource
     ) noexcept -> VkPhysicalDeviceMemoryProperties2 * {
@@ -3666,7 +3666,7 @@ namespace engine :: vulkan {
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_MEMORY_BUDGET_AVAILABLE
-    extern auto toVulkanFormat (
+    auto toVulkanFormat (
             VkPhysicalDeviceMemoryBudgetPropertiesEXT           * pDestination,
             Type ( PhysicalDeviceMemoryBudgetProperties ) const * pSource
     ) noexcept -> VkPhysicalDeviceMemoryBudgetPropertiesEXT * {
@@ -3690,7 +3690,7 @@ namespace engine :: vulkan {
 #endif
 
 #if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
-    extern auto extractContext (
+    auto extractContext (
             Type ( PhysicalDeviceMemoryProperties2 )          * pDestination,
             GetPhysicalDeviceMemoryPropertiesContext    const * pContext
     ) noexcept -> void {
@@ -4002,7 +4002,7 @@ namespace engine :: vulkan {
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEDICATED_ALLOCATION_AVAILABLE
-    extern auto toVulkanFormat (
+    auto toVulkanFormat (
             VkDedicatedAllocationMemoryAllocateInfoNV                  * pDestination,
             Type ( DedicatedAllocationMemoryAllocateInfoNVidia ) const * pSource
     ) noexcept -> VkDedicatedAllocationMemoryAllocateInfoNV * {
@@ -4027,7 +4027,7 @@ namespace engine :: vulkan {
 #endif
 
 #if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
-    extern auto toVulkanFormat (
+    auto toVulkanFormat (
             VkExportMemoryAllocateInfo              * pDestination,
             Type ( ExportMemoryAllocateInfo ) const * pSource
     ) noexcept -> VkExportMemoryAllocateInfo * {
@@ -4051,7 +4051,7 @@ namespace engine :: vulkan {
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXTERNAL_MEMORY_AVAILABLE
-    extern auto toVulkanFormat (
+    auto toVulkanFormat (
             VkExportMemoryAllocateInfoNV                  * pDestination,
             Type ( ExportMemoryAllocateInfoNVidia ) const * pSource
     ) noexcept -> VkExportMemoryAllocateInfoNV * {
@@ -4075,7 +4075,7 @@ namespace engine :: vulkan {
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_MEMORY_WIN32_AVAILABLE
-    extern auto toVulkanFormat (
+    auto toVulkanFormat (
             VkExportMemoryWin32HandleInfoKHR           * pDestination,
             Type ( ExportMemoryWin32HandleInfo ) const * pSource
     ) noexcept -> VkExportMemoryWin32HandleInfoKHR * {
@@ -4101,7 +4101,7 @@ namespace engine :: vulkan {
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_MEMORY_FD_AVAILABLE
-    extern auto toVulkanFormat (
+    auto toVulkanFormat (
             VkImportMemoryFdInfoKHR           * pDestination,
             Type ( ImportMemoryFdInfo ) const * pSource
     ) noexcept -> VkImportMemoryFdInfoKHR * {
@@ -4126,7 +4126,7 @@ namespace engine :: vulkan {
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_MEMORY_WIN32_AVAILABLE
-    extern auto toVulkanFormat (
+    auto toVulkanFormat (
             VkImportMemoryWin32HandleInfoKHR           * pDestination,
             Type ( ImportMemoryWin32HandleInfo ) const * pSource
     ) noexcept -> VkImportMemoryWin32HandleInfoKHR * {
@@ -4152,7 +4152,7 @@ namespace engine :: vulkan {
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXTERNAL_MEMORY_WIN32_AVAILABLE
-    extern auto toVulkanFormat (
+    auto toVulkanFormat (
             VkExportMemoryWin32HandleInfoNV           * pDestination,
             Type ( ExportMemoryWin32HandleInfoNVidia ) const * pSource
     ) noexcept -> VkExportMemoryWin32HandleInfoNV * {
@@ -4177,7 +4177,7 @@ namespace engine :: vulkan {
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXTERNAL_MEMORY_WIN32_AVAILABLE
-    extern auto toVulkanFormat (
+    auto toVulkanFormat (
             VkImportMemoryWin32HandleInfoNV           * pDestination,
             Type ( ImportMemoryWin32HandleInfoNVidia ) const * pSource
     ) noexcept -> VkImportMemoryWin32HandleInfoNV * {
@@ -4202,7 +4202,7 @@ namespace engine :: vulkan {
 #endif
 
 #if __C_ENG_VULKAN_API_ANDROID_EXTERNAL_MEMORY_ANDROID_HARDWARE_BUFFER_AVAILABLE
-    extern auto toVulkanFormat (
+    auto toVulkanFormat (
             VkImportAndroidHardwareBufferInfoANDROID              * pDestination,
             Type ( ImportAndroidHardwareBufferInfoAndroid ) const * pSource
     ) noexcept -> VkImportAndroidHardwareBufferInfoANDROID * {
@@ -4226,7 +4226,7 @@ namespace engine :: vulkan {
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_GOOGLE_FUCHSIA_BUFFER_COLLECTION_AVAILABLE
-    extern auto toVulkanFormat (
+    auto toVulkanFormat (
             VkImportMemoryBufferCollectionFUCHSIA              * pDestination,
             Type ( ImportMemoryBufferCollectionFuchsia ) const * pSource
     ) noexcept -> VkImportMemoryBufferCollectionFUCHSIA * {
@@ -4251,7 +4251,7 @@ namespace engine :: vulkan {
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_EXTERNAL_MEMORY_HOST_AVAILABLE
-    extern auto toVulkanFormat (
+    auto toVulkanFormat (
             VkImportMemoryHostPointerInfoEXT           * pDestination,
             Type ( ImportMemoryHostPointerInfo ) const * pSource
     ) noexcept -> VkImportMemoryHostPointerInfoEXT * {
@@ -4276,7 +4276,7 @@ namespace engine :: vulkan {
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_GOOGLE_FUCHSIA_EXTERNAL_MEMORY_AVAILABLE
-    extern auto toVulkanFormat (
+    auto toVulkanFormat (
             VkImportMemoryZirconHandleInfoFUCHSIA           * pDestination,
             Type ( ImportMemoryZirconHandleInfoFuchsia ) const * pSource
     ) noexcept -> VkImportMemoryZirconHandleInfoFUCHSIA * {
@@ -4301,7 +4301,7 @@ namespace engine :: vulkan {
 #endif
 
 #if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
-    extern auto toVulkanFormat (
+    auto toVulkanFormat (
             VkMemoryAllocateFlagsInfo              * pDestination,
             Type ( MemoryAllocateFlagsInfo ) const * pSource
     ) noexcept -> VkMemoryAllocateFlagsInfo * {
@@ -4326,7 +4326,7 @@ namespace engine :: vulkan {
 #endif
 
 #if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
-    extern auto toVulkanFormat (
+    auto toVulkanFormat (
             VkMemoryDedicatedAllocateInfo              * pDestination,
             Type ( MemoryDedicatedAllocateInfo ) const * pSource
     ) noexcept -> VkMemoryDedicatedAllocateInfo * {
@@ -4351,7 +4351,7 @@ namespace engine :: vulkan {
 #endif
 
 #if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
-    extern auto toVulkanFormat (
+    auto toVulkanFormat (
             VkMemoryOpaqueCaptureAddressAllocateInfo              * pDestination,
             Type ( MemoryOpaqueCaptureAddressAllocateInfo ) const * pSource
     ) noexcept -> VkMemoryOpaqueCaptureAddressAllocateInfo * {
@@ -4375,7 +4375,7 @@ namespace engine :: vulkan {
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_MEMORY_PRIORITY_AVAILABLE
-    extern auto toVulkanFormat (
+    auto toVulkanFormat (
             VkMemoryPriorityAllocateInfoEXT           * pDestination,
             Type ( MemoryPriorityAllocateInfo ) const * pSource
     ) noexcept -> VkMemoryPriorityAllocateInfoEXT * {
@@ -4399,7 +4399,7 @@ namespace engine :: vulkan {
 #endif
 
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
-    extern auto toVulkanFormat (
+    auto toVulkanFormat (
             VkMemoryAllocateInfo              * pDestination,
             Type ( MemoryAllocateInfo ) const * pSource
     ) noexcept -> VkMemoryAllocateInfo * {
@@ -4424,7 +4424,7 @@ namespace engine :: vulkan {
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_MEMORY_WIN32_AVAILABLE
-    extern auto toVulkanFormat (
+    auto toVulkanFormat (
             VkMemoryGetWin32HandleInfoKHR           * pDestination,
             Type ( MemoryGetWin32HandleInfo ) const * pSource
     ) noexcept -> VkMemoryGetWin32HandleInfoKHR * {
@@ -4449,7 +4449,7 @@ namespace engine :: vulkan {
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_MEMORY_WIN32_AVAILABLE
-    extern auto fromVulkanFormat (
+    auto fromVulkanFormat (
             Type ( MemoryWin32HandleProperties )     * pDestination,
             VkMemoryWin32HandlePropertiesKHR   const * pSource
     ) noexcept -> Type ( MemoryWin32HandleProperties ) * {
@@ -4473,7 +4473,7 @@ namespace engine :: vulkan {
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_MEMORY_FD_AVAILABLE
-    extern auto toVulkanFormat (
+    auto toVulkanFormat (
             VkMemoryGetFdInfoKHR           * pDestination,
             Type ( MemoryGetFdInfo ) const * pSource
     ) noexcept -> VkMemoryGetFdInfoKHR * {
@@ -4498,7 +4498,7 @@ namespace engine :: vulkan {
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_MEMORY_FD_AVAILABLE
-    extern auto fromVulkanFormat (
+    auto fromVulkanFormat (
             Type ( MemoryFdProperties )     * pDestination,
             VkMemoryFdPropertiesKHR   const * pSource
     ) noexcept -> Type ( MemoryFdProperties ) * {
@@ -4522,7 +4522,7 @@ namespace engine :: vulkan {
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_EXTERNAL_MEMORY_HOST_AVAILABLE
-    extern auto fromVulkanFormat (
+    auto fromVulkanFormat (
             Type ( MemoryHostPointerProperties )     * pDestination,
             VkMemoryHostPointerPropertiesEXT   const * pSource
     ) noexcept -> Type ( MemoryHostPointerProperties ) * {
@@ -4546,7 +4546,7 @@ namespace engine :: vulkan {
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXTERNAL_MEMORY_RDMA_AVAILABLE
-    extern auto toVulkanFormat (
+    auto toVulkanFormat (
             VkMemoryGetRemoteAddressInfoNV                  * pDestination,
             Type ( MemoryGetRemoteAddressInfoNVidia ) const * pSource
     ) noexcept -> VkMemoryGetRemoteAddressInfoNV * {
@@ -4604,7 +4604,7 @@ namespace engine :: vulkan {
 #endif
 
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
-    extern auto toVulkanFormat (
+    auto toVulkanFormat (
             VkMappedMemoryRange              * pDestination,
             Type ( MappedMemoryRange ) const * pSource
     ) noexcept -> VkMappedMemoryRange * {
@@ -4630,7 +4630,7 @@ namespace engine :: vulkan {
 #endif
 
 #if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
-    extern auto toVulkanFormat (
+    auto toVulkanFormat (
             VkDeviceMemoryOpaqueCaptureAddressInfo              * pDestination,
             Type ( DeviceMemoryOpaqueCaptureAddressInfo ) const * pSource
     ) noexcept -> VkDeviceMemoryOpaqueCaptureAddressInfo * {
@@ -4647,6 +4647,496 @@ namespace engine :: vulkan {
                 .sType                  = VK_STRUCTURE_TYPE_DEVICE_MEMORY_OPAQUE_CAPTURE_ADDRESS_INFO,
                 .pNext                  = nullptr,
                 .memory                 = pSource->memory
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    auto prepareContext (
+            CreateBufferContext                  * pContext,
+            Type ( BufferCreateInfo )      const * pSource
+    ) noexcept -> VkBufferCreateInfo * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pContext == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        auto pCurrent   = reinterpret_cast < Type ( GenericInStructure ) const * > ( pSource->pNext );
+        auto pCurrentVk = reinterpret_cast < VkBaseOutStructure * > ( toVulkanFormat ( & pContext->createInfo, pSource ) );
+
+        while ( pCurrent != nullptr ) {
+
+            switch ( pCurrent->structureType ) {
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+
+                case StructureTypeExternalMemoryBufferCreateInfo:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                            toVulkanFormat (
+                                    & pContext->externalMemoryCreateInfo,
+                                    reinterpret_cast < Type ( ExternalMemoryBufferCreateInfo ) const * > ( pCurrent )
+                            )
+                    );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+
+                case StructureTypeBufferOpaqueCaptureAddressCreateInfo:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                            toVulkanFormat (
+                                    & pContext->opaqueCaptureAddressCreateInfo,
+                                    reinterpret_cast < Type ( BufferOpaqueCaptureAddressCreateInfo ) const * > ( pCurrent )
+                            )
+                    );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_GOOGLE_FUCHSIA_BUFFER_COLLECTION_AVAILABLE
+
+                case StructureTypeBufferCollectionBufferCreateInfoFuchsia:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                            toVulkanFormat (
+                                    & pContext->bufferCollectionCreateInfo,
+                                    reinterpret_cast < Type ( BufferCollectionBufferCreateInfoFuchsia ) const * > ( pCurrent )
+                            )
+                    );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_BUFFER_DEVICE_ADDRESS_AVAILABLE
+
+                case StructureTypeBufferDeviceAddressCreateInfo:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                            toVulkanFormat (
+                                    & pContext->deviceAddressCreateInfo,
+                                    reinterpret_cast < Type ( BufferDeviceAddressCreateInfo ) const * > ( pCurrent )
+                            )
+                    );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEDICATED_ALLOCATION_AVAILABLE
+
+                case StructureTypeDedicatedAllocationBufferCreateInfoNVidia:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                            toVulkanFormat (
+                                    & pContext->dedicatedAllocationCreateInfo,
+                                    reinterpret_cast < Type ( DedicatedAllocationBufferCreateInfoNVidia ) const * > ( pCurrent )
+                            )
+                    );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VIDEO_DECODE_H264_AVAILABLE
+
+                case StructureTypeVideoDecodeH264Profile:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                            toVulkanFormat (
+                                    & pContext->decodeH264Profile,
+                                    reinterpret_cast < Type ( VideoDecodeH264Profile ) const * > ( pCurrent )
+                            )
+                    );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VIDEO_DECODE_H265_AVAILABLE
+
+                case StructureTypeVideoDecodeH265Profile:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                            toVulkanFormat (
+                                    & pContext->decodeH265Profile,
+                                    reinterpret_cast < Type ( VideoDecodeH265Profile ) const * > ( pCurrent )
+                            )
+                    );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VIDEO_ENCODE_H264_AVAILABLE
+
+                case StructureTypeVideoEncodeH264Profile:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                            toVulkanFormat (
+                                    & pContext->encodeH264Profile,
+                                    reinterpret_cast < Type ( VideoEncodeH264Profile ) const * > ( pCurrent )
+                            )
+                    );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VIDEO_ENCODE_H265_AVAILABLE
+
+                case StructureTypeVideoEncodeH265Profile:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                            toVulkanFormat (
+                                    & pContext->encodeH265Profile,
+                                    reinterpret_cast < Type ( VideoEncodeH265Profile ) const * > ( pCurrent )
+                            )
+                    );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_QUEUE_AVAILABLE
+
+                case StructureTypeVideoProfile:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                            toVulkanFormat (
+                                    & pContext->videoProfile,
+                                    reinterpret_cast < Type ( VideoProfile ) const * > ( pCurrent )
+                            )
+                    );
+                    break;
+
+                case StructureTypeVideoProfiles: {
+                    auto pVideoProfiles = reinterpret_cast < Type ( VideoProfiles ) const * > ( pCurrent );
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                            toVulkanFormat (
+                                    & pContext->videoProfiles,
+                                    pVideoProfiles
+                            )
+                    );
+
+                    pContext->videoProfiles.pProfiles = & pContext->videoProfilesProfiles[0];
+
+                    if ( pContext->videoProfiles.profileCount > engine :: vulkan :: config :: videoProfileCount ) {
+                        __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, String :: f (
+                                "config :: videoProfileCount = %d. Minimum Required = %d",
+                                engine :: vulkan :: config :: videoProfileCount,
+                                pContext->videoProfiles.profileCount
+                        ))
+
+                        pContext->videoProfiles.profileCount = engine :: vulkan :: config :: videoProfileCount;
+                    }
+
+                    for ( uint32 i = 0U; i < pContext->videoProfiles.profileCount; ++ i ) {
+                        (void) toVulkanFormat ( & pContext->videoProfilesProfiles[i], & pVideoProfiles->pProfiles[i] );
+                    }
+
+                    break;
+                }
+
+#endif
+
+                default:
+                    break;
+            }
+
+            pCurrentVk  = pCurrentVk->pNext == nullptr ? pCurrentVk : pCurrentVk->pNext;
+            pCurrent    = pCurrent->pNext;
+        }
+
+        return & pContext->createInfo;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    auto toVulkanFormat (
+            VkBufferCreateInfo              * pDestination,
+            Type ( BufferCreateInfo ) const * pSource
+    ) noexcept -> VkBufferCreateInfo * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                  = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO,
+                .pNext                  = nullptr,
+                .flags                  = pSource->flags,
+                .size                   = pSource->size,
+                .usage                  = pSource->usage,
+                .sharingMode            = static_cast < VkSharingMode > ( pSource->sharingMode ),
+                .queueFamilyIndexCount  = pSource->queueFamilyIndexCount,
+                .pQueueFamilyIndices    = pSource->pQueueFamilyIndices
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    auto toVulkanFormat (
+            VkExternalMemoryBufferCreateInfo              * pDestination,
+            Type ( ExternalMemoryBufferCreateInfo ) const * pSource
+    ) noexcept -> VkExternalMemoryBufferCreateInfo * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                  = VK_STRUCTURE_TYPE_EXTERNAL_MEMORY_BUFFER_CREATE_INFO_KHR,
+                .pNext                  = nullptr,
+                .handleTypes            = pSource->handleTypes
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+    auto toVulkanFormat (
+            VkBufferOpaqueCaptureAddressCreateInfo              * pDestination,
+            Type ( BufferOpaqueCaptureAddressCreateInfo ) const * pSource
+    ) noexcept -> VkBufferOpaqueCaptureAddressCreateInfo * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                  = VK_STRUCTURE_TYPE_BUFFER_OPAQUE_CAPTURE_ADDRESS_CREATE_INFO,
+                .pNext                  = nullptr,
+                .opaqueCaptureAddress   = pSource->opaqueCaptureAddress
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_GOOGLE_FUCHSIA_BUFFER_COLLECTION_AVAILABLE
+    auto toVulkanFormat (
+            VkBufferCollectionBufferCreateInfoFUCHSIA              * pDestination,
+            Type ( BufferCollectionBufferCreateInfoFuchsia ) const * pSource
+    ) noexcept -> VkBufferCollectionBufferCreateInfoFUCHSIA * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                  = VK_STRUCTURE_TYPE_BUFFER_COLLECTION_BUFFER_CREATE_INFO_FUCHSIA,
+                .pNext                  = nullptr,
+                .collection             = pSource->collection,
+                .index                  = pSource->index
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_BUFFER_DEVICE_ADDRESS_AVAILABLE
+    auto toVulkanFormat (
+            VkBufferDeviceAddressCreateInfoEXT           * pDestination,
+            Type ( BufferDeviceAddressCreateInfo ) const * pSource
+    ) noexcept -> VkBufferDeviceAddressCreateInfoEXT * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                  = VK_STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_CREATE_INFO_EXT,
+                .pNext                  = nullptr,
+                .deviceAddress          = pSource->deviceAddress
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEDICATED_ALLOCATION_AVAILABLE
+    auto toVulkanFormat (
+            VkDedicatedAllocationBufferCreateInfoNV                  * pDestination,
+            Type ( DedicatedAllocationBufferCreateInfoNVidia ) const * pSource
+    ) noexcept -> VkDedicatedAllocationBufferCreateInfoNV * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                  = VK_STRUCTURE_TYPE_DEDICATED_ALLOCATION_BUFFER_CREATE_INFO_NV,
+                .pNext                  = nullptr,
+                .dedicatedAllocation    = pSource->dedicatedAllocation
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VIDEO_DECODE_H264_AVAILABLE
+    auto toVulkanFormat (
+            VkVideoDecodeH264ProfileEXT           * pDestination,
+            Type ( VideoDecodeH264Profile ) const * pSource
+    ) noexcept -> VkVideoDecodeH264ProfileEXT * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                  = VK_STRUCTURE_TYPE_VIDEO_DECODE_H264_PROFILE_EXT,
+                .pNext                  = nullptr,
+                .stdProfileIdc          = pSource->stdProfileIdc,
+                .pictureLayout          = pSource->pictureLayout
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VIDEO_DECODE_H265_AVAILABLE
+    auto toVulkanFormat (
+            VkVideoDecodeH265ProfileEXT           * pDestination,
+            Type ( VideoDecodeH265Profile ) const * pSource
+    ) noexcept -> VkVideoDecodeH265ProfileEXT * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                  = VK_STRUCTURE_TYPE_VIDEO_DECODE_H265_PROFILE_EXT,
+                .pNext                  = nullptr,
+                .stdProfileIdc          = pSource->stdProfileIdc
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VIDEO_ENCODE_H264_AVAILABLE
+    auto toVulkanFormat (
+            VkVideoEncodeH264ProfileEXT           * pDestination,
+            Type ( VideoEncodeH264Profile ) const * pSource
+    ) noexcept -> VkVideoEncodeH264ProfileEXT * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                  = VK_STRUCTURE_TYPE_VIDEO_ENCODE_H264_PROFILE_EXT,
+                .pNext                  = nullptr,
+                .stdProfileIdc          = pSource->stdProfileIdc
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VIDEO_ENCODE_H265_AVAILABLE
+    auto toVulkanFormat (
+            VkVideoEncodeH265ProfileEXT           * pDestination,
+            Type ( VideoEncodeH265Profile ) const * pSource
+    ) noexcept -> VkVideoEncodeH265ProfileEXT * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                  = VK_STRUCTURE_TYPE_VIDEO_ENCODE_H265_PROFILE_EXT,
+                .pNext                  = nullptr,
+                .stdProfileIdc          = pSource->stdProfileIdc
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_QUEUE_AVAILABLE
+    auto toVulkanFormat (
+            VkVideoProfileKHR           * pDestination,
+            Type ( VideoProfile ) const * pSource
+    ) noexcept -> VkVideoProfileKHR * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                  = VK_STRUCTURE_TYPE_VIDEO_PROFILE_KHR,
+                .pNext                  = nullptr,
+                .videoCodecOperation    = static_cast < VkVideoCodecOperationFlagBitsKHR > ( pSource->videoCodecOperation ),
+                .chromaSubsampling      = pSource->chromaSubsampling,
+                .lumaBitDepth           = pSource->lumaBitDepth,
+                .chromaBitDepth         = pSource->chromaBitDepth
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_QUEUE_AVAILABLE
+    auto toVulkanFormat (
+            VkVideoProfilesKHR           * pDestination,
+            Type ( VideoProfiles ) const * pSource
+    ) noexcept -> VkVideoProfilesKHR * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                  = VK_STRUCTURE_TYPE_VIDEO_PROFILES_KHR,
+                .pNext                  = nullptr,
+                .profileCount           = pSource->profileCount,
+                .pProfiles              = nullptr
         };
 
         return pDestination;

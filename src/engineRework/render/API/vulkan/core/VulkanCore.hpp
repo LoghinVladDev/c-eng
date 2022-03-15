@@ -557,7 +557,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
             Field ( VideoProfile,                                                          VkStructureType :: VK_STRUCTURE_TYPE_VIDEO_PROFILE_KHR ),
             Field ( VideoCapabilities,                                                     VkStructureType :: VK_STRUCTURE_TYPE_VIDEO_CAPABILITIES_KHR ),
-            Field ( VideoPictureResource,                                                  VkStructureType :: VK_STRUCTURE_VIDEO_PICTURE_RESOURCE_KHR ),
+            Field ( VideoPictureResource,                                                  VkStructureType :: VK_STRUCTURE_TYPE_VIDEO_PICTURE_RESOURCE_KHR ),
             Field ( VideoGetMemoryProperties,                                              VkStructureType :: VK_STRUCTURE_TYPE_VIDEO_GET_MEMORY_PROPERTIES_KHR ),
             Field ( VideoBindMemory,                                                       VkStructureType :: VK_STRUCTURE_TYPE_VIDEO_BIND_MEMORY_KHR ),
             Field ( VideoSessionCreateInfo,                                                VkStructureType :: VK_STRUCTURE_TYPE_VIDEO_SESSION_CREATE_INFO_KHR ),
@@ -1184,9 +1184,9 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
             Field ( VideoDecodeH265SessionCreateInfo,                                      VkStructureType :: VK_STRUCTURE_TYPE_VIDEO_DECODE_H265_SESSION_CREATE_INFO_EXT ),
             Field ( VideoDecodeH265SessionParametersCreateInfo,                            VkStructureType :: VK_STRUCTURE_TYPE_VIDEO_DECODE_H265_SESSION_PARAMETERS_CREATE_INFO_EXT ),
             Field ( VideoDecodeH265SessionParametersAddInfo,                               VkStructureType :: VK_STRUCTURE_TYPE_VIDEO_DECODE_H265_SESSION_PARAMETERS_ADD_INFO_EXT ),
-            Field ( VideoDecodeH265SessionProfile,                                         VkStructureType :: VK_STRUCTURE_TYPE_VIDEO_DECODE_H265_PROFILE_EXT ),
-            Field ( VideoDecodeH265SessionPictureInfo,                                     VkStructureType :: VK_STRUCTURE_TYPE_VIDEO_DECODE_H265_PICTURE_INFO_EXT ),
-            Field ( VideoDecodeH265SessionDPBSlotInfo,                                     VkStructureType :: VK_STRUCTURE_TYPE_VIDEO_DECODE_H265_DPB_SLOT_INFO_EXT ),
+            Field ( VideoDecodeH265Profile,                                                VkStructureType :: VK_STRUCTURE_TYPE_VIDEO_DECODE_H265_PROFILE_EXT ),
+            Field ( VideoDecodeH265PictureInfo,                                            VkStructureType :: VK_STRUCTURE_TYPE_VIDEO_DECODE_H265_PICTURE_INFO_EXT ),
+            Field ( VideoDecodeH265DPBSlotInfo,                                            VkStructureType :: VK_STRUCTURE_TYPE_VIDEO_DECODE_H265_DPB_SLOT_INFO_EXT ),
 
 #endif
 
@@ -1362,8 +1362,8 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #if __C_ENG_VULKAN_API_EXTENSION_BUFFER_DEVICE_ADDRESS_AVAILABLE
 
-            Field ( PhysicalDeviceBufferDeviceAddressFeaturesExt,                          VkStructureType :: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_DEVICE_ADDRESS_FEATURES_EXT ),
-            Field ( BufferDeviceAddressCreateInfoExt,                                      VkStructureType :: VK_STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_CREATE_INFO_EXT ),
+            Field ( PhysicalDeviceBufferDeviceAddressFeaturesExt,                           VkStructureType :: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_DEVICE_ADDRESS_FEATURES_EXT ),
+            Field ( BufferDeviceAddressCreateInfo,                                          VkStructureType :: VK_STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_CREATE_INFO_EXT ),
 
 #endif
 
@@ -2707,7 +2707,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
             Field ( Transfer,       VkQueueFlagBits :: VK_QUEUE_TRANSFER_BIT ),
             Field ( SparseBinding,  VkQueueFlagBits :: VK_QUEUE_SPARSE_BINDING_BIT ),
             Field ( Protected,      VkQueueFlagBits :: VK_QUEUE_PROTECTED_BIT ),
-            Field ( Present,        VkQueueFlagBits :: VK_QUEUE_PROTECTED_BIT * 2U ), // NOLINT(clion-misra-cpp2008-4-5-2)
+            Field ( Present,        0x00008000U ), // NOLINT(clion-misra-cpp2008-4-5-2)
 
 #if __C_ENG_VULKAN_BETA_EXTENSIONS_ENABLED && __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_DECODE_QUEUE_AVAILABLE
 
@@ -3043,9 +3043,9 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #if __C_ENG_VULKAN_BETA_EXTENSIONS_ENABLED
 
             Field ( EncodeH264, VkVideoCodecOperationFlagBitsKHR :: VK_VIDEO_CODEC_OPERATION_ENCODE_H264_BIT_EXT ),
-            Field ( EncodeH265, VkVideoCodecOperationFlagBitsKHR :: VK_VIDEO_CODEC_OPERATION_ENCODE_H264_BIT_EXT ),
-            Field ( DecodeH264, VkVideoCodecOperationFlagBitsKHR :: VK_VIDEO_CODEC_OPERATION_ENCODE_H264_BIT_EXT ),
-            Field ( DecodeH265, VkVideoCodecOperationFlagBitsKHR :: VK_VIDEO_CODEC_OPERATION_ENCODE_H264_BIT_EXT ),
+            Field ( EncodeH265, VkVideoCodecOperationFlagBitsKHR :: VK_VIDEO_CODEC_OPERATION_ENCODE_H265_BIT_EXT ),
+            Field ( DecodeH264, VkVideoCodecOperationFlagBitsKHR :: VK_VIDEO_CODEC_OPERATION_DECODE_H264_BIT_EXT ),
+            Field ( DecodeH265, VkVideoCodecOperationFlagBitsKHR :: VK_VIDEO_CODEC_OPERATION_DECODE_H265_BIT_EXT ),
 
 #endif
 
@@ -4797,6 +4797,116 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #include <ObjectMapping.hpp>
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+#define C_ENG_MAP_START ENUM ( BufferCreateFlag, TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( SparseBinding,              VkBufferCreateFlagBits :: VK_BUFFER_CREATE_SPARSE_BINDING_BIT ),
+            Field ( SparseResidency,            VkBufferCreateFlagBits :: VK_BUFFER_CREATE_SPARSE_RESIDENCY_BIT ),
+            Field ( SparseAliased,              VkBufferCreateFlagBits :: VK_BUFFER_CREATE_SPARSE_ALIASED_BIT ),
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+            Field ( Protected,                  VkBufferCreateFlagBits :: VK_BUFFER_CREATE_PROTECTED_BIT ),
+#endif
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+            Field ( DeviceAddressCaptureReplay, VkBufferCreateFlagBits :: VK_BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT ),
+#endif
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+#define C_ENG_MAP_START ENUM ( BufferUsageFlag, TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( TransferSource,                             VkBufferUsageFlagBits :: VK_BUFFER_USAGE_TRANSFER_SRC_BIT ),
+            Field ( TransferDestination,                        VkBufferUsageFlagBits :: VK_BUFFER_USAGE_TRANSFER_DST_BIT ),
+            Field ( UniformTexelBuffer,                         VkBufferUsageFlagBits :: VK_BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT ),
+            Field ( StorageTexelBuffer,                         VkBufferUsageFlagBits :: VK_BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT ),
+            Field ( UniformBuffer,                              VkBufferUsageFlagBits :: VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT ),
+            Field ( StorageBuffer,                              VkBufferUsageFlagBits :: VK_BUFFER_USAGE_STORAGE_BUFFER_BIT ),
+            Field ( IndexBuffer,                                VkBufferUsageFlagBits :: VK_BUFFER_USAGE_INDEX_BUFFER_BIT ),
+            Field ( VertexBuffer,                               VkBufferUsageFlagBits :: VK_BUFFER_USAGE_VERTEX_BUFFER_BIT ),
+            Field ( IndirectBuffer,                             VkBufferUsageFlagBits :: VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT ),
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+            Field ( ShaderDeviceAddress,                        VkBufferUsageFlagBits :: VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT ),
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_DECODE_QUEUE_AVAILABLE && __C_ENG_VULKAN_BETA_EXTENSIONS_ENABLED
+            Field ( VideoDecodeSource,                          VkBufferUsageFlagBits :: VK_BUFFER_USAGE_VIDEO_DECODE_SRC_BIT_KHR ),
+            Field ( VideoDecodeDestination,                     VkBufferUsageFlagBits :: VK_BUFFER_USAGE_VIDEO_DECODE_DST_BIT_KHR ),
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_ENCODE_QUEUE_AVAILABLE && __C_ENG_VULKAN_BETA_EXTENSIONS_ENABLED
+            Field ( VideoEncodeSource,                          VkBufferUsageFlagBits :: VK_BUFFER_USAGE_VIDEO_ENCODE_SRC_BIT_KHR ),
+            Field ( VideoEncodeDestination,                     VkBufferUsageFlagBits :: VK_BUFFER_USAGE_VIDEO_ENCODE_DST_BIT_KHR ),
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_TRANSFORM_FEEDBACK_AVAILABLE
+            Field ( TransformFeedbackBuffer,                    VkBufferUsageFlagBits :: VK_BUFFER_USAGE_TRANSFORM_FEEDBACK_BUFFER_BIT_EXT ),
+            Field ( TransformFeedbackCounterBuffer,             VkBufferUsageFlagBits :: VK_BUFFER_USAGE_TRANSFORM_FEEDBACK_COUNTER_BUFFER_BIT_EXT ),
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_CONDITIONAL_RENDERING_AVAILABLE
+            Field ( ConditionalRendering,                       VkBufferUsageFlagBits :: VK_BUFFER_USAGE_CONDITIONAL_RENDERING_BIT_EXT ),
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+            Field ( AccelerationStructureBuildInputReadOnly,    VkBufferUsageFlagBits :: VK_BUFFER_USAGE_ACCELERATION_STRUCTURE_BUILD_INPUT_READ_ONLY_BIT_KHR ),
+            Field ( AccelerationStructureStorage,               VkBufferUsageFlagBits :: VK_BUFFER_USAGE_ACCELERATION_STRUCTURE_STORAGE_BIT_KHR ),
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_RAY_TRACING_PIPELINE_AVAILABLE
+            Field ( ShaderBindingTable,                         VkBufferUsageFlagBits :: VK_BUFFER_USAGE_SHADER_BINDING_TABLE_BIT_KHR ),
+#endif
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VIDEO_DECODE_H264_AVAILABLE
+#define C_ENG_MAP_START ENUM ( VideoDecodeH264PictureLayoutFlag, TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( Progressive,                VkVideoDecodeH264PictureLayoutFlagBitsEXT :: VK_VIDEO_DECODE_H264_PICTURE_LAYOUT_PROGRESSIVE_EXT ),
+            Field ( InterlacedInterleavedLines, VkVideoDecodeH264PictureLayoutFlagBitsEXT :: VK_VIDEO_DECODE_H264_PICTURE_LAYOUT_INTERLACED_INTERLEAVED_LINES_BIT_EXT ),
+            Field ( InterlacedSeparatePlanes,   VkVideoDecodeH264PictureLayoutFlagBitsEXT :: VK_VIDEO_DECODE_H264_PICTURE_LAYOUT_INTERLACED_SEPARATE_PLANES_BIT_EXT ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_QUEUE_AVAILABLE
+#define C_ENG_MAP_START ENUM ( VideoChromaSubsamplingFlag, TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( Invalid,    VkVideoChromaSubsamplingFlagBitsKHR :: VK_VIDEO_CHROMA_SUBSAMPLING_INVALID_BIT_KHR ),
+            Field ( Monochrome, VkVideoChromaSubsamplingFlagBitsKHR :: VK_VIDEO_CHROMA_SUBSAMPLING_MONOCHROME_BIT_KHR ),
+            Field ( 420,        VkVideoChromaSubsamplingFlagBitsKHR :: VK_VIDEO_CHROMA_SUBSAMPLING_420_BIT_KHR ),
+            Field ( 422,        VkVideoChromaSubsamplingFlagBitsKHR :: VK_VIDEO_CHROMA_SUBSAMPLING_422_BIT_KHR ),
+            Field ( 444,        VkVideoChromaSubsamplingFlagBitsKHR :: VK_VIDEO_CHROMA_SUBSAMPLING_444_BIT_KHR ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_QUEUE_AVAILABLE
+#define C_ENG_MAP_START ENUM ( VideoComponentBitDepthFlag, TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( Invalid,    VkVideoComponentBitDepthFlagBitsKHR :: VK_VIDEO_COMPONENT_BIT_DEPTH_INVALID_KHR ),
+            Field ( 8,          VkVideoComponentBitDepthFlagBitsKHR :: VK_VIDEO_COMPONENT_BIT_DEPTH_8_BIT_KHR ),
+            Field ( 10,         VkVideoComponentBitDepthFlagBitsKHR :: VK_VIDEO_COMPONENT_BIT_DEPTH_10_BIT_KHR ),
+            Field ( 12,         VkVideoComponentBitDepthFlagBitsKHR :: VK_VIDEO_COMPONENT_BIT_DEPTH_12_BIT_KHR ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
 
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 
@@ -4814,6 +4924,8 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_ALIAS ( SampleMask, VkSampleMask );
 
         __C_ENG_ALIAS ( GenericStructure, void );
+
+        __C_ENG_ALIAS ( DeviceAddress,                          VkDeviceAddress );
 
         __C_ENG_ALIAS ( InstanceHandle,                         VkInstance );
         __C_ENG_ALIAS ( PhysicalDeviceHandle,                   VkPhysicalDevice );
@@ -4879,6 +4991,8 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_ALIAS ( MemoryHeapFlags,                        VkMemoryHeapFlags );
         __C_ENG_ALIAS ( CullModeFlags,                          VkCullModeFlags );
         __C_ENG_ALIAS ( MemoryMapFlags,                         VkMemoryMapFlags );
+        __C_ENG_ALIAS ( BufferCreateFlags,                      VkBufferCreateFlags );
+        __C_ENG_ALIAS ( BufferUsageFlags,                       VkBufferUsageFlags );
 
         __C_ENG_ALIAS ( AllocationFunction,                     PFN_vkAllocationFunction );
         __C_ENG_ALIAS ( ReallocationFunction,                   PFN_vkReallocationFunction );
@@ -4912,6 +5026,15 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DEFERRED_HOST_OPERATIONS_AVAILABLE
         __C_ENG_ALIAS ( DeferredOperationHandle,  VkDeferredOperationKHR );
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VIDEO_DECODE_H264_AVAILABLE
+        __C_ENG_ALIAS ( VideoDecodeH264PictureLayoutFlags, VkVideoDecodeH264PictureLayoutFlagsEXT );
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_QUEUE_AVAILABLE
+        __C_ENG_ALIAS ( VideoChromaSubsamplingFlags, VkVideoChromaSubsamplingFlagsKHR );
+        __C_ENG_ALIAS ( VideoComponentBitDepthFlags, VkVideoComponentBitDepthFlagsKHR );
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXTERNAL_MEMORY_AVAILABLE
@@ -13361,6 +13484,185 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #include <ObjectMapping.hpp>
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( BufferCreateInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )              structureType;
+            Type ( GenericStructure )   const * pNext;
+            Type ( BufferCreateFlags )          flags;
+            Type ( DeviceSize )                 size;
+            Type ( BufferUsageFlags )           usage;
+            Type ( SharingMode )                sharingMode;
+            cds :: uint32                       queueFamilyIndexCount;
+            cds :: uint32               const * pQueueFamilyIndices;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_GOOGLE_FUCHSIA_BUFFER_COLLECTION_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( BufferCollectionBufferCreateInfoFuchsia, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                          structureType;
+            Type ( GenericStructure )               const * pNext;
+            Type ( BufferCollectionHandleFuchsia )          collection;
+            cds :: uint32                                   index;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_BUFFER_DEVICE_ADDRESS_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( BufferDeviceAddressCreateInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                          structureType;
+            Type ( GenericStructure )               const * pNext;
+            Type ( DeviceAddress )                          deviceAddress;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( BufferOpaqueCaptureAddressCreateInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                          structureType;
+            Type ( GenericStructure )               const * pNext;
+            cds :: uint64                                   opaqueCaptureAddress;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEDICATED_ALLOCATION_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( DedicatedAllocationBufferCreateInfoNVidia, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                          structureType;
+            Type ( GenericStructure )               const * pNext;
+            Type ( Bool )                                   dedicatedAllocation;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( ExternalMemoryBufferCreateInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                          structureType;
+            Type ( GenericStructure )               const * pNext;
+            Type ( ExternalMemoryHandleTypeFlags )          handleTypes;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VIDEO_DECODE_H264_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( VideoDecodeH264Profile, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                          structureType;
+            Type ( GenericStructure )               const * pNext;
+            StdVideoH264ProfileIdc                          stdProfileIdc;
+            Type ( VideoDecodeH264PictureLayoutFlags )      pictureLayout;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VIDEO_DECODE_H265_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( VideoDecodeH265Profile, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                          structureType;
+            Type ( GenericStructure )               const * pNext;
+            StdVideoH265ProfileIdc                          stdProfileIdc;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VIDEO_ENCODE_H264_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( VideoEncodeH264Profile, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                          structureType;
+            Type ( GenericStructure )               const * pNext;
+            StdVideoH264ProfileIdc                          stdProfileIdc;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VIDEO_ENCODE_H265_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( VideoEncodeH265Profile, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                          structureType;
+            Type ( GenericStructure )               const * pNext;
+            StdVideoH265ProfileIdc                          stdProfileIdc;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_QUEUE_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( VideoProfile, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                          structureType;
+            Type ( GenericStructure )               const * pNext;
+            Type ( VideoCodecOperationFlag )                videoCodecOperation;
+            Type ( VideoChromaSubsamplingFlags )            chromaSubsampling;
+            Type ( VideoComponentBitDepthFlags )            lumaBitDepth;
+            Type ( VideoComponentBitDepthFlags )            chromaBitDepth;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_QUEUE_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( VideoProfiles, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                          structureType;
+            Type ( GenericStructure )               const * pNext;
+            cds :: uint32                                   profileCount;
+            Type ( VideoProfile )                   const * pProfiles;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
 
 #define C_ENG_MAP_START     HEADER
 #include <ObjectMapping.hpp>
@@ -13430,6 +13732,8 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         NoDiscard auto toString ( Type ( PipelineCacheHeaderVersionValue ) ) noexcept -> cds :: StringLiteral;
         NoDiscard auto toString ( Type ( MemoryPropertyFlag ) ) noexcept -> cds :: StringLiteral;
         NoDiscard auto toString ( Type ( MemoryHeapFlag ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( BufferCreateFlag ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( BufferUsageFlag ) ) noexcept -> cds :: StringLiteral;
 
 #endif
 
@@ -13474,6 +13778,15 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #if __C_ENG_VULKAN_API_EXTENSION_BLEND_OPERATION_ADVANCED_AVAILABLE
         NoDiscard auto toString ( Type ( BlendOverlap ) ) noexcept -> cds :: StringLiteral;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VIDEO_DECODE_H264_AVAILABLE
+        NoDiscard auto toString ( Type ( VideoDecodeH264PictureLayoutFlag ) ) noexcept -> cds :: StringLiteral;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_QUEUE_AVAILABLE
+        NoDiscard auto toString ( Type ( VideoChromaSubsamplingFlag ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( VideoComponentBitDepthFlag ) ) noexcept -> cds :: StringLiteral;
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_COVERAGE_REDUCTION_MODE_AVAILABLE
@@ -13713,6 +14026,8 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         NoDiscard auto toString ( Type ( MemoryAllocateInfo ) const & ) noexcept -> cds :: String;
         NoDiscard auto toString ( Type ( MappedMemoryRange ) const & ) noexcept -> cds :: String;
 
+        NoDiscard auto toString ( Type ( BufferCreateInfo ) const & ) noexcept -> cds :: String;
+
 #endif
 
 #if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
@@ -13756,6 +14071,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         NoDiscard auto toString ( Type ( PhysicalDeviceMemoryProperties2 ) const & ) noexcept -> cds :: String;
 
         NoDiscard auto toString ( Type ( ExportMemoryAllocateInfo ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( ExternalMemoryBufferCreateInfo ) const & ) noexcept -> cds :: String;
 
 #endif
 
@@ -13808,6 +14124,8 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         NoDiscard auto toString ( Type ( SubpassEndInfo ) const & ) noexcept -> cds :: String;
 
         NoDiscard auto toString ( Type ( DeviceMemoryOpaqueCaptureAddressInfo ) const & ) noexcept -> cds :: String;
+
+        NoDiscard auto toString ( Type ( BufferOpaqueCaptureAddressCreateInfo ) const & ) noexcept -> cds :: String;
 #endif
 
 #if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
@@ -13855,6 +14173,39 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEDICATED_ALLOCATION_AVAILABLE
         NoDiscard auto toString ( Type ( DedicatedAllocationMemoryAllocateInfoNVidia ) const & ) noexcept -> cds :: String;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_GOOGLE_FUCHSIA_BUFFER_COLLECTION_AVAILABLE
+        NoDiscard auto toString ( Type ( BufferCollectionBufferCreateInfoFuchsia ) const & ) noexcept -> cds :: String;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VIDEO_DECODE_H264_AVAILABLE
+        NoDiscard auto toString ( Type ( VideoDecodeH264Profile ) const & ) noexcept -> cds :: String;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VIDEO_DECODE_H265_AVAILABLE
+        NoDiscard auto toString ( Type ( VideoDecodeH265Profile ) const & ) noexcept -> cds :: String;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VIDEO_ENCODE_H264_AVAILABLE
+        NoDiscard auto toString ( Type ( VideoEncodeH264Profile ) const & ) noexcept -> cds :: String;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VIDEO_ENCODE_H265_AVAILABLE
+        NoDiscard auto toString ( Type ( VideoEncodeH265Profile ) const & ) noexcept -> cds :: String;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_QUEUE_AVAILABLE
+        NoDiscard auto toString ( Type ( VideoProfile ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( VideoProfiles ) const & ) noexcept -> cds :: String;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_BUFFER_DEVICE_ADDRESS_AVAILABLE
+        NoDiscard auto toString ( Type ( BufferDeviceAddressCreateInfo ) const & ) noexcept -> cds :: String;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEDICATED_ALLOCATION_AVAILABLE
+        NoDiscard auto toString ( Type ( DedicatedAllocationBufferCreateInfoNVidia ) const & ) noexcept -> cds :: String;
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXTERNAL_MEMORY_AVAILABLE

@@ -12707,7 +12707,7 @@ namespace engine :: vulkan {
 
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PORTABILITY_SUBSET_AVAILABLE
 
-            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details.portabilitySubsetFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
+            currentInChain = currentInChain->pNext = reinterpret_cast < vulkan :: Type ( GenericOutStructure ) * > ( & details->portabilitySubsetFeatures ); // NOLINT(clion-misra-cpp2008-6-2-1)
         currentInChain->structureType = vulkan :: StructureTypePhysicalDevicePortabilitySubsetFeatures;
 
 #endif
@@ -13142,8 +13142,8 @@ namespace engine :: vulkan {
 
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_QUEUE_AVAILABLE
     auto fromVulkanFormat (
-            Type ( QueueFamilyQueryResultStatusProperties )        * pDestination,
-            VkQueueFamilyQueryResultStatusPropertiesKHR      const * pSource
+            Type ( QueueFamilyQueryResultStatusProperties )         * pDestination,
+            VkQueueFamilyQueryResultStatusProperties2KHR      const * pSource
     ) noexcept -> Type ( QueueFamilyQueryResultStatusProperties ) * {
 
 #if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
@@ -13164,8 +13164,8 @@ namespace engine :: vulkan {
 
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_QUEUE_AVAILABLE
     auto fromVulkanFormat (
-            Type ( VideoQueueFamilyProperties )        * pDestination,
-            VkVideoQueueFamilyPropertiesKHR      const * pSource
+            Type ( VideoQueueFamilyProperties )         * pDestination,
+            VkVideoQueueFamilyProperties2KHR      const * pSource
     ) noexcept -> Type ( VideoQueueFamilyProperties ) * {
 
 #if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
@@ -19030,6 +19030,82 @@ namespace engine :: vulkan {
                 .constantID = pSource->constantID,
                 .offset     = pSource->offset,
                 .size       = pSource->size
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PORTABILITY_SUBSET_AVAILABLE
+    auto toVulkanFormat (
+            VkPhysicalDevicePortabilitySubsetFeaturesKHR           * pDestination,
+            Type ( PhysicalDevicePortabilitySubsetFeatures ) const * pSource
+    ) noexcept -> VkPhysicalDevicePortabilitySubsetFeaturesKHR * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                                  = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PORTABILITY_SUBSET_FEATURES_KHR,
+                .pNext                                  = nullptr,
+                .constantAlphaColorBlendFactors         = pSource->constantAlphaColorBlendFactors,
+                .events                                 = pSource->events,
+                .imageViewFormatReinterpretation        = pSource->imageViewFormatReinterpretation,
+                .imageViewFormatSwizzle                 = pSource->imageViewFormatSwizzle,
+                .imageView2DOn3DImage                   = pSource->imageView2DOn3DImage,
+                .multisampleArrayImage                  = pSource->multisampleArrayImage,
+                .mutableComparisonSamplers              = pSource->mutableComparisonSamplers,
+                .pointPolygons                          = pSource->pointPolygons,
+                .samplerMipLodBias                      = pSource->samplerMipLodBias,
+                .separateStencilMaskRef                 = pSource->separateStencilMaskRef,
+                .shaderSampleRateInterpolationFunctions = pSource->shaderSampleRateInterpolationFunctions,
+                .tessellationIsolines                   = pSource->tessellationIsolines,
+                .tessellationPointMode                  = pSource->tessellationPointMode,
+                .triangleFans                           = pSource->triangleFans,
+                .vertexAttributeAccessBeyondStride      = pSource->vertexAttributeAccessBeyondStride,
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PORTABILITY_SUBSET_AVAILABLE
+    auto fromVulkanFormat (
+            Type ( PhysicalDevicePortabilitySubsetFeatures )       * pDestination,
+            VkPhysicalDevicePortabilitySubsetFeaturesKHR     const * pSource
+    ) noexcept -> Type ( PhysicalDevicePortabilitySubsetFeatures ) * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .structureType                          = StructureTypePhysicalDevicePortabilitySubsetFeatures,
+                .pNext                                  = nullptr,
+                .constantAlphaColorBlendFactors         = pSource->constantAlphaColorBlendFactors,
+                .events                                 = pSource->events,
+                .imageViewFormatReinterpretation        = pSource->imageViewFormatReinterpretation,
+                .imageViewFormatSwizzle                 = pSource->imageViewFormatSwizzle,
+                .imageView2DOn3DImage                   = pSource->imageView2DOn3DImage,
+                .multisampleArrayImage                  = pSource->multisampleArrayImage,
+                .mutableComparisonSamplers              = pSource->mutableComparisonSamplers,
+                .pointPolygons                          = pSource->pointPolygons,
+                .samplerMipLodBias                      = pSource->samplerMipLodBias,
+                .separateStencilMaskRef                 = pSource->separateStencilMaskRef,
+                .shaderSampleRateInterpolationFunctions = pSource->shaderSampleRateInterpolationFunctions,
+                .tessellationIsolines                   = pSource->tessellationIsolines,
+                .tessellationPointMode                  = pSource->tessellationPointMode,
+                .triangleFans                           = pSource->triangleFans,
+                .vertexAttributeAccessBeyondStride      = pSource->vertexAttributeAccessBeyondStride,
         };
 
         return pDestination;
