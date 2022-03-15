@@ -23,11 +23,13 @@ namespace engine {
             - _surfaceHandle : SurfaceHandle
             - _instance : Instance
             - _device : Device
+            - _presentHandler : cds :: UniquePointer < PresentHandler >
             .. getters ..
             + Version desiredVersion () const
             + SurfaceHandle surfaceHandle () const
             + Instance instance () const
             + Device device () const
+            + PresentHandler presentHandler () const
             .. setters ..
             + VulkanRenderEngine setDesiredVersion ( Version )
             .. private functions ..

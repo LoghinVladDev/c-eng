@@ -377,7 +377,7 @@ auto Self :: reserveAndAcquireImages () noexcept(false) -> Self & {
     return * this;
 }
 
-auto Self :: freeImages() noexcept -> VSwapChain & {
+auto Self :: freeImages() noexcept -> Type ( SwapChain ) & {
     for ( auto & imageArea : globals :: swapChainImageAreas ) {
         if ( imageArea.swapChainHandle == this->_handle ) {
 

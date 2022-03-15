@@ -570,7 +570,7 @@ static auto windowFrameBufferResizeEventRootCallback (
     if ( pObject->engine() != nullptr ) {
         __C_ENG_TYPE ( WindowFrameBufferResizeEvent ) event (
                 pObject,
-                ( __C_ENG_TYPE ( Size ) ) {
+                ( engine :: __C_ENG_TYPE ( Size ) ) {
                     .width  = static_cast < uint32 > ( width ),
                     .height = static_cast < uint32 > ( height )
                 },
@@ -590,7 +590,7 @@ static auto windowResizeEventRootCallback (
     if ( pObject->engine() != nullptr ) {
         __C_ENG_TYPE ( WindowResizeEvent ) event (
                 pObject,
-                ( __C_ENG_TYPE ( Size ) ) {
+                ( engine :: __C_ENG_TYPE ( Size ) ) {
                     .width  = static_cast < uint32 > ( width ),
                     .height = static_cast < uint32 > ( height ),
                 },

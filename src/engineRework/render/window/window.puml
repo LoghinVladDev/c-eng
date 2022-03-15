@@ -89,6 +89,8 @@ namespace engine {
         + Window resize ( uint32, uint32 )
         + Window setMinimumSize ( uint32, uint32 )
         + Window setMaximumSize ( uint32, uint32 )
+        .. others ..
+        + {static} ExtensionNames vulkanRequiredExtensionNames ()
     }
 
 }

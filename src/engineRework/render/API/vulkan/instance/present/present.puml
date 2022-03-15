@@ -1,6 +1,7 @@
 @startuml
 
 !includesub ../../vulkan.puml!VULKAN
+!includesub swap/swapchain.puml!PUBLIC
 
 !startsub PUBLIC
 
@@ -11,9 +12,55 @@ namespace engine {
 
         VulkanRenderObject <|-- PresentHandler
 
-        class PresentHandler {
-
+        class "PresentHandler :: SurfaceFormats" {
+            + formats : SurfaceFormat[]
+            + count : uint32
         }
+
+        class "PresentHandler :: PresentModes" {
+            + presentModes : PresentMode[]
+            + count : uint32
+        }
+
+        class "PresentHandler :: SurfaceProperties" {
+            + surfaceCapabilities : SurfaceCapabilities
+            + formats : SurfaceFormats
+            + presentModes : PresentModes
+        }
+
+        class "PresentHandler :: ImageViews" {
+            + imageViews : ImageViewHandle[]
+            + count : uint32
+        }
+
+        abstract class PresentHandler {
+            - _imageViews : ImageViews
+            + ImageViews imageViews() const
+            - {static} bool deviceSupportsSurfacePresent ( Device, SurfaceHandle )
+            # {static} SurfaceProperties propertiesForDevice ( PhysicalDeviceHandle, SurfaceHandle )
+            # ImageViewHandle[] acquireImageViews ()
+            # void releaseImageViews ()
+            + PresentHandler init ( Device )
+            + cds :: UniquePointer < PresentHandler > {static} createSuitablePresentHandler ( Device, SurfaceHandle )
+        }
+
+        PresentHandler -- "is nested in" "PresentHandler :: SurfaceFormats"
+        PresentHandler -- "is nested in" "PresentHandler :: PresentModes"
+        PresentHandler -- "is nested in" "PresentHandler :: SurfaceProperties"
+        PresentHandler -- "is nested in" "PresentHandler :: ImageViews"
+
+        class SwapChainPresentHandler {
+            - _surface : SurfaceHandle
+            - _swapChain : SwapChain
+            - _surfaceProperties : SurfaceProperties
+            + SurfaceHandle surface() const
+            + SwapChain swapChain () const
+            + SurfaceProperties surfaceProperties () const
+        }
+
+        PresentHandler <|--- SwapChainPresentHandler
+
+        PresentHandler "1" *-- "1" SwapChain
 
     }
 }

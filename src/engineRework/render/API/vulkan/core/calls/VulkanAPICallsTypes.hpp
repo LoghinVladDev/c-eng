@@ -625,13 +625,36 @@ struct GetSwapChainContext {
 };
 
 struct CreateImageViewContext {
-    DiagnosticContext                           diag;
+    DiagnosticContext                                           diag;
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
-    VkImageViewCreateInfo                       createInfo;
+    VkImageViewCreateInfo                                       createInfo;
 #endif
 #if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
-    VkImageViewUsageCreateInfo                  usageCreateInfo;
-    VkSamplerYcbcrConversionInfo                samplerYcbcrConversionInfo;
+    VkImageViewUsageCreateInfo                                  usageCreateInfo;
+    VkSamplerYcbcrConversionInfo                                samplerYcbcrConversionInfo;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_ASTC_DECODE_MODE_AVAILABLE
+    VkImageViewASTCDecodeModeEXT                                astcDecodeMode;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_IMAGE_VIEW_MIN_LOD_AVAILABLE
+    VkImageViewMinLodCreateInfoEXT                              minLodCreateInfo;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_VIDEO_DECODE_H264_AVAILABLE
+    VkVideoDecodeH264ProfileEXT                                 decodeH264Profile;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_VIDEO_DECODE_H265_AVAILABLE
+    VkVideoDecodeH265ProfileEXT                                 decodeH265Profile;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_VIDEO_ENCODE_H264_AVAILABLE
+    VkVideoEncodeH264ProfileEXT                                 encodeH264Profile;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_VIDEO_ENCODE_H265_AVAILABLE
+    VkVideoEncodeH265ProfileEXT                                 encodeH265Profile;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_QUEUE_AVAILABLE
+    VkVideoProfileKHR                                           videoProfile;
+    VkVideoProfileKHR                                           videoProfilesProfiles [ engine :: vulkan :: config :: videoProfileCount ];
+    VkVideoProfilesKHR                                          videoProfiles;
 #endif
 };
 
@@ -1439,6 +1462,80 @@ struct CreateBufferContext {
 #endif
 };
 
+struct CreateBufferViewContext {
+    DiagnosticContext                                           diag;
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    VkBufferViewCreateInfo                                      createInfo;
+#endif
+};
+
+struct CreateImageContext {
+    DiagnosticContext                                           diag;
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    VkImageCreateInfo                                           createInfo;
+#endif
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    VkExternalMemoryImageCreateInfo                             externalMemoryCreateInfo;
+#endif
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE && __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SWAP_CHAIN_AVAILABLE
+    VkImageSwapchainCreateInfoKHR                               swapchainCreateInfo;
+#endif
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+    VkImageFormatListCreateInfo                                 formatListCreateInfo;
+    VkFormat                                                    formatListFormats [ engine :: vulkan :: config :: imageFormatListFormatCount ];
+    VkImageStencilUsageCreateInfo                               stencilUsageCreateInfo;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXTERNAL_MEMORY_AVAILABLE
+    VkExternalMemoryImageCreateInfoNV                           externalMemoryCreateInfoNVidia;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_GOOGLE_FUCHSIA_BUFFER_COLLECTION_AVAILABLE
+    VkBufferCollectionImageCreateInfoFUCHSIA                    bufferCollectionImageCreateInfo;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEDICATED_ALLOCATION_AVAILABLE
+    VkDedicatedAllocationImageCreateInfoNV                      dedicatedAllocationImageCreateInfo;
+#endif
+#if __C_ENG_VULKAN_API_ANDROID_EXTERNAL_MEMORY_ANDROID_HARDWARE_BUFFER_AVAILABLE
+    VkExternalFormatANDROID                                     externalFormat;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_IMAGE_DRM_FORMAT_MODIFIER_AVAILABLE
+    VkImageDrmFormatModifierExplicitCreateInfoEXT               drmFormatModifierExplicitCreateInfo;
+    VkSubresourceLayout                                         drmFormatSubresourceLayouts [ engine :: vulkan :: config :: imageDrmFormatSubresourceLayoutCount ];
+    VkImageDrmFormatModifierListCreateInfoEXT                   drmFormatModifierListCreateInfo;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_VIDEO_DECODE_H264_AVAILABLE
+    VkVideoDecodeH264ProfileEXT                                 decodeH264Profile;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_VIDEO_DECODE_H265_AVAILABLE
+    VkVideoDecodeH265ProfileEXT                                 decodeH265Profile;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_VIDEO_ENCODE_H264_AVAILABLE
+    VkVideoEncodeH264ProfileEXT                                 encodeH264Profile;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_VIDEO_ENCODE_H265_AVAILABLE
+    VkVideoEncodeH265ProfileEXT                                 encodeH265Profile;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_QUEUE_AVAILABLE
+    VkVideoProfileKHR                                           videoProfile;
+    VkVideoProfileKHR                                           videoProfilesProfiles [ engine :: vulkan :: config :: videoProfileCount ];
+    VkVideoProfilesKHR                                          videoProfiles;
+#endif
+};
+
+struct GetImageSubresourceLayoutContext {
+    DiagnosticContext                                           diag;
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    VkImageSubresource                                          subresource;
+    VkSubresourceLayout                                         layout;
+#endif
+};
+
+struct GetImageDrmFormatModifierPropertiesContext {
+    DiagnosticContext                                           diag;
+#if __C_ENG_VULKAN_API_EXTENSION_IMAGE_DRM_FORMAT_MODIFIER_AVAILABLE
+    VkImageDrmFormatModifierPropertiesEXT                       properties;
+#endif
+};
+
 union GetMemorySharedContext {
     GetMemoryWin32Context                   win32;
     GetMemoryFdContext                      fd;
@@ -1467,14 +1564,19 @@ union EnumerateSharedContext {
 
 union CreateBufferSharedContext {
     CreateBufferContext                                                 buffer;
+    CreateBufferViewContext                                             view;
     CreateFrameBufferContext                                            frame;
+};
+
+union CreateImageSharedContext {
+    CreateImageContext                                                  image;
+    CreateImageViewContext                                              view;
 };
 
 union CreateSharedContext {
     CreateInstanceContext                                               instance;
     CreateDeviceContext                                                 device;
     CreateSwapChainContext                                              swapChain;
-    CreateImageViewContext                                              imageView;
     CreateCommandPoolContext                                            commandPool;
     CreateFenceContext                                                  fence;
     CreateSemaphoreContext                                              semaphore;
@@ -1485,6 +1587,7 @@ union CreateSharedContext {
     CreateValidationCacheContext                                        validationCache;
     CreatePipelineSharedContext                                         pipeline;
     CreateBufferSharedContext                                           buffer;
+    CreateImageSharedContext                                            image;
 };
 
 union GetPipelineSharedContext {
@@ -1502,6 +1605,11 @@ union GetPhysicalDeviceSharedContext {
     GetPhysicalDeviceMemoryPropertiesContext                            memory;
 };
 
+union GetImageSharedContext {
+    GetImageSubresourceLayoutContext                                    subresourceLayout;
+    GetImageDrmFormatModifierPropertiesContext                          drmFormatModifier;
+};
+
 union GetSharedContext {
     GetPhysicalDeviceSharedContext                                      physicalDevice;
     GetDeviceQueueContext                                               deviceQueue;
@@ -1511,6 +1619,7 @@ union GetSharedContext {
     GetSemaphoreContext                                                 semaphore;
     GetPipelineSharedContext                                            pipeline;
     GetMemorySharedContext                                              memory;
+    GetImageSharedContext                                               image;
 };
 
 union AllocateSharedContext {

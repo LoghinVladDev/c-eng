@@ -13834,6 +13834,125 @@ namespace engine :: vulkan {
 
 #endif
 
+#if __C_ENG_VULKAN_API_EXTENSION_ASTC_DECODE_MODE_AVAILABLE
+
+                case StructureTypeImageViewASTCDecodeMode:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                            toVulkanFormat (
+                                    & pContext->astcDecodeMode,
+                                    reinterpret_cast < Type ( ImageViewASTCDecodeMode ) const * > ( pCurrent )
+                            )
+                    );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_IMAGE_VIEW_MIN_LOD_AVAILABLE
+
+                case StructureTypeImageViewMinLODCreateInfo:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                            toVulkanFormat (
+                                    & pContext->minLodCreateInfo,
+                                    reinterpret_cast < Type ( ImageViewMinLodCreateInfo ) const * > ( pCurrent )
+                            )
+                    );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VIDEO_DECODE_H264_AVAILABLE
+
+                case StructureTypeVideoDecodeH264Profile:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                            toVulkanFormat (
+                                    & pContext->decodeH264Profile,
+                                    reinterpret_cast < Type ( VideoDecodeH264Profile ) const * > ( pCurrent )
+                            )
+                    );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VIDEO_DECODE_H265_AVAILABLE
+
+                case StructureTypeVideoDecodeH265Profile:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                            toVulkanFormat (
+                                    & pContext->decodeH265Profile,
+                                    reinterpret_cast < Type ( VideoDecodeH265Profile ) const * > ( pCurrent )
+                            )
+                    );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VIDEO_ENCODE_H264_AVAILABLE
+
+                case StructureTypeVideoEncodeH264Profile:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                            toVulkanFormat (
+                                    & pContext->encodeH264Profile,
+                                    reinterpret_cast < Type ( VideoEncodeH264Profile ) const * > ( pCurrent )
+                            )
+                    );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VIDEO_ENCODE_H265_AVAILABLE
+
+                case StructureTypeVideoEncodeH265Profile:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                            toVulkanFormat (
+                                    & pContext->encodeH265Profile,
+                                    reinterpret_cast < Type ( VideoEncodeH265Profile ) const * > ( pCurrent )
+                            )
+                    );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_QUEUE_AVAILABLE
+
+                case StructureTypeVideoProfile:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                            toVulkanFormat (
+                                    & pContext->videoProfile,
+                                    reinterpret_cast < Type ( VideoProfile ) const * > ( pCurrent )
+                            )
+                    );
+                    break;
+
+                case StructureTypeVideoProfiles: {
+                    auto pVideoProfiles = reinterpret_cast < Type ( VideoProfiles ) const * > ( pCurrent );
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                            toVulkanFormat (
+                                    & pContext->videoProfiles,
+                                    pVideoProfiles
+                            )
+                    );
+
+                    pContext->videoProfiles.pProfiles = & pContext->videoProfilesProfiles[0];
+
+                    if ( pContext->videoProfiles.profileCount > engine :: vulkan :: config :: videoProfileCount ) {
+                        __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, cds :: String :: f (
+                                "config :: videoProfileCount = %d. Minimum Required = %d",
+                                engine :: vulkan :: config :: videoProfileCount,
+                                pContext->videoProfiles.profileCount
+                        ))
+
+                        pContext->videoProfiles.profileCount = engine :: vulkan :: config :: videoProfileCount;
+                    }
+
+                    for ( cds :: uint32 i = 0U; i < pContext->videoProfiles.profileCount; ++ i ) {
+                        (void) toVulkanFormat ( & pContext->videoProfilesProfiles[i], & pVideoProfiles->pProfiles[i] );
+                    }
+
+                    break;
+                }
+
+#endif
+
                 default:
                     break;
             }
@@ -19106,6 +19225,54 @@ namespace engine :: vulkan {
                 .tessellationPointMode                  = pSource->tessellationPointMode,
                 .triangleFans                           = pSource->triangleFans,
                 .vertexAttributeAccessBeyondStride      = pSource->vertexAttributeAccessBeyondStride,
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_ASTC_DECODE_MODE_AVAILABLE
+    auto toVulkanFormat (
+            VkImageViewASTCDecodeModeEXT           * pDestination,
+            Type ( ImageViewASTCDecodeMode ) const * pSource
+    ) noexcept -> VkImageViewASTCDecodeModeEXT * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                                  = VK_STRUCTURE_TYPE_IMAGE_VIEW_ASTC_DECODE_MODE_EXT,
+                .pNext                                  = nullptr,
+                .decodeMode                             = static_cast < VkFormat > ( pSource->decodeMode )
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_IMAGE_VIEW_MIN_LOD_AVAILABLE
+    auto toVulkanFormat (
+            VkImageViewMinLodCreateInfoEXT           * pDestination,
+            Type ( ImageViewMinLodCreateInfo ) const * pSource
+    ) noexcept -> VkImageViewMinLodCreateInfoEXT * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                                  = VK_STRUCTURE_TYPE_IMAGE_VIEW_MIN_LOD_CREATE_INFO_EXT,
+                .pNext                                  = nullptr,
+                .minLod                                 = pSource->minLod
         };
 
         return pDestination;

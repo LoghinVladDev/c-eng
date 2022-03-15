@@ -1604,7 +1604,7 @@ auto engine :: vulkan :: createImageView (
 
     return APICaller.vkCreateImageView (
             deviceHandle,
-            prepareContext ( & context.data().create.imageView, pCreateInfo ),
+            prepareContext ( & context.data().create.image.view, pCreateInfo ),
             AllocatorHandler :: apply ( pAllocationCallbacks ),
             pHandle
     );
@@ -4731,6 +4731,172 @@ auto engine :: vulkan :: destroyBuffer (
     return APICaller.vkDestroyBuffer (
             deviceHandle,
             bufferHandle,
+            AllocatorHandler ::apply ( pAllocationCallbacks )
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: createBufferView (
+        Type ( DeviceHandle )                   deviceHandle,
+        Type ( BufferViewCreateInfo )   const * pCreateInfo,
+        Type ( AllocationCallbacks )    const * pAllocationCallbacks,
+        Type ( BufferViewHandle )             * pHandle
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || pCreateInfo == nullptr || pHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    auto context = ContextManager :: acquire();
+
+    return APICaller.vkCreateBufferView (
+            deviceHandle,
+            toVulkanFormat ( & context->create.buffer.view.createInfo, pCreateInfo ),
+            AllocatorHandler ::apply ( pAllocationCallbacks ),
+            pHandle
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: destroyBufferView (
+        Type ( DeviceHandle )                   deviceHandle,
+        Type ( BufferViewHandle )               viewHandle,
+        Type ( AllocationCallbacks )    const * pAllocationCallbacks
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || viewHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    return APICaller.vkDestroyBufferView (
+            deviceHandle,
+            viewHandle,
+            AllocatorHandler ::apply ( pAllocationCallbacks )
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: createImage (
+        Type ( DeviceHandle )                   deviceHandle,
+        Type ( ImageCreateInfo )        const * pCreateInfo,
+        Type ( AllocationCallbacks )    const * pAllocationCallbacks,
+        Type ( ImageHandle )                  * pHandle
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || pCreateInfo == nullptr || pHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    auto context = ContextManager :: acquire();
+
+    return APICaller.vkCreateImage (
+            deviceHandle,
+            prepareContext ( & context->create.image.image, pCreateInfo ),
+            AllocatorHandler ::apply ( pAllocationCallbacks ),
+            pHandle
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: getImageSubresourceLayout (
+        Type ( DeviceHandle )               deviceHandle,
+        Type ( ImageHandle )                imageHandle,
+        Type ( ImageSubresource )   const * pSubresource,
+        Type ( SubresourceLayout )        * pLayout
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || imageHandle == nullptr || pSubresource == nullptr || pLayout == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    auto context = ContextManager :: acquire();
+
+    if (
+            auto result = APICaller.vkGetImageSubresourceLayout (
+                    deviceHandle,
+                    imageHandle,
+                    toVulkanFormat ( & context->get.image.subresourceLayout.subresource, pSubresource ),
+                    & context->get.image.subresourceLayout.layout
+            ); result != ResultSuccess
+    ) {
+        return result;
+    }
+
+    (void) fromVulkanFormat ( pLayout, & context->get.image.subresourceLayout.layout );
+    return ResultSuccess;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_IMAGE_DRM_FORMAT_MODIFIER_AVAILABLE
+auto engine :: vulkan :: getImageDrmFormatModifierProperties (
+        Type ( DeviceHandle )                               deviceHandle,
+        Type ( ImageHandle )                                imageHandle,
+        Type ( ImageDrmFormatModifierProperties )         * pProperties
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || imageHandle == nullptr || pProperties == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    auto context = ContextManager :: acquire();
+
+    if (
+            auto result = APICaller.vkGetImageDrmFormatModifierPropertiesEXT (
+                    deviceHandle,
+                    imageHandle,
+                    & context->get.image.drmFormatModifier.properties
+            ); result != ResultSuccess
+    ) {
+        return result;
+    }
+
+    (void) fromVulkanFormat ( pProperties, & context->get.image.drmFormatModifier.properties );
+    return ResultSuccess;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: destroyImage (
+        Type ( DeviceHandle )                   deviceHandle,
+        Type ( ImageHandle )                    imageHandle,
+        Type ( AllocationCallbacks )    const * pAllocationCallbacks
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || imageHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    return APICaller.vkDestroyImage (
+            deviceHandle,
+            imageHandle,
             AllocatorHandler ::apply ( pAllocationCallbacks )
     );
 }

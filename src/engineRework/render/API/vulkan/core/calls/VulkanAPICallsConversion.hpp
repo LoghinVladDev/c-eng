@@ -3910,6 +3910,132 @@ namespace engine :: vulkan {
     ) noexcept -> VkVideoProfilesKHR *;
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto toVulkanFormat (
+            VkBufferViewCreateInfo              *,
+            Type ( BufferViewCreateInfo ) const *
+    ) noexcept -> VkBufferViewCreateInfo *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto prepareContext (
+            CreateImageContext                  *,
+            Type ( ImageCreateInfo )      const *
+    ) noexcept -> VkImageCreateInfo *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto toVulkanFormat (
+            VkImageCreateInfo              *,
+            Type ( ImageCreateInfo ) const *
+    ) noexcept -> VkImageCreateInfo *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    extern auto toVulkanFormat (
+            VkExternalMemoryImageCreateInfo              *,
+            Type ( ExternalMemoryImageCreateInfo ) const *
+    ) noexcept -> VkExternalMemoryImageCreateInfo *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE && __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SWAP_CHAIN_AVAILABLE
+    extern auto toVulkanFormat (
+            VkImageSwapchainCreateInfoKHR           *,
+            Type ( ImageSwapChainCreateInfo ) const *
+    ) noexcept -> VkImageSwapchainCreateInfoKHR *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+    extern auto toVulkanFormat (
+            VkImageStencilUsageCreateInfo              *,
+            Type ( ImageStencilUsageCreateInfo ) const *
+    ) noexcept -> VkImageStencilUsageCreateInfo *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXTERNAL_MEMORY_AVAILABLE
+    extern auto toVulkanFormat (
+            VkExternalMemoryImageCreateInfoNV                  *,
+            Type ( ExternalMemoryImageCreateInfoNVidia ) const *
+    ) noexcept -> VkExternalMemoryImageCreateInfoNV *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_GOOGLE_FUCHSIA_BUFFER_COLLECTION_AVAILABLE
+    extern auto toVulkanFormat (
+            VkBufferCollectionImageCreateInfoFUCHSIA              *,
+            Type ( BufferCollectionImageCreateInfoFuchsia ) const *
+    ) noexcept -> VkBufferCollectionImageCreateInfoFUCHSIA *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_IMAGE_DRM_FORMAT_MODIFIER_AVAILABLE
+    extern auto toVulkanFormat (
+            VkImageDrmFormatModifierExplicitCreateInfoEXT           *,
+            Type ( ImageDrmFormatModifierExplicitCreateInfo ) const *
+    ) noexcept -> VkImageDrmFormatModifierExplicitCreateInfoEXT *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto toVulkanFormat (
+            VkSubresourceLayout              *,
+            Type ( SubresourceLayout ) const *
+    ) noexcept -> VkSubresourceLayout *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_IMAGE_DRM_FORMAT_MODIFIER_AVAILABLE
+    extern auto toVulkanFormat (
+            VkImageDrmFormatModifierListCreateInfoEXT           *,
+            Type ( ImageDrmFormatModifierListCreateInfo ) const *
+    ) noexcept -> VkImageDrmFormatModifierListCreateInfoEXT *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEDICATED_ALLOCATION_AVAILABLE
+    extern auto toVulkanFormat (
+            VkDedicatedAllocationImageCreateInfoNV                  *,
+            Type ( DedicatedAllocationImageCreateInfoNVidia ) const *
+    ) noexcept -> VkDedicatedAllocationImageCreateInfoNV *;
+#endif
+
+#if __C_ENG_VULKAN_API_ANDROID_EXTERNAL_MEMORY_ANDROID_HARDWARE_BUFFER_AVAILABLE
+    extern auto toVulkanFormat (
+            VkExternalFormatANDROID              *,
+            Type ( ExternalFormatAndroid ) const *
+    ) noexcept -> VkExternalFormatANDROID *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto toVulkanFormat (
+            VkImageSubresource              *,
+            Type ( ImageSubresource ) const *
+    ) noexcept -> VkImageSubresource *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto fromVulkanFormat (
+            Type ( SubresourceLayout )       *,
+            VkSubresourceLayout        const *
+    ) noexcept -> Type ( SubresourceLayout ) *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_IMAGE_DRM_FORMAT_MODIFIER_AVAILABLE
+    extern auto fromVulkanFormat (
+            Type ( ImageDrmFormatModifierProperties )       *,
+            VkImageDrmFormatModifierPropertiesEXT     const *
+    ) noexcept -> Type ( ImageDrmFormatModifierProperties ) *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_ASTC_DECODE_MODE_AVAILABLE
+    extern auto toVulkanFormat (
+            VkImageViewASTCDecodeModeEXT           *,
+            Type ( ImageViewASTCDecodeMode ) const *
+    ) noexcept -> VkImageViewASTCDecodeModeEXT *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_IMAGE_VIEW_MIN_LOD_AVAILABLE
+    extern auto toVulkanFormat (
+            VkImageViewMinLodCreateInfoEXT           *,
+            Type ( ImageViewMinLodCreateInfo ) const *
+    ) noexcept -> VkImageViewMinLodCreateInfoEXT *;
+#endif
+
 } // namespace engine :: vulkan
 
 #define C_ENG_MAP_END

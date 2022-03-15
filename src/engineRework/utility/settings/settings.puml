@@ -36,8 +36,11 @@ namespace engine {
         - _initialized : bool
         + bool initialized () const
         .. functions ..
+        - Settings load ()
+        - Settings save ()
         + {static} Settings instance ()
         + Value get ( Key )
+        + Value get ( cds :: String )
         + Settings set ( Key, Value )
         + {static} Value defaultForKey ( Key )
     }

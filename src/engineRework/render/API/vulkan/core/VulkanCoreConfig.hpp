@@ -117,12 +117,16 @@ namespace engine :: vulkan :: config {
 
 
     constexpr cds :: uint32 flushMappedRangeCount                                   = 2048U;
+
     constexpr cds :: uint32 videoProfileCount                                       = 128U;
-}
 
-#if defined ( __C_ENG_USE_DEFENSIVE_PROGRAMMING ) || !defined(NDEBUG)
+    constexpr cds :: uint32 imageDrmFormatSubresourceLayoutCount                    = 32U;
+    constexpr cds :: uint32 imageFormatListFormatCount                              = 128U;
+} // namespace engine :: vulkan :: config
 
-#define __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED true /* NOLINT(bugprone-reserved-identifier) */
+#if defined ( __C_ENG_USE_DEFENSIVE_PROGRAMMING ) || ! defined ( NDEBUG )
+
+#define __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED true /* NOLINT(bugprone-reserved-identifier,cert-dcl37-c) */
 
 #else
 

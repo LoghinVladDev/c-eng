@@ -71,6 +71,20 @@ namespace engine {
         LayerHandler --- "LayerHandler::ValidationEnabledFeatures" : is nested in
         LayerHandler --- "LayerHandler::ValidationDisabledFeatures" : is nested in
 
+        class ValidationCache {
+            - _device : DeviceHandle
+            - _deviceName : cds :: String
+            - _cachePath : cds :: Path
+            - _handle : ValidationCacheHandle
+            + ValidationCacheHandle handle () const
+            + ValidationCache ()
+            + ValidationCache ( ValidationCache const & )
+            + ValidationCache ( ValidationCache && )
+            + ValidationCache operator = ( ValidationCache const & )
+            + ValidationCache operator = ( ValidationCache && )
+            + ValidationCache init ( Device, cds :: Path )
+        }
+
     }
 
 }

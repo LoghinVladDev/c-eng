@@ -333,11 +333,11 @@ auto vulkan :: toString (
 #if ( __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE && __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SWAP_CHAIN_AVAILABLE ) || ( __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DEVICE_GROUP_AVAILABLE && __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SWAP_CHAIN_AVAILABLE )
 
         case StructureTypeDeviceGroupPresentCapabilities:                                           { asString = "StructureTypeDeviceGroupPresentCapabilities";                                     break; }
-        case StructureTypeImageSwapchainCreateInfo:                                                 { asString = "StructureTypeImageSwapchainCreateInfo";                                           break; }
-        case StructureTypeBindImageMemorySwapchainInfo:                                             { asString = "StructureTypeBindImageMemorySwapchainInfo";                                       break; }
+        case StructureTypeImageSwapChainCreateInfo:                                                 { asString = "StructureTypeImageSwapChainCreateInfo";                                           break; }
+        case StructureTypeBindImageMemorySwapChainInfo:                                             { asString = "StructureTypeBindImageMemorySwapChainInfo";                                       break; }
         case StructureTypeAcquireNextImageInfo:                                                     { asString = "StructureTypeAcquireNextImageInfo";                                               break; }
         case StructureTypeDeviceGroupPresentInfo:                                                   { asString = "StructureTypeDeviceGroupPresentInfo";                                             break; }
-        case StructureTypeDeviceGroupSwapchainCreateInfo:                                           { asString = "StructureTypeDeviceGroupSwapchainCreateInfo";                                     break; }
+        case StructureTypeDeviceGroupSwapChainCreateInfo:                                           { asString = "StructureTypeDeviceGroupSwapChainCreateInfo";                                     break; }
 
 #endif
 
@@ -1012,9 +1012,9 @@ auto vulkan :: toString (
         case StructureTypeVideoDecodeH265SessionCreateInfo:                                      { asString = "StructureTypeVideoDecodeH265SessionCreateInfo";                                      break; }
         case StructureTypeVideoDecodeH265SessionParametersCreateInfo:                            { asString = "StructureTypeVideoDecodeH265SessionParametersCreateInfo";                            break; }
         case StructureTypeVideoDecodeH265SessionParametersAddInfo:                               { asString = "StructureTypeVideoDecodeH265SessionParametersAddInfo";                               break; }
-        case StructureTypeVideoDecodeH265SessionProfile:                                         { asString = "StructureTypeVideoDecodeH265SessionProfile";                                         break; }
-        case StructureTypeVideoDecodeH265SessionPictureInfo:                                     { asString = "StructureTypeVideoDecodeH265SessionPictureInfo";                                     break; }
-        case StructureTypeVideoDecodeH265SessionDPBSlotInfo:                                     { asString = "StructureTypeVideoDecodeH265SessionDPBSlotInfo";                                     break; }
+        case StructureTypeVideoDecodeH265Profile:                                                { asString = "StructureTypeVideoDecodeH265Profile";                                                break; }
+        case StructureTypeVideoDecodeH265PictureInfo:                                            { asString = "StructureTypeVideoDecodeH265PictureInfo";                                            break; }
+        case StructureTypeVideoDecodeH265DPBSlotInfo:                                            { asString = "StructureTypeVideoDecodeH265DPBSlotInfo";                                            break; }
 
 #endif
 
@@ -1191,7 +1191,7 @@ auto vulkan :: toString (
 #if __C_ENG_VULKAN_API_EXTENSION_BUFFER_DEVICE_ADDRESS_AVAILABLE
 
         case StructureTypePhysicalDeviceBufferDeviceAddressFeaturesExt:                          { asString = "StructureTypePhysicalDeviceBufferDeviceAddressFeaturesExt";                          break; }
-        case StructureTypeBufferDeviceAddressCreateInfoExt:                                      { asString = "StructureTypeBufferDeviceAddressCreateInfoExt";                                      break; }
+        case StructureTypeBufferDeviceAddressCreateInfo:                                         { asString = "StructureTypeBufferDeviceAddressCreateInfo";                                         break; }
 
 #endif
 
@@ -12775,6 +12775,259 @@ auto vulkan :: toString (
            ", pNext = "                 + engine :: toString ( info.pNext ) +
            ", profileCount = "          + info.profileCount +
            ", profiles = "              + :: toStringVulkan ( info.profileCount, info.pProfiles ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( BufferViewCreateInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( BufferViewCreateInfo ) ) " " +
+           "{ structureType = "_s       + toString ( info.structureType ) +
+           ", pNext = "                 + engine :: toString ( info.pNext ) +
+           ", flags = "                 + "0b" + Long ( info.flags ).toString(2) +
+           ", buffer = "                + engine :: toString ( info.buffer ) +
+           ", format = "                + toString ( info.format ) +
+           ", offset = "                + toString ( info.offset ) +
+           ", range = "                 + toString ( info.range ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( ImageType )  flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case ImageType1D: { asString = "1D"; break; }
+        case ImageType2D: { asString = "2D"; break; }
+        case ImageType3D: { asString = "3D"; break; }
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( ImageTiling )  flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case ImageTilingOptimal:            { asString = "Optimal";             break; }
+        case ImageTilingLinear:             { asString = "Linear";              break; }
+#if __C_ENG_VULKAN_API_EXTENSION_IMAGE_DRM_FORMAT_MODIFIER_AVAILABLE
+        case ImageTilingDrmFormatModifier:  { asString = "Drm Format Modifier"; break; }
+#endif
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( ImageCreateInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( ImageCreateInfo ) ) " " +
+           "{ structureType = "_s       + toString ( info.structureType ) +
+           ", pNext = "                 + engine :: toString ( info.pNext ) +
+           ", flags = "                 + "0b" + Long ( info.flags ).toString(2) +
+           ", imageType = "             + toString ( info.imageType ) +
+           ", format = "                + toString ( info.format ) +
+           ", extent = "                + toString ( info.extent ) +
+           ", mipLevels = "             + info.mipLevels +
+           ", arrayLayers = "           + info.arrayLayers +
+           ", samples = "               + toString ( info.samples ) +
+           ", tiling = "                + toString ( info.tiling ) +
+           ", usage = "                 + "0b" + Long ( info.usage ).toString(2) +
+           ", sharingMode = "           + toString ( info.sharingMode ) +
+           ", queueFamilyIndexCount = " + info.queueFamilyIndexCount +
+           ", queueFamilyIndices = "    + :: toStringRegular ( info.queueFamilyIndexCount, info.pQueueFamilyIndices ) +
+           ", initialLayout = "         + toString ( info.initialLayout ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_GOOGLE_FUCHSIA_BUFFER_COLLECTION_AVAILABLE
+auto vulkan :: toString (
+        Type ( BufferCollectionImageCreateInfoFuchsia ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( BufferCollectionImageCreateInfoFuchsia ) ) " " +
+           "{ structureType = "_s       + toString ( info.structureType ) +
+           ", pNext = "                 + engine :: toString ( info.pNext ) +
+           ", collection = "            + toString ( info.collection ) +
+           ", index = "                 + info.index +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEDICATED_ALLOCATION_AVAILABLE
+auto vulkan :: toString (
+        Type ( DedicatedAllocationImageCreateInfoNVidia ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( DedicatedAllocationImageCreateInfoNVidia ) ) " " +
+           "{ structureType = "_s       + toString ( info.structureType ) +
+           ", pNext = "                 + engine :: toString ( info.pNext ) +
+           ", dedicatedAllocation = "   + ( info.dedicatedAllocation == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_ANDROID_EXTERNAL_MEMORY_ANDROID_HARDWARE_BUFFER_AVAILABLE
+auto vulkan :: toString (
+        Type ( ExternalFormatAndroid ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( ExternalFormatAndroid ) ) " " +
+           "{ structureType = "_s       + toString ( info.structureType ) +
+           ", pNext = "                 + engine :: toString ( info.pNext ) +
+           ", externalFormat = "        + info.externalFormat +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+auto vulkan :: toString (
+        Type ( ExternalMemoryImageCreateInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( ExternalMemoryImageCreateInfo ) ) " " +
+           "{ structureType = "_s       + toString ( info.structureType ) +
+           ", pNext = "                 + engine :: toString ( info.pNext ) +
+           ", handleTypes = "           + "0b" + Long ( info.handleTypes ).toString(2) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXTERNAL_MEMORY_AVAILABLE
+auto vulkan :: toString (
+        Type ( ExternalMemoryImageCreateInfoNVidia ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( ExternalMemoryImageCreateInfoNVidia ) ) " " +
+           "{ structureType = "_s       + toString ( info.structureType ) +
+           ", pNext = "                 + engine :: toString ( info.pNext ) +
+           ", handleTypes = "           + "0b" + Long ( info.handleTypes ).toString(2) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( SubresourceLayout ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( SubresourceLayout ) ) " " +
+           "{ offset = "_s          + toString ( info.offset ) +
+           ", size = "              + toString ( info.size ) +
+           ", rowPitch = "          + toString ( info.rowPitch ) +
+           ", arrayPitch = "        + toString ( info.arrayPitch ) +
+           ", depthPitch = "        + toString ( info.depthPitch ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_IMAGE_DRM_FORMAT_MODIFIER_AVAILABLE
+auto vulkan :: toString (
+        Type ( ImageDrmFormatModifierExplicitCreateInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( ImageDrmFormatModifierExplicitCreateInfo ) ) " " +
+           "{ structureType = "_s               + toString ( info.structureType ) +
+           ", pNext = "                         + engine :: toString ( info.pNext ) +
+           ", drmFormatModifier = "             + info.drmFormatModifier +
+           ", drmFormatModifierPlaneCount = "   + info.drmFormatModifierPlaneCount +
+           ", planeLayouts = "                  + :: toStringVulkan ( info.drmFormatModifierPlaneCount, info.pPlaneLayouts ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_IMAGE_DRM_FORMAT_MODIFIER_AVAILABLE
+auto vulkan :: toString (
+        Type ( ImageDrmFormatModifierListCreateInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( ImageDrmFormatModifierListCreateInfo ) ) " " +
+           "{ structureType = "_s               + toString ( info.structureType ) +
+           ", pNext = "                         + engine :: toString ( info.pNext ) +
+           ", drmFormatModifierCount = "        + info.drmFormatModifierCount +
+           ", drmFormatModifiers = "            + :: toStringRegular ( info.drmFormatModifierCount, info.pDrmFormatModifiers ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+auto vulkan :: toString (
+        Type ( ImageStencilUsageCreateInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( ImageStencilUsageCreateInfo ) ) " " +
+           "{ structureType = "_s               + toString ( info.structureType ) +
+           ", pNext = "                         + engine :: toString ( info.pNext ) +
+           ", stencilUsage = "                  + "0b" + Long ( info.stencilUsage ).toString(2) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE && __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SWAP_CHAIN_AVAILABLE
+auto vulkan :: toString (
+        Type ( ImageSwapChainCreateInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( ImageStencilUsageCreateInfo ) ) " " +
+           "{ structureType = "_s               + toString ( info.structureType ) +
+           ", pNext = "                         + engine :: toString ( info.pNext ) +
+           ", stencilUsage = "                  + engine :: toString ( info.swapchain ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( ImageSubresource ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( ImageSubresource ) ) " " +
+           "{ aspectMask = "_s  + "0b" + Long ( info.aspectMask ).toString(2) +
+           ", mipLevel = "      + info.mipLevel +
+           ", arrayLayer = "    + info.arrayLayer +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_ASTC_DECODE_MODE_AVAILABLE
+auto vulkan :: toString (
+        Type ( ImageViewASTCDecodeMode ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( ImageViewASTCDecodeMode ) ) " " +
+           "{ structureType = "_s               + toString ( info.structureType ) +
+           ", pNext = "                         + engine :: toString ( info.pNext ) +
+           ", decodeMode = "                    + toString ( info.decodeMode ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_IMAGE_VIEW_MIN_LOD_AVAILABLE
+auto vulkan :: toString (
+        Type ( ImageViewMinLodCreateInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( ImageViewMinLodCreateInfo ) ) " " +
+           "{ structureType = "_s               + toString ( info.structureType ) +
+           ", pNext = "                         + engine :: toString ( info.pNext ) +
+           ", minLod = "                        + info.minLod +
            " }";
 }
 #endif

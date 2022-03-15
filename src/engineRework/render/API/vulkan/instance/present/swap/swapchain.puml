@@ -1,0 +1,42 @@
+@startuml
+
+!includesub ../../../vulkan.puml!VULKAN
+
+!startsub PUBLIC
+
+namespace engine {
+    namespace vulkan {
+
+        class "SwapChain :: Images" {
+            + images : ImageHandle []
+            + count : uint32
+        }
+
+        class "SwapChain :: Properties" {
+            + imageExtent : Extent2D
+            + imageFormat : Format
+        }
+
+        class SwapChain {
+            - _handle : SwapChainHandle
+            - _device : Device
+            - _images : Images
+            - _properties : Properties
+            + SwapChainHandle handle () const
+            + Device device () const
+            + Images images () const
+            + Properties properties () const
+            - SwapChain reserveAndAcquireImages ()
+            - SwapChain freeImages ()
+            + init ( Device, SurfaceHandle )
+        }
+
+        SwapChain -- "nested in" "SwapChain :: Images"
+        SwapChain -- "nested in" "SwapChain :: Properties"
+
+    }
+}
+
+!endsub
+
+@enduml

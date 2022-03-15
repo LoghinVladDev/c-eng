@@ -147,7 +147,7 @@ namespace engine {
             auto _monitors = glfwGetMonitors ( & monitorCount );
             auto _primary = glfwGetPrimaryMonitor();
 
-            monitors.resize(static_cast < Size > ( monitorCount ));
+            monitors.resize ( static_cast < cds :: Size > ( monitorCount ) );
 
             for ( sint32 i = 0; i < monitorCount; ++ i ) {
                 auto pMonitor = new __C_ENG_TYPE ( Monitor );

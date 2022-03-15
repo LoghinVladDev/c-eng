@@ -1337,6 +1337,57 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         ) noexcept -> Type ( Result );
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+        NoDiscard MaybeUnused extern auto createBufferView (
+                Type ( DeviceHandle ),
+                Type ( BufferViewCreateInfo )   const *,
+                Type ( AllocationCallbacks )    const *,
+                Type ( BufferViewHandle )             *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+        NoDiscard MaybeUnused extern auto destroyBufferView (
+                Type ( DeviceHandle ),
+                Type ( BufferViewHandle ),
+                Type ( AllocationCallbacks )    const *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+        NoDiscard MaybeUnused extern auto createImage (
+                Type ( DeviceHandle ),
+                Type ( ImageCreateInfo )        const *,
+                Type ( AllocationCallbacks )    const *,
+                Type ( ImageHandle )                  *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+        NoDiscard MaybeUnused extern auto getImageSubresourceLayout (
+                Type ( DeviceHandle ),
+                Type ( ImageHandle ),
+                Type ( ImageSubresource )   const *,
+                Type ( SubresourceLayout )        *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_IMAGE_DRM_FORMAT_MODIFIER_AVAILABLE
+        NoDiscard MaybeUnused extern auto getImageDrmFormatModifierProperties (
+                Type ( DeviceHandle ),
+                Type ( ImageHandle ),
+                Type ( ImageDrmFormatModifierProperties )   *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+        NoDiscard MaybeUnused extern auto destroyImage (
+                Type ( DeviceHandle ),
+                Type ( ImageHandle ),
+                Type ( AllocationCallbacks )    const *
+        ) noexcept -> Type ( Result );
+#endif
+
     } /// namespace vulkan
 
 } /// namespace engine
