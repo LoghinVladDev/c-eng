@@ -7,6 +7,15 @@
 
 
 namespace engine :: vulkan :: config {
+
+    enum class CoreDumpType {
+        NoDump,
+        DumpOnError,
+        DumpAll
+    };
+
+    constexpr CoreDumpType  coreDumpType = CoreDumpType :: DumpOnError;
+
     constexpr cds :: uint32 contextCount = 16U;
 
     constexpr cds :: uint32 validationFeatureEnableCount    = 32U;
@@ -122,6 +131,12 @@ namespace engine :: vulkan :: config {
 
     constexpr cds :: uint32 imageDrmFormatSubresourceLayoutCount                    = 32U;
     constexpr cds :: uint32 imageFormatListFormatCount                              = 128U;
+
+    constexpr cds :: uint32 accelerationStructureGeometryCount                      = 256U;
+
+    constexpr cds :: uint32 accelerationStructureNVidiaGeometryCount                = accelerationStructureGeometryCount;
+
+    constexpr cds :: uint32 bindAccelerationStructureCount                          = 512U;
 } // namespace engine :: vulkan :: config
 
 #if defined ( __C_ENG_USE_DEFENSIVE_PROGRAMMING ) || ! defined ( NDEBUG )

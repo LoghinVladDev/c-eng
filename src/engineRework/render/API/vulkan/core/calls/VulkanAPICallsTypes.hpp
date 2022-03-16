@@ -14,6 +14,85 @@
 #define C_ENG_MAP_START HEADER
 #include <ObjectMapping.hpp>
 
+using GenericContext = void;
+
+using ContextAction = void (*) ( GenericContext * ) noexcept;
+
+enum class ContextType {
+    Unknown,
+    Common,
+    CreateInstance,
+    EnumerateLayerProperties,
+    EnumerateExtensionProperties,
+    EnumeratePhysicalDevices,
+    EnumeratePhysicalDeviceQueueFamilyPerformanceQueryCounters,
+    EnumeratePhysicalDeviceGroups,
+    CreateDevice,
+    GetPhysicalDeviceProperties,
+    GetPhysicalDeviceFeatures,
+    GetPhysicalDeviceQueueFamilyProperties,
+    GetDeviceQueue,
+    GetSurface,
+    CreateSwapChain,
+    GetSwapChain,
+    CreateImageView,
+    CreateCommandPool,
+    AllocateCommandBuffers,
+    BeginCommandBuffer,
+    SubmitQueue,
+    CreateFence,
+    GetFence,
+    RegisterEvent,
+    ImportFenceWin32,
+    ImportFenceFd,
+    CreateSemaphore,
+    GetSemaphore,
+    WaitSemaphore,
+    SignalSemaphore,
+    ImportSemaphoreWin32,
+    ImportSemaphoreFd,
+    ImportSemaphoreZirconHandleInfoGoogle,
+    CreateEvent,
+    SetCommandBufferEvent,
+    WaitCommandBufferEvent2,
+    WaitCommandBufferEvent,
+    BeginCommandBufferRendering,
+    CreateRenderPass,
+    CreateRenderPass2,
+    CreateFrameBuffer,
+    BeginRenderPass,
+    NextSubpass,
+    CreateShaderModule,
+    GetPhysicalDeviceCooperativeMatrixProperties,
+    CreateValidationCache,
+    CreateComputePipeline,
+    CreateGraphicsPipeline,
+    CreateRayTracingPipelineNVidia,
+    CreateRayTracingPipeline,
+    CreatePipelineCache,
+    GetPipelineCommon,
+    GetPipelineProperties,
+    GetPipelineStatistics,
+    GetPipelineInternalRepresentations,
+    GetPhysicalDeviceMemoryProperties,
+    AllocateMemory,
+    GetMemoryWin32,
+    GetMemoryFd,
+    GetMemoryPlatformIndependent,
+    FlushMappedMemoryRanges,
+    CreateBuffer,
+    CreateBufferView,
+    CreateImage,
+    GetImageSubresourceLayout,
+    GetImageDrmFormatModifierProperties,
+    CreateAccelerationStructureKhronos,
+    CreateAccelerationStructureNVidia,
+    GetAccelerationStructureBuildSizes,
+    GetAccelerationStructureMemoryRequirements,
+    BindAccelerationStructureMemory,
+    GetAccelerationStructureDeviceAddress,
+};
+
 struct DiagnosticContext {
 #if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
     engine :: vulkan :: Type ( Result )     error;
@@ -24,12 +103,32 @@ struct DiagnosticContext {
 #endif
 };
 
-struct CommonContext {
+struct DumpContext {
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+    ContextType                             contextType;
+    cds :: StringLiteral                    apiFunction;
+    cds :: StringLiteral                    apiFunctionDescription;
+    cds :: uint32                           paramCount;
+    void const *                            pParams;
+#endif
+};
+
+struct RuleSetContext {
+    ContextAction onDelete;
+};
+
+struct CommonItems {
     DiagnosticContext                   diag;
+    DumpContext                         dump;
+    RuleSetContext                      ruleSet;
+};
+
+struct CommonContext {
+    CommonItems                         common;
 };
 
 struct CreateInstanceContext {
-    DiagnosticContext                   diag;
+    CommonItems                         common;
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
     VkInstanceCreateInfo                instance;
     VkApplicationInfo                   applicationInfo;
@@ -52,28 +151,28 @@ struct CreateInstanceContext {
 };
 
 struct EnumerateLayerPropertiesContext {
-    DiagnosticContext                   diag;
+    CommonItems                         common;
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
     VkLayerProperties                   properties [ engine :: vulkan :: config :: layerCount ];
 #endif
 };
 
 struct EnumerateExtensionPropertiesContext {
-    DiagnosticContext                   diag;
+    CommonItems                         common;
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
     VkExtensionProperties               properties [ engine :: vulkan :: config :: layerExtensionCount ];
 #endif
 };
 
 struct EnumeratePhysicalDevicesContext {
-    DiagnosticContext                   diag;
+    CommonItems                         common;
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
     VkPhysicalDevice                    devices [ engine :: vulkan :: config :: physicalDeviceCount ];
 #endif
 };
 
 struct EnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersContext {
-    DiagnosticContext                   diag;
+    CommonItems                         common;
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PERFORMANCE_QUERY_AVAILABLE
     VkPerformanceCounterKHR             counters [ engine :: vulkan :: config :: queueFamilyPerformanceCounterCount ];
     VkPerformanceCounterDescriptionKHR  descriptions [ engine :: vulkan :: config :: queueFamilyPerformanceCounterCount ];
@@ -81,7 +180,7 @@ struct EnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersContext {
 };
 
 struct EnumeratePhysicalDeviceGroupsContext {
-    DiagnosticContext                   diag;
+    CommonItems                         common;
 #if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
     VkPhysicalDeviceGroupProperties     properties [ engine :: vulkan :: config :: physicalDeviceGroupCount ];
 #endif
@@ -524,7 +623,7 @@ struct DeviceFeaturesContext {
 };
 
 struct CreateDeviceContext {
-    DiagnosticContext                           diag;
+    CommonItems                                 common;
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
     VkDeviceCreateInfo                          device;
     VkDeviceQueueCreateInfo                     queues [ engine :: vulkan :: config :: queueFamilyCreateInfoCount ];
@@ -548,17 +647,17 @@ struct CreateDeviceContext {
 };
 
 struct GetPhysicalDevicePropertiesContext {
-    DiagnosticContext                           diag;
+    CommonItems                                 common;
     DevicePropertiesContext                     properties;
 };
 
 struct GetPhysicalDeviceFeaturesContext {
-    DiagnosticContext                           diag;
+    CommonItems                                 common;
     DeviceFeaturesContext                       features;
 };
 
 struct GetPhysicalDeviceQueueFamilyPropertiesContext {
-    DiagnosticContext                               diag;
+    CommonItems                                     common;
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
     VkQueueFamilyProperties                         properties [ engine :: vulkan :: config :: queueFamilyCount ];
 #endif
@@ -578,14 +677,14 @@ struct GetPhysicalDeviceQueueFamilyPropertiesContext {
 };
 
 struct GetDeviceQueueContext {
-    DiagnosticContext                           diag;
+    CommonItems                                 common;
 #if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
     VkDeviceQueueInfo2                          info2;
 #endif
 };
 
 struct GetSurfaceContext {
-    DiagnosticContext                           diag;
+    CommonItems                                 common;
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SURFACE_AVAILABLE
     VkSurfaceCapabilitiesKHR                    capabilities;
     VkSurfaceFormatKHR                          formats [ engine :: vulkan :: config :: surfaceFormatCount ];
@@ -604,7 +703,7 @@ struct GetSurfaceContext {
 };
 
 struct CreateSwapChainContext {
-    DiagnosticContext                           diag;
+    CommonItems                                 common;
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SWAP_CHAIN_AVAILABLE
     VkSwapchainCreateInfoKHR                    createInfo;
 #endif
@@ -618,14 +717,14 @@ struct CreateSwapChainContext {
 };
 
 struct GetSwapChainContext {
-    DiagnosticContext                           diag;
+    CommonItems                                 common;
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
     VkImage                                     images [ engine :: vulkan :: config :: swapChainImageCount ];
 #endif
 };
 
 struct CreateImageViewContext {
-    DiagnosticContext                                           diag;
+    CommonItems                                                 common;
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
     VkImageViewCreateInfo                                       createInfo;
 #endif
@@ -659,21 +758,21 @@ struct CreateImageViewContext {
 };
 
 struct CreateCommandPoolContext {
-    DiagnosticContext                           diag;
+    CommonItems                                 common;
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
     VkCommandPoolCreateInfo                     createInfo;
 #endif
 };
 
 struct AllocateCommandBuffersContext {
-    DiagnosticContext                           diag;
+    CommonItems                                 common;
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
     VkCommandBufferAllocateInfo                 allocateInfo;
 #endif
 };
 
 struct BeginCommandBufferContext {
-    DiagnosticContext                                       diag;
+    CommonItems                                             common;
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
     VkCommandBufferBeginInfo                                beginInfo;
     VkCommandBufferInheritanceInfo                          inheritanceInfo;
@@ -705,7 +804,7 @@ struct BeginCommandBufferContext {
 };
 
 struct SubmitQueueContext {
-    DiagnosticContext                                       diag;
+    CommonItems                                             common;
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
     VkSubmitInfo                                            submitInfos [ engine :: vulkan :: config :: submitInfoCount ];
     VkPipelineStageFlags                                    stageFlags [ engine :: vulkan :: config :: submitInfoCount ] [ engine :: vulkan :: config :: pipelineStageFlagsCount ];
@@ -738,7 +837,7 @@ struct SubmitQueueContext {
 };
 
 struct CreateFenceContext {
-    DiagnosticContext                                       diag;
+    CommonItems                                             common;
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
     VkFenceCreateInfo                                       createInfo;
 #endif
@@ -751,7 +850,7 @@ struct CreateFenceContext {
 };
 
 struct GetFenceContext {
-    DiagnosticContext                                       diag;
+    CommonItems                                             common;
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_FENCE_WIN32_AVAILABLE
     VkFenceGetWin32HandleInfoKHR                            win32HandleInfo;
 #endif
@@ -761,7 +860,7 @@ struct GetFenceContext {
 };
 
 struct RegisterEventContext {
-    DiagnosticContext                                       diag;
+    CommonItems                                             common;
 #if __C_ENG_VULKAN_API_EXTENSION_DISPLAY_CONTROL_AVAILABLE
     VkDeviceEventInfoEXT                                    deviceInfo;
     VkDisplayEventInfoEXT                                   displayInfo;
@@ -770,20 +869,20 @@ struct RegisterEventContext {
 
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_FENCE_WIN32_AVAILABLE
 struct ImportFenceWin32Context {
-    DiagnosticContext                                       diag;
+    CommonItems                                             common;
     VkImportFenceWin32HandleInfoKHR                         info;
 };
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_FENCE_FD_AVAILABLE
 struct ImportFenceFdContext {
-    DiagnosticContext                                       diag;
+    CommonItems                                             common;
     VkImportFenceFdInfoKHR                                  info;
 };
 #endif
 
 struct CreateSemaphoreContext {
-    DiagnosticContext                                       diag;
+    CommonItems                                             common;
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
     VkSemaphoreCreateInfo                                   createInfo;
 #endif
@@ -799,7 +898,7 @@ struct CreateSemaphoreContext {
 };
 
 struct GetSemaphoreContext {
-    DiagnosticContext                                       diag;
+    CommonItems                                             common;
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_SEMAPHORE_WIN32_AVAILABLE
     VkSemaphoreGetWin32HandleInfoKHR                        win32HandleInfo;
 #endif
@@ -812,7 +911,7 @@ struct GetSemaphoreContext {
 };
 
 struct WaitSemaphoreContext {
-    DiagnosticContext                                       diag;
+    CommonItems                                             common;
 #if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
     VkSemaphoreWaitInfo                                     info;
     uint64_t                                                values [ engine :: vulkan :: config :: waitSemaphoreCount ];
@@ -820,7 +919,7 @@ struct WaitSemaphoreContext {
 };
 
 struct SignalSemaphoreContext {
-    DiagnosticContext                                       diag;
+    CommonItems                                             common;
 #if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
     VkSemaphoreSignalInfo                                   info;
 #endif
@@ -828,34 +927,34 @@ struct SignalSemaphoreContext {
 
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_SEMAPHORE_WIN32_AVAILABLE
 struct ImportSemaphoreWin32Context {
-    DiagnosticContext                                       diag;
+    CommonItems                                             common;
     VkImportSemaphoreWin32HandleInfoKHR                     info;
 };
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_SEMAPHORE_FD_AVAILABLE
 struct ImportSemaphoreFdContext {
-    DiagnosticContext                                       diag;
+    CommonItems                                             common;
     VkImportSemaphoreFdInfoKHR                              info;
 };
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_GOOGLE_FUCHSIA_EXTERNAL_SEMAPHORE_AVAILABLE
 struct ImportSemaphoreZirconHandleInfoGoogleContext {
-    DiagnosticContext                                       diag;
+    CommonItems                                             common;
     VkImportSemaphoreZirconHandleInfoGoogle                 info;
 };
 #endif
 
 struct CreateEventContext {
-    DiagnosticContext                                       diag;
+    CommonItems                                             common;
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
     VkEventCreateInfo                                       createInfo;
 #endif
 };
 
 struct SetCommandBufferEventContext {
-    DiagnosticContext                                       diag;
+    CommonItems                                             common;
 #if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
     VkDependencyInfo_t                                      dependencyInfo;
     VkMemoryBarrier2_t                                      memoryBarriers [ engine :: vulkan :: config :: dependencyInfoMemoryBarrierCount ];
@@ -869,7 +968,7 @@ struct SetCommandBufferEventContext {
 };
 
 struct WaitCommandBufferEvent2Context {
-    DiagnosticContext                                       diag;
+    CommonItems                                             common;
 #if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
     VkDependencyInfo_t                                      dependencyInfos [ engine :: vulkan :: config :: commandBufferWaitEventsDependencyInfoCount ];
     VkMemoryBarrier2_t                                      memoryBarriers [ engine :: vulkan :: config :: commandBufferWaitEventsDependencyInfoCount ] [ engine :: vulkan :: config :: dependencyInfoMemoryBarrierCount ];
@@ -883,7 +982,7 @@ struct WaitCommandBufferEvent2Context {
 };
 
 struct WaitCommandBufferEventContext {
-    DiagnosticContext                                       diag;
+    CommonItems                                             common;
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
     VkMemoryBarrier                                         memoryBarriers [ engine :: vulkan :: config :: memoryBarrierCount ];
     VkBufferMemoryBarrier                                   bufferMemoryBarriers [ engine :: vulkan :: config :: bufferMemoryBarrierCount ];
@@ -896,7 +995,7 @@ struct WaitCommandBufferEventContext {
 };
 
 struct BeginCommandBufferRenderingContext {
-    DiagnosticContext                                       diag;
+    CommonItems                                             common;
 #if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE
     VkRenderingInfo_t                                       info;
     VkRenderingAttachmentInfo_t                             colorAttachments [ engine :: vulkan :: config :: renderingInfoColorAttachmentCount ];
@@ -919,7 +1018,7 @@ struct BeginCommandBufferRenderingContext {
 };
 
 struct CreateRenderPassContext {
-    DiagnosticContext                                       diag;
+    CommonItems                                             common;
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
     VkRenderPassCreateInfo                                  createInfo;
     VkAttachmentDescription                                 attachmentDescriptions [ engine :: vulkan :: config :: renderPassAttachmentDescriptionCount ];
@@ -941,7 +1040,7 @@ struct CreateRenderPassContext {
 };
 
 struct CreateRenderPass2Context {
-    DiagnosticContext                                       diag;
+    CommonItems                                             common;
 #if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
     VkRenderPassCreateInfo2                                 createInfo;
     VkAttachmentDescription2                                attachmentDescriptions [ engine :: vulkan :: config :: renderPassAttachmentDescriptionCount ];
@@ -970,7 +1069,7 @@ struct CreateRenderPass2Context {
 };
 
 struct CreateFrameBufferContext {
-    DiagnosticContext                                       diag;
+    CommonItems                                             common;
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
     VkFramebufferCreateInfo                                 createInfo;
 #endif
@@ -981,7 +1080,7 @@ struct CreateFrameBufferContext {
 };
 
 struct BeginRenderPassContext {
-    DiagnosticContext                                       diag;
+    CommonItems                                             common;
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
     VkRenderPassBeginInfo                                   beginInfo;
     VkClearValue                                            clearValues [ engine :: vulkan :: config :: renderPassBeginInfoClearValueCount ];
@@ -1007,7 +1106,7 @@ struct BeginRenderPassContext {
 };
 
 struct NextSubpassContext {
-    DiagnosticContext                                       diag;
+    CommonItems                                             common;
 #if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
     VkSubpassBeginInfo                                      beginInfo;
     VkSubpassEndInfo                                        endInfo;
@@ -1019,7 +1118,7 @@ struct NextSubpassContext {
 };
 
 struct CreateShaderModuleContext {
-    DiagnosticContext                                       diag;
+    CommonItems                                             common;
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
     VkShaderModuleCreateInfo                                createInfo;
 #endif
@@ -1029,21 +1128,21 @@ struct CreateShaderModuleContext {
 };
 
 struct GetPhysicalDeviceCooperativeMatrixPropertiesContext {
-    DiagnosticContext                                       diag;
+    CommonItems                                             common;
 #if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_COOPERATIVE_MATRIX_AVAILABLE
     VkCooperativeMatrixPropertiesNV                         properties [ engine :: vulkan :: config :: cooperativeMatrixPropertiesCount ];
 #endif
 };
 
 struct CreateValidationCacheContext {
-    DiagnosticContext                                       diag;
+    CommonItems                                             common;
 #if __C_ENG_VULKAN_API_EXTENSION_VALIDATION_CACHE_AVAILABLE
     VkValidationCacheCreateInfoEXT                          createInfo;
 #endif
 };
 
 struct CreateComputePipelineContext {
-    DiagnosticContext                                       diag;
+    CommonItems                                             common;
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
     VkComputePipelineCreateInfo                             createInfos [ engine :: vulkan :: config :: computePipelineCount ];
     VkSpecializationInfo                                    specializationInfos [ engine :: vulkan :: config :: computePipelineCount ];
@@ -1066,7 +1165,7 @@ struct CreateComputePipelineContext {
 };
 
 struct CreateGraphicsPipelineContext {
-    DiagnosticContext                                           diag;
+    CommonItems                                                 common;
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
     VkGraphicsPipelineCreateInfo                                createInfos [ engine :: vulkan :: config :: graphicsPipelineCount ];
     VkPipelineShaderStageCreateInfo                             shaderStageCreateInfos [ engine :: vulkan :: config :: graphicsPipelineCount ] [ engine :: vulkan :: config :: graphicsPipelineShaderStageCount ];
@@ -1231,7 +1330,7 @@ struct CreateGraphicsPipelineContext {
 };
 
 struct CreateRayTracingPipelineNVidiaContext {
-    DiagnosticContext                                           diag;
+    CommonItems                                                 common;
 #if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
     VkRayTracingPipelineCreateInfoNV                            createInfos [ engine :: vulkan :: config :: rayTracingPipelineCount ];
 #endif
@@ -1257,7 +1356,7 @@ struct CreateRayTracingPipelineNVidiaContext {
 };
 
 struct CreateRayTracingPipelineContext {
-    DiagnosticContext                                           diag;
+    CommonItems                                                 common;
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_RAY_TRACING_PIPELINE_AVAILABLE
     VkRayTracingPipelineCreateInfoKHR                           createInfos [ engine :: vulkan :: config :: rayTracingPipelineCount ];
 #endif
@@ -1290,21 +1389,21 @@ struct CreateRayTracingPipelineContext {
 };
 
 struct CreatePipelineCacheContext {
-    DiagnosticContext                                           diag;
+    CommonItems                                                 common;
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
     VkPipelineCacheCreateInfo                                   createInfo;
 #endif
 };
 
 struct GetPipelineCommonContext {
-    DiagnosticContext                                           diag;
+    CommonItems                                                 common;
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PIPELINE_EXECUTABLE_PROPERTIES_AVAILABLE
     VkPipelineInfoKHR                                           info;
 #endif
 };
 
 struct GetPipelinePropertiesContext {
-    DiagnosticContext                                           diag;
+    CommonItems                                                 common;
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PIPELINE_EXECUTABLE_PROPERTIES_AVAILABLE
     VkPipelineInfoKHR                                           info;
     VkPipelineExecutablePropertiesKHR                           properties [ engine :: vulkan :: config :: pipelineExecutablePropertiesCount ];
@@ -1312,7 +1411,7 @@ struct GetPipelinePropertiesContext {
 };
 
 struct GetPipelineStatisticsContext {
-    DiagnosticContext                                           diag;
+    CommonItems                                                 common;
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PIPELINE_EXECUTABLE_PROPERTIES_AVAILABLE
     VkPipelineExecutableInfoKHR                                 info;
     VkPipelineExecutableStatisticKHR                            statistics [ engine :: vulkan :: config :: pipelineExecutableStatisticsCount ];
@@ -1320,7 +1419,7 @@ struct GetPipelineStatisticsContext {
 };
 
 struct GetPipelineInternalRepresentationsContext {
-    DiagnosticContext                                           diag;
+    CommonItems                                                 common;
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PIPELINE_EXECUTABLE_PROPERTIES_AVAILABLE
     VkPipelineExecutableInfoKHR                                 info;
     VkPipelineExecutableInternalRepresentationKHR               internalRepresentations [ engine :: vulkan :: config :: pipelineExecutableInternalRepresentationCount ];
@@ -1328,7 +1427,7 @@ struct GetPipelineInternalRepresentationsContext {
 };
 
 struct GetPhysicalDeviceMemoryPropertiesContext {
-    DiagnosticContext                                           diag;
+    CommonItems                                                 common;
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
     VkPhysicalDeviceMemoryProperties                            properties;
 #endif
@@ -1341,7 +1440,7 @@ struct GetPhysicalDeviceMemoryPropertiesContext {
 };
 
 struct AllocateMemoryContext {
-    DiagnosticContext                                           diag;
+    CommonItems                                                 common;
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
     VkMemoryAllocateInfo                                        info;
 #endif
@@ -1388,7 +1487,7 @@ struct AllocateMemoryContext {
 };
 
 struct GetMemoryWin32Context {
-    DiagnosticContext                                           diag;
+    CommonItems                                                 common;
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_MEMORY_WIN32_AVAILABLE
     VkMemoryGetWin32HandleInfoKHR                               info;
     VkMemoryWin32HandlePropertiesKHR                            properties;
@@ -1396,7 +1495,7 @@ struct GetMemoryWin32Context {
 };
 
 struct GetMemoryFdContext {
-    DiagnosticContext                                           diag;
+    CommonItems                                                 common;
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_MEMORY_FD_AVAILABLE
     VkMemoryGetFdInfoKHR                                        info;
     VkMemoryFdPropertiesKHR                                     properties;
@@ -1404,7 +1503,7 @@ struct GetMemoryFdContext {
 };
 
 struct GetMemoryPlatformIndependentContext {
-    DiagnosticContext                                           diag;
+    CommonItems                                                 common;
 #if __C_ENG_VULKAN_API_EXTENSION_EXTERNAL_MEMORY_HOST_AVAILABLE
     VkMemoryHostPointerPropertiesEXT                            properties;
 #endif
@@ -1417,14 +1516,14 @@ struct GetMemoryPlatformIndependentContext {
 };
 
 struct FlushMappedMemoryRangesContext {
-    DiagnosticContext                                           diag;
+    CommonItems                                                 common;
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
     VkMappedMemoryRange                                         ranges [ engine :: vulkan :: config :: flushMappedRangeCount ];
 #endif
 };
 
 struct CreateBufferContext {
-    DiagnosticContext                                           diag;
+    CommonItems                                                 common;
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
     VkBufferCreateInfo                                          createInfo;
 #endif
@@ -1463,14 +1562,14 @@ struct CreateBufferContext {
 };
 
 struct CreateBufferViewContext {
-    DiagnosticContext                                           diag;
+    CommonItems                                                 common;
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
     VkBufferViewCreateInfo                                      createInfo;
 #endif
 };
 
 struct CreateImageContext {
-    DiagnosticContext                                           diag;
+    CommonItems                                                 common;
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
     VkImageCreateInfo                                           createInfo;
 #endif
@@ -1522,7 +1621,7 @@ struct CreateImageContext {
 };
 
 struct GetImageSubresourceLayoutContext {
-    DiagnosticContext                                           diag;
+    CommonItems                                                 common;
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
     VkImageSubresource                                          subresource;
     VkSubresourceLayout                                         layout;
@@ -1530,9 +1629,66 @@ struct GetImageSubresourceLayoutContext {
 };
 
 struct GetImageDrmFormatModifierPropertiesContext {
-    DiagnosticContext                                           diag;
+    CommonItems                                                 common;
 #if __C_ENG_VULKAN_API_EXTENSION_IMAGE_DRM_FORMAT_MODIFIER_AVAILABLE
     VkImageDrmFormatModifierPropertiesEXT                       properties;
+#endif
+};
+
+struct CreateAccelerationStructureKhronosContext {
+    CommonItems                                                 common;
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+    VkAccelerationStructureCreateInfoKHR                        createInfo;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_MOTION_BLUR_AVAILABLE
+    VkAccelerationStructureMotionInfoNV                         motionInfo;
+#endif
+};
+
+struct CreateAccelerationStructureNVidiaContext {
+    CommonItems                                                 common;
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+    VkAccelerationStructureCreateInfoNV                         createInfo;
+    VkGeometryNV                                                geometries [ engine :: vulkan :: config :: accelerationStructureNVidiaGeometryCount ];
+#endif
+};
+
+struct GetAccelerationStructureBuildSizesContext {
+    CommonItems                                                 common;
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+    VkAccelerationStructureBuildGeometryInfoKHR                 geometryInfo;
+    VkAccelerationStructureBuildSizesInfoKHR                    sizesInfo;
+    VkAccelerationStructureGeometryKHR                          geometries [ engine :: vulkan :: config :: accelerationStructureGeometryCount ];
+    VkAccelerationStructureGeometryKHR const *                  geometryPointers [ engine :: vulkan :: config :: accelerationStructureGeometryCount ];
+    VkAccelerationStructureGeometryKHR                       *  pDynamicGeometries;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_MOTION_BLUR_AVAILABLE
+    VkAccelerationStructureGeometryMotionTrianglesDataNV        trianglesData [ engine :: vulkan :: config :: accelerationStructureGeometryCount ];
+#endif
+};
+
+struct GetAccelerationStructureMemoryRequirementsContext {
+    CommonItems                                                 common;
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    VkMemoryRequirements2                                       requirements2;
+    VkMemoryDedicatedRequirements                               dedicatedRequirements;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+    VkAccelerationStructureMemoryRequirementsInfoNV             requirements;
+#endif
+};
+
+struct BindAccelerationStructureMemoryContext {
+    CommonItems                                                 common;
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+    VkBindAccelerationStructureMemoryInfoNV                     infos [ engine :: vulkan :: config :: bindAccelerationStructureCount ];
+#endif
+};
+
+struct GetAccelerationStructureDeviceAddressContext {
+    CommonItems                                                 common;
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+    VkAccelerationStructureDeviceAddressInfoKHR                 info;
 #endif
 };
 
@@ -1573,6 +1729,11 @@ union CreateImageSharedContext {
     CreateImageViewContext                                              view;
 };
 
+union CreateAccelerationStructureSharedContext {
+    CreateAccelerationStructureKhronosContext                           khronos;
+    CreateAccelerationStructureNVidiaContext                            nvidia;
+};
+
 union CreateSharedContext {
     CreateInstanceContext                                               instance;
     CreateDeviceContext                                                 device;
@@ -1588,6 +1749,7 @@ union CreateSharedContext {
     CreatePipelineSharedContext                                         pipeline;
     CreateBufferSharedContext                                           buffer;
     CreateImageSharedContext                                            image;
+    CreateAccelerationStructureSharedContext                            accelerationStructure;
 };
 
 union GetPipelineSharedContext {
@@ -1610,6 +1772,12 @@ union GetImageSharedContext {
     GetImageDrmFormatModifierPropertiesContext                          drmFormatModifier;
 };
 
+union GetAccelerationStructureSharedContext {
+    GetAccelerationStructureBuildSizesContext                           buildSizes;
+    GetAccelerationStructureMemoryRequirementsContext                   memoryRequirements;
+    GetAccelerationStructureDeviceAddressContext                        deviceAddress;
+};
+
 union GetSharedContext {
     GetPhysicalDeviceSharedContext                                      physicalDevice;
     GetDeviceQueueContext                                               deviceQueue;
@@ -1620,6 +1788,7 @@ union GetSharedContext {
     GetPipelineSharedContext                                            pipeline;
     GetMemorySharedContext                                              memory;
     GetImageSharedContext                                               image;
+    GetAccelerationStructureSharedContext                               accelerationStructure;
 };
 
 union AllocateSharedContext {
@@ -1691,6 +1860,10 @@ union SetSharedContext {
     SetCommandBufferSharedContext                                       commandBuffer;
 };
 
+union BindSharedContext {
+    BindAccelerationStructureMemoryContext                              accelerationStructureMemory;
+};
+
 union SharedContext {
     CommonContext                                                       common;
     CreateSharedContext                                                 create;
@@ -1704,6 +1877,7 @@ union SharedContext {
     ImportSharedContext                                                 _import;
     WaitSharedContext                                                   wait;
     SignalSharedContext                                                 signal;
+    BindSharedContext                                                   bind;
 };
 
 

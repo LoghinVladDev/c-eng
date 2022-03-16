@@ -4036,6 +4036,189 @@ namespace engine :: vulkan {
     ) noexcept -> VkImageViewMinLodCreateInfoEXT *;
 #endif
 
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+    extern auto prepareContext (
+            CreateAccelerationStructureNVidiaContext              *,
+            Type ( AccelerationStructureCreateInfoNVidia )  const *
+    ) noexcept -> VkAccelerationStructureCreateInfoNV *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+    extern auto toVulkanFormat (
+            VkAccelerationStructureCreateInfoNV                  *,
+            Type ( AccelerationStructureCreateInfoNVidia ) const *
+    ) noexcept -> VkAccelerationStructureCreateInfoNV *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+    extern auto toVulkanFormat (
+            VkGeometryNV                  *,
+            Type ( GeometryNVidia ) const *
+    ) noexcept -> VkGeometryNV *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+    extern auto prepareContext (
+            CreateAccelerationStructureKhronosContext       *,
+            Type ( AccelerationStructureCreateInfo )  const *
+    ) noexcept -> VkAccelerationStructureCreateInfoKHR *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+    extern auto toVulkanFormat (
+            VkAccelerationStructureCreateInfoKHR           *,
+            Type ( AccelerationStructureCreateInfo ) const *
+    ) noexcept -> VkAccelerationStructureCreateInfoKHR *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+    extern auto toVulkanFormat (
+            VkAccelerationStructureMotionInfoNV                  *,
+            Type ( AccelerationStructureMotionInfoNVidia ) const *
+    ) noexcept -> VkAccelerationStructureMotionInfoNV *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+    extern auto prepareContext (
+            GetAccelerationStructureBuildSizesContext              *,
+            Type ( AccelerationStructureBuildGeometryInfo )  const *
+    ) noexcept -> VkAccelerationStructureBuildGeometryInfoKHR *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+    extern auto fromVulkanFormat (
+            Type ( AccelerationStructureBuildSizesInfo )       *,
+            VkAccelerationStructureBuildSizesInfoKHR     const *
+    ) noexcept -> Type ( AccelerationStructureBuildSizesInfo ) *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+    extern auto toVulkanFormat (
+            VkAccelerationStructureBuildGeometryInfoKHR           *,
+            Type ( AccelerationStructureBuildGeometryInfo ) const *
+    ) noexcept -> VkAccelerationStructureBuildGeometryInfoKHR *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+    extern auto toVulkanFormat (
+            VkAccelerationStructureGeometryKHR           *,
+            Type ( AccelerationStructureGeometry ) const *
+    ) noexcept -> VkAccelerationStructureGeometryKHR *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+    extern auto toVulkanFormat (
+            VkAccelerationStructureGeometryTrianglesDataKHR           *,
+            Type ( AccelerationStructureGeometryTrianglesData ) const *
+    ) noexcept -> VkAccelerationStructureGeometryTrianglesDataKHR *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+    extern auto toVulkanFormat (
+            VkAccelerationStructureGeometryAabbsDataKHR           *,
+            Type ( AccelerationStructureGeometryAabbsData ) const *
+    ) noexcept -> VkAccelerationStructureGeometryAabbsDataKHR *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+    extern auto toVulkanFormat (
+            VkAccelerationStructureGeometryInstancesDataKHR           *,
+            Type ( AccelerationStructureGeometryInstancesData ) const *
+    ) noexcept -> VkAccelerationStructureGeometryInstancesDataKHR *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_MOTION_BLUR_AVAILABLE
+    extern auto toVulkanFormat (
+            VkAccelerationStructureGeometryMotionTrianglesDataNV                  *,
+            Type ( AccelerationStructureGeometryMotionTrianglesDataNVidia ) const *
+    ) noexcept -> VkAccelerationStructureGeometryMotionTrianglesDataNV *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+    extern auto toVulkanFormat (
+            VkAccelerationStructureMemoryRequirementsInfoNV                  *,
+            Type ( AccelerationStructureMemoryRequirementsInfoNVidia ) const *
+    ) noexcept -> VkAccelerationStructureMemoryRequirementsInfoNV *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+    extern auto prepareContext (
+            GetAccelerationStructureMemoryRequirementsContext         *,
+            Type ( MemoryRequirements2 )                        const *
+    ) noexcept -> VkMemoryRequirements2 *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+    extern auto extractContext (
+            Type ( MemoryRequirements2 )                              *,
+            GetAccelerationStructureMemoryRequirementsContext   const *
+    ) noexcept -> void;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto toVulkanFormat (
+            VkMemoryRequirements              *,
+            Type ( MemoryRequirements ) const *
+    ) noexcept -> VkMemoryRequirements *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    extern auto toVulkanFormat (
+            VkMemoryRequirements2              *,
+            Type ( MemoryRequirements2 ) const *
+    ) noexcept -> VkMemoryRequirements2 *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    extern auto toVulkanFormat (
+            VkMemoryDedicatedRequirements              *,
+            Type ( MemoryDedicatedRequirements ) const *
+    ) noexcept -> VkMemoryDedicatedRequirements *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto fromVulkanFormat (
+            Type ( MemoryRequirements )    *,
+            VkMemoryRequirements     const *
+    ) noexcept -> Type ( MemoryRequirements ) *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    extern auto fromVulkanFormat (
+            Type ( MemoryRequirements2 )    *,
+            VkMemoryRequirements2     const *
+    ) noexcept -> Type ( MemoryRequirements2 ) *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    extern auto fromVulkanFormat (
+            Type ( MemoryDedicatedRequirements )    *,
+            VkMemoryDedicatedRequirements     const *
+    ) noexcept -> Type ( MemoryDedicatedRequirements ) *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+    extern auto prepareContext (
+            BindAccelerationStructureMemoryContext                    *,
+            cds :: uint32,
+            Type ( BindAccelerationStructureMemoryInfoNVidia )  const *
+    ) noexcept -> VkBindAccelerationStructureMemoryInfoNV *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+    extern auto toVulkanFormat (
+            VkBindAccelerationStructureMemoryInfoNV                  *,
+            Type ( BindAccelerationStructureMemoryInfoNVidia ) const *
+    ) noexcept -> VkBindAccelerationStructureMemoryInfoNV *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+    extern auto toVulkanFormat (
+            VkAccelerationStructureDeviceAddressInfoKHR           *,
+            Type ( AccelerationStructureDeviceAddressInfo ) const *
+    ) noexcept -> VkAccelerationStructureDeviceAddressInfoKHR *;
+#endif
+
 } // namespace engine :: vulkan
 
 #define C_ENG_MAP_END

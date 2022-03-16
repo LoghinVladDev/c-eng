@@ -4937,6 +4937,186 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #include <ObjectMapping.hpp>
 #endif
 
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+#define C_ENG_MAP_START ENUM ( AccelerationStructureType, TYPE ( cds :: uint8 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( TopLevel,       VkAccelerationStructureTypeKHR :: VK_ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL_KHR ),
+            Field ( BottomLevel,    VkAccelerationStructureTypeKHR :: VK_ACCELERATION_STRUCTURE_TYPE_BOTTOM_LEVEL_KHR ),
+            Field ( Generic,        VkAccelerationStructureTypeKHR :: VK_ACCELERATION_STRUCTURE_TYPE_GENERIC_KHR ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START ENUM ( BuildAccelerationStructureFlag, TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( AllowUpdate,        VkBuildAccelerationStructureFlagBitsKHR :: VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_UPDATE_BIT_KHR ),
+            Field ( AllowCompaction,    VkBuildAccelerationStructureFlagBitsKHR :: VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_COMPACTION_BIT_KHR ),
+            Field ( PreferFastTrace,    VkBuildAccelerationStructureFlagBitsKHR :: VK_BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_TRACE_BIT_KHR ),
+            Field ( PreferFastBuild,    VkBuildAccelerationStructureFlagBitsKHR :: VK_BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_BUILD_BIT_KHR ),
+            Field ( LowMemory,          VkBuildAccelerationStructureFlagBitsKHR :: VK_BUILD_ACCELERATION_STRUCTURE_LOW_MEMORY_BIT_KHR ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START ENUM ( GeometryType, TYPE ( cds :: uint8 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( Triangles,  VkGeometryTypeKHR :: VK_GEOMETRY_TYPE_TRIANGLES_KHR ),
+            Field ( AABBS,      VkGeometryTypeKHR :: VK_GEOMETRY_TYPE_AABBS_KHR ),
+            Field ( Instances,  VkGeometryTypeKHR :: VK_GEOMETRY_TYPE_INSTANCES_KHR ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START ENUM ( GeometryFlag, TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( Opaque,                         VkGeometryFlagBitsKHR :: VK_GEOMETRY_OPAQUE_BIT_KHR ),
+            Field ( NoDuplicateAnyHitInvocation,    VkGeometryFlagBitsKHR :: VK_GEOMETRY_NO_DUPLICATE_ANY_HIT_INVOCATION_BIT_KHR ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+#define C_ENG_MAP_START ENUM ( AccelerationStructureTypeNVidia, TYPE ( cds :: uint8 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( TopLevel,       VkAccelerationStructureTypeNV :: VK_ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL_NV ),
+            Field ( BottomLevel,    VkAccelerationStructureTypeNV :: VK_ACCELERATION_STRUCTURE_TYPE_BOTTOM_LEVEL_NV ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START ENUM ( BuildAccelerationStructureFlagNVidia, TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( AllowUpdate,        VkBuildAccelerationStructureFlagBitsNV :: VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_UPDATE_BIT_NV ),
+            Field ( AllowCompaction,    VkBuildAccelerationStructureFlagBitsNV :: VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_COMPACTION_BIT_NV ),
+            Field ( PreferFastTrace,    VkBuildAccelerationStructureFlagBitsNV :: VK_BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_TRACE_BIT_NV ),
+            Field ( PreferFastBuild,    VkBuildAccelerationStructureFlagBitsNV :: VK_BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_BUILD_BIT_NV ),
+            Field ( LowMemory,          VkBuildAccelerationStructureFlagBitsNV :: VK_BUILD_ACCELERATION_STRUCTURE_LOW_MEMORY_BIT_NV ),
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_MOTION_BLUR_AVAILABLE
+            Field ( Motion,             VkBuildAccelerationStructureFlagBitsNV :: VK_BUILD_ACCELERATION_STRUCTURE_MOTION_BIT_NV ),
+#endif
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START ENUM ( GeometryTypeNVidia, TYPE ( cds :: uint8 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( Triangles,  VkGeometryTypeNV :: VK_GEOMETRY_TYPE_TRIANGLES_NV ),
+            Field ( AABBS,      VkGeometryTypeNV :: VK_GEOMETRY_TYPE_AABBS_NV ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START ENUM ( GeometryFlagNVidia, TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( Opaque,                         VkGeometryFlagBitsNV :: VK_GEOMETRY_OPAQUE_BIT_NV ),
+            Field ( NoDuplicateAnyHitInvocation,    VkGeometryFlagBitsNV :: VK_GEOMETRY_NO_DUPLICATE_ANY_HIT_INVOCATION_BIT_NV ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+#define C_ENG_MAP_START ENUM ( IndexType, TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( UInt16,      VkIndexType :: VK_INDEX_TYPE_UINT16 ),
+            Field ( UInt32,      VkIndexType :: VK_INDEX_TYPE_UINT32 ),
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+            Field ( None,        VkIndexType :: VK_INDEX_TYPE_NONE_KHR ),
+#elif __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+            Field ( None,        VkIndexType :: VK_INDEX_TYPE_NONE_NV ),
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_INDEX_TYPE_UINT8_AVAILABLE
+            Field ( UInt8,       VkIndexType :: VK_INDEX_TYPE_UINT8_EXT ),
+#endif
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+#define C_ENG_MAP_START ENUM ( AccelerationStructureCreateFlag, TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( DeviceAddressCaptureReplay, VkAccelerationStructureCreateFlagBitsKHR :: VK_ACCELERATION_STRUCTURE_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT_KHR ),
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_MOTION_BLUR_AVAILABLE
+            Field ( MotionNVidia,               VkAccelerationStructureCreateFlagBitsKHR :: VK_ACCELERATION_STRUCTURE_CREATE_MOTION_BIT_NV ),
+#endif
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+#define C_ENG_MAP_START ENUM ( AccelerationStructureBuildType, TYPE ( cds :: uint8 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( Host,           VkAccelerationStructureBuildTypeKHR :: VK_ACCELERATION_STRUCTURE_BUILD_TYPE_HOST_KHR ),
+            Field ( Device,         VkAccelerationStructureBuildTypeKHR :: VK_ACCELERATION_STRUCTURE_BUILD_TYPE_DEVICE_KHR ),
+            Field ( HostOrDevice,   VkAccelerationStructureBuildTypeKHR :: VK_ACCELERATION_STRUCTURE_BUILD_TYPE_HOST_OR_DEVICE_KHR ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+#define C_ENG_MAP_START ENUM ( BuildAccelerationStructureMode, TYPE ( cds :: uint8 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( Build,  VkBuildAccelerationStructureModeKHR :: VK_BUILD_ACCELERATION_STRUCTURE_MODE_BUILD_KHR ),
+            Field ( Update, VkBuildAccelerationStructureModeKHR :: VK_BUILD_ACCELERATION_STRUCTURE_MODE_UPDATE_KHR ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+#define C_ENG_MAP_START ENUM ( AccelerationStructureMemoryRequirementsTypeNVidia, TYPE ( cds :: uint8 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( Object,         VkAccelerationStructureMemoryRequirementsTypeNV :: VK_ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_OBJECT_NV ),
+            Field ( BuildScratch,   VkAccelerationStructureMemoryRequirementsTypeNV :: VK_ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_BUILD_SCRATCH_NV ),
+            Field ( UpdateScratch,  VkAccelerationStructureMemoryRequirementsTypeNV :: VK_ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_UPDATE_SCRATCH_NV ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
 
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 
@@ -5054,6 +5234,23 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_PIPELINE_CREATION_FEEDBACK_AVAILABLE
         __C_ENG_ALIAS ( PipelineCreationFeedbackFlags,      VkPipelineCreationFeedbackFlags );
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+        __C_ENG_ALIAS ( BuildAccelerationStructureFlags,    VkBuildAccelerationStructureFlagsKHR );
+        __C_ENG_ALIAS ( AccelerationStructureHandle,        VkAccelerationStructureKHR );
+        __C_ENG_ALIAS ( GeometryFlags,                      VkGeometryFlagsKHR );
+        __C_ENG_ALIAS ( AccelerationStructureCreateFlags,   VkAccelerationStructureCreateFlagsKHR );
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+        __C_ENG_ALIAS ( BuildAccelerationStructureFlagsNVidia,  VkBuildAccelerationStructureFlagsNV );
+        __C_ENG_ALIAS ( AccelerationStructureHandleNVidia,      VkAccelerationStructureNV );
+        __C_ENG_ALIAS ( GeometryFlagsNVidia,                    VkGeometryFlagsNV );
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_MOTION_BLUR_AVAILABLE
+        __C_ENG_ALIAS ( AccelerationStructureMotionInfoFlagsNVidia,  VkAccelerationStructureMotionInfoFlagsNV );
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DEFERRED_HOST_OPERATIONS_AVAILABLE
@@ -13942,6 +14139,392 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #endif
 
 
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( GeometryAABBNVidia, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )              structureType;
+            Type ( GenericStructure )   const * pNext;
+            Type ( BufferHandle )               aabbData;
+            cds :: uint32                       numAABBs;
+            cds :: uint32                       stride;
+            Type ( DeviceSize )                 offset;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( GeometryTrianglesNVidia, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )              structureType;
+            Type ( GenericStructure )   const * pNext;
+            Type ( BufferHandle )               vertexData;
+            Type ( DeviceSize )                 vertexOffset;
+            cds :: uint32                       vertexCount;
+            Type ( DeviceSize )                 vertexStride;
+            Type ( Format )                     vertexFormat;
+            Type ( BufferHandle )               indexData;
+            Type ( DeviceSize )                 indexOffset;
+            cds :: uint32                       indexCount;
+            Type ( IndexType )                  indexType;
+            Type ( BufferHandle )               transformData;
+            Type ( DeviceSize )                 transformOffset;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( GeometryDataNVidia, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( GeometryTrianglesNVidia )    triangles;
+            Type ( GeometryAABBNVidia )         aabbs;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( GeometryNVidia, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                              structureType;
+            Type ( GenericStructure )                   const * pNext;
+            Type ( GeometryTypeNVidia )                         geometryType;
+            Type ( GeometryDataNVidia )                         geometry;
+            Type ( GeometryFlagsNVidia )                        flags;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( AccelerationStructureInfoNVidia, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                              structureType;
+            Type ( GenericStructure )                   const * pNext;
+            Type ( AccelerationStructureTypeNVidia )            type;
+            Type ( BuildAccelerationStructureFlagsNVidia )      flags;
+            cds :: uint32                                       instanceCount;
+            cds :: uint32                                       geometryCount;
+            Type ( GeometryNVidia )                     const * pGeometries;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( AccelerationStructureCreateInfoNVidia, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                      structureType;
+            Type ( GenericStructure )           const * pNext;
+            Type ( DeviceSize )                         compactedSize;
+            Type ( AccelerationStructureInfoNVidia )    info;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( AccelerationStructureCreateInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                      structureType;
+            Type ( GenericStructure )           const * pNext;
+            Type ( AccelerationStructureCreateFlags )   flags;
+            Type ( BufferHandle )                       buffer;
+            Type ( DeviceSize )                         offset;
+            Type ( DeviceSize )                         size;
+            Type ( AccelerationStructureType )          type;
+            Type ( DeviceAddress )                      deviceAddress;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_MOTION_BLUR_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( AccelerationStructureMotionInfoNVidia, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                                  structureType;
+            Type ( GenericStructure )                       const * pNext;
+            cds :: uint32                                           maxInstances;
+            Type ( AccelerationStructureMotionInfoFlagsNVidia )     flags;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+#define C_ENG_MAP_START UNION ( DeviceOrHostAddress, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Union {
+            Type ( DeviceAddress )  deviceAddress;
+            void                  * hostAddress;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+#define C_ENG_MAP_START UNION ( DeviceOrHostAddressConst, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Union {
+            Type ( DeviceAddress )  deviceAddress;
+            void            const * hostAddress;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( AccelerationStructureGeometryTrianglesData, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                                  structureType;
+            Type ( GenericStructure )                       const * pNext;
+            Type ( Format )                                         vertexFormat;
+            Type ( DeviceOrHostAddressConst )                       vertexData;
+            Type ( DeviceSize )                                     vertexStride;
+            cds :: uint32                                           maxVertex;
+            Type ( IndexType )                                      indexType;
+            Type ( DeviceOrHostAddressConst )                       indexData;
+            Type ( DeviceOrHostAddressConst )                       transformData;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( AccelerationStructureGeometryAabbsData, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                                  structureType;
+            Type ( GenericStructure )                       const * pNext;
+            Type ( DeviceOrHostAddressConst )                       data;
+            Type ( DeviceSize )                                     stride;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( AccelerationStructureGeometryInstancesData, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                                  structureType;
+            Type ( GenericStructure )                       const * pNext;
+            Type ( Bool )                                           arrayOfPointers;
+            Type ( DeviceOrHostAddressConst )                       data;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+#define C_ENG_MAP_START UNION ( AccelerationStructureGeometryData, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( AccelerationStructureGeometryTrianglesData ) triangles;
+            Type ( AccelerationStructureGeometryAabbsData )     aabbs;
+            Type ( AccelerationStructureGeometryInstancesData ) instances;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( AccelerationStructureGeometry, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                                  structureType;
+            Type ( GenericStructure )                       const * pNext;
+            Type ( GeometryType )                                   geometryType;
+            Type ( AccelerationStructureGeometryData )              geometry;
+            Type ( GeometryFlags )                                  flags;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( AccelerationStructureBuildGeometryInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                                  structureType;
+            Type ( GenericStructure )                       const * pNext;
+            Type ( AccelerationStructureType )                      type;
+            Type ( BuildAccelerationStructureFlags )                flags;
+            Type ( BuildAccelerationStructureMode )                 mode;
+            Type ( AccelerationStructureHandle )                    source;
+            Type ( AccelerationStructureHandle )                    destination;
+            cds :: uint32                                           geometryCount;
+            Type ( AccelerationStructureGeometry )          const * pGeometries;
+            Type ( AccelerationStructureGeometry )  const * const * ppGeometries;
+            Type ( DeviceOrHostAddress )                            scratchData;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( AccelerationStructureBuildSizesInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                                  structureType;
+            Type ( GenericStructure )                       const * pNext;
+            Type ( DeviceSize )                                     accelerationStructureSize;
+            Type ( DeviceSize )                                     updateScratchSize;
+            Type ( DeviceSize )                                     buildScratchSize;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_MOTION_BLUR_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( AccelerationStructureGeometryMotionTrianglesDataNVidia, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                                  structureType;
+            Type ( GenericStructure )                       const * pNext;
+            Type ( DeviceOrHostAddressConst )                       vertexData;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( AccelerationStructureMemoryRequirementsInfoNVidia, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                                              structureType;
+            Type ( GenericStructure )                                   const * pNext;
+            Type ( AccelerationStructureMemoryRequirementsTypeNVidia )          type;
+            Type ( AccelerationStructureHandleNVidia )                          accelerationStructure;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( MemoryRequirements, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( DeviceSize ) size;
+            Type ( DeviceSize ) alignment;
+            cds :: uint32       memoryTypeBits;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( MemoryRequirements2, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )      structureType;
+            Type ( GenericStructure ) * pNext;
+            Type ( MemoryRequirements ) memoryRequirements;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( MemoryDedicatedRequirements, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )      structureType;
+            Type ( GenericStructure ) * pNext;
+            Type ( Bool )               prefersDedicatedAllocation;
+            Type ( Bool )               requiresDedicatedAllocation;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( BindAccelerationStructureMemoryInfoNVidia, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                              structureType;
+            Type ( GenericStructure )                   const * pNext;
+            Type ( AccelerationStructureHandleNVidia )          accelerationStructure;
+            Type ( DeviceMemoryHandle )                         memory;
+            Type ( DeviceSize )                                 memoryOffset;
+            cds :: uint32                                       deviceIndexCount;
+            cds :: uint32                               const * pDeviceIndices;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( AccelerationStructureDeviceAddressInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                              structureType;
+            Type ( GenericStructure )                   const * pNext;
+            Type ( AccelerationStructureHandle )                accelerationStructure;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+
 #define C_ENG_MAP_START     HEADER
 #include <ObjectMapping.hpp>
 
@@ -14014,6 +14597,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         NoDiscard auto toString ( Type ( BufferUsageFlag ) ) noexcept -> cds :: StringLiteral;
         NoDiscard auto toString ( Type ( ImageType ) ) noexcept -> cds :: StringLiteral;
         NoDiscard auto toString ( Type ( ImageTiling ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( IndexType ) ) noexcept -> cds :: StringLiteral;
 
 #endif
 
@@ -14085,6 +14669,24 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         NoDiscard auto toString ( Type ( ShaderGroupShader ) ) noexcept -> cds :: StringLiteral;
 #endif
 
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+        NoDiscard auto toString ( Type ( AccelerationStructureType ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( BuildAccelerationStructureFlag ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( GeometryType ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( GeometryFlag ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( AccelerationStructureCreateFlag ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( AccelerationStructureBuildType ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( BuildAccelerationStructureMode ) ) noexcept -> cds :: StringLiteral;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+        NoDiscard auto toString ( Type ( AccelerationStructureTypeNVidia ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( BuildAccelerationStructureFlagNVidia ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( GeometryTypeNVidia ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( GeometryFlagNVidia ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( AccelerationStructureMemoryRequirementsTypeNVidia ) ) noexcept -> cds :: StringLiteral;
+#endif
+
 #if __C_ENG_VULKAN_API_EXTENSION_LINE_RASTERIZATION_AVAILABLE
         NoDiscard auto toString ( Type ( LineRasterizationMode ) ) noexcept -> cds :: StringLiteral;
 #endif
@@ -14140,21 +14742,17 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SURFACE_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( ColorSpace ) ) noexcept -> cds :: StringLiteral;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( SurfaceTransformFlag ) ) noexcept -> cds :: StringLiteral;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( CompositeAlphaFlag ) ) noexcept -> cds :: StringLiteral;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PresentMode ) ) noexcept -> cds :: StringLiteral;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( SurfaceCapabilities ) const & ) noexcept -> cds :: String;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( SurfaceFormat ) const & ) noexcept -> cds :: String;
-
+        NoDiscard auto toString ( Type ( ColorSpace ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( SurfaceTransformFlag ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( CompositeAlphaFlag ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( PresentMode ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( SurfaceCapabilities ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( SurfaceFormat ) const & ) noexcept -> cds :: String;
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SWAP_CHAIN_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( SwapChainCreateFlag ) ) noexcept -> cds :: StringLiteral;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( SwapChainCreateInfo ) const & ) noexcept -> cds :: String;
-
+        NoDiscard auto toString ( Type ( SwapChainCreateFlag ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( SwapChainCreateInfo ) const & ) noexcept -> cds :: String;
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_GET_SURFACE_CAPABILITIES_AVAILABLE
@@ -14312,6 +14910,8 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         NoDiscard auto toString ( Type ( SubresourceLayout ) const & ) noexcept -> cds :: String;
         NoDiscard auto toString ( Type ( ImageSubresource ) const & ) noexcept -> cds :: String;
 
+        NoDiscard auto toString ( Type ( MemoryRequirements ) const & ) noexcept -> cds :: String;
+
 #endif
 
 #if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
@@ -14357,6 +14957,9 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         NoDiscard auto toString ( Type ( ExportMemoryAllocateInfo ) const & ) noexcept -> cds :: String;
         NoDiscard auto toString ( Type ( ExternalMemoryBufferCreateInfo ) const & ) noexcept -> cds :: String;
         NoDiscard auto toString ( Type ( ExternalMemoryImageCreateInfo ) const & ) noexcept -> cds :: String;
+
+        NoDiscard auto toString ( Type ( MemoryRequirements2 ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( MemoryDedicatedRequirements ) const & ) noexcept -> cds :: String;
 
 #endif
 
@@ -14443,9 +15046,36 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         NoDiscard auto toString ( Type ( RayTracingPipelineInterfaceCreateInfo ) const & ) noexcept -> cds :: String;
 #endif
 
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+        NoDiscard auto toString ( Type ( AccelerationStructureCreateInfo ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( AccelerationStructureBuildGeometryInfo ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( AccelerationStructureGeometry ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( AccelerationStructureGeometryData ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( DeviceOrHostAddress ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( DeviceOrHostAddressConst ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( AccelerationStructureGeometryTrianglesData ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( AccelerationStructureGeometryAabbsData ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( AccelerationStructureGeometryInstancesData ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( AccelerationStructureBuildSizesInfo ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( AccelerationStructureDeviceAddressInfo ) const & ) noexcept -> cds :: String;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_MOTION_BLUR_AVAILABLE
+        NoDiscard auto toString ( Type ( AccelerationStructureMotionInfoNVidia ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( AccelerationStructureGeometryMotionTrianglesDataNVidia ) const & ) noexcept -> cds :: String;
+#endif
+
 #if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
         NoDiscard auto toString ( Type ( RayTracingShaderGroupCreateInfoNVidia ) const & ) noexcept -> cds :: String;
         NoDiscard auto toString ( Type ( RayTracingPipelineCreateInfoNVidia ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( AccelerationStructureCreateInfoNVidia ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( AccelerationStructureInfoNVidia ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( GeometryAABBNVidia ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( GeometryTrianglesNVidia ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( GeometryDataNVidia ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( GeometryNVidia ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( AccelerationStructureMemoryRequirementsInfoNVidia ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( BindAccelerationStructureMemoryInfoNVidia ) const & ) noexcept -> cds :: String;
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PIPELINE_EXECUTABLE_PROPERTIES_AVAILABLE

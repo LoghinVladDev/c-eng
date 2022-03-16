@@ -5817,4 +5817,878 @@ namespace engine :: vulkan {
     }
 #endif
 
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+    auto prepareContext (
+            CreateAccelerationStructureNVidiaContext              * pContext,
+            Type ( AccelerationStructureCreateInfoNVidia )  const * pSource
+    ) noexcept -> VkAccelerationStructureCreateInfoNV * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pContext == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        (void) toVulkanFormat ( & pContext->createInfo, pSource );
+
+        pContext->createInfo.info.pGeometries = & pContext->geometries[0];
+
+        if ( pContext->createInfo.info.geometryCount > engine :: vulkan :: config :: accelerationStructureNVidiaGeometryCount ) {
+            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, String :: f (
+                    "config :: accelerationStructureNVidiaGeometryCount = %d. Minimum Required = %d",
+                    engine :: vulkan :: config :: accelerationStructureNVidiaGeometryCount,
+                    pContext->createInfo.info.geometryCount
+            ))
+
+            pContext->createInfo.info.geometryCount = engine :: vulkan :: config :: accelerationStructureNVidiaGeometryCount;
+        }
+
+        for ( uint32 i = 0U; i < pContext->createInfo.info.geometryCount; ++ i ) {
+            (void) toVulkanFormat ( & pContext->geometries[i], & pSource->info.pGeometries[i] );
+        }
+
+        return & pContext->createInfo;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+    auto toVulkanFormat (
+            VkAccelerationStructureCreateInfoNV                  * pDestination,
+            Type ( AccelerationStructureCreateInfoNVidia ) const * pSource
+    ) noexcept -> VkAccelerationStructureCreateInfoNV * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType          = VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_CREATE_INFO_NV,
+                .pNext          = nullptr,
+                .compactedSize  = pSource->compactedSize,
+                .info           = {
+                        .sType          = VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_INFO_NV,
+                        .pNext          = nullptr,
+                        .type           = static_cast < VkAccelerationStructureTypeNV > ( pSource->info.type ),
+                        .flags          = pSource->info.flags,
+                        .instanceCount  = pSource->info.instanceCount,
+                        .geometryCount  = pSource->info.geometryCount,
+                        .pGeometries    = nullptr
+                }
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+    auto toVulkanFormat (
+            VkGeometryNV                  * pDestination,
+            Type ( GeometryNVidia ) const * pSource
+    ) noexcept -> VkGeometryNV * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType              = VK_STRUCTURE_TYPE_GEOMETRY_NV,
+                .pNext              = nullptr,
+                .geometryType       = static_cast < VkGeometryTypeKHR > ( pSource->geometryType ),
+                .geometry           = {
+                        .triangles          = {
+                                .sType              = VK_STRUCTURE_TYPE_GEOMETRY_TRIANGLES_NV,
+                                .pNext              = nullptr,
+                                .vertexData         = pSource->geometry.triangles.vertexData,
+                                .vertexOffset       = pSource->geometry.triangles.vertexOffset,
+                                .vertexCount        = pSource->geometry.triangles.vertexCount,
+                                .vertexStride       = pSource->geometry.triangles.vertexStride,
+                                .vertexFormat       = static_cast < VkFormat > ( pSource->geometry.triangles.vertexFormat ),
+                                .indexData          = pSource->geometry.triangles.indexData,
+                                .indexOffset        = pSource->geometry.triangles.indexOffset,
+                                .indexCount         = pSource->geometry.triangles.indexCount,
+                                .indexType          = static_cast < VkIndexType > ( pSource->geometry.triangles.indexType ),
+                                .transformData      = pSource->geometry.triangles.transformData,
+                                .transformOffset    = pSource->geometry.triangles.transformOffset
+                        },
+                        .aabbs              = {
+                                .sType              = VK_STRUCTURE_TYPE_GEOMETRY_AABB_NV,
+                                .pNext              = nullptr,
+                                .aabbData           = pSource->geometry.aabbs.aabbData,
+                                .numAABBs           = pSource->geometry.aabbs.numAABBs,
+                                .stride             = pSource->geometry.aabbs.stride,
+                                .offset             = pSource->geometry.aabbs.offset
+                        }
+                },
+                .flags              = pSource->flags
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+    auto prepareContext (
+            CreateAccelerationStructureKhronosContext       * pContext,
+            Type ( AccelerationStructureCreateInfo )  const * pSource
+    ) noexcept -> VkAccelerationStructureCreateInfoKHR * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pContext == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        auto pCurrent   = reinterpret_cast < Type ( GenericInStructure ) const * > ( pSource->pNext );
+        auto pCurrentVk = reinterpret_cast < VkBaseOutStructure * > ( toVulkanFormat ( & pContext->createInfo, pSource ) );
+
+        while ( pCurrent != nullptr ) {
+
+            switch ( pCurrent->structureType ) {
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_MOTION_BLUR_AVAILABLE
+
+                case StructureTypeAccelerationStructureMotionInfoNVidia:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                            toVulkanFormat (
+                                    & pContext->motionInfo,
+                                    reinterpret_cast < Type ( AccelerationStructureMotionInfoNVidia ) const * > ( pCurrent )
+                            )
+                    );
+                    break;
+
+#endif
+
+                default:
+                    break;
+            }
+
+            pCurrentVk  = pCurrentVk->pNext == nullptr ? pCurrentVk : pCurrentVk->pNext;
+            pCurrent    = pCurrent->pNext;
+        }
+
+        pCurrentVk->pNext = nullptr;
+
+        return & pContext->createInfo;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+    auto toVulkanFormat (
+            VkAccelerationStructureCreateInfoKHR           * pDestination,
+            Type ( AccelerationStructureCreateInfo ) const * pSource
+    ) noexcept -> VkAccelerationStructureCreateInfoKHR * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType              = VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_CREATE_INFO_KHR,
+                .pNext              = nullptr,
+                .createFlags        = pSource->flags,
+                .buffer             = pSource->buffer,
+                .offset             = pSource->offset,
+                .size               = pSource->size,
+                .type               = static_cast < VkAccelerationStructureTypeKHR > ( pSource->type ),
+                .deviceAddress      = pSource->deviceAddress
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+    auto toVulkanFormat (
+            VkAccelerationStructureMotionInfoNV                  * pDestination,
+            Type ( AccelerationStructureMotionInfoNVidia ) const * pSource
+    ) noexcept -> VkAccelerationStructureMotionInfoNV * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType              = VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_MOTION_INFO_NV,
+                .pNext              = nullptr,
+                .maxInstances       = pSource->maxInstances,
+                .flags              = pSource->flags
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+    static auto accelerationStructureBuildSizesContextOnDelete (
+            GenericContext * pGenericContext
+    ) noexcept -> void {
+        delete [] reinterpret_cast < GetAccelerationStructureBuildSizesContext * > ( pGenericContext )->pDynamicGeometries;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+    auto prepareContext (
+            GetAccelerationStructureBuildSizesContext              * pContext,
+            Type ( AccelerationStructureBuildGeometryInfo )  const * pSource
+    ) noexcept -> VkAccelerationStructureBuildGeometryInfoKHR * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pContext == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        if ( pSource->geometryCount != 0U && pSource->ppGeometries != nullptr ) {
+            pContext->common.ruleSet.onDelete   = & accelerationStructureBuildSizesContextOnDelete;
+            pContext->pDynamicGeometries        = new VkAccelerationStructureGeometryKHR [ pSource->geometryCount ];
+        }
+
+        (void) toVulkanFormat ( & pContext->geometryInfo, pSource );
+
+        if ( pSource->geometryCount != 0U && pSource->pGeometries != nullptr ) {
+            pContext->geometryInfo.pGeometries = & pContext->geometries[0];
+
+            if ( pContext->geometryInfo.geometryCount > engine :: vulkan :: config :: accelerationStructureGeometryCount ) {
+                __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, String :: f (
+                        "config :: accelerationStructureGeometryCount = %d. Minimum Required = %d",
+                        engine :: vulkan :: config :: accelerationStructureGeometryCount,
+                        pContext->geometryInfo.geometryCount
+                ))
+
+                pContext->geometryInfo.geometryCount = engine :: vulkan :: config :: accelerationStructureGeometryCount;
+            }
+
+            for ( uint32 i = 0U; i < pContext->geometryInfo.geometryCount; ++ i ) {
+                auto pCurrent   = reinterpret_cast < Type ( GenericInStructure ) const * > ( pSource->pGeometries[i].pNext );
+                auto pCurrentVk = reinterpret_cast < VkBaseOutStructure * > ( toVulkanFormat ( & pContext->geometries[i], & pSource->pGeometries[i] ) );
+
+                while ( pCurrent != nullptr ) {
+
+                    switch ( pCurrent->structureType ) {
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_MOTION_BLUR_AVAILABLE
+
+                        case StructureTypeAccelerationStructureGeometryMotionTrianglesDataNVidia:
+                            pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                                    toVulkanFormat (
+                                            & pContext->trianglesData[i],
+                                            reinterpret_cast < Type ( AccelerationStructureGeometryMotionTrianglesDataNVidia ) const * > ( pCurrent )
+                                    )
+                            );
+                            break;
+
+#endif
+
+                        default:
+                            break;
+                    }
+
+                    pCurrentVk  = pCurrentVk->pNext == nullptr ? pCurrentVk : pCurrentVk->pNext;
+                    pCurrent    = pCurrent->pNext;
+                }
+
+                pCurrentVk->pNext = nullptr;
+            }
+        } else {
+            pContext->geometryInfo.ppGeometries = & pContext->geometryPointers[0];
+
+            if ( pContext->geometryInfo.geometryCount > engine :: vulkan :: config :: accelerationStructureGeometryCount ) {
+                __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, String :: f (
+                        "config :: accelerationStructureGeometryCount = %d. Minimum Required = %d",
+                        engine :: vulkan :: config :: accelerationStructureGeometryCount,
+                        pContext->geometryInfo.geometryCount
+                ))
+
+                pContext->geometryInfo.geometryCount = engine :: vulkan :: config :: accelerationStructureGeometryCount;
+            }
+
+            for ( uint32 i = 0U; i < pContext->geometryInfo.geometryCount; ++ i ) {
+                pContext->geometryPointers[i] = & pContext->pDynamicGeometries[i];
+
+                auto pCurrent   = reinterpret_cast < Type ( GenericInStructure ) const * > ( pSource->pGeometries[i].pNext );
+                auto pCurrentVk = reinterpret_cast < VkBaseOutStructure * > ( toVulkanFormat ( & pContext->pDynamicGeometries[i], pSource->ppGeometries[i] ) );
+
+                while ( pCurrent != nullptr ) {
+
+                    switch ( pCurrent->structureType ) {
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_MOTION_BLUR_AVAILABLE
+
+                        case StructureTypeAccelerationStructureGeometryMotionTrianglesDataNVidia:
+                            pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                                    toVulkanFormat (
+                                            & pContext->trianglesData[i],
+                                            reinterpret_cast < Type ( AccelerationStructureGeometryMotionTrianglesDataNVidia ) const * > ( pCurrent )
+                                    )
+                            );
+                            break;
+
+#endif
+
+                        default:
+                            break;
+                    }
+
+                    pCurrentVk  = pCurrentVk->pNext == nullptr ? pCurrentVk : pCurrentVk->pNext;
+                    pCurrent    = pCurrent->pNext;
+                }
+
+                pCurrentVk->pNext = nullptr;
+            }
+        }
+
+        return & pContext->geometryInfo;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+    auto toVulkanFormat (
+            VkAccelerationStructureBuildGeometryInfoKHR           * pDestination,
+            Type ( AccelerationStructureBuildGeometryInfo ) const * pSource
+    ) noexcept -> VkAccelerationStructureBuildGeometryInfoKHR * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        pDestination->sType                      = VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_BUILD_GEOMETRY_INFO_KHR;
+        pDestination->pNext                      = nullptr;
+        pDestination->type                       = static_cast < VkAccelerationStructureTypeKHR > ( pSource->type );
+        pDestination->flags                      = pSource->flags;
+        pDestination->mode                       = static_cast < VkBuildAccelerationStructureModeKHR > ( pSource->mode );
+        pDestination->srcAccelerationStructure   = pSource->source;
+        pDestination->dstAccelerationStructure   = pSource->destination;
+        pDestination->geometryCount              = pSource->geometryCount;
+        pDestination->pGeometries                = nullptr;
+        pDestination->ppGeometries               = nullptr;
+
+        (void) std :: memcpy ( & pDestination->scratchData, & pSource->scratchData, sizeof ( VkDeviceOrHostAddressKHR ) );
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+    auto toVulkanFormat (
+            VkAccelerationStructureGeometryKHR           * pDestination,
+            Type ( AccelerationStructureGeometry ) const * pSource
+    ) noexcept -> VkAccelerationStructureGeometryKHR * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        pDestination->sType                      = VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_KHR;
+        pDestination->pNext                      = nullptr;
+        pDestination->geometryType               = static_cast < VkGeometryTypeKHR > ( pSource->geometryType );
+        pDestination->flags                      = pSource->flags;
+
+        switch ( pDestination->geometryType ) {
+            case VK_GEOMETRY_TYPE_AABBS_KHR:
+                (void) toVulkanFormat ( & pDestination->geometry.aabbs, & pSource->geometry.aabbs );
+                break;
+            case VK_GEOMETRY_TYPE_TRIANGLES_KHR:
+                (void) toVulkanFormat ( & pDestination->geometry.triangles, & pSource->geometry.triangles );
+                break;
+            case VK_GEOMETRY_TYPE_INSTANCES_KHR:
+                (void) toVulkanFormat ( & pDestination->geometry.instances, & pSource->geometry.instances );
+                break;
+            default:
+                break;
+        }
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+    auto toVulkanFormat (
+            VkAccelerationStructureGeometryTrianglesDataKHR           * pDestination,
+            Type ( AccelerationStructureGeometryTrianglesData ) const * pSource
+    ) noexcept -> VkAccelerationStructureGeometryTrianglesDataKHR * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        pDestination->sType             = VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_TRIANGLES_DATA_KHR;
+        pDestination->pNext             = nullptr;
+        pDestination->vertexFormat      = static_cast < VkFormat > ( pSource->vertexFormat );
+        pDestination->vertexStride      = pSource->vertexStride;
+        pDestination->maxVertex         = pSource->maxVertex;
+        pDestination->indexType         = static_cast < VkIndexType > ( pSource->indexType );
+
+        (void) std :: memcpy ( & pDestination->vertexData,      & pSource->vertexData,      sizeof ( VkDeviceOrHostAddressConstKHR ) );
+        (void) std :: memcpy ( & pDestination->indexData,       & pSource->indexData,       sizeof ( VkDeviceOrHostAddressConstKHR ) );
+        (void) std :: memcpy ( & pDestination->transformData,   & pSource->transformData,   sizeof ( VkDeviceOrHostAddressConstKHR ) );
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+    auto toVulkanFormat (
+            VkAccelerationStructureGeometryAabbsDataKHR           * pDestination,
+            Type ( AccelerationStructureGeometryAabbsData ) const * pSource
+    ) noexcept -> VkAccelerationStructureGeometryAabbsDataKHR * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        pDestination->sType             = VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_AABBS_DATA_KHR;
+        pDestination->pNext             = nullptr;
+        pDestination->stride            = pSource->stride;
+
+        (void) std :: memcpy ( & pDestination->data, & pSource->data, sizeof ( VkDeviceOrHostAddressConstKHR ) );
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+    auto toVulkanFormat (
+            VkAccelerationStructureGeometryInstancesDataKHR           * pDestination,
+            Type ( AccelerationStructureGeometryInstancesData ) const * pSource
+    ) noexcept -> VkAccelerationStructureGeometryInstancesDataKHR * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        pDestination->sType             = VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_AABBS_DATA_KHR;
+        pDestination->pNext             = nullptr;
+        pDestination->arrayOfPointers   = pSource->arrayOfPointers;
+
+        (void) std :: memcpy ( & pDestination->data, & pSource->data, sizeof ( VkDeviceOrHostAddressConstKHR ) );
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_MOTION_BLUR_AVAILABLE
+    auto toVulkanFormat (
+            VkAccelerationStructureGeometryMotionTrianglesDataNV                  * pDestination,
+            Type ( AccelerationStructureGeometryMotionTrianglesDataNVidia ) const * pSource
+    ) noexcept -> VkAccelerationStructureGeometryMotionTrianglesDataNV * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        pDestination->sType             = VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_MOTION_TRIANGLES_DATA_NV;
+        pDestination->pNext             = nullptr;
+
+        (void) std :: memcpy ( & pDestination->vertexData, & pSource->vertexData, sizeof ( VkDeviceOrHostAddressConstKHR ) );
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+    auto fromVulkanFormat (
+            Type ( AccelerationStructureBuildSizesInfo )       * pDestination,
+            VkAccelerationStructureBuildSizesInfoKHR     const * pSource
+    ) noexcept -> Type ( AccelerationStructureBuildSizesInfo ) * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .structureType              = StructureTypeAccelerationStructureBuildSizesInfo,
+                .pNext                      = nullptr,
+                .accelerationStructureSize  = pSource->accelerationStructureSize,
+                .updateScratchSize          = pSource->updateScratchSize,
+                .buildScratchSize           = pSource->buildScratchSize
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+    auto toVulkanFormat (
+            VkAccelerationStructureMemoryRequirementsInfoNV                  * pDestination,
+            Type ( AccelerationStructureMemoryRequirementsInfoNVidia ) const * pSource
+    ) noexcept -> VkAccelerationStructureMemoryRequirementsInfoNV * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                  = VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_INFO_NV,
+                .pNext                  = nullptr,
+                .type                   = static_cast < VkAccelerationStructureMemoryRequirementsTypeNV > ( pSource->type ),
+                .accelerationStructure  = pSource->accelerationStructure
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+    auto prepareContext (
+            GetAccelerationStructureMemoryRequirementsContext              * pContext,
+            Type ( MemoryRequirements2 )                             const * pSource
+    ) noexcept -> VkMemoryRequirements2 * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pContext == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        auto pCurrent   = reinterpret_cast < Type ( GenericInStructure ) const * > ( pSource->pNext );
+        auto pCurrentVk = reinterpret_cast < VkBaseOutStructure * > ( toVulkanFormat ( & pContext->requirements2, pSource ) );
+
+        while ( pCurrent != nullptr ) {
+
+            switch ( pCurrent->structureType ) {
+
+                case StructureTypeMemoryDedicatedRequirements:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                            toVulkanFormat (
+                                    & pContext->dedicatedRequirements,
+                                    reinterpret_cast < Type ( MemoryDedicatedRequirements ) const * > ( pCurrent )
+                            )
+                    );
+                    break;
+
+                default:
+                    break;
+            }
+
+            pCurrentVk  = pCurrentVk->pNext == nullptr ? pCurrentVk : pCurrentVk->pNext;
+            pCurrent    = pCurrent->pNext;
+        }
+
+        pCurrentVk->pNext = nullptr;
+
+        return & pContext->requirements2;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    auto toVulkanFormat (
+            VkMemoryRequirements2              * pDestination,
+            Type ( MemoryRequirements2 ) const * pSource
+    ) noexcept -> VkMemoryRequirements2 * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        pDestination->sType = VK_STRUCTURE_TYPE_MEMORY_REQUIREMENTS_2;
+        pDestination->pNext = nullptr;
+
+        (void) toVulkanFormat ( & pDestination->memoryRequirements, & pSource->memoryRequirements );
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    auto toVulkanFormat (
+            VkMemoryRequirements              * pDestination,
+            Type ( MemoryRequirements ) const * pSource
+    ) noexcept -> VkMemoryRequirements * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .size           = pSource->size,
+                .alignment      = pSource->alignment,
+                .memoryTypeBits = pSource->memoryTypeBits
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    auto toVulkanFormat (
+            VkMemoryDedicatedRequirements              * pDestination,
+            Type ( MemoryDedicatedRequirements ) const * pSource
+    ) noexcept -> VkMemoryDedicatedRequirements * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                          = VK_STRUCTURE_TYPE_MEMORY_DEDICATED_REQUIREMENTS,
+                .pNext                          = nullptr,
+                .prefersDedicatedAllocation     = pSource->prefersDedicatedAllocation,
+                .requiresDedicatedAllocation    = pSource->requiresDedicatedAllocation
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+    auto extractContext (
+            Type ( MemoryRequirements2 )                                   * pDestination,
+            GetAccelerationStructureMemoryRequirementsContext        const * pContext
+    ) noexcept -> void {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pContext == nullptr || pDestination == nullptr ) {
+            return;
+        }
+
+#endif
+
+        auto pCurrent   = reinterpret_cast < Type ( GenericOutStructure ) * > ( fromVulkanFormat ( pDestination, & pContext->requirements2 ) );
+
+        while ( pCurrent->pNext != nullptr ) {
+
+            switch ( pCurrent->structureType ) {
+
+                case StructureTypeMemoryDedicatedRequirements:
+                    pCurrent->pNext = reinterpret_cast < Type ( GenericOutStructure ) * > (
+                            fromVulkanFormat (
+                                    reinterpret_cast < Type ( MemoryDedicatedRequirements * ) > ( pCurrent->pNext ),
+                                    & pContext->dedicatedRequirements
+                            )
+                    );
+                    break;
+
+                default:
+                    break;
+            }
+
+            pCurrent    = pCurrent->pNext;
+        }
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    auto fromVulkanFormat (
+            Type ( MemoryRequirements2 )    * pDestination,
+            VkMemoryRequirements2     const * pSource
+    ) noexcept -> Type ( MemoryRequirements2 ) * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        pDestination->structureType = StructureTypeMemoryRequirements;
+        (void) fromVulkanFormat ( & pDestination->memoryRequirements, & pSource->memoryRequirements );
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    auto fromVulkanFormat (
+            Type ( MemoryDedicatedRequirements )    * pDestination,
+            VkMemoryDedicatedRequirements     const * pSource
+    ) noexcept -> Type ( MemoryDedicatedRequirements ) * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .structureType                  = StructureTypeMemoryDedicatedRequirements,
+                .pNext                          = nullptr,
+                .prefersDedicatedAllocation     = pSource->prefersDedicatedAllocation,
+                .requiresDedicatedAllocation    = pSource->requiresDedicatedAllocation
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    auto fromVulkanFormat (
+            Type ( MemoryRequirements )    * pDestination,
+            VkMemoryRequirements     const * pSource
+    ) noexcept -> Type ( MemoryRequirements ) * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .size           = pSource->size,
+                .alignment      = pSource->alignment,
+                .memoryTypeBits = pSource->memoryTypeBits
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+    auto prepareContext (
+            BindAccelerationStructureMemoryContext                    * pContext,
+            cds :: uint32                                               count,
+            Type ( BindAccelerationStructureMemoryInfoNVidia )  const * pInfos
+    ) noexcept -> VkBindAccelerationStructureMemoryInfoNV * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pContext == nullptr || count == 0U || pInfos == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        if ( count > engine :: vulkan :: config :: bindAccelerationStructureCount ) {
+            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, String :: f (
+                    "config :: bindAccelerationStructureCount = %d. Minimum Required = %d",
+                    engine :: vulkan :: config :: bindAccelerationStructureCount,
+                    count
+            ))
+
+            count = engine :: vulkan :: config :: bindAccelerationStructureCount;
+        }
+
+        for ( uint32 i = 0U; i < count; ++ i ) {
+            (void) toVulkanFormat ( & pContext->infos[i], & pInfos[i] );
+        }
+
+        return & pContext->infos[0];
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+    auto toVulkanFormat (
+            VkBindAccelerationStructureMemoryInfoNV                  * pDestination,
+            Type ( BindAccelerationStructureMemoryInfoNVidia ) const * pSource
+    ) noexcept -> VkBindAccelerationStructureMemoryInfoNV * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                          = VK_STRUCTURE_TYPE_BIND_ACCELERATION_STRUCTURE_MEMORY_INFO_NV,
+                .pNext                          = nullptr,
+                .accelerationStructure          = pSource->accelerationStructure,
+                .memory                         = pSource->memory,
+                .memoryOffset                   = pSource->memoryOffset,
+                .deviceIndexCount               = pSource->deviceIndexCount,
+                .pDeviceIndices                 = pSource->pDeviceIndices
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+    auto toVulkanFormat (
+            VkAccelerationStructureDeviceAddressInfoKHR                  * pDestination,
+            Type ( AccelerationStructureDeviceAddressInfo ) const * pSource
+    ) noexcept -> VkAccelerationStructureDeviceAddressInfoKHR * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                          = VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_DEVICE_ADDRESS_INFO_KHR,
+                .pNext                          = nullptr,
+                .accelerationStructure          = pSource->accelerationStructure
+        };
+
+        return pDestination;
+    }
+#endif
+
 } // namespace vulkan :: engine

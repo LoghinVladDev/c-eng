@@ -635,11 +635,9 @@ auto engine :: vulkan :: createDevice (
 
 #endif
 
-    auto context = ContextManager :: acquire();
-
     return APICaller.vkCreateDevice (
             physicalDeviceHandle,
-            prepareContext ( & context.data().create.device, pCreateInfo ),
+            prepareContext ( & ContextManager :: acquire().data().create.device, pCreateInfo ),
             AllocatorHandler :: apply ( pAllocationCallbacks ),
             pDeviceHandle
     );
@@ -4897,7 +4895,242 @@ auto engine :: vulkan :: destroyImage (
     return APICaller.vkDestroyImage (
             deviceHandle,
             imageHandle,
-            AllocatorHandler ::apply ( pAllocationCallbacks )
+            AllocatorHandler :: apply ( pAllocationCallbacks )
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+auto engine :: vulkan :: createAccelerationStructureNVidia (
+        Type ( DeviceHandle )                                   deviceHandle,
+        Type ( AccelerationStructureCreateInfoNVidia )  const * pCreateInfo,
+        Type ( AllocationCallbacks )                    const * pAllocationCallbacks,
+        Type ( AccelerationStructureHandleNVidia )            * pHandle
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || pCreateInfo == nullptr || pHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    return APICaller.vkCreateAccelerationStructureNV (
+            deviceHandle,
+            prepareContext ( & ContextManager :: acquire()->create.accelerationStructure.nvidia, pCreateInfo ),
+            AllocatorHandler :: apply ( pAllocationCallbacks ),
+            pHandle
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+auto engine :: vulkan :: createAccelerationStructure (
+        Type ( DeviceHandle )                                   deviceHandle,
+        Type ( AccelerationStructureCreateInfo )        const * pCreateInfo,
+        Type ( AllocationCallbacks )                    const * pAllocationCallbacks,
+        Type ( AccelerationStructureHandle )                  * pHandle
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || pCreateInfo == nullptr || pHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    return APICaller.vkCreateAccelerationStructureKHR (
+            deviceHandle,
+            prepareContext ( & ContextManager :: acquire()->create.accelerationStructure.khronos, pCreateInfo ),
+            AllocatorHandler :: apply ( pAllocationCallbacks ),
+            pHandle
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+auto engine :: vulkan :: getAccelerationStructureBuildSizes (
+        Type ( DeviceHandle )                                   deviceHandle,
+        Type ( AccelerationStructureBuildType )                 buildType,
+        Type ( AccelerationStructureBuildGeometryInfo ) const * pBuildInfo,
+        cds :: uint32                                   const * pMaxPrimitiveCounts,
+        Type ( AccelerationStructureBuildSizesInfo )          * pSizeInfo
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || pBuildInfo == nullptr || pSizeInfo == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    auto context = ContextManager :: acquire();
+
+    if (
+            auto result = APICaller.vkGetAccelerationStructureBuildSizesKHR (
+                    deviceHandle,
+                    static_cast < VkAccelerationStructureBuildTypeKHR > ( buildType ),
+                    prepareContext ( & context->get.accelerationStructure.buildSizes, pBuildInfo ),
+                    & pMaxPrimitiveCounts[0],
+                    & context->get.accelerationStructure.buildSizes.sizesInfo
+            ); result != ResultSuccess
+    ) {
+        return result;
+    }
+
+    (void) fromVulkanFormat ( pSizeInfo, & context->get.accelerationStructure.buildSizes.sizesInfo );
+    return ResultSuccess;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+auto engine :: vulkan :: destroyAccelerationStructureNVidia (
+        Type ( DeviceHandle )                       deviceHandle,
+        Type ( AccelerationStructureHandleNVidia )  accelerationStructureHandle,
+        Type ( AllocationCallbacks )        const * pAllocationCallbacks
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || accelerationStructureHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    return APICaller.vkDestroyAccelerationStructureNV (
+            deviceHandle,
+            accelerationStructureHandle,
+            AllocatorHandler :: apply ( pAllocationCallbacks )
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+auto engine :: vulkan :: destroyAccelerationStructure (
+        Type ( DeviceHandle )                   deviceHandle,
+        Type ( AccelerationStructureHandle )    accelerationStructureHandle,
+        Type ( AllocationCallbacks )    const * pAllocationCallbacks
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || accelerationStructureHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    return APICaller.vkDestroyAccelerationStructureKHR (
+            deviceHandle,
+            accelerationStructureHandle,
+            AllocatorHandler :: apply ( pAllocationCallbacks )
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+auto engine :: vulkan :: getAccelerationStructureMemoryRequirementsNVidia (
+        Type ( DeviceHandle )                                               deviceHandle,
+        Type ( AccelerationStructureMemoryRequirementsInfoNVidia )  const * pInfo,
+        Type ( MemoryRequirements2 )                                      * pRequirements
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || pInfo == nullptr || pRequirements == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    auto context = ContextManager :: acquire();
+
+    if (
+            auto result = APICaller.vkGetAccelerationStructureMemoryRequirementsNV (
+                    deviceHandle,
+                    toVulkanFormat ( & context->get.accelerationStructure.memoryRequirements.requirements, pInfo ),
+                    prepareContext ( & context->get.accelerationStructure.memoryRequirements, pRequirements )
+            ); result != ResultSuccess
+    ) {
+        return result;
+    }
+
+    extractContext ( pRequirements, & context->get.accelerationStructure.memoryRequirements );
+    return ResultSuccess;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+auto engine :: vulkan :: bindAccelerationStructureMemoryNVidia (
+        Type ( DeviceHandle )                                       deviceHandle,
+        cds :: uint32                                               count,
+        Type ( BindAccelerationStructureMemoryInfoNVidia )  const * pInfos
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || pInfos == nullptr || count == 0U ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    return APICaller.vkBindAccelerationStructureMemoryNV (
+            deviceHandle,
+            count,
+            prepareContext ( & ContextManager :: acquire()->bind.accelerationStructureMemory, count, & pInfos[0] )
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+auto engine :: vulkan :: getAccelerationStructureHandleNVidia (
+        Type ( DeviceHandle )                         deviceHandle,
+        Type ( AccelerationStructureHandleNVidia )    accelerationStructureHandle,
+        cds :: uint64                                 dataSize,
+        void                                        * pData
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || accelerationStructureHandle == nullptr || pData == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    return APICaller.vkGetAccelerationStructureHandleNV (
+            deviceHandle,
+            accelerationStructureHandle,
+            dataSize,
+            pData
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+auto engine :: vulkan :: getAccelerationStructureDeviceAddress (
+        Type ( DeviceHandle )                                   deviceHandle,
+        Type ( AccelerationStructureDeviceAddressInfo ) const * pInfo,
+        Type ( DeviceAddress )                                * pResult
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || pInfo == nullptr || pResult == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    return APICaller.vkGetAccelerationStructureDeviceAddressKHR (
+            pResult,
+            deviceHandle,
+            toVulkanFormat ( & ContextManager :: acquire()->get.accelerationStructure.deviceAddress.info, pInfo )
     );
 }
 #endif

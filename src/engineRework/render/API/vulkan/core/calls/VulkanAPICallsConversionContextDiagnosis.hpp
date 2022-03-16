@@ -13,7 +13,7 @@
 
 #if defined(__CDS_compiler_clang) || defined(__CDS_compiler_gcc)
 
-#define __C_ENG_DIAG_SET_CONTEXT_ERROR(_pContext, _error, ...)   _pContext->diag = {        \
+#define __C_ENG_DIAG_SET_CONTEXT_ERROR(_pContext, _error, ...)   _pContext->common.diag = { \
     .error      = _error,                                                                   \
     .file       = __FILE__,                                                                 \
     .function   = __PRETTY_FUNCTION__,                                                      \
@@ -23,12 +23,12 @@
 
 #elif defined(__CDS_compiler_MinGW)
 
-#define __C_ENG_DIAG_SET_CONTEXT_ERROR(_pContext, _error, ...)   _pContext->diag = {    \
-    .error      = _error,                                                               \
-    .file       = __FILE__,                                                             \
-    .function   = __PRETTY_FUNCTION__,                                                  \
-    .line       = __LINE__,                                                             \
-    .pMessage   = (__VA_ARGS__).copy()                                                  \
+#define __C_ENG_DIAG_SET_CONTEXT_ERROR(_pContext, _error, ...)   _pContext->common.diag = { \
+    .error      = _error,                                                                   \
+    .file       = __FILE__,                                                                 \
+    .function   = __PRETTY_FUNCTION__,                                                      \
+    .line       = __LINE__,                                                                 \
+    .pMessage   = (__VA_ARGS__).copy()                                                      \
 };
 
 #else

@@ -42,25 +42,53 @@ private:
     public:
         ~ContextHolder () noexcept {
             cds :: LockGuard guard ( contextLock );
-            this->pContext->inUse = false;
 
 #if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
-            if ( this->pContext->data.common.diag.error != engine :: vulkan :: ResultSuccess ) {
+            if ( this->pContext->data.common.common.diag.error != engine :: vulkan :: ResultSuccess ) {
                 engine :: Type ( Logger ) :: instance().error ( cds :: String::f (
                         "API Error logged in context at release : %s, in %s -> %s : %d ---> %s",
-                        toString ( pContext->data.common.diag.error ),
-                        pContext->data.common.diag.file,
-                        pContext->data.common.diag.function,
-                        pContext->data.common.diag.line,
-                        pContext->data.common.diag.pMessage == nullptr ? "no details given" : pContext->data.common.diag.pMessage->cStr()
+                        toString ( pContext->data.common.common.diag.error ),
+                        pContext->data.common.common.diag.file,
+                        pContext->data.common.common.diag.function,
+                        pContext->data.common.common.diag.line,
+                        pContext->data.common.common.diag.pMessage == nullptr ? "no details given" : pContext->data.common.common.diag.pMessage->cStr()
                 ));
 
-                cds :: Memory :: instance().destroy ( pContext->data.common.diag.pMessage );
+                cds :: Memory :: instance().destroy ( pContext->data.common.common.diag.pMessage );
 
-                this->pContext->data.common.diag.error = engine :: vulkan :: ResultSuccess;
+                this->pContext->data.common.common.diag.error = engine :: vulkan :: ResultSuccess;
             }
+
+            switch ( engine :: vulkan :: config :: coreDumpType ) {
+                case engine :: vulkan :: config :: CoreDumpType :: DumpOnError:
+                    if ( this->pContext->data.common.common.diag.error == engine :: vulkan :: ResultSuccess ) {
+                        break;
+                    }
+
+                    __CDS_Fallthrough;
+                case engine :: vulkan :: config :: CoreDumpType :: DumpAll:
+                    break;
+
+                case engine :: vulkan :: config :: CoreDumpType :: NoDump:
+                    break;
+            }
+
+            pContext->data.common.common.dump = {
+                    .contextType            = ContextType :: Unknown,
+                    .apiFunction            = nullptr,
+                    .apiFunctionDescription = nullptr,
+                    .paramCount             = 0U,
+                    .pParams                = nullptr
+            };
 #endif
 
+            if ( this->pContext->data.common.common.ruleSet.onDelete != nullptr ) {
+                this->pContext->data.common.common.ruleSet.onDelete ( reinterpret_cast < GenericContext * > ( & this->pContext->data ) );
+            }
+
+            this->pContext->data.common.common.ruleSet.onDelete = nullptr;
+
+            this->pContext->inUse = false;
         }
 
         ContextHolder ( ContextHolder && holder ) noexcept :
@@ -119,6 +147,9 @@ public:
                 LOG_CONTEXT_SIZE ( CreateImageSharedContext, 2 )
                     LOG_CONTEXT_SIZE ( CreateImageContext, 3 )
                     LOG_CONTEXT_SIZE ( CreateImageViewContext, 3 )
+                LOG_CONTEXT_SIZE ( CreateAccelerationStructureSharedContext, 2 )
+                    LOG_CONTEXT_SIZE ( CreateAccelerationStructureKhronosContext, 3 )
+                    LOG_CONTEXT_SIZE ( CreateAccelerationStructureNVidiaContext, 3 )
             LOG_CONTEXT_SIZE ( EnumerateSharedContext, 1 )
                 LOG_CONTEXT_SIZE ( EnumerateLayerPropertiesContext, 2 )
                 LOG_CONTEXT_SIZE ( EnumerateExtensionPropertiesContext, 2 )
@@ -147,6 +178,10 @@ public:
                     LOG_CONTEXT_SIZE ( GetMemoryFdContext, 3 )
                 LOG_CONTEXT_SIZE ( GetImageSharedContext, 2 )
                     LOG_CONTEXT_SIZE ( GetImageSubresourceLayoutContext, 3 )
+                LOG_CONTEXT_SIZE ( GetAccelerationStructureSharedContext, 2 )
+                    LOG_CONTEXT_SIZE ( GetAccelerationStructureBuildSizesContext, 3 )
+                    LOG_CONTEXT_SIZE ( BindAccelerationStructureMemoryContext, 3 )
+                    LOG_CONTEXT_SIZE ( GetAccelerationStructureDeviceAddressContext, 3 )
             LOG_CONTEXT_SIZE ( SetSharedContext, 1 )
                 LOG_CONTEXT_SIZE ( SetCommandBufferSharedContext, 2 )
                     LOG_CONTEXT_SIZE ( SetCommandBufferEventContext, 3 )
@@ -172,6 +207,8 @@ public:
                     LOG_CONTEXT_SIZE ( WaitCommandBufferEvent2Context, 3 )
             LOG_CONTEXT_SIZE ( SignalSharedContext, 1 )
                 LOG_CONTEXT_SIZE ( SignalSemaphoreContext, 2 )
+            LOG_CONTEXT_SIZE ( BindSharedContext, 1 )
+                LOG_CONTEXT_SIZE ( BindAccelerationStructureMemoryContext, 2 )
 
 #undef LOG_CONTEXT_SIZE
 
@@ -192,8 +229,12 @@ public:
                     context.inUse = false;
 
 #if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
-                    context.data.common.diag.error = engine :: vulkan :: ResultSuccess;
+                    context.data.common.common.diag.error = engine :: vulkan :: ResultSuccess;
 #endif
+
+                    context.data.common.common.ruleSet = {
+                            .onDelete = nullptr
+                    };
 
                 }
             }

@@ -1388,6 +1388,83 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         ) noexcept -> Type ( Result );
 #endif
 
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+        NoDiscard MaybeUnused extern auto createAccelerationStructureNVidia (
+                Type ( DeviceHandle ),
+                Type ( AccelerationStructureCreateInfoNVidia )  const *,
+                Type ( AllocationCallbacks )                    const *,
+                Type ( AccelerationStructureHandleNVidia )            *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+        NoDiscard MaybeUnused extern auto createAccelerationStructure (
+                Type ( DeviceHandle ),
+                Type ( AccelerationStructureCreateInfo )        const *,
+                Type ( AllocationCallbacks )                    const *,
+                Type ( AccelerationStructureHandle )                  *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+        NoDiscard MaybeUnused extern auto getAccelerationStructureBuildSizes (
+                Type ( DeviceHandle ),
+                Type ( AccelerationStructureBuildType ),
+                Type ( AccelerationStructureBuildGeometryInfo ) const *,
+                cds :: uint32                                   const *,
+                Type ( AccelerationStructureBuildSizesInfo )          *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+        NoDiscard MaybeUnused extern auto destroyAccelerationStructureNVidia (
+                Type ( DeviceHandle ),
+                Type ( AccelerationStructureHandleNVidia ),
+                Type ( AllocationCallbacks )                    const *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+        NoDiscard MaybeUnused extern auto destroyAccelerationStructure (
+                Type ( DeviceHandle ),
+                Type ( AccelerationStructureHandle ),
+                Type ( AllocationCallbacks )                    const *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+        NoDiscard MaybeUnused extern auto getAccelerationStructureMemoryRequirementsNVidia (
+                Type ( DeviceHandle ),
+                Type ( AccelerationStructureMemoryRequirementsInfoNVidia )  const *,
+                Type ( MemoryRequirements2 )                                      *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+        NoDiscard MaybeUnused extern auto bindAccelerationStructureMemoryNVidia (
+                Type ( DeviceHandle ),
+                cds :: uint32,
+                Type ( BindAccelerationStructureMemoryInfoNVidia )  const *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+        NoDiscard MaybeUnused extern auto getAccelerationStructureHandleNVidia (
+                Type ( DeviceHandle ),
+                Type ( AccelerationStructureHandleNVidia ),
+                cds :: uint64,
+                void                                        *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+        NoDiscard MaybeUnused extern auto getAccelerationStructureDeviceAddress (
+                Type ( DeviceHandle ),
+                Type ( AccelerationStructureDeviceAddressInfo ) const *,
+                Type ( DeviceAddress )                                *
+        ) noexcept -> Type ( Result );
+#endif
+
     } /// namespace vulkan
 
 } /// namespace engine

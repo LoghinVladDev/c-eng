@@ -13031,3 +13031,603 @@ auto vulkan :: toString (
            " }";
 }
 #endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+auto vulkan :: toString (
+        Type ( AccelerationStructureType )  flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case AccelerationStructureTypeTopLevel:     { asString = "Top Level";       break; }
+        case AccelerationStructureTypeBottomLevel:  { asString = "Bottom Level";    break; }
+        case AccelerationStructureTypeGeneric:      { asString = "Generic";         break; }
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+auto vulkan :: toString (
+        Type ( BuildAccelerationStructureFlag )  flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case BuildAccelerationStructureFlagAllowUpdate:     { asString = "Allow Update";        break; }
+        case BuildAccelerationStructureFlagAllowCompaction: { asString = "Allow Compaction";    break; }
+        case BuildAccelerationStructureFlagPreferFastTrace: { asString = "Prefer Fast Trace";   break; }
+        case BuildAccelerationStructureFlagPreferFastBuild: { asString = "Prefer Fast Build";   break; }
+        case BuildAccelerationStructureFlagLowMemory:       { asString = "Low Memory";          break; }
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+auto vulkan :: toString (
+        Type ( GeometryType )  flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case GeometryTypeTriangles: { asString = "Triangles";   break; }
+        case GeometryTypeAABBS:     { asString = "AABBS";       break; }
+        case GeometryTypeInstances: { asString = "Instances";   break; }
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+auto vulkan :: toString (
+        Type ( GeometryFlag )  flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case GeometryFlagOpaque:                        { asString = "Opaque";                          break; }
+        case GeometryFlagNoDuplicateAnyHitInvocation:   { asString = "No Duplicate Any Hit Invocation"; break; }
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+auto vulkan :: toString (
+        Type ( AccelerationStructureTypeNVidia )  flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case AccelerationStructureTypeNVidiaTopLevel:     { asString = "Top Level";       break; }
+        case AccelerationStructureTypeNVidiaBottomLevel:  { asString = "Bottom Level";    break; }
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+auto vulkan :: toString (
+        Type ( BuildAccelerationStructureFlagNVidia )  flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case BuildAccelerationStructureFlagNVidiaAllowUpdate:     { asString = "Allow Update";        break; }
+        case BuildAccelerationStructureFlagNVidiaAllowCompaction: { asString = "Allow Compaction";    break; }
+        case BuildAccelerationStructureFlagNVidiaPreferFastTrace: { asString = "Prefer Fast Trace";   break; }
+        case BuildAccelerationStructureFlagNVidiaPreferFastBuild: { asString = "Prefer Fast Build";   break; }
+        case BuildAccelerationStructureFlagNVidiaLowMemory:       { asString = "Low Memory";          break; }
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_MOTION_BLUR_AVAILABLE
+        case BuildAccelerationStructureFlagNVidiaMotion:          { asString = "Motion";              break; }
+#endif
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+auto vulkan :: toString (
+        Type ( GeometryTypeNVidia )  flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case GeometryTypeNVidiaTriangles: { asString = "Triangles";   break; }
+        case GeometryTypeNVidiaAABBS:     { asString = "AABBS";       break; }
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+auto vulkan :: toString (
+        Type ( GeometryFlagNVidia )  flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case GeometryFlagNVidiaOpaque:                        { asString = "Opaque";                          break; }
+        case GeometryFlagNVidiaNoDuplicateAnyHitInvocation:   { asString = "No Duplicate Any Hit Invocation"; break; }
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( IndexType )  flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case IndexTypeUInt16:   { asString = "UInt16";  break; }
+        case IndexTypeUInt32:   { asString = "UInt32";  break; }
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+        case IndexTypeNone:     { asString = "None";    break; }
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_INDEX_TYPE_UINT8_AVAILABLE
+        case IndexTypeUInt8:    { asString = "UInt8";   break; }
+#endif
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+auto vulkan :: toString (
+        Type ( GeometryAABBNVidia ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( GeometryAABBNVidia ) ) " " +
+           "{ structureType = "_s               + toString ( info.structureType ) +
+           ", pNext = "                         + engine :: toString ( info.pNext ) +
+           ", aabbData = "                      + engine :: toString ( info.aabbData ) +
+           ", numAABBs = "                      + info.numAABBs +
+           ", stride = "                        + info.stride +
+           ", offset = "                        + toString ( info.offset ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+auto vulkan :: toString (
+        Type ( GeometryTrianglesNVidia ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( GeometryTrianglesNVidia ) ) " " +
+           "{ structureType = "_s               + toString ( info.structureType ) +
+           ", pNext = "                         + engine :: toString ( info.pNext ) +
+           ", vertexData = "                    + engine :: toString ( info.vertexData ) +
+           ", vertexOffset = "                  + toString ( info.vertexOffset ) +
+           ", vertexCount = "                   + info.vertexCount +
+           ", vertexStride = "                  + toString ( info.vertexStride ) +
+           ", vertexFormat = "                  + toString ( info.vertexFormat ) +
+           ", indexData = "                     + engine :: toString ( info.indexData ) +
+           ", indexOffset = "                   + toString ( info.indexOffset ) +
+           ", indexCount = "                    + info.indexCount +
+           ", indexType = "                     + toString ( info.indexType ) +
+           ", transformData = "                 + engine :: toString ( info.transformData ) +
+           ", transformOffset = "               + toString ( info.transformOffset ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+auto vulkan :: toString (
+        Type ( GeometryDataNVidia ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( GeometryDataNVidia ) ) " " +
+           "{ triangles = "_s   + toString ( info.triangles ) +
+           ", aabbs = "         + toString ( info.aabbs ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+auto vulkan :: toString (
+        Type ( GeometryNVidia ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( GeometryNVidia ) ) " " +
+           "{ structureType = "_s               + toString ( info.structureType ) +
+           ", pNext = "                         + engine :: toString ( info.pNext ) +
+           ", geometryType = "                  + toString ( info.geometryType ) +
+           ", geometry = "                      + toString ( info.geometry ) +
+           ", flags = "                         + "0b" + Long ( info.flags ).toString(2) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+auto vulkan :: toString (
+        Type ( AccelerationStructureInfoNVidia ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( AccelerationStructureInfoNVidia ) ) " " +
+           "{ structureType = "_s               + toString ( info.structureType ) +
+           ", pNext = "                         + engine :: toString ( info.pNext ) +
+           ", type = "                          + toString ( info.type ) +
+           ", flags = "                         + "0b" + Long ( info.flags ).toString(2) +
+           ", instanceCount = "                 + info.instanceCount +
+           ", geometryCount = "                 + info.geometryCount +
+           ", geometries = "                    + :: toStringVulkan ( info.geometryCount, info.pGeometries ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+auto vulkan :: toString (
+        Type ( AccelerationStructureCreateInfoNVidia ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( AccelerationStructureCreateInfoNVidia ) ) " " +
+           "{ structureType = "_s               + toString ( info.structureType ) +
+           ", pNext = "                         + engine :: toString ( info.pNext ) +
+           ", compactedSize = "                 + toString ( info.compactedSize ) +
+           ", info = "                          + toString ( info.info ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+auto vulkan :: toString (
+        Type ( AccelerationStructureCreateFlag )  flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case AccelerationStructureCreateFlagDeviceAddressCaptureReplay: { asString = "Device Address Capture Replay";   break; }
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_MOTION_BLUR_AVAILABLE
+        case AccelerationStructureCreateFlagMotionNVidia:               { asString = "Motion Blur";                     break; }
+#endif
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+auto vulkan :: toString (
+        Type ( AccelerationStructureBuildType )  flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case AccelerationStructureBuildTypeHost:            { asString = "Host";            break; }
+        case AccelerationStructureBuildTypeDevice:          { asString = "Device";          break; }
+        case AccelerationStructureBuildTypeHostOrDevice:    { asString = "Host or Device";  break; }
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+auto vulkan :: toString (
+        Type ( BuildAccelerationStructureMode )  flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case BuildAccelerationStructureModeBuild:   { asString = "Build";   break; }
+        case BuildAccelerationStructureModeUpdate:  { asString = "Update";  break; }
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+auto vulkan :: toString (
+        Type ( AccelerationStructureCreateInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( AccelerationStructureCreateInfo ) ) " " +
+           "{ structureType = "_s               + toString ( info.structureType ) +
+           ", pNext = "                         + engine :: toString ( info.pNext ) +
+           ", flags = "                         + "0b" + Long ( info.flags ).toString(2) +
+           ", buffer = "                        + engine :: toString ( info.buffer ) +
+           ", offset = "                        + engine :: toString ( info.offset ) +
+           ", size = "                          + engine :: toString ( info.size ) +
+           ", type = "                          + toString ( info.type ) +
+           ", deviceAddress = "                 + toString ( info.deviceAddress ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_MOTION_BLUR_AVAILABLE
+auto vulkan :: toString (
+        Type ( AccelerationStructureMotionInfoNVidia ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( AccelerationStructureMotionInfoNVidia ) ) " " +
+           "{ structureType = "_s               + toString ( info.structureType ) +
+           ", pNext = "                         + engine :: toString ( info.pNext ) +
+           ", maxInstances = "                  + info.maxInstances +
+           ", flags = "                         + "0b" + Long ( info.flags ).toString(2) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+auto vulkan :: toString (
+        Type ( DeviceOrHostAddress ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( DeviceOrHostAddress ) ) " " +
+           "{ deviceAddress = "_s   + toString ( info.deviceAddress ) +
+           ", hostAddress = "       + engine :: toString ( info.hostAddress ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+auto vulkan :: toString (
+        Type ( DeviceOrHostAddressConst ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( DeviceOrHostAddressConst ) ) " " +
+           "{ deviceAddress = "_s   + toString ( info.deviceAddress ) +
+           ", hostAddress = "       + engine :: toString ( info.hostAddress ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+auto vulkan :: toString (
+        Type ( AccelerationStructureGeometryTrianglesData ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( AccelerationStructureGeometryTrianglesData ) ) " " +
+           "{ structureType = "_s               + toString ( info.structureType ) +
+           ", pNext = "                         + engine :: toString ( info.pNext ) +
+           ", vertexFormat = "                  + toString ( info.vertexFormat ) +
+           ", vertexData = "                    + toString ( info.vertexData ) +
+           ", vertexStride = "                  + toString( info.vertexStride ) +
+           ", maxVertex = "                     + info.maxVertex +
+           ", indexType = "                     + toString ( info.indexType ) +
+           ", indexData = "                     + toString ( info.indexData ) +
+           ", transformData = "                 + toString ( info.transformData ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+auto vulkan :: toString (
+        Type ( AccelerationStructureGeometryAabbsData ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( AccelerationStructureGeometryAabbsData ) ) " " +
+           "{ structureType = "_s               + toString ( info.structureType ) +
+           ", pNext = "                         + engine :: toString ( info.pNext ) +
+           ", data = "                          + toString ( info.data ) +
+           ", stride = "                        + toString ( info.stride ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+auto vulkan :: toString (
+        Type ( AccelerationStructureGeometryInstancesData ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( AccelerationStructureGeometryInstancesData ) ) " " +
+           "{ structureType = "_s               + toString ( info.structureType ) +
+           ", pNext = "                         + engine :: toString ( info.pNext ) +
+           ", arrayOfPointers = "               + ( info.arrayOfPointers == VK_TRUE ? "true" : "false" ) +
+           ", data = "                          + toString ( info.data ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+auto vulkan :: toString (
+        Type ( AccelerationStructureGeometryData ) const & info
+) noexcept -> String {
+
+    auto extractFromUnion = [] ( Type ( GenericInStructure ) const * pInfo ) noexcept {
+        switch ( pInfo->structureType ) {
+            case StructureTypeAccelerationStructureGeometryTrianglesData:
+                return toString ( * reinterpret_cast < Type ( AccelerationStructureGeometryTrianglesData ) const * > ( pInfo ) );
+            case StructureTypeAccelerationStructureGeometryAABBSData:
+                return toString ( * reinterpret_cast < Type ( AccelerationStructureGeometryAabbsData ) const * > ( pInfo ) );
+            case StructureTypeAccelerationStructureGeometryInstancesData:
+                return toString ( * reinterpret_cast < Type ( AccelerationStructureGeometryInstancesData ) const * > ( pInfo ) );
+            default:
+                return "Invalid Structure Format"_s;
+        }
+    };
+
+    return __C_ENG_STRINGIFY ( Type ( AccelerationStructureGeometryData ) ) " -> " +
+            extractFromUnion ( reinterpret_cast < Type ( GenericInStructure ) const * > ( & info ) );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+auto vulkan :: toString (
+        Type ( AccelerationStructureGeometry ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( AccelerationStructureGeometry ) ) " " +
+           "{ structureType = "_s               + toString ( info.structureType ) +
+           ", pNext = "                         + engine :: toString ( info.pNext ) +
+           ", geometryType = "                  + toString ( info.geometryType ) +
+           ", geometry = "                      + toString ( info.geometry ) +
+           ", flags = "                         + "0b" + Long ( info.flags ).toString(2) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+auto vulkan :: toString (
+        Type ( AccelerationStructureBuildGeometryInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( AccelerationStructureBuildGeometryInfo ) ) " " +
+           "{ structureType = "_s               + toString ( info.structureType ) +
+           ", pNext = "                         + engine :: toString ( info.pNext ) +
+           ", type = "                          + toString ( info.type ) +
+           ", flags = "                         + "0b" + Long ( info.flags ).toString(2) +
+           ", mode = "                          + toString ( info.mode ) +
+           ", source = "                        + engine :: toString ( info.source ) +
+           ", destination = "                   + engine :: toString ( info.destination ) +
+           ", geometryCount = "                 + info.geometryCount +
+           ", pGeometries = "                   + :: toStringVulkan ( info.geometryCount, info.pGeometries ) +
+           ", ppGeometries = "                  + :: toStringEngine ( info.geometryCount, info.ppGeometries ) +
+           ", scratchData = "                   + toString ( info.scratchData ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+auto vulkan :: toString (
+        Type ( AccelerationStructureBuildSizesInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( AccelerationStructureBuildSizesInfo ) ) " " +
+           "{ structureType = "_s               + toString ( info.structureType ) +
+           ", pNext = "                         + engine :: toString ( info.pNext ) +
+           ", accelerationStructureSize = "     + toString ( info.accelerationStructureSize ) +
+           ", updateScratchSize = "             + toString ( info.updateScratchSize ) +
+           ", buildScratchSize = "              + toString ( info.buildScratchSize ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_MOTION_BLUR_AVAILABLE
+auto vulkan :: toString (
+        Type ( AccelerationStructureGeometryMotionTrianglesDataNVidia ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( AccelerationStructureGeometryMotionTrianglesDataNVidia ) ) " " +
+           "{ structureType = "_s               + toString ( info.structureType ) +
+           ", pNext = "                         + engine :: toString ( info.pNext ) +
+           ", vertexData = "                    + toString ( info.vertexData ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+auto vulkan :: toString (
+        Type ( AccelerationStructureMemoryRequirementsTypeNVidia )  flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case AccelerationStructureMemoryRequirementsTypeNVidiaObject:           { asString = "Object";          break; }
+        case AccelerationStructureMemoryRequirementsTypeNVidiaBuildScratch:     { asString = "Build Scratch";   break; }
+        case AccelerationStructureMemoryRequirementsTypeNVidiaUpdateScratch:    { asString = "Update Scratch";  break; }
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+auto vulkan :: toString (
+        Type ( AccelerationStructureMemoryRequirementsInfoNVidia ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( AccelerationStructureMemoryRequirementsInfoNVidia ) ) " " +
+           "{ structureType = "_s               + toString ( info.structureType ) +
+           ", pNext = "                         + engine :: toString ( info.pNext ) +
+           ", type = "                          + toString ( info.type ) +
+           ", accelerationStructure = "         + engine :: toString ( info.accelerationStructure ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( MemoryRequirements ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( MemoryRequirements ) ) " " +
+           "{ size = "_s            + toString ( info.size ) +
+           ", alignment = "         + toString ( info.alignment ) +
+           ", memoryTypeBits = "    + info.memoryTypeBits +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+auto vulkan :: toString (
+        Type ( MemoryRequirements2 ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( MemoryRequirements2 ) ) " " +
+           "{ structureType = "_s               + toString ( info.structureType ) +
+           ", pNext = "                         + engine :: toString ( info.pNext ) +
+           ", memoryRequirements = "            + toString ( info.memoryRequirements ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+auto vulkan :: toString (
+        Type ( MemoryDedicatedRequirements ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( MemoryDedicatedRequirements ) ) " " +
+           "{ structureType = "_s               + toString ( info.structureType ) +
+           ", pNext = "                         + engine :: toString ( info.pNext ) +
+           ", prefersDedicatedAllocation = "    + ( info.prefersDedicatedAllocation == VK_TRUE ? "true" : "false" ) +
+           ", requiresDedicatedAllocation = "   + ( info.requiresDedicatedAllocation == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+auto vulkan :: toString (
+        Type ( BindAccelerationStructureMemoryInfoNVidia ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( BindAccelerationStructureMemoryInfoNVidia ) ) " " +
+           "{ structureType = "_s               + toString ( info.structureType ) +
+           ", pNext = "                         + engine :: toString ( info.pNext ) +
+           ", accelerationStructure = "         + engine :: toString ( info.accelerationStructure ) +
+           ", memory = "                        + engine :: toString ( info.memory ) +
+           ", memoryOffset = "                  + toString ( info.memoryOffset ) +
+           ", deviceIndexCount = "              + info.deviceIndexCount +
+           ", deviceIndices = "                 + :: toStringRegular ( info.deviceIndexCount, info.pDeviceIndices ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+auto vulkan :: toString (
+        Type ( AccelerationStructureDeviceAddressInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( AccelerationStructureDeviceAddressInfo ) ) " " +
+           "{ structureType = "_s               + toString ( info.structureType ) +
+           ", pNext = "                         + engine :: toString ( info.pNext ) +
+           ", accelerationStructure = "         + engine :: toString ( info.accelerationStructure ) +
+           " }";
+}
+#endif
