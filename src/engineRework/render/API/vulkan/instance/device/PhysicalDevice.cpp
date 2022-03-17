@@ -285,7 +285,7 @@ auto vulkan :: Self :: refreshQueueFamilies () noexcept (false) -> Self & {
         }
 
         pQueueFamilyDetails = new __C_ENG_TYPE ( QueueFamilyDetails ) [ queueFamilyCount ];
-        result = vulkan :: getPhysicalDeviceQueueFamilyDetails(
+        result = vulkan :: getPhysicalDeviceQueueFamilyDetails (
                 this->handle(),
                 & queueFamilyCount,
                 & pQueueFamilyDetails[0]

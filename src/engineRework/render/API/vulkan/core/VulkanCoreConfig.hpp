@@ -17,6 +17,7 @@ namespace engine :: vulkan :: config {
     constexpr CoreDumpType  coreDumpType = CoreDumpType :: DumpOnError;
 
     constexpr cds :: uint32 contextCount = 16U;
+    constexpr cds :: uint32 dumpParameterCount = 256U;
 
     constexpr cds :: uint32 validationFeatureEnableCount    = 32U;
     constexpr cds :: uint32 validationFeatureDisableCount   = 32U;

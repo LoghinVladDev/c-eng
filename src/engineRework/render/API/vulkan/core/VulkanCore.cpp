@@ -2638,6 +2638,17 @@ auto vulkan :: toString (
             " }";
 }
 
+auto vulkan :: toString (
+        __C_ENG_TYPE ( PhysicalDeviceExtendedFeatures ) const & properties
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceExtendedFeatures ) ) " "
+            "{ type = "_s          + toString ( properties.structureType ) +
+            ", pNext = "           + engine :: toString ( properties.pNext ) +
+            ", baseFeatures = "    + toString ( properties.features ) +
+            " }";
+}
+
 #if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
 
 auto vulkan :: toString (
@@ -4663,7 +4674,7 @@ auto vulkan :: toString (
     }
     (void) enabledExtensionNames.removeSuffix(", ").append(" ]");
 
-    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( DeviceQueueCreateInfo ) ) " "
+    return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( DeviceCreateInfo ) ) " "
            "{ type = "_s                    + toString ( info.structureType ) +
            ", pNext = "                     + :: toString ( info.pNext ) +
            ", flags = "                     + "0b" + Long ( info.flags ).toString(2) +

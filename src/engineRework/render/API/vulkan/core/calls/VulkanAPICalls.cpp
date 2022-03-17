@@ -10,6 +10,7 @@
 #include <calls/util/ContextManager.hpp>
 #include <calls/util/APICaller.hpp>
 #include <calls/util/LastCreatedInstance.hpp>
+#include <calls/util/DumpManager.hpp>
 
 #define C_ENG_MAP_START     SOURCE
 #include <ObjectMapping.hpp>
@@ -29,6 +30,15 @@ auto engine :: vulkan :: enumerateInstanceVersion (
     if ( pVersion == nullptr ) {
         return ResultErrorIllegalArgument;
     }
+
+    auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkEnumerateInstanceVersion",
+            "Queries the version of instance-level functionality supported by the implementation",
+            pVersion
+    );
 
 #endif
 
@@ -55,6 +65,17 @@ auto engine :: vulkan :: getFunctionAddress (
     ) {
         return ResultErrorIllegalArgument;
     }
+
+    auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkGetInstanceProcAddr",
+            "Obtains Function Pointers for all Vulkan commands",
+            nullptr,
+            functionName,
+            pFunctionHandle
+    );
 
 #endif
 
@@ -89,6 +110,17 @@ auto engine :: vulkan :: getInstanceFunctionAddress (
         return ResultErrorIllegalArgument;
     }
 
+    auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkGetInstanceProcAddr",
+            "Obtains Function Pointers for all Vulkan commands",
+            instanceHandle,
+            functionName,
+            pFunctionHandle
+    );
+
 #endif
 
     * pFunctionHandle = reinterpret_cast < void * > (
@@ -122,6 +154,17 @@ auto engine :: vulkan :: getDeviceFunctionAddress (
     ) {
         return ResultErrorIllegalArgument;
     }
+
+    auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkGetDeviceProcAddr",
+            "Obtains Function Pointers for all Vulkan Device commands",
+            deviceHandle,
+            functionName,
+            pFunctionHandle
+    );
 
 #endif
 
@@ -163,6 +206,20 @@ auto engine :: vulkan :: createInstance (
 
     auto context = ContextManager :: acquire();
 
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: CreateInstance,
+            "vkCreateInstance",
+            "Creates a Vulkan Instance Object",
+            pCreateInfo,
+            pAllocationCallbacks,
+            pInstanceHandle
+    );
+
+#endif
+
     if (
             auto result = APICaller.vkCreateInstance (
                     prepareContext ( & context->create.instance, pCreateInfo ),
@@ -191,6 +248,23 @@ auto engine :: vulkan :: enumerateInstanceLayerProperties (
         return ResultErrorIllegalArgument;
     }
 
+    auto context = ContextManager :: acquire();
+    auto arrayPack = DumpedArray {
+        .pCount = pCount,
+        .type   = ParameterType :: LayerProperties,
+        .size   = sizeof ( Type ( LayerProperties ) ),
+        .pArray = pProperties
+    };
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: EnumerateLayerProperties,
+            "vkEnumerateInstanceLayerProperties",
+            "Queries Available Layers for instance creation",
+            pCount,
+            arrayPack
+    );
+
 #endif
 
     if ( pProperties == nullptr ) {
@@ -208,7 +282,11 @@ auto engine :: vulkan :: enumerateInstanceLayerProperties (
 
 #endif
 
+#if ! __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
     auto context = ContextManager :: acquire();
+
+#endif
 
     if (
             auto result = APICaller.vkEnumerateInstanceLayerProperties (
@@ -240,6 +318,25 @@ auto engine :: vulkan :: enumeratePhysicalDeviceLayerProperties (
         return ResultErrorIllegalArgument;
     }
 
+    auto context = ContextManager :: acquire();
+
+    auto arrayPack = DumpedArray {
+            .pCount = pCount,
+            .type   = ParameterType :: LayerProperties,
+            .size   = sizeof ( Type ( LayerProperties ) ),
+            .pArray = pProperties
+    };
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: EnumerateLayerProperties,
+            "vkEnumerateDeviceLayerProperties",
+            "Queries Available Layers for device creation. Based on supported physical device layers",
+            physicalDeviceHandle,
+            pCount,
+            arrayPack
+    );
+
 #endif
 
     if ( pProperties == nullptr ) {
@@ -258,7 +355,11 @@ auto engine :: vulkan :: enumeratePhysicalDeviceLayerProperties (
 
 #endif
 
+#if ! __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
     auto context = ContextManager :: acquire();
+
+#endif
 
     if (
         auto result = APICaller.vkEnumerateDeviceLayerProperties (
@@ -291,6 +392,25 @@ auto engine :: vulkan :: enumerateInstanceExtensionProperties (
         return ResultErrorIllegalArgument;
     }
 
+    auto context = ContextManager :: acquire();
+
+    auto arrayPack = DumpedArray {
+        .pCount = pCount,
+        .type   = ParameterType :: ExtensionProperties,
+        .size   = sizeof ( Type ( ExtensionProperties ) ),
+        .pArray = pProperties
+    };
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: EnumerateExtensionProperties,
+            "vkEnumerateInstanceExtensionProperties",
+            "Queries Available Instance Extensions",
+            layerName,
+            pCount,
+            arrayPack
+    );
+
 #endif
 
     if ( pProperties == nullptr ) {
@@ -309,7 +429,11 @@ auto engine :: vulkan :: enumerateInstanceExtensionProperties (
 
 #endif
 
+#if ! __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
     auto context = ContextManager :: acquire();
+
+#endif
 
     if (
         auto result = APICaller.vkEnumerateInstanceExtensionProperties (
@@ -342,6 +466,24 @@ auto engine :: vulkan :: enumeratePhysicalDevices (
         return ResultErrorIllegalArgument;
     }
 
+    auto context = ContextManager :: acquire();
+    auto arrayPack = DumpedArray {
+        .pCount = pCount,
+        .type   = ParameterType::Handle,
+        .size   = sizeof ( Type ( PhysicalDeviceHandle ) ),
+        .pArray = pDevices
+    };
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: EnumeratePhysicalDevices,
+            "vkEnumeratePhysicalDevices",
+            "Queries Available Physical Devices",
+            handle,
+            pCount,
+            arrayPack
+    );
+
 #endif
 
     if ( pDevices == nullptr ) {
@@ -360,7 +502,11 @@ auto engine :: vulkan :: enumeratePhysicalDevices (
 
 #endif
 
+#if ! __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
     auto context = ContextManager :: acquire();
+
+#endif
 
     if (
             auto result = APICaller.vkEnumeratePhysicalDevices (
@@ -393,6 +539,33 @@ auto engine :: vulkan :: enumeratePhysicalDeviceQueueFamilyPerformanceQueryCount
         return ResultErrorIllegalArgument;
     }
 
+    auto context = ContextManager :: acquire();
+    auto countersPack = DumpedArray {
+        .pCount = pCount,
+        .type   = ParameterType :: PerformanceCounter,
+        .size   = sizeof ( Type ( PerformanceCounter ) ),
+        .pArray = pCounters
+    };
+
+    auto descriptionsPack = DumpedArray {
+        .pCount = pCount,
+        .type   = ParameterType :: PerformanceCounterDescription,
+        .size   = sizeof ( Type ( PerformanceCounterDescription ) ),
+        .pArray = pDescriptions
+    };
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: EnumeratePhysicalDeviceQueueFamilyPerformanceQueryCounters,
+            "vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR",
+            "Queries Available Physical Device Queue Family Performance Query Counters",
+            physicalDeviceHandle,
+            queueFamilyIndex,
+            pCount,
+            countersPack,
+            descriptionsPack
+    );
+
 #endif
 
     if ( pCounters == nullptr && pDescriptions == nullptr ) {
@@ -413,7 +586,11 @@ auto engine :: vulkan :: enumeratePhysicalDeviceQueueFamilyPerformanceQueryCount
 
 #endif
 
+#if ! __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
     auto context = ContextManager :: acquire();
+
+#endif
 
     if (
             auto result = APICaller.vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR (
@@ -449,6 +626,24 @@ auto engine :: vulkan :: enumeratePhysicalDeviceGroups (
         return ResultErrorIllegalArgument;
     }
 
+    auto context = ContextManager :: acquire();
+    auto arrayPack = DumpedArray {
+        .pCount = pCount,
+        .type   = ParameterType :: PhysicalDeviceGroupProperties,
+        .size   = sizeof ( Type ( PhysicalDeviceGroupProperties ) ),
+        .pArray = pProperties
+    };
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: EnumeratePhysicalDeviceGroups,
+            "vkEnumeratePhysicalDeviceGroups",
+            "Queries Available Physical Device Groups",
+            instanceHandle,
+            pCount,
+            arrayPack
+    );
+
 #endif
 
     if ( pProperties == nullptr ) {
@@ -467,7 +662,11 @@ auto engine :: vulkan :: enumeratePhysicalDeviceGroups (
 
 #endif
 
+#if ! __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
     auto context = ContextManager :: acquire();
+
+#endif
 
     if (
             auto result = APICaller.vkEnumeratePhysicalDeviceGroups (
@@ -517,6 +716,25 @@ auto engine :: vulkan :: enumeratePhysicalDeviceExtensionProperties (
         return ResultErrorIllegalArgument;
     }
 
+    auto context = ContextManager :: acquire();
+    auto arrayPack = DumpedArray {
+        .pCount = pCount,
+        .type   = ParameterType :: ExtensionProperties,
+        .size   = sizeof ( Type ( ExtensionProperties ) ),
+        .pArray = pProperties
+    };
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: EnumerateExtensionProperties,
+            "vkEnumerateDeviceExtensionProperties",
+            "Queries Available Device Extensions",
+            handle,
+            layerName,
+            pCount,
+            arrayPack
+    );
+
 #endif
 
     if ( pProperties == nullptr ) {
@@ -536,7 +754,11 @@ auto engine :: vulkan :: enumeratePhysicalDeviceExtensionProperties (
 
 #endif
 
+#if ! __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
     auto context = ContextManager :: acquire();
+
+#endif
 
     if (
             auto result = APICaller.vkEnumerateDeviceExtensionProperties (
@@ -575,6 +797,21 @@ auto engine :: vulkan :: createDebugMessenger (
 
     auto context = ContextManager :: acquire();
 
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: CreateInstance,
+            "vkCreateDebugUtilsMessengerEXT",
+            "Creates a Debug Messenger Object",
+            instanceHandle,
+            pCreateInfo,
+            pAllocationCallbacks,
+            pHandle
+    );
+
+#endif
+
     return APICaller.vkCreateDebugUtilsMessengerEXT (
             instanceHandle,
             toVulkanFormat ( & context.data().create.instance.debugMessenger, pCreateInfo ),
@@ -601,6 +838,18 @@ auto engine :: vulkan :: createSurface (
     ) {
         return ResultErrorIllegalArgument;
     }
+
+    auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "glfwCreateWindowSurface",
+            "Creates a Surface Object ( GLFW )",
+            instanceHandle,
+            pWindowHandle,
+            pAllocationCallbacks,
+            pSurfaceHandle
+    );
 
 #endif
 
@@ -635,9 +884,26 @@ auto engine :: vulkan :: createDevice (
 
 #endif
 
+    auto context = ContextManager :: acquire();
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    prepareDump (
+            context.data(),
+            SharedContextType::CreateDevice,
+            "vkCreateDevice",
+            "Creates a Logical Device Object",
+            physicalDeviceHandle,
+            pCreateInfo,
+            pAllocationCallbacks,
+            pDeviceHandle
+    );
+
+#endif
+
     return APICaller.vkCreateDevice (
             physicalDeviceHandle,
-            prepareContext ( & ContextManager :: acquire().data().create.device, pCreateInfo ),
+            prepareContext ( & context.data().create.device, pCreateInfo ),
             AllocatorHandler :: apply ( pAllocationCallbacks ),
             pDeviceHandle
     );
@@ -655,6 +921,16 @@ auto engine :: vulkan :: destroyInstance (
     if ( handle == nullptr ) {
         return ResultErrorIllegalArgument;
     }
+
+    auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkDestroyInstance",
+            "Destroys an Instance Object",
+            handle,
+            pAllocationCallbacks
+    );
 
 #endif
 
@@ -674,6 +950,17 @@ auto engine :: vulkan :: destroyDebugMessenger (
     if ( instanceHandle == nullptr || debugMessengerHandle == nullptr ) {
         return ResultErrorIllegalArgument;
     }
+
+    auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkDestroyDebugUtilsMessengerEXT",
+            "Destroys a Debug Messenger Object",
+            instanceHandle,
+            debugMessengerHandle,
+            pAllocationCallbacks
+    );
 
 #endif
 
@@ -698,6 +985,17 @@ auto engine :: vulkan :: destroySurface (
         return ResultErrorIllegalArgument;
     }
 
+    auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkDestroySurfaceKHR",
+            "Destroys a Surfce Object",
+            instanceHandle,
+            surfaceHandle,
+            pAllocationCallbacks
+    );
+
 #endif
 
     return APICaller.vkDestroySurfaceKHR (
@@ -719,6 +1017,16 @@ auto engine :: vulkan :: destroyDevice (
     if ( handle == nullptr ) {
         return ResultErrorIllegalArgument;
     }
+
+    auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkDestroyDevice",
+            "Destroys a Logical Device Object",
+            handle,
+            pAllocationCallbacks
+    );
 
 #endif
 
@@ -742,7 +1050,21 @@ auto engine :: vulkan :: getPhysicalDeviceProperties (
     }
 
 #endif
+
     auto context = ContextManager :: acquire();
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: GetPhysicalDeviceProperties,
+            "vkGetPhysicalDeviceProperties",
+            "Queries Physical Device Properties",
+            handle,
+            pProperties
+    );
+
+#endif
 
     if (
             auto result = APICaller.vkGetPhysicalDeviceProperties (
@@ -778,6 +1100,19 @@ auto engine :: vulkan :: getPhysicalDeviceFeatures (
 
     auto context = ContextManager :: acquire();
 
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: GetPhysicalDeviceFeatures,
+            "vkGetPhysicalDeviceFeatures",
+            "Queries Physical Device Features",
+            physicalDeviceHandle,
+            pFeatures
+    );
+
+#endif
+
     if (
             auto result = APICaller.vkGetPhysicalDeviceFeatures (
                     physicalDeviceHandle,
@@ -809,6 +1144,15 @@ auto engine :: vulkan :: getPhysicalDeviceProperties (
     auto context = ContextManager :: acquire();
 
 #if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: GetPhysicalDeviceProperties,
+            "vkGetPhysicalDeviceProperties2",
+            "Queries Physical Device Properties",
+            handle,
+            pProperties
+    );
 
     if (
             auto result = APICaller.vkGetPhysicalDeviceProperties (
@@ -859,6 +1203,15 @@ auto engine :: vulkan :: getPhysicalDeviceFeatures (
     auto context = ContextManager :: acquire();
 
 #if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: GetPhysicalDeviceFeatures,
+            "vkGetPhysicalDeviceFeatures2",
+            "Queries Physical Device Features",
+            physicalDeviceHandle,
+            pFeatures
+    );
 
     if (
             auto result = APICaller.vkGetPhysicalDeviceProperties (
@@ -972,6 +1325,24 @@ auto engine :: vulkan :: getPhysicalDeviceQueueFamilyProperties (
         return ResultErrorIllegalArgument;
     }
 
+    auto context = ContextManager :: acquire();
+    auto arrayPack = DumpedArray {
+        .pCount = pCount,
+        .type   = ParameterType :: QueueFamilyProperties,
+        .size   = sizeof ( Type ( QueueFamilyProperties ) ),
+        .pArray = pProperties
+    };
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: GetPhysicalDeviceQueueFamilyProperties,
+            "vkGetPhysicalDeviceQueueFamilyProperties",
+            "Queries Physical Device Queue Family Properties",
+            physicalDeviceHandle,
+            pCount,
+            arrayPack
+    );
+
 #endif
 
     if ( pProperties == nullptr ) {
@@ -990,7 +1361,11 @@ auto engine :: vulkan :: getPhysicalDeviceQueueFamilyProperties (
 
 #endif
 
+#if ! __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
     auto context = ContextManager :: acquire();
+
+#endif
 
     if (
             auto result = APICaller.vkGetPhysicalDeviceQueueFamilyProperties (
@@ -1023,6 +1398,24 @@ auto engine :: vulkan :: getPhysicalDeviceQueueFamilyProperties (
         return ResultErrorIllegalArgument;
     }
 
+    auto context = ContextManager :: acquire();
+    auto arrayPack = DumpedArray {
+        .pCount = pCount,
+        .type   = ParameterType :: Structure,
+        .size   = sizeof ( Type ( QueueFamilyExtendedProperties ) ),
+        .pArray = pProperties
+    };
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: GetPhysicalDeviceQueueFamilyProperties,
+            "vkGetPhysicalDeviceQueueFamilyProperties2",
+            "Queries Physical Device Queue Family Properties",
+            physicalDeviceHandle,
+            pCount,
+            arrayPack
+    );
+
 #endif
 
     if ( pProperties == nullptr ) {
@@ -1041,7 +1434,11 @@ auto engine :: vulkan :: getPhysicalDeviceQueueFamilyProperties (
 
 #endif
 
+#if ! __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
     auto context = ContextManager :: acquire();
+
+#endif
 
     if (
             auto result = APICaller.vkGetPhysicalDeviceQueueFamilyProperties2 (
@@ -1135,6 +1532,18 @@ auto engine :: vulkan :: getPhysicalDeviceSurfaceSupport (
         return ResultErrorIllegalArgument;
     }
 
+    auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkGetPhysicalDeviceSurfaceSupportKHR",
+            "Queries Physical Device Surface Support",
+            deviceHandle,
+            queueFamilyIndex,
+            surfaceHandle,
+            pSupport
+    );
+
 #endif
 
     Type ( Bool ) support = VK_FALSE;
@@ -1170,6 +1579,18 @@ auto engine :: vulkan :: getDeviceQueue (
         return ResultErrorIllegalArgument;
     }
 
+    auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkGetDeviceQueue",
+            "Acquires a Queue Handle from a given Queue Family and a Device",
+            deviceHandle,
+            queueFamilyIndex,
+            queueIndex,
+            pQueueHandle
+    );
+
 #endif
 
     return APICaller.vkGetDeviceQueue (
@@ -1198,6 +1619,20 @@ auto engine :: vulkan :: getDeviceQueue (
 
     auto context = ContextManager :: acquire();
 
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: GetDeviceQueue,
+            "vkGetDeviceQueue2",
+            "Acquires a Queue Handle from a given Queue Family and a Device",
+            deviceHandle,
+            pQueueInfo,
+            pQueueHandle
+    );
+
+#endif
+
     return APICaller.vkGetDeviceQueue2 (
             deviceHandle,
             toVulkanFormat ( & context.data().get.deviceQueue.info2, pQueueInfo ),
@@ -1222,6 +1657,20 @@ auto engine :: vulkan :: getPhysicalDeviceSurfaceCapabilities (
 #endif
 
     auto context = ContextManager :: acquire();
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: GetSurface,
+            "vkGetPhysicalDeviceSurfaceCapabilitiesKHR",
+            "Queries a Physical Device's Surface Capabilities",
+            deviceHandle,
+            surfaceHandle,
+            pSurfaceCapabilities
+    );
+
+#endif
 
     if (
             auto result = APICaller.vkGetPhysicalDeviceSurfaceCapabilitiesKHR (
@@ -1252,6 +1701,25 @@ auto engine :: vulkan :: getPhysicalDeviceSurfaceFormats (
         return ResultErrorIllegalArgument;
     }
 
+    auto context = ContextManager :: acquire();
+    auto arrayPack = DumpedArray {
+        .pCount = pCount,
+        .type   = ParameterType :: SurfaceFormat,
+        .size   = sizeof ( Type ( SurfaceFormat ) ),
+        .pArray = pFormats
+    };
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: GetSurface,
+            "vkGetPhysicalDeviceSurfaceFormatsKHR",
+            "Queries a Physical Device's Surface Formats",
+            deviceHandle,
+            surfaceHandle,
+            pCount,
+            arrayPack
+    );
+
 #endif
 
     if ( pFormats == nullptr ) {
@@ -1271,7 +1739,11 @@ auto engine :: vulkan :: getPhysicalDeviceSurfaceFormats (
 
 #endif
 
+#if ! __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
     auto context = ContextManager :: acquire();
+
+#endif
 
     if (
             auto result = APICaller.vkGetPhysicalDeviceSurfaceFormatsKHR (
@@ -1306,6 +1778,25 @@ auto engine :: vulkan :: getPhysicalDeviceSurfacePresentModes (
         return ResultErrorIllegalArgument;
     }
 
+    auto context = ContextManager :: acquire();
+    auto arrayPack = DumpedArray {
+        .pCount = pCount,
+        .type   = ParameterType :: UInt32,
+        .size   = sizeof ( Type ( PresentMode ) ),
+        .pArray = pPresentModes
+    };
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: GetSurface,
+            "vkGetPhysicalDeviceSurfacePresentModesKHR",
+            "Queries a Physical Device's Surface Present Modes",
+            deviceHandle,
+            surfaceHandle,
+            pCount,
+            arrayPack
+    );
+
 #endif
 
     if ( pPresentModes == nullptr ) {
@@ -1325,7 +1816,11 @@ auto engine :: vulkan :: getPhysicalDeviceSurfacePresentModes (
 
 #endif
 
+#if ! __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
     auto context = ContextManager :: acquire();
+
+#endif
 
     if (
             auto result = APICaller.vkGetPhysicalDeviceSurfacePresentModesKHR (
@@ -1363,6 +1858,20 @@ auto engine :: vulkan :: getPhysicalDeviceSurfaceCapabilities (
 
     auto context = ContextManager :: acquire();
 
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: GetSurface,
+            "vkGetPhysicalDeviceSurfaceCapabilities2EXT",
+            "Queries a Physical Device's Surface Capabilities",
+            deviceHandle,
+            surfaceHandle,
+            pSurfaceCapabilities
+    );
+
+#endif
+
     if (
             auto result = APICaller.vkGetPhysicalDeviceSurfaceCapabilities2EXT (
                     deviceHandle,
@@ -1395,6 +1904,28 @@ auto engine :: vulkan :: getPhysicalDeviceSurfaceFormats (
 #endif
 
     auto context = ContextManager :: acquire();
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    auto arrayPack = DumpedArray {
+        .pCount = pCount,
+        .type   = ParameterType::Structure,
+        .size   = sizeof ( Type ( SurfaceFormat2 ) ),
+        .pArray = pFormats
+    };
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: GetSurface,
+            "vkGetPhysicalDeviceSurfaceFormats2KHR",
+            "Queries a Physical Device's Surface Formats",
+            deviceHandle,
+            pSurfaceInfo,
+            pCount,
+            arrayPack
+    );
+
+#endif
 
     if ( pFormats == nullptr ) {
         return APICaller.vkGetPhysicalDeviceSurfaceFormats2KHR (
@@ -1496,6 +2027,21 @@ auto engine :: vulkan :: createSwapChain (
 
     auto context = ContextManager :: acquire();
 
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: CreateSwapChain,
+            "vkCreateSwapchainKHR",
+            "Creates a Swap Chain Object",
+            deviceHandle,
+            pCreateInfo,
+            pAllocationCallbacks,
+            pHandle
+    );
+
+#endif
+
     return APICaller.vkCreateSwapchainKHR (
             deviceHandle,
             prepareContext ( & context.data().create.swapChain, pCreateInfo ),
@@ -1517,6 +2063,17 @@ auto engine :: vulkan :: destroySwapChain (
     if ( deviceHandle == nullptr || handle == nullptr ) {
         return ResultErrorIllegalArgument;
     }
+
+    auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkDestroySwapchainKHR",
+            "Destroy a Swap Chain Object",
+            deviceHandle,
+            handle,
+            pAllocationCallbacks
+    );
 
 #endif
 
@@ -1542,6 +2099,25 @@ auto engine :: vulkan :: getSwapChainImages (
         return ResultErrorIllegalArgument;
     }
 
+    auto context = ContextManager :: acquire();
+    auto arrayPack = DumpedArray {
+        .pCount = pCount,
+        .type   = ParameterType :: Handle,
+        .size   = sizeof ( Type ( ImageHandle ) ),
+        .pArray = pImageHandles
+    };
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: GetSwapChain,
+            "vkGetSwapchainImagesKHR",
+            "Acquire the Image Handles of a SwapChain",
+            deviceHandle,
+            swapChainHandle,
+            pCount,
+            arrayPack
+    );
+
 #endif
 
     if ( pImageHandles == nullptr ) {
@@ -1561,7 +2137,11 @@ auto engine :: vulkan :: getSwapChainImages (
 
 #endif
 
+#if ! __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
     auto context = ContextManager :: acquire();
+
+#endif
 
     if (
             auto result = APICaller.vkGetSwapchainImagesKHR (

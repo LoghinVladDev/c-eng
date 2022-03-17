@@ -19,6 +19,11 @@ using GenericContext = void;
 using ContextAction = void (*) ( GenericContext * ) noexcept;
 
 enum class ContextType {
+    None,
+    Shared
+};
+
+enum class SharedContextType {
     Unknown,
     Common,
     CreateInstance,
@@ -93,6 +98,51 @@ enum class ContextType {
     GetAccelerationStructureDeviceAddress,
 };
 
+union SpecializedContextType {
+    SharedContextType shared;
+};
+
+enum class ParameterType {
+    Unknown,
+
+    BoolPtr,
+    UInt32,
+    UInt32Ptr,
+    StringLiteral,
+
+    Handle,
+    HandlePtr,
+
+    LayerProperties,
+    ExtensionProperties,
+    PerformanceCounter,
+    PerformanceCounterDescription,
+    PhysicalDeviceGroupProperties,
+    QueueFamilyProperties,
+    SurfaceFormat,
+
+    PhysicalDevicePropertiesPtr,
+    PhysicalDeviceFeaturesPtr,
+    AllocationCallbacksPtr,
+
+    Structure,
+    StructurePtr,
+
+    DumpArrayPack
+};
+
+struct DumpedArray {
+    cds :: uint32 * pCount;
+    ParameterType   type;
+    cds :: uint32   size;
+    void          * pArray;
+};
+
+struct Parameter {
+    ParameterType   type;
+    void          * pParam;
+};
+
 struct DiagnosticContext {
 #if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
     engine :: vulkan :: Type ( Result )     error;
@@ -106,10 +156,11 @@ struct DiagnosticContext {
 struct DumpContext {
 #if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
     ContextType                             contextType;
+    SpecializedContextType                  specializedContextType;
     cds :: StringLiteral                    apiFunction;
     cds :: StringLiteral                    apiFunctionDescription;
     cds :: uint32                           paramCount;
-    void const *                            pParams;
+    Parameter                               params [ engine :: vulkan :: config :: dumpParameterCount ];
 #endif
 };
 
@@ -1879,6 +1930,92 @@ union SharedContext {
     SignalSharedContext                                                 signal;
     BindSharedContext                                                   bind;
 };
+
+constexpr auto toString ( ContextType type ) noexcept -> cds :: StringLiteral {
+    switch ( type ) {
+        case ContextType :: None:   return "None";
+        case ContextType :: Shared: return "Shared";
+    }
+
+    return "Unknown";
+}
+
+constexpr auto toString ( SharedContextType type ) noexcept -> cds :: StringLiteral {
+    switch ( type ) {
+        case SharedContextType :: Unknown:                                                    return "Unknown";
+        case SharedContextType :: Common:                                                     return "Common";
+        case SharedContextType :: CreateInstance:                                             return "CreateInstance";
+        case SharedContextType :: EnumerateLayerProperties:                                   return "EnumerateLayerProperties";
+        case SharedContextType :: EnumerateExtensionProperties:                               return "EnumerateExtensionProperties";
+        case SharedContextType :: EnumeratePhysicalDevices:                                   return "EnumeratePhysicalDevices";
+        case SharedContextType :: EnumeratePhysicalDeviceQueueFamilyPerformanceQueryCounters: return "EnumeratePhysicalDeviceQueueFamilyPerformanceQueryCounters";
+        case SharedContextType :: EnumeratePhysicalDeviceGroups:                              return "EnumeratePhysicalDeviceGroups";
+        case SharedContextType :: CreateDevice:                                               return "CreateDevice";
+        case SharedContextType :: GetPhysicalDeviceProperties:                                return "GetPhysicalDeviceProperties";
+        case SharedContextType :: GetPhysicalDeviceFeatures:                                  return "GetPhysicalDeviceFeatures";
+        case SharedContextType :: GetPhysicalDeviceQueueFamilyProperties:                     return "GetPhysicalDeviceQueueFamilyProperties";
+        case SharedContextType :: GetDeviceQueue:                                             return "GetDeviceQueue";
+        case SharedContextType :: GetSurface:                                                 return "GetSurface";
+        case SharedContextType :: CreateSwapChain:                                            return "CreateSwapChain";
+        case SharedContextType :: GetSwapChain:                                               return "GetSwapChain";
+        case SharedContextType :: CreateImageView:                                            return "CreateImageView";
+        case SharedContextType :: CreateCommandPool:                                          return "CreateCommandPool";
+        case SharedContextType :: AllocateCommandBuffers:                                     return "AllocateCommandBuffers";
+        case SharedContextType :: BeginCommandBuffer:                                         return "BeginCommandBuffer";
+        case SharedContextType :: SubmitQueue:                                                return "SubmitQueue";
+        case SharedContextType :: CreateFence:                                                return "CreateFence";
+        case SharedContextType :: GetFence:                                                   return "GetFence";
+        case SharedContextType :: RegisterEvent:                                              return "RegisterEvent";
+        case SharedContextType :: ImportFenceWin32:                                           return "ImportFenceWin32";
+        case SharedContextType :: ImportFenceFd:                                              return "ImportFenceFd";
+        case SharedContextType :: CreateSemaphore:                                            return "CreateSemaphore";
+        case SharedContextType :: GetSemaphore:                                               return "GetSemaphore";
+        case SharedContextType :: WaitSemaphore:                                              return "WaitSemaphore";
+        case SharedContextType :: SignalSemaphore:                                            return "SignalSemaphore";
+        case SharedContextType :: ImportSemaphoreWin32:                                       return "ImportSemaphoreWin32";
+        case SharedContextType :: ImportSemaphoreFd:                                          return "ImportSemaphoreFd";
+        case SharedContextType :: ImportSemaphoreZirconHandleInfoGoogle:                      return "ImportSemaphoreZirconHandleInfoGoogle";
+        case SharedContextType :: CreateEvent:                                                return "CreateEvent";
+        case SharedContextType :: SetCommandBufferEvent:                                      return "SetCommandBufferEvent";
+        case SharedContextType :: WaitCommandBufferEvent2:                                    return "WaitCommandBufferEvent2";
+        case SharedContextType :: WaitCommandBufferEvent:                                     return "WaitCommandBufferEvent";
+        case SharedContextType :: BeginCommandBufferRendering:                                return "BeginCommandBufferRendering";
+        case SharedContextType :: CreateRenderPass:                                           return "CreateRenderPass";
+        case SharedContextType :: CreateRenderPass2:                                          return "CreateRenderPass2";
+        case SharedContextType :: CreateFrameBuffer:                                          return "CreateFrameBuffer";
+        case SharedContextType :: BeginRenderPass:                                            return "BeginRenderPass";
+        case SharedContextType :: NextSubpass:                                                return "NextSubpass";
+        case SharedContextType :: CreateShaderModule:                                         return "CreateShaderModule";
+        case SharedContextType :: GetPhysicalDeviceCooperativeMatrixProperties:               return "GetPhysicalDeviceCooperativeMatrixProperties";
+        case SharedContextType :: CreateValidationCache:                                      return "CreateValidationCache";
+        case SharedContextType :: CreateComputePipeline:                                      return "CreateComputePipeline";
+        case SharedContextType :: CreateGraphicsPipeline:                                     return "CreateGraphicsPipeline";
+        case SharedContextType :: CreateRayTracingPipelineNVidia:                             return "CreateRayTracingPipelineNVidia";
+        case SharedContextType :: CreateRayTracingPipeline:                                   return "CreateRayTracingPipeline";
+        case SharedContextType :: CreatePipelineCache:                                        return "CreatePipelineCache";
+        case SharedContextType :: GetPipelineCommon:                                          return "GetPipelineCommon";
+        case SharedContextType :: GetPipelineProperties:                                      return "GetPipelineProperties";
+        case SharedContextType :: GetPipelineStatistics:                                      return "GetPipelineStatistics";
+        case SharedContextType :: GetPipelineInternalRepresentations:                         return "GetPipelineInternalRepresentations";
+        case SharedContextType :: GetPhysicalDeviceMemoryProperties:                          return "GetPhysicalDeviceMemoryProperties";
+        case SharedContextType :: AllocateMemory:                                             return "AllocateMemory";
+        case SharedContextType :: GetMemoryWin32:                                             return "GetMemoryWin32";
+        case SharedContextType :: GetMemoryFd:                                                return "GetMemoryFd";
+        case SharedContextType :: GetMemoryPlatformIndependent:                               return "GetMemoryPlatformIndependent";
+        case SharedContextType :: FlushMappedMemoryRanges:                                    return "FlushMappedMemoryRanges";
+        case SharedContextType :: CreateBuffer:                                               return "CreateBuffer";
+        case SharedContextType :: CreateBufferView:                                           return "CreateBufferView";
+        case SharedContextType :: CreateImage:                                                return "CreateImage";
+        case SharedContextType :: GetImageSubresourceLayout:                                  return "GetImageSubresourceLayout";
+        case SharedContextType :: GetImageDrmFormatModifierProperties:                        return "GetImageDrmFormatModifierProperties";
+        case SharedContextType :: CreateAccelerationStructureKhronos:                         return "CreateAccelerationStructureKhronos";
+        case SharedContextType :: CreateAccelerationStructureNVidia:                          return "CreateAccelerationStructureNVidia";
+        case SharedContextType :: GetAccelerationStructureBuildSizes:                         return "GetAccelerationStructureBuildSizes";
+        case SharedContextType :: GetAccelerationStructureMemoryRequirements:                 return "GetAccelerationStructureMemoryRequirements";
+        case SharedContextType :: BindAccelerationStructureMemory:                            return "BindAccelerationStructureMemory";
+        case SharedContextType :: GetAccelerationStructureDeviceAddress:                      return "GetAccelerationStructureDeviceAddress";
+    }
+}
 
 
 #define C_ENG_MAP_END
