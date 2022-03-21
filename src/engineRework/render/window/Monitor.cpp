@@ -77,12 +77,12 @@ namespace engine {
             GLFWgammaramp const * pGammaRamp = glfwGetGammaRamp ( pMonitor->handle() );
 
             for ( sint32 i = 0; i < count; ++ i ) {
-                (void) pMonitor->_availableVideoModes.pushBack ( ( __C_ENG_TYPE ( MonitorVideoModeProperties ) ) {
-                    .size   = ( __C_ENG_TYPE ( Size ) ) {
+                (void) pMonitor->_availableVideoModes.pushBack ( Type ( MonitorVideoModeProperties ) {
+                    .size   = Type ( Size ) {
                         .width  = static_cast < uint32 > ( pModes[i].width ),
                         .height = static_cast < uint32 > ( pModes[i].height )
                     },
-                    .colorChannelsDepth = ( __C_ENG_TYPE ( ColorChannelsDepth ) ) {
+                    .colorChannelsDepth = Type ( ColorChannelsDepth ) {
                         .red    = static_cast < uint32 > ( pModes[i].redBits ),
                         .green  = static_cast < uint32 > ( pModes[i].greenBits ),
                         .blue   = static_cast < uint32 > ( pModes[i].blueBits ),
@@ -92,38 +92,38 @@ namespace engine {
             }
 
             GLFWvidmode const * pActiveMode = glfwGetVideoMode ( pMonitor->handle() );
-            pMonitor->_properties = ( __C_ENG_TYPE ( MonitorProperties ) ) {
+            pMonitor->_properties = Type ( MonitorProperties ) {
                 .name               = glfwGetMonitorName ( pMonitor->handle() ),
-                .physicalSizeMM     = ( __C_ENG_TYPE ( Size ) ) {
+                .physicalSizeMM     = Type ( Size ) {
                     .width              = static_cast < uint32 > ( physicalWidthMM ),
                     .height             = static_cast < uint32 > ( physicalHeightMM )
                 },
-                .contentScale       = ( __C_ENG_TYPE ( MonitorContentScale ) ) {
+                .contentScale       = Type ( MonitorContentScale ) {
                     .x                  = contentScaleX,
                     .y                  = contentScaleY
                 },
-                .workArea           = ( __C_ENG_TYPE ( MonitorWorkArea ) ) {
-                    .position           = ( __C_ENG_TYPE ( Position ) ) {
+                .workArea           = Type ( MonitorWorkArea ) {
+                    .position           = Type ( Position ) {
                         .x                  = static_cast < uint32 > ( workAreaXPos ),
                         .y                  = static_cast < uint32 > ( workAreaYPos )
                     },
-                    .size               = ( __C_ENG_TYPE ( Size ) ) {
+                    .size               = Type ( Size ) {
                         .width              = static_cast < uint32 > ( workAreaWidth ),
                         .height             = static_cast < uint32 > ( workAreaHeight )
                     }
                 },
-                .gammaRamp          = ( __C_ENG_TYPE ( MonitorGammaRamp ) ) {
+                .gammaRamp          = Type ( MonitorGammaRamp ) {
                     .size               = static_cast < uint32 > ( pGammaRamp->size ),
                     .red                = pGammaRamp->red,
                     .green              = pGammaRamp->green,
                     .blue               = pGammaRamp->blue
                 },
-                .activeVideoMode    = ( __C_ENG_TYPE ( MonitorVideoModeProperties ) ) {
-                    .size               = ( __C_ENG_TYPE ( Size ) ) {
+                .activeVideoMode    = Type ( MonitorVideoModeProperties ) {
+                    .size               = Type ( Size ) {
                         .width              = static_cast < uint32 > ( pActiveMode->width ),
                         .height             = static_cast < uint32 > ( pActiveMode->height )
                     },
-                    .colorChannelsDepth = ( __C_ENG_TYPE ( ColorChannelsDepth ) ) {
+                    .colorChannelsDepth = Type ( ColorChannelsDepth ) {
                         .red                = static_cast < uint32 > ( pActiveMode->redBits ),
                         .green              = static_cast < uint32 > ( pActiveMode->greenBits ),
                         .blue               = static_cast < uint32 > ( pActiveMode->blueBits )

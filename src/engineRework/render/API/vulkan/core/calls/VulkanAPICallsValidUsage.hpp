@@ -861,7 +861,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
                         }
                     }
 
-                    queueValidationArray [ queueValidationElementCount ++ ] = ( QueueInfoWithProtected ) {
+                    queueValidationArray [ queueValidationElementCount ++ ] = QueueInfoWithProtected {
                         .index = pQueueCreateInfo->queueFamilyIndex,
                         .protectedExists = ( pQueueCreateInfo->flags & static_cast < uint32 > ( vulkan :: __C_ENG_TYPE ( DeviceQueueCreateFlag ) :: DeviceQueueCreateFlagProtected ) ) != 0U
                     };

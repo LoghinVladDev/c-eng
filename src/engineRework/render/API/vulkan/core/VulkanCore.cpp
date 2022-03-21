@@ -9285,7 +9285,7 @@ auto vulkan :: toString (
         case SubpassDescriptionFlagFragmentRegionQualcomm:                          { asString = "Fragment Region";                                 break; }
         case SubpassDescriptionFlagShaderResolveQualcomm:                           { asString = "Shader Resolve";                                  break; }
 #endif
-#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXPERIMENTAL_MULTIVIEW_PER_VIEW_ATTRIBUTES_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_ARM_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_AVAILABLE
         case SubpassDescriptionFlagRasterizationOrderAttachmentColorAccessARM:      { asString = "Rasterization Order Attachment Color Access";     break; }
         case SubpassDescriptionFlagRasterizationOrderAttachmentDepthAccessARM:      { asString = "Rasterization Order Attachment Depth Access";     break; }
         case SubpassDescriptionFlagRasterizationOrderAttachmentStencilAccessARM:    { asString = "Rasterization Order Attachment Stencil Access";   break; }
@@ -10478,7 +10478,9 @@ auto vulkan :: toString (
     StringLiteral asString = "";
 
     switch ( flag ) {
+#if __C_ENG_VULKAN_API_EXTENSION_ARM_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_AVAILABLE
         case PipelineColorBlendStateCreateFlagRasterizationOrderAttachmentAccessARM:    { asString = "Rasterization Order Attachment Access";   break; }
+#endif
     }
 
     return asString;

@@ -202,35 +202,6 @@ namespace engine :: vulkan {
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 #define CALL_POINT CALL ( vkFreeCommandBuffers, INSTANCE, NO_EXTENSION )
 #include <calls/util/APICallerGenerator.hpp>
-//    private:
-//        APICall <PFN_vkFreeCommandBuffers> mutable vkFreeCommandBuffersHandle{nullptr, {}};
-//    public:
-//        template<typename...ArgumentTypes>[[nodiscard]] inline auto vkFreeCommandBuffers(
-//                cds::ReturnOf<PFN_vkFreeCommandBuffers> *pReturn, ArgumentTypes &&...arguments) const noexcept -> VResult{
-//            if(this->vkFreeCommandBuffersHandle.handle==nullptr){
-//                cds::LockGuard(vkFreeCommandBuffersHandle
-//                                       .lock);if(this->vkFreeCommandBuffersHandle.handle==nullptr){
-//                    if(this->instanceHandleToBeUsed==nullptr){
-//                        this->
-//                                instanceHandleToBeUsed = LastCreatedInstance::acquire();
-//                    }if(this->instanceHandleToBeUsed==nullptr){
-//                        (void)
-//                                engine::VLogger::instance()
-//                                        .warning("Requested Instance Function, but no Instance Handle Provided");}vkFreeCommandBuffersHandle.
-//                            handle = reinterpret_cast<PFN_vkFreeCommandBuffers>(vkGetInstanceProcAddr(this->instanceHandleToBeUsed,
-//                                                                                                      "vkFreeCommandBuffers"));
-//                }if(this->vkFreeCommandBuffersHandle.handle==nullptr){
-//                    (void)
-//                            engine::VLogger::instance()
-//                                    .
-//                                            critical(cds::String("API Call error : Function \"" "vkFreeCommandBuffers" "\" not found.")
-//                                    );return
-//                            ResultErrorFunctionHandleNotFound;
-//                }}*
-//                          pReturn = this->vkFreeCommandBuffersHandle.handle(std::forward<ArgumentTypes>(arguments)...);
-//            return
-//                    ResultSuccess;
-//        }
 #endif
 
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE

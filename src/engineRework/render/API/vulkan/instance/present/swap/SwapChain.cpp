@@ -57,6 +57,13 @@ static inline auto chooseFormat (
     return & pProperties->formats.pFormats[0];
 }
 
+#if defined(__CDS_compiler_MSVC)
+#pragma push_macro("min")
+#pragma push_macro("max")
+#undef min
+#undef max
+#endif
+
 static inline auto chooseExtent (
         Type ( PresentHandler ) :: SurfaceProperties const * pProperties
 ) noexcept -> Type ( Extent2D ) {
@@ -86,6 +93,11 @@ static inline auto chooseExtent (
         )
     };
 }
+
+#if defined(__CDS_compiler_MSVC)
+#pragma pop_macro("max")
+#pragma pop_macro("min")
+#endif
 
 static inline auto chooseTransform (
         Type ( PresentHandler ) :: SurfaceProperties const * pProperties

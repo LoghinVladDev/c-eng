@@ -5,6 +5,7 @@
 #ifndef __C_ENG_VULKAN_CORE_CONFIG_HPP__
 #define __C_ENG_VULKAN_CORE_CONFIG_HPP__ /* NOLINT(bugprone-reserved-identifier) */
 
+#include <CDS/Types>
 
 namespace engine :: vulkan :: config {
 

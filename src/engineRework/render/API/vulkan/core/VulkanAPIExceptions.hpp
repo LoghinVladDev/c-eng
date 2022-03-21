@@ -113,6 +113,12 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #define __C_ENG_LOG_DETAILED_API_CALL_EXCEPTION(_level, _apiCall, _retVal) (void) __C_ENG_TYPE ( Logger ) :: instance()._level( cds :: String :: f ( "%s:%lld in %s => Vulkan API Call Exception : %s -> %s", __FILE__, __LINE__, __PRETTY_FUNCTION__, _apiCall, vulkan :: toString ( _retVal ) ) ) // NOLINT(bugprone-reserved-identifier)
 #define __C_ENG_LOG_AND_THROW_DETAILED_API_CALL_EXCEPTION(_level, _apiCall, _retVal) __C_ENG_LOG_DETAILED_API_CALL_EXCEPTION(_level, _apiCall, _retVal); __C_ENG_THROW_DETAILED_API_CALL_EXCEPTION(_apiCall, _retVal) // NOLINT(bugprone-reserved-identifier)
 
+#elif defined(__CDS_compiler_MSVC)
+
+#define __C_ENG_THROW_DETAILED_API_CALL_EXCEPTION(_apiCall, _retVal) throw __C_ENG_TYPE ( VulkanAPICallException ) ( _apiCall, _retVal, __LINE__, __FILE__, __FUNCSIG__ ) // NOLINT(bugprone-reserved-identifier)
+#define __C_ENG_LOG_DETAILED_API_CALL_EXCEPTION(_level, _apiCall, _retVal) (void) __C_ENG_TYPE ( Logger ) :: instance()._level( cds :: String :: f ( "%s:%lld in %s => Vulkan API Call Exception : %s -> %s", __FILE__, __LINE__, __FUNCSIG__, _apiCall, vulkan :: toString ( _retVal ) ) ) // NOLINT(bugprone-reserved-identifier)
+#define __C_ENG_LOG_AND_THROW_DETAILED_API_CALL_EXCEPTION(_level, _apiCall, _retVal) __C_ENG_LOG_DETAILED_API_CALL_EXCEPTION(_level, _apiCall, _retVal); __C_ENG_THROW_DETAILED_API_CALL_EXCEPTION(_apiCall, _retVal) // NOLINT(bugprone-reserved-identifier)
+
 #else
 
 #error Define The __C_ENG_THROW_DETAILED_API_CALL_EXCEPTION macro set for the selected compiler

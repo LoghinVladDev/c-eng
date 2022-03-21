@@ -19,7 +19,7 @@ public:                                                                         
                                                                                                                                                                                                                     \
             __CALL_GENERATION_CREATE_ALTERNATIVE_CHECK_ ## _resolveFormula                                                                                                                                          \
                                                                                                                                                                                                                     \
-            cds :: LockGuard guard ( _name ## Handle.lock );                                                                                                                                                        \
+            cds :: LockGuard guard ( this->_name ## Handle.lock );                                                                                                                                                  \
             if ( this->_name ## Handle.handle == nullptr ) {                                                                                                                                                        \
                 __CALL_GENERATION_ACQUIRE_HANDLE_ ## _resolveFormula(_name)                                                                                                                                         \
             }                                                                                                                                                                                                       \
@@ -42,7 +42,7 @@ public:                                                                         
                                                                                                                                                                                                                     \
             __CALL_GENERATION_CREATE_ALTERNATIVE_CHECK_ ## _resolveFormula                                                                                                                                          \
                                                                                                                                                                                                                     \
-            cds :: LockGuard guard ( _name ## Handle.lock );                                                                                                                                                        \
+            cds :: LockGuard guard ( this->_name ## Handle.lock );                                                                                                                                                  \
             if ( this->_name ## Handle.handle == nullptr ) {                                                                                                                                                        \
                 __CALL_GENERATION_ACQUIRE_HANDLE_ ## _resolveFormula(_name)                                                                                                                                         \
             }                                                                                                                                                                                                       \
@@ -60,13 +60,24 @@ public:                                                                         
         this->_name ## Handle.handle ( std :: forward < ArgumentTypes > ( arguments ) ... );                                                                                                                        \
         return ResultSuccess;                                                                                                                                                                                       \
     }                                                                                                                                                                                                               \
+                                                                                                                                                                                                                    \
+    template < typename ... ArgumentTypes, typename F, typename R = cds :: ReturnOf < PFN_ ## _name >, cds :: EnableIf < ! std :: is_same < R, void > :: value > = 0 >                                              \
+    NoDiscard inline auto _name ## IndirectIndirection ( F call, R * pResult, ArgumentTypes && ... arguments ) const noexcept -> void {                                                                             \
+        * pResult = call ( std :: forward < ArgumentTypes && > ( arguments ) ... );                                                                                                                                 \
+    }                                                                                                                                                                                                               \
+                                                                                                                                                                                                                    \
+    template < typename ... ArgumentTypes, typename F, typename R = cds :: ReturnOf < PFN_ ## _name >, cds :: EnableIf < std :: is_same < R, void > :: value > = 0 >                                                \
+    NoDiscard inline auto _name ## IndirectIndirection ( F call, R * , ArgumentTypes && ... arguments ) const noexcept -> void {                                                                                    \
+        call ( std :: forward < ArgumentTypes && > ( arguments ) ... );                                                                                                                                             \
+    }                                                                                                                                                                                                               \
+                                                                                                                                                                                                                    \
     template < typename ... ArgumentTypes, typename R = cds :: ReturnOf < PFN_ ## _name >, typename cds :: EnableIf < ! std :: is_same < R, void > :: value && ! std :: is_same < R, VkResult > :: value > = 0 >    \
     NoDiscard inline auto _name ( cds :: ReturnOf < PFN_ ## _name > * pReturn, ArgumentTypes && ... arguments ) const noexcept -> Type ( Result ) {                                                                 \
         if ( this->_name ## Handle.handle == nullptr ) {                                                                                                                                                            \
                                                                                                                                                                                                                     \
             __CALL_GENERATION_CREATE_ALTERNATIVE_CHECK_ ## _resolveFormula                                                                                                                                          \
                                                                                                                                                                                                                     \
-            cds :: LockGuard guard ( _name ## Handle.lock );                                                                                                                                                        \
+            cds :: LockGuard guard ( this->_name ## Handle.lock );                                                                                                                                                  \
             if ( this->_name ## Handle.handle == nullptr ) {                                                                                                                                                        \
                 __CALL_GENERATION_ACQUIRE_HANDLE_ ## _resolveFormula(_name)                                                                                                                                         \
             }                                                                                                                                                                                                       \
@@ -81,7 +92,7 @@ public:                                                                         
             }                                                                                                                                                                                                       \
         }                                                                                                                                                                                                           \
                                                                                                                                                                                                                     \
-        * pReturn = this->_name ## Handle.handle ( std :: forward < ArgumentTypes > ( arguments ) ... );                                                                                                            \
+        this->_name ## IndirectIndirection ( this-> _name ## Handle.handle, pReturn, std :: forward < ArgumentTypes && > ( arguments ) ... );                                                                       \
         return ResultSuccess;                                                                                                                                                                                       \
     }
 
@@ -208,10 +219,11 @@ public:                                                                         
 
 #define __CALL                      __C_ENG_API_CALLER_GENERATOR_META_CALL(__CALL_GENERATION_, CALL_POINT)
 
+#if ! defined ( __C_ENG_DEBUG_CALLER_GENERATOR )
+
 __CDS_WarningSuppression_VoidPtrDereference_SuppressEnable
 __CALL
 __CDS_WarningSuppression_VoidPtrDereference_SuppressDisable
-
 
 #undef __CALL
 
@@ -251,7 +263,8 @@ __CDS_WarningSuppression_VoidPtrDereference_SuppressDisable
 #undef __CALL_GENERATION_CREATE_ALTERNATIVE_CHECK_INSTANCE_OR_KHR
 #undef __CALL_GENERATION_CREATE_ALTERNATIVE_CHECK_INSTANCE_OR_EXT
 
-
 #undef CALL_POINT
+
+#endif
 
 #endif

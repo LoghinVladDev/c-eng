@@ -31,6 +31,16 @@
     .pMessage   = (__VA_ARGS__).copy()                                                      \
 };
 
+#elif defined(__CDS_compiler_MSVC)
+
+#define __C_ENG_DIAG_SET_CONTEXT_ERROR(_pContext, _error, ...)   _pContext->common.diag = { \
+    .error      = _error,                                                                   \
+    .file       = __FILE__,                                                                 \
+    .function   = __FUNCSIG__,                                                              \
+    .line       = __LINE__,                                                                 \
+    .pMessage   = (__VA_ARGS__).copy()                                                      \
+};
+
 #else
 
 #error Define The __C_ENG_DIAG_SET_CONTEXT_ERROR macro set for the selected compiler

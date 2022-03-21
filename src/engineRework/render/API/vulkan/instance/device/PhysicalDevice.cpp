@@ -402,7 +402,7 @@ static inline auto refreshExtensions (
 
         rDeviceWithExtensions.extensionArray.pExtensions[i].enabled =
                 Type ( Settings ) :: instance().get (
-                        String ( deviceName ).forEach ( [](auto & c) {
+                        String ( deviceName ).forEach ( [](char & c) {
                             if ( " \t\n\r\f"_s.contains (c) ) {
                                 c = '_';
                             }

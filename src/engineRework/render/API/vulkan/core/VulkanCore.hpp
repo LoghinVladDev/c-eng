@@ -3533,7 +3533,11 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #include <ObjectMapping.hpp>
 
         Enum {
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
             Field ( DeviceOnly, VkEventCreateFlagBits :: VK_EVENT_CREATE_DEVICE_ONLY_BIT ),
+#elif __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
+            Field ( DeviceOnly, VkEventCreateFlagBits :: VK_EVENT_CREATE_DEVICE_ONLY_BIT_KHR ),
+#endif
         };
 
 #define C_ENG_MAP_END
@@ -3928,11 +3932,11 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_FRAGMENT_SHADING_RATE_AVAILABLE && ( __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE )
-            Field ( RenderingFragmentShadingRateAttachment,     VkPipelineCreateFlagBits :: VK_PIPELINE_CREATE_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR ),
+            Field ( RenderingFragmentShadingRateAttachment,     VkPipelineCreateFlagBits :: VK_PIPELINE_RASTERIZATION_STATE_CREATE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR    ),
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_FRAGMENT_DENSITY_MAP_AVAILABLE && ( __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE )
-            Field ( RenderingFragmentDensityMapAttachment,      VkPipelineCreateFlagBits :: VK_PIPELINE_CREATE_RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT ),
+            Field ( RenderingFragmentDensityMapAttachment,      VkPipelineCreateFlagBits :: VK_PIPELINE_RASTERIZATION_STATE_CREATE_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT  ),
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_RAY_TRACING_PIPELINE_AVAILABLE
@@ -4010,9 +4014,9 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
             Field ( ApplicationPipelineCache,   VkPipelineCreationFeedbackFlagBits :: VK_PIPELINE_CREATION_FEEDBACK_APPLICATION_PIPELINE_CACHE_HIT_BIT ),
             Field ( BasePipelineAcceleration,   VkPipelineCreationFeedbackFlagBits :: VK_PIPELINE_CREATION_FEEDBACK_BASE_PIPELINE_ACCELERATION_BIT ),
 #else
-            Field ( Valid,                      VkPipelineCreationFeedbackFlagBits :: VK_PIPELINE_CREATION_FEEDBACK_VALID_BIT_EXT ),
-            Field ( ApplicationPipelineCache,   VkPipelineCreationFeedbackFlagBits :: VK_PIPELINE_CREATION_FEEDBACK_APPLICATION_PIPELINE_CACHE_HIT_BIT_EXT ),
-            Field ( BasePipelineAcceleration,   VkPipelineCreationFeedbackFlagBits :: VK_PIPELINE_CREATION_FEEDBACK_BASE_PIPELINE_ACCELERATION_BIT_EXT ),
+            Field ( Valid,                      VkPipelineCreationFeedbackFlagBitsEXT :: VK_PIPELINE_CREATION_FEEDBACK_VALID_BIT_EXT ),
+            Field ( ApplicationPipelineCache,   VkPipelineCreationFeedbackFlagBitsEXT :: VK_PIPELINE_CREATION_FEEDBACK_APPLICATION_PIPELINE_CACHE_HIT_BIT_EXT ),
+            Field ( BasePipelineAcceleration,   VkPipelineCreationFeedbackFlagBitsEXT :: VK_PIPELINE_CREATION_FEEDBACK_BASE_PIPELINE_ACCELERATION_BIT_EXT ),
 #endif
         };
 
@@ -5347,6 +5351,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_ALIAS ( BufferUsageFlags,                       VkBufferUsageFlags );
         __C_ENG_ALIAS ( BufferViewCreateFlags,                  VkBufferViewCreateFlags );
         __C_ENG_ALIAS ( SamplerCreateFlags,                     VkSamplerCreateFlags );
+        __C_ENG_ALIAS ( DependencyFlags,                        VkDependencyFlags );
 
         __C_ENG_ALIAS ( AllocationFunction,                     PFN_vkAllocationFunction );
         __C_ENG_ALIAS ( ReallocationFunction,                   PFN_vkReallocationFunction );
@@ -5374,8 +5379,10 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_ALIAS ( SemaphoreWaitFlags,                 VkSemaphoreWaitFlags );
 #endif
 
-#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_PIPELINE_CREATION_FEEDBACK_AVAILABLE
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
         __C_ENG_ALIAS ( PipelineCreationFeedbackFlags,      VkPipelineCreationFeedbackFlags );
+#elif __C_ENG_VULKAN_API_EXTENSION_PIPELINE_CREATION_FEEDBACK_AVAILABLE
+        __C_ENG_ALIAS ( PipelineCreationFeedbackFlags,      VkPipelineCreationFeedbackFlagsEXT );
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
@@ -5476,12 +5483,6 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
         __C_ENG_ALIAS ( RenderingFlags,                 VkRenderingFlagsKHR );
 
-#endif
-
-#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
-        __C_ENG_ALIAS ( DependencyFlags,                VkDependencyFlags );
-#elif __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
-        __C_ENG_ALIAS ( DepepdencyFlags,                VkDependencyFlagsKHR );
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DISPLAY_AVAILABLE

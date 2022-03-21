@@ -30,7 +30,7 @@ public:
             String          deviceName
     ) noexcept -> ValidationCacheContents {
 
-        deviceName.toLower().forEach([](auto & character){
+        deviceName.toLower().forEach([](char & character){
             if ( " \t\r\f\n"_s.contains( character ) ) {
                 character = '_';
             }
@@ -90,7 +90,7 @@ public:
             return;
         }
 
-        deviceName.toLower().forEach([](auto & character){
+        deviceName.toLower().forEach([](char & character){
             if ( " \t\r\f\n"_s.contains( character ) ) {
                 character = '_';
             }

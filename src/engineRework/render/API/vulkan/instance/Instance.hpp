@@ -21,66 +21,40 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
     namespace vulkan {
 
         Class {
-            Const ( ENGINE_TYPE ( DebugMessageSeverityFlags ),  defaultMessageSeverityFlags, VALUE ( // NOLINT(clion-misra-cpp2008-4-5-2)
-
-#ifdef NDEBUG
-
-                    0U
-
-#else
-
-                    DebugMessageSeverityFlagVerbose |
-                    DebugMessageSeverityFlagInfo    |
-                    DebugMessageSeverityFlagWarning |
-                    DebugMessageSeverityFlagError
-
-#endif
-
-            ))
-
-            Const ( ENGINE_TYPE ( DebugMessageTypeFlags ),      defaultMessageTypeFlags,    VALUE ( // NOLINT(clion-misra-cpp2008-4-5-2)
-
-#ifdef NDEBUG
-
-                    0U
-
-#else
-
-                    DebugMessageTypeFlagGeneral     |
-                    DebugMessageTypeFlagValidation  |
-                    DebugMessageTypeFlagPerformance
-
-#endif
-
-            ))
-
-            Const ( TYPE ( cds :: Array < __C_ENG_TYPE ( ValidationFeatureEnable ) > ),     defaultEnabledValidationFeatures, VALUE ({
-
-#ifdef NDEBUG
-
-#else
-
-                ValidationFeatureEnableGpuAssisted,
-                ValidationFeatureEnableGpuAssistedReserveBindingSlot,
-                ValidationFeatureEnableBestPractices,
-//                ValidationFeatureEnableDebugPrintf, https://vulkan.lunarg.com/doc/view/1.2.189.0/linux/1.2-extensions/vkspec.html#VUID-VkValidationFeaturesEXT-pEnabledValidationFeatures-02968
-                ValidationFeatureEnableSynchronizationValidation
-
-#endif
-
-            }))
-
-            Const ( TYPE ( cds :: Array < __C_ENG_TYPE ( ValidationFeatureDisable ) > ),    defaultDisabledValidationFeatures, VALUE ({
 
 #ifndef NDEBUG
 
+            Const ( ENGINE_TYPE ( DebugMessageSeverityFlags ),   defaultMessageSeverityFlags,    VALUE (
+                    DebugMessageSeverityFlagVerbose |
+                    DebugMessageSeverityFlagInfo |
+                    DebugMessageSeverityFlagWarning |
+                    DebugMessageSeverityFlagError
+            ))
+
+            Const ( ENGINE_TYPE ( DebugMessageTypeFlags ),      defaultMessageTypeFlags,    VALUE (
+                    DebugMessageTypeFlagGeneral |
+                    DebugMessageTypeFlagValidation |
+                    DebugMessageTypeFlagPerformance
+            ))
+
+            Const ( TYPE ( cds :: Array < Type ( ValidationFeatureEnable ) > ),     defaultEnabledValidationFeatures,   VALUE ({
+                    ValidationFeatureEnableGpuAssisted,
+                    ValidationFeatureEnableGpuAssistedReserveBindingSlot,
+                    ValidationFeatureEnableBestPractices,
+//                    ValidationFeatureEnableDebugPrintf, https://vulkan.lunarg.com/doc/view/1.2.189.0/linux/1.2-extensions/vkspec.html#VUID-VkValidationFeaturesEXT-pEnabledValidationFeatures-02968
+                    ValidationFeatureEnableSynchronizationValidation
+            }))
+
+            Const ( TYPE ( cds :: Array < __C_ENG_TYPE ( ValidationFeatureDisable ) > ),    defaultDisabledValidationFeatures, VALUE ({}) )
+
 #else
 
-                ValidationFeatureDisableAll
+            Const ( ENGINE_TYPE ( DebugMessageSeverityFlags ),   defaultMessageSeverityFlags,    VALUE ( 0U ) )
+            Const ( ENGINE_TYPE ( DebugMessageTypeFlags ),      defaultMessageTypeFlags,    VALUE ( 0U ) )
+            Const ( TYPE ( cds :: Array < Type ( ValidationFeatureEnable ) > ),     defaultEnabledValidationFeatures,   VALUE ({}))
+            Const ( TYPE ( cds :: Array < __C_ENG_TYPE ( ValidationFeatureDisable ) > ),    defaultDisabledValidationFeatures, VALUE ({ ValidationFeatureDisableAll }) )
 
 #endif
-
-            }))
 
             Field ( ENGINE_TYPE ( Version ),                                                version,                    DEFAULT_VALUE ( versionConstants :: nullVersion ),  GET_DEFAULT, SET_NONE )
             Field ( ENGINE_TYPE ( LayerHandler ),                                           layerHandler,               NO_INIT,                                            GET_DEFAULT, SET_NONE )

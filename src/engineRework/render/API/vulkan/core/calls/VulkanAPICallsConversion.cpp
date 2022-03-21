@@ -16525,7 +16525,11 @@ namespace engine :: vulkan {
 #endif
 
         * pDestination = {
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
                 .sType                      = VK_STRUCTURE_TYPE_RENDERING_INFO,
+#elif __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE
+                .sType                      = VK_STRUCTURE_TYPE_RENDERING_INFO_KHR,
+#endif
                 .pNext                      = nullptr,
                 .flags                      = pSource->flags,
                 .renderArea                 = {
@@ -16564,7 +16568,11 @@ namespace engine :: vulkan {
 
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
         pDestination->sType                      = VK_STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO;
+#elif __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE
+        pDestination->sType                      = VK_STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO_KHR;
+#endif
         pDestination->pNext                      = nullptr;
         pDestination->imageView                  = pSource->imageView;
         pDestination->imageLayout                = static_cast < VkImageLayout > ( pSource->imageLayout );

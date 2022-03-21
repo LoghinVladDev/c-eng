@@ -255,10 +255,10 @@ auto __C_ENG_TYPE ( Gamepad ) :: update () noexcept -> void {
         for ( uint32 i = 0U; i < axesCount; ++ i ) {
             if ( this->_axes[i] != currentState.axes[i] ) {
 
-                globals :: activeEvents[globals :: activeEventCount ++] = (RawControllerEvent) {
+                globals :: activeEvents[globals :: activeEventCount ++] = RawControllerEvent {
                     .handle     = this->handle(),
                     .type       = RawControllerEventType :: Axis,
-                    .axisEvent  = (RawAxisEvent) {
+                    .axisEvent  = RawAxisEvent {
                         .axisID     = static_cast < uint16 > ( i ),
                         .oldValue   = this->_axes[i],
                         .newValue   = currentState.axes[i]
@@ -279,10 +279,10 @@ auto __C_ENG_TYPE ( Gamepad ) :: update () noexcept -> void {
 
             if ( this->_buttons[i] != current ) {
 
-                globals :: activeEvents[globals :: activeEventCount ++] = (RawControllerEvent) {
+                globals :: activeEvents[globals :: activeEventCount ++] = RawControllerEvent {
                     .handle         = this->handle(),
                     .type           = RawControllerEventType :: Button,
-                    .buttonEvent    = (RawButtonEvent) {
+                    .buttonEvent    = RawButtonEvent {
                         .state          = current,
                         .buttonID       = static_cast < uint16 > ( i )
                     }
@@ -319,10 +319,10 @@ auto __C_ENG_TYPE ( Joystick ) :: update () noexcept -> void {
         for ( sint32 i = 0; i < readAxisCount; ++ i ) {
             if ( this->_axes[i] != readAxes[i] ) {
 
-                globals :: activeEvents[globals :: activeEventCount ++] = (RawControllerEvent) {
+                globals :: activeEvents[globals :: activeEventCount ++] = RawControllerEvent {
                     .handle     = this->handle(),
                     .type       = RawControllerEventType :: Axis,
-                    .axisEvent  = (RawAxisEvent) {
+                    .axisEvent  = RawAxisEvent {
                         .axisID     = static_cast < uint16 > ( i ),
                         .oldValue   = this->_axes[i],
                         .newValue   = readAxes[i]
@@ -357,10 +357,10 @@ auto __C_ENG_TYPE ( Joystick ) :: update () noexcept -> void {
 
             if ( this->_buttons[i] != current ) {
 
-                globals :: activeEvents[globals :: activeEventCount ++] = (RawControllerEvent) {
+                globals :: activeEvents[globals :: activeEventCount ++] = RawControllerEvent {
                     .handle         = this->handle(),
                     .type           = RawControllerEventType :: Button,
-                    .buttonEvent    = (RawButtonEvent) {
+                    .buttonEvent    = RawButtonEvent {
                         .state          = current,
                         .buttonID       = static_cast < uint16 > ( i )
                     }
@@ -383,10 +383,10 @@ auto __C_ENG_TYPE ( Joystick ) :: update () noexcept -> void {
         for ( sint32 i = 0; i < readHatCount; ++ i ) {
             if ( this->_hats[i] != readHats[i] ) { // NOLINT(clion-misra-cpp2008-5-0-4)
 
-                globals :: activeEvents[globals :: activeEventCount ++] = ( RawControllerEvent ) {
+                globals :: activeEvents[globals :: activeEventCount ++] = RawControllerEvent {
                     .handle     = this->handle(),
                     .type       = RawControllerEventType :: Hat,
-                    .hatEvent   = (RawHatEvent) {
+                    .hatEvent   = RawHatEvent {
                         .hatState   = readHats[i],
                         .hatID      = static_cast < uint16 > ( i )
                     }
@@ -470,7 +470,7 @@ static inline auto controllerHatEventRootCallback (
     }
 }
 
-static engine :: utility :: SimpleEventQueue < __C_ENG_TYPE ( ControllerEvent ) * > customEvents;
+static engine :: utility :: SimpleEventQueue < Type ( ControllerEvent ) * > customEvents;
 
 __C_ENG_MAYBE_UNUSED auto Self :: handleEvent (
         __C_ENG_TYPE ( ControllerEvent ) const & event

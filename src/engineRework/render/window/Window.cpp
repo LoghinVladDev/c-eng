@@ -213,7 +213,7 @@ auto Self :: init () noexcept (false) -> Self & {
 
     auto resolution = __C_ENG_TYPE ( Settings ) :: instance().get( __C_ENG_TYPE ( Settings ) :: keyResolution );
 
-    this->_size = ( __C_ENG_TYPE ( Size ) ) {
+    this->_size = Type ( Size ) {
         .width  = static_cast < uint32 > ( ( resolution >> 32 ) & 0xFFFFFFFFU ),
         .height = static_cast < uint32 > ( resolution & 0xFFFFFFFFU )
     };
@@ -232,7 +232,7 @@ auto Self :: init () noexcept (false) -> Self & {
             glfwWindowHint ( GLFW_BLUE_BITS,    static_cast < sint32 > ( this->_monitor->properties().activeVideoMode.colorChannelsDepth.blue ) );
             glfwWindowHint ( GLFW_REFRESH_RATE, static_cast < sint32 > ( this->_monitor->properties().activeVideoMode.refreshRate ) );
 
-            this->_size = ( __C_ENG_TYPE ( Size ) ) {
+            this->_size = Type ( Size ) {
                 .width  = static_cast < uint32 > ( this->_monitor->properties().activeVideoMode.size.width ),
                 .height = static_cast < uint32 > ( this->_monitor->properties().activeVideoMode.size.height )
             };
@@ -288,7 +288,7 @@ auto Self :: init () noexcept (false) -> Self & {
     sint32 yPos;
     glfwGetWindowPos ( this->handle(), & xPos, & yPos );
 
-    this->_position = ( __C_ENG_TYPE ( Position ) ) {
+    this->_position = Type ( Position ) {
         .x =    static_cast < uint32 > ( xPos ),
         .y =    static_cast < uint32 > ( yPos )
     };
@@ -420,7 +420,7 @@ auto Self :: makeWindowed () noexcept -> Self & {
 
     auto resolution = __C_ENG_TYPE ( Settings ) :: instance().get ( __C_ENG_TYPE ( Settings ) :: keyResolution );
 
-    this->_size = ( __C_ENG_TYPE ( Size ) ) {
+    this->_size = Type ( Size ) {
         .width = static_cast < uint32 > ((resolution >> 32) & 0xFFFFFFFFU ),
         .height   = static_cast < uint32 > ( resolution & 0xFFFFFFFFU )
     };
@@ -518,7 +518,7 @@ auto Self :: makeWindowedFullscreen (
         return * this;
     }
 
-    this->_size = ( __C_ENG_TYPE ( Size ) ) {
+    this->_size = Type ( Size ) {
         .width = this->monitor()->properties().activeVideoMode.size.width,
         .height = this->monitor()->properties().activeVideoMode.size.height
     };
@@ -553,7 +553,7 @@ namespace engine {
             cds :: uint32 height
     ) noexcept -> void {
 
-        pWindow->_size = ( __C_ENG_TYPE ( Size ) ) {
+        pWindow->_size = Type ( Size ) {
             .width = width,
             .height = height
         };
@@ -570,7 +570,7 @@ static auto windowFrameBufferResizeEventRootCallback (
     if ( pObject->engine() != nullptr ) {
         __C_ENG_TYPE ( WindowFrameBufferResizeEvent ) event (
                 pObject,
-                ( engine :: __C_ENG_TYPE ( Size ) ) {
+                engine :: Type ( Size ) {
                     .width  = static_cast < uint32 > ( width ),
                     .height = static_cast < uint32 > ( height )
                 },
@@ -590,7 +590,7 @@ static auto windowResizeEventRootCallback (
     if ( pObject->engine() != nullptr ) {
         __C_ENG_TYPE ( WindowResizeEvent ) event (
                 pObject,
-                ( engine :: __C_ENG_TYPE ( Size ) ) {
+                engine :: Type ( Size ) {
                     .width  = static_cast < uint32 > ( width ),
                     .height = static_cast < uint32 > ( height ),
                 },
@@ -633,7 +633,7 @@ static auto windowContentScaleEventRootCallback (
 
         __C_ENG_TYPE ( WindowContentScaleEvent ) event (
                 pObject,
-                ( __C_ENG_TYPE ( WindowContentScale ) ) {
+                Type ( WindowContentScale ) {
                     .x = xScale,
                     .y = yScale
                 }
@@ -654,7 +654,7 @@ static auto windowMoveEventRootCallback (
 
         __C_ENG_TYPE ( WindowMoveEvent ) event (
                 pObject,
-                ( __C_ENG_TYPE ( Position ) ) {
+                Type ( Position ) {
                     .x = static_cast < uint32 > ( xPos ),
                     .y = static_cast < uint32 > ( yPos )
                 },
@@ -805,7 +805,7 @@ namespace engine {
             uint32  yPos
     ) noexcept -> void {
 
-        window->_mousePosition = ( __C_ENG_TYPE ( Position ) ) {
+        window->_mousePosition = Type ( Position ) {
             .x = xPos,
             .y = yPos
         };
@@ -825,7 +825,7 @@ static auto mouseMoveEventRootCallback (
 
         __C_ENG_TYPE ( MouseMoveEvent ) event (
                 pObject,
-                ( __C_ENG_TYPE ( Position ) ) {
+                Type ( Position ) {
                     .x  = castedXPos,
                     .y  = castedYPos,
                 },
