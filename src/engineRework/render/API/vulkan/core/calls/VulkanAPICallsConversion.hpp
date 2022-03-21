@@ -4268,6 +4268,97 @@ namespace engine :: vulkan {
     ) noexcept -> VkSamplerYcbcrConversionCreateInfo *;
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto prepareContext (
+            CreateDescriptorSetLayoutContext              *,
+            Type ( DescriptorSetLayoutCreateInfo )  const *
+    ) noexcept -> VkDescriptorSetLayoutCreateInfo *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto toVulkanFormat (
+            VkDescriptorSetLayoutCreateInfo              *,
+            Type ( DescriptorSetLayoutCreateInfo ) const *
+    ) noexcept -> VkDescriptorSetLayoutCreateInfo *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto toVulkanFormat (
+            VkDescriptorSetLayoutBinding              *,
+            Type ( DescriptorSetLayoutBinding ) const *
+    ) noexcept -> VkDescriptorSetLayoutBinding *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+    extern auto toVulkanFormat (
+            VkDescriptorSetLayoutBindingFlagsCreateInfo              *,
+            Type ( DescriptorSetLayoutBindingFlagsCreateInfo ) const *
+    ) noexcept -> VkDescriptorSetLayoutBindingFlagsCreateInfo *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VALVE_MUTABLE_DESCRIPTOR_TYPE_AVAILABLE
+    extern auto toVulkanFormat (
+            VkMutableDescriptorTypeCreateInfoVALVE              *,
+            Type ( MutableDescriptorTypeCreateInfoValve ) const *
+    ) noexcept -> VkMutableDescriptorTypeCreateInfoVALVE *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VALVE_MUTABLE_DESCRIPTOR_TYPE_AVAILABLE
+    extern auto toVulkanFormat (
+            VkMutableDescriptorTypeListVALVE              *,
+            Type ( MutableDescriptorTypeListValve ) const *
+    ) noexcept -> VkMutableDescriptorTypeListVALVE *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    extern auto prepareContext (
+            GetDescriptorSetLayoutSupportContext          *,
+            Type ( DescriptorSetLayoutCreateInfo )  const *
+    ) noexcept -> VkDescriptorSetLayoutCreateInfo *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    extern auto prepareContext (
+            GetDescriptorSetLayoutSupportContext       *,
+            Type ( DescriptorSetLayoutSupport )  const *
+    ) noexcept -> VkDescriptorSetLayoutSupport *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    extern auto extractContext (
+            Type ( DescriptorSetLayoutSupport )           *,
+            GetDescriptorSetLayoutSupportContext    const *
+    ) noexcept -> void;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    extern auto toVulkanFormat (
+            VkDescriptorSetLayoutSupport              *,
+            Type ( DescriptorSetLayoutSupport ) const *
+    ) noexcept -> VkDescriptorSetLayoutSupport *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+    extern auto toVulkanFormat (
+            VkDescriptorSetVariableDescriptorCountLayoutSupport              *,
+            Type ( DescriptorSetVariableDescriptorCountLayoutSupport ) const *
+    ) noexcept -> VkDescriptorSetVariableDescriptorCountLayoutSupport *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    extern auto fromVulkanFormat (
+            Type ( DescriptorSetLayoutSupport )       *,
+            VkDescriptorSetLayoutSupport        const *
+    ) noexcept -> Type ( DescriptorSetLayoutSupport ) *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+    extern auto fromVulkanFormat (
+            Type ( DescriptorSetVariableDescriptorCountLayoutSupport )       *,
+            VkDescriptorSetVariableDescriptorCountLayoutSupport        const *
+    ) noexcept -> Type ( DescriptorSetVariableDescriptorCountLayoutSupport ) *;
+#endif
+
 } // namespace engine :: vulkan
 
 #define C_ENG_MAP_END

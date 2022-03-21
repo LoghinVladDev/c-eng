@@ -13899,3 +13899,177 @@ auto vulkan :: toString (
            " }";
 }
 #endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( DescriptorSetLayoutCreateFlag )  flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+        case DescriptorSetLayoutCreateFlagUpdateAfterBindPool:  { asString = "Update After Bind Pool";  break; }
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PUSH_DESCRIPTOR_AVAILABLE
+        case DescriptorSetLayoutCreateFlagPushDescriptor:       { asString = "Push Descriptor";         break; }
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_VALVE_MUTABLE_DESCRIPTOR_TYPE_AVAILABLE
+        case DescriptorSetLayoutCreateFlagHostOnlyPoolValve:    { asString = "Host Only Pool";          break; }
+#endif
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( DescriptorType )  flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case DescriptorTypeSampler:                     { asString = "Sampler";                         break; }
+        case DescriptorTypeCombinedImageSampler:        { asString = "Combined Image Sampler";          break; }
+        case DescriptorTypeSampledImage:                { asString = "Sampled Image";                   break; }
+        case DescriptorTypeStorageImage:                { asString = "Storage Image";                   break; }
+        case DescriptorTypeUniformTexelBuffer:          { asString = "Uniform Texel Buffer";            break; }
+        case DescriptorTypeStorageTexelBuffer:          { asString = "Storage Texel Buffer";            break; }
+        case DescriptorTypeUniformBuffer:               { asString = "Uniform Buffer";                  break; }
+        case DescriptorTypeStorageBuffer:               { asString = "Storage Buffer";                  break; }
+        case DescriptorTypeUniformBufferDynamic:        { asString = "Uniform Buffer Dynamic";          break; }
+        case DescriptorTypeStorageBufferDynamic:        { asString = "Storage Buffer Dynamic";          break; }
+        case DescriptorTypeInputAttachment:             { asString = "Input Attachment";                break; }
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_INLINE_UNIFORM_BLOCK_AVAILABLE
+        case DescriptorTypeInlineUniformBlock:          { asString = "Inline Uniform Block";            break; }
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+        case DescriptorTypeAccelerationStructure:       { asString = "Acceleration Structure";          break; }
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+        case DescriptorTypeAccelerationStructureNVidia: { asString = "Acceleration Structure NVidia";   break; }
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_VALVE_MUTABLE_DESCRIPTOR_TYPE_AVAILABLE
+        case DescriptorTypeMutableValve:                { asString = "Mutable Valve";                   break; }
+#endif
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+auto vulkan :: toString (
+        Type ( DescriptorBindingFlag )  flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case DescriptorBindingFlagUpdateAfterBind:          { asString = "Update After Bind";           break; }
+        case DescriptorBindingFlagUpdateUnusedWhilePending: { asString = "Update Unused While Pending"; break; }
+        case DescriptorBindingFlagPartiallyBound:           { asString = "Partially Bound";             break; }
+        case DescriptorBindingFlagVariableDescriptorCount:  { asString = "Variable Descriptor Count";   break; }
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( DescriptorSetLayoutBinding ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( DescriptorSetLayoutBinding ) ) " " +
+           "{ binding = "_s             + info.binding +
+           ", descriptorType = "        + engine :: toString ( info.descriptorType ) +
+           ", descriptorCount = "       + info.descriptorCount +
+           ", stageFlags = "            + "0b" + Long ( info.stageFlags ).toString(2) +
+           ", pImmutableSamplers = "    + engine :: toString ( info.pImmutableSamplers ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( DescriptorSetLayoutCreateInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( DescriptorSetLayoutCreateInfo ) ) " " +
+           "{ structureType = "_s               + toString ( info.structureType ) +
+           ", pNext = "                         + engine :: toString ( info.pNext ) +
+           ", flags = "                         + "0b" + Long ( info.flags ).toString(2) +
+           ", bindingCount = "                  + info.bindingCount +
+           ", bindings = "                      + :: toStringVulkan ( info.bindingCount, info.pBindings ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+auto vulkan :: toString (
+        Type ( DescriptorSetLayoutBindingFlagsCreateInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( DescriptorSetLayoutBindingFlagsCreateInfo ) ) " " +
+           "{ structureType = "_s               + toString ( info.structureType ) +
+           ", pNext = "                         + engine :: toString ( info.pNext ) +
+           ", bindingCount = "                  + info.bindingCount +
+           ", bindingFlags = "                  + :: toStringFlags ( info.bindingCount, info.pBindingFlags ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VALVE_MUTABLE_DESCRIPTOR_TYPE_AVAILABLE
+auto vulkan :: toString (
+        Type ( MutableDescriptorTypeListValve ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( MutableDescriptorTypeListValve ) ) " " +
+           "{ descriptorTypeCount = "_s + info.descriptorTypeCount +
+           ", descriptorTypes = "       + :: toStringVulkan ( info.descriptorTypeCount, info.pDescriptorTypes ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VALVE_MUTABLE_DESCRIPTOR_TYPE_AVAILABLE
+auto vulkan :: toString (
+        Type ( MutableDescriptorTypeCreateInfoValve ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( MutableDescriptorTypeCreateInfoValve ) ) " " +
+           "{ structureType = "_s                   + toString ( info.structureType ) +
+           ", pNext = "                             + engine :: toString ( info.pNext ) +
+           ", mutableDescriptorTypeListCount = "_s  + info.mutableDescriptorTypeListCount +
+           ", pMutableDescriptorTypeLists = "       + :: toStringVulkan ( info.mutableDescriptorTypeListCount, info.pMutableDescriptorTypeLists ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+auto vulkan :: toString (
+        Type ( DescriptorSetLayoutSupport ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( DescriptorSetLayoutSupport ) ) " " +
+           "{ structureType = "_s                   + toString ( info.structureType ) +
+           ", pNext = "                             + engine :: toString ( info.pNext ) +
+           ", supported = "                         + ( info.supported == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+auto vulkan :: toString (
+        Type ( DescriptorSetVariableDescriptorCountLayoutSupport ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( DescriptorSetVariableDescriptorCountLayoutSupport ) ) " " +
+           "{ structureType = "_s                   + toString ( info.structureType ) +
+           ", pNext = "                             + engine :: toString ( info.pNext ) +
+           ", maxVariableDescriptorCount = "        + info.maxVariableDescriptorCount +
+           " }";
+}
+#endif

@@ -3705,16 +3705,18 @@ namespace engine :: vulkan {
 
         auto pCurrent = reinterpret_cast < Type ( GenericOutStructure ) * > ( fromVulkanFormat ( pDestination, & pContext->properties2 )->pNext );
 
-        while ( pCurrent != nullptr ) {
+        while ( pCurrent->pNext != nullptr ) {
 
-            switch ( pCurrent->structureType ) {
+            switch ( pCurrent->pNext->structureType ) {
 
 #if __C_ENG_VULKAN_API_EXTENSION_MEMORY_BUDGET_AVAILABLE
 
                 case StructureTypePhysicalDeviceMemoryBudgetProperties:
-                    (void) fromVulkanFormat (
-                            reinterpret_cast < Type ( PhysicalDeviceMemoryBudgetProperties ) * > ( pCurrent ),
-                            & pContext->budgetProperties
+                    pCurrent->pNext = reinterpret_cast < Type ( GenericOutStructure ) * > (
+                            fromVulkanFormat (
+                                    reinterpret_cast < Type ( PhysicalDeviceMemoryBudgetProperties ) * > ( pCurrent->pNext ),
+                                    & pContext->budgetProperties
+                            )
                     );
                     break;
 
@@ -6516,7 +6518,7 @@ namespace engine :: vulkan {
 
         while ( pCurrent->pNext != nullptr ) {
 
-            switch ( pCurrent->structureType ) {
+            switch ( pCurrent->pNext->structureType ) {
 
                 case StructureTypeMemoryDedicatedRequirements:
                     pCurrent->pNext = reinterpret_cast < Type ( GenericOutStructure ) * > (
@@ -6974,6 +6976,541 @@ namespace engine :: vulkan {
                 .yChromaOffset                  = static_cast < VkChromaLocation > ( pSource->yChromaOffset ),
                 .chromaFilter                   = static_cast < VkFilter > ( pSource->chromaFilter ),
                 .forceExplicitReconstruction    = pSource->forceExplicitReconstruction
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    auto prepareContext (
+            CreateDescriptorSetLayoutContext              * pContext,
+            Type ( DescriptorSetLayoutCreateInfo )  const * pSource
+    ) noexcept -> VkDescriptorSetLayoutCreateInfo * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pContext == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        auto pCurrent   = reinterpret_cast < Type ( GenericInStructure ) const * > ( pSource->pNext );
+        auto pCurrentVk = reinterpret_cast < VkBaseOutStructure * > ( toVulkanFormat ( & pContext->createInfo, pSource ) );
+
+        while ( pCurrent != nullptr ) {
+
+            switch ( pCurrent->structureType ) {
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+
+                case StructureTypeDescriptorSetLayoutBindingFlagsCreateInfo:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                            toVulkanFormat (
+                                    & pContext->bindingFlagsCreateInfo,
+                                    reinterpret_cast < Type ( DescriptorSetLayoutBindingFlagsCreateInfo ) const * > ( pCurrent )
+                            )
+                    );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VALVE_MUTABLE_DESCRIPTOR_TYPE_AVAILABLE
+
+                case StructureTypeMutableDescriptorTypeCreateInfoValve: {
+                    auto pMutableDescriptorTypeCreateInfo = reinterpret_cast < Type ( MutableDescriptorTypeCreateInfoValve ) const * > ( pCurrent );
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                            toVulkanFormat (
+                                    & pContext->mutableDescriptorTypeCreateInfo,
+                                    pMutableDescriptorTypeCreateInfo
+                            )
+                    );
+
+                    pContext->mutableDescriptorTypeCreateInfo.pMutableDescriptorTypeLists = & pContext->mutableDescriptorTypeLists[0];
+
+                    if ( pContext->mutableDescriptorTypeCreateInfo.mutableDescriptorTypeListCount > engine :: vulkan :: config :: descriptorSetMutableDescriptorTypeListCount ) {
+                        __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, String :: f (
+                                "config :: descriptorSetMutableDescriptorTypeListCount = %d. Minimum Required = %d",
+                                engine :: vulkan :: config :: descriptorSetMutableDescriptorTypeListCount,
+                                pContext->mutableDescriptorTypeCreateInfo.mutableDescriptorTypeListCount
+                        ))
+
+                        pContext->mutableDescriptorTypeCreateInfo.mutableDescriptorTypeListCount = engine :: vulkan :: config :: descriptorSetMutableDescriptorTypeListCount;
+                    }
+
+                    for ( uint32 i = 0U; i < pContext->mutableDescriptorTypeCreateInfo.mutableDescriptorTypeListCount; ++ i ) {
+                        (void) toVulkanFormat ( & pContext->mutableDescriptorTypeLists[i], & pMutableDescriptorTypeCreateInfo->pMutableDescriptorTypeLists[i] );
+
+                        pContext->mutableDescriptorTypeLists[i].pDescriptorTypes = & pContext->mutableDescriptorListEntries[i][0];
+
+                        if ( pContext->mutableDescriptorTypeLists[i].descriptorTypeCount > engine :: vulkan :: config :: descriptorSetMutableDescriptorListItemCount ) {
+                            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, String :: f (
+                                    "config :: descriptorSetMutableDescriptorListItemCount = %d. Minimum Required = %d",
+                                    engine :: vulkan :: config :: descriptorSetMutableDescriptorListItemCount,
+                                    pContext->mutableDescriptorTypeLists[i].descriptorTypeCount
+                            ))
+
+                            pContext->mutableDescriptorTypeLists[i].descriptorTypeCount = engine :: vulkan :: config :: descriptorSetMutableDescriptorListItemCount;
+                        }
+
+                        for ( uint32 j = 0U; j < pContext->mutableDescriptorTypeLists[i].descriptorTypeCount; ++ j ) {
+                            pContext->mutableDescriptorListEntries[i][j] = static_cast < VkDescriptorType > ( pMutableDescriptorTypeCreateInfo->pMutableDescriptorTypeLists[i].pDescriptorTypes[j] );
+                        }
+                    }
+
+                    break;
+                }
+
+#endif
+
+                default:
+                    break;
+            }
+
+            pCurrentVk  = pCurrentVk->pNext == nullptr ? pCurrentVk : pCurrentVk->pNext;
+            pCurrent    = pCurrent->pNext;
+        }
+
+        pCurrentVk->pNext = nullptr;
+
+        pContext->createInfo.pBindings = & pContext->bindings[0];
+
+        if ( pContext->createInfo.bindingCount > engine :: vulkan :: config :: descriptorSetLayoutBindingCount ) {
+            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, String :: f (
+                    "config :: descriptorSetLayoutBindingCount = %d. Minimum Required = %d",
+                    engine :: vulkan :: config :: descriptorSetLayoutBindingCount,
+                    pContext->createInfo.bindingCount
+            ))
+
+            pContext->createInfo.bindingCount = engine :: vulkan :: config :: descriptorSetLayoutBindingCount;
+        }
+
+        for ( uint32 i = 0U; i < pContext->createInfo.bindingCount; ++ i ) {
+            (void) toVulkanFormat ( & pContext->bindings[i], & pSource->pBindings[i] );
+        }
+
+        return & pContext->createInfo;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    auto toVulkanFormat (
+            VkDescriptorSetLayoutCreateInfo              * pDestination,
+            Type ( DescriptorSetLayoutCreateInfo ) const * pSource
+    ) noexcept -> VkDescriptorSetLayoutCreateInfo * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                          = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO,
+                .pNext                          = nullptr,
+                .flags                          = pSource->flags,
+                .bindingCount                   = pSource->bindingCount,
+                .pBindings                      = nullptr
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    auto toVulkanFormat (
+            VkDescriptorSetLayoutBinding              * pDestination,
+            Type ( DescriptorSetLayoutBinding ) const * pSource
+    ) noexcept -> VkDescriptorSetLayoutBinding * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .binding            = pSource->binding,
+                .descriptorType     = static_cast < VkDescriptorType > ( pSource->descriptorType ),
+                .descriptorCount    = pSource->descriptorCount,
+                .stageFlags         = pSource->stageFlags,
+                .pImmutableSamplers = pSource->pImmutableSamplers
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+    auto toVulkanFormat (
+            VkDescriptorSetLayoutBindingFlagsCreateInfo              * pDestination,
+            Type ( DescriptorSetLayoutBindingFlagsCreateInfo ) const * pSource
+    ) noexcept -> VkDescriptorSetLayoutBindingFlagsCreateInfo * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType          = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_BINDING_FLAGS_CREATE_INFO,
+                .pNext          = nullptr,
+                .bindingCount   = pSource->bindingCount,
+                .pBindingFlags  = pSource->pBindingFlags
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VALVE_MUTABLE_DESCRIPTOR_TYPE_AVAILABLE
+    auto toVulkanFormat (
+            VkMutableDescriptorTypeCreateInfoVALVE              * pDestination,
+            Type ( MutableDescriptorTypeCreateInfoValve ) const * pSource
+    ) noexcept -> VkMutableDescriptorTypeCreateInfoVALVE * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                          = VK_STRUCTURE_TYPE_MUTABLE_DESCRIPTOR_TYPE_CREATE_INFO_VALVE,
+                .pNext                          = nullptr,
+                .mutableDescriptorTypeListCount = pSource->mutableDescriptorTypeListCount,
+                .pMutableDescriptorTypeLists    = nullptr
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VALVE_MUTABLE_DESCRIPTOR_TYPE_AVAILABLE
+    auto toVulkanFormat (
+            VkMutableDescriptorTypeListVALVE              * pDestination,
+            Type ( MutableDescriptorTypeListValve ) const * pSource
+    ) noexcept -> VkMutableDescriptorTypeListVALVE * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .descriptorTypeCount    = pSource->descriptorTypeCount,
+                .pDescriptorTypes       = nullptr
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    auto prepareContext (
+            GetDescriptorSetLayoutSupportContext          * pContext,
+            Type ( DescriptorSetLayoutCreateInfo )  const * pSource
+    ) noexcept -> VkDescriptorSetLayoutCreateInfo * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pContext == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        auto pCurrent   = reinterpret_cast < Type ( GenericInStructure ) const * > ( pSource->pNext );
+        auto pCurrentVk = reinterpret_cast < VkBaseOutStructure * > ( toVulkanFormat ( & pContext->createInfo, pSource ) );
+
+        while ( pCurrent != nullptr ) {
+
+            switch ( pCurrent->structureType ) {
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+
+                case StructureTypeDescriptorSetLayoutBindingFlagsCreateInfo:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                            toVulkanFormat (
+                                    & pContext->bindingFlagsCreateInfo,
+                                    reinterpret_cast < Type ( DescriptorSetLayoutBindingFlagsCreateInfo ) const * > ( pCurrent )
+                            )
+                    );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VALVE_MUTABLE_DESCRIPTOR_TYPE_AVAILABLE
+
+                case StructureTypeMutableDescriptorTypeCreateInfoValve: {
+                    auto pMutableDescriptorTypeCreateInfo = reinterpret_cast < Type ( MutableDescriptorTypeCreateInfoValve ) const * > ( pCurrent );
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                            toVulkanFormat (
+                                    & pContext->mutableDescriptorTypeCreateInfo,
+                                    pMutableDescriptorTypeCreateInfo
+                            )
+                    );
+
+                    pContext->mutableDescriptorTypeCreateInfo.pMutableDescriptorTypeLists = & pContext->mutableDescriptorTypeLists[0];
+
+                    if ( pContext->mutableDescriptorTypeCreateInfo.mutableDescriptorTypeListCount > engine :: vulkan :: config :: descriptorSetMutableDescriptorTypeListCount ) {
+                        __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, String :: f (
+                                "config :: descriptorSetMutableDescriptorTypeListCount = %d. Minimum Required = %d",
+                                engine :: vulkan :: config :: descriptorSetMutableDescriptorTypeListCount,
+                                pContext->mutableDescriptorTypeCreateInfo.mutableDescriptorTypeListCount
+                        ))
+
+                        pContext->mutableDescriptorTypeCreateInfo.mutableDescriptorTypeListCount = engine :: vulkan :: config :: descriptorSetMutableDescriptorTypeListCount;
+                    }
+
+                    for ( uint32 i = 0U; i < pContext->mutableDescriptorTypeCreateInfo.mutableDescriptorTypeListCount; ++ i ) {
+                        (void) toVulkanFormat ( & pContext->mutableDescriptorTypeLists[i], & pMutableDescriptorTypeCreateInfo->pMutableDescriptorTypeLists[i] );
+
+                        pContext->mutableDescriptorTypeLists[i].pDescriptorTypes = & pContext->mutableDescriptorListEntries[i][0];
+
+                        if ( pContext->mutableDescriptorTypeLists[i].descriptorTypeCount > engine :: vulkan :: config :: descriptorSetMutableDescriptorListItemCount ) {
+                            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, String :: f (
+                                    "config :: descriptorSetMutableDescriptorListItemCount = %d. Minimum Required = %d",
+                                    engine :: vulkan :: config :: descriptorSetMutableDescriptorListItemCount,
+                                    pContext->mutableDescriptorTypeLists[i].descriptorTypeCount
+                            ))
+
+                            pContext->mutableDescriptorTypeLists[i].descriptorTypeCount = engine :: vulkan :: config :: descriptorSetMutableDescriptorListItemCount;
+                        }
+
+                        for ( uint32 j = 0U; j < pContext->mutableDescriptorTypeLists[i].descriptorTypeCount; ++ j ) {
+                            pContext->mutableDescriptorListEntries[i][j] = static_cast < VkDescriptorType > ( pMutableDescriptorTypeCreateInfo->pMutableDescriptorTypeLists[i].pDescriptorTypes[j] );
+                        }
+                    }
+
+                    break;
+                }
+
+#endif
+
+                default:
+                    break;
+            }
+
+            pCurrentVk  = pCurrentVk->pNext == nullptr ? pCurrentVk : pCurrentVk->pNext;
+            pCurrent    = pCurrent->pNext;
+        }
+
+        pCurrentVk->pNext = nullptr;
+
+        pContext->createInfo.pBindings = & pContext->bindings[0];
+
+        if ( pContext->createInfo.bindingCount > engine :: vulkan :: config :: descriptorSetLayoutBindingCount ) {
+            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, String :: f (
+                    "config :: descriptorSetLayoutBindingCount = %d. Minimum Required = %d",
+                    engine :: vulkan :: config :: descriptorSetLayoutBindingCount,
+                    pContext->createInfo.bindingCount
+            ))
+
+            pContext->createInfo.bindingCount = engine :: vulkan :: config :: descriptorSetLayoutBindingCount;
+        }
+
+        for ( uint32 i = 0U; i < pContext->createInfo.bindingCount; ++ i ) {
+            (void) toVulkanFormat ( & pContext->bindings[i], & pSource->pBindings[i] );
+        }
+
+        return & pContext->createInfo;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    auto prepareContext (
+            GetDescriptorSetLayoutSupportContext       * pContext,
+            Type ( DescriptorSetLayoutSupport )  const * pSource
+    ) noexcept -> VkDescriptorSetLayoutSupport * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pContext == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        auto pCurrent   = reinterpret_cast < Type ( GenericInStructure ) const * > ( pSource->pNext );
+        auto pCurrentVk = reinterpret_cast < VkBaseOutStructure * > ( toVulkanFormat ( & pContext->support, pSource ) );
+
+        while ( pCurrent != nullptr ) {
+
+            switch ( pCurrent->structureType ) {
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+
+                case StructureTypeDescriptorSetVariableDescriptorCountLayoutSupport:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                            toVulkanFormat (
+                                    & pContext->variableDescriptorCountSupport,
+                                    reinterpret_cast < Type ( DescriptorSetVariableDescriptorCountLayoutSupport ) const * > ( pCurrent )
+                            )
+                    );
+                    break;
+
+#endif
+
+                default:
+                    break;
+            }
+
+            pCurrentVk  = pCurrentVk->pNext == nullptr ? pCurrentVk : pCurrentVk->pNext;
+            pCurrent    = pCurrent->pNext;
+        }
+
+        pCurrentVk->pNext = nullptr;
+
+        return & pContext->support;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    auto toVulkanFormat (
+            VkDescriptorSetLayoutSupport              * pDestination,
+            Type ( DescriptorSetLayoutSupport ) const * pSource
+    ) noexcept -> VkDescriptorSetLayoutSupport * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType      = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_SUPPORT,
+                .pNext      = nullptr,
+                .supported  = pSource->supported
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+    auto toVulkanFormat (
+            VkDescriptorSetVariableDescriptorCountLayoutSupport              * pDestination,
+            Type ( DescriptorSetVariableDescriptorCountLayoutSupport ) const * pSource
+    ) noexcept -> VkDescriptorSetVariableDescriptorCountLayoutSupport * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                      = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_LAYOUT_SUPPORT,
+                .pNext                      = nullptr,
+                .maxVariableDescriptorCount = pSource->maxVariableDescriptorCount
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    auto extractContext (
+            Type ( DescriptorSetLayoutSupport )           * pDestination,
+            GetDescriptorSetLayoutSupportContext    const * pContext
+    ) noexcept -> void {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pContext == nullptr ) {
+            return;
+        }
+
+#endif
+
+        auto pCurrent = reinterpret_cast < Type ( GenericOutStructure ) * > ( fromVulkanFormat ( pDestination, & pContext->support ) );
+
+        while ( pCurrent->pNext != nullptr ) {
+
+            switch ( pCurrent->pNext->structureType ) {
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+
+                case StructureTypeDescriptorSetVariableDescriptorCountLayoutSupport:
+                    pCurrent->pNext = reinterpret_cast < Type ( GenericOutStructure ) * > (
+                            fromVulkanFormat (
+                                    reinterpret_cast < Type ( DescriptorSetVariableDescriptorCountLayoutSupport ) * > ( pCurrent->pNext ),
+                                    & pContext->variableDescriptorCountSupport
+                            )
+                    );
+                    break;
+
+#endif
+
+                default:
+                    break;
+            }
+
+            pCurrent = pCurrent->pNext;
+        }
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    auto fromVulkanFormat (
+            Type ( DescriptorSetLayoutSupport )    * pDestination,
+            VkDescriptorSetLayoutSupport     const * pSource
+    ) noexcept -> Type ( DescriptorSetLayoutSupport ) * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .structureType  = StructureTypeDescriptorSetLayoutSupport,
+                .pNext          = nullptr,
+                .supported      = pSource->supported
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+    auto fromVulkanFormat (
+            Type ( DescriptorSetVariableDescriptorCountLayoutSupport )    * pDestination,
+            VkDescriptorSetVariableDescriptorCountLayoutSupport     const * pSource
+    ) noexcept -> Type ( DescriptorSetVariableDescriptorCountLayoutSupport ) * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .structureType              = StructureTypeDescriptorSetVariableDescriptorCountLayoutSupport,
+                .pNext                      = nullptr,
+                .maxVariableDescriptorCount = pSource->maxVariableDescriptorCount
         };
 
         return pDestination;

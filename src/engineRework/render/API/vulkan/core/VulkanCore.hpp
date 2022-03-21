@@ -5260,6 +5260,77 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #include <ObjectMapping.hpp>
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+#define C_ENG_MAP_START ENUM ( DescriptorSetLayoutCreateFlag, TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+            Field ( UpdateAfterBindPool,    VkDescriptorSetLayoutCreateFlagBits :: VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT ),
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PUSH_DESCRIPTOR_AVAILABLE
+            Field ( PushDescriptor,         VkDescriptorSetLayoutCreateFlagBits :: VK_DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR ),
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_VALVE_MUTABLE_DESCRIPTOR_TYPE_AVAILABLE
+            Field ( HostOnlyPoolValve,      VkDescriptorSetLayoutCreateFlagBits :: VK_DESCRIPTOR_SET_LAYOUT_CREATE_HOST_ONLY_POOL_BIT_VALVE ),
+#endif
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+#define C_ENG_MAP_START ENUM ( DescriptorType, TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( Sampler,                        VkDescriptorType :: VK_DESCRIPTOR_TYPE_SAMPLER ),
+            Field ( CombinedImageSampler,           VkDescriptorType :: VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER ),
+            Field ( SampledImage,                   VkDescriptorType :: VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE ),
+            Field ( StorageImage,                   VkDescriptorType :: VK_DESCRIPTOR_TYPE_STORAGE_IMAGE ),
+            Field ( UniformTexelBuffer,             VkDescriptorType :: VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER ),
+            Field ( StorageTexelBuffer,             VkDescriptorType :: VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER ),
+            Field ( UniformBuffer,                  VkDescriptorType :: VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER ),
+            Field ( StorageBuffer,                  VkDescriptorType :: VK_DESCRIPTOR_TYPE_STORAGE_BUFFER ),
+            Field ( UniformBufferDynamic,           VkDescriptorType :: VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC ),
+            Field ( StorageBufferDynamic,           VkDescriptorType :: VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC ),
+            Field ( InputAttachment,                VkDescriptorType :: VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT ),
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+            Field ( InlineUniformBlock,             VkDescriptorType :: VK_DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK ),
+#elif __C_ENG_VULKAN_API_EXTENSION_INLINE_UNIFORM_BLOCK_AVAILABLE
+            Field ( InlineUniformBlock,             VkDescriptorType :: VK_DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT ),
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+            Field ( AccelerationStructure,          VkDescriptorType :: VK_DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR ),
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+            Field ( AccelerationStructureNVidia,    VkDescriptorType :: VK_DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_NV ),
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_VALVE_MUTABLE_DESCRIPTOR_TYPE_AVAILABLE
+            Field ( MutableValve,                   VkDescriptorType :: VK_DESCRIPTOR_TYPE_MUTABLE_VALVE ),
+#endif
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+#define C_ENG_MAP_START ENUM ( DescriptorBindingFlag, TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( UpdateAfterBind,            VkDescriptorBindingFlagBits :: VK_DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT ),
+            Field ( UpdateUnusedWhilePending,   VkDescriptorBindingFlagBits :: VK_DESCRIPTOR_BINDING_UPDATE_UNUSED_WHILE_PENDING_BIT ),
+            Field ( PartiallyBound,             VkDescriptorBindingFlagBits :: VK_DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT ),
+            Field ( VariableDescriptorCount,    VkDescriptorBindingFlagBits :: VK_DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
 
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 
@@ -5352,6 +5423,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_ALIAS ( BufferViewCreateFlags,                  VkBufferViewCreateFlags );
         __C_ENG_ALIAS ( SamplerCreateFlags,                     VkSamplerCreateFlags );
         __C_ENG_ALIAS ( DependencyFlags,                        VkDependencyFlags );
+        __C_ENG_ALIAS ( DescriptorSetLayoutCreateFlags,         VkDescriptorSetLayoutCreateFlags );
 
         __C_ENG_ALIAS ( AllocationFunction,                     PFN_vkAllocationFunction );
         __C_ENG_ALIAS ( ReallocationFunction,                   PFN_vkReallocationFunction );
@@ -5377,6 +5449,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
         __C_ENG_ALIAS ( SemaphoreWaitFlags,                 VkSemaphoreWaitFlags );
+        __C_ENG_ALIAS ( DescriptorBindingFlags,             VkDescriptorBindingFlags );
 #endif
 
 #if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
@@ -14761,6 +14834,110 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #include <ObjectMapping.hpp>
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( DescriptorSetLayoutBinding, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            cds :: uint32                       binding;
+            Type ( DescriptorType )             descriptorType;
+            cds :: uint32                       descriptorCount;
+            Type ( ShaderStageFlags )           stageFlags;
+            Type ( SamplerHandle )      const * pImmutableSamplers;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( DescriptorSetLayoutCreateInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                      structureType;
+            Type ( GenericStructure )           const * pNext;
+            Type ( DescriptorSetLayoutCreateFlags )     flags;
+            cds :: uint32                               bindingCount;
+            Type ( DescriptorSetLayoutBinding ) const * pBindings;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( DescriptorSetLayoutBindingFlagsCreateInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                      structureType;
+            Type ( GenericStructure )           const * pNext;
+            cds :: uint32                               bindingCount;
+            Type ( DescriptorBindingFlags )     const * pBindingFlags;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VALVE_MUTABLE_DESCRIPTOR_TYPE_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( MutableDescriptorTypeListValve, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            cds :: uint32                       descriptorTypeCount;
+            Type ( DescriptorType )     const * pDescriptorTypes;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( DescriptorSetLayoutSupport, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                      structureType;
+            Type ( GenericStructure )           const * pNext;
+            Type ( Bool )                               supported;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( DescriptorSetVariableDescriptorCountLayoutSupport, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                      structureType;
+            Type ( GenericStructure )           const * pNext;
+            cds :: uint32                               maxVariableDescriptorCount;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VALVE_MUTABLE_DESCRIPTOR_TYPE_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( MutableDescriptorTypeCreateInfoValve, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                          structureType;
+            Type ( GenericStructure )               const * pNext;
+            cds :: uint32                                   mutableDescriptorTypeListCount;
+            Type ( MutableDescriptorTypeListValve ) const * pMutableDescriptorTypeLists;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+
 
 #define C_ENG_MAP_START     HEADER
 #include <ObjectMapping.hpp>
@@ -14840,6 +15017,8 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         NoDiscard auto toString ( Type ( SamplerMipmapMode ) ) noexcept -> cds :: StringLiteral;
         NoDiscard auto toString ( Type ( SamplerAddressMode ) ) noexcept -> cds :: StringLiteral;
         NoDiscard auto toString ( Type ( BorderColor ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( DescriptorSetLayoutCreateFlag ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( DescriptorType ) ) noexcept -> cds :: StringLiteral;
 
 #endif
 
@@ -14861,13 +15040,14 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
 
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( DriverID ) ) noexcept -> cds :: StringLiteral;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( ShaderFloatControlsIndependence ) ) noexcept -> cds :: StringLiteral;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( ResolveModeFlag ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( DriverID ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( ShaderFloatControlsIndependence ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( ResolveModeFlag ) ) noexcept -> cds :: StringLiteral;
 
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( ImageFormatListCreateInfo ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( ImageFormatListCreateInfo ) const & ) noexcept -> cds :: String;
 
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( SamplerReductionMode ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( SamplerReductionMode ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( DescriptorBindingFlag ) ) noexcept -> cds :: StringLiteral;
 
 #endif
 
@@ -15161,6 +15341,9 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
         NoDiscard auto toString ( Type ( SamplerCreateInfo ) const & ) noexcept -> cds :: String;
 
+        NoDiscard auto toString ( Type ( DescriptorSetLayoutCreateInfo ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( DescriptorSetLayoutBinding ) const & ) noexcept -> cds :: String;
+
 #endif
 
 #if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
@@ -15211,6 +15394,8 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         NoDiscard auto toString ( Type ( MemoryDedicatedRequirements ) const & ) noexcept -> cds :: String;
 
         NoDiscard auto toString ( Type ( SamplerYCBCRConversionCreateInfo ) const & ) noexcept -> cds :: String;
+
+        NoDiscard auto toString ( Type ( DescriptorSetLayoutSupport ) const & ) noexcept -> cds :: String;
 
 #endif
 
@@ -15272,6 +15457,9 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         NoDiscard auto toString ( Type ( ImageStencilUsageCreateInfo ) const & ) noexcept -> cds :: String;
 
         NoDiscard auto toString ( Type ( SamplerReductionModeCreateInfo ) const & ) noexcept -> cds :: String;
+
+        NoDiscard auto toString ( Type ( DescriptorSetLayoutBindingFlagsCreateInfo ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( DescriptorSetVariableDescriptorCountLayoutSupport ) const & ) noexcept -> cds :: String;
 #endif
 
 #if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
@@ -15347,6 +15535,11 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #if __C_ENG_VULKAN_API_EXTENSION_GOOGLE_FUCHSIA_BUFFER_COLLECTION_AVAILABLE
         NoDiscard auto toString ( Type ( BufferCollectionBufferCreateInfoFuchsia ) const & ) noexcept -> cds :: String;
         NoDiscard auto toString ( Type ( BufferCollectionImageCreateInfoFuchsia ) const & ) noexcept -> cds :: String;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VALVE_MUTABLE_DESCRIPTOR_TYPE_AVAILABLE
+        NoDiscard auto toString ( Type ( MutableDescriptorTypeListValve ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( MutableDescriptorTypeCreateInfoValve ) const & ) noexcept -> cds :: String;
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_BORDER_COLOR_SWIZZLE_AVAILABLE

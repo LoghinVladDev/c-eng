@@ -7726,3 +7726,91 @@ auto engine :: vulkan :: destroySamplerYCBCRConversion (
     );
 }
 #endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: createDescriptorSetLayout (
+        Type ( DeviceHandle )                               deviceHandle,
+        Type ( DescriptorSetLayoutCreateInfo )      const * pCreateInfo,
+        Type ( AllocationCallbacks )                const * pAllocationCallbacks,
+        Type ( DescriptorSetLayoutHandle )                * pHandle
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || pCreateInfo == nullptr || pHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    auto context = ContextManager :: acquire();
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: CreateDescriptorSetLayout,
+            "vkCreateDescriptorSetLayout",
+            "Creates a Descriptor Set Layout",
+            deviceHandle,
+            pCreateInfo,
+            pAllocationCallbacks,
+            pHandle
+    );
+
+#endif
+
+    return APICaller.vkCreateDescriptorSetLayout (
+            deviceHandle,
+            prepareContext ( & context->create.descriptor.set.layout, pCreateInfo ),
+            AllocatorHandler :: apply ( pAllocationCallbacks ),
+            pHandle
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+auto engine :: vulkan :: getDescriptorSetLayoutSupport (
+        Type ( DeviceHandle )                               deviceHandle,
+        Type ( DescriptorSetLayoutCreateInfo )      const * pCreateInfo,
+        Type ( DescriptorSetLayoutSupport )               * pSupport
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || pCreateInfo == nullptr || pSupport == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    auto context = ContextManager :: acquire();
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: GetDescriptorSetLayoutSupport,
+            "vkGetDescriptorSetLayoutSupport",
+            "Checks the support of a given Descriptor Set Layout",
+            deviceHandle,
+            pCreateInfo,
+            pSupport
+    );
+
+#endif
+
+    if (
+            auto result = APICaller.vkGetDescriptorSetLayoutSupport (
+                    deviceHandle,
+                    prepareContext ( & context->get.descriptor.set.layout.support, pCreateInfo ),
+                    prepareContext ( & context->get.descriptor.set.layout.support, pSupport )
+            ); result != ResultSuccess
+    ) {
+        return result;
+    }
+
+    extractContext ( pSupport, & context->get.descriptor.set.layout.support );
+    return ResultSuccess;
+}
+#endif

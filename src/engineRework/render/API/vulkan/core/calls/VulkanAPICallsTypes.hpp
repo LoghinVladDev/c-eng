@@ -111,7 +111,9 @@ enum class SharedContextType {
     GetAccelerationStructureMemoryRequirements,
     BindAccelerationStructureMemory,
     GetAccelerationStructureDeviceAddress,
-    CreateSampler
+    CreateSampler,
+    CreateDescriptorSetLayout,
+    GetDescriptorSetLayoutSupport,
 };
 
 union SpecializedContextType {
@@ -1788,6 +1790,42 @@ struct CreateSamplerContext {
 #endif
 };
 
+struct CreateDescriptorSetLayoutContext {
+    CommonItems                                                 common;
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    VkDescriptorSetLayoutCreateInfo                             createInfo;
+    VkDescriptorSetLayoutBinding                                bindings [ engine :: vulkan :: config :: descriptorSetLayoutBindingCount ];
+#endif
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+    VkDescriptorSetLayoutBindingFlagsCreateInfo                 bindingFlagsCreateInfo;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_VALVE_MUTABLE_DESCRIPTOR_TYPE_AVAILABLE
+    VkMutableDescriptorTypeCreateInfoVALVE                      mutableDescriptorTypeCreateInfo;
+    VkMutableDescriptorTypeListVALVE                            mutableDescriptorTypeLists [ engine :: vulkan :: config :: descriptorSetMutableDescriptorTypeListCount ];
+    VkDescriptorType                                            mutableDescriptorListEntries [ engine :: vulkan :: config :: descriptorSetMutableDescriptorTypeListCount ] [ engine :: vulkan :: config :: descriptorSetMutableDescriptorListItemCount ];
+#endif
+};
+
+struct GetDescriptorSetLayoutSupportContext {
+    CommonItems                                                 common;
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    VkDescriptorSetLayoutCreateInfo                             createInfo;
+    VkDescriptorSetLayoutBinding                                bindings [ engine :: vulkan :: config :: descriptorSetLayoutBindingCount ];
+#endif
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    VkDescriptorSetLayoutSupport                                support;
+#endif
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+    VkDescriptorSetLayoutBindingFlagsCreateInfo                 bindingFlagsCreateInfo;
+    VkDescriptorSetVariableDescriptorCountLayoutSupport         variableDescriptorCountSupport;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_VALVE_MUTABLE_DESCRIPTOR_TYPE_AVAILABLE
+    VkMutableDescriptorTypeCreateInfoVALVE                      mutableDescriptorTypeCreateInfo;
+    VkMutableDescriptorTypeListVALVE                            mutableDescriptorTypeLists [ engine :: vulkan :: config :: descriptorSetMutableDescriptorTypeListCount ];
+    VkDescriptorType                                            mutableDescriptorListEntries [ engine :: vulkan :: config :: descriptorSetMutableDescriptorTypeListCount ] [ engine :: vulkan :: config :: descriptorSetMutableDescriptorListItemCount ];
+#endif
+};
+
 union GetMemorySharedContext {
     GetMemoryWin32Context                   win32;
     GetMemoryFdContext                      fd;
@@ -1830,6 +1868,14 @@ union CreateAccelerationStructureSharedContext {
     CreateAccelerationStructureNVidiaContext                            nvidia;
 };
 
+union CreateDescriptorSetSharedContext {
+    CreateDescriptorSetLayoutContext                                    layout;
+};
+
+union CreateDescriptorSharedContext {
+    CreateDescriptorSetSharedContext                                    set;
+};
+
 union CreateSharedContext {
     CreateInstanceContext                                               instance;
     CreateDeviceContext                                                 device;
@@ -1847,6 +1893,7 @@ union CreateSharedContext {
     CreateImageSharedContext                                            image;
     CreateAccelerationStructureSharedContext                            accelerationStructure;
     CreateSamplerContext                                                sampler;
+    CreateDescriptorSharedContext                                       descriptor;
 };
 
 union GetPipelineSharedContext {
@@ -1875,6 +1922,18 @@ union GetAccelerationStructureSharedContext {
     GetAccelerationStructureDeviceAddressContext                        deviceAddress;
 };
 
+union GetDescriptorSetLayoutSharedContext {
+    GetDescriptorSetLayoutSupportContext                                support;
+};
+
+union GetDescriptorSetSharedContext {
+    GetDescriptorSetLayoutSharedContext                                 layout;
+};
+
+union GetDescriptorSharedContext {
+    GetDescriptorSetSharedContext                                       set;
+};
+
 union GetSharedContext {
     GetPhysicalDeviceSharedContext                                      physicalDevice;
     GetDeviceQueueContext                                               deviceQueue;
@@ -1886,6 +1945,7 @@ union GetSharedContext {
     GetMemorySharedContext                                              memory;
     GetImageSharedContext                                               image;
     GetAccelerationStructureSharedContext                               accelerationStructure;
+    GetDescriptorSharedContext                                          descriptor;
 };
 
 union AllocateSharedContext {
@@ -2061,6 +2121,8 @@ constexpr auto toString ( SharedContextType type ) noexcept -> cds :: StringLite
         case SharedContextType :: BindAccelerationStructureMemory:                            return "BindAccelerationStructureMemory";
         case SharedContextType :: GetAccelerationStructureDeviceAddress:                      return "GetAccelerationStructureDeviceAddress";
         case SharedContextType :: CreateSampler:                                              return "CreateSampler";
+        case SharedContextType :: CreateDescriptorSetLayout:                                  return "CreateDescriptorSetLayout";
+        case SharedContextType :: GetDescriptorSetLayoutSupport:                              return "GetDescriptorSetLayoutSupport";
     }
 }
 

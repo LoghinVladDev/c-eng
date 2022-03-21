@@ -1499,14 +1499,22 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         ) noexcept -> Type ( Result );
 #endif
 
-//#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
-//        NoDiscard MaybeUnused extern auto createDescriptorSetLayout (
-//                Type ( DeviceHandle ),
-//                Type ( DescriptorSetLayoutCreateInfo )  const *,
-//                Type ( AllocationCallbacks )            const *,
-//                Type ( DescriptorSetLayoutHandle )            *
-//        ) noexcept -> Type ( Result );
-//#endif
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+        NoDiscard MaybeUnused extern auto createDescriptorSetLayout (
+                Type ( DeviceHandle ),
+                Type ( DescriptorSetLayoutCreateInfo )  const *,
+                Type ( AllocationCallbacks )            const *,
+                Type ( DescriptorSetLayoutHandle )            *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+        NoDiscard MaybeUnused extern auto getDescriptorSetLayoutSupport (
+                Type ( DeviceHandle ),
+                Type ( DescriptorSetLayoutCreateInfo )  const *,
+                Type ( DescriptorSetLayoutSupport )           *
+        ) noexcept -> Type ( Result );
+#endif
 
     } /// namespace vulkan
 
