@@ -5117,6 +5117,145 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #include <ObjectMapping.hpp>
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+#define C_ENG_MAP_START ENUM ( SamplerCreateFlag, TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+#if __C_ENG_VULKAN_API_EXTENSION_FRAGMENT_DENSITY_MAP_AVAILABLE
+            Field ( Subsampled,                     VkSamplerCreateFlagBits :: VK_SAMPLER_CREATE_SUBSAMPLED_BIT_EXT ),
+            Field ( SubsampledCoarseReconstruction, VkSamplerCreateFlagBits :: VK_SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT ),
+#endif
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+#define C_ENG_MAP_START ENUM ( Filter, TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( Nearest,    VkFilter :: VK_FILTER_NEAREST ),
+            Field ( Linear,     VkFilter :: VK_FILTER_LINEAR ),
+#if __C_ENG_VULKAN_API_EXTENSION_FILTER_CUBIC_AVAILABLE
+            Field ( Cubic,      VkFilter :: VK_FILTER_CUBIC_EXT ),
+#endif
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+#define C_ENG_MAP_START ENUM ( SamplerMipmapMode, TYPE ( cds :: uint8 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( Nearest,    VkSamplerMipmapMode :: VK_SAMPLER_MIPMAP_MODE_NEAREST ),
+            Field ( Linear,     VkSamplerMipmapMode :: VK_SAMPLER_MIPMAP_MODE_LINEAR ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+#define C_ENG_MAP_START ENUM ( SamplerAddressMode, TYPE ( cds :: uint8 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( Repeat,             VkSamplerAddressMode :: VK_SAMPLER_ADDRESS_MODE_REPEAT ),
+            Field ( MirroredRepeat,     VkSamplerAddressMode :: VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT ),
+            Field ( ClampToEdge,        VkSamplerAddressMode :: VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE ),
+            Field ( ClampToBorder,      VkSamplerAddressMode :: VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER ),
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+            Field ( MirrorClampToEdge,  VkSamplerAddressMode :: VK_SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE ),
+#endif
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+#define C_ENG_MAP_START ENUM ( BorderColor, TYPE ( cds :: uint8 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( FloatTransparentBlack,  VkBorderColor :: VK_BORDER_COLOR_FLOAT_TRANSPARENT_BLACK ),
+            Field ( IntTransparentBlack,    VkBorderColor :: VK_BORDER_COLOR_INT_TRANSPARENT_BLACK ),
+            Field ( FloatOpaqueBlack,       VkBorderColor :: VK_BORDER_COLOR_FLOAT_OPAQUE_BLACK ),
+            Field ( IntOpaqueBlack,         VkBorderColor :: VK_BORDER_COLOR_INT_OPAQUE_BLACK ),
+            Field ( FloatOpaqueWhite,       VkBorderColor :: VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE ),
+            Field ( IntOpaqueWhite,         VkBorderColor :: VK_BORDER_COLOR_INT_OPAQUE_WHITE ),
+#if __C_ENG_VULKAN_API_EXTENSION_CUSTOM_BORDER_COLOR_AVAILABLE
+            Field ( FloatCustom,            VkBorderColor :: VK_BORDER_COLOR_FLOAT_CUSTOM_EXT ),
+            Field ( IntCustom,              VkBorderColor :: VK_BORDER_COLOR_INT_CUSTOM_EXT ),
+#endif
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+#define C_ENG_MAP_START ENUM ( SamplerReductionMode, TYPE ( cds :: uint8 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( WeightedAverage,    VkSamplerReductionMode :: VK_SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE ),
+            Field ( Min,                VkSamplerReductionMode :: VK_SAMPLER_REDUCTION_MODE_MIN ),
+            Field ( Max,                VkSamplerReductionMode :: VK_SAMPLER_REDUCTION_MODE_MAX ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+#define C_ENG_MAP_START ENUM ( SamplerYCBCRModelConversion, TYPE ( cds :: uint8 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( RGBIdentity,    VkSamplerYcbcrModelConversion :: VK_SAMPLER_YCBCR_MODEL_CONVERSION_RGB_IDENTITY ),
+            Field ( YCBCRIdentity,  VkSamplerYcbcrModelConversion :: VK_SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_IDENTITY ),
+            Field ( 709,            VkSamplerYcbcrModelConversion :: VK_SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_709 ),
+            Field ( 601,            VkSamplerYcbcrModelConversion :: VK_SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_601 ),
+            Field ( 2020,           VkSamplerYcbcrModelConversion :: VK_SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_2020 ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+#define C_ENG_MAP_START ENUM ( SamplerYCBCRRange, TYPE ( cds :: uint8 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( ITUFull,    VkSamplerYcbcrRange :: VK_SAMPLER_YCBCR_RANGE_ITU_FULL ),
+            Field ( ITUNarrow,  VkSamplerYcbcrRange :: VK_SAMPLER_YCBCR_RANGE_ITU_NARROW ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+#define C_ENG_MAP_START ENUM ( ChromaLocation, TYPE ( cds :: uint8 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( CositedEven,    VkChromaLocation :: VK_CHROMA_LOCATION_COSITED_EVEN ),
+            Field ( Midpoint,       VkChromaLocation :: VK_CHROMA_LOCATION_MIDPOINT ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
 
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 
@@ -5157,6 +5296,8 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_ALIAS ( PipelineLayoutHandle,                   VkPipelineLayout );
         __C_ENG_ALIAS ( DeviceMemoryHandle,                     VkDeviceMemory );
         __C_ENG_ALIAS ( BufferViewHandle,                       VkBufferView );
+        __C_ENG_ALIAS ( SamplerHandle,                          VkSampler );
+        __C_ENG_ALIAS ( DescriptorSetLayoutHandle,              VkDescriptorSetLayout );
 
         __C_ENG_ALIAS ( InstanceCreateFlags,                    VkInstanceCreateFlags );
         __C_ENG_ALIAS ( DebugMessengerCreateFlags,              VkDebugUtilsMessengerCreateFlagsEXT );
@@ -5205,6 +5346,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_ALIAS ( BufferCreateFlags,                      VkBufferCreateFlags );
         __C_ENG_ALIAS ( BufferUsageFlags,                       VkBufferUsageFlags );
         __C_ENG_ALIAS ( BufferViewCreateFlags,                  VkBufferViewCreateFlags );
+        __C_ENG_ALIAS ( SamplerCreateFlags,                     VkSamplerCreateFlags );
 
         __C_ENG_ALIAS ( AllocationFunction,                     PFN_vkAllocationFunction );
         __C_ENG_ALIAS ( ReallocationFunction,                   PFN_vkReallocationFunction );
@@ -5216,7 +5358,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
 
-        __C_ENG_ALIAS ( SamplerYCBCRConversion,             VkSamplerYcbcrConversion );
+        __C_ENG_ALIAS ( SamplerYCBCRConversionHandle,       VkSamplerYcbcrConversion );
         __C_ENG_ALIAS ( CommandPoolTrimFlags,               VkCommandPoolTrimFlags );
         __C_ENG_ALIAS ( ExternalFenceHandleTypeFlags,       VkExternalFenceHandleTypeFlags );
         __C_ENG_ALIAS ( FenceImportFlags,                   VkFenceImportFlags );
@@ -10506,9 +10648,9 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #include <ObjectMapping.hpp>
 
         Struct {
-            Type ( StructureType )              structureType;
-            Type ( GenericStructure )   const * pNext;
-            Type ( SamplerYCBCRConversion )     conversion;
+            Type ( StructureType )                          structureType;
+            Type ( GenericStructure )               const * pNext;
+            Type ( SamplerYCBCRConversionHandle )           conversion;
         };
 
 #define C_ENG_MAP_END
@@ -11448,10 +11590,10 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #define C_ENG_MAP_END
 #include <ObjectMapping.hpp>
 
-#define C_ENG_MAP_START STRUCT ( ClearColorValue,  NO_PARENT )
+#define C_ENG_MAP_START UNION ( ClearColorValue,  NO_PARENT )
 #include <ObjectMapping.hpp>
 
-        Struct {
+        Union {
             float           float32[4];
             cds :: sint32   int32[4];
             cds :: uint32   uint32[4];
@@ -14524,6 +14666,100 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #include <ObjectMapping.hpp>
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( SamplerCreateInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )              structureType;
+            Type ( GenericStructure )   const * pNext;
+            Type ( SamplerCreateFlags )         flags;
+            Type ( Filter )                     magFilter;
+            Type ( Filter )                     minFilter;
+            Type ( SamplerMipmapMode )          mipmapMode;
+            Type ( SamplerAddressMode )         addressModeU;
+            Type ( SamplerAddressMode )         addressModeV;
+            Type ( SamplerAddressMode )         addressModeW;
+            float                               mipLodBias;
+            Type ( Bool )                       anisotropyEnable;
+            float                               maxAnisotropy;
+            Type ( Bool )                       compareEnable;
+            Type ( CompareOperation )           compareOperation;
+            float                               minLod;
+            float                               maxLod;
+            Type ( BorderColor )                borderColor;
+            Type ( Bool )                       unnormalizedCoordinates;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_BORDER_COLOR_SWIZZLE_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( SamplerBorderColorComponentMappingCreateInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )              structureType;
+            Type ( GenericStructure )   const * pNext;
+            Type ( ComponentMapping )           components;
+            Type ( Bool )                       srgb;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_CUSTOM_BORDER_COLOR_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( SamplerCustomBorderColorCreateInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )              structureType;
+            Type ( GenericStructure )   const * pNext;
+            Type ( ClearColorValue )            customBorderColor;
+            Type ( Format )                     format;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( SamplerReductionModeCreateInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )              structureType;
+            Type ( GenericStructure )   const * pNext;
+            Type ( SamplerReductionMode )       reductionMode;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( SamplerYCBCRConversionCreateInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                      structureType;
+            Type ( GenericStructure )           const * pNext;
+            Type ( Format )                             format;
+            Type ( SamplerYCBCRModelConversion )        ycbcrModel;
+            Type ( SamplerYCBCRRange )                  ycbcrRange;
+            Type ( ComponentMapping )                   components;
+            Type ( ChromaLocation )                     xChromaOffset;
+            Type ( ChromaLocation )                     yChromaOffset;
+            Type ( Filter )                             chromaFilter;
+            Type ( Bool )                               forceExplicitReconstruction;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
 
 #define C_ENG_MAP_START     HEADER
 #include <ObjectMapping.hpp>
@@ -14598,6 +14834,11 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         NoDiscard auto toString ( Type ( ImageType ) ) noexcept -> cds :: StringLiteral;
         NoDiscard auto toString ( Type ( ImageTiling ) ) noexcept -> cds :: StringLiteral;
         NoDiscard auto toString ( Type ( IndexType ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( SamplerCreateFlag ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( Filter ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( SamplerMipmapMode ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( SamplerAddressMode ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( BorderColor ) ) noexcept -> cds :: StringLiteral;
 
 #endif
 
@@ -14611,6 +14852,9 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         NoDiscard auto toString ( Type ( ExternalMemoryHandleTypeFlag ) ) noexcept -> cds :: StringLiteral;
         NoDiscard auto toString ( Type ( MemoryAllocateFlag ) ) noexcept -> cds :: StringLiteral;
         NoDiscard auto toString ( Type ( PeerMemoryFeatureFlag ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( SamplerYCBCRModelConversion ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( SamplerYCBCRRange ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( ChromaLocation ) ) noexcept -> cds :: StringLiteral;
 
 #endif
 
@@ -14621,6 +14865,8 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( ResolveModeFlag ) ) noexcept -> cds :: StringLiteral;
 
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( ImageFormatListCreateInfo ) const & ) noexcept -> cds :: String;
+
+        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( SamplerReductionMode ) ) noexcept -> cds :: StringLiteral;
 
 #endif
 
@@ -14912,6 +15158,8 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
         NoDiscard auto toString ( Type ( MemoryRequirements ) const & ) noexcept -> cds :: String;
 
+        NoDiscard auto toString ( Type ( SamplerCreateInfo ) const & ) noexcept -> cds :: String;
+
 #endif
 
 #if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
@@ -14960,6 +15208,8 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
         NoDiscard auto toString ( Type ( MemoryRequirements2 ) const & ) noexcept -> cds :: String;
         NoDiscard auto toString ( Type ( MemoryDedicatedRequirements ) const & ) noexcept -> cds :: String;
+
+        NoDiscard auto toString ( Type ( SamplerYCBCRConversionCreateInfo ) const & ) noexcept -> cds :: String;
 
 #endif
 
@@ -15019,6 +15269,8 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
         NoDiscard auto toString ( Type ( BufferOpaqueCaptureAddressCreateInfo ) const & ) noexcept -> cds :: String;
         NoDiscard auto toString ( Type ( ImageStencilUsageCreateInfo ) const & ) noexcept -> cds :: String;
+
+        NoDiscard auto toString ( Type ( SamplerReductionModeCreateInfo ) const & ) noexcept -> cds :: String;
 #endif
 
 #if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
@@ -15094,6 +15346,14 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #if __C_ENG_VULKAN_API_EXTENSION_GOOGLE_FUCHSIA_BUFFER_COLLECTION_AVAILABLE
         NoDiscard auto toString ( Type ( BufferCollectionBufferCreateInfoFuchsia ) const & ) noexcept -> cds :: String;
         NoDiscard auto toString ( Type ( BufferCollectionImageCreateInfoFuchsia ) const & ) noexcept -> cds :: String;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_BORDER_COLOR_SWIZZLE_AVAILABLE
+        NoDiscard auto toString ( Type ( SamplerBorderColorComponentMappingCreateInfo ) const & ) noexcept -> cds :: String;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_CUSTOM_BORDER_COLOR_AVAILABLE
+        NoDiscard auto toString ( Type ( SamplerCustomBorderColorCreateInfo ) const & ) noexcept -> cds :: String;
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_VIDEO_DECODE_H264_AVAILABLE

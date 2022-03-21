@@ -13642,3 +13642,258 @@ auto vulkan :: toString (
            " }";
 }
 #endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( SamplerCreateFlag )  flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+#if __C_ENG_VULKAN_API_EXTENSION_FRAGMENT_DENSITY_MAP_AVAILABLE
+        case SamplerCreateFlagSubsampled:                       { asString = "Subsampled";                          break; }
+        case SamplerCreateFlagSubsampledCoarseReconstruction:   { asString = "Subsampled Coarse Reconstruction";    break; }
+#endif
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( Filter )  flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case FilterNearest: { asString = "Nearest"; break; }
+        case FilterLinear:  { asString = "Linear";  break; }
+#if __C_ENG_VULKAN_API_EXTENSION_FILTER_CUBIC_AVAILABLE
+        case FilterCubic:   { asString = "Cubic";   break; }
+#endif
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( SamplerMipmapMode )  flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case SamplerMipmapModeNearest: { asString = "Nearest"; break; }
+        case SamplerMipmapModeLinear:  { asString = "Linear";  break; }
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( SamplerAddressMode )  flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case SamplerAddressModeRepeat:              { asString = "Repeat";                  break; }
+        case SamplerAddressModeMirroredRepeat:      { asString = "Mirrored Repeat";         break; }
+        case SamplerAddressModeClampToEdge:         { asString = "Clamp To Edge";           break; }
+        case SamplerAddressModeClampToBorder:       { asString = "Clamp To Border";         break; }
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+        case SamplerAddressModeMirrorClampToEdge:   { asString = "Mirror Clamp To Edge";    break; }
+#endif
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( BorderColor )  flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case BorderColorFloatTransparentBlack:  { asString = "Float Transparent Black"; break; }
+        case BorderColorIntTransparentBlack:    { asString = "Int Transparent Black";   break; }
+        case BorderColorFloatOpaqueBlack:       { asString = "Float Opaque Black";      break; }
+        case BorderColorIntOpaqueBlack:         { asString = "Int Opaque Black";        break; }
+        case BorderColorFloatOpaqueWhite:       { asString = "Float Opaque White";      break; }
+        case BorderColorIntOpaqueWhite:         { asString = "Int Opaque White";        break; }
+#if __C_ENG_VULKAN_API_EXTENSION_CUSTOM_BORDER_COLOR_AVAILABLE
+        case BorderColorFloatCustom:            { asString = "Float Custom";            break; }
+        case BorderColorIntCustom:              { asString = "Int Custom";              break; }
+#endif
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+auto vulkan :: toString (
+        Type ( SamplerReductionMode )  flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case SamplerReductionModeWeightedAverage:   { asString = "Weighted Average";    break; }
+        case SamplerReductionModeMin:               { asString = "Min";                 break; }
+        case SamplerReductionModeMax:               { asString = "Max";                 break; }
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( SamplerCreateInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( SamplerCreateInfo ) ) " " +
+           "{ structureType = "_s           + toString ( info.structureType ) +
+           ", pNext = "                     + engine :: toString ( info.pNext ) +
+           ", flags = "                     + "0b" + Long ( info.flags ).toString(2) +
+           ", magFilter = "                 + toString ( info.magFilter ) +
+           ", minFilter = "                 + toString ( info.minFilter ) +
+           ", mipmapMode = "                + toString ( info.mipmapMode ) +
+           ", addressModeU = "              + toString ( info.addressModeU ) +
+           ", addressModeV = "              + toString ( info.addressModeV ) +
+           ", addressModeW = "              + toString ( info.addressModeW ) +
+           ", mipLodBias = "                + info.mipLodBias +
+           ", anisotropyEnable = "          + ( info.anisotropyEnable == VK_TRUE ? "true" : "false" ) +
+           ", maxAnisotropy = "             + info.maxAnisotropy +
+           ", compareEnable = "             + ( info.compareEnable == VK_TRUE ? "true" : "false" ) +
+           ", compareOperation = "          + toString ( info.compareOperation ) +
+           ", minLod = "                    + info.minLod +
+           ", maxLod = "                    + info.maxLod +
+           ", borderColor = "               + toString ( info.borderColor ) +
+           ", unnormalizedCoordinates = "   + ( info.unnormalizedCoordinates == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_BORDER_COLOR_SWIZZLE_AVAILABLE
+auto vulkan :: toString (
+        Type ( SamplerBorderColorComponentMappingCreateInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( SamplerBorderColorComponentMappingCreateInfo ) ) " " +
+           "{ structureType = "_s           + toString ( info.structureType ) +
+           ", pNext = "                     + engine :: toString ( info.pNext ) +
+           ", components = "                + toString ( info.components ) +
+           ", srgb = "                      + ( info.srgb == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_CUSTOM_BORDER_COLOR_AVAILABLE
+auto vulkan :: toString (
+        Type ( SamplerCustomBorderColorCreateInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( SamplerCustomBorderColorCreateInfo ) ) " " +
+           "{ structureType = "_s           + toString ( info.structureType ) +
+           ", pNext = "                     + engine :: toString ( info.pNext ) +
+           ", customBorderColor = "         + toString ( info.customBorderColor ) +
+           ", format = "                    + toString ( info.format ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+auto vulkan :: toString (
+        Type ( SamplerReductionModeCreateInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( SamplerReductionModeCreateInfo ) ) " " +
+           "{ structureType = "_s           + toString ( info.structureType ) +
+           ", pNext = "                     + engine :: toString ( info.pNext ) +
+           ", reductionMode = "             + toString ( info.reductionMode ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+auto vulkan :: toString (
+        Type ( SamplerYCBCRModelConversion )  flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case SamplerYCBCRModelConversionRGBIdentity:    { asString = "RGB Identity";    break; }
+        case SamplerYCBCRModelConversionYCBCRIdentity:  { asString = "YCBCR Identity";  break; }
+        case SamplerYCBCRModelConversion709:            { asString = "709";             break; }
+        case SamplerYCBCRModelConversion601:            { asString = "601";             break; }
+        case SamplerYCBCRModelConversion2020:           { asString = "2020";            break; }
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+auto vulkan :: toString (
+        Type ( SamplerYCBCRRange )  flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case SamplerYCBCRRangeITUFull:    { asString = "ITU Full";    break; }
+        case SamplerYCBCRRangeITUNarrow:  { asString = "ITU Narrow";  break; }
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+auto vulkan :: toString (
+        Type ( ChromaLocation )  flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case ChromaLocationCositedEven:     { asString = "Cosited Even";    break; }
+        case ChromaLocationMidpoint:        { asString = "Midpoin";         break; }
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+auto vulkan :: toString (
+        Type ( SamplerYCBCRConversionCreateInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( SamplerYCBCRConversionCreateInfo ) ) " " +
+           "{ structureType = "_s               + toString ( info.structureType ) +
+           ", pNext = "                         + engine :: toString ( info.pNext ) +
+           ", format = "                        + toString ( info.format ) +
+           ", ycbcrModel = "                    + toString ( info.ycbcrModel ) +
+           ", ycbcrRange = "                    + toString ( info.ycbcrRange ) +
+           ", components = "                    + toString ( info.components ) +
+           ", xChromaOffset = "                 + toString ( info.xChromaOffset ) +
+           ", yChromaOffset = "                 + toString ( info.yChromaOffset ) +
+           ", chromaFilter = "                  + toString ( info.chromaFilter ) +
+           ", forceExplicitReconstruction = "   + ( info.forceExplicitReconstruction == VK_TRUE ? "true" : "false" ) +
+           " }";
+}
+#endif

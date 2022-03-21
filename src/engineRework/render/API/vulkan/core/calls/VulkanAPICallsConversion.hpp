@@ -4219,6 +4219,55 @@ namespace engine :: vulkan {
     ) noexcept -> VkAccelerationStructureDeviceAddressInfoKHR *;
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto prepareContext (
+            CreateSamplerContext              *,
+            Type ( SamplerCreateInfo )  const *
+    ) noexcept -> VkSamplerCreateInfo *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto toVulkanFormat (
+            VkSamplerCreateInfo              *,
+            Type ( SamplerCreateInfo ) const *
+    ) noexcept -> VkSamplerCreateInfo *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_BORDER_COLOR_SWIZZLE_AVAILABLE
+    extern auto toVulkanFormat (
+            VkSamplerBorderColorComponentMappingCreateInfoEXT           *,
+            Type ( SamplerBorderColorComponentMappingCreateInfo ) const *
+    ) noexcept -> VkSamplerBorderColorComponentMappingCreateInfoEXT *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_CUSTOM_BORDER_COLOR_AVAILABLE
+    extern auto toVulkanFormat (
+            VkSamplerCustomBorderColorCreateInfoEXT           *,
+            Type ( SamplerCustomBorderColorCreateInfo ) const *
+    ) noexcept -> VkSamplerCustomBorderColorCreateInfoEXT *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+    extern auto toVulkanFormat (
+            VkSamplerReductionModeCreateInfo              *,
+            Type ( SamplerReductionModeCreateInfo ) const *
+    ) noexcept -> VkSamplerReductionModeCreateInfo *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    extern auto prepareContext (
+            CreateSamplerContext                             *,
+            Type ( SamplerYCBCRConversionCreateInfo )  const *
+    ) noexcept -> VkSamplerYcbcrConversionCreateInfo *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    extern auto toVulkanFormat (
+            VkSamplerYcbcrConversionCreateInfo              *,
+            Type ( SamplerYCBCRConversionCreateInfo ) const *
+    ) noexcept -> VkSamplerYcbcrConversionCreateInfo *;
+#endif
+
 } // namespace engine :: vulkan
 
 #define C_ENG_MAP_END

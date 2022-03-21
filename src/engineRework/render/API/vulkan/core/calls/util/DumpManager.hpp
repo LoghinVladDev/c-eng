@@ -560,6 +560,8 @@ __C_ENG_DUMP_MANAGER_SET_TYPE ( engine :: vulkan :: Type ( AccelerationStructure
 __C_ENG_DUMP_MANAGER_SET_TYPE ( engine :: vulkan :: Type ( AccelerationStructureHandleNVidia ) * , HandlePtr )
 __C_ENG_DUMP_MANAGER_SET_TYPE ( engine :: vulkan :: Type ( AccelerationStructureHandle ) , Handle )
 __C_ENG_DUMP_MANAGER_SET_TYPE ( engine :: vulkan :: Type ( AccelerationStructureHandle ) * , HandlePtr )
+__C_ENG_DUMP_MANAGER_SET_TYPE ( engine :: vulkan :: Type ( SamplerHandle ) , Handle )
+__C_ENG_DUMP_MANAGER_SET_TYPE ( engine :: vulkan :: Type ( SamplerHandle ) * , HandlePtr )
 #endif
 
 __C_ENG_DUMP_MANAGER_SET_TYPE ( DumpedArray, DumpArrayPack )

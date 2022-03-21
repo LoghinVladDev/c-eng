@@ -1465,6 +1465,49 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         ) noexcept -> Type ( Result );
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+        NoDiscard MaybeUnused extern auto createSampler (
+                Type ( DeviceHandle ),
+                Type ( SamplerCreateInfo )      const *,
+                Type ( AllocationCallbacks )    const *,
+                Type ( SamplerHandle )                *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+        NoDiscard MaybeUnused extern auto destroySampler (
+                Type ( DeviceHandle ),
+                Type ( SamplerHandle ),
+                Type ( AllocationCallbacks )    const *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+        NoDiscard MaybeUnused extern auto createSamplerYCBCRConversion (
+                Type ( DeviceHandle ),
+                Type ( SamplerYCBCRConversionCreateInfo )   const *,
+                Type ( AllocationCallbacks )                const *,
+                Type ( SamplerYCBCRConversionHandle )             *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+        NoDiscard MaybeUnused extern auto destroySamplerYCBCRConversion (
+                Type ( DeviceHandle ),
+                Type ( SamplerYCBCRConversionHandle ),
+                Type ( AllocationCallbacks )            const *
+        ) noexcept -> Type ( Result );
+#endif
+
+//#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+//        NoDiscard MaybeUnused extern auto createDescriptorSetLayout (
+//                Type ( DeviceHandle ),
+//                Type ( DescriptorSetLayoutCreateInfo )  const *,
+//                Type ( AllocationCallbacks )            const *,
+//                Type ( DescriptorSetLayoutHandle )            *
+//        ) noexcept -> Type ( Result );
+//#endif
+
     } /// namespace vulkan
 
 } /// namespace engine

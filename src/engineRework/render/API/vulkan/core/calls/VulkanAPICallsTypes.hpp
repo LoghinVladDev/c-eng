@@ -111,6 +111,7 @@ enum class SharedContextType {
     GetAccelerationStructureMemoryRequirements,
     BindAccelerationStructureMemory,
     GetAccelerationStructureDeviceAddress,
+    CreateSampler
 };
 
 union SpecializedContextType {
@@ -1764,6 +1765,29 @@ struct GetAccelerationStructureDeviceAddressContext {
 #endif
 };
 
+struct CreateSamplerContext {
+    CommonItems                                                 common;
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    VkSamplerCreateInfo                                         createInfo;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_BORDER_COLOR_SWIZZLE_AVAILABLE
+    VkSamplerBorderColorComponentMappingCreateInfoEXT           borderColorComponentMappingCreateInfo;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_CUSTOM_BORDER_COLOR_AVAILABLE
+    VkSamplerCustomBorderColorCreateInfoEXT                     customBorderColorCreateInfo;
+#endif
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+    VkSamplerReductionModeCreateInfo                            reductionModeCreateInfo;
+#endif
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    VkSamplerYcbcrConversionInfo                                ycbcrConversionInfo;
+    VkSamplerYcbcrConversionCreateInfo                          ycbcrConversionCreateInfo;
+#endif
+#if __C_ENG_VULKAN_API_ANDROID_EXTERNAL_MEMORY_ANDROID_HARDWARE_BUFFER_AVAILABLE
+    VkExernalFormatANDROID                                      externalFormat;
+#endif
+};
+
 union GetMemorySharedContext {
     GetMemoryWin32Context                   win32;
     GetMemoryFdContext                      fd;
@@ -1822,6 +1846,7 @@ union CreateSharedContext {
     CreateBufferSharedContext                                           buffer;
     CreateImageSharedContext                                            image;
     CreateAccelerationStructureSharedContext                            accelerationStructure;
+    CreateSamplerContext                                                sampler;
 };
 
 union GetPipelineSharedContext {
@@ -2035,6 +2060,7 @@ constexpr auto toString ( SharedContextType type ) noexcept -> cds :: StringLite
         case SharedContextType :: GetAccelerationStructureMemoryRequirements:                 return "GetAccelerationStructureMemoryRequirements";
         case SharedContextType :: BindAccelerationStructureMemory:                            return "BindAccelerationStructureMemory";
         case SharedContextType :: GetAccelerationStructureDeviceAddress:                      return "GetAccelerationStructureDeviceAddress";
+        case SharedContextType :: CreateSampler:                                              return "CreateSampler";
     }
 }
 

@@ -7574,3 +7574,155 @@ auto engine :: vulkan :: getAccelerationStructureDeviceAddress (
     );
 }
 #endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: createSampler (
+        Type ( DeviceHandle )                   deviceHandle,
+        Type ( SamplerCreateInfo )      const * pCreateInfo,
+        Type ( AllocationCallbacks )    const * pAllocationCallbacks,
+        Type ( SamplerHandle )                * pHandle
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || pCreateInfo == nullptr || pHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    auto context = ContextManager :: acquire();
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: CreateSampler,
+            "vkCreateSampler",
+            "Creates a Sampler Object",
+            deviceHandle,
+            pCreateInfo,
+            pAllocationCallbacks,
+            pHandle
+    );
+
+#endif
+
+    return APICaller.vkCreateSampler (
+            deviceHandle,
+            prepareContext ( & context->create.sampler, pCreateInfo ),
+            AllocatorHandler :: apply ( pAllocationCallbacks ),
+            pHandle
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: destroySampler (
+        Type ( DeviceHandle )                   deviceHandle,
+        Type ( SamplerHandle )                  samplerHandle,
+        Type ( AllocationCallbacks )    const * pAllocationCallbacks
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || samplerHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+    auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkDestroySampler",
+            "Destroys a sampler",
+            deviceHandle,
+            samplerHandle,
+            pAllocationCallbacks
+    );
+
+#endif
+
+    return APICaller.vkDestroySampler (
+            deviceHandle,
+            samplerHandle,
+            AllocatorHandler :: apply ( pAllocationCallbacks )
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+auto engine :: vulkan :: createSamplerYCBCRConversion (
+        Type ( DeviceHandle )                               deviceHandle,
+        Type ( SamplerYCBCRConversionCreateInfo )   const * pCreateInfo,
+        Type ( AllocationCallbacks )                const * pAllocationCallbacks,
+        Type ( SamplerYCBCRConversionHandle )             * pHandle
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || pCreateInfo == nullptr || pHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    auto context = ContextManager :: acquire();
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: CreateSampler,
+            "vkCreateSamplerYcbcrConversion",
+            "Creates a Sampler YCBCR Conversion Object",
+            deviceHandle,
+            pCreateInfo,
+            pAllocationCallbacks,
+            pHandle
+    );
+
+#endif
+
+    return APICaller.vkCreateSamplerYcbcrConversion (
+            deviceHandle,
+            prepareContext ( & context->create.sampler, pCreateInfo ),
+            AllocatorHandler :: apply ( pAllocationCallbacks ),
+            pHandle
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+auto engine :: vulkan :: destroySamplerYCBCRConversion (
+        Type ( DeviceHandle )                           deviceHandle,
+        Type ( SamplerYCBCRConversionHandle )           samplerConversionHandle,
+        Type ( AllocationCallbacks )            const * pAllocationCallbacks
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || samplerConversionHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+    auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkDestroySamplerYcbcrConversion",
+            "Destroys a sampler YCBCR Conversion",
+            deviceHandle,
+            samplerConversionHandle,
+            pAllocationCallbacks
+    );
+
+#endif
+
+    return APICaller.vkDestroySamplerYcbcrConversion (
+            deviceHandle,
+            samplerConversionHandle,
+            AllocatorHandler :: apply ( pAllocationCallbacks )
+    );
+}
+#endif

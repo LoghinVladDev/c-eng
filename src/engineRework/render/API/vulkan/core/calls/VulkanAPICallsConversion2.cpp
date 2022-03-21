@@ -6691,4 +6691,293 @@ namespace engine :: vulkan {
     }
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    auto prepareContext (
+            CreateSamplerContext              * pContext,
+            Type ( SamplerCreateInfo )  const * pSource
+    ) noexcept -> VkSamplerCreateInfo * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pContext == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        auto pCurrent   = reinterpret_cast < Type ( GenericInStructure ) const * > ( pSource->pNext );
+        auto pCurrentVk = reinterpret_cast < VkBaseOutStructure * > ( toVulkanFormat ( & pContext->createInfo, pSource ) );
+
+        while ( pCurrent != nullptr ) {
+
+            switch ( pCurrent->structureType ) {
+
+#if __C_ENG_VULKAN_API_EXTENSION_BORDER_COLOR_SWIZZLE_AVAILABLE
+
+                case StructureTypeSamplerBorderColorComponentMappingCreateInfo:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                            toVulkanFormat (
+                                    & pContext->borderColorComponentMappingCreateInfo,
+                                    reinterpret_cast < Type ( SamplerBorderColorComponentMappingCreateInfo ) const * > ( pCurrent )
+                            )
+                    );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_CUSTOM_BORDER_COLOR_AVAILABLE
+
+                case StructureTypeSamplerCustomBorderColorCreateInfo:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                            toVulkanFormat (
+                                    & pContext->customBorderColorCreateInfo,
+                                    reinterpret_cast < Type ( SamplerCustomBorderColorCreateInfo ) const * > ( pCurrent )
+                            )
+                    );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+
+                case StructureTypeSamplerReductionModeCreateInfo:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                            toVulkanFormat (
+                                    & pContext->reductionModeCreateInfo,
+                                    reinterpret_cast < Type ( SamplerReductionModeCreateInfo ) const * > ( pCurrent )
+                            )
+                    );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+
+                case StructureTypeSamplerYCBCRConversionInfo:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                            toVulkanFormat (
+                                    & pContext->ycbcrConversionInfo,
+                                    reinterpret_cast < Type ( SamplerYCBCRConversionInfo ) const * > ( pCurrent )
+                            )
+                    );
+                    break;
+
+#endif
+
+                default:
+                    break;
+            }
+
+            pCurrentVk  = pCurrentVk->pNext == nullptr ? pCurrentVk : pCurrentVk->pNext;
+            pCurrent    = pCurrent->pNext;
+        }
+
+        pCurrentVk->pNext = nullptr;
+
+        return & pContext->createInfo;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    auto toVulkanFormat (
+            VkSamplerCreateInfo              * pDestination,
+            Type ( SamplerCreateInfo ) const * pSource
+    ) noexcept -> VkSamplerCreateInfo * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                      = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO,
+                .pNext                      = nullptr,
+                .flags                      = pSource->flags,
+                .magFilter                  = static_cast < VkFilter > ( pSource->magFilter ),
+                .minFilter                  = static_cast < VkFilter > ( pSource->minFilter ),
+                .mipmapMode                 = static_cast < VkSamplerMipmapMode > ( pSource->mipmapMode ),
+                .addressModeU               = static_cast < VkSamplerAddressMode > ( pSource->addressModeU ),
+                .addressModeV               = static_cast < VkSamplerAddressMode > ( pSource->addressModeV ),
+                .addressModeW               = static_cast < VkSamplerAddressMode > ( pSource->addressModeW ),
+                .mipLodBias                 = pSource->mipLodBias,
+                .anisotropyEnable           = pSource->anisotropyEnable,
+                .maxAnisotropy              = pSource->maxAnisotropy,
+                .compareEnable              = pSource->compareEnable,
+                .compareOp                  = static_cast < VkCompareOp > ( pSource->compareOperation ),
+                .minLod                     = pSource->minLod,
+                .maxLod                     = pSource->maxLod,
+                .borderColor                = static_cast < VkBorderColor > ( pSource->borderColor ),
+                .unnormalizedCoordinates    = pSource->unnormalizedCoordinates
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+    auto toVulkanFormat (
+            VkSamplerReductionModeCreateInfo              * pDestination,
+            Type ( SamplerReductionModeCreateInfo ) const * pSource
+    ) noexcept -> VkSamplerReductionModeCreateInfo * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                      = VK_STRUCTURE_TYPE_SAMPLER_REDUCTION_MODE_CREATE_INFO,
+                .pNext                      = nullptr,
+                .reductionMode              = static_cast < VkSamplerReductionMode > ( pSource->reductionMode )
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_BORDER_COLOR_SWIZZLE_AVAILABLE
+    auto toVulkanFormat (
+            VkSamplerBorderColorComponentMappingCreateInfoEXT           * pDestination,
+            Type ( SamplerBorderColorComponentMappingCreateInfo ) const * pSource
+    ) noexcept -> VkSamplerBorderColorComponentMappingCreateInfoEXT * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                      = VK_STRUCTURE_TYPE_SAMPLER_BORDER_COLOR_COMPONENT_MAPPING_CREATE_INFO_EXT,
+                .pNext                      = nullptr,
+                .components                 = {
+                        .r                          = static_cast < VkComponentSwizzle > ( pSource->components.r ),
+                        .g                          = static_cast < VkComponentSwizzle > ( pSource->components.g ),
+                        .b                          = static_cast < VkComponentSwizzle > ( pSource->components.b ),
+                        .a                          = static_cast < VkComponentSwizzle > ( pSource->components.a )
+                },
+                .srgb                       = pSource->srgb
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_CUSTOM_BORDER_COLOR_AVAILABLE
+    auto toVulkanFormat (
+            VkSamplerCustomBorderColorCreateInfoEXT           * pDestination,
+            Type ( SamplerCustomBorderColorCreateInfo ) const * pSource
+    ) noexcept -> VkSamplerCustomBorderColorCreateInfoEXT * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+
+        pDestination->sType     = VK_STRUCTURE_TYPE_SAMPLER_CUSTOM_BORDER_COLOR_CREATE_INFO_EXT;
+        pDestination->pNext     = nullptr;
+        pDestination->format    = static_cast < VkFormat > ( pSource->format );
+
+        (void) std :: memcpy ( & pDestination->customBorderColor, & pSource->customBorderColor, sizeof ( VkClearColorValue ) );
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    auto prepareContext (
+            CreateSamplerContext                             * pContext,
+            Type ( SamplerYCBCRConversionCreateInfo )  const * pSource
+    ) noexcept -> VkSamplerYcbcrConversionCreateInfo * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pContext == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        auto pCurrent   = reinterpret_cast < Type ( GenericInStructure ) const * > ( pSource->pNext );
+        auto pCurrentVk = reinterpret_cast < VkBaseOutStructure * > ( toVulkanFormat ( & pContext->ycbcrConversionCreateInfo, pSource ) );
+
+        while ( pCurrent != nullptr ) {
+
+            switch ( pCurrent->structureType ) {
+
+#if __C_ENG_VULKAN_API_ANDROID_EXTERNAL_MEMORY_ANDROID_HARDWARE_BUFFER_AVAILABLE
+
+                case StructureTypeExternalFormatAndroid:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                            toVulkanFormat (
+                                    & pContext->externalFormat,
+                                    reinterpret_cast < Type ( ExternalFormatAndroid ) const * > ( pCurrent )
+                            )
+                    );
+                    break;
+
+#endif
+
+                default:
+                    break;
+            }
+
+            pCurrentVk  = pCurrentVk->pNext == nullptr ? pCurrentVk : pCurrentVk->pNext;
+            pCurrent    = pCurrent->pNext;
+        }
+
+        pCurrentVk->pNext = nullptr;
+
+        return & pContext->ycbcrConversionCreateInfo;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    auto toVulkanFormat (
+            VkSamplerYcbcrConversionCreateInfo              * pDestination,
+            Type ( SamplerYCBCRConversionCreateInfo ) const * pSource
+    ) noexcept -> VkSamplerYcbcrConversionCreateInfo * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                          = VK_STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_CREATE_INFO,
+                .pNext                          = nullptr,
+                .format                         = static_cast < VkFormat > ( pSource->format ),
+                .ycbcrModel                     = static_cast < VkSamplerYcbcrModelConversion > ( pSource->ycbcrModel ),
+                .ycbcrRange                     = static_cast < VkSamplerYcbcrRange > ( pSource->ycbcrRange ),
+                .components                     = {
+                        .r                              = static_cast < VkComponentSwizzle > ( pSource->components.r ),
+                        .g                              = static_cast < VkComponentSwizzle > ( pSource->components.g ),
+                        .b                              = static_cast < VkComponentSwizzle > ( pSource->components.b ),
+                        .a                              = static_cast < VkComponentSwizzle > ( pSource->components.a )
+                },
+                .xChromaOffset                  = static_cast < VkChromaLocation > ( pSource->xChromaOffset ),
+                .yChromaOffset                  = static_cast < VkChromaLocation > ( pSource->yChromaOffset ),
+                .chromaFilter                   = static_cast < VkFilter > ( pSource->chromaFilter ),
+                .forceExplicitReconstruction    = pSource->forceExplicitReconstruction
+        };
+
+        return pDestination;
+    }
+#endif
+
 } // namespace vulkan :: engine
