@@ -2180,6 +2180,21 @@ auto engine :: vulkan :: createImageView (
 
     auto context = ContextManager :: acquire();
 
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: CreateImageView,
+            "vkCreateImageView",
+            "Creates an Image View object",
+            deviceHandle,
+            pCreateInfo,
+            pAllocationCallbacks,
+            pHandle
+    );
+
+#endif
+
     return APICaller.vkCreateImageView (
             deviceHandle,
             prepareContext ( & context.data().create.image.view, pCreateInfo ),
@@ -2201,6 +2216,17 @@ auto engine :: vulkan :: destroyImageView (
     if ( deviceHandle == nullptr || handle == nullptr ) {
         return ResultErrorIllegalArgument;
     }
+
+    auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkDestroyImageView",
+            "Destroys an Image View object",
+            deviceHandle,
+            handle,
+            pAllocationCallbacks
+    );
 
 #endif
 
@@ -2230,6 +2256,21 @@ auto engine :: vulkan :: createCommandPool (
 
     auto context = ContextManager :: acquire();
 
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: CreateCommandPool,
+            "vkCreateCommandPool",
+            "Creates a Command Pool Object",
+            deviceHandle,
+            pCreateInfo,
+            pAllocationCallbacks,
+            pHandle
+    );
+
+#endif
+
     return APICaller.vkCreateCommandPool (
             deviceHandle,
             toVulkanFormat ( & context.data().create.commandPool.createInfo, pCreateInfo ),
@@ -2248,9 +2289,20 @@ auto engine :: vulkan :: destroyCommandPool (
 
 #if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
 
-        if ( deviceHandle == nullptr || handle == nullptr ) {
-            return ResultErrorIllegalArgument;
-        }
+    if ( deviceHandle == nullptr || handle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+    auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkDestroyCommandPool",
+            "Destroys a Command Pool object",
+            deviceHandle,
+            handle,
+            pAllocationCallbacks
+    );
 
 #endif
 
@@ -2271,9 +2323,21 @@ auto engine :: vulkan :: resetCommandPool (
 
 #if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
 
-        if ( deviceHandle == nullptr || handle == nullptr ) {
-            return ResultErrorIllegalArgument;
-        }
+    if ( deviceHandle == nullptr || handle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+    auto context = ContextManager :: acquire();
+    auto flagsPack = Flags ( flags );
+
+    prepareDump (
+            context.data(),
+            "vkResetCommandPool",
+            "Resets a command pool's buffers",
+            deviceHandle,
+            handle,
+            flagsPack
+    );
 
 #endif
 
@@ -2302,6 +2366,27 @@ auto engine :: vulkan :: allocateCommandBuffers (
 
     auto context = ContextManager :: acquire();
 
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    auto arrayPack = DumpedArray {
+        .pCount = & pAllocateInfo->commandBufferCount,
+        .type   = ParameterType :: Handle,
+        .size   = sizeof ( Type ( CommandBufferHandle ) ),
+        .pArray = pHandles
+    };
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: AllocateCommandBuffers,
+            "vkAllocateCommandBuffers",
+            "Allocates multiple command buffers from a command pool",
+            deviceHandle,
+            pAllocateInfo,
+            arrayPack
+    );
+
+#endif
+
     return APICaller.vkAllocateCommandBuffers (
             deviceHandle,
             toVulkanFormat ( & context.data().allocate.commandBuffers.allocateInfo, pAllocateInfo ),
@@ -2322,9 +2407,18 @@ auto engine :: vulkan :: resetCommandBuffer (
         return ResultErrorIllegalArgument;
     }
 
-#endif
-
     auto context = ContextManager :: acquire();
+    auto flagsPack = Flags ( flags );
+
+    prepareDump (
+            context.data(),
+            "vkResetCommandBuffer",
+            "Resets a command buffer",
+            handle,
+            flags
+    );
+
+#endif
 
     return APICaller.vkResetCommandBuffer (
             handle,
@@ -2346,6 +2440,24 @@ auto engine :: vulkan :: freeCommandBuffers (
     if ( deviceHandle == nullptr || commandPoolHandle == nullptr || pCommandBuffers == nullptr ) {
         return ResultErrorIllegalArgument;
     }
+
+    auto context = ContextManager :: acquire();
+    auto arrayPack = DumpedArray {
+        .pCount = & commandBufferCount,
+        .type   = ParameterType :: Handle,
+        .size   = sizeof ( Type ( CommandBufferHandle ) ),
+        .pArray = pCommandBuffers
+    };
+
+    prepareDump (
+            context.data(),
+            "vkFreeCommandBuffers",
+            "Frees several command buffers from a command pool",
+            deviceHandle,
+            commandPoolHandle,
+            commandBufferCount,
+            arrayPack
+    );
 
 #endif
 
@@ -2374,6 +2486,19 @@ auto engine :: vulkan :: beginCommandBuffer (
 
     auto context = ContextManager :: acquire();
 
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: BeginCommandBuffer,
+            "vkBeginCommandBuffer",
+            "Begins the recording of a command buffer",
+            commandBufferHandle,
+            pBeginInfo
+    );
+
+#endif
+
     return APICaller.vkBeginCommandBuffer (
             commandBufferHandle,
             prepareContext ( & context.data().begin.commandBuffer, pBeginInfo )
@@ -2391,6 +2516,15 @@ auto engine :: vulkan :: endCommandBuffer (
     if ( commandBufferHandle == nullptr ) {
         return ResultErrorIllegalArgument;
     }
+
+    auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkEndCommandBuffer",
+            "Ends the recording of a command buffer",
+            commandBufferHandle
+    );
 
 #endif
 
@@ -2410,6 +2544,18 @@ auto engine :: vulkan :: trimCommandPool (
     if ( deviceHandle == nullptr || handle == nullptr ) {
         return ResultErrorIllegalArgument;
     }
+
+    auto context = ContextManager :: acquire();
+    auto flagsPack = Flags ( flags );
+
+    prepareDump (
+            context.data(),
+            "vkTrimCommandPool",
+            "Trims a command pool, removing unused handles",
+            deviceHandle,
+            handle,
+            flagsPack
+    );
 
 #endif
 
@@ -2443,6 +2589,28 @@ auto engine :: vulkan :: queueSubmit (
 
     auto context = ContextManager :: acquire();
 
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    auto arrayPack = DumpedArray {
+        .pCount = & submitCount,
+        .type   = ParameterType :: Structure,
+        .size   = sizeof ( Type ( SubmitInfo ) ),
+        .pArray = pSubmits
+    };
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: SubmitQueue,
+            "vkQueueSubmit",
+            "Submits a set of commands onto a queue",
+            queueHandle,
+            submitCount,
+            arrayPack,
+            fenceHandle
+    );
+
+#endif
+
     return APICaller.vkQueueSubmit (
             queueHandle,
             submitCount,
@@ -2464,6 +2632,23 @@ auto engine :: vulkan :: commandBufferExecuteCommands (
     if ( primaryCommandBufferHandle == nullptr || commandBufferCount == 0U || pSecondaryCommandBufferHandles == nullptr ) {
         return ResultErrorIllegalArgument;
     }
+
+    auto context = ContextManager :: acquire();
+    auto arrayPack = DumpedArray {
+        .pCount = & commandBufferCount,
+        .type   = ParameterType :: Handle,
+        .size   = sizeof ( Type ( CommandBufferHandle ) ),
+        .pArray = pSecondaryCommandBufferHandles
+    };
+
+    prepareDump (
+            context.data(),
+            "vkCmdExecuteCommands",
+            "Executes a set of secondary command buffers",
+            primaryCommandBufferHandle,
+            commandBufferCount,
+            arrayPack
+    );
 
 #endif
 
@@ -2496,6 +2681,28 @@ auto engine :: vulkan :: queueSubmit (
 #endif
 
     auto context = ContextManager :: acquire();
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    auto arrayPack = DumpedArray {
+        .pCount = & submitCount,
+        .type   = ParameterType :: Structure,
+        .size   = sizeof ( Type ( SubmitInfo2 ) ),
+        .pArray = pSubmits
+    };
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: SubmitQueue,
+            "vkQueueSubmit2",
+            "Submits a set of commands onto a queue",
+            queueHandle,
+            submitCount,
+            arrayPack,
+            fenceHandle
+    );
+
+#endif
 
 #if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
@@ -2531,6 +2738,16 @@ auto engine :: vulkan :: commandBufferSetDeviceMask (
         return ResultErrorIllegalArgument;
     }
 
+    auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkCmdSetDeviceMask",
+            "Sets a device mask for a command buffer",
+            commandBufferHandle,
+            deviceMask
+    );
+
 #endif
 
     return APICaller.vkCmdSetDeviceMask ( commandBufferHandle, deviceMask );
@@ -2554,6 +2771,21 @@ auto engine :: vulkan :: createFence (
 #endif
 
     auto context = ContextManager :: acquire();
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: CreateFence,
+            "vkCreateFence",
+            "Creates a Fence Object",
+            deviceHandle,
+            pCreateInfo,
+            pAllocationCallbacks,
+            pHandle
+    );
+
+#endif
 
     return APICaller.vkCreateFence (
             deviceHandle,
@@ -2581,6 +2813,20 @@ auto engine :: vulkan :: getFenceWin32Handle (
 
     auto context = ContextManager :: acquire ();
 
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: GetFence,
+            "vkGetFenceWin32HandleKHR",
+            "Acquires an external win32 fence",
+            deviceHandle,
+            pInfo,
+            pHandle
+    );
+
+#endif
+
     return APICaller.vkGetFenceWin32HandleKHR (
             deviceHandle,
             toVulkanFormat ( & context.data().get.fence.win32HandleInfo, pInfo ),
@@ -2606,6 +2852,20 @@ auto engine :: vulkan :: getFenceFD (
 
     auto context = ContextManager :: acquire ();
 
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: GetFence,
+            "vkGetFenceFdKHR",
+            "Acquires an external fd fence",
+            deviceHandle,
+            pInfo,
+            pHandle
+    );
+
+#endif
+
     return APICaller.vkGetFenceFdKHR (
             deviceHandle,
             toVulkanFormat ( & context.data().get.fence.fdInfo, pInfo ),
@@ -2626,6 +2886,17 @@ auto engine :: vulkan :: destroyFence (
     if ( deviceHandle == nullptr || fenceHandle == nullptr ) {
         return ResultErrorIllegalArgument;
     }
+
+    auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkDestroyFence",
+            "Destroys a Fence Object",
+            deviceHandle,
+            fenceHandle,
+            pAllocationCallbacks
+    );
 
 #endif
 
@@ -2649,6 +2920,16 @@ auto engine :: vulkan :: getFenceStatus (
         return ResultErrorIllegalArgument;
     }
 
+    auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkGetFenceStatus",
+            "Gets the status of a Fence Object",
+            deviceHandle,
+            fenceHandle
+    );
+
 #endif
 
     return APICaller.vkGetFenceStatus ( deviceHandle, fenceHandle );
@@ -2667,6 +2948,23 @@ auto engine :: vulkan :: resetFences (
     if ( deviceHandle == nullptr || count == 0U || pFences == nullptr ) {
         return ResultErrorIllegalArgument;
     }
+
+    auto context = ContextManager :: acquire();
+    auto arrayPack = DumpedArray {
+        .pCount = & count,
+        .type   = ParameterType::Handle,
+        .size   = sizeof ( Type ( FenceHandle ) ),
+        .pArray = pFences
+    };
+
+    prepareDump (
+            context.data(),
+            "vkResetFences",
+            "Resets the status of multiple Fence Objects",
+            deviceHandle,
+            count,
+            arrayPack
+    );
 
 #endif
 
@@ -2692,6 +2990,25 @@ auto engine :: vulkan :: waitForFences (
     if ( deviceHandle == nullptr || count == 0U || pFences == nullptr ) {
         return ResultErrorIllegalArgument;
     }
+
+    auto context = ContextManager :: acquire();
+    auto arrayPack = DumpedArray {
+            .pCount = & count,
+            .type   = ParameterType::Handle,
+            .size   = sizeof ( Type ( FenceHandle ) ),
+            .pArray = pFences
+    };
+
+    prepareDump (
+            context.data(),
+            "vkWaitForFences",
+            "Waits for multiple Fence Objects",
+            deviceHandle,
+            count,
+            arrayPack,
+            waitForAll,
+            timeout
+    );
 
 #endif
 
@@ -2723,6 +3040,21 @@ auto engine :: vulkan :: registerDeviceEvent (
 
     auto context = ContextManager :: acquire();
 
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: RegisterEvent,
+            "vkRegisterDeviceEventEXT",
+            "Registers a Device Event",
+            deviceHandle,
+            pEventInfo,
+            pAllocationCallbacks,
+            pHandle
+    );
+
+#endif
+
     return APICaller.vkRegisterDeviceEventEXT (
             deviceHandle,
             toVulkanFormat ( & context.data().other.registerEvent.deviceInfo, pEventInfo ),
@@ -2751,6 +3083,22 @@ auto engine :: vulkan :: registerDisplayEvent (
 
     auto context = ContextManager :: acquire();
 
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: RegisterEvent,
+            "vkRegisterDisplayEventEXT",
+            "Registers a Display Event",
+            deviceHandle,
+            displayHandle,
+            pEventInfo,
+            pAllocationCallbacks,
+            pHandle
+    );
+
+#endif
+
     return APICaller.vkRegisterDisplayEventEXT (
             deviceHandle,
             displayHandle,
@@ -2777,6 +3125,19 @@ auto engine :: vulkan :: importFenceWin32Handle (
 
     auto context = ContextManager :: acquire();
 
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: ImportFenceWin32,
+            "vkImportFenceWin32HandleKHR",
+            "Imports a Win32 Fence Handle",
+            deviceHandle,
+            pInfo
+    );
+
+#endif
+
     return APICaller.vkImportFenceWin32HandleKHR (
             deviceHandle,
             toVulkanFormat ( & context.data()._import.fence.win32.info, pInfo )
@@ -2799,6 +3160,19 @@ auto engine :: vulkan :: importFenceFd (
 #endif
 
     auto context = ContextManager :: acquire();
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: ImportFenceFd,
+            "vkImportFenceFdKHR",
+            "Imports a fd Fence Handle",
+            deviceHandle,
+            pInfo
+    );
+
+#endif
 
     return APICaller.vkImportFenceFdKHR (
             deviceHandle,
@@ -2824,6 +3198,21 @@ auto engine :: vulkan :: createSemaphore (
 #endif
 
     auto context = ContextManager :: acquire();
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: CreateSemaphore,
+            "vkCreateSemaphore",
+            "Creates a Semaphore Object",
+            deviceHandle,
+            pCreateInfo,
+            pAllocationCallbacks,
+            pHandle
+    );
+
+#endif
 
     return APICaller.vkCreateSemaphore (
             deviceHandle,
@@ -2851,6 +3240,20 @@ auto engine :: vulkan :: getSemaphoreWin32Handle (
 
     auto context = ContextManager :: acquire();
 
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: GetSemaphore,
+            "vkGetSemaphoreWin32HandleKHR",
+            "Acquires a Win32 Semaphore Handle",
+            deviceHandle,
+            pInfo,
+            pHandle
+    );
+
+#endif
+
     return APICaller.vkGetSemaphoreWin32HandleKHR (
             deviceHandle,
             toVulkanFormat ( & context.data().get.semaphore.win32HandleInfo, pInfo ),
@@ -2875,6 +3278,20 @@ auto engine :: vulkan :: getSemaphoreFd (
 #endif
 
     auto context = ContextManager :: acquire();
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: GetSemaphore,
+            "vkGetSemaphoreFdKHR",
+            "Acquires a Fd Semaphore Handle",
+            deviceHandle,
+            pInfo,
+            pFd
+    );
+
+#endif
 
     return APICaller.vkGetSemaphoreFdKHR (
             deviceHandle,
@@ -2901,6 +3318,20 @@ auto engine :: vulkan :: getSemaphoreZirconHandleGoogle (
 
     auto context = ContextManager :: acquire();
 
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: GetSemaphore,
+            "vkGetSemaphoreZirconHandleFUCHSIA",
+            "Acquires a Zircon Semaphore Handle",
+            deviceHandle,
+            pInfo,
+            pHandle
+    );
+
+#endif
+
     return APICaller.vkGetSemaphoreZirconHandleFUCHSIA (
             deviceHandle,
             toVulkanFormat ( & context.data().get.semaphore.zirconHandleInfo, pInfo ),
@@ -2921,6 +3352,17 @@ auto engine :: vulkan :: destroySemaphore (
     if ( deviceHandle == nullptr || semaphoreHandle == nullptr ) {
         return ResultErrorIllegalArgument;
     }
+
+    auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkDestroySemaphore",
+            "Destroys a Semaphore Object",
+            deviceHandle,
+            semaphoreHandle,
+            pAllocationCallbacks
+    );
 
 #endif
 
@@ -2944,6 +3386,17 @@ auto engine :: vulkan :: getSemaphoreCounterValue (
     if ( deviceHandle == nullptr || semaphoreHandle == nullptr ) {
         return ResultErrorIllegalArgument;
     }
+
+    auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkGetSemaphoreCounterValue",
+            "Gets a Semaphore Object's Counter Value",
+            deviceHandle,
+            semaphoreHandle,
+            pValue
+    );
 
 #endif
 
@@ -2986,6 +3439,20 @@ auto engine :: vulkan :: waitSemaphores (
 
     auto context = ContextManager :: acquire();
 
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: WaitSemaphore,
+            "vkWaitSemaphores",
+            "Waits for multiple Semaphore Objects",
+            deviceHandle,
+            pWaitInfo,
+            timeout
+    );
+
+#endif
+
     return APICaller.vkWaitSemaphores (
             deviceHandle,
             prepareContext ( & context.data().wait.semaphore, pWaitInfo ),
@@ -3010,6 +3477,19 @@ auto engine :: vulkan :: signalSemaphore (
 
     auto context = ContextManager :: acquire();
 
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: SignalSemaphore,
+            "vkSignalSemaphore",
+            "Signals a Semaphore Objects",
+            deviceHandle,
+            pSignalInfo
+    );
+
+#endif
+
     return APICaller.vkSignalSemaphore (
             deviceHandle,
             toVulkanFormat ( & context.data().signal.semaphore.info, pSignalInfo )
@@ -3032,6 +3512,19 @@ auto engine :: vulkan :: importSemaphoreWin32Handle (
 #endif
 
     auto context = ContextManager :: acquire();
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: ImportSemaphoreWin32,
+            "vkImportSemaphoreWin32HandleKHR",
+            "Imports a win32 Semaphore Objects",
+            deviceHandle,
+            pInfo
+    );
+
+#endif
 
     return APICaller.vkImportSemaphoreWin32HandleKHR (
             deviceHandle,
@@ -3056,6 +3549,19 @@ auto engine :: vulkan :: importSemaphoreFd (
 
     auto context = ContextManager :: acquire();
 
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: ImportSemaphoreFd,
+            "vkImportSemaphoreFdKHR",
+            "Imports a fd Semaphore Objects",
+            deviceHandle,
+            pInfo
+    );
+
+#endif
+
     return APICaller.vkImportSemaphoreFdKHR (
             deviceHandle,
             toVulkanFormat ( & context.data()._import.semaphore.fd.info, pInfo )
@@ -3078,6 +3584,19 @@ auto engine :: vulkan :: importSemaphoreZirconHandleGoogle (
 #endif
 
     auto context = ContextManager :: acquire();
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: ImportSemaphoreZirconHandleInfoGoogle,
+            "vkImportSemaphoreZirconHandleFUCHSIA",
+            "Imports a Zircon Semaphore Objects",
+            deviceHandle,
+            pInfo
+    );
+
+#endif
 
     return APICaller.vkImportSemaphoreZirconHandleFUCHSIA (
             deviceHandle,
@@ -3104,6 +3623,21 @@ auto engine :: vulkan :: createEvent (
 
     auto context = ContextManager :: acquire();
 
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: CreateEvent,
+            "vkCreateEvent",
+            "Creates an Event Object",
+            deviceHandle,
+            pCreateInfo,
+            pAllocationCallbacks,
+            pHandle
+    );
+
+#endif
+
     return APICaller.vkCreateEvent (
             deviceHandle,
             toVulkanFormat ( & context.data().create.event.createInfo, pCreateInfo ),
@@ -3125,6 +3659,17 @@ auto engine :: vulkan :: destroyEvent (
     if ( deviceHandle == nullptr || handle == nullptr ) {
         return ResultErrorIllegalArgument;
     }
+
+    auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkDestroyEvent",
+            "Destroys an Event Object",
+            deviceHandle,
+            handle,
+            pAllocationCallbacks
+    );
 
 #endif
 
@@ -3148,6 +3693,16 @@ auto engine :: vulkan :: getEventStatus (
         return ResultErrorIllegalArgument;
     }
 
+    auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkGetEventStatus",
+            "Acquires the status of an event object",
+            deviceHandle,
+            handle
+    );
+
 #endif
 
     return APICaller.vkGetEventStatus (
@@ -3169,6 +3724,16 @@ auto engine :: vulkan :: setEvent (
         return ResultErrorIllegalArgument;
     }
 
+    auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkSetEvent",
+            "Sets an event to triggered status",
+            deviceHandle,
+            handle
+    );
+
 #endif
 
     return APICaller.vkSetEvent (
@@ -3189,6 +3754,16 @@ auto engine :: vulkan :: resetEvent (
     if ( deviceHandle == nullptr || handle == nullptr ) {
         return ResultErrorIllegalArgument;
     }
+
+    auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkResetEvent",
+            "Resets an event to un-triggered status",
+            deviceHandle,
+            handle
+    );
 
 #endif
 
@@ -3215,6 +3790,20 @@ auto engine :: vulkan :: commandBufferSetEvent (
 #endif
 
     auto context = ContextManager :: acquire();
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: SetCommandBufferEvent,
+            "vkCmdSetEvent2",
+            "Load a command buffer with a request to set an event to triggered status",
+            commandBufferHandle,
+            eventHandle,
+            pDependencyInfo
+    );
+
+#endif
 
 #if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
@@ -3249,6 +3838,18 @@ auto engine :: vulkan :: commandBufferSetEvent (
         return ResultErrorIllegalArgument;
     }
 
+    auto context = ContextManager :: acquire();
+    auto flagsPack = Flags ( flags );
+
+    prepareDump (
+            context.data(),
+            "vkCmdSetEvent",
+            "Load a command buffer with a request to set an event to triggered status",
+            commandBufferHandle,
+            eventHandle,
+            flagsPack
+    );
+
 #endif
 
     return APICaller.vkCmdSetEvent (
@@ -3271,6 +3872,18 @@ auto engine :: vulkan :: commandBufferResetEvent (
     if ( commandBufferHandle == nullptr || eventHandle == nullptr ) {
         return ResultErrorIllegalArgument;
     }
+
+    auto context = ContextManager :: acquire();
+    auto flagsPack = Flags ( flags );
+
+    prepareDump (
+            context.data(),
+            "vkCmdSetEvent",
+            "Load a command buffer with a request to reset an event to un-triggered status",
+            commandBufferHandle,
+            eventHandle,
+            flagsPack
+    );
 
 #endif
 
@@ -3319,6 +3932,35 @@ auto engine :: vulkan :: commandBufferWaitEvents (
 #endif
 
     auto context = ContextManager :: acquire();
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    auto eventHandlesPack = DumpedArray {
+        .pCount = & eventCount,
+        .type   = ParameterType :: Handle,
+        .size   = sizeof ( Type ( EventHandle ) ),
+        .pArray = pEventHandles
+    };
+
+    auto dependencyInfosPack = DumpedArray {
+        .pCount = & eventCount,
+        .type   = ParameterType :: Structure,
+        .size   = sizeof ( Type ( DependencyInfo ) ),
+        .pArray = pDependencyInfos
+    };
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: WaitCommandBufferEvent2,
+            "vkCmdWaitEvents2",
+            "Load a command buffer with a request to wait for a set of events before execution",
+            commandBufferHandle,
+            eventCount,
+            eventHandlesPack,
+            dependencyInfosPack
+    );
+
+#endif
 
 #if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
@@ -3377,6 +4019,59 @@ auto engine :: vulkan :: commandBufferWaitEvents (
 
     auto context = ContextManager :: acquire();
 
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    auto eventHandlesPack = DumpedArray {
+            .pCount = & eventCount,
+            .type   = ParameterType :: Handle,
+            .size   = sizeof ( Type ( EventHandle ) ),
+            .pArray = pEventHandles
+    };
+
+    auto sourceFlagsPack = Flags ( sourceStageMask );
+    auto destinationFlagsPack = Flags ( destinationStageMask );
+
+    auto memoryBarrierArrayPack = DumpedArray {
+            .pCount = & memoryBarrierCount,
+            .type   = ParameterType :: Structure,
+            .size   = sizeof ( Type ( MemoryBarrier ) ),
+            .pArray = pMemoryBarriers
+    };
+
+    auto bufferMemoryBarrierArrayPack = DumpedArray {
+            .pCount = & bufferMemoryBarrierCount,
+            .type   = ParameterType :: Structure,
+            .size   = sizeof ( Type ( BufferMemoryBarrier ) ),
+            .pArray = pBufferMemoryBarriers
+    };
+
+    auto imageMemoryBarrierArrayPack = DumpedArray {
+            .pCount = & imageMemoryBarrierCount,
+            .type   = ParameterType :: Structure,
+            .size   = sizeof ( Type ( ImageMemoryBarrier ) ),
+            .pArray = pImageMemoryBarriers
+    };
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: WaitCommandBufferEvent,
+            "vkCmdWaitEvents",
+            "Load a command buffer with a request to wait for a set of events before execution",
+            commandBufferHandle,
+            eventCount,
+            eventHandlesPack,
+            sourceFlagsPack,
+            destinationFlagsPack,
+            memoryBarrierCount,
+            memoryBarrierArrayPack,
+            bufferMemoryBarrierCount,
+            bufferMemoryBarrierArrayPack,
+            imageMemoryBarrierCount,
+            imageMemoryBarrierArrayPack
+    );
+
+#endif
+
     return APICaller.vkCmdWaitEvents (
             commandBufferHandle,
             eventCount,
@@ -3404,6 +4099,15 @@ auto engine :: vulkan :: queueWaitIdle (
         return ResultErrorIllegalArgument;
     }
 
+    auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkQueueWaitIdle",
+            "Waits until the queue is idle",
+            handle
+    );
+
 #endif
 
     return APICaller.vkQueueWaitIdle ( handle );
@@ -3420,6 +4124,15 @@ auto engine :: vulkan :: deviceWaitIdle (
     if ( handle == nullptr ) {
         return ResultErrorIllegalArgument;
     }
+
+    auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkDeviceWaitIdle",
+            "Waits until the device is idle",
+            handle
+    );
 
 #endif
 
@@ -3442,6 +4155,19 @@ auto engine :: vulkan :: commandBufferBeginRendering (
 #endif
 
     auto context = ContextManager :: acquire();
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: BeginCommandBufferRendering,
+            "vkCmdBeginRendering",
+            "Begins a dynamic rendering recording of a command buffer",
+            handle,
+            pRenderingInfo
+    );
+
+#endif
 
 #if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
@@ -3471,6 +4197,15 @@ auto engine :: vulkan :: commandBufferEndRendering (
     if ( handle == nullptr ) {
         return ResultErrorIllegalArgument;
     }
+
+    auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkCmdEndRendering",
+            "Ends a dynamic rendering recording of a command buffer",
+            handle
+    );
 
 #endif
 
@@ -3504,6 +4239,21 @@ auto engine :: vulkan :: createRenderPass (
 
     auto context = ContextManager :: acquire();
 
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: CreateRenderPass,
+            "vkCreateRenderPass",
+            "Creates a Render Pass Object",
+            deviceHandle,
+            pCreateInfo,
+            pAllocationCallbacks,
+            pHandle
+    );
+
+#endif
+
     return APICaller.vkCreateRenderPass (
             deviceHandle,
             prepareContext ( & context.data().create.renderPass, pCreateInfo ),
@@ -3531,6 +4281,21 @@ auto engine :: vulkan :: createRenderPass (
 
     auto context = ContextManager :: acquire();
 
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: CreateRenderPass2,
+            "vkCreateRenderPass2",
+            "Creates a Render Pass Object",
+            deviceHandle,
+            pCreateInfo,
+            pAllocationCallbacks,
+            pHandle
+    );
+
+#endif
+
     return APICaller.vkCreateRenderPass2 (
             deviceHandle,
             prepareContext ( & context.data().create.renderPass2, pCreateInfo ),
@@ -3552,6 +4317,17 @@ auto engine :: vulkan :: destroyRenderPass (
     if ( deviceHandle == nullptr || renderPassHandle == nullptr ) {
         return ResultErrorIllegalArgument;
     }
+
+    auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkDestroyRenderPass",
+            "Destroys a Render Pass Object",
+            deviceHandle,
+            renderPassHandle,
+            pAllocationCallbacks
+    );
 
 #endif
 
@@ -3581,6 +4357,21 @@ auto engine :: vulkan :: createFrameBuffer (
 
     auto context = ContextManager :: acquire();
 
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: CreateFrameBuffer,
+            "vkCreateFramebuffer",
+            "Creates a Frame Buffer Object",
+            deviceHandle,
+            pCreateInfo,
+            pAllocationCallbacks,
+            pHandle
+    );
+
+#endif
+
     return APICaller.vkCreateFramebuffer (
             deviceHandle,
             prepareContext ( & context.data().create.buffer.frame, pCreateInfo ),
@@ -3603,9 +4394,18 @@ auto engine :: vulkan :: destroyFrameBuffer (
         return ResultErrorIllegalArgument;
     }
 
-#endif
-
     auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkDestroyFramebuffer",
+            "Destroys a Frame Buffer Object",
+            deviceHandle,
+            handle,
+            pAllocationCallbacks
+    );
+
+#endif
 
     return APICaller.vkDestroyFramebuffer (
             deviceHandle,
@@ -3632,6 +4432,22 @@ auto engine :: vulkan :: commandBufferBeginRenderPass (
 
     auto context = ContextManager :: acquire();
 
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    auto contentsAsInt = static_cast < cds :: uint32 > ( subpassContents );
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: BeginRenderPass,
+            "vkCmdBeginRenderPass",
+            "Begins the recording of a render pass commands in a command buffer",
+            commandBufferHandle,
+            pInfo,
+            contentsAsInt
+    );
+
+#endif
+
     return APICaller.vkCmdBeginRenderPass (
             commandBufferHandle,
             prepareContext ( & context.data().begin.renderPass, pInfo ),
@@ -3657,6 +4473,20 @@ auto engine :: vulkan :: commandBufferBeginRenderPass (
 
     auto context = ContextManager :: acquire();
 
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: BeginRenderPass,
+            "vkCmdBeginRenderPass2",
+            "Begins the recording of a render pass commands in a command buffer",
+            commandBufferHandle,
+            pRenderPassBeginInfo,
+            pSubpassBeginInfo
+    );
+
+#endif
+
     return APICaller.vkCmdBeginRenderPass2 (
             commandBufferHandle,
             prepareContext ( & context.data().begin.renderPass, pRenderPassBeginInfo ),
@@ -3677,6 +4507,17 @@ auto engine :: vulkan :: getRenderAreaGranularity (
     if ( deviceHandle == nullptr || renderPassHandle == nullptr || pGranularity == nullptr ) {
         return ResultErrorIllegalArgument;
     }
+
+    auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkGetRenderAreaGranularity",
+            "Acquires the Render Area Granularity from a Render Pass",
+            deviceHandle,
+            renderPassHandle,
+            pGranularity
+    );
 
 #endif
 
@@ -3699,6 +4540,16 @@ auto engine :: vulkan :: commandBufferNextSubpass (
     if ( commandBufferHandle == nullptr ) {
         return ResultErrorIllegalArgument;
     }
+
+    auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkCmdNextSubpass",
+            "Loads a command buffer to jump to the next subpass upon execution",
+            commandBufferHandle,
+            contents
+    );
 
 #endif
 
@@ -3726,6 +4577,20 @@ auto engine :: vulkan :: commandBufferNextSubpass (
 
     auto context = ContextManager :: acquire();
 
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: NextSubpass,
+            "vkCmdNextSubpass2",
+            "Loads a command buffer to jump to the next subpass upon execution",
+            commandBufferHandle,
+            pBeginInfo,
+            pEndInfo
+    );
+
+#endif
+
     return APICaller.vkCmdNextSubpass2 (
             commandBufferHandle,
             prepareContext ( & context.data().other.nextSubpass, pBeginInfo ),
@@ -3744,6 +4609,15 @@ auto engine :: vulkan :: commandBufferEndRenderPass (
     if ( handle == nullptr ) {
         return ResultErrorIllegalArgument;
     }
+
+    auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkCmdEndRenderPass",
+            "Loads a command buffer to end a render pass upon execution",
+            handle
+    );
 
 #endif
 
@@ -3766,6 +4640,19 @@ auto engine :: vulkan :: commandBufferEndRenderPass (
 #endif
 
     auto context = ContextManager :: acquire();
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: NextSubpass,
+            "vkCmdEndRenderPass2",
+            "Loads a command buffer to ends a render pass upon execution",
+            handle,
+            pInfo
+    );
+
+#endif
 
     return APICaller.vkCmdEndRenderPass2 (
             handle,
@@ -3792,6 +4679,21 @@ auto engine :: vulkan :: createShaderModule (
 
     auto context = ContextManager :: acquire();
 
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: CreateShaderModule,
+            "vkCreateShaderModule",
+            "Creates a Shader Module Object",
+            deviceHandle,
+            pCreateInfo,
+            pAllocationCallbacks,
+            pShaderModuleHandle
+    );
+
+#endif
+
     return APICaller.vkCreateShaderModule (
             deviceHandle,
             prepareContext ( & context.data().create.shaderModule, pCreateInfo ),
@@ -3813,6 +4715,17 @@ auto engine :: vulkan :: destroyShaderModule (
     if ( deviceHandle == nullptr || shaderModuleHandle == nullptr ) {
         return ResultErrorIllegalArgument;
     }
+
+    auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkDestroyShaderModule",
+            "Destroys a Shader Module Object",
+            deviceHandle,
+            shaderModuleHandle,
+            pAllocationCallbacks
+    );
 
 #endif
 
@@ -3836,6 +4749,16 @@ auto engine :: vulkan :: commandBufferSetPatchControlPoints (
         return ResultErrorIllegalArgument;
     }
 
+    auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkCmdSetPatchControlPointsEXT",
+            "Loads a command buffer to execute a setting of patch control points upon execution",
+            commandBufferHandle,
+            patchControlPoints
+    );
+
 #endif
 
     return APICaller.vkCmdSetPatchControlPointsEXT ( commandBufferHandle, patchControlPoints );
@@ -3855,6 +4778,24 @@ auto engine :: vulkan :: getPhysicalDeviceCooperativeMatrixPropertiesNVidia (
         return ResultErrorIllegalArgument;
     }
 
+    auto context = ContextManager :: acquire();
+    auto arrayPack = DumpedArray {
+        .pCount = pCount,
+        .type   = ParameterType::Structure,
+        .size   = sizeof ( Type ( CooperativeMatrixPropertiesNVidia ) ),
+        .pArray = pProperties
+    };
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: GetPhysicalDeviceCooperativeMatrixProperties,
+            "vkGetPhysicalDeviceCooperativeMatrixPropertiesNV",
+            "Acquires the properties of cooperative matrices from a physical device",
+            physicalDeviceHandle,
+            pCount,
+            arrayPack
+    );
+
 #endif
 
     if ( pProperties == nullptr ) {
@@ -3873,7 +4814,11 @@ auto engine :: vulkan :: getPhysicalDeviceCooperativeMatrixPropertiesNVidia (
 
 #endif
 
+#if ! __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
     auto context = ContextManager :: acquire();
+
+#endif
 
     if (
             auto result = APICaller.vkGetPhysicalDeviceCooperativeMatrixPropertiesNV (
@@ -3911,6 +4856,21 @@ auto engine :: vulkan :: createValidationCache (
 
     auto context = ContextManager :: acquire();
 
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: CreateValidationCache,
+            "vkCreateValidationCacheEXT",
+            "Create Validation Cache",
+            deviceHandle,
+            pCreateInfo,
+            pAllocationCallbacks,
+            pHandle
+    );
+
+#endif
+
     return APICaller.vkCreateValidationCacheEXT (
             deviceHandle,
             toVulkanFormat ( & context.data().create.validationCache.createInfo, pCreateInfo ),
@@ -3933,6 +4893,24 @@ auto engine :: vulkan :: mergeValidationCache (
     if ( deviceHandle == nullptr || destinationCacheHandle == nullptr || sourceCacheCount == 0U || pSourceCacheHandles == nullptr ) {
         return ResultErrorIllegalArgument;
     }
+
+    auto context = ContextManager :: acquire();
+    auto arrayPack = DumpedArray {
+        .pCount = & sourceCacheCount,
+        .type   = ParameterType :: Handle,
+        .size   = sizeof ( Type ( ValidationCacheHandle ) ),
+        .pArray = pSourceCacheHandles
+    };
+
+    prepareDump (
+            context.data(),
+            "vkMergeValidationCachesEXT",
+            "Merges a set of validation caches Validation Cache",
+            deviceHandle,
+            destinationCacheHandle,
+            sourceCacheCount,
+            arrayPack
+    );
 
 #endif
 
@@ -3958,6 +4936,18 @@ auto engine :: vulkan :: getValidationCacheData (
     if ( deviceHandle == nullptr || validationCacheHandle == nullptr || pDataSize == nullptr ) {
         return ResultErrorIllegalArgument;
     }
+
+    auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkGetValidationCacheDataEXT",
+            "Gets the data from a validation cache",
+            deviceHandle,
+            validationCacheHandle,
+            pDataSize,
+            pData
+    );
 
 #endif
 
@@ -4002,6 +4992,17 @@ auto engine :: vulkan :: destroyValidationCache (
         return ResultErrorIllegalArgument;
     }
 
+    auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkDestroyValidationCacheEXT",
+            "Destroys a validation cache",
+            deviceHandle,
+            validationCacheHandle,
+            pAllocationCallbacks
+    );
+
 #endif
 
     return APICaller.vkDestroyValidationCacheEXT (
@@ -4037,6 +5038,37 @@ auto engine :: vulkan :: createComputePipelines (
 
     auto context = ContextManager :: acquire();
 
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    auto createInfosArrayPack = DumpedArray {
+        .pCount = & count,
+        .type   = ParameterType :: Structure,
+        .size   = sizeof ( Type ( ComputePipelineCreateInfo ) ),
+        .pArray = pCreateInfos
+    };
+
+    auto handlesArrayPack = DumpedArray {
+        .pCount = & count,
+        .type   = ParameterType :: Handle,
+        .size   = sizeof ( Type ( PipelineHandle ) ),
+        .pArray = pPipelineHandles
+    };
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: CreateComputePipeline,
+            "vkCreateComputePipelines",
+            "Creates a set of compute pipelines",
+            deviceHandle,
+            pipelineCacheHandle,
+            count,
+            createInfosArrayPack,
+            pAllocationCallbacks,
+            handlesArrayPack
+    );
+
+#endif
+
     if (
             auto result = APICaller.vkCreateComputePipelines (
                     deviceHandle,
@@ -4069,6 +5101,17 @@ auto engine :: vulkan :: getDeviceSubpassShadingMaxWorkgroupSizeHuawei (
         return ResultErrorIllegalArgument;
     }
 
+    auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkGetDeviceSubpassShadingMaxWorkgroupSizeHUAWEI",
+            "Acquires a device subpass shading max workgroup size",
+            deviceHandle,
+            renderPassHandle,
+            pMaxWorkgroupSize
+    );
+
 #endif
 
     return APICaller.vkGetDeviceSubpassShadingMaxWorkgroupSizeHUAWEI (
@@ -4098,6 +5141,37 @@ auto engine :: vulkan :: createGraphicsPipelines (
 #endif
 
     auto context = ContextManager :: acquire();
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    auto createInfosArrayPack = DumpedArray {
+            .pCount = & count,
+            .type   = ParameterType :: Structure,
+            .size   = sizeof ( Type ( GraphicsPipelineCreateInfo ) ),
+            .pArray = pCreateInfos
+    };
+
+    auto handlesArrayPack = DumpedArray {
+            .pCount = & count,
+            .type   = ParameterType :: Handle,
+            .size   = sizeof ( Type ( PipelineHandle ) ),
+            .pArray = pPipelineHandles
+    };
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: CreateGraphicsPipeline,
+            "vkCreateGraphicsPipelines",
+            "Creates a set of graphics pipelines",
+            deviceHandle,
+            pipelineCacheHandle,
+            count,
+            createInfosArrayPack,
+            pAllocationCallbacks,
+            handlesArrayPack
+    );
+
+#endif
 
     if (
             auto result = APICaller.vkCreateGraphicsPipelines (
@@ -4137,6 +5211,37 @@ auto engine :: vulkan :: createRayTracingPipelinesNVidia (
 #endif
 
     auto context = ContextManager :: acquire();
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    auto createInfosArrayPack = DumpedArray {
+            .pCount = & count,
+            .type   = ParameterType :: Structure,
+            .size   = sizeof ( Type ( RayTracingPipelineCreateInfoNVidia ) ),
+            .pArray = pCreateInfos
+    };
+
+    auto handlesArrayPack = DumpedArray {
+            .pCount = & count,
+            .type   = ParameterType :: Handle,
+            .size   = sizeof ( Type ( PipelineHandle ) ),
+            .pArray = pPipelineHandles
+    };
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: CreateRayTracingPipelineNVidia,
+            "vkCreateRayTracingPipelinesNV",
+            "Creates a set of ray tracing pipelines",
+            deviceHandle,
+            pipelineCacheHandle,
+            count,
+            createInfosArrayPack,
+            pAllocationCallbacks,
+            handlesArrayPack
+    );
+
+#endif
 
     if (
             auto result = APICaller.vkCreateRayTracingPipelinesNV (
@@ -4178,6 +5283,38 @@ auto engine :: vulkan :: createRayTracingPipelines (
 
     auto context = ContextManager :: acquire();
 
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    auto createInfosArrayPack = DumpedArray {
+            .pCount = & count,
+            .type   = ParameterType :: Structure,
+            .size   = sizeof ( Type ( RayTracingPipelineCreateInfo ) ),
+            .pArray = pCreateInfos
+    };
+
+    auto handlesArrayPack = DumpedArray {
+            .pCount = & count,
+            .type   = ParameterType :: Handle,
+            .size   = sizeof ( Type ( PipelineHandle ) ),
+            .pArray = pPipelineHandles
+    };
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: CreateRayTracingPipeline,
+            "vkCreateRayTracingPipelines",
+            "Creates a set of ray tracing pipelines",
+            deviceHandle,
+            deferredOperationHandle,
+            pipelineCacheHandle,
+            count,
+            createInfosArrayPack,
+            pAllocationCallbacks,
+            handlesArrayPack
+    );
+
+#endif
+
     if (
             auto result = APICaller.vkCreateRayTracingPipelinesKHR (
                     deviceHandle,
@@ -4214,6 +5351,20 @@ auto engine :: vulkan :: getRayTracingShaderGroupHandles (
         return ResultErrorIllegalArgument;
     }
 
+    auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkGetRayTracingShaderGroupHandlesKHR",
+            "Acquires a ray tracing pipeline's shader group handles",
+            deviceHandle,
+            pipelineHandle,
+            firstGroup,
+            groupCount,
+            dataSize,
+            pData
+    );
+
 #endif
 
     return APICaller.vkGetRayTracingShaderGroupHandlesKHR (
@@ -4243,6 +5394,20 @@ auto engine :: vulkan :: getRayTracingCaptureReplayShaderGroupHandles (
         return ResultErrorIllegalArgument;
     }
 
+    auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkGetRayTracingCaptureReplayShaderGroupHandlesKHR",
+            "Acquires a ray tracing pipeline's capture replay shader group handles",
+            deviceHandle,
+            pipelineHandle,
+            firstGroup,
+            groupCount,
+            dataSize,
+            pData
+    );
+
 #endif
 
     return APICaller.vkGetRayTracingCaptureReplayShaderGroupHandlesKHR (
@@ -4269,6 +5434,17 @@ auto engine :: vulkan :: compileDeferredNVidia (
         return ResultErrorIllegalArgument;
     }
 
+    auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkCompileDeferredNV",
+            "Set a shader index to be deferredly compiled",
+            deviceHandle,
+            pipelineHandle,
+            shader
+    );
+
 #endif
 
     return APICaller.vkCompileDeferredNV (
@@ -4293,6 +5469,19 @@ auto engine :: vulkan :: getRayTracingShaderGroupStackSize (
     if ( deviceHandle == nullptr || pipelineHandle == nullptr || pSize == nullptr ) {
         return ResultErrorIllegalArgument;
     }
+
+    auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkGetRayTracingShaderGroupStackSizeKHR",
+            "Acquire the stack size of a shader group of a pipeline",
+            deviceHandle,
+            pipelineHandle,
+            group,
+            groupShader,
+            pSize
+    );
 
 #endif
 
@@ -4328,6 +5517,16 @@ auto engine :: vulkan :: commandBufferSetRayTracingPipelineStackSize (
         return ResultErrorIllegalArgument;
     }
 
+    auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkCmdSetRayTracingPipelineStackSizeKHR",
+            "Load a command buffer to set the stack size of a pipeline upon execution",
+            commandBufferHandle,
+            pipelineStackSize
+    );
+
 #endif
 
     return APICaller.vkCmdSetRayTracingPipelineStackSizeKHR (
@@ -4349,6 +5548,17 @@ auto engine :: vulkan :: destroyPipeline (
     if ( deviceHandle == nullptr || pipelineHandle == nullptr ) {
         return ResultErrorIllegalArgument;
     }
+
+    auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkDestroyPipeline",
+            "Destroys a pipeline object",
+            deviceHandle,
+            pipelineHandle,
+            pAllocationCallbacks
+    );
 
 #endif
 
@@ -4378,6 +5588,20 @@ auto engine :: vulkan :: createPipelineCache (
 
     auto context = ContextManager :: acquire();
 
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    prepareDump (
+            context.data(),
+            "vkCreatePipelineCache",
+            "Creates a pipeline cache object",
+            deviceHandle,
+            pCreateInfo,
+            pAllocationCallbacks,
+            pHandle
+    );
+
+#endif
+
     return APICaller.vkCreatePipelineCache (
             deviceHandle,
             prepareContext ( & context->create.pipeline.cache, pCreateInfo ),
@@ -4400,6 +5624,24 @@ auto engine :: vulkan :: mergePipelineCaches (
     if ( deviceHandle == nullptr || destinationCacheHandle == nullptr || pSourceCacheHandles == nullptr || sourceCacheCount == 0U ) {
         return ResultErrorIllegalArgument;
     }
+
+    auto context = ContextManager :: acquire();
+    auto arrayPack = DumpedArray {
+        .pCount = & sourceCacheCount,
+        .type   = ParameterType :: Handle,
+        .size   = sizeof ( Type ( PipelineCacheHandle ) ),
+        .pArray = pSourceCacheHandles
+    };
+
+    prepareDump (
+            context.data(),
+            "vkMergePipelineCaches",
+            "Merges a set of pipeline caches",
+            deviceHandle,
+            destinationCacheHandle,
+            sourceCacheCount,
+            arrayPack
+    );
 
 #endif
 
@@ -4425,6 +5667,18 @@ auto engine :: vulkan :: getPipelineCacheData (
     if ( deviceHandle == nullptr || cacheHandle == nullptr || pSize == nullptr ) {
         return ResultErrorIllegalArgument;
     }
+
+    auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkGetPipelineCacheData",
+            "Gets the data of a pipeline cache",
+            deviceHandle,
+            cacheHandle,
+            pSize,
+            pData
+    );
 
 #endif
 
@@ -4471,6 +5725,17 @@ auto engine :: vulkan :: destroyPipelineCache (
         return ResultErrorIllegalArgument;
     }
 
+    auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkDestroyPipelineCache",
+            "Destroys a pipeline cache",
+            deviceHandle,
+            cacheHandle,
+            pAllocationCallbacks
+    );
+
 #endif
 
     return APICaller.vkDestroyPipelineCache (
@@ -4493,6 +5758,17 @@ auto engine :: vulkan :: commandBufferBindPipeline (
     if ( commandBufferHandle == nullptr || pipelineHandle == nullptr ) {
         return ResultErrorIllegalArgument;
     }
+
+    auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkCmdBindPipeline",
+            "Binds a pipeline to be used by the GPU upon a command buffer's execution",
+            commandBufferHandle,
+            bindPoint,
+            pipelineHandle
+    );
 
 #endif
 
@@ -4517,6 +5793,18 @@ auto engine :: vulkan :: commandBufferBindPipelineShaderGroup (
     if ( commandBufferHandle == nullptr || pipelineHandle == nullptr ) {
         return ResultErrorIllegalArgument;
     }
+
+    auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkCmdBindPipelineShaderGroupNV",
+            "Binds a pipeline shader group to be used by the GPU upon a command buffer's execution",
+            commandBufferHandle,
+            bindPoint,
+            pipelineHandle,
+            groupIndex
+    );
 
 #endif
 
@@ -4546,6 +5834,28 @@ auto engine :: vulkan :: getPipelineExecutableProperties (
 #endif
 
     auto context = ContextManager :: acquire();
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    auto arrayPack = DumpedArray {
+        .pCount = pCount,
+        .type   = ParameterType :: Structure,
+        .size   = sizeof ( Type ( PipelineExecutableProperties ) ),
+        .pArray = pProperties
+    };
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: GetPipelineProperties,
+            "vkGetPipelineExecutablePropertiesKHR",
+            "Acquires a pipeline's executable properties",
+            deviceHandle,
+            pPipelineInfo,
+            pCount,
+            arrayPack
+    );
+
+#endif
 
     if ( pProperties == nullptr ) {
         return APICaller.vkGetPipelineExecutablePropertiesKHR (
@@ -4598,6 +5908,28 @@ auto engine :: vulkan :: getPipelineExecutableStatistics (
 
     auto context = ContextManager :: acquire();
 
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    auto arrayPack = DumpedArray {
+            .pCount = pCount,
+            .type   = ParameterType :: Structure,
+            .size   = sizeof ( Type ( PipelineExecutableStatistic ) ),
+            .pArray = pStatistics
+    };
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: GetPipelineStatistics,
+            "vkGetPipelineExecutableStatisticsKHR",
+            "Acquires a pipeline's executable statistics",
+            deviceHandle,
+            pPipelineExecutableInfo,
+            pCount,
+            arrayPack
+    );
+
+#endif
+
     if ( pStatistics == nullptr ) {
         return APICaller.vkGetPipelineExecutableStatisticsKHR (
                 deviceHandle,
@@ -4649,6 +5981,28 @@ auto engine :: vulkan :: getPipelineExecutableInternalRepresentations (
 
     auto context = ContextManager :: acquire();
 
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    auto arrayPack = DumpedArray {
+            .pCount = pCount,
+            .type   = ParameterType :: Structure,
+            .size   = sizeof ( Type ( PipelineExecutableInternalRepresentation ) ),
+            .pArray = pRepresentations
+    };
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: GetPipelineInternalRepresentations,
+            "vkGetPipelineExecutableInternalRepresentationsKHR",
+            "Acquires a pipeline's executable internal reprepsentations",
+            deviceHandle,
+            pPipelineExecutableInfo,
+            pCount,
+            arrayPack
+    );
+
+#endif
+
     if ( pRepresentations == nullptr ) {
         return APICaller.vkGetPipelineExecutableInternalRepresentationsKHR (
                 deviceHandle,
@@ -4697,6 +6051,19 @@ auto engine :: vulkan :: getShaderInfoAMD (
     if ( deviceHandle == nullptr || pipelineHandle == nullptr || pDataSize == nullptr ) {
         return ResultErrorIllegalArgument;
     }
+
+    auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkGetShaderInfoAMD",
+            "Acquires Shader Information",
+            deviceHandle,
+            pipelineHandle,
+            shaderStage,
+            pDataSize,
+            pData
+    );
 
 #endif
 
@@ -4789,6 +6156,18 @@ auto engine :: vulkan :: getPhysicalDeviceMemoryProperties (
 
     auto context = ContextManager :: acquire();
 
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    prepareDump (
+            context.data(),
+            "vkGetPhysicalDeviceMemoryProperties2",
+            "Acquires Physical Device Memory Properties",
+            physicalDeviceHandle,
+            pProperties
+    );
+
+#endif
+
     if (
             auto result = APICaller.vkGetPhysicalDeviceMemoryProperties2 (
                     physicalDeviceHandle,
@@ -4821,6 +6200,20 @@ auto engine :: vulkan :: allocateMemory (
 
     auto context = ContextManager :: acquire();
 
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    prepareDump (
+            context.data(),
+            "vkAllocateMemory",
+            "Allocates host/device memory",
+            deviceHandle,
+            pAllocateInfo,
+            pAllocationCallbacks,
+            pHandle
+    );
+
+#endif
+
     return APICaller.vkAllocateMemory (
             deviceHandle,
             prepareContext ( & context->allocate.memory, pAllocateInfo ),
@@ -4842,6 +6235,17 @@ auto engine :: vulkan :: setDeviceMemoryPriority (
     if ( deviceHandle == nullptr || memoryHandle == nullptr ) {
         return ResultErrorIllegalArgument;
     }
+
+    auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkSetDeviceMemoryPriorityEXT",
+            "Sets host/device memory priority",
+            deviceHandle,
+            memoryHandle,
+            priority
+    );
 
 #endif
 
@@ -4870,7 +6274,21 @@ auto engine :: vulkan :: getMemoryWin32Handle (
 
     auto context = ContextManager :: acquire ();
 
-    return APICaller.vkGetMemoryWin32Handle (
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: GetMemoryWin32
+            "vkGetMemoryWin32HandleKHR",
+            "Acquires a win32 external memory handle",
+            deviceHandle,
+            pInfo,
+            pHandle
+    );
+
+#endif
+
+    return APICaller.vkGetMemoryWin32HandleKHR (
             deviceHandle,
             toVulkanFormat ( & context->get.memory.win32.info, pInfo ),
             pHandle
@@ -4891,6 +6309,18 @@ auto engine :: vulkan :: getMemoryWin32HandleNVidia (
     if ( deviceHandle == nullptr || memoryHandle == nullptr || pHandle == nullptr ) {
         return ResultErrorIllegalArgument;
     }
+
+    auto context = ContextManager :: acquire ();
+
+    prepareDump (
+            context.data(),
+            "vkGetMemoryWin32HandleNV",
+            "Acquires a win32 external memory handle",
+            deviceHandle,
+            memoryHandle,
+            type,
+            pHandle
+    );
 
 #endif
 
@@ -4921,8 +6351,23 @@ auto engine :: vulkan :: getMemoryWin32HandleProperties (
 
     auto context = ContextManager :: acquire ();
 
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: GetMemoryWin32
+            "vkGetMemoryWin32HandlePropertiesKHR",
+            "Acquires a win32 external memory handle properties",
+            deviceHandle,
+            type,
+            handle,
+            pProperties
+    );
+
+#endif
+
     if (
-            auto result = APICaller.vkGetMemoryWin32Handle (
+            auto result = APICaller.vkGetMemoryWin32HandlePropertiesKHR (
                     deviceHandle,
                     static_cast < VkExternalMemoryHandleTypeFlagBits > ( type ),
                     handle
@@ -4954,6 +6399,20 @@ auto engine :: vulkan :: getMemoryFd (
 
     auto context = ContextManager :: acquire ();
 
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: GetMemoryFd,
+            "vkGetMemoryFdKHR",
+            "Acquires a fd external memory handle",
+            deviceHandle,
+            pInfo,
+            pFd
+    );
+
+#endif
+
     return APICaller.vkGetMemoryFdKHR (
             deviceHandle,
             toVulkanFormat ( & context->get.memory.fd.info, pInfo ),
@@ -4980,8 +6439,23 @@ auto engine :: vulkan :: getMemoryFdProperties (
 
     auto context = ContextManager :: acquire ();
 
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: GetMemoryFd,
+            "vkGetMemoryFdPropertiesKHR",
+            "Acquires a fd external memory handle properties",
+            deviceHandle,
+            type,
+            fd,
+            pProperties
+    );
+
+#endif
+
     if (
-            auto result = APICaller.vkGetMemoryFdPropertiesKHR(
+            auto result = APICaller.vkGetMemoryFdPropertiesKHR (
                     deviceHandle,
                     static_cast < VkExternalMemoryHandleTypeFlagBits > ( type ),
                     fd,
@@ -5013,6 +6487,21 @@ auto engine :: vulkan :: getMemoryHostPointerProperties (
 #endif
 
     auto context = ContextManager :: acquire ();
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: GetMemoryPlatformIndependent,
+            "vkGetMemoryHostPointerPropertiesEXT",
+            "Acquires a host pointer's memory properties",
+            deviceHandle,
+            type,
+            pHostPointer,
+            pProperties
+    );
+
+#endif
 
     if (
             auto result = APICaller.vkGetMemoryHostPointerPropertiesEXT (
@@ -5047,6 +6536,20 @@ auto engine :: vulkan :: getMemoryRemoteAddressNVidia (
 
     auto context = ContextManager :: acquire ();
 
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: GetMemoryPlatformIndependent,
+            "vkGetMemoryRemoteAddressNV",
+            "Acquires a remote memory address",
+            deviceHandle,
+            pInfo,
+            pAddress
+    );
+
+#endif
+
     return APICaller.vkGetMemoryRemoteAddressNV (
             deviceHandle,
             toVulkanFormat ( & context->get.memory.platformIndependent.remoteAddress, pInfo ),
@@ -5067,6 +6570,17 @@ auto engine :: vulkan :: freeMemory (
     if ( deviceHandle == nullptr || pAllocationCallbacks == nullptr ) {
         return ResultErrorIllegalArgument;
     }
+
+    auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkFreeMemory",
+            "Frees host/device memory",
+            deviceHandle,
+            memoryHandle,
+            pAllocationCallbacks
+    );
 
 #endif
 
@@ -5093,6 +6607,20 @@ auto engine :: vulkan :: mapMemory (
     if ( deviceHandle == nullptr || memoryHandle == nullptr || ppData == nullptr ) {
         return ResultErrorIllegalArgument;
     }
+
+    auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkMapMemory",
+            "Maps memory to given layout",
+            deviceHandle,
+            memoryHandle,
+            offset,
+            size,
+            flags,
+            ppData
+    );
 
 #endif
 
@@ -5124,6 +6652,27 @@ auto engine :: vulkan :: flushMappedMemoryRanges (
 
     auto context = ContextManager :: acquire();
 
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    auto arrayPack = DumpedArray {
+        .pCount = & memoryRangeCount,
+        .type   = ParameterType :: Structure,
+        .size   = sizeof ( Type ( MappedMemoryRange ) ),
+        .pArray = pMemoryRanges
+    };
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: FlushMappedMemoryRanges,
+            "vkFlushMappedMemoryRanges",
+            "Flushes mapped memory ranges",
+            deviceHandle,
+            memoryRangeCount,
+            arrayPack
+    );
+
+#endif
+
     return APICaller.vkFlushMappedMemoryRanges (
             deviceHandle,
             memoryRangeCount,
@@ -5149,6 +6698,27 @@ auto engine :: vulkan :: invalidateMappedMemoryRanges (
 
     auto context = ContextManager :: acquire();
 
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    auto arrayPack = DumpedArray {
+            .pCount = & memoryRangeCount,
+            .type   = ParameterType :: Structure,
+            .size   = sizeof ( Type ( MappedMemoryRange ) ),
+            .pArray = pMemoryRanges
+    };
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: FlushMappedMemoryRanges,
+            "vkInvalidateMappedMemoryRanges",
+            "Invalidates mapped memory ranges",
+            deviceHandle,
+            memoryRangeCount,
+            arrayPack
+    );
+
+#endif
+
     return APICaller.vkInvalidateMappedMemoryRanges (
             deviceHandle,
             memoryRangeCount,
@@ -5168,6 +6738,16 @@ auto engine :: vulkan :: unmapMemory (
     if ( deviceHandle == nullptr || deviceMemoryHandle == nullptr ) {
         return ResultErrorIllegalArgument;
     }
+
+    auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkUnmapMemory",
+            "Unmaps memory",
+            deviceHandle,
+            deviceMemoryHandle
+    );
 
 #endif
 
@@ -5190,6 +6770,17 @@ auto engine :: vulkan :: getDeviceMemoryCommitment (
     if ( deviceHandle == nullptr || deviceMemoryHandle == nullptr || pCommittedMemoryInBytes == nullptr ) {
         return ResultErrorIllegalArgument;
     }
+
+    auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkGetDeviceMemoryCommitment",
+            "Acquire device memory commitment",
+            deviceHandle,
+            deviceMemoryHandle,
+            pCommittedMemoryInBytes
+    );
 
 #endif
 
@@ -5215,6 +6806,19 @@ auto engine :: vulkan :: getDeviceGroupPeerMemoryFeatures (
     if ( deviceHandle == nullptr || pPeerMemoryFeatures == nullptr ) {
         return ResultErrorIllegalArgument;
     }
+
+    auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkGetDeviceGroupPeerMemoryFeatures",
+            "Acquire device group peer memory features",
+            deviceHandle,
+            heapIndex,
+            localDeviceIndex,
+            remoteDeviceIndex,
+            pPeerMemoryFeatures
+    );
 
 #endif
 
@@ -5244,6 +6848,20 @@ auto engine :: vulkan :: getDeviceMemoryOpaqueCaptureAddress (
 #endif
 
     auto context = ContextManager :: acquire();
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: GetMemoryPlatformIndependent,
+            "vkGetDeviceMemoryOpaqueCaptureAddress",
+            "Acquire device group opaque capture address",
+            deviceHandle,
+            pInfo,
+            pResult
+    );
+
+#endif
 
     uint64_t result;
 
@@ -5280,6 +6898,21 @@ auto engine :: vulkan :: createBuffer (
 
     auto context = ContextManager :: acquire();
 
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: CreateBuffer,
+            "vkCreateBuffer",
+            "Creates a Buffer Object",
+            deviceHandle,
+            pCreateInfo,
+            pAllocationCallbacks,
+            pHandle
+    );
+
+#endif
+
     return APICaller.vkCreateBuffer (
             deviceHandle,
             prepareContext ( & context->create.buffer.buffer, pCreateInfo ),
@@ -5302,9 +6935,18 @@ auto engine :: vulkan :: destroyBuffer (
         return ResultErrorIllegalArgument;
     }
 
-#endif
-
     auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkDestroyBuffer",
+            "Destroys a Buffer Object",
+            deviceHandle,
+            bufferHandle,
+            pAllocationCallbacks
+    );
+
+#endif
 
     return APICaller.vkDestroyBuffer (
             deviceHandle,
@@ -5332,6 +6974,21 @@ auto engine :: vulkan :: createBufferView (
 
     auto context = ContextManager :: acquire();
 
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: CreateBufferView,
+            "vkCreateBufferView",
+            "Creates a Buffer View Object",
+            deviceHandle,
+            pCreateInfo,
+            pAllocationCallbacks,
+            pHandle
+    );
+
+#endif
+
     return APICaller.vkCreateBufferView (
             deviceHandle,
             toVulkanFormat ( & context->create.buffer.view.createInfo, pCreateInfo ),
@@ -5353,6 +7010,17 @@ auto engine :: vulkan :: destroyBufferView (
     if ( deviceHandle == nullptr || viewHandle == nullptr ) {
         return ResultErrorIllegalArgument;
     }
+
+    auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkDestroyBufferView",
+            "Destroys a Buffer View Object",
+            deviceHandle,
+            viewHandle,
+            pAllocationCallbacks
+    );
 
 #endif
 
@@ -5382,6 +7050,21 @@ auto engine :: vulkan :: createImage (
 
     auto context = ContextManager :: acquire();
 
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: CreateImage,
+            "vkCreateImage",
+            "Creates an Image Object",
+            deviceHandle,
+            pCreateInfo,
+            pAllocationCallbacks,
+            pHandle
+    );
+
+#endif
+
     return APICaller.vkCreateImage (
             deviceHandle,
             prepareContext ( & context->create.image.image, pCreateInfo ),
@@ -5408,6 +7091,21 @@ auto engine :: vulkan :: getImageSubresourceLayout (
 #endif
 
     auto context = ContextManager :: acquire();
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: GetImageSubresourceLayout,
+            "vkGetImageSubresourceLayout",
+            "Acquires an image's subresource layout",
+            deviceHandle,
+            imageHandle,
+            pSubresource,
+            pLayout
+    );
+
+#endif
 
     if (
             auto result = APICaller.vkGetImageSubresourceLayout (
@@ -5442,6 +7140,20 @@ auto engine :: vulkan :: getImageDrmFormatModifierProperties (
 
     auto context = ContextManager :: acquire();
 
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: GetImageDrmFormatModifierProperties,
+            "vkGetImageDrmFormatModifierPropertiesEXT",
+            "Acquires an image's drm format modifier properties",
+            deviceHandle,
+            imageHandle,
+            pProperties
+    );
+
+#endif
+
     if (
             auto result = APICaller.vkGetImageDrmFormatModifierPropertiesEXT (
                     deviceHandle,
@@ -5470,6 +7182,17 @@ auto engine :: vulkan :: destroyImage (
         return ResultErrorIllegalArgument;
     }
 
+    auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkDestroyImage",
+            "Destroys an Image Object",
+            deviceHandle,
+            imageHandle,
+            pAllocationCallbacks
+    );
+
 #endif
 
     return APICaller.vkDestroyImage (
@@ -5496,9 +7219,26 @@ auto engine :: vulkan :: createAccelerationStructureNVidia (
 
 #endif
 
+    auto context = ContextManager :: acquire();
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: CreateAccelerationStructureNVidia,
+            "vkCreateAccelerationStructureNV",
+            "Creates an acceleration structure",
+            deviceHandle,
+            pCreateInfo,
+            pAllocationCallbacks,
+            pHandle
+    );
+
+#endif
+
     return APICaller.vkCreateAccelerationStructureNV (
             deviceHandle,
-            prepareContext ( & ContextManager :: acquire()->create.accelerationStructure.nvidia, pCreateInfo ),
+            prepareContext ( & context->create.accelerationStructure.nvidia, pCreateInfo ),
             AllocatorHandler :: apply ( pAllocationCallbacks ),
             pHandle
     );
@@ -5521,9 +7261,26 @@ auto engine :: vulkan :: createAccelerationStructure (
 
 #endif
 
+    auto context = ContextManager :: acquire();
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: CreateAccelerationStructureKhronos,
+            "vkCreateAccelerationStructureKHR",
+            "Creates an acceleration structure",
+            deviceHandle,
+            pCreateInfo,
+            pAllocationCallbacks,
+            pHandle
+    );
+
+#endif
+
     return APICaller.vkCreateAccelerationStructureKHR (
             deviceHandle,
-            prepareContext ( & ContextManager :: acquire()->create.accelerationStructure.khronos, pCreateInfo ),
+            prepareContext ( & context->create.accelerationStructure.khronos, pCreateInfo ),
             AllocatorHandler :: apply ( pAllocationCallbacks ),
             pHandle
     );
@@ -5548,6 +7305,22 @@ auto engine :: vulkan :: getAccelerationStructureBuildSizes (
 #endif
 
     auto context = ContextManager :: acquire();
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: GetAccelerationStructureBuildSizes,
+            "vkGetAccelerationStructureBuildSizesKHR",
+            "Acquires an acceleration structure's build sizes",
+            deviceHandle,
+            buildType,
+            pBuildInfo,
+            pMaxPrimitiveCounts,
+            pSizeInfo
+    );
+
+#endif
 
     if (
             auto result = APICaller.vkGetAccelerationStructureBuildSizesKHR (
@@ -5579,6 +7352,17 @@ auto engine :: vulkan :: destroyAccelerationStructureNVidia (
         return ResultErrorIllegalArgument;
     }
 
+    auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkDestroyAccelerationStructureNV",
+            "Destroys an acceleration structure",
+            deviceHandle,
+            accelerationStructureHandle,
+            pAllocationCallbacks
+    );
+
 #endif
 
     return APICaller.vkDestroyAccelerationStructureNV (
@@ -5601,6 +7385,17 @@ auto engine :: vulkan :: destroyAccelerationStructure (
     if ( deviceHandle == nullptr || accelerationStructureHandle == nullptr ) {
         return ResultErrorIllegalArgument;
     }
+
+    auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkDestroyAccelerationStructureKHR",
+            "Destroys an acceleration structure",
+            deviceHandle,
+            accelerationStructureHandle,
+            pAllocationCallbacks
+    );
 
 #endif
 
@@ -5628,6 +7423,20 @@ auto engine :: vulkan :: getAccelerationStructureMemoryRequirementsNVidia (
 #endif
 
     auto context = ContextManager :: acquire();
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: GetAccelerationStructureBuildSizes,
+            "vkGetAccelerationStructureMemoryRequirementsNV",
+            "Acquires an acceleration structure's memory requirements",
+            deviceHandle,
+            pInfo,
+            pRequirements
+    );
+
+#endif
 
     if (
             auto result = APICaller.vkGetAccelerationStructureMemoryRequirementsNV (
@@ -5659,10 +7468,33 @@ auto engine :: vulkan :: bindAccelerationStructureMemoryNVidia (
 
 #endif
 
+    auto context = ContextManager :: acquire();
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    auto arrayPack = DumpedArray {
+        .pCount = & count,
+        .type   = ParameterType :: Structure,
+        .size   = sizeof ( Type ( BindAccelerationStructureMemoryInfoNVidia ) ),
+        .pArray = pInfos
+    };
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: BindAccelerationStructureMemory,
+            "vkBindAccelerationStructureMemoryNV",
+            "Binds an acceleration structure's memory",
+            deviceHandle,
+            count,
+            arrayPack
+    );
+
+#endif
+
     return APICaller.vkBindAccelerationStructureMemoryNV (
             deviceHandle,
             count,
-            prepareContext ( & ContextManager :: acquire()->bind.accelerationStructureMemory, count, & pInfos[0] )
+            prepareContext ( & context->bind.accelerationStructureMemory, count, & pInfos[0] )
     );
 }
 #endif
@@ -5680,6 +7512,18 @@ auto engine :: vulkan :: getAccelerationStructureHandleNVidia (
     if ( deviceHandle == nullptr || accelerationStructureHandle == nullptr || pData == nullptr ) {
         return ResultErrorIllegalArgument;
     }
+
+    auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkGetAccelerationStructureHandleNV",
+            "Gets an acceleration structure's Handle",
+            deviceHandle,
+            accelerationStructureHandle,
+            dataSize,
+            pData
+    );
 
 #endif
 
@@ -5707,10 +7551,26 @@ auto engine :: vulkan :: getAccelerationStructureDeviceAddress (
 
 #endif
 
+    auto context = ContextManager :: acquire();
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: GetAccelerationStructureDeviceAddress,
+            "vkGetAccelerationStructureDeviceAddressKHR",
+            "Acquires an acceleration structure's device address",
+            deviceHandle,
+            pInfo,
+            pResult
+    );
+
+#endif
+
     return APICaller.vkGetAccelerationStructureDeviceAddressKHR (
             pResult,
             deviceHandle,
-            toVulkanFormat ( & ContextManager :: acquire()->get.accelerationStructure.deviceAddress.info, pInfo )
+            toVulkanFormat ( & context->get.accelerationStructure.deviceAddress.info, pInfo )
     );
 }
 #endif

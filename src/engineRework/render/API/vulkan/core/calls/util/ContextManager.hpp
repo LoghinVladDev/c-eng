@@ -9,6 +9,7 @@
 #include <CDS/Mutex>
 #include <CDS/LockGuard>
 #include <CDS/Long>
+#include <CDS/Double>
 #include <Logger.hpp>
 
 #define C_ENG_MAP_START     HEADER
@@ -271,47 +272,66 @@ inline static auto paramToString (
 ) noexcept -> cds :: String {
 
     switch ( parameter.type ) {
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
         case ParameterType :: BoolPtr: {
-            auto pValue = * reinterpret_cast < bool ** > ( parameter.pParam );
+            auto pValue = * reinterpret_cast < bool * const * > ( parameter.pParam );
             return "0x" + cds :: Long ( reinterpret_cast < cds :: uint64 > ( pValue ) ).toString(16) +
                    ", value = " + ( pValue == nullptr ? "null"_s : ( * reinterpret_cast < bool * > ( pValue ) ? "true" : "false" ) );
         }
+
         case ParameterType :: UInt32Ptr: {
-            auto pValue = * reinterpret_cast < cds :: uint32 ** > ( parameter.pParam );
+            auto pValue = * reinterpret_cast < cds :: uint32 * const * > ( parameter.pParam );
             return "0x" + cds :: Long ( reinterpret_cast < cds :: uint64 > ( pValue ) ).toString(16) +
                    ", value = " + ( pValue == nullptr ? "null"_s : cds :: Long ( * reinterpret_cast < cds :: uint32 * > ( pValue ) ).toString() );
         }
 
         case ParameterType :: UInt32: {
-            auto pValue = reinterpret_cast < cds :: uint32 * > ( parameter.pParam );
+            auto pValue = reinterpret_cast < cds :: uint32 const * > ( parameter.pParam );
+            return ( pValue == nullptr ? "null"_s : cds :: Long ( * pValue ).toString() );
+        }
+
+        case ParameterType :: Float: {
+            auto pValue = reinterpret_cast < float const * > ( parameter.pParam );
+            return ( pValue == nullptr ? "null"_s : cds :: Double ( * pValue ).toString() );
+        }
+
+        case ParameterType :: UInt64Ptr: {
+            auto pValue = * reinterpret_cast < cds :: uint64 * const * > ( parameter.pParam );
+            return "0x" + cds :: Long ( reinterpret_cast < cds :: uint64 > ( pValue ) ).toString(16) +
+                   ", value = " + ( pValue == nullptr ? "null"_s : cds :: Long ( * reinterpret_cast < cds :: uint64 * > ( pValue ) ).toString() );
+        }
+
+        case ParameterType :: UInt64: {
+            auto pValue = reinterpret_cast < cds :: uint64 const * > ( parameter.pParam );
             return ( pValue == nullptr ? "null"_s : cds :: Long ( * pValue ).toString() );
         }
 
         case ParameterType :: StringLiteral: {
-            auto pValue = * reinterpret_cast < cds :: StringLiteral * > ( parameter.pParam );
+            auto pValue = * reinterpret_cast < cds :: StringLiteral const * > ( parameter.pParam );
             return pValue == nullptr ? "null" : pValue;
         }
 
         case ParameterType :: AllocationCallbacksPtr: {
-            auto pAllocationCallbacks = * reinterpret_cast < engine :: vulkan :: Type ( AllocationCallbacks ) const ** > ( parameter.pParam );
+            auto pAllocationCallbacks = * reinterpret_cast < engine :: vulkan :: Type ( AllocationCallbacks ) const * const * > ( parameter.pParam );
             return "0x" + cds :: Long ( reinterpret_cast < cds :: uint64 > ( pAllocationCallbacks ) ).toString(16) +
                     " -> " + ( pAllocationCallbacks == nullptr ? "null"_s : engine :: vulkan :: toString ( * pAllocationCallbacks ) );
         }
 
         case ParameterType :: PhysicalDevicePropertiesPtr: {
-            auto pStructure = * reinterpret_cast < engine :: vulkan :: Type ( PhysicalDeviceProperties ) const ** > ( parameter.pParam );
+            auto pStructure = * reinterpret_cast < engine :: vulkan :: Type ( PhysicalDeviceProperties ) const * const * > ( parameter.pParam );
             return "0x" + cds :: Long ( reinterpret_cast < cds :: uint64 > ( pStructure ) ).toString(16) +
                     " -> " + ( pStructure == nullptr ? "null"_s : engine :: vulkan :: toString ( * pStructure ) );
         }
 
         case ParameterType :: PhysicalDeviceFeaturesPtr: {
-            auto pStructure = * reinterpret_cast < engine :: vulkan :: Type ( PhysicalDeviceFeatures ) const ** > ( parameter.pParam );
+            auto pStructure = * reinterpret_cast < engine :: vulkan :: Type ( PhysicalDeviceFeatures ) const * const * > ( parameter.pParam );
             return "0x" + cds :: Long ( reinterpret_cast < cds :: uint64 > ( pStructure ) ).toString(16) +
                     " -> " + ( pStructure == nullptr ? "null"_s : engine :: vulkan :: toString ( * pStructure ) );
         }
 
         case ParameterType :: StructurePtr: {
-            auto pStructure = * reinterpret_cast < engine :: vulkan :: Type ( GenericInStructure ) const ** > ( parameter.pParam );
+            auto pStructure = * reinterpret_cast < engine :: vulkan :: Type ( GenericInStructure ) const * const * > ( parameter.pParam );
             return "0x" + cds :: Long ( reinterpret_cast < cds :: uint64 > ( pStructure ) ).toString(16) +
                     " -> " + ( pStructure == nullptr ? "null"_s : representChain ( * pStructure ) );
         }
@@ -323,7 +343,7 @@ inline static auto paramToString (
         }
 
         case ParameterType :: HandlePtr: {
-            auto pHandle = * reinterpret_cast < engine :: vulkan :: Type ( InstanceHandle ) const ** > ( parameter.pParam );
+            auto pHandle = * reinterpret_cast < engine :: vulkan :: Type ( InstanceHandle ) const * const * > ( parameter.pParam );
             return "0x" + cds :: Long ( reinterpret_cast < cds :: uint64 > ( pHandle ) ).toString(16) +
                    ", value = 0x" + ( pHandle == nullptr ? "null"_s : cds :: Long ( * reinterpret_cast < cds :: uint64 const * > ( pHandle ) ).toString(16) );
         }
@@ -368,6 +388,20 @@ inline static auto paramToString (
             return toString ( * pProperties );
         }
 
+        case ParameterType :: Extent2DPtr: {
+            auto pProperties = reinterpret_cast < engine :: vulkan :: Type ( Extent2D ) const * > ( parameter.pParam );
+            return cds :: String :: f (
+                    "Extent { width = %d, height = %d }",
+                    pProperties->width,
+                    pProperties->height
+            );
+        }
+
+        case ParameterType :: Flags: {
+            auto pProperties = reinterpret_cast < Flags const * > ( parameter.pParam );
+            return pProperties->toString();
+        }
+
         case ParameterType :: DumpArrayPack: {
             auto pPack = reinterpret_cast < DumpedArray const * > ( parameter.pParam );
             if ( pPack->pArray == nullptr ) {
@@ -376,11 +410,24 @@ inline static auto paramToString (
 
             cds :: String str = "[ "_s;
             for ( cds :: uint32 i = 0U; i < * pPack->pCount; ++ i ) {
-                str += paramToString ( Parameter { .type    = pPack->type, .pParam = reinterpret_cast < cds :: Byte * > ( pPack->pArray ) + i * pPack->size } ) + ", ";
+                str += paramToString ( Parameter {
+                    .type       = pPack->type,
+                    .pParam     = reinterpret_cast < cds :: Byte const * > ( pPack->pArray ) + i * pPack->size
+                } ) + ", ";
             }
 
             return str.removeSuffix(", "_s) + " ]";
         }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_COOPERATIVE_MATRIX_AVAILABLE
+
+        case ParameterType :: CooperativeMatrixPropertiesNVidia: {
+            auto pProperties = reinterpret_cast < engine :: vulkan :: Type ( CooperativeMatrixPropertiesNVidia ) const * > ( parameter.pParam );
+            return toString ( * pProperties );
+        }
+
+#endif
 
         case ParameterType :: Unknown:
             return "Unknown"_s;

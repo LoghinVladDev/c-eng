@@ -9,6 +9,7 @@
 
 #if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
 #include <CDS/String>
+#include <CDS/Long>
 #endif
 
 #define C_ENG_MAP_START HEADER
@@ -17,6 +18,20 @@
 using GenericContext = void;
 
 using ContextAction = void (*) ( GenericContext * ) noexcept;
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+class Flags {
+private:
+    cds :: uint64 _v;
+
+public:
+    template < typename T >
+    explicit Flags ( T value ) noexcept : _v ( value ) { }
+    template < typename T >
+    explicit operator T () const noexcept { return _v; }
+    inline auto toString () const noexcept -> cds :: String { return "0x" + cds :: Long ( _v ).toString(16); }
+};
+#endif
 
 enum class ContextType {
     None,
@@ -108,7 +123,11 @@ enum class ParameterType {
     BoolPtr,
     UInt32,
     UInt32Ptr,
+    UInt64,
+    UInt64Ptr,
+    Float,
     StringLiteral,
+    Flags,
 
     Handle,
     HandlePtr,
@@ -120,6 +139,8 @@ enum class ParameterType {
     PhysicalDeviceGroupProperties,
     QueueFamilyProperties,
     SurfaceFormat,
+    Extent2DPtr,
+    CooperativeMatrixPropertiesNVidia,
 
     PhysicalDevicePropertiesPtr,
     PhysicalDeviceFeaturesPtr,
@@ -132,15 +153,15 @@ enum class ParameterType {
 };
 
 struct DumpedArray {
-    cds :: uint32 * pCount;
-    ParameterType   type;
-    cds :: uint32   size;
-    void          * pArray;
+    cds :: uint32   const * pCount;
+    ParameterType           type;
+    cds :: uint32           size;
+    void            const * pArray;
 };
 
 struct Parameter {
-    ParameterType   type;
-    void          * pParam;
+    ParameterType           type;
+    void            const * pParam;
 };
 
 struct DiagnosticContext {
