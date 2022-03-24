@@ -14073,3 +14073,33 @@ auto vulkan :: toString (
            " }";
 }
 #endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( PushConstantRange ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( PushConstantRange ) ) " " +
+           "{ stageFlags = "_s  + "0b" + Long ( info.stageFlags ).toString(2) +
+           ", offset = "        + info.offset +
+           ", size = "          + info.size +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( PipelineLayoutCreateInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( PipelineLayoutCreateInfo ) ) " " +
+           "{ structureType = "_s                   + toString ( info.structureType ) +
+           ", pNext = "                             + engine :: toString ( info.pNext ) +
+           ", flags = "                             + "0b" + Long ( info.flags ).toString(2) +
+           ", setLayoutCount = "                    + info.setLayoutCount +
+           ", setLayouts = "                        + :: toStringEngine ( info.setLayoutCount, info.pSetLayouts ) +
+           ", pushConstantRangeCount = "            + info.pushConstantRangeCount +
+           ", pushConstantRanges = "                + :: toStringVulkan ( info.pushConstantRangeCount, info.pPushConstantRanges ) +
+           " }";
+}
+#endif

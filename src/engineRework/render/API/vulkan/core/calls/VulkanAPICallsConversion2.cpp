@@ -7517,4 +7517,92 @@ namespace engine :: vulkan {
     }
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    auto prepareContext (
+            CreatePipelineLayoutContext              * pContext,
+            Type ( PipelineLayoutCreateInfo )  const * pSource
+    ) noexcept -> VkPipelineLayoutCreateInfo * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pContext == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        (void) toVulkanFormat ( & pContext->createInfo, pSource );
+
+        pContext->createInfo.pPushConstantRanges = & pContext->pushConstantRanges[0];
+
+        if ( pContext->createInfo.pushConstantRangeCount > engine :: vulkan :: config :: pipelineLayoutPushConstantRangeCount ) {
+            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, String :: f (
+                    "config :: pipelineLayoutPushConstantRangeCount = %d. Minimum Required = %d",
+                    engine :: vulkan :: config :: pipelineLayoutPushConstantRangeCount,
+                    pContext->createInfo.pushConstantRangeCount
+            ))
+
+            pContext->createInfo.pushConstantRangeCount = engine :: vulkan :: config :: pipelineLayoutPushConstantRangeCount;
+        }
+
+        for ( uint32 i = 0U; i < pContext->createInfo.pushConstantRangeCount; ++ i ) {
+            (void) toVulkanFormat ( & pContext->pushConstantRanges[i], & pSource->pPushConstantRanges[i] );
+        }
+
+        return & pContext->createInfo;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    auto toVulkanFormat (
+            VkPipelineLayoutCreateInfo              * pDestination,
+            Type ( PipelineLayoutCreateInfo ) const * pSource
+    ) noexcept -> VkPipelineLayoutCreateInfo * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                      = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO,
+                .pNext                      = nullptr,
+                .flags                      = pSource->flags,
+                .setLayoutCount             = pSource->setLayoutCount,
+                .pSetLayouts                = pSource->pSetLayouts,
+                .pushConstantRangeCount     = pSource->pushConstantRangeCount,
+                .pPushConstantRanges        = nullptr
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    auto toVulkanFormat (
+            VkPushConstantRange              * pDestination,
+            Type ( PushConstantRange ) const * pSource
+    ) noexcept -> VkPushConstantRange * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .stageFlags = pSource->stageFlags,
+                .offset     = pSource->offset,
+                .size       = pSource->size
+        };
+
+        return pDestination;
+    }
+#endif
+
 } // namespace vulkan :: engine

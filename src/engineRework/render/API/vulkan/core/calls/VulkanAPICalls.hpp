@@ -1516,6 +1516,31 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         ) noexcept -> Type ( Result );
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+        NoDiscard MaybeUnused extern auto destroyDescriptorSetLayout (
+                Type ( DeviceHandle ),
+                Type ( DescriptorSetLayoutHandle ),
+                Type ( AllocationCallbacks )        const *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+        NoDiscard MaybeUnused extern auto createPipelineLayout (
+                Type ( DeviceHandle ),
+                Type ( PipelineLayoutCreateInfo )       const *,
+                Type ( AllocationCallbacks )            const *,
+                Type ( PipelineLayoutHandle )                 *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+        NoDiscard MaybeUnused extern auto destroyPipelineLayout (
+                Type ( DeviceHandle ),
+                Type ( PipelineLayoutHandle ),
+                Type ( AllocationCallbacks )        const *
+        ) noexcept -> Type ( Result );
+#endif
+
     } /// namespace vulkan
 
 } /// namespace engine

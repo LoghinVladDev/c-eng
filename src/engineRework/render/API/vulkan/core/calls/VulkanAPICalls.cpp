@@ -7814,3 +7814,113 @@ auto engine :: vulkan :: getDescriptorSetLayoutSupport (
     return ResultSuccess;
 }
 #endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: destroyDescriptorSetLayout (
+        Type ( DeviceHandle )                           deviceHandle,
+        Type ( DescriptorSetLayoutHandle )              layoutHandle,
+        Type ( AllocationCallbacks )            const * pAllocationCallbacks
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || layoutHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+    auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkDestroyDescriptorSetLayout",
+            "Destroys a Descriptor Set Layout Object",
+            deviceHandle,
+            layoutHandle,
+            pAllocationCallbacks
+    );
+
+#endif
+
+    return APICaller.vkDestroyDescriptorSetLayout (
+            deviceHandle,
+            layoutHandle,
+            AllocatorHandler :: apply ( pAllocationCallbacks )
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: createPipelineLayout (
+        Type ( DeviceHandle )                               deviceHandle,
+        Type ( PipelineLayoutCreateInfo )           const * pCreateInfo,
+        Type ( AllocationCallbacks )                const * pAllocationCallbacks,
+        Type ( PipelineLayoutHandle )                     * pHandle
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || pCreateInfo == nullptr || pHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    auto context = ContextManager :: acquire();
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: CreatePipelineLayout,
+            "vkCreatePipelineLayout",
+            "Creates a Pipeline Layout",
+            deviceHandle,
+            pCreateInfo,
+            pAllocationCallbacks,
+            pHandle
+    );
+
+#endif
+
+    return APICaller.vkCreatePipelineLayout (
+            deviceHandle,
+            prepareContext ( & context->create.pipeline.layout, pCreateInfo ),
+            AllocatorHandler :: apply ( pAllocationCallbacks ),
+            pHandle
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: destroyPipelineLayout (
+        Type ( DeviceHandle )                           deviceHandle,
+        Type ( PipelineLayoutHandle )                   layoutHandle,
+        Type ( AllocationCallbacks )            const * pAllocationCallbacks
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || layoutHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+    auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkDestroyPipelineLayout",
+            "Destroys a Pipeline Layout Object",
+            deviceHandle,
+            layoutHandle,
+            pAllocationCallbacks
+    );
+
+#endif
+
+    return APICaller.vkDestroyPipelineLayout (
+            deviceHandle,
+            layoutHandle,
+            AllocatorHandler :: apply ( pAllocationCallbacks )
+    );
+}
+#endif

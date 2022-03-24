@@ -114,6 +114,7 @@ enum class SharedContextType {
     CreateSampler,
     CreateDescriptorSetLayout,
     GetDescriptorSetLayoutSupport,
+    CreatePipelineLayout,
 };
 
 union SpecializedContextType {
@@ -1826,6 +1827,14 @@ struct GetDescriptorSetLayoutSupportContext {
 #endif
 };
 
+struct CreatePipelineLayoutContext {
+    CommonItems                                                 common;
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    VkPipelineLayoutCreateInfo                                  createInfo;
+    VkPushConstantRange                                         pushConstantRanges [ engine :: vulkan :: config :: pipelineLayoutPushConstantRangeCount ];
+#endif
+};
+
 union GetMemorySharedContext {
     GetMemoryWin32Context                   win32;
     GetMemoryFdContext                      fd;
@@ -1842,6 +1851,7 @@ union CreatePipelineSharedContext {
     CreateGraphicsPipelineContext                                       graphics;
     CreateRayTracingPipelineSharedContext                               rayTracing;
     CreatePipelineCacheContext                                          cache;
+    CreatePipelineLayoutContext                                         layout;
 };
 
 union EnumerateSharedContext {
@@ -2123,6 +2133,7 @@ constexpr auto toString ( SharedContextType type ) noexcept -> cds :: StringLite
         case SharedContextType :: CreateSampler:                                              return "CreateSampler";
         case SharedContextType :: CreateDescriptorSetLayout:                                  return "CreateDescriptorSetLayout";
         case SharedContextType :: GetDescriptorSetLayoutSupport:                              return "GetDescriptorSetLayoutSupport";
+        case SharedContextType :: CreatePipelineLayout:                                       return "CreatePipelineLayout";
     }
 }
 

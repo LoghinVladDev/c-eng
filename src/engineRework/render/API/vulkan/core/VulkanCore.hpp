@@ -5424,6 +5424,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_ALIAS ( SamplerCreateFlags,                     VkSamplerCreateFlags );
         __C_ENG_ALIAS ( DependencyFlags,                        VkDependencyFlags );
         __C_ENG_ALIAS ( DescriptorSetLayoutCreateFlags,         VkDescriptorSetLayoutCreateFlags );
+        __C_ENG_ALIAS ( PipelineLayoutCreateFlags,              VkPipelineLayoutCreateFlags );
 
         __C_ENG_ALIAS ( AllocationFunction,                     PFN_vkAllocationFunction );
         __C_ENG_ALIAS ( ReallocationFunction,                   PFN_vkReallocationFunction );
@@ -14937,6 +14938,38 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #include <ObjectMapping.hpp>
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( PushConstantRange, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( ShaderStageFlags )   stageFlags;
+            cds :: uint32               offset;
+            cds :: uint32               size;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( PipelineLayoutCreateInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                          structureType;
+            Type ( GenericStructure )               const * pNext;
+            Type ( PipelineLayoutCreateFlags )              flags;
+            cds :: uint32                                   setLayoutCount;
+            Type ( DescriptorSetLayoutHandle )      const * pSetLayouts;
+            cds :: uint32                                   pushConstantRangeCount;
+            Type ( PushConstantRange )              const * pPushConstantRanges;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
 
 
 #define C_ENG_MAP_START     HEADER
@@ -15343,6 +15376,8 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
         NoDiscard auto toString ( Type ( DescriptorSetLayoutCreateInfo ) const & ) noexcept -> cds :: String;
         NoDiscard auto toString ( Type ( DescriptorSetLayoutBinding ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( PushConstantRange ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( PipelineLayoutCreateInfo ) const & ) noexcept -> cds :: String;
 
 #endif
 

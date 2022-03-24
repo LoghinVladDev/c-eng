@@ -4359,6 +4359,27 @@ namespace engine :: vulkan {
     ) noexcept -> Type ( DescriptorSetVariableDescriptorCountLayoutSupport ) *;
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto prepareContext (
+            CreatePipelineLayoutContext              *,
+            Type ( PipelineLayoutCreateInfo )  const *
+    ) noexcept -> VkPipelineLayoutCreateInfo *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto toVulkanFormat (
+            VkPipelineLayoutCreateInfo              *,
+            Type ( PipelineLayoutCreateInfo ) const *
+    ) noexcept -> VkPipelineLayoutCreateInfo *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto toVulkanFormat (
+            VkPushConstantRange              *,
+            Type ( PushConstantRange ) const *
+    ) noexcept -> VkPushConstantRange *;
+#endif
+
 } // namespace engine :: vulkan
 
 #define C_ENG_MAP_END
