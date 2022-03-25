@@ -1541,6 +1541,40 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         ) noexcept -> Type ( Result );
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+        NoDiscard MaybeUnused extern auto createDescriptorPool (
+                Type ( DeviceHandle ),
+                Type ( DescriptorPoolCreateInfo )   const *,
+                Type ( AllocationCallbacks )        const *,
+                Type ( DescriptorPoolHandle )             *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+        NoDiscard MaybeUnused extern auto destroyDescriptorPool (
+                Type ( DeviceHandle ),
+                Type ( DescriptorPoolHandle ),
+                Type ( AllocationCallbacks )        const *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+        NoDiscard MaybeUnused extern auto allocateDescriptorSets (
+                Type ( DeviceHandle ),
+                Type ( DescriptorSetAllocateInfo )  const *,
+                Type ( DescriptorSetHandle )              *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+        NoDiscard MaybeUnused extern auto freeDescriptorSets (
+                Type ( DeviceHandle ),
+                Type ( DescriptorPoolHandle ),
+                cds :: uint32,
+                Type ( DescriptorSetHandle )    const *
+        ) noexcept -> Type ( Result );
+#endif
+
     } /// namespace vulkan
 
 } /// namespace engine

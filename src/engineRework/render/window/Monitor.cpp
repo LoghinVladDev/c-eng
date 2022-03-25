@@ -75,6 +75,16 @@ namespace engine {
             );
 
             GLFWgammaramp const * pGammaRamp = glfwGetGammaRamp ( pMonitor->handle() );
+            GLFWgammaramp nullRamp {
+                .red    = nullptr,
+                .green  = nullptr,
+                .blue   = nullptr,
+                .size   = 0U
+            };
+
+            if ( pGammaRamp == nullptr ) {
+                pGammaRamp = & nullRamp;
+            }
 
             for ( sint32 i = 0; i < count; ++ i ) {
                 (void) pMonitor->_availableVideoModes.pushBack ( Type ( MonitorVideoModeProperties ) {

@@ -10,6 +10,8 @@
 #define C_ENG_MAP_START HEADER
 #include <ObjectMapping.hpp>
 
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
 #define __C_ENG_DUMP_MANAGER_SET_TYPE(_of, _what) \
     template <>                                   \
     constexpr auto parameterTypeOfParameter < _of > ( _of const & ) noexcept -> ParameterType {  \
@@ -564,6 +566,10 @@ __C_ENG_DUMP_MANAGER_SET_TYPE ( engine :: vulkan :: Type ( SamplerHandle ) , Han
 __C_ENG_DUMP_MANAGER_SET_TYPE ( engine :: vulkan :: Type ( SamplerHandle ) * , HandlePtr )
 __C_ENG_DUMP_MANAGER_SET_TYPE ( engine :: vulkan :: Type ( DescriptorSetLayoutHandle ) , Handle )
 __C_ENG_DUMP_MANAGER_SET_TYPE ( engine :: vulkan :: Type ( DescriptorSetLayoutHandle ) * , HandlePtr )
+__C_ENG_DUMP_MANAGER_SET_TYPE ( engine :: vulkan :: Type ( DescriptorPoolHandle ) , Handle )
+__C_ENG_DUMP_MANAGER_SET_TYPE ( engine :: vulkan :: Type ( DescriptorPoolHandle ) * , HandlePtr )
+__C_ENG_DUMP_MANAGER_SET_TYPE ( engine :: vulkan :: Type ( DescriptorSetHandle ) , Handle )
+__C_ENG_DUMP_MANAGER_SET_TYPE ( engine :: vulkan :: Type ( DescriptorSetHandle ) * , HandlePtr )
 #endif
 
 __C_ENG_DUMP_MANAGER_SET_TYPE ( DumpedArray, DumpArrayPack )
@@ -648,6 +654,8 @@ inline auto prepareDump (
             std :: forward < ArgumentTypes && > ( arguments ) ...
     );
 }
+
+#endif
 
 #define C_ENG_MAP_END
 #include <ObjectMapping.hpp>

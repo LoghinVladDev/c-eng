@@ -33,9 +33,11 @@ using VkPhysicalDeviceImageRobustnessFeatures_t     = VkPhysicalDeviceImageRobus
 #if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 using VkPhysicalDeviceInlineUniformBlockFeatures_t      = VkPhysicalDeviceInlineUniformBlockFeatures;
 using VkPhysicalDeviceInlineUniformBlockProperties_t    = VkPhysicalDeviceInlineUniformBlockProperties;
+using VkDescriptorPoolInlineUniformBlockCreateInfo_t    = VkDescriptorPoolInlineUniformBlockCreateInfo;
 #elif __C_ENG_VULKAN_API_EXTENSION_INLINE_UNIFORM_BLOCK_AVAILABLE
 using VkPhysicalDeviceInlineUniformBlockFeatures_t  = VkPhysicalDeviceInlineUniformBlockFeaturesEXT;
 using VkPhysicalDeviceInlineUniformBlockProperties_t    = VkPhysicalDeviceInlineUniformBlockPropertiesEXT;
+using VkDescriptorPoolInlineUniformBlockCreateInfo_t    = VkDescriptorPoolInlineUniformBlockCreateInfoEXT;
 #endif
 
 #if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE

@@ -145,6 +145,7 @@ namespace engine :: vulkan :: config {
     constexpr cds :: uint32 descriptorSetMutableDescriptorListItemCount             = 32U;
 
     constexpr cds :: uint32 pipelineLayoutPushConstantRangeCount                    = 512U;
+    constexpr cds :: uint32 descriptorPoolSizeCount                                 = 256U;
 } // namespace engine :: vulkan :: config
 
 #if defined ( __C_ENG_USE_DEFENSIVE_PROGRAMMING ) || ! defined ( NDEBUG )

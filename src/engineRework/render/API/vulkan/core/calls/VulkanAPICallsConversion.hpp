@@ -4380,6 +4380,71 @@ namespace engine :: vulkan {
     ) noexcept -> VkPushConstantRange *;
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto prepareContext (
+            CreateDescriptorPoolContext              *,
+            Type ( DescriptorPoolCreateInfo )  const *
+    ) noexcept -> VkDescriptorPoolCreateInfo *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto toVulkanFormat (
+            VkDescriptorPoolCreateInfo              *,
+            Type ( DescriptorPoolCreateInfo ) const *
+    ) noexcept -> VkDescriptorPoolCreateInfo *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto toVulkanFormat (
+            VkDescriptorPoolSize              *,
+            Type ( DescriptorPoolSize ) const *
+    ) noexcept -> VkDescriptorPoolSize *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_INLINE_UNIFORM_BLOCK_AVAILABLE
+    extern auto toVulkanFormat (
+            VkDescriptorPoolInlineUniformBlockCreateInfo_t            *,
+            Type ( DescriptorPoolInlineUniformBlockCreateInfo ) const *
+    ) noexcept -> VkDescriptorPoolInlineUniformBlockCreateInfo_t *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto prepareContext (
+            AllocateDescriptorSetsContext             *,
+            Type ( DescriptorSetAllocateInfo )  const *
+    ) noexcept -> VkDescriptorSetAllocateInfo *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto prepareSubcontext (
+            CommonContext                             *,
+            DescriptorSetAllocateInfoSubcontext       *,
+            Type ( DescriptorSetAllocateInfo )  const *
+    ) noexcept -> VkDescriptorSetAllocateInfo *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto toVulkanFormat (
+            VkDescriptorSetAllocateInfo              *,
+            Type ( DescriptorSetAllocateInfo ) const *
+    ) noexcept -> VkDescriptorSetAllocateInfo *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+    extern auto prepareSubcontext (
+            CommonContext                                                    *,
+            DescriptorSetVariableDescriptorCountAllocateInfoSubcontext       *,
+            Type ( DescriptorSetVariableDescriptorCountAllocateInfo )  const *
+    ) noexcept -> VkDescriptorSetVariableDescriptorCountAllocateInfo *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+    extern auto toVulkanFormat (
+            VkDescriptorSetVariableDescriptorCountAllocateInfo              *,
+            Type ( DescriptorSetVariableDescriptorCountAllocateInfo ) const *
+    ) noexcept -> VkDescriptorSetVariableDescriptorCountAllocateInfo *;
+#endif
+
 } // namespace engine :: vulkan
 
 #define C_ENG_MAP_END

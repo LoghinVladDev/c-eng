@@ -5331,6 +5331,24 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #include <ObjectMapping.hpp>
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+#define C_ENG_MAP_START ENUM ( DescriptorPoolCreateFlag, TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( FreeDescriptorSet,  VkDescriptorPoolCreateFlagBits :: VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT ),
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+            Field ( UpdateAfterBind,    VkDescriptorPoolCreateFlagBits :: VK_DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT ),
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_VALVE_MUTABLE_DESCRIPTOR_TYPE_AVAILABLE
+            Field ( HostOnlyValve,      VkDescriptorPoolCreateFlagBits :: VK_DESCRIPTOR_POOL_CREATE_HOST_ONLY_BIT_VALVE ),
+#endif
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
 
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 
@@ -5373,6 +5391,8 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_ALIAS ( BufferViewHandle,                       VkBufferView );
         __C_ENG_ALIAS ( SamplerHandle,                          VkSampler );
         __C_ENG_ALIAS ( DescriptorSetLayoutHandle,              VkDescriptorSetLayout );
+        __C_ENG_ALIAS ( DescriptorPoolHandle,                   VkDescriptorPool );
+        __C_ENG_ALIAS ( DescriptorSetHandle,                    VkDescriptorSet );
 
         __C_ENG_ALIAS ( InstanceCreateFlags,                    VkInstanceCreateFlags );
         __C_ENG_ALIAS ( DebugMessengerCreateFlags,              VkDebugUtilsMessengerCreateFlagsEXT );
@@ -5425,6 +5445,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_ALIAS ( DependencyFlags,                        VkDependencyFlags );
         __C_ENG_ALIAS ( DescriptorSetLayoutCreateFlags,         VkDescriptorSetLayoutCreateFlags );
         __C_ENG_ALIAS ( PipelineLayoutCreateFlags,              VkPipelineLayoutCreateFlags );
+        __C_ENG_ALIAS ( DescriptorPoolCreateFlags,              VkDescriptorPoolCreateFlags );
 
         __C_ENG_ALIAS ( AllocationFunction,                     PFN_vkAllocationFunction );
         __C_ENG_ALIAS ( ReallocationFunction,                   PFN_vkReallocationFunction );
@@ -14970,6 +14991,81 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #include <ObjectMapping.hpp>
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( DescriptorPoolSize, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( DescriptorType ) type;
+            cds :: uint32           descriptorCount;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( DescriptorPoolCreateInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                          structureType;
+            Type ( GenericStructure )               const * pNext;
+            Type ( DescriptorPoolCreateFlags )              flags;
+            cds :: uint32                                   maxSets;
+            cds :: uint32                                   poolSizeCount;
+            Type ( DescriptorPoolSize )             const * pPoolSizes;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_INLINE_UNIFORM_BLOCK_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( DescriptorPoolInlineUniformBlockCreateInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                          structureType;
+            Type ( GenericStructure )               const * pNext;
+            cds :: uint32                                   maxInlineUniformBlockBindings;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( DescriptorSetAllocateInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                          structureType;
+            Type ( GenericStructure )               const * pNext;
+            Type ( DescriptorPoolHandle )                   descriptorPool;
+            cds :: uint32                                   descriptorSetCount;
+            Type ( DescriptorSetLayoutHandle )      const * pSetLayouts;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( DescriptorSetVariableDescriptorCountAllocateInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                          structureType;
+            Type ( GenericStructure )               const * pNext;
+            cds :: uint32                                   descriptorSetCount;
+            cds :: uint32                           const * pDescriptorCounts;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
 
 
 #define C_ENG_MAP_START     HEADER
@@ -15052,6 +15148,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         NoDiscard auto toString ( Type ( BorderColor ) ) noexcept -> cds :: StringLiteral;
         NoDiscard auto toString ( Type ( DescriptorSetLayoutCreateFlag ) ) noexcept -> cds :: StringLiteral;
         NoDiscard auto toString ( Type ( DescriptorType ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( DescriptorPoolCreateFlag ) ) noexcept -> cds :: StringLiteral;
 
 #endif
 
@@ -15378,6 +15475,9 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         NoDiscard auto toString ( Type ( DescriptorSetLayoutBinding ) const & ) noexcept -> cds :: String;
         NoDiscard auto toString ( Type ( PushConstantRange ) const & ) noexcept -> cds :: String;
         NoDiscard auto toString ( Type ( PipelineLayoutCreateInfo ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( DescriptorPoolSize ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( DescriptorPoolCreateInfo ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( DescriptorSetAllocateInfo ) const & ) noexcept -> cds :: String;
 
 #endif
 
@@ -15495,6 +15595,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
         NoDiscard auto toString ( Type ( DescriptorSetLayoutBindingFlagsCreateInfo ) const & ) noexcept -> cds :: String;
         NoDiscard auto toString ( Type ( DescriptorSetVariableDescriptorCountLayoutSupport ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( DescriptorSetVariableDescriptorCountAllocateInfo ) const & ) noexcept -> cds :: String;
 #endif
 
 #if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
@@ -15513,6 +15614,10 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_SUBGROUP_SIZE_CONTROL_AVAILABLE
         NoDiscard auto toString ( Type ( PipelineShaderStageRequiredSubgroupSizeCreateInfo ) const & ) noexcept -> cds :: String;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_INLINE_UNIFORM_BLOCK_AVAILABLE
+        NoDiscard auto toString ( Type ( DescriptorPoolInlineUniformBlockCreateInfo ) const & ) noexcept -> cds :: String;
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_RAY_TRACING_PIPELINE_AVAILABLE

@@ -1490,6 +1490,16 @@ auto engine :: vulkan :: getPhysicalDeviceQueueFamilyDetails (
     createChain ( * pCount, & pDetails[0], & extendedProperties[0] );
 
     if (
+            auto result = APICaller.vkGetPhysicalDeviceQueueFamilyProperties2 (
+                    handle,
+                    pCount,
+                    nullptr
+            ); result != ResultSuccess
+    ) {
+        return result;
+    }
+
+    if (
             auto result = getPhysicalDeviceQueueFamilyProperties (
                     handle,
                     pCount,
@@ -7921,6 +7931,175 @@ auto engine :: vulkan :: destroyPipelineLayout (
             deviceHandle,
             layoutHandle,
             AllocatorHandler :: apply ( pAllocationCallbacks )
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: createDescriptorPool (
+        Type ( DeviceHandle )                               deviceHandle,
+        Type ( DescriptorPoolCreateInfo )           const * pCreateInfo,
+        Type ( AllocationCallbacks )                const * pAllocationCallbacks,
+        Type ( DescriptorPoolHandle )                     * pHandle
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || pCreateInfo == nullptr || pHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    auto context = ContextManager :: acquire();
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: CreateDescriptorPool,
+            "vkCreateDescriptorPool",
+            "Creates a Descriptor Pool",
+            deviceHandle,
+            pCreateInfo,
+            pAllocationCallbacks,
+            pHandle
+    );
+
+#endif
+
+    return APICaller.vkCreateDescriptorPool (
+            deviceHandle,
+            prepareContext ( & context->create.descriptor.pool, pCreateInfo ),
+            AllocatorHandler :: apply ( pAllocationCallbacks ),
+            pHandle
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: destroyDescriptorPool (
+        Type ( DeviceHandle )                           deviceHandle,
+        Type ( DescriptorPoolHandle )                   poolHandle,
+        Type ( AllocationCallbacks )            const * pAllocationCallbacks
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || poolHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+    auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkDestroyDescriptorPool",
+            "Destroys a Descriptor Pool Object",
+            deviceHandle,
+            poolHandle,
+            pAllocationCallbacks
+    );
+
+#endif
+
+    return APICaller.vkDestroyDescriptorPool (
+            deviceHandle,
+            poolHandle,
+            AllocatorHandler :: apply ( pAllocationCallbacks )
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: allocateDescriptorSets (
+        Type ( DeviceHandle )                               deviceHandle,
+        Type ( DescriptorSetAllocateInfo )          const * pAllocateInfo,
+        Type ( DescriptorSetHandle )                      * pHandles
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || pAllocateInfo == nullptr || pHandles == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    auto context = ContextManager :: acquire();
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    auto arrayPack = DumpedArray {
+        .pCount = & pAllocateInfo->descriptorSetCount,
+        .type   = ParameterType :: Handle,
+        .size   = sizeof ( Type ( DescriptorSetHandle ) ),
+        .pArray = pHandles
+    };
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: AllocateDescriptorSets,
+            "vkAllocateDescriptorSets",
+            "Allocates a number of descriptor sets from a Descriptor Pool",
+            deviceHandle,
+            pAllocateInfo,
+            arrayPack
+    );
+
+#endif
+
+    return APICaller.vkAllocateDescriptorSets (
+            deviceHandle,
+            prepareContext ( & context->allocate.descriptorSets, pAllocateInfo ),
+            & pHandles[0]
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: freeDescriptorSets (
+        Type ( DeviceHandle )                   deviceHandle,
+        Type ( DescriptorPoolHandle )           poolHandle,
+        cds :: uint32                           count,
+        Type ( DescriptorSetHandle )    const * pSets
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || poolHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    auto context = ContextManager :: acquire();
+    auto arrayPack = DumpedArray {
+        .pCount = & count,
+        .type   = ParameterType :: Handle,
+        .size   = sizeof ( Type ( DescriptorSetHandle ) ),
+        .pArray = pSets
+    };
+
+    prepareDump (
+            context.data(),
+            "vkFreeDescriptorSets",
+            "Frees a number of descriptor sets from a Descriptor Pool",
+            deviceHandle,
+            poolHandle,
+            count,
+            arrayPack
+    );
+
+#endif
+
+    return APICaller.vkFreeDescriptorSets (
+            deviceHandle,
+            poolHandle,
+            count,
+            pSets
     );
 }
 #endif

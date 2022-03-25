@@ -115,6 +115,8 @@ enum class SharedContextType {
     CreateDescriptorSetLayout,
     GetDescriptorSetLayoutSupport,
     CreatePipelineLayout,
+    CreateDescriptorPool,
+    AllocateDescriptorSets,
 };
 
 union SpecializedContextType {
@@ -1835,6 +1837,44 @@ struct CreatePipelineLayoutContext {
 #endif
 };
 
+struct CreateDescriptorPoolContext {
+    CommonItems                                                 common;
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    VkDescriptorPoolCreateInfo                                  createInfo;
+    VkDescriptorPoolSize                                        poolSizes [ engine :: vulkan :: config :: descriptorPoolSizeCount ];
+#endif
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_INLINE_UNIFORM_BLOCK_AVAILABLE
+    VkDescriptorPoolInlineUniformBlockCreateInfo_t              inlineUniformBlockCreateInfo;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_VALVE_MUTABLE_DESCRIPTOR_TYPE_AVAILABLE
+    VkMutableDescriptorTypeCreateInfoVALVE                      mutableDescriptorTypeCreateInfo;
+    VkMutableDescriptorTypeListVALVE                            mutableDescriptorTypeLists [ engine :: vulkan :: config :: descriptorSetMutableDescriptorTypeListCount ];
+    VkDescriptorType                                            mutableDescriptorListEntries [ engine :: vulkan :: config :: descriptorSetMutableDescriptorTypeListCount ] [ engine :: vulkan :: config :: descriptorSetMutableDescriptorListItemCount ];
+#endif
+};
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+struct DescriptorSetAllocateInfoSubcontext {
+    VkDescriptorSetAllocateInfo info;
+};
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+struct DescriptorSetVariableDescriptorCountAllocateInfoSubcontext {
+    VkDescriptorSetVariableDescriptorCountAllocateInfo info;
+};
+#endif
+
+struct AllocateDescriptorSetsContext {
+    CommonItems                                                     common;
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    DescriptorSetAllocateInfoSubcontext                             allocateInfo;
+#endif
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+    DescriptorSetVariableDescriptorCountAllocateInfoSubcontext      variableDescriptorCount;
+#endif
+};
+
 union GetMemorySharedContext {
     GetMemoryWin32Context                   win32;
     GetMemoryFdContext                      fd;
@@ -1884,6 +1924,7 @@ union CreateDescriptorSetSharedContext {
 
 union CreateDescriptorSharedContext {
     CreateDescriptorSetSharedContext                                    set;
+    CreateDescriptorPoolContext                                         pool;
 };
 
 union CreateSharedContext {
@@ -1961,6 +2002,7 @@ union GetSharedContext {
 union AllocateSharedContext {
     AllocateCommandBuffersContext                                       commandBuffers;
     AllocateMemoryContext                                               memory;
+    AllocateDescriptorSetsContext                                       descriptorSets;
 };
 
 union BeginSharedContext {
@@ -2134,6 +2176,8 @@ constexpr auto toString ( SharedContextType type ) noexcept -> cds :: StringLite
         case SharedContextType :: CreateDescriptorSetLayout:                                  return "CreateDescriptorSetLayout";
         case SharedContextType :: GetDescriptorSetLayoutSupport:                              return "GetDescriptorSetLayoutSupport";
         case SharedContextType :: CreatePipelineLayout:                                       return "CreatePipelineLayout";
+        case SharedContextType :: CreateDescriptorPool:                                       return "CreateDescriptorPool";
+        case SharedContextType :: AllocateDescriptorSets:                                     return "AllocateDescriptorSets";
     }
 }
 

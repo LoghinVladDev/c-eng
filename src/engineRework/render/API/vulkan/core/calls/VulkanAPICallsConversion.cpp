@@ -13032,6 +13032,7 @@ namespace engine :: vulkan {
 
                     case StructureTypeQueueFamilyGlobalPriorityProperties:
                         pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > ( & pContext->globalPriorities[i] );
+                        pContext->globalPriorities[i].priorityCount = 0U; /// disabled for now
                         break;
 
 #endif

@@ -14103,3 +14103,94 @@ auto vulkan :: toString (
            " }";
 }
 #endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( DescriptorPoolCreateFlag )  flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case DescriptorPoolCreateFlagFreeDescriptorSet: { asString = "Free Descriptor Set";     break; }
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+        case DescriptorPoolCreateFlagUpdateAfterBind:   { asString = "Update After Bind";       break; }
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_VALVE_MUTABLE_DESCRIPTOR_TYPE_AVAILABLE
+        case DescriptorPoolCreateFlagHostOnlyValve:     { asString = "Host Only";               break; }
+#endif
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( DescriptorPoolCreateInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( DescriptorPoolCreateInfo ) ) " " +
+           "{ structureType = "_s                   + toString ( info.structureType ) +
+           ", pNext = "                             + engine :: toString ( info.pNext ) +
+           ", flags = "                             + "0b" + Long ( info.flags ).toString(2) +
+           ", maxSets = "                           + info.maxSets +
+           ", poolSizeCount = "                     + info.poolSizeCount +
+           ", poolSizes = "                         + :: toStringVulkan ( info.poolSizeCount, info.pPoolSizes ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( DescriptorPoolSize ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( DescriptorPoolSize ) ) " " +
+           "{ type = "_s            + toString ( info.type ) +
+           ", descriptorCount = "   + info.descriptorCount +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_INLINE_UNIFORM_BLOCK_AVAILABLE
+auto vulkan :: toString (
+        Type ( DescriptorPoolInlineUniformBlockCreateInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( DescriptorPoolInlineUniformBlockCreateInfo ) ) " " +
+           "{ structureType = "_s                   + toString ( info.structureType ) +
+           ", pNext = "                             + engine :: toString ( info.pNext ) +
+           ", maxInlineUniformBlockBindings = "     + info.maxInlineUniformBlockBindings +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( DescriptorSetAllocateInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( DescriptorSetAllocateInfo ) ) " " +
+           "{ structureType = "_s                   + toString ( info.structureType ) +
+           ", pNext = "                             + engine :: toString ( info.pNext ) +
+           ", descriptorPool = "                    + engine :: toString ( info.descriptorPool ) +
+           ", descriptorSetCount = "                + info.descriptorSetCount +
+           ", setLayouts = "                        + :: toStringEngine ( info.descriptorSetCount, info.pSetLayouts ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+auto vulkan :: toString (
+        Type ( DescriptorSetVariableDescriptorCountAllocateInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( DescriptorSetVariableDescriptorCountAllocateInfo ) ) " " +
+           "{ structureType = "_s                   + toString ( info.structureType ) +
+           ", pNext = "                             + engine :: toString ( info.pNext ) +
+           ", descriptorSetCount = "                + info.descriptorSetCount +
+           ", descriptorCounts = "                  + :: toStringRegular ( info.descriptorSetCount, info.pDescriptorCounts ) +
+           " }";
+}
+#endif
