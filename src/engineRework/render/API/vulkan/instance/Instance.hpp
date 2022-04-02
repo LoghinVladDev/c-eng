@@ -13,6 +13,7 @@
 #include <CDS/Array>
 
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 #define C_ENG_MAP_START     CLASS ( Instance, ENGINE_PARENT ( VulkanRenderObject ) )
 #include <ObjectMapping.hpp>
 
@@ -23,6 +24,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         Class {
 
 #ifndef NDEBUG
+#if __C_ENG_VULKAN_API_EXTENSION_DEBUG_UTILS_AVAILABLE
 
             Const ( ENGINE_TYPE ( DebugMessageSeverityFlags ),   defaultMessageSeverityFlags,    VALUE (
                     DebugMessageSeverityFlagVerbose |
@@ -47,13 +49,16 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
             Const ( TYPE ( cds :: Array < __C_ENG_TYPE ( ValidationFeatureDisable ) > ),    defaultDisabledValidationFeatures, VALUE ({}) )
 
+#endif
 #else
+#if __C_ENG_VULKAN_API_EXTENSION_DEBUG_UTILS_AVAILABLE
 
             Const ( ENGINE_TYPE ( DebugMessageSeverityFlags ),   defaultMessageSeverityFlags,    VALUE ( 0U ) )
             Const ( ENGINE_TYPE ( DebugMessageTypeFlags ),      defaultMessageTypeFlags,    VALUE ( 0U ) )
             Const ( TYPE ( cds :: Array < Type ( ValidationFeatureEnable ) > ),     defaultEnabledValidationFeatures,   VALUE ({}))
             Const ( TYPE ( cds :: Array < __C_ENG_TYPE ( ValidationFeatureDisable ) > ),    defaultDisabledValidationFeatures, VALUE ({ ValidationFeatureDisableAll }) )
 
+#endif
 #endif
 
             Field ( ENGINE_TYPE ( Version ),                                                version,                    DEFAULT_VALUE ( versionConstants :: nullVersion ),  GET_DEFAULT, SET_NONE )
@@ -116,6 +121,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #define C_ENG_MAP_END
 #include <ObjectMapping.hpp>
+#endif
 
 
 #endif // __C_ENG_INSTANCE_HPP__

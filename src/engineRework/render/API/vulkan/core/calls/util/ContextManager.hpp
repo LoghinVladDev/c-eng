@@ -12,6 +12,7 @@
 #include <CDS/Double>
 #include <Logger.hpp>
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 #define C_ENG_MAP_START     HEADER
 #include <ObjectMapping.hpp>
 
@@ -1180,5 +1181,6 @@ inline static auto representChain ( engine :: vulkan :: Type ( GenericInStructur
 
 #define C_ENG_MAP_END
 #include <ObjectMapping.hpp>
+#endif
 
 #endif //__C_ENG_CONTEXT_MANAGER_HPP__

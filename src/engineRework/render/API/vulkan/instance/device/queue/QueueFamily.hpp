@@ -10,6 +10,7 @@
 #include <VulkanCore.hpp>
 #include <CDS/Array>
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 #define C_ENG_MAP_START     CLASS ( QueueFamily,    ENGINE_PARENT ( VulkanRenderObject ) )
 #include <ObjectMapping.hpp>
 
@@ -21,10 +22,12 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         Class {
             using UndefinedQueryResult = void;
 
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PERFORMANCE_QUERY_AVAILABLE
             struct PerformanceCounterProperties {
                 __C_ENG_TYPE ( PerformanceCounter )             counter;
                 __C_ENG_TYPE ( PerformanceCounterDescription )  description;
             };
+#endif
 
             Field ( ENGINE_TYPE ( QueueFamilyDetails ),                     details,                        NO_INIT,                            GET_DEFAULT, SET_NONE )
             Field ( TYPE ( cds :: Array < PerformanceCounterProperties > ), performanceCounterProperties,   NO_INIT,                            GET_DEFAULT, SET_NONE )
@@ -150,6 +153,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #define C_ENG_MAP_END
 #include <ObjectMapping.hpp>
+#endif
 
 
 #endif //__C_ENG_QUEUE_FAMILY_HPP__

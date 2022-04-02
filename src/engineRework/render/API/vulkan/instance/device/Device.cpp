@@ -18,6 +18,7 @@ using namespace engine; // NOLINT(clion-misra-cpp2008-7-3-4)
 using namespace vulkan; // NOLINT(clion-misra-cpp2008-7-3-4)
 
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 struct StructureWithSize {
     __C_ENG_TYPE ( GenericOutStructure )  * pStructure;
     uint32                                  size;
@@ -1558,3 +1559,4 @@ auto Self :: operator = (
 
     return * this;
 }
+#endif

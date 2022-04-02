@@ -11,6 +11,7 @@
 using namespace cds; // NOLINT(clion-misra-cpp2008-7-3-4)
 using namespace engine; // NOLINT(clion-misra-cpp2008-7-3-4)
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 #define C_ENG_MAP_START     CLASS ( QueueFamily, ENGINE_PARENT ( VulkanRenderObject ) )
 #include <ObjectMapping.hpp>
 
@@ -109,3 +110,5 @@ auto vulkan :: Self :: getQueueFlagsWithPresent (
 
     return flags;
 }
+
+#endif

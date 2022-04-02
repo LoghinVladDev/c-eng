@@ -19,9 +19,9 @@ using namespace engine; // NOLINT(clion-misra-cpp2008-7-3-4)
 using namespace vulkan; // NOLINT(clion-misra-cpp2008-7-3-4)
 
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE && __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SWAP_CHAIN_AVAILABLE
 #define C_ENG_MAP_START     CLASS ( SwapChain,  ENGINE_PARENT ( VulkanRenderObject ) )
 #include <ObjectMapping.hpp>
-
 
 struct SwapChainImages {
     Type ( ImageHandle )        imagesArray [ engine :: vulkan :: config :: swapChainImageCount ];
@@ -416,3 +416,5 @@ auto Self :: freeImages() noexcept -> Type ( SwapChain ) & {
 Self :: Destructor () noexcept {
     (void) this->Self :: clear();
 }
+
+#endif

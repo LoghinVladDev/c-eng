@@ -11,6 +11,7 @@
 #include <CDS/Path>
 
 
+#if __C_ENG_VULKAN_API_EXTENSION_VALIDATION_CACHE_AVAILABLE
 #define C_ENG_MAP_START CLASS ( ValidationCache, ENGINE_PARENT ( VulkanRenderObject ) )
 #include <ObjectMapping.hpp>
 
@@ -48,6 +49,7 @@ namespace engine :: vulkan {
 
 #define C_ENG_MAP_END
 #include <ObjectMapping.hpp>
+#endif
 
 
 #endif //__C_ENG_VALIDATION_CACHE_HPP__

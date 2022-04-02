@@ -16,6 +16,7 @@
 #include <ValidationCache.hpp>
 
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 #define C_ENG_MAP_START     CLASS ( Device, ENGINE_PARENT ( VulkanRenderObject ) )
 #include <ObjectMapping.hpp>
 
@@ -111,6 +112,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #define C_ENG_MAP_END
 #include <ObjectMapping.hpp>
+#endif
 
 
 #endif //__C_ENG_DEVICE_HPP__

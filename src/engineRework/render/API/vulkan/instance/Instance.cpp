@@ -13,6 +13,7 @@ using namespace cds; // NOLINT(clion-misra-cpp2008-7-3-4)
 using namespace engine; // NOLINT(clion-misra-cpp2008-7-3-4)
 
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 static vulkan :: __C_ENG_TYPE ( DebugMessengerBasicNotifyCallback ) basicNotifyCallback = nullptr;
 
 __C_ENG_MAYBE_UNUSED auto setBasicNotifyCallback (
@@ -383,3 +384,4 @@ auto vulkan :: Self :: build () noexcept -> Nester {
 
 #define C_ENG_MAP_END
 #include <ObjectMapping.hpp>
+#endif

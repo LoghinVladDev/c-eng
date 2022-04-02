@@ -15,6 +15,7 @@ using namespace engine; // NOLINT(clion-misra-cpp2008-7-3-4)
 using namespace cds; // NOLINT(clion-misra-cpp2008-7-3-4)
 using namespace vulkan; // NOLINT(clion-misra-cpp2008-7-3-4)
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 #define C_ENG_MAP_START     CLASS ( PresentHandler, ENGINE_PARENT ( VulkanRenderObject ) )
 #include <ObjectMapping.hpp>
 
@@ -212,3 +213,5 @@ auto Self :: releaseImageViews () noexcept -> void {
         }
     }
 }
+
+#endif

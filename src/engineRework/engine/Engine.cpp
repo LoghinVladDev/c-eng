@@ -19,6 +19,7 @@
 using namespace cds; // NOLINT(clion-misra-cpp2008-7-3-4)
 using namespace engine; // NOLINT(clion-misra-cpp2008-7-3-4)
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 static auto renderSurfaceAttachCallback (
         __C_ENG_TYPE ( RenderInstanceSurfaceAttachData ) const * pCallbackData
 ) noexcept -> bool {
@@ -62,6 +63,7 @@ static auto renderSurfaceDetachCallback (
 
     return true;
 }
+#endif
 
 
 #define C_ENG_MAP_START     CLASS ( Engine, PARENT ( Object ) )
@@ -98,19 +100,29 @@ auto Self :: initializeRenderEngine () noexcept -> Self & {
     this->setState ( __C_ENG_TYPE ( EngineState ) :: EngineStateStartupInitializingRenderEngine );
 
     if ( this->renderEngine() == nullptr ) {
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
         (void) __C_ENG_TYPE ( Logger ) :: instance ().info ("No Render Engine present, using default (Vulkan)");
 
         this->_renderEngine = new vulkan :: __C_ENG_TYPE ( VulkanRenderEngine );
         this->_externalRenderEngine = false;
+#endif
     }
 
-    (void) this->renderEngine()->setRenderSurfaceCallbacks({
-        .attachCallback = & renderSurfaceAttachCallback,
-        .detachCallback = & renderSurfaceDetachCallback,
-        .pUserData      = this
-    });
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    if ( dynamic_cast < vulkan :: Type ( VulkanRenderEngine ) const * > ( this->renderEngine () ) != nullptr ) {
+        (void) this->renderEngine()->setRenderSurfaceCallbacks({
+            .attachCallback = & renderSurfaceAttachCallback,
+            .detachCallback = & renderSurfaceDetachCallback,
+            .pUserData      = this
+        });
+    }
+#endif
 
-    (void) this->renderEngine()->init();
+    if ( this->renderEngine() != nullptr ) {
+        (void) this->renderEngine()->init();
+    } else {
+        Type ( Logger ) :: instance().fatal ( "No Render Engine available, no default value could be chosen" );
+    }
 
     return * this;
 }

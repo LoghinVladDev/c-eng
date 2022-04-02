@@ -13,6 +13,7 @@ using namespace engine; // NOLINT(clion-misra-cpp2008-7-3-4)
 using namespace cds; // NOLINT(clion-misra-cpp2008-7-3-4)
 using namespace vulkan; // NOLINT(clion-misra-cpp2008-7-3-4)
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE && __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SURFACE_AVAILABLE && __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SWAP_CHAIN_AVAILABLE
 #define C_ENG_MAP_START     CLASS ( SwapChainPresentHandler, ENGINE_PARENT ( PresentHandler ) )
 #include <ObjectMapping.hpp>
 
@@ -137,3 +138,4 @@ Self :: Constructor (
         _surface ( handle ) {
 
 }
+#endif

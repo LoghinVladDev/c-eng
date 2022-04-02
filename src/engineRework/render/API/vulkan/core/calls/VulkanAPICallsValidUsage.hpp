@@ -8,6 +8,8 @@
 #include <VulkanCoreConfig.hpp>
 #include <CDS/HashSet>
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+
 namespace engine { // NOLINT(modernize-concat-nested-namespaces)
     namespace vulkan {
 
@@ -166,6 +168,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
             return validateImplicit ( pCreateInfo );
         }
 
+#if __C_ENG_VULKAN_API_EXTENSION_AMD_MEMORY_OVERALLOCATION_BEHAVIOUR_AVAILABLE
         static inline auto validateImplicit (
                 __C_ENG_TYPE ( DeviceMemoryOverallocationCreateInfoAMD ) const * pCreateInfo
         ) noexcept -> bool {
@@ -196,7 +199,9 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         ) noexcept -> bool {
             return validateImplicit ( pCreateInfo );
         }
+#endif
 
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEVICE_DIAGNOSTICS_CONFIG_AVAILABLE
         static inline auto validateImplicit (
                 __C_ENG_TYPE ( DeviceDiagnosticsConfigCreateInfoNVidia ) const * pCreateInfo
         ) noexcept -> bool {
@@ -230,6 +235,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         ) noexcept -> bool {
             return validateImplicit ( pCreateInfo );
         }
+#endif
 
         static inline auto validateImplicit (
                 __C_ENG_TYPE ( DeviceDeviceMemoryReportCreateInfo ) const * pCreateInfo
@@ -1557,5 +1563,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
     }
 }
+
+#endif
 
 #endif //__C_ENG_VULKAN_API_CALLS_VALID_USAGE_HPP__

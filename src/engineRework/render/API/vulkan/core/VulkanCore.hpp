@@ -1979,6 +1979,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #include <ObjectMapping.hpp>
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 #define C_ENG_MAP_START     ENUM ( ValidationFeatureEnable,    TYPE ( cds :: uint8 ) )
 #include <ObjectMapping.hpp>
 
@@ -1992,7 +1993,9 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #define C_ENG_MAP_END
 #include <ObjectMapping.hpp>
+#endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 #define C_ENG_MAP_START     ENUM ( ValidationFeatureDisable,    TYPE ( cds :: uint8 ) )
 #include <ObjectMapping.hpp>
 
@@ -2009,7 +2012,9 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #define C_ENG_MAP_END
 #include <ObjectMapping.hpp>
+#endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 #define C_ENG_MAP_START     ENUM ( SampleCountFlag, TYPE ( cds :: uint32 ) )
 #include <ObjectMapping.hpp>
 
@@ -2025,7 +2030,9 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #define C_ENG_MAP_END
 #include <ObjectMapping.hpp>
+#endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 #define C_ENG_MAP_START     ENUM ( PointClippingBehavior, TYPE ( cds :: uint8 ) )
 #include <ObjectMapping.hpp>
 
@@ -2036,7 +2043,9 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #define C_ENG_MAP_END
 #include <ObjectMapping.hpp>
+#endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 #define C_ENG_MAP_START     ENUM ( ShaderStageFlag, TYPE ( cds :: uint32 ) )
 #include <ObjectMapping.hpp>
 
@@ -2089,8 +2098,10 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #define C_ENG_MAP_END
 #include <ObjectMapping.hpp>
+#endif
 
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 #define C_ENG_MAP_START     ENUM ( DeviceQueueCreateFlag,   TYPE ( cds :: uint32 ) )
 #include <ObjectMapping.hpp>
 
@@ -2100,6 +2111,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #define C_ENG_MAP_END
 #include <ObjectMapping.hpp>
+#endif
 
 
 #if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
@@ -16572,7 +16584,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_EXTENDED_DYNAMIC_STATE_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXTERNAL_MEMORY_RDMA_AVAILABLE
 
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceExternalMemoryRDMAFeaturesNVidia ) const & ) noexcept -> cds :: String;
 

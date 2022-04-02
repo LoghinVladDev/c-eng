@@ -269,12 +269,14 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
         namespace utility {
             extern auto chainFeaturesFromDetails (
                     Type ( PhysicalDeviceExtendedFeatures )       *,
                     Type ( PhysicalDeviceDetails )                *
             ) noexcept -> void;
         }
+#endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SURFACE_AVAILABLE
         NoDiscard MaybeUnused extern auto getPhysicalDeviceSurfaceCapabilities (

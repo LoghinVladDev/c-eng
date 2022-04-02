@@ -15,6 +15,7 @@ using namespace cds;
 using namespace engine;
 using namespace engine :: vulkan;
 
+#if __C_ENG_VULKAN_API_EXTENSION_VALIDATION_CACHE_AVAILABLE
 #define C_ENG_MAP_START CLASS ( ValidationCache, ENGINE_PARENT ( VulkanRenderObject ) )
 #include <ObjectMapping.hpp>
 
@@ -259,3 +260,5 @@ auto Self :: clear () noexcept -> Self & {
 
     return * this;
 }
+
+#endif

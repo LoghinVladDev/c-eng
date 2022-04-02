@@ -13,6 +13,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
     namespace vulkan {
 
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 #define C_ENG_MAP_START     CLASS ( VulkanAPIException, ENGINE_PARENT ( RenderEngineAPIException ) )
 #include <ObjectMapping.hpp>
 
@@ -26,8 +27,10 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #define C_ENG_MAP_END
 #include <ObjectMapping.hpp>
+#endif
 
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 #define C_ENG_MAP_START     CLASS ( VulkanAPICallException, ENGINE_PARENT ( VulkanAPIException ) )
 #include <ObjectMapping.hpp>
 
@@ -100,7 +103,9 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #define C_ENG_MAP_END
 #include <ObjectMapping.hpp>
+#endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 #if defined(__CDS_compiler_clang) || defined(__CDS_compiler_gcc)
 
 #define __C_ENG_THROW_DETAILED_API_CALL_EXCEPTION(_apiCall, _retVal) throw __C_ENG_TYPE ( VulkanAPICallException ) ( _apiCall, _retVal, __LINE__, __FILE__, __PRETTY_FUNCTION__ ) // NOLINT(bugprone-reserved-identifier)
@@ -123,6 +128,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #error Define The __C_ENG_THROW_DETAILED_API_CALL_EXCEPTION macro set for the selected compiler
 
+#endif
 #endif
 
     }

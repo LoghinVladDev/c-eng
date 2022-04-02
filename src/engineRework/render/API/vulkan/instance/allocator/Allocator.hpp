@@ -10,6 +10,7 @@
 #include <VulkanCore.hpp>
 
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 #define C_ENG_MAP_START     CLASS ( Allocator,  PARENT ( cds :: Object ) )
 #include <ObjectMapping.hpp>
 
@@ -31,6 +32,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #define C_ENG_MAP_END
 #include <ObjectMapping.hpp>
+#endif
 
 
 #endif //__C_ENG_ALLOCATOR_HPP__

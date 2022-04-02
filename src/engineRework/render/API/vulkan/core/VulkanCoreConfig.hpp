@@ -7,6 +7,7 @@
 
 #include <CDS/Types>
 
+
 namespace engine :: vulkan :: config {
 
     enum class CoreDumpType {

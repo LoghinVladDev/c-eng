@@ -9,6 +9,7 @@
 #include <CDS/LockGuard>
 #include <VulkanCore.hpp>
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 #define C_ENG_MAP_START HEADER
 #include <ObjectMapping.hpp>
 
@@ -38,5 +39,6 @@ public:
 
 #define C_ENG_MAP_END
 #include <ObjectMapping.hpp>
+#endif
 
 #endif //__C_ENG_ALLOCATION_HANDLER_HPP__

@@ -7784,7 +7784,7 @@ namespace engine :: vulkan {
         * pDestination = {
 #if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
                 .sType                          = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_INLINE_UNIFORM_BLOCK_CREATE_INFO,
-#elif
+#else
                 .sType                          = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_INLINE_UNIFORM_BLOCK_CREATE_INFO_EXT,
 #endif
                 .pNext                          = nullptr,

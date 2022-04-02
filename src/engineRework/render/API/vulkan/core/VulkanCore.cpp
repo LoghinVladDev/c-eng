@@ -14,6 +14,7 @@ using namespace engine; // NOLINT(clion-misra-cpp2008-7-3-4)
 #define C_ENG_MAP_START     SOURCE
 #include <ObjectMapping.hpp>
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 auto vulkan :: toString (
         vulkan :: __C_ENG_TYPE ( Result ) result
 ) noexcept -> StringLiteral {
@@ -128,7 +129,9 @@ auto vulkan :: toString (
 
     return asString;
 }
+#endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 auto vulkan :: toString (
         __C_ENG_TYPE ( StructureType ) type
 ) noexcept -> StringLiteral {
@@ -1727,7 +1730,9 @@ auto vulkan :: toString (
 
     return asString;
 }
+#endif
 
+#if __C_ENG_VULKAN_API_EXTENSION_DEBUG_UTILS_AVAILABLE
 auto vulkan :: toString (
         __C_ENG_TYPE ( DebugMessageSeverityFlag ) flag
 ) noexcept -> StringLiteral {
@@ -1756,7 +1761,9 @@ auto vulkan :: toString (
 
     return asString;
 }
+#endif
 
+#if __C_ENG_VULKAN_API_EXTENSION_VALIDATION_FEATURES_AVAILABLE
 auto vulkan :: toString (
         __C_ENG_TYPE ( ValidationFeatureEnable ) flag
 ) noexcept -> StringLiteral {
@@ -1791,7 +1798,9 @@ auto vulkan :: toString (
 
     return asString;
 }
+#endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 auto vulkan :: toString (
         __C_ENG_TYPE ( PhysicalDeviceType ) type
 ) noexcept -> StringLiteral {
@@ -1807,7 +1816,9 @@ auto vulkan :: toString (
 
     return asString;
 }
+#endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 auto vulkan :: toString (
         __C_ENG_TYPE ( VendorID ) ID
 ) noexcept -> StringLiteral {
@@ -1824,7 +1835,9 @@ auto vulkan :: toString (
 
     return asString;
 }
+#endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 auto vulkan :: toString (
         __C_ENG_TYPE ( SampleCountFlag ) flag
 ) noexcept -> StringLiteral {
@@ -1842,7 +1855,9 @@ auto vulkan :: toString (
 
     return asString;
 }
+#endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 auto vulkan :: toString (
         __C_ENG_TYPE ( PointClippingBehavior ) flag
 ) noexcept -> StringLiteral {
@@ -1855,7 +1870,9 @@ auto vulkan :: toString (
 
     return asString;
 }
+#endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 auto vulkan :: toString (
         __C_ENG_TYPE ( ShaderStageFlag ) flag
 ) noexcept -> StringLiteral {
@@ -1899,6 +1916,7 @@ auto vulkan :: toString (
 
     return asString;
 }
+#endif
 
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 
@@ -2267,6 +2285,7 @@ auto vulkan :: toString (
 
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 auto vulkan :: toString (
         __C_ENG_TYPE ( Offset2D ) const & offset
 ) noexcept -> String {
@@ -2318,7 +2337,9 @@ auto vulkan :: toString (
             ", extent = "   + toString ( rect.extent ) +
             " }";
 }
+#endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 auto vulkan :: toString (
         __C_ENG_TYPE ( Version ) const & version
 ) noexcept -> String {
@@ -2330,14 +2351,18 @@ auto vulkan :: toString (
             ", patch = "        + version.patch     +
             " }";
 }
+#endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 auto vulkan :: toString (
         __C_ENG_TYPE ( DeviceSize ) deviceSize
 ) noexcept -> String {
 
     return ""_s + static_cast < uint64 > ( deviceSize );
 }
+#endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 auto vulkan :: toString (
         __C_ENG_TYPE ( ApplicationInfo ) const & createInfo
 ) noexcept -> String {
@@ -2352,7 +2377,9 @@ auto vulkan :: toString (
             ", apiVersion = "       + versionReadableFormat ( createInfo.apiVersion ) +
             " }";
 }
+#endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 auto vulkan :: toString (
         __C_ENG_TYPE ( InstanceCreateInfo ) const & createInfo
 ) noexcept -> String {
@@ -2376,7 +2403,9 @@ auto vulkan :: toString (
             ", enabledExtensions = "    + stringArrayToString ( createInfo.pEnabledExtensionNames, createInfo.enabledExtensionCount ) +
             " }";
 }
+#endif
 
+#if __C_ENG_VULKAN_API_EXTENSION_DEBUG_UTILS_AVAILABLE
 auto vulkan :: toString (
         __C_ENG_TYPE ( DebugMessengerCreateInfo ) const & createInfo
 ) noexcept -> String {
@@ -2391,7 +2420,9 @@ auto vulkan :: toString (
             ", userData = "             + :: toString ( createInfo.pCallbackUserData ) +
             " }";
 }
+#endif
 
+#if __C_ENG_VULKAN_API_EXTENSION_VALIDATION_FEATURES_AVAILABLE
 auto vulkan :: toString (
         __C_ENG_TYPE ( ValidationFeatures ) const & createInfo
 ) noexcept -> String {
@@ -2435,7 +2466,9 @@ auto vulkan :: toString (
             " }"
             " }";
 }
+#endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 auto vulkan :: toString (
         __C_ENG_TYPE ( LayerProperties ) const & properties
 ) noexcept -> String {
@@ -2447,7 +2480,9 @@ auto vulkan :: toString (
             ", description = "      + properties.description +
             " }";
 }
+#endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 auto vulkan :: toString (
         __C_ENG_TYPE ( ExtensionProperties ) const & properties
 ) noexcept -> String {
@@ -2457,7 +2492,9 @@ auto vulkan :: toString (
             ", specVersion = "      + properties.specVersion +
             " }";
 }
+#endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 auto vulkan :: toString (
         __C_ENG_TYPE ( AllocationCallbacks ) const & allocationCallbacks
 ) noexcept -> String {
@@ -2470,7 +2507,9 @@ auto vulkan :: toString (
             ", internalFreeNotificationCallback = "         + :: toString ( allocationCallbacks.internalFreeNotificationCallback ) +
             " }";
 }
+#endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 auto vulkan :: toString (
         __C_ENG_TYPE ( PhysicalDeviceLimits ) const &   deviceLimits
 ) noexcept -> String {
@@ -2584,7 +2623,9 @@ auto vulkan :: toString (
             ", nonCoherentAtomSize = "                              + toString ( deviceLimits.nonCoherentAtomSize ) +
             " }";
 }
+#endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 auto vulkan :: toString (
         __C_ENG_TYPE ( PhysicalDeviceSparseProperties ) const & properties
 ) noexcept -> String {
@@ -2597,7 +2638,9 @@ auto vulkan :: toString (
             ", residencyNonResidentStrict = "               + properties.residencyNonResidentStrict +
             " }";
 }
+#endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 auto vulkan :: toString (
         __C_ENG_TYPE ( PhysicalDeviceProperties ) const & properties
 ) noexcept -> String {
@@ -2614,7 +2657,9 @@ auto vulkan :: toString (
             ", sparseProperties = "     + toString ( properties.sparseProperties ) +
             " }";
 }
+#endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 static auto deduceAndMoveToNextInPropertiesChain (
         vulkan :: __C_ENG_TYPE ( GenericOutStructure ) * pInStructure
 ) noexcept -> String {
@@ -2624,7 +2669,9 @@ static auto deduceAndMoveToNextInPropertiesChain (
 
     return "";
 }
+#endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 auto vulkan :: toString (
         __C_ENG_TYPE ( PhysicalDeviceExtendedProperties ) const & properties
 ) noexcept -> String {
@@ -2637,7 +2684,9 @@ auto vulkan :: toString (
             ) +
             " }";
 }
+#endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 auto vulkan :: toString (
         __C_ENG_TYPE ( PhysicalDeviceExtendedFeatures ) const & properties
 ) noexcept -> String {
@@ -2648,6 +2697,7 @@ auto vulkan :: toString (
             ", baseFeatures = "    + toString ( properties.features ) +
             " }";
 }
+#endif
 
 #if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
 
@@ -4161,7 +4211,7 @@ auto vulkan :: toString (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_MULTI_DRAW_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_VALVE_MUTABLE_DESCRIPTOR_TYPE_AVAILABLE
 
             ", mutableDescriptorTypeFeaturesValve = "               + toString ( details.mutableDescriptorTypeFeaturesValve ) +
 
@@ -7245,6 +7295,7 @@ auto vulkan :: toString (
         case Format_ASTC_10x10_SFloat_Block:                    { asString = "[[511..384]c1[383..256]c2[255..128]c3[127..0]c4]:s,fRGBA,10x10,ASTC,t=(c1,c2,c3,c4)";                     break; }
         case Format_ASTC_12x10_SFloat_Block:                    { asString = "[[511..384]c1[383..256]c2[255..128]c3[127..0]c4]:s,fRGBA,12x10,ASTC,t=(c1,c2,c3,c4)";                     break; }
         case Format_ASTC_12x12_SFloat_Block:                    { asString = "[[511..384]c1[383..256]c2[255..128]c3[127..0]c4]:s,fRGBA,12x12,ASTC,t=(c1,c2,c3,c4)";                     break; }
+#if __C_ENG_VULKAN_API_POWER_VR_IMAGE_FORMAT_AVAILABLE
         case Format_PVRTC2_2BPP_UNorm_Block_PowerVR:
         case Format_PVRTC1_2BPP_UNorm_Block_PowerVR:            { asString = "[[255..192]c1[192..128]c2[127..64]c3[63..0]c4]:u,nRGBA,8x4,PVRTC,t=(c1,c2,c3,c4)";                        break; }
         case Format_PVRTC2_4BPP_UNorm_Block_PowerVR:
@@ -7253,6 +7304,7 @@ auto vulkan :: toString (
         case Format_PVRTC2_2BPP_SRGB_Block_PowerVR:             { asString = "[[255..192]c1[192..128]c2[127..64]c3[63..0]c4]:u,sRGBAnl,8x4,PVRTC,t=(c1,c2,c3,c4)";                      break; }
         case Format_PVRTC1_4BPP_SRGB_Block_PowerVR:
         case Format_PVRTC2_4BPP_SRGB_Block_PowerVR:             { asString = "[[255..192]c1[192..128]c2[127..64]c3[63..0]c4]:u,sRGBAnl,4x4,PVRTC,t=(c1,c2,c3,c4)";                      break; }
+#endif
     }
 
     return asString;
@@ -8231,7 +8283,7 @@ auto vulkan :: toString (
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_HUAWEI_INVOCATION_MASK_AVAILABLE
 
         case AccessFlagInvocationMaskReadHuawei:            { asString = "InvocationMaskReadHuawei";            break; }
 
@@ -10128,7 +10180,7 @@ auto vulkan :: toString (
 }
 #endif
 
-#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_AMD_PIPELINE_COMPILER_CONTROL_AVAILABLE
 auto vulkan :: toString (
         Type ( PipelineCompilerControlFlagAMD ) flag
 ) noexcept -> StringLiteral {
