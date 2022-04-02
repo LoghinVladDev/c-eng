@@ -364,6 +364,7 @@ inline static auto paramToString (
             return toString ( * pProperties );
         }
 
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PERFORMANCE_QUERY_AVAILABLE
         case ParameterType :: PerformanceCounter: {
             auto pProperties = reinterpret_cast < engine :: vulkan :: Type ( PerformanceCounter ) const * > ( parameter.pParam );
             return toString ( * pProperties );
@@ -373,6 +374,7 @@ inline static auto paramToString (
             auto pProperties = reinterpret_cast < engine :: vulkan :: Type ( PerformanceCounterDescription ) const * > ( parameter.pParam );
             return toString ( * pProperties );
         }
+#endif
 
         case ParameterType :: PhysicalDeviceGroupProperties: {
             auto pProperties = reinterpret_cast < engine :: vulkan :: Type ( PhysicalDeviceGroupProperties ) const * > ( parameter.pParam );
@@ -384,10 +386,12 @@ inline static auto paramToString (
             return toString ( * pProperties );
         }
 
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SURFACE_AVAILABLE
         case ParameterType :: SurfaceFormat: {
             auto pProperties = reinterpret_cast < engine :: vulkan :: Type ( SurfaceFormat ) const * > ( parameter.pParam );
             return toString ( * pProperties );
         }
+#endif
 
         case ParameterType :: Extent2DPtr: {
             auto pProperties = reinterpret_cast < engine :: vulkan :: Type ( Extent2D ) const * > ( parameter.pParam );

@@ -7256,7 +7256,9 @@ auto vulkan :: toString (
         case Format_G10x6_B10x6_R10x6_3Plane_444_UNorm_3Pack16:
         case Format_G10x6_B10x6_R10x6_3Plane_422_UNorm_3Pack16:
         case Format_G10x6_B10x6_R10x6_3Plane_420_UNorm_3Pack16: { asString = "[[47..42]unused[41..32]g[41..26]unused[25..16]b[15..10]unused[9..0]r]:u,n,plane0=g,plane1=b,plane3=r";    break; }
+#if __C_ENG_VULKAN_API_EXTENSION_YCBCR_2_PLANE_444_FORMATS_AVAILABLE
         case Format_G10x6_B10x6R10x6_2Plane_444_UNorm_3Pack16:
+#endif
         case Format_G10x6_B10x6R10x6_2Plane_422_UNorm_3Pack16:
         case Format_G10x6_B10x6R10x6_2Plane_420_UNorm_3Pack16:  { asString = "[[47..42]unused[41..32]g[41..26]unused[25..16]b[15..10]unused[9..0]r]:u,n,plane0=g,plane1=br";            break; }
         case Format_R12x4_UNorm_Pack16:                         { asString = "[[15..12]unused[11..0]r]:u,n";                                                                            break; }
@@ -7267,7 +7269,9 @@ auto vulkan :: toString (
         case Format_G12x4_B12x4_R12x4_3Plane_444_UNorm_3Pack16:
         case Format_G12x4_B12x4_R12x4_3Plane_422_UNorm_3Pack16:
         case Format_G12x4_B12x4_R12x4_3Plane_420_UNorm_3Pack16: { asString = "[[47..44]unused[43..32]g[41..28]unused[27..16]b[15..12]unused[11..0]r]:u,n,plane0=g,plane1=b,plane3=r";   break; }
+#if __C_ENG_VULKAN_API_EXTENSION_YCBCR_2_PLANE_444_FORMATS_AVAILABLE
         case Format_G12x4_B12x4R12x4_2Plane_444_UNorm_3Pack16:
+#endif
         case Format_G12x4_B12x4R12x4_2Plane_422_UNorm_3Pack16:
         case Format_G12x4_B12x4R12x4_2Plane_420_UNorm_3Pack16:  { asString = "[[47..44]unused[43..32]g[41..28]unused[27..16]b[15..12]unused[11..0]r]:u,n,plane0=g,plane1=br";           break; }
         case Format_G16_B16_G16_R16_422_UNorm:                  { asString = "[[63..48]g[47..32]b[41..16]g[15..0]r]:u,n";                                                               break; }
@@ -7275,10 +7279,15 @@ auto vulkan :: toString (
         case Format_G16_B16_R16_3Plane_444_UNorm:
         case Format_G16_B16_R16_3Plane_422_UNorm:
         case Format_G16_B16_R16_3Plane_420_UNorm:               { asString = "[[47..32]g[41..16]b[15..0]r]:u,n,plane0=g,plane1=b,plane3=r";                                             break; }
+#if __C_ENG_VULKAN_API_EXTENSION_YCBCR_2_PLANE_444_FORMATS_AVAILABLE
         case Format_G16_B16R16_2Plane_444_UNorm:
+#endif
         case Format_G16_B16R16_2Plane_422_UNorm:
         case Format_G16_B16R16_2Plane_420_UNorm:                { asString = "[[47..32]g[41..16]b[15..0]r]:u,n,plane0=g,plane1=br";                                                     break; }
+#if __C_ENG_VULKAN_API_EXTENSION_YCBCR_2_PLANE_444_FORMATS_AVAILABLE
         case Format_G8_B8R8_2Plane_444_UNorm:                   { asString = "[[23..16]g[15..8]b[7..0]r]:u,n,plane0=g,plane1=br";                                                       break; }
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SAMPLER_YCBCR_CONVERSION_AVAILABLE
         case Format_A4_R4_G4_B4_UNorm_Pack16:                   { asString = "[[15..12]a[11..8]r[7..4]g[3..0]b:u,n]";                                                                   break; }
         case Format_A4_B4_G4_R4_UNorm_Pack16:                   { asString = "[[15..12]a[11..8]b[7..4]g[3..0]r:u,n]";                                                                   break; }
         case Format_ASTC_4x4_SFloat_Block:                      { asString = "[[511..384]c1[383..256]c2[255..128]c3[127..0]c4]:s,fRGBA,4x4,ASTC,t=(c1,c2,c3,c4)";                       break; }
@@ -7295,6 +7304,7 @@ auto vulkan :: toString (
         case Format_ASTC_10x10_SFloat_Block:                    { asString = "[[511..384]c1[383..256]c2[255..128]c3[127..0]c4]:s,fRGBA,10x10,ASTC,t=(c1,c2,c3,c4)";                     break; }
         case Format_ASTC_12x10_SFloat_Block:                    { asString = "[[511..384]c1[383..256]c2[255..128]c3[127..0]c4]:s,fRGBA,12x10,ASTC,t=(c1,c2,c3,c4)";                     break; }
         case Format_ASTC_12x12_SFloat_Block:                    { asString = "[[511..384]c1[383..256]c2[255..128]c3[127..0]c4]:s,fRGBA,12x12,ASTC,t=(c1,c2,c3,c4)";                     break; }
+#endif
 #if __C_ENG_VULKAN_API_POWER_VR_IMAGE_FORMAT_AVAILABLE
         case Format_PVRTC2_2BPP_UNorm_Block_PowerVR:
         case Format_PVRTC1_2BPP_UNorm_Block_PowerVR:            { asString = "[[255..192]c1[192..128]c2[127..64]c3[63..0]c4]:u,nRGBA,8x4,PVRTC,t=(c1,c2,c3,c4)";                        break; }
@@ -14363,7 +14373,9 @@ auto vulkan :: toString (
 
     switch ( flag ) {
         case DescriptorUpdateTemplateTypeDescriptorSet:     { asString = "Descriptor Set";      break; }
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PUSH_DESCRIPTOR_AVAILABLE
         case DescriptorUpdateTemplateTypePushDescriptors:   { asString = "Push Descriptors";    break; }
+#endif
     }
 
     return asString;

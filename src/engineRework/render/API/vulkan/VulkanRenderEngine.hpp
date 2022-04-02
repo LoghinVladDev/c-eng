@@ -20,7 +20,11 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
         Class {
             Field ( ENGINE_TYPE ( Version ),                                    desiredVersion, DEFAULT_VALUE ( versionConstants :: nullVersion ),  GET_DEFAULT, SET_INLINE ( setDesiredVersion ) ) // NOLINT(clion-misra-cpp2008-5-0-4,clion-misra-cpp2008-5-0-6)
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SURFACE_AVAILABLE
             Field ( ENGINE_PRIMITIVE_TYPE ( SurfaceHandle ),                    surfaceHandle,  DEFAULT_VALUE ( nullptr ),                          GET_DEFAULT, SET_NONE )
+#endif
+
             Field ( ENGINE_TYPE ( Instance ),                                   instance,       NO_INIT,                                            GET_DEFAULT, SET_NONE )
             Field ( ENGINE_TYPE ( Device ),                                     device,         NO_INIT,                                            GET_DEFAULT, SET_NONE )
             Field ( TYPE ( cds :: UniquePointer < Type ( PresentHandler ) > ),  presentHandler, NO_INIT,                                            GET_DEFAULT, SET_NONE )

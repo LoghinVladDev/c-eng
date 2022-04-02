@@ -237,6 +237,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         }
 #endif
 
+#if __C_ENG_VULKAN_API_EXTENSION_DEVICE_MEMORY_REPORT_AVAILABLE
         static inline auto validateImplicit (
                 __C_ENG_TYPE ( DeviceDeviceMemoryReportCreateInfo ) const * pCreateInfo
         ) noexcept -> bool {
@@ -270,6 +271,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         ) noexcept -> bool {
             return validateImplicit ( pCreateInfo );
         }
+#endif
 
         static inline auto validateImplicit (
                 __C_ENG_TYPE ( DevicePrivateDataCreateInfo ) const * pCreateInfo
@@ -777,7 +779,9 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
                 if (
                         occurrences.contains ( chainElement->structureType ) &&
+#if __C_ENG_VULKAN_API_EXTENSION_DEVICE_MEMORY_REPORT_AVAILABLE
                         chainElement->structureType != StructureTypeDeviceDeviceMemoryReportCreateInfo &&
+#endif
                         chainElement->structureType != StructureTypeDevicePrivateDataCreateInfo
                 ) {
                     reportError ( "VUID-VkDeviceCreateInfo-sType-unique: "

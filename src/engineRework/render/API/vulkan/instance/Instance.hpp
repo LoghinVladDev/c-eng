@@ -63,11 +63,14 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
             Field ( ENGINE_TYPE ( Version ),                                                version,                    DEFAULT_VALUE ( versionConstants :: nullVersion ),  GET_DEFAULT, SET_NONE )
             Field ( ENGINE_TYPE ( LayerHandler ),                                           layerHandler,               NO_INIT,                                            GET_DEFAULT, SET_NONE )
+
+#if __C_ENG_VULKAN_API_EXTENSION_DEBUG_UTILS_AVAILABLE
             Field ( ENGINE_TYPE ( DebugMessageSeverityFlags ),                              debugMessageSeverityFlags,  DEFAULT_VALUE ( defaultMessageSeverityFlags ),      GET_DEFAULT, SET_NONE )
             Field ( ENGINE_TYPE ( DebugMessageTypeFlags ),                                  debugMessageTypeFlags,      DEFAULT_VALUE ( defaultMessageTypeFlags ),          GET_DEFAULT, SET_NONE )
+            Field ( ENGINE_TYPE ( DebugMessengerHandle ),                                   debugMessengerHandle,       DEFAULT_VALUE ( nullptr ),                          GET_DEFAULT, SET_NONE )
+#endif
 
             Field ( ENGINE_TYPE ( InstanceHandle ),                                         handle,                     DEFAULT_VALUE ( nullptr ),                          GET_DEFAULT, SET_NONE )
-            Field ( ENGINE_TYPE ( DebugMessengerHandle ),                                   debugMessengerHandle,       DEFAULT_VALUE ( nullptr ),                          GET_DEFAULT, SET_NONE )
 
             Field ( TYPE ( cds :: Array < __C_ENG_TYPE ( ValidationFeatureEnable ) > ),     enabledValidationFeatures,  NO_INIT,                                            GET_DEFAULT, SET_NONE )
             Field ( TYPE ( cds :: Array < __C_ENG_TYPE ( ValidationFeatureDisable ) > ),    disabledValidationFeatures, NO_INIT,                                            GET_DEFAULT, SET_NONE )
@@ -105,11 +108,16 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
         Class {
             Field ( ENGINE_TYPE ( Version ),                                                version,                    DEFAULT_VALUE ( versionConstants :: nullVersion ),      GET_NONE, SET_INLINE ( setVersion ) )
+
+#if __C_ENG_VULKAN_API_EXTENSION_DEBUG_UTILS_AVAILABLE
             Field ( ENGINE_TYPE ( DebugMessageSeverityFlags ),                              debugMessageSeverityFlags,  DEFAULT_VALUE ( defaultMessageSeverityFlags ),          GET_NONE, SET_INLINE ( setDebugMessageSeverityFlags ) )
             Field ( ENGINE_TYPE ( DebugMessageTypeFlags ),                                  debugMessageTypeFlags,      DEFAULT_VALUE ( defaultMessageTypeFlags ),              GET_NONE, SET_INLINE ( setDebugMessageTypeFlags ) )
+#endif
 
+#if __C_ENG_VULKAN_API_EXTENSION_VALIDATION_CACHE_AVAILABLE
             Field ( TYPE ( cds :: Array < __C_ENG_TYPE ( ValidationFeatureEnable ) > ),     enabledValidationFeatures,  DEFAULT_VALUE ( defaultEnabledValidationFeatures ),     GET_NONE, SET_INLINE ( setEnabledValidationFeatures ) )
             Field ( TYPE ( cds :: Array < __C_ENG_TYPE ( ValidationFeatureDisable ) > ),    disabledValidationFeatures, DEFAULT_VALUE ( defaultDisabledValidationFeatures ),    GET_NONE, SET_INLINE ( setDisabledValidationFeatures ) )
+#endif
 
         public:
             __C_ENG_NO_DISCARD auto build () noexcept -> Nester;

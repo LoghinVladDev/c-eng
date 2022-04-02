@@ -1162,12 +1162,14 @@ auto Self :: build () noexcept (false) -> Nester {
 
     LockGuard deviceCreationGuard ( globals :: deviceCreationLock );
 
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SURFACE_AVAILABLE
     if (
             this->_surfaceHandle    != nullptr &&
             this->_physicalDevice   != nullptr
     ) {
         return this->buildSingleDeviceToSurface();
     }
+#endif
 
     throw Type ( VulkanAPIException ) ( "Unable to build device from given objects" );
 }
@@ -1250,10 +1252,12 @@ auto Self :: deviceCreateInfoAddQueueCreateInfos (
     requiredQueueCounts [ QueueFlagPresent ]    = this->_presentQueueCount;
 
     for ( auto const & family : this->_physicalDevice->queueFamilies() ) {
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SURFACE_AVAILABLE
         queueFamilyFlags [ family.index() ] = family.query()
                 .select < Type ( QueueFlags ) > ()
                 .withSurface ( this->_surfaceHandle )
                 .execute();
+#endif
 
         totalFamilyCounts [ family.index() ] = family.details().properties.queueCount;
     }
@@ -1364,7 +1368,10 @@ auto Self :: buildSingleDeviceToSurface () noexcept (false) -> Nester {
     Nester device;
 
     device._physicalDevice  = this->_physicalDevice;
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SURFACE_AVAILABLE
     device._surfaceHandle   = this->_surfaceHandle;
+#endif
 
     Type ( DeviceCreateInfo ) deviceCreateInfo {
         .structureType  = StructureTypeDeviceCreateInfo,
@@ -1538,7 +1545,9 @@ Self :: Constructor (
         Self && deviceRef
 ) noexcept :
         _handle ( exchange ( deviceRef._handle, nullptr ) ),
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SURFACE_AVAILABLE
         _surfaceHandle ( exchange ( deviceRef._surfaceHandle, nullptr ) ),
+#endif
         _physicalDevice ( exchange ( deviceRef._physicalDevice, nullptr ) ),
         _queues ( std :: move ( deviceRef._queues ) ) {
 
@@ -1553,7 +1562,9 @@ auto Self :: operator = (
     }
 
     this->_handle           = exchange ( deviceRef._handle, nullptr );
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SURFACE_AVAILABLE
     this->_surfaceHandle    = exchange ( deviceRef._surfaceHandle, nullptr );
+#endif
     this->_physicalDevice   = exchange ( deviceRef._physicalDevice, nullptr );
     this->_queues           = std :: move ( deviceRef._queues );
 

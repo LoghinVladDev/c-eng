@@ -13,7 +13,7 @@
 #include <CDS/Pointer>
 
 
-#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE && __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SURFACE_AVAILABLE
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 #define C_ENG_MAP_START     CLASS ( PresentHandler, ENGINE_PARENT ( VulkanRenderObject ) )
 #include <ObjectMapping.hpp>
 
@@ -24,6 +24,8 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
         Class {
         public:
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SURFACE_AVAILABLE
             struct SurfaceFormats {
                 Type ( SurfaceFormat )    * pFormats;
                 cds :: uint32               count;
@@ -39,6 +41,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
                 SurfaceFormats                  formats;
                 PresentModes                    presentModes;
             };
+#endif
 
             struct ImageViews {
                 Type ( ImageViewHandle )  * pImageViews;
@@ -48,10 +51,14 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
             Field ( TYPE ( ImageViews ),    imageViews, DEFAULT_VALUE ( nullptr, 0U ),  GET_DEFAULT,    SET_DEFAULT_PROTECTED )
 
         private:
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SURFACE_AVAILABLE
             static auto deviceSupportsSurfacePresent ( Type ( Device ) const *, Type ( SurfaceHandle ) ) noexcept (false) -> bool;
+#endif
 
         protected:
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SURFACE_AVAILABLE
             static auto propertiesForDevice ( Type ( PhysicalDeviceHandle ), Type ( SurfaceHandle ) ) noexcept (false) -> SurfaceProperties const *;
+#endif
             auto acquireImageViews () noexcept -> Type ( ImageViewHandle ) *;
             auto releaseImageViews () noexcept -> void;
 
@@ -59,10 +66,12 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
             virtual auto init ( Type ( Device ) const * ) noexcept (false) -> Self & = 0;
             auto clear () noexcept -> Self & override = 0;
 
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SURFACE_AVAILABLE
             __C_ENG_NO_DISCARD static auto createSuitablePresentHandler (
                     Type ( Device )         const *,
                     Type ( SurfaceHandle )
             ) noexcept -> cds :: UniquePointer < Type ( PresentHandler ) >;
+#endif
 
             Destructor () noexcept override = default;
         };

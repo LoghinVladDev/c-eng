@@ -80,6 +80,7 @@ static VKAPI_ATTR auto VKAPI_CALL debugMessengerCallback (
     return VK_FALSE;
 }
 
+#if __C_ENG_VULKAN_API_EXTENSION_DEBUG_UTILS_AVAILABLE
 static inline auto populateDebugMessengerCreateInfo (
         vulkan :: __C_ENG_TYPE ( DebugMessengerCreateInfo )   * pCreateInfo,
         vulkan :: __C_ENG_TYPE ( DebugMessageSeverityFlags )    messageSeverityFlags,
@@ -102,6 +103,7 @@ static inline auto populateDebugMessengerCreateInfo (
             .pCallbackUserData      = nullptr
     };
 }
+#endif
 
 static inline auto populateApplicationInfo (
         vulkan :: __C_ENG_TYPE ( ApplicationInfo )    * pApplicationInfo,
@@ -151,6 +153,7 @@ static inline auto populateInstanceCreateInfo (
     };
 }
 
+#if __C_ENG_VULKAN_API_EXTENSION_VALIDATION_FEATURES_AVAILABLE
 static inline auto populateValidationFeatures (
         vulkan :: __C_ENG_TYPE ( ValidationFeatures )                                 * pValidationFeatures,
         vulkan :: __C_ENG_TYPE ( LayerHandler ) :: ValidationEnabledFeatures    const * pEnabledFeatures,
@@ -171,6 +174,7 @@ static inline auto populateValidationFeatures (
             .pDisabledValidationFeatures    = pDisabledFeatures->pFeatures
     };
 }
+#endif
 
 #define C_ENG_MAP_START     CLASS ( Instance, ENGINE_PARENT ( VulkanRenderObject ) )
 #include <ObjectMapping.hpp>
@@ -220,9 +224,14 @@ auto vulkan :: Self :: init () noexcept (false) -> Self & {
     auto layers = this->_layerHandler.enabledLayerNames();
     auto extensions = this->_layerHandler.enabledExtensionNames();
 
+#if __C_ENG_VULKAN_API_EXTENSION_DEBUG_UTILS_AVAILABLE
     __C_ENG_TYPE ( DebugMessengerCreateInfo )   debugMessengerCreateInfo {};
+#endif
+
     __C_ENG_TYPE ( ApplicationInfo )            applicationInfo {};
     __C_ENG_TYPE ( InstanceCreateInfo )         instanceCreateInfo {};
+
+#if __C_ENG_VULKAN_API_EXTENSION_VALIDATION_FEATURES_AVAILABLE
     __C_ENG_TYPE ( ValidationFeatures )         validationFeatures {};
 
     __C_ENG_TYPE ( ValidationFeatureEnable )    enabledValidationFeatures   [ engine :: vulkan :: config :: validationFeatureEnableCount ];
@@ -230,11 +239,13 @@ auto vulkan :: Self :: init () noexcept (false) -> Self & {
 
     __C_ENG_TYPE ( LayerHandler ) :: ValidationEnabledFeatures  enabledFeatures {};
     __C_ENG_TYPE ( LayerHandler ) :: ValidationDisabledFeatures disabledFeatures {};
+#endif
 
     void                                      * pNext = nullptr;
 
     if ( this->layerHandler().debugLayerEnabled() ) {
 
+#if __C_ENG_VULKAN_API_EXTENSION_VALIDATION_FEATURES_AVAILABLE
         for ( uint32 i = 0U; i < this->enabledValidationFeatures().size(); ++ i ) {
             enabledValidationFeatures[i] = this->enabledValidationFeatures()[static_cast < sint32 > ( i )];
         }
@@ -253,6 +264,15 @@ auto vulkan :: Self :: init () noexcept (false) -> Self & {
                 .count      = static_cast < cds :: uint32 > ( this->disabledValidationFeatures().size() )
         };
 
+        populateValidationFeatures (
+                & validationFeatures,
+                & enabledFeatures,
+                & disabledFeatures,
+                nullptr
+        );
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_DEBUG_UTILS_AVAILABLE
         pNext = & debugMessengerCreateInfo;
 
         populateDebugMessengerCreateInfo (
@@ -262,13 +282,7 @@ auto vulkan :: Self :: init () noexcept (false) -> Self & {
                 & debugMessengerCallback,
                 & validationFeatures
         );
-
-        populateValidationFeatures (
-                & validationFeatures,
-                & enabledFeatures,
-                & disabledFeatures,
-                nullptr
-        );
+#endif
     }
 
     populateApplicationInfo (
@@ -309,12 +323,14 @@ auto vulkan :: Self :: init () noexcept (false) -> Self & {
 
     if ( this->layerHandler().debugLayerEnabled() ) {
 
+#if __C_ENG_VULKAN_API_EXTENSION_DEBUG_UTILS_AVAILABLE
         result = vulkan :: createDebugMessenger (
                 this->handle(),
                 & debugMessengerCreateInfo,
                 __C_ENG_TYPE (Allocator)::instance().callbacks(),
                 & this->_debugMessengerHandle
         );
+#endif
 
         if ( result != ResultSuccess ) {
             __C_ENG_LOG_AND_THROW_DETAILED_API_CALL_EXCEPTION ( error, "createDebugMessenger", result );
@@ -325,6 +341,7 @@ auto vulkan :: Self :: init () noexcept (false) -> Self & {
 }
 
 auto vulkan :: Self :: clear () noexcept (false) -> Self & {
+#if __C_ENG_VULKAN_API_EXTENSION_DEBUG_UTILS_AVAILABLE
     if ( this->_debugMessengerHandle != nullptr ) {
 
         if (
@@ -340,6 +357,7 @@ auto vulkan :: Self :: clear () noexcept (false) -> Self & {
 
         this->_debugMessengerHandle = nullptr;
     }
+#endif
 
     if ( this->_handle != nullptr ) {
 
@@ -374,10 +392,13 @@ auto vulkan :: Self :: build () noexcept -> Nester {
     Nester builtObject;
 
     builtObject._version                    = this->_version;
+
+#if __C_ENG_VULKAN_API_EXTENSION_VALIDATION_FEATURES_AVAILABLE
     builtObject._debugMessageSeverityFlags  = this->_debugMessageSeverityFlags;
     builtObject._debugMessageTypeFlags      = this->_debugMessageTypeFlags;
     builtObject._enabledValidationFeatures  = std :: move ( this->_enabledValidationFeatures );
     builtObject._disabledValidationFeatures = std :: move ( this->_disabledValidationFeatures );
+#endif
 
     return builtObject;
 }

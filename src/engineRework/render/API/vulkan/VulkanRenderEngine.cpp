@@ -32,6 +32,7 @@ auto vulkan :: Self :: init () noexcept (false) -> Self & {
 
     (void) this->_instance.init();
 
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SURFACE_AVAILABLE
     if ( this->renderInstanceSurfaceCallbacks().attachCallback == nullptr ) {
         (void) __C_ENG_TYPE ( Logger ) :: instance().error ( "No Instance Surface Attach Callback Present. Cannot bind window surface to render API" );
     } else {
@@ -46,6 +47,7 @@ auto vulkan :: Self :: init () noexcept (false) -> Self & {
             (void) __C_ENG_TYPE ( Logger ) :: instance().warning ( "Instance Surface Attach Callback returned error value." );
         }
     }
+#endif
 
     __C_ENG_TYPE ( PhysicalDevice ) const * pPhysicalDeviceToUse = nullptr;
     uint32 maxPhysicalDeviceScore = 0U;
@@ -64,7 +66,10 @@ auto vulkan :: Self :: init () noexcept (false) -> Self & {
 
     auto builder = Type ( Device ) :: Builder ()
         .fromDevice ( pPhysicalDeviceToUse )
-        .toSurface ( this->_surfaceHandle );
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SURFACE_AVAILABLE
+        .toSurface ( this->_surfaceHandle )
+#endif
+    ;
 
     if ( this->instance().layerHandler().debugLayerEnabled() ) {
         builder.useValidationCache();
@@ -72,21 +77,31 @@ auto vulkan :: Self :: init () noexcept (false) -> Self & {
 
     this->_device = builder.build();
 
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SURFACE_AVAILABLE
     this->_presentHandler = Type ( PresentHandler ) :: createSuitablePresentHandler (
             & this->_device,
             this->_surfaceHandle
     );
+#endif
 
-    (void) this->_presentHandler->init ( & this->_device );
+    if ( this->presentHandler() == nullptr ) {
+        (void) Type ( Logger ) :: instance().critical ("Unable to present GPU output to any display");
+    } else {
+        (void) this->_presentHandler->init ( & this->_device );
+    }
 
     return * this;
 }
 
 auto vulkan :: Self :: clear () noexcept (false) -> Self & {
 
-    (void) this->_presentHandler->clear();
+    if ( this->presentHandler() != nullptr ) {
+        (void) this->_presentHandler->clear();
+    }
+
     (void) this->_device.clear();
 
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SURFACE_AVAILABLE
     if ( this->_surfaceHandle != nullptr ) {
 
         if ( this->renderInstanceSurfaceCallbacks().detachCallback == nullptr ) {
@@ -106,6 +121,7 @@ auto vulkan :: Self :: clear () noexcept (false) -> Self & {
             }
         }
     }
+#endif
 
     (void) this->_instance.clear();
 

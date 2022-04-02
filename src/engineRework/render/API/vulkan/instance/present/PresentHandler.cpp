@@ -20,15 +20,18 @@ using namespace vulkan; // NOLINT(clion-misra-cpp2008-7-3-4)
 #include <ObjectMapping.hpp>
 
 
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SURFACE_AVAILABLE
 struct DeviceSurfaceProperties {
     Self :: SurfaceProperties       properties;
     Type ( PhysicalDeviceHandle )   deviceHandle;
     Type ( SurfaceHandle )          surfaceHandle;
 };
+#endif
 
 namespace globals {
     static Mutex propertiesLock;
 
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SURFACE_AVAILABLE
     static Type ( SurfaceFormat ) surfaceFormats [ engine :: vulkan :: config :: physicalDeviceCount * engine :: vulkan :: config :: physicalDeviceSurfaceCount ] [ engine :: vulkan :: config :: surfaceFormatCount ];
     static Type ( PresentMode ) presentModes [ engine :: vulkan :: config :: physicalDeviceCount * engine :: vulkan :: config :: physicalDeviceSurfaceCount ] [ engine :: vulkan :: config :: surfacePresentModeCount ];
 
@@ -36,6 +39,7 @@ namespace globals {
     static uint32 propertyCount;
 
     static DeviceSurfaceProperties * pLastUsedDeviceProperties;
+#endif
 }
 
 
@@ -49,7 +53,7 @@ namespace globals {
     static ImageViewArea imageViewAreas [ engine :: vulkan :: config :: physicalDeviceCount * engine :: vulkan :: config :: physicalDeviceSurfaceCount ];
 }
 
-
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SURFACE_AVAILABLE
 auto Self :: propertiesForDevice (
         Type ( PhysicalDeviceHandle )   deviceHandle,
         Type ( SurfaceHandle )          surfaceHandle
@@ -147,7 +151,9 @@ auto Self :: propertiesForDevice (
 
     return & globals :: properties [ globals :: propertyCount ++ ].properties;
 }
+#endif
 
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SURFACE_AVAILABLE
 auto Self :: deviceSupportsSurfacePresent (
         Type ( Device )         const * pDevice,
         Type ( SurfaceHandle )          surfaceHandle
@@ -175,7 +181,9 @@ auto Self :: deviceSupportsSurfacePresent (
         pProperties->formats.count > 0U &&
         pProperties->presentModes.count > 0U;
 }
+#endif
 
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SURFACE_AVAILABLE
 auto Self :: createSuitablePresentHandler (
         Type ( Device )         const * pDevice,
         Type ( SurfaceHandle )          surfaceHandle
@@ -201,6 +209,7 @@ auto Self :: acquireImageViews () noexcept -> Type ( ImageViewHandle ) * {
 
     return nullptr;
 }
+#endif
 
 auto Self :: releaseImageViews () noexcept -> void {
 

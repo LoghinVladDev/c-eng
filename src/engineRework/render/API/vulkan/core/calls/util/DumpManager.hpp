@@ -485,13 +485,17 @@ __C_ENG_DUMP_MANAGER_SET_TYPE ( engine :: vulkan :: Type ( PhysicalDeviceMainten
 __C_ENG_DUMP_MANAGER_SET_TYPE ( engine :: vulkan :: Type ( AllocationCallbacks ) const *, AllocationCallbacksPtr )
 __C_ENG_DUMP_MANAGER_SET_TYPE ( engine :: vulkan :: Type ( LayerProperties ), LayerProperties )
 __C_ENG_DUMP_MANAGER_SET_TYPE ( engine :: vulkan :: Type ( ExtensionProperties ), ExtensionProperties )
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PERFORMANCE_QUERY_AVAILABLE
 __C_ENG_DUMP_MANAGER_SET_TYPE ( engine :: vulkan :: Type ( PerformanceCounter ), PerformanceCounter )
 __C_ENG_DUMP_MANAGER_SET_TYPE ( engine :: vulkan :: Type ( PerformanceCounterDescription ), PerformanceCounterDescription )
+#endif
 __C_ENG_DUMP_MANAGER_SET_TYPE ( engine :: vulkan :: Type ( PhysicalDeviceGroupProperties ), PhysicalDeviceGroupProperties )
 __C_ENG_DUMP_MANAGER_SET_TYPE ( engine :: vulkan :: Type ( QueueFamilyProperties ), QueueFamilyProperties )
 __C_ENG_DUMP_MANAGER_SET_TYPE ( engine :: vulkan :: Type ( PhysicalDeviceProperties ) *, PhysicalDevicePropertiesPtr )
 __C_ENG_DUMP_MANAGER_SET_TYPE ( engine :: vulkan :: Type ( PhysicalDeviceFeatures ) *, PhysicalDeviceFeaturesPtr )
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SURFACE_AVAILABLE
 __C_ENG_DUMP_MANAGER_SET_TYPE ( engine :: vulkan :: Type ( SurfaceFormat ), SurfaceFormat )
+#endif
 __C_ENG_DUMP_MANAGER_SET_TYPE ( engine :: vulkan :: Type ( Extent2D ), Extent2DPtr )
 
 __C_ENG_DUMP_MANAGER_SET_TYPE ( engine :: vulkan :: Type ( QueueFamilyExtendedProperties ), Structure )
@@ -520,12 +524,18 @@ __C_ENG_DUMP_MANAGER_SET_TYPE ( engine :: vulkan :: Type ( PhysicalDeviceHandle 
 __C_ENG_DUMP_MANAGER_SET_TYPE ( engine :: vulkan :: Type ( PhysicalDeviceHandle * ), HandlePtr )
 __C_ENG_DUMP_MANAGER_SET_TYPE ( engine :: vulkan :: Type ( DeviceHandle ), Handle )
 __C_ENG_DUMP_MANAGER_SET_TYPE ( engine :: vulkan :: Type ( DeviceHandle ) *, HandlePtr )
+#if __C_ENG_VULKAN_API_EXTENSION_DISPLAY_CONTROL_AVAILABLE
 __C_ENG_DUMP_MANAGER_SET_TYPE ( engine :: vulkan :: Type ( DisplayHandle ), Handle )
 __C_ENG_DUMP_MANAGER_SET_TYPE ( engine :: vulkan :: Type ( DisplayHandle ) *, HandlePtr )
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_DEBUG_UTILS_AVAILABLE
 __C_ENG_DUMP_MANAGER_SET_TYPE ( engine :: vulkan :: Type ( DebugMessengerHandle ), Handle )
 __C_ENG_DUMP_MANAGER_SET_TYPE ( engine :: vulkan :: Type ( DebugMessengerHandle ) *, HandlePtr )
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SURFACE_AVAILABLE
 __C_ENG_DUMP_MANAGER_SET_TYPE ( engine :: vulkan :: Type ( SurfaceHandle ) , Handle )
 __C_ENG_DUMP_MANAGER_SET_TYPE ( engine :: vulkan :: Type ( SurfaceHandle ) *, HandlePtr )
+#endif
 __C_ENG_DUMP_MANAGER_SET_TYPE ( engine :: vulkan :: Type ( QueueHandle ) , Handle )
 __C_ENG_DUMP_MANAGER_SET_TYPE ( engine :: vulkan :: Type ( QueueHandle ) * , HandlePtr )
 __C_ENG_DUMP_MANAGER_SET_TYPE ( engine :: vulkan :: Type ( ImageViewHandle ) , Handle )
@@ -536,8 +546,10 @@ __C_ENG_DUMP_MANAGER_SET_TYPE ( engine :: vulkan :: Type ( CommandPoolHandle ) ,
 __C_ENG_DUMP_MANAGER_SET_TYPE ( engine :: vulkan :: Type ( CommandPoolHandle ) * , HandlePtr )
 __C_ENG_DUMP_MANAGER_SET_TYPE ( engine :: vulkan :: Type ( CommandBufferHandle ) , Handle )
 __C_ENG_DUMP_MANAGER_SET_TYPE ( engine :: vulkan :: Type ( CommandBufferHandle ) * , HandlePtr )
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SWAP_CHAIN_AVAILABLE
 __C_ENG_DUMP_MANAGER_SET_TYPE ( engine :: vulkan :: Type ( SwapChainHandle ) , Handle )
 __C_ENG_DUMP_MANAGER_SET_TYPE ( engine :: vulkan :: Type ( SwapChainHandle ) * , HandlePtr )
+#endif
 __C_ENG_DUMP_MANAGER_SET_TYPE ( engine :: vulkan :: Type ( FenceHandle ) , Handle )
 __C_ENG_DUMP_MANAGER_SET_TYPE ( engine :: vulkan :: Type ( FenceHandle ) * , HandlePtr )
 __C_ENG_DUMP_MANAGER_SET_TYPE ( engine :: vulkan :: Type ( SemaphoreHandle ) , Handle )
@@ -552,8 +564,10 @@ __C_ENG_DUMP_MANAGER_SET_TYPE ( engine :: vulkan :: Type ( PipelineCacheHandle )
 __C_ENG_DUMP_MANAGER_SET_TYPE ( engine :: vulkan :: Type ( PipelineCacheHandle ) * , HandlePtr )
 __C_ENG_DUMP_MANAGER_SET_TYPE ( engine :: vulkan :: Type ( PipelineHandle ) , Handle )
 __C_ENG_DUMP_MANAGER_SET_TYPE ( engine :: vulkan :: Type ( PipelineHandle ) * , HandlePtr )
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DEFERRED_HOST_OPERATIONS_AVAILABLE
 __C_ENG_DUMP_MANAGER_SET_TYPE ( engine :: vulkan :: Type ( DeferredOperationHandle ) , Handle )
 __C_ENG_DUMP_MANAGER_SET_TYPE ( engine :: vulkan :: Type ( DeferredOperationHandle ) * , HandlePtr )
+#endif
 __C_ENG_DUMP_MANAGER_SET_TYPE ( engine :: vulkan :: Type ( DeviceMemoryHandle ) , Handle )
 __C_ENG_DUMP_MANAGER_SET_TYPE ( engine :: vulkan :: Type ( DeviceMemoryHandle ) * , HandlePtr )
 __C_ENG_DUMP_MANAGER_SET_TYPE ( engine :: vulkan :: Type ( BufferHandle ) , Handle )

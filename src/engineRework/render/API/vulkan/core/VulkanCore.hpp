@@ -7256,7 +7256,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #endif
 
 
-#if __C_ENG_VULKAN_API_EXTENSION_INLINE_UNIFORM_BLOCK_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_INLINE_UNIFORM_BLOCK_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
 #define C_ENG_MAP_START     STRUCT ( PhysicalDeviceInlineUniformBlockProperties,  NO_PARENT )
 #include <ObjectMapping.hpp>
@@ -11753,7 +11753,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #endif
 
 
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 #define C_ENG_MAP_START STRUCT ( RenderingAttachmentInfo,  NO_PARENT )
 #include <ObjectMapping.hpp>
 
@@ -15574,7 +15574,6 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
         NoDiscard auto toString ( Type ( ApplicationInfo ) const & ) noexcept -> cds :: String;
         NoDiscard auto toString ( Type ( InstanceCreateInfo ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( DebugMessengerCreateInfo ) const & ) noexcept -> cds :: String;
         NoDiscard auto toString ( Type ( LayerProperties ) const & ) noexcept -> cds :: String;
         NoDiscard auto toString ( Type ( ExtensionProperties ) const & ) noexcept -> cds :: String;
         NoDiscard auto toString ( Type ( AllocationCallbacks ) const & ) noexcept -> cds :: String;
@@ -15825,6 +15824,10 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_INLINE_UNIFORM_BLOCK_AVAILABLE
         NoDiscard auto toString ( Type ( DescriptorPoolInlineUniformBlockCreateInfo ) const & ) noexcept -> cds :: String;
         NoDiscard auto toString ( Type ( WriteDescriptorSetInlineUniformBlock ) const & ) noexcept -> cds :: String;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_DEBUG_UTILS_AVAILABLE
+        NoDiscard auto toString ( Type ( DebugMessengerCreateInfo ) const & ) noexcept -> cds :: String;
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_RAY_TRACING_PIPELINE_AVAILABLE
@@ -16283,7 +16286,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_INLINE_UNIFORM_BLOCK_AVAILABLE
+#if __C_ENG_VULKAN_API_EXTENSION_INLINE_UNIFORM_BLOCK_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
 
         __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceInlineUniformBlockProperties ) const & ) noexcept -> cds :: String;
 

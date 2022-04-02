@@ -15,7 +15,7 @@ using namespace cds;
 using namespace engine;
 using namespace engine :: vulkan;
 
-#if __C_ENG_VULKAN_API_EXTENSION_VALIDATION_CACHE_AVAILABLE
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 #define C_ENG_MAP_START CLASS ( ValidationCache, ENGINE_PARENT ( VulkanRenderObject ) )
 #include <ObjectMapping.hpp>
 

@@ -44,7 +44,7 @@ namespace engine {
 
     private:
         auto initializeSettings () noexcept -> Self &;
-        auto initializeRenderEngine () noexcept -> Self &;
+        auto initializeRenderEngine () noexcept (false) -> Self &;
         auto startup () noexcept -> Self &;
         auto run () noexcept -> Self &;
         auto shutdown () noexcept -> Self &;

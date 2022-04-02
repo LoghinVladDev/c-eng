@@ -86,6 +86,7 @@ auto vulkan :: Self :: clear () noexcept -> Self & {
     return * this;
 }
 
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SURFACE_AVAILABLE
 auto vulkan :: Self :: getQueueFlagsWithPresent (
         Type ( SurfaceHandle ) surfaceHandle
 ) const noexcept (false) -> Type ( QueueFlags ) {
@@ -110,5 +111,6 @@ auto vulkan :: Self :: getQueueFlagsWithPresent (
 
     return flags;
 }
+#endif
 
 #endif

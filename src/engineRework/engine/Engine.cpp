@@ -19,7 +19,7 @@
 using namespace cds; // NOLINT(clion-misra-cpp2008-7-3-4)
 using namespace engine; // NOLINT(clion-misra-cpp2008-7-3-4)
 
-#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE && __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SURFACE_AVAILABLE
 static auto renderSurfaceAttachCallback (
         __C_ENG_TYPE ( RenderInstanceSurfaceAttachData ) const * pCallbackData
 ) noexcept -> bool {
@@ -91,12 +91,17 @@ auto Self :: startup () noexcept -> Self & {
     __C_ENG_TYPE ( Controller ) :: setEngine ( this );
     __C_ENG_TYPE ( Monitor ) :: initMonitorHandler ();
 
-    return this
-        ->initializeSettings()
-        .initializeRenderEngine();
+    try {
+        return this
+                ->initializeSettings()
+                .initializeRenderEngine();
+    } catch ( std :: exception const & e ) {
+        Type ( Logger ) :: instance().fatal ( "Failed to initialize render engine : "_s + e.what() );
+        return * this;
+    }
 }
 
-auto Self :: initializeRenderEngine () noexcept -> Self & {
+auto Self :: initializeRenderEngine () noexcept (false) -> Self & {
     this->setState ( __C_ENG_TYPE ( EngineState ) :: EngineStateStartupInitializingRenderEngine );
 
     if ( this->renderEngine() == nullptr ) {
@@ -108,7 +113,7 @@ auto Self :: initializeRenderEngine () noexcept -> Self & {
 #endif
     }
 
-#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE && __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SURFACE_AVAILABLE
     if ( dynamic_cast < vulkan :: Type ( VulkanRenderEngine ) const * > ( this->renderEngine () ) != nullptr ) {
         (void) this->renderEngine()->setRenderSurfaceCallbacks({
             .attachCallback = & renderSurfaceAttachCallback,

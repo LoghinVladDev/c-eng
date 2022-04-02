@@ -30,10 +30,12 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         Class {
             Field ( ENGINE_PRIMITIVE_TYPE ( DeviceHandle ),             handle,                 DEFAULT_VALUE ( nullptr ),  GET_DEFAULT,    SET_NONE )
 
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SURFACE_AVAILABLE
             Field ( ENGINE_PRIMITIVE_TYPE ( SurfaceHandle ),            surfaceHandle,          DEFAULT_VALUE ( nullptr ),  GET_DEFAULT,    SET_NONE )
+#endif
+
             Field ( ENGINE_TYPE ( PhysicalDevice const * ),             physicalDevice,         DEFAULT_VALUE ( nullptr ),  GET_DEFAULT,    SET_NONE )
             Field ( TYPE ( cds :: Array < Type ( Queue ) > ),           queues,                 NO_INIT,                    GET_DEFAULT,    SET_NONE )
-
             Field ( ENGINE_TYPE ( ValidationCache ),                    validationCache,        NO_INIT,                    GET_DEFAULT,    SET_NONE )
 
         public:
@@ -65,7 +67,10 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         Class {
             Field ( ENGINE_PRIMITIVE_TYPE ( PhysicalDevice const * ),                   physicalDevice,                 DEFAULT_VALUE ( nullptr ),      GET_NONE,   SET_INLINE ( fromDevice ) )
             Field ( ENGINE_PRIMITIVE_TYPE ( PhysicalDeviceGroup const * ),              physicalDeviceGroup,            DEFAULT_VALUE ( nullptr ),      GET_NONE,   SET_INLINE ( fromDeviceGroup ) )
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SURFACE_AVAILABLE
             Field ( ENGINE_PRIMITIVE_TYPE ( SurfaceHandle ),                            surfaceHandle,                  DEFAULT_VALUE ( nullptr ),      GET_NONE,   SET_INLINE ( toSurface ) )
+#endif
 
             Field ( PRIMITIVE_TYPE ( bool ),                                            preferExclusiveOperations,      DEFAULT_VALUE ( false ),        GET_NONE,   SET_INLINE ( setPreferExclusiveOperations ) )
             Field ( PRIMITIVE_TYPE ( float ),                                           maxQueuePriority,               DEFAULT_VALUE ( 1.0f ),         GET_NONE,   SET_INLINE ( setMaxQueuePriority ) )
