@@ -1257,7 +1257,7 @@ auto Self :: deviceCreateInfoAddQueueCreateInfos (
         totalFamilyCounts [ family.index() ] = family.details().properties.queueCount;
     }
 
-    for ( auto type : Array < __C_ENG_TYPE ( QueueFlag ) > { QueueFlagGraphics, QueueFlagTransfer, QueueFlagPresent } ) {
+    for ( auto type : Array < Type ( QueueFlag ) > { QueueFlagGraphics, QueueFlagTransfer, QueueFlagPresent } ) {
 
         HashMap < uint32, uint32 > familyCounts;
         uint32 totalCount = 0U;

@@ -7939,4 +7939,587 @@ namespace engine :: vulkan {
     }
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    auto prepareContext (
+            UpdateDescriptorSetsContext       * pContext,
+            cds :: uint32                       count,
+            Type ( WriteDescriptorSet ) const * pSets
+    ) noexcept -> VkWriteDescriptorSet * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pContext == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        if ( count > engine :: vulkan :: config :: updateWriteDescriptorCount ) {
+            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, String :: f (
+                    "config :: updateWriteDescriptorCount = %d. Minimum Required = %d",
+                    engine :: vulkan :: config :: updateWriteDescriptorCount,
+                    count
+            ))
+
+            count = engine :: vulkan :: config :: updateWriteDescriptorCount;
+        }
+
+        for ( cds :: uint32 i = 0U; i < count; ++ i ) {
+            pContext->writeSubcontexts[i].pWrite = & pContext->writeInfos[i];
+
+            (void) prepareSubcontext (
+                    reinterpret_cast < CommonContext * > ( pContext ),
+                    & pContext->writeSubcontexts[i],
+                    & pSets[i]
+            );
+        }
+
+        return & pContext->writeInfos[0];
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    auto prepareContext (
+            UpdateDescriptorSetsContext      * pContext,
+            cds :: uint32                      count,
+            Type ( CopyDescriptorSet ) const * pSets
+    ) noexcept -> VkCopyDescriptorSet * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pContext == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        if ( count > engine :: vulkan :: config :: updateCopyDescriptorCount ) {
+            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, String :: f (
+                    "config :: updateCopyDescriptorCount = %d. Minimum Required = %d",
+                    engine :: vulkan :: config :: updateCopyDescriptorCount,
+                    count
+            ))
+
+            count = engine :: vulkan :: config :: updateCopyDescriptorCount;
+        }
+
+        for ( cds :: uint32 i = 0U; i < count; ++ i ) {
+            pContext->copySubcontexts[i].pCopy = & pContext->copyInfos[i];
+
+            (void) prepareSubcontext (
+                    reinterpret_cast < CommonContext * > ( pContext ),
+                    & pContext->copySubcontexts[i],
+                    & pSets[i]
+            );
+        }
+
+        return & pContext->copyInfos[0];
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    auto prepareSubcontext (
+            CommonContext                         * pRootContext,
+            WriteDescriptorSetSubcontext          * pContext,
+            Type ( WriteDescriptorSet )     const * pSource
+    ) noexcept -> VkWriteDescriptorSet * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pRootContext == nullptr || pContext == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+        if ( pContext->pWrite == nullptr ) {
+            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pRootContext, ResultErrorIllegalArgument, String :: f (
+                    "Subcontext 'WriteDescriptorSetSubcontext' contains null pWrite"
+            ))
+        }
+
+#endif
+
+        auto pCurrent   = reinterpret_cast < Type ( GenericInStructure ) const * > ( pSource->pNext );
+        auto pCurrentVk = reinterpret_cast < VkBaseOutStructure * > ( toVulkanFormat ( pContext->pWrite, pSource ) );
+
+        while ( pCurrent != nullptr ) {
+
+            switch ( pCurrent->structureType ) {
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+
+                case StructureTypeWriteDescriptorSetAccelerationStructure:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                            prepareSubcontext (
+                                    pRootContext,
+                                    & pContext->writeAccelerationStructure,
+                                    reinterpret_cast < Type ( WriteDescriptorSetAccelerationStructure ) const * > ( pCurrent )
+                            )
+                    );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+
+                case StructureTypeWriteDescriptorSetAccelerationStructureNVidia:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                            prepareSubcontext (
+                                    pRootContext,
+                                    & pContext->writeAccelerationStructureNVidia,
+                                    reinterpret_cast < Type ( WriteDescriptorSetAccelerationStructureNVidia ) const * > ( pCurrent )
+                            )
+                    );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_INLINE_UNIFORM_BLOCK_AVAILABLE
+
+                case StructureTypeWriteDescriptorSetInlineUniformBlock:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                            prepareSubcontext (
+                                    pRootContext,
+                                    & pContext->writeInlineUniformBlock,
+                                    reinterpret_cast < Type ( WriteDescriptorSetInlineUniformBlock ) const * > ( pCurrent )
+                            )
+                    );
+                    break;
+
+#endif
+
+                default:
+                    break;
+            }
+
+            pCurrent    = pCurrent->pNext;
+            pCurrentVk  = pCurrentVk->pNext == nullptr ? pCurrentVk : pCurrentVk->pNext;
+        }
+
+        pCurrentVk->pNext = nullptr;
+
+        if ( pSource->pImageInfo != nullptr ) {
+            pContext->pWrite->pImageInfo = toVulkanFormat (
+                    & pContext->imageInfo,
+                    pSource->pImageInfo
+            );
+        }
+
+        if ( pSource->pBufferInfo != nullptr ) {
+            pContext->pWrite->pBufferInfo = toVulkanFormat (
+                    & pContext->bufferInfo,
+                    pSource->pBufferInfo
+            );
+        }
+
+        return pContext->pWrite;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    auto prepareSubcontext (
+            CommonContext                        * pRootContext,
+            CopyDescriptorSetSubcontext          * pContext,
+            Type ( CopyDescriptorSet )     const * pSource
+    ) noexcept -> VkCopyDescriptorSet * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pRootContext == nullptr || pContext == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+        if ( pContext->pCopy == nullptr ) {
+            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pRootContext, ResultErrorIllegalArgument, String :: f (
+                    "Subcontext 'CopyDescriptorSetSubcontext' contains null pCopy"
+            ))
+        }
+
+#endif
+
+        return toVulkanFormat ( pContext->pCopy, pSource );
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    auto toVulkanFormat (
+            VkWriteDescriptorSet              * pDestination,
+            Type ( WriteDescriptorSet ) const * pSource
+    ) noexcept -> VkWriteDescriptorSet * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType              = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,
+                .pNext              = nullptr,
+                .dstSet             = pSource->destinationSet,
+                .dstBinding         = pSource->destinationBinding,
+                .dstArrayElement    = pSource->destinationArrayElement,
+                .descriptorCount    = pSource->descriptorCount,
+                .descriptorType     = static_cast < VkDescriptorType > ( pSource->descriptorType ),
+                .pImageInfo         = nullptr,
+                .pBufferInfo        = nullptr,
+                .pTexelBufferView   = pSource->pTexelBufferView
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+    extern auto prepareSubcontext (
+            CommonContext                                              *,
+            WriteDescriptorSetAccelerationStructureSubcontext          * pContext,
+            Type ( WriteDescriptorSetAccelerationStructure )     const * pSource
+    ) noexcept -> VkWriteDescriptorSetAccelerationStructureKHR * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pContext == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        return toVulkanFormat ( & pContext->accelerationStructure, pSource );
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+    extern auto prepareSubcontext (
+            CommonContext                                                    *,
+            WriteDescriptorSetAccelerationStructureSubcontextNVidia          * pContext,
+            Type ( WriteDescriptorSetAccelerationStructureNVidia )     const * pSource
+    ) noexcept -> VkWriteDescriptorSetAccelerationStructureNV * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pContext == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        return toVulkanFormat ( & pContext->accelerationStructure, pSource );
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_INLINE_UNIFORM_BLOCK_AVAILABLE
+    extern auto prepareSubcontext (
+            CommonContext                                           *,
+            WriteDescriptorSetInlineUniformBlockSubcontext          * pContext,
+            Type ( WriteDescriptorSetInlineUniformBlock )     const * pSource
+    ) noexcept -> VkWriteDescriptorSetInlineUniformBlock_t * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pContext == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        return toVulkanFormat ( & pContext->inlineUniformBlock, pSource );
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    auto toVulkanFormat (
+            VkDescriptorImageInfo              * pDestination,
+            Type ( DescriptorImageInfo ) const * pSource
+    ) noexcept -> VkDescriptorImageInfo * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sampler        = pSource->sampler,
+                .imageView      = pSource->imageView,
+                .imageLayout    = static_cast < VkImageLayout > ( pSource->imageLayout )
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    auto toVulkanFormat (
+            VkDescriptorBufferInfo              * pDestination,
+            Type ( DescriptorBufferInfo ) const * pSource
+    ) noexcept -> VkDescriptorBufferInfo * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .buffer = pSource->buffer,
+                .offset = pSource->offset,
+                .range  = pSource->range
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    auto toVulkanFormat (
+            VkCopyDescriptorSet              * pDestination,
+            Type ( CopyDescriptorSet ) const * pSource
+    ) noexcept -> VkCopyDescriptorSet * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType              = VK_STRUCTURE_TYPE_COPY_DESCRIPTOR_SET,
+                .pNext              = nullptr,
+                .srcSet             = pSource->sourceSet,
+                .srcBinding         = pSource->sourceBinding,
+                .srcArrayElement    = pSource->sourceArrayElement,
+                .dstSet             = pSource->destinationSet,
+                .dstBinding         = pSource->destinationBinding,
+                .dstArrayElement    = pSource->destinationArrayElement,
+                .descriptorCount    = pSource->descriptorCount
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+    auto toVulkanFormat (
+            VkWriteDescriptorSetAccelerationStructureKHR           * pDestination,
+            Type ( WriteDescriptorSetAccelerationStructure ) const * pSource
+    ) noexcept -> VkWriteDescriptorSetAccelerationStructureKHR * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                      = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_ACCELERATION_STRUCTURE_KHR,
+                .pNext                      = nullptr,
+                .accelerationStructureCount = pSource->accelerationStructureCount,
+                .pAccelerationStructures    = pSource->pAccelerationStructures
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+    auto toVulkanFormat (
+            VkWriteDescriptorSetAccelerationStructureNV                  * pDestination,
+            Type ( WriteDescriptorSetAccelerationStructureNVidia ) const * pSource
+    ) noexcept -> VkWriteDescriptorSetAccelerationStructureNV * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                      = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_ACCELERATION_STRUCTURE_NV,
+                .pNext                      = nullptr,
+                .accelerationStructureCount = pSource->accelerationStructureCount,
+                .pAccelerationStructures    = pSource->pAccelerationStructures
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_INLINE_UNIFORM_BLOCK_AVAILABLE
+    auto toVulkanFormat (
+            VkWriteDescriptorSetInlineUniformBlock_t            * pDestination,
+            Type ( WriteDescriptorSetInlineUniformBlock ) const * pSource
+    ) noexcept -> VkWriteDescriptorSetInlineUniformBlock_t * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+                .sType                      = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_INLINE_UNIFORM_BLOCK,
+#else
+                .sType                      = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_INLINE_UNIFORM_BLOCK_EXT,
+#endif
+                .pNext                      = nullptr,
+                .dataSize                   = pSource->dataSize,
+                .pData                      = pSource->pData
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    auto prepareContext (
+            CreateDescriptorUpdateTemplateContext             * pContext,
+            Type ( DescriptorUpdateTemplateCreateInfo ) const * pSource
+    ) noexcept -> VkDescriptorUpdateTemplateCreateInfo * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pContext == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        (void) toVulkanFormat ( & pContext->createInfo, pSource );
+
+        pContext->createInfo.pDescriptorUpdateEntries = & pContext->entries[0];
+
+        if ( pContext->createInfo.descriptorUpdateEntryCount > engine :: vulkan :: config :: descriptorUpdateTemplateEntryCount ) {
+            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, String :: f (
+                    "config :: descriptorUpdateTemplateEntryCount = %d. Minimum Required = %d",
+                    engine :: vulkan :: config :: descriptorUpdateTemplateEntryCount,
+                    pContext->createInfo.descriptorUpdateEntryCount
+            ))
+
+            pContext->createInfo.descriptorUpdateEntryCount = engine :: vulkan :: config :: descriptorUpdateTemplateEntryCount;
+        }
+
+        for ( uint32 i = 0U; i < pContext->createInfo.descriptorUpdateEntryCount; ++ i ) {
+            (void) toVulkanFormat ( & pContext->entries[i], & pSource->pDescriptorUpdateEntries[i] );
+        }
+
+        return & pContext->createInfo;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    auto toVulkanFormat (
+            VkDescriptorUpdateTemplateCreateInfo              * pDestination,
+            Type ( DescriptorUpdateTemplateCreateInfo ) const * pSource
+    ) noexcept -> VkDescriptorUpdateTemplateCreateInfo * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                      = VK_STRUCTURE_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO,
+                .pNext                      = nullptr,
+                .flags                      = pSource->flags,
+                .descriptorUpdateEntryCount = pSource->descriptorUpdateEntryCount,
+                .pDescriptorUpdateEntries   = nullptr,
+                .templateType               = static_cast < VkDescriptorUpdateTemplateType > ( pSource->templateType ),
+                .descriptorSetLayout        = pSource->descriptorSetLayout,
+                .pipelineBindPoint          = static_cast < VkPipelineBindPoint > ( pSource->pipelineBindPoint ),
+                .pipelineLayout             = pSource->pipelineLayout,
+                .set                        = pSource->set
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    auto toVulkanFormat (
+            VkDescriptorUpdateTemplateEntry              * pDestination,
+            Type ( DescriptorUpdateTemplateEntry ) const * pSource
+    ) noexcept -> VkDescriptorUpdateTemplateEntry * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .dstBinding         = pSource->destinationBinding,
+                .dstArrayElement    = pSource->destinationArrayElement,
+                .descriptorCount    = pSource->descriptorCount,
+                .descriptorType     = static_cast < VkDescriptorType > ( pSource->descriptorType ),
+                .offset             = pSource->offset,
+                .stride             = pSource->stride
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+    auto prepareContext (
+            GetDeviceBufferAddressContext          * pContext,
+            Type ( BufferDeviceAddressInfo ) const * pSource
+    ) noexcept -> VkBufferDeviceAddressInfo * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pContext == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        return toVulkanFormat ( & pContext->info, pSource );
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+    auto toVulkanFormat (
+            VkBufferDeviceAddressInfo              * pDestination,
+            Type ( BufferDeviceAddressInfo ) const * pSource
+    ) noexcept -> VkBufferDeviceAddressInfo * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType  = VK_STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_INFO,
+                .pNext  = nullptr,
+                .buffer = pSource->buffer
+        };
+
+        return pDestination;
+    }
+#endif
+
+
 } // namespace vulkan :: engine

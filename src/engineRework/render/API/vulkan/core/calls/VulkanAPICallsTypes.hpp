@@ -117,6 +117,9 @@ enum class SharedContextType {
     CreatePipelineLayout,
     CreateDescriptorPool,
     AllocateDescriptorSets,
+    UpdateDescriptorSets,
+    CreateDescriptorUpdateTemplate,
+    GetDeviceBufferAddress,
 };
 
 union SpecializedContextType {
@@ -1875,6 +1878,72 @@ struct AllocateDescriptorSetsContext {
 #endif
 };
 
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+struct WriteDescriptorSetAccelerationStructureSubcontext {
+    VkWriteDescriptorSetAccelerationStructureKHR                    accelerationStructure;
+};
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+struct WriteDescriptorSetAccelerationStructureSubcontextNVidia {
+    VkWriteDescriptorSetAccelerationStructureNV                     accelerationStructure;
+};
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_INLINE_UNIFORM_BLOCK_AVAILABLE
+struct WriteDescriptorSetInlineUniformBlockSubcontext {
+    VkWriteDescriptorSetInlineUniformBlock_t                        inlineUniformBlock;
+};
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+struct WriteDescriptorSetSubcontext {
+    VkWriteDescriptorSet                                          * pWrite;
+    VkDescriptorImageInfo                                           imageInfo;
+    VkDescriptorBufferInfo                                          bufferInfo;
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+    WriteDescriptorSetAccelerationStructureSubcontext               writeAccelerationStructure;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+    WriteDescriptorSetAccelerationStructureSubcontextNVidia         writeAccelerationStructureNVidia;
+#endif
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_INLINE_UNIFORM_BLOCK_AVAILABLE
+    WriteDescriptorSetInlineUniformBlockSubcontext                  writeInlineUniformBlock;
+#endif
+};
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+struct CopyDescriptorSetSubcontext {
+    VkCopyDescriptorSet                                           * pCopy;
+};
+#endif
+
+struct UpdateDescriptorSetsContext {
+    CommonItems                                                     common;
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    VkWriteDescriptorSet                                            writeInfos [ engine :: vulkan :: config :: updateWriteDescriptorCount ];
+    VkCopyDescriptorSet                                             copyInfos [ engine :: vulkan :: config :: updateCopyDescriptorCount ];
+    WriteDescriptorSetSubcontext                                    writeSubcontexts [ engine :: vulkan :: config :: updateWriteDescriptorCount ];
+    CopyDescriptorSetSubcontext                                     copySubcontexts [ engine :: vulkan :: config :: updateCopyDescriptorCount ];
+#endif
+};
+
+struct CreateDescriptorUpdateTemplateContext {
+    CommonItems                                                     common;
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    VkDescriptorUpdateTemplateCreateInfo                            createInfo;
+    VkDescriptorUpdateTemplateEntry                                 entries [ engine :: vulkan :: config :: descriptorUpdateTemplateEntryCount ];
+#endif
+};
+
+struct GetDeviceBufferAddressContext {
+    CommonItems                                                     common;
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+    VkBufferDeviceAddressInfo                                       info;
+#endif
+};
+
 union GetMemorySharedContext {
     GetMemoryWin32Context                   win32;
     GetMemoryFdContext                      fd;
@@ -1922,9 +1991,14 @@ union CreateDescriptorSetSharedContext {
     CreateDescriptorSetLayoutContext                                    layout;
 };
 
+union CreateDescriptorUpdateSharedContext {
+    CreateDescriptorUpdateTemplateContext                               _template;
+};
+
 union CreateDescriptorSharedContext {
     CreateDescriptorSetSharedContext                                    set;
     CreateDescriptorPoolContext                                         pool;
+    CreateDescriptorUpdateSharedContext                                 update;
 };
 
 union CreateSharedContext {
@@ -1985,9 +2059,18 @@ union GetDescriptorSharedContext {
     GetDescriptorSetSharedContext                                       set;
 };
 
+union GetDeviceBufferSharedContext {
+    GetDeviceBufferAddressContext                                       address;
+};
+
+union GetDeviceSharedContext {
+    GetDeviceQueueContext                                               queue;
+    GetDeviceBufferSharedContext                                        buffer;
+};
+
 union GetSharedContext {
     GetPhysicalDeviceSharedContext                                      physicalDevice;
-    GetDeviceQueueContext                                               deviceQueue;
+    GetDeviceSharedContext                                              device;
     GetSurfaceContext                                                   surface;
     GetSwapChainContext                                                 swapChain;
     GetFenceContext                                                     fence;
@@ -2073,6 +2156,14 @@ union BindSharedContext {
     BindAccelerationStructureMemoryContext                              accelerationStructureMemory;
 };
 
+union UpdateDescriptorSharedContext {
+    UpdateDescriptorSetsContext                                         sets;
+};
+
+union UpdateSharedContext {
+    UpdateDescriptorSharedContext                                       descriptor;
+};
+
 union SharedContext {
     CommonContext                                                       common;
     CreateSharedContext                                                 create;
@@ -2087,6 +2178,7 @@ union SharedContext {
     WaitSharedContext                                                   wait;
     SignalSharedContext                                                 signal;
     BindSharedContext                                                   bind;
+    UpdateSharedContext                                                 update;
 };
 
 constexpr auto toString ( ContextType type ) noexcept -> cds :: StringLiteral {
@@ -2178,6 +2270,9 @@ constexpr auto toString ( SharedContextType type ) noexcept -> cds :: StringLite
         case SharedContextType :: CreatePipelineLayout:                                       return "CreatePipelineLayout";
         case SharedContextType :: CreateDescriptorPool:                                       return "CreateDescriptorPool";
         case SharedContextType :: AllocateDescriptorSets:                                     return "AllocateDescriptorSets";
+        case SharedContextType :: UpdateDescriptorSets:                                       return "UpdateDescriptorSets";
+        case SharedContextType :: CreateDescriptorUpdateTemplate:                             return "CreateDescriptorUpdateTemplate";
+        case SharedContextType :: GetDeviceBufferAddress:                                     return "GetDeviceBufferAddress";
     }
 }
 

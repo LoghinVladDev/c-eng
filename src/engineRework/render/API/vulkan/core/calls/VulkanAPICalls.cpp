@@ -1645,7 +1645,7 @@ auto engine :: vulkan :: getDeviceQueue (
 
     return APICaller.vkGetDeviceQueue2 (
             deviceHandle,
-            toVulkanFormat ( & context.data().get.deviceQueue.info2, pQueueInfo ),
+            toVulkanFormat ( & context.data().get.device.queue.info2, pQueueInfo ),
             pQueueHandle
     );
 }
@@ -8101,5 +8101,500 @@ auto engine :: vulkan :: freeDescriptorSets (
             count,
             pSets
     );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: resetDescriptorPool (
+        Type ( DeviceHandle )               deviceHandle,
+        Type ( DescriptorPoolHandle )       poolHandle,
+        Type ( DescriptorPoolResetFlags )   flags
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || poolHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    auto context = ContextManager :: acquire();
+    auto flagsPack = Flags ( flags );
+
+    prepareDump (
+            context.data(),
+            "vkResetDescriptorPool",
+            "Frees all descriptor sets from a Descriptor Pool",
+            deviceHandle,
+            poolHandle,
+            flagsPack
+    );
+
+#endif
+
+    return APICaller.vkResetDescriptorPool (
+            deviceHandle,
+            poolHandle,
+            flags
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: updateDescriptorSets (
+        Type ( DeviceHandle )               deviceHandle,
+        cds :: uint32                       descriptorWriteCount,
+        Type ( WriteDescriptorSet ) const * pDescriptorWrites,
+        cds :: uint32                       descriptorCopyCount,
+        Type ( CopyDescriptorSet )  const * pDescriptorCopies
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    auto context = ContextManager :: acquire();
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    auto writePack = DumpedArray {
+        .pCount = & descriptorWriteCount,
+        .type   = ParameterType :: Structure,
+        .size   = sizeof ( Type ( WriteDescriptorSet ) ),
+        .pArray = pDescriptorWrites
+    };
+
+    auto copyPack = DumpedArray {
+        .pCount = & descriptorCopyCount,
+        .type   = ParameterType :: Structure,
+        .size   = sizeof ( Type ( CopyDescriptorSet ) ),
+        .pArray = pDescriptorCopies
+    };
+
+    prepareDump (
+            context.data(),
+            "vkUpdateDescriptorSets",
+            "Updates a set of descriptors with a combination of write and copy operations",
+            deviceHandle,
+            descriptorWriteCount,
+            writePack,
+            descriptorCopyCount,
+            copyPack
+    );
+
+#endif
+
+    return APICaller.vkUpdateDescriptorSets (
+            deviceHandle,
+            descriptorWriteCount,
+            prepareContext ( & context->update.descriptor.sets, descriptorWriteCount, & pDescriptorWrites[0] ),
+            descriptorCopyCount,
+            prepareContext ( & context->update.descriptor.sets, descriptorCopyCount, & pDescriptorCopies[0] )
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+auto engine :: vulkan :: createDescriptorUpdateTemplate (
+        Type ( DeviceHandle )                               deviceHandle,
+        Type ( DescriptorUpdateTemplateCreateInfo ) const * pCreateInfo,
+        Type ( AllocationCallbacks )                const * pAllocationCallbacks,
+        Type ( DescriptorUpdateTemplateHandle )           * pHandle
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    auto context = ContextManager :: acquire();
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    prepareDump (
+            context.data(),
+            "vkCreateDescriptorUpdateTemplate",
+            "Creates a Descriptor Update Template to execute batch commands of Descriptor Update",
+            deviceHandle,
+            pCreateInfo,
+            pAllocationCallbacks,
+            pHandle
+    );
+
+#endif
+
+    return APICaller.vkCreateDescriptorUpdateTemplate (
+            deviceHandle,
+            prepareContext ( & context->create.descriptor.update._template, pCreateInfo ),
+            AllocatorHandler :: apply ( pAllocationCallbacks ),
+            pHandle
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+auto engine :: vulkan :: destroyDescriptorUpdateTemplate (
+        Type ( DeviceHandle )                           deviceHandle,
+        Type ( DescriptorUpdateTemplateHandle )         templateHandle,
+        Type ( AllocationCallbacks )            const * pAllocationCallbacks
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || templateHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+    auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkDestroyDescriptorUpdateTemplate",
+            "Destroys a Descriptor Update Template",
+            deviceHandle,
+            templateHandle,
+            pAllocationCallbacks
+    );
+
+#endif
+
+    return APICaller.vkDestroyDescriptorUpdateTemplate (
+            deviceHandle,
+            templateHandle,
+            AllocatorHandler :: apply ( pAllocationCallbacks )
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+auto engine :: vulkan :: updateDescriptorSetWithTemplate (
+        Type ( DeviceHandle )                           deviceHandle,
+        Type ( DescriptorSetHandle )                    setHandle,
+        Type ( DescriptorUpdateTemplateHandle )         templateHandle,
+        void                                    const * pData
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || setHandle == nullptr || templateHandle == nullptr || pData == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+    auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkUpdateDescriptorSetWithTemplate",
+            "Updates a Descriptor Set using a Descriptor Update Template",
+            deviceHandle,
+            setHandle,
+            templateHandle,
+            pData
+    );
+
+#endif
+
+    return APICaller.vkUpdateDescriptorSetWithTemplate (
+            deviceHandle,
+            setHandle,
+            templateHandle,
+            pData
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: commandBufferBindDescriptorSets (
+        Type ( CommandBufferHandle )            commandBufferHandle,
+        Type ( PipelineBindPoint )              bindPoint,
+        Type ( PipelineLayoutHandle )           layoutHandle,
+        cds :: uint32                           firstSet,
+        cds :: uint32                           descriptorSetCount,
+        Type ( DescriptorSetHandle )    const * pDescriptorSets,
+        cds :: uint32                           dynamicOffsetCount,
+        cds :: uint32                   const * pDynamicOffsets
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( commandBufferHandle == nullptr || layoutHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+    auto context = ContextManager :: acquire();
+    auto setsPack = DumpedArray {
+        .pCount = & descriptorSetCount,
+        .type   = ParameterType :: Handle,
+        .size   = sizeof ( Type ( DescriptorSetHandle ) ),
+        .pArray = pDescriptorSets
+    };
+    auto offsetPack = DumpedArray {
+        .pCount = & dynamicOffsetCount,
+        .type   = ParameterType :: UInt32,
+        .size   = sizeof ( uint32 ),
+        .pArray = pDynamicOffsets
+    };
+
+    prepareDump (
+            context.data(),
+            "vkCmdBindDescriptorSets",
+            "Binds several descriptor sets upon command buffer's execution",
+            commandBufferHandle,
+            bindPoint,
+            layoutHandle,
+            firstSet,
+            descriptorSetCount,
+            setsPack,
+            dynamicOffsetCount,
+            offsetPack
+    );
+
+#endif
+
+    return APICaller.vkCmdBindDescriptorSets (
+            commandBufferHandle,
+            static_cast < VkPipelineBindPoint > ( bindPoint ),
+            layoutHandle,
+            firstSet,
+            descriptorSetCount,
+            pDescriptorSets,
+            dynamicOffsetCount,
+            pDynamicOffsets
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PUSH_DESCRIPTOR_AVAILABLE
+auto engine :: vulkan :: commandBufferPushDescriptorSet (
+        Type ( CommandBufferHandle )            commandBufferHandle,
+        Type ( PipelineBindPoint )              bindPoint,
+        Type ( PipelineLayoutHandle )           layoutHandle,
+        cds :: uint32                           set,
+        cds :: uint32                           descriptorWriteCount,
+        Type ( WriteDescriptorSet )     const * pDescriptorWrites
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( commandBufferHandle == nullptr || layoutHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    auto context = ContextManager :: acquire();
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    auto setsPack = DumpedArray {
+        .pCount = & descriptorWriteCount,
+        .type   = ParameterType :: Structure,
+        .size   = sizeof ( Type ( WriteDescriptorSet ) ),
+        .pArray = pDescriptorWrites
+    };
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: UpdateDescriptorSets,
+            "vkCmdPushDescriptorSetKHR",
+            "Pushes a set of descriptor updates into a command buffer",
+            commandBufferHandle,
+            bindPoint,
+            layoutHandle,
+            set,
+            descriptorWriteCount,
+            setsPack
+    );
+
+#endif
+
+    return APICaller.vkCmdPushDescriptorSetKHR (
+            commandBufferHandle,
+            static_cast < VkPipelineBindPoint > ( bindPoint ),
+            layoutHandle,
+            set,
+            descriptorWriteCount,
+            prepareContext ( & context->update.descriptor.sets, descriptorWriteCount, & pDescriptorWrites[0] )
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PUSH_DESCRIPTOR_AVAILABLE
+auto engine :: vulkan :: commandBufferPushDescriptorSetWithTemplate (
+        Type ( CommandBufferHandle )                    commandBufferHandle,
+        Type ( DescriptorUpdateTemplateHandle )         templateHandle,
+        Type ( PipelineLayoutHandle )                   layoutHandle,
+        cds :: uint32                                   set,
+        void                                    const * pData
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( commandBufferHandle == nullptr || layoutHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+    auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkCmdPushDescriptorSetWithTemplateKHR",
+            "Loads a descriptor set update unto a command buffer's execution set",
+            commandBufferHandle,
+            templateHandle,
+            layoutHandle,
+            set,
+            pData
+    );
+
+#endif
+
+    return APICaller.vkCmdPushDescriptorSetWithTemplateKHR (
+            commandBufferHandle,
+            templateHandle,
+            layoutHandle,
+            set,
+            pData
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: commandBufferPushConstants (
+        Type ( CommandBufferHandle )            commandBufferHandle,
+        Type ( PipelineLayoutHandle )           layoutHandle,
+        Type ( ShaderStageFlags )               stageFlags,
+        cds :: uint32                           offset,
+        cds :: uint32                           size,
+        void                            const * pValues
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( commandBufferHandle == nullptr || layoutHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+    auto context = ContextManager :: acquire();
+    auto flagsPack = Flags ( stageFlags );
+
+    prepareDump (
+            context.data(),
+            "vkCmdPushConstants",
+            "Loads a set of constants update unto a command buffer's execution",
+            commandBufferHandle,
+            flagsPack,
+            layoutHandle,
+            offset,
+            size,
+            pValues
+    );
+
+#endif
+
+    return APICaller.vkCmdPushConstants (
+            commandBufferHandle,
+            layoutHandle,
+            stageFlags,
+            offset,
+            size,
+            pValues
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+auto engine :: vulkan :: getBufferDeviceAddress (
+        Type ( DeviceHandle )                       deviceHandle,
+        Type ( BufferDeviceAddressInfo )    const * pInfo,
+        Type ( DeviceAddress )                    * pAddress
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || pInfo == nullptr || pAddress == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    auto context = ContextManager :: acquire();
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: GetDeviceBufferAddress,
+            "vkGetBufferDeviceAddress",
+            "Acquire a buffer's device address",
+            deviceHandle,
+            pInfo,
+            pAddress
+    );
+
+#endif
+
+    return APICaller.vkGetBufferDeviceAddress (
+            pAddress,
+            deviceHandle,
+            prepareContext ( & context->get.device.buffer.address, pInfo )
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+auto engine :: vulkan :: getBufferOpaqueCaptureAddress (
+        Type ( DeviceHandle )                       deviceHandle,
+        Type ( BufferDeviceAddressInfo )    const * pInfo,
+        cds :: uint64                             * pAddress
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || pInfo == nullptr || pAddress == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    auto context = ContextManager :: acquire();
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: GetDeviceBufferAddress,
+            "vkGetBufferDeviceAddress",
+            "Acquire a buffer's device address",
+            deviceHandle,
+            pInfo,
+            pAddress
+    );
+
+#endif
+
+    uint64_t ret;
+    if (
+            auto result = APICaller.vkGetBufferOpaqueCaptureAddress (
+                    & ret,
+                    deviceHandle,
+                    prepareContext ( & context->get.device.buffer.address, pInfo )
+            ); result != ResultSuccess
+    ) {
+        return result;
+    }
+
+    * pAddress = ret;
+    return ResultSuccess;
 }
 #endif

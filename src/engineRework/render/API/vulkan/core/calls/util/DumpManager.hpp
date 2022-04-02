@@ -558,10 +558,6 @@ __C_ENG_DUMP_MANAGER_SET_TYPE ( engine :: vulkan :: Type ( DeviceMemoryHandle ) 
 __C_ENG_DUMP_MANAGER_SET_TYPE ( engine :: vulkan :: Type ( DeviceMemoryHandle ) * , HandlePtr )
 __C_ENG_DUMP_MANAGER_SET_TYPE ( engine :: vulkan :: Type ( BufferHandle ) , Handle )
 __C_ENG_DUMP_MANAGER_SET_TYPE ( engine :: vulkan :: Type ( BufferHandle ) * , HandlePtr )
-__C_ENG_DUMP_MANAGER_SET_TYPE ( engine :: vulkan :: Type ( AccelerationStructureHandleNVidia ) , Handle )
-__C_ENG_DUMP_MANAGER_SET_TYPE ( engine :: vulkan :: Type ( AccelerationStructureHandleNVidia ) * , HandlePtr )
-__C_ENG_DUMP_MANAGER_SET_TYPE ( engine :: vulkan :: Type ( AccelerationStructureHandle ) , Handle )
-__C_ENG_DUMP_MANAGER_SET_TYPE ( engine :: vulkan :: Type ( AccelerationStructureHandle ) * , HandlePtr )
 __C_ENG_DUMP_MANAGER_SET_TYPE ( engine :: vulkan :: Type ( SamplerHandle ) , Handle )
 __C_ENG_DUMP_MANAGER_SET_TYPE ( engine :: vulkan :: Type ( SamplerHandle ) * , HandlePtr )
 __C_ENG_DUMP_MANAGER_SET_TYPE ( engine :: vulkan :: Type ( DescriptorSetLayoutHandle ) , Handle )
@@ -570,6 +566,21 @@ __C_ENG_DUMP_MANAGER_SET_TYPE ( engine :: vulkan :: Type ( DescriptorPoolHandle 
 __C_ENG_DUMP_MANAGER_SET_TYPE ( engine :: vulkan :: Type ( DescriptorPoolHandle ) * , HandlePtr )
 __C_ENG_DUMP_MANAGER_SET_TYPE ( engine :: vulkan :: Type ( DescriptorSetHandle ) , Handle )
 __C_ENG_DUMP_MANAGER_SET_TYPE ( engine :: vulkan :: Type ( DescriptorSetHandle ) * , HandlePtr )
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+__C_ENG_DUMP_MANAGER_SET_TYPE ( engine :: vulkan :: Type ( DescriptorUpdateTemplateHandle ) , Handle )
+__C_ENG_DUMP_MANAGER_SET_TYPE ( engine :: vulkan :: Type ( DescriptorUpdateTemplateHandle ) * , HandlePtr )
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+__C_ENG_DUMP_MANAGER_SET_TYPE ( engine :: vulkan :: Type ( AccelerationStructureHandleNVidia ) , Handle )
+__C_ENG_DUMP_MANAGER_SET_TYPE ( engine :: vulkan :: Type ( AccelerationStructureHandleNVidia ) * , HandlePtr )
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+__C_ENG_DUMP_MANAGER_SET_TYPE ( engine :: vulkan :: Type ( AccelerationStructureHandle ) , Handle )
+__C_ENG_DUMP_MANAGER_SET_TYPE ( engine :: vulkan :: Type ( AccelerationStructureHandle ) * , HandlePtr )
 #endif
 
 __C_ENG_DUMP_MANAGER_SET_TYPE ( DumpedArray, DumpArrayPack )

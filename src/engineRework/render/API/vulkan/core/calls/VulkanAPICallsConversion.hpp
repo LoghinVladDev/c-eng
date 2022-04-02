@@ -4445,6 +4445,146 @@ namespace engine :: vulkan {
     ) noexcept -> VkDescriptorSetVariableDescriptorCountAllocateInfo *;
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto prepareContext (
+            UpdateDescriptorSetsContext           *,
+            cds :: uint32,
+            Type ( WriteDescriptorSet )     const *
+    ) noexcept -> VkWriteDescriptorSet *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto prepareContext (
+            UpdateDescriptorSetsContext           *,
+            cds :: uint32,
+            Type ( CopyDescriptorSet )      const *
+    ) noexcept -> VkCopyDescriptorSet *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto prepareSubcontext (
+            CommonContext                         *,
+            WriteDescriptorSetSubcontext          *,
+            Type ( WriteDescriptorSet )     const *
+    ) noexcept -> VkWriteDescriptorSet *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto prepareSubcontext (
+            CommonContext                        *,
+            CopyDescriptorSetSubcontext          *,
+            Type ( CopyDescriptorSet )     const *
+    ) noexcept -> VkCopyDescriptorSet *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto toVulkanFormat (
+            VkWriteDescriptorSet              *,
+            Type ( WriteDescriptorSet ) const *
+    ) noexcept -> VkWriteDescriptorSet *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+    extern auto prepareSubcontext (
+            CommonContext                                              *,
+            WriteDescriptorSetAccelerationStructureSubcontext          *,
+            Type ( WriteDescriptorSetAccelerationStructure )     const *
+    ) noexcept -> VkWriteDescriptorSetAccelerationStructureKHR *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+    extern auto prepareSubcontext (
+            CommonContext                                                    *,
+            WriteDescriptorSetAccelerationStructureSubcontextNVidia          *,
+            Type ( WriteDescriptorSetAccelerationStructureNVidia )     const *
+    ) noexcept -> VkWriteDescriptorSetAccelerationStructureNV *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_INLINE_UNIFORM_BLOCK_AVAILABLE
+    extern auto prepareSubcontext (
+            CommonContext                                           *,
+            WriteDescriptorSetInlineUniformBlockSubcontext          *,
+            Type ( WriteDescriptorSetInlineUniformBlock )     const *
+    ) noexcept -> VkWriteDescriptorSetInlineUniformBlock_t *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto toVulkanFormat (
+            VkDescriptorImageInfo              *,
+            Type ( DescriptorImageInfo ) const *
+    ) noexcept -> VkDescriptorImageInfo *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto toVulkanFormat (
+            VkDescriptorBufferInfo              *,
+            Type ( DescriptorBufferInfo ) const *
+    ) noexcept -> VkDescriptorBufferInfo *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto toVulkanFormat (
+            VkCopyDescriptorSet              *,
+            Type ( CopyDescriptorSet ) const *
+    ) noexcept -> VkCopyDescriptorSet *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+    extern auto toVulkanFormat (
+            VkWriteDescriptorSetAccelerationStructureKHR           *,
+            Type ( WriteDescriptorSetAccelerationStructure ) const *
+    ) noexcept -> VkWriteDescriptorSetAccelerationStructureKHR *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+    extern auto toVulkanFormat (
+            VkWriteDescriptorSetAccelerationStructureNV                  *,
+            Type ( WriteDescriptorSetAccelerationStructureNVidia ) const *
+    ) noexcept -> VkWriteDescriptorSetAccelerationStructureNV *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_INLINE_UNIFORM_BLOCK_AVAILABLE
+    extern auto toVulkanFormat (
+            VkWriteDescriptorSetInlineUniformBlock_t            *,
+            Type ( WriteDescriptorSetInlineUniformBlock ) const *
+    ) noexcept -> VkWriteDescriptorSetInlineUniformBlock_t *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    extern auto prepareContext (
+            CreateDescriptorUpdateTemplateContext                  *,
+            Type ( DescriptorUpdateTemplateCreateInfo )      const *
+    ) noexcept -> VkDescriptorUpdateTemplateCreateInfo *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    extern auto toVulkanFormat (
+            VkDescriptorUpdateTemplateCreateInfo              *,
+            Type ( DescriptorUpdateTemplateCreateInfo ) const *
+    ) noexcept -> VkDescriptorUpdateTemplateCreateInfo *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+    extern auto toVulkanFormat (
+            VkDescriptorUpdateTemplateEntry              *,
+            Type ( DescriptorUpdateTemplateEntry ) const *
+    ) noexcept -> VkDescriptorUpdateTemplateEntry *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+    extern auto prepareContext (
+            GetDeviceBufferAddressContext               *,
+            Type ( BufferDeviceAddressInfo )      const *
+    ) noexcept -> VkBufferDeviceAddressInfo *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+    extern auto toVulkanFormat (
+            VkBufferDeviceAddressInfo              *,
+            Type ( BufferDeviceAddressInfo ) const *
+    ) noexcept -> VkBufferDeviceAddressInfo *;
+#endif
+
 } // namespace engine :: vulkan
 
 #define C_ENG_MAP_END

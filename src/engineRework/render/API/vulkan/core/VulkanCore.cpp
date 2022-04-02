@@ -14194,3 +14194,175 @@ auto vulkan :: toString (
            " }";
 }
 #endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( DescriptorBufferInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( DescriptorBufferInfo ) ) " " +
+           "{ buffer = "_s  + engine :: toString ( info.buffer ) +
+           ", offset = "    + toString ( info.offset ) +
+           ", range = "     + toString ( info.range ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( DescriptorImageInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( DescriptorImageInfo ) ) " " +
+           "{ sampler = "_s     + engine :: toString ( info.sampler ) +
+           ", imageView = "     + engine :: toString ( info.imageView ) +
+           ", imageLayout = "   + toString ( info.imageLayout ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( WriteDescriptorSet ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( WriteDescriptorSet ) ) " " +
+           "{ structureType = "_s                   + toString ( info.structureType ) +
+           ", pNext = "                             + engine :: toString ( info.pNext ) +
+           ", destinationSet = "                    + engine :: toString ( info.destinationSet ) +
+           ", destinationBinding = "                + info.destinationBinding +
+           ", destinationArrayElement = "           + info.destinationArrayElement +
+           ", descriptorCount = "                   + info.descriptorCount +
+           ", descriptorType = "                    + toString ( info.descriptorType ) +
+           ", pImageInfo = "                        + engine :: toString ( info.pImageInfo ) +
+           ", pBufferInfo = "                       + engine :: toString ( info.pBufferInfo ) +
+           ", pTexelBufferView = "                  + engine :: toString ( info.pTexelBufferView ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+auto vulkan :: toString (
+        Type ( WriteDescriptorSetAccelerationStructure ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( WriteDescriptorSetAccelerationStructure ) ) " " +
+           "{ structureType = "_s                   + toString ( info.structureType ) +
+           ", pNext = "                             + engine :: toString ( info.pNext ) +
+           ", accelerationStructureCount = "        + info.accelerationStructureCount +
+           ", accelerationStructures = "            + :: toStringEngine ( info.accelerationStructureCount, info.pAccelerationStructures ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+auto vulkan :: toString (
+        Type ( WriteDescriptorSetAccelerationStructureNVidia ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( WriteDescriptorSetAccelerationStructureNVidia ) ) " " +
+           "{ structureType = "_s                   + toString ( info.structureType ) +
+           ", pNext = "                             + engine :: toString ( info.pNext ) +
+           ", accelerationStructureCount = "        + info.accelerationStructureCount +
+           ", accelerationStructures = "            + :: toStringEngine ( info.accelerationStructureCount, info.pAccelerationStructures ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_INLINE_UNIFORM_BLOCK_AVAILABLE
+auto vulkan :: toString (
+        Type ( WriteDescriptorSetInlineUniformBlock ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( WriteDescriptorSetInlineUniformBlock ) ) " " +
+           "{ structureType = "_s                   + toString ( info.structureType ) +
+           ", pNext = "                             + engine :: toString ( info.pNext ) +
+           ", dataSize = "                          + info.dataSize +
+           ", pData = "                             + engine :: toString ( info.pData ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( CopyDescriptorSet ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( CopyDescriptorSet ) ) " " +
+           "{ structureType = "_s                   + toString ( info.structureType ) +
+           ", pNext = "                             + engine :: toString ( info.pNext ) +
+           ", sourceSet = "                         + engine :: toString ( info.sourceSet ) +
+           ", sourceBinding = "                     + info.sourceBinding +
+           ", sourceArrayElement = "                + info.sourceArrayElement +
+           ", destinationSet = "                    + engine :: toString ( info.destinationSet ) +
+           ", destinationBinding = "                + info.destinationBinding +
+           ", destinationArrayElement = "           + info.destinationArrayElement +
+           ", descriptorCount = "                   + info.descriptorCount +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+auto vulkan :: toString (
+        Type ( DescriptorUpdateTemplateType )  flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case DescriptorUpdateTemplateTypeDescriptorSet:     { asString = "Descriptor Set";      break; }
+        case DescriptorUpdateTemplateTypePushDescriptors:   { asString = "Push Descriptors";    break; }
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+auto vulkan :: toString (
+        Type ( DescriptorUpdateTemplateEntry ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( DescriptorUpdateTemplateEntry ) ) " " +
+           "{ destinationBinding = "_s      + info.destinationBinding +
+           ", destinationArrayElement = "   + info.destinationArrayElement +
+           ", descriptorCount = "           + info.descriptorCount +
+           ", descriptorType = "            + toString ( info.descriptorType ) +
+           ", offset = "                    + info.offset +
+           ", stride = "                    + info.stride +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+auto vulkan :: toString (
+        Type ( DescriptorUpdateTemplateCreateInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( DescriptorUpdateTemplateCreateInfo ) ) " " +
+           "{ structureType = "_s                   + toString ( info.structureType ) +
+           ", pNext = "                             + engine :: toString ( info.pNext ) +
+           ", flags = "                             + "0b" + Long ( info.flags ).toString(2) +
+           ", descriptorUpdateEntryCount = "        + info.descriptorUpdateEntryCount +
+           ", descriptorUpdateEntries = "           + :: toStringVulkan ( info.descriptorUpdateEntryCount, info.pDescriptorUpdateEntries ) +
+           ", templateType = "                      + toString ( info.templateType ) +
+           ", descriptorSetLayout = "               + engine :: toString ( info.descriptorSetLayout ) +
+           ", pipelineBindPoint = "                 + engine :: toString ( info.pipelineBindPoint ) +
+           ", pipelineLayout = "                    + engine :: toString ( info.pipelineLayout ) +
+           ", set = "                               + info.set +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+auto vulkan :: toString (
+        Type ( BufferDeviceAddressInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( BufferDeviceAddressInfo ) ) " " +
+           "{ structureType = "_s                   + toString ( info.structureType ) +
+           ", pNext = "                             + engine :: toString ( info.pNext ) +
+           ", buffer = "                            + engine :: toString ( info.buffer ) +
+           " }";
+}
+#endif

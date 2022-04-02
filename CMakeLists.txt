@@ -41,9 +41,9 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
     add_compile_options(--coverage)
     #Uncomment in case of linker errors
-    if(WIN32)
+    #if(WIN32)
         link_libraries(gcov)
-    endif()
+    #endif()
 endif ()
 
 if (WIN32)

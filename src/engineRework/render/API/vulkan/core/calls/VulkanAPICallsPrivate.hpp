@@ -34,10 +34,12 @@ using VkPhysicalDeviceImageRobustnessFeatures_t     = VkPhysicalDeviceImageRobus
 using VkPhysicalDeviceInlineUniformBlockFeatures_t      = VkPhysicalDeviceInlineUniformBlockFeatures;
 using VkPhysicalDeviceInlineUniformBlockProperties_t    = VkPhysicalDeviceInlineUniformBlockProperties;
 using VkDescriptorPoolInlineUniformBlockCreateInfo_t    = VkDescriptorPoolInlineUniformBlockCreateInfo;
+using VkWriteDescriptorSetInlineUniformBlock_t          = VkWriteDescriptorSetInlineUniformBlock;
 #elif __C_ENG_VULKAN_API_EXTENSION_INLINE_UNIFORM_BLOCK_AVAILABLE
-using VkPhysicalDeviceInlineUniformBlockFeatures_t  = VkPhysicalDeviceInlineUniformBlockFeaturesEXT;
+using VkPhysicalDeviceInlineUniformBlockFeatures_t      = VkPhysicalDeviceInlineUniformBlockFeaturesEXT;
 using VkPhysicalDeviceInlineUniformBlockProperties_t    = VkPhysicalDeviceInlineUniformBlockPropertiesEXT;
 using VkDescriptorPoolInlineUniformBlockCreateInfo_t    = VkDescriptorPoolInlineUniformBlockCreateInfoEXT;
+using VkWriteDescriptorSetInlineUniformBlock_t          = VkWriteDescriptorSetInlineUniformBlockEXT;
 #endif
 
 #if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE

@@ -1575,6 +1575,111 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         ) noexcept -> Type ( Result );
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+        NoDiscard MaybeUnused extern auto resetDescriptorPool (
+                Type ( DeviceHandle ),
+                Type ( DescriptorPoolHandle ),
+                Type ( DescriptorPoolResetFlags )
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+        NoDiscard MaybeUnused extern auto updateDescriptorSets (
+                Type ( DeviceHandle ),
+                cds :: uint32,
+                Type ( WriteDescriptorSet ) const *,
+                cds :: uint32,
+                Type ( CopyDescriptorSet )  const *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+        NoDiscard MaybeUnused extern auto createDescriptorUpdateTemplate (
+                Type ( DeviceHandle ),
+                Type ( DescriptorUpdateTemplateCreateInfo ) const *,
+                Type ( AllocationCallbacks )                const *,
+                Type ( DescriptorUpdateTemplateHandle )           *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+        NoDiscard MaybeUnused extern auto destroyDescriptorUpdateTemplate (
+                Type ( DeviceHandle ),
+                Type ( DescriptorUpdateTemplateHandle ),
+                Type ( AllocationCallbacks )            const *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+        NoDiscard MaybeUnused extern auto updateDescriptorSetWithTemplate (
+                Type ( DeviceHandle ),
+                Type ( DescriptorSetHandle ),
+                Type ( DescriptorUpdateTemplateHandle ),
+                void                                    const *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+        NoDiscard MaybeUnused extern auto commandBufferBindDescriptorSets (
+                Type ( CommandBufferHandle ),
+                Type ( PipelineBindPoint ),
+                Type ( PipelineLayoutHandle ),
+                cds :: uint32,
+                cds :: uint32,
+                Type ( DescriptorSetHandle )    const *,
+                cds :: uint32,
+                cds :: uint32                   const *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PUSH_DESCRIPTOR_AVAILABLE
+        NoDiscard MaybeUnused extern auto commandBufferPushDescriptorSet (
+                Type ( CommandBufferHandle ),
+                Type ( PipelineBindPoint ),
+                Type ( PipelineLayoutHandle ),
+                cds :: uint32,
+                cds :: uint32,
+                Type ( WriteDescriptorSet )     const *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PUSH_DESCRIPTOR_AVAILABLE
+        NoDiscard MaybeUnused extern auto commandBufferPushDescriptorSetWithTemplate (
+                Type ( CommandBufferHandle ),
+                Type ( DescriptorUpdateTemplateHandle ),
+                Type ( PipelineLayoutHandle ),
+                cds :: uint32,
+                void                                    const *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+        NoDiscard MaybeUnused extern auto commandBufferPushConstants (
+                Type ( CommandBufferHandle ),
+                Type ( PipelineLayoutHandle ),
+                Type ( ShaderStageFlags ),
+                cds :: uint32,
+                cds :: uint32,
+                void                            const *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+        NoDiscard MaybeUnused extern auto getBufferDeviceAddress (
+                Type ( DeviceHandle ),
+                Type ( BufferDeviceAddressInfo )    const *,
+                Type ( DeviceAddress )                    *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+        NoDiscard MaybeUnused extern auto getBufferOpaqueCaptureAddress (
+                Type ( DeviceHandle ),
+                Type ( BufferDeviceAddressInfo )    const *,
+                cds :: uint64                             *
+        ) noexcept -> Type ( Result );
+#endif
+
     } /// namespace vulkan
 
 } /// namespace engine

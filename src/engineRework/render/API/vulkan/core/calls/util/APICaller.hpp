@@ -2452,6 +2452,11 @@ namespace engine :: vulkan {
 #include <calls/util/APICallerGenerator.hpp>
 #endif
 
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PUSH_DESCRIPTOR_AVAILABLE
+#define CALL_POINT CALL ( vkCmdPushDescriptorSetWithTemplateKHR, INSTANCE, EXTENSION ( VK_KHR_PUSH_DESCRIPTOR ) )
+#include <calls/util/APICallerGenerator.hpp>
+#endif
+
     public:
         inline auto acquireHandlesForDevice (
                 engine :: vulkan :: Type ( DeviceHandle )               handle,

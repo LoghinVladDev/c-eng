@@ -5349,6 +5349,21 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #include <ObjectMapping.hpp>
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+#define C_ENG_MAP_START ENUM ( DescriptorUpdateTemplateType, TYPE ( cds :: uint8 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( DescriptorSet,      VkDescriptorUpdateTemplateType :: VK_DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET ),
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PUSH_DESCRIPTOR_AVAILABLE
+            Field ( PushDescriptors,    VkDescriptorUpdateTemplateType :: VK_DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR ),
+#endif
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
 
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 
@@ -5446,6 +5461,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_ALIAS ( DescriptorSetLayoutCreateFlags,         VkDescriptorSetLayoutCreateFlags );
         __C_ENG_ALIAS ( PipelineLayoutCreateFlags,              VkPipelineLayoutCreateFlags );
         __C_ENG_ALIAS ( DescriptorPoolCreateFlags,              VkDescriptorPoolCreateFlags );
+        __C_ENG_ALIAS ( DescriptorPoolResetFlags,               VkDescriptorPoolResetFlags );
 
         __C_ENG_ALIAS ( AllocationFunction,                     PFN_vkAllocationFunction );
         __C_ENG_ALIAS ( ReallocationFunction,                   PFN_vkReallocationFunction );
@@ -5457,15 +5473,18 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
 
-        __C_ENG_ALIAS ( SamplerYCBCRConversionHandle,       VkSamplerYcbcrConversion );
-        __C_ENG_ALIAS ( CommandPoolTrimFlags,               VkCommandPoolTrimFlags );
-        __C_ENG_ALIAS ( ExternalFenceHandleTypeFlags,       VkExternalFenceHandleTypeFlags );
-        __C_ENG_ALIAS ( FenceImportFlags,                   VkFenceImportFlags );
-        __C_ENG_ALIAS ( SemaphoreImportFlags,               VkSemaphoreImportFlags );
-        __C_ENG_ALIAS ( ExternalSemaphoreHandleTypeFlags,   VkExternalSemaphoreHandleTypeFlags );
-        __C_ENG_ALIAS ( ExternalMemoryHandleTypeFlags,      VkExternalMemoryHandleTypeFlags );
-        __C_ENG_ALIAS ( MemoryAllocateFlags,                VkMemoryAllocateFlags );
-        __C_ENG_ALIAS ( PeerMemoryFeatureFlags,             VkPeerMemoryFeatureFlags );
+        __C_ENG_ALIAS ( SamplerYCBCRConversionHandle,           VkSamplerYcbcrConversion );
+        __C_ENG_ALIAS ( CommandPoolTrimFlags,                   VkCommandPoolTrimFlags );
+        __C_ENG_ALIAS ( ExternalFenceHandleTypeFlags,           VkExternalFenceHandleTypeFlags );
+        __C_ENG_ALIAS ( FenceImportFlags,                       VkFenceImportFlags );
+        __C_ENG_ALIAS ( SemaphoreImportFlags,                   VkSemaphoreImportFlags );
+        __C_ENG_ALIAS ( ExternalSemaphoreHandleTypeFlags,       VkExternalSemaphoreHandleTypeFlags );
+        __C_ENG_ALIAS ( ExternalMemoryHandleTypeFlags,          VkExternalMemoryHandleTypeFlags );
+        __C_ENG_ALIAS ( MemoryAllocateFlags,                    VkMemoryAllocateFlags );
+        __C_ENG_ALIAS ( PeerMemoryFeatureFlags,                 VkPeerMemoryFeatureFlags );
+        __C_ENG_ALIAS ( DescriptorUpdateTemplateHandle,         VkDescriptorUpdateTemplate );
+        __C_ENG_ALIAS ( DescriptorUpdateTemplateCreateFlags,    VkDescriptorUpdateTemplateCreateFlags );
+
 
 #endif
 
@@ -15066,6 +15085,171 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #include <ObjectMapping.hpp>
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( DescriptorBufferInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( BufferHandle )   buffer;
+            Type ( DeviceSize )     offset;
+            Type ( DeviceSize )     range;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( DescriptorImageInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( SamplerHandle )      sampler;
+            Type ( ImageViewHandle )    imageView;
+            Type ( ImageLayout )        imageLayout;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( WriteDescriptorSet, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                          structureType;
+            Type ( GenericStructure )               const * pNext;
+            Type ( DescriptorSetHandle )                    destinationSet;
+            cds :: uint32                                   destinationBinding;
+            cds :: uint32                                   destinationArrayElement;
+            cds :: uint32                                   descriptorCount;
+            Type ( DescriptorType )                         descriptorType;
+            Type ( DescriptorImageInfo )            const * pImageInfo;
+            Type ( DescriptorBufferInfo )           const * pBufferInfo;
+            Type ( BufferViewHandle )               const * pTexelBufferView;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( WriteDescriptorSetAccelerationStructure, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                          structureType;
+            Type ( GenericStructure )               const * pNext;
+            cds :: uint32                                   accelerationStructureCount;
+            Type ( AccelerationStructureHandle )    const * pAccelerationStructures;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( WriteDescriptorSetAccelerationStructureNVidia, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                              structureType;
+            Type ( GenericStructure )                   const * pNext;
+            cds :: uint32                                       accelerationStructureCount;
+            Type ( AccelerationStructureHandleNVidia )  const * pAccelerationStructures;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_INLINE_UNIFORM_BLOCK_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( WriteDescriptorSetInlineUniformBlock, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                              structureType;
+            Type ( GenericStructure )                   const * pNext;
+            cds :: uint32                                       dataSize;
+            void                                        const * pData;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( CopyDescriptorSet, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )              structureType;
+            Type ( GenericStructure )   const * pNext;
+            Type ( DescriptorSetHandle )        sourceSet;
+            cds :: uint32                       sourceBinding;
+            cds :: uint32                       sourceArrayElement;
+            Type ( DescriptorSetHandle )        destinationSet;
+            cds :: uint32                       destinationBinding;
+            cds :: uint32                       destinationArrayElement;
+            cds :: uint32                       descriptorCount;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( DescriptorUpdateTemplateEntry, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            cds :: uint32           destinationBinding;
+            cds :: uint32           destinationArrayElement;
+            cds :: uint32           descriptorCount;
+            Type ( DescriptorType ) descriptorType;
+            cds :: uint64           offset;
+            cds :: uint64           stride;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( DescriptorUpdateTemplateCreateInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                              structureType;
+            Type ( GenericStructure )                   const * pNext;
+            Type ( DescriptorUpdateTemplateCreateFlags )        flags;
+            cds :: uint32                                       descriptorUpdateEntryCount;
+            Type ( DescriptorUpdateTemplateEntry )      const * pDescriptorUpdateEntries;
+            Type ( DescriptorUpdateTemplateType )               templateType;
+            Type ( DescriptorSetLayoutHandle )                  descriptorSetLayout;
+            Type ( PipelineBindPoint )                          pipelineBindPoint;
+            Type ( PipelineLayoutHandle )                       pipelineLayout;
+            cds :: uint32                                       set;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( BufferDeviceAddressInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                              structureType;
+            Type ( GenericStructure )                   const * pNext;
+            Type ( BufferHandle )                               buffer;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
 
 
 #define C_ENG_MAP_START     HEADER
@@ -15165,6 +15349,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         NoDiscard auto toString ( Type ( SamplerYCBCRModelConversion ) ) noexcept -> cds :: StringLiteral;
         NoDiscard auto toString ( Type ( SamplerYCBCRRange ) ) noexcept -> cds :: StringLiteral;
         NoDiscard auto toString ( Type ( ChromaLocation ) ) noexcept -> cds :: StringLiteral;
+        NoDiscard auto toString ( Type ( DescriptorUpdateTemplateType ) ) noexcept -> cds :: StringLiteral;
 
 #endif
 
@@ -15479,6 +15664,11 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         NoDiscard auto toString ( Type ( DescriptorPoolCreateInfo ) const & ) noexcept -> cds :: String;
         NoDiscard auto toString ( Type ( DescriptorSetAllocateInfo ) const & ) noexcept -> cds :: String;
 
+        NoDiscard auto toString ( Type ( WriteDescriptorSet ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( DescriptorBufferInfo ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( DescriptorImageInfo ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( CopyDescriptorSet ) const & ) noexcept -> cds :: String;
+
 #endif
 
 #if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
@@ -15531,6 +15721,8 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         NoDiscard auto toString ( Type ( SamplerYCBCRConversionCreateInfo ) const & ) noexcept -> cds :: String;
 
         NoDiscard auto toString ( Type ( DescriptorSetLayoutSupport ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( DescriptorUpdateTemplateEntry ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( DescriptorUpdateTemplateCreateInfo ) const & ) noexcept -> cds :: String;
 
 #endif
 
@@ -15596,6 +15788,8 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         NoDiscard auto toString ( Type ( DescriptorSetLayoutBindingFlagsCreateInfo ) const & ) noexcept -> cds :: String;
         NoDiscard auto toString ( Type ( DescriptorSetVariableDescriptorCountLayoutSupport ) const & ) noexcept -> cds :: String;
         NoDiscard auto toString ( Type ( DescriptorSetVariableDescriptorCountAllocateInfo ) const & ) noexcept -> cds :: String;
+
+        NoDiscard auto toString ( Type ( BufferDeviceAddressInfo ) const & ) noexcept -> cds :: String;
 #endif
 
 #if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
@@ -15618,6 +15812,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_INLINE_UNIFORM_BLOCK_AVAILABLE
         NoDiscard auto toString ( Type ( DescriptorPoolInlineUniformBlockCreateInfo ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( WriteDescriptorSetInlineUniformBlock ) const & ) noexcept -> cds :: String;
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_RAY_TRACING_PIPELINE_AVAILABLE
@@ -15639,6 +15834,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         NoDiscard auto toString ( Type ( AccelerationStructureGeometryInstancesData ) const & ) noexcept -> cds :: String;
         NoDiscard auto toString ( Type ( AccelerationStructureBuildSizesInfo ) const & ) noexcept -> cds :: String;
         NoDiscard auto toString ( Type ( AccelerationStructureDeviceAddressInfo ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( WriteDescriptorSetAccelerationStructure ) const & ) noexcept -> cds :: String;
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_MOTION_BLUR_AVAILABLE
@@ -15657,6 +15853,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         NoDiscard auto toString ( Type ( GeometryNVidia ) const & ) noexcept -> cds :: String;
         NoDiscard auto toString ( Type ( AccelerationStructureMemoryRequirementsInfoNVidia ) const & ) noexcept -> cds :: String;
         NoDiscard auto toString ( Type ( BindAccelerationStructureMemoryInfoNVidia ) const & ) noexcept -> cds :: String;
+        NoDiscard auto toString ( Type ( WriteDescriptorSetAccelerationStructureNVidia ) const & ) noexcept -> cds :: String;
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PIPELINE_EXECUTABLE_PROPERTIES_AVAILABLE
