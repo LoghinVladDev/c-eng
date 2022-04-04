@@ -8598,3 +8598,850 @@ auto engine :: vulkan :: getBufferOpaqueCaptureAddress (
     return ResultSuccess;
 }
 #endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: createQueryPool (
+        Type ( DeviceHandle )                   deviceHandle,
+        Type ( QueryPoolCreateInfo )    const * pCreateInfo,
+        Type ( AllocationCallbacks )    const * pAllocationCallbacks,
+        Type ( QueryPoolHandle )              * pHandle
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || pCreateInfo == nullptr || pHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    auto context = ContextManager :: acquire();
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: CreateQueryPool,
+            "vkCreateQueryPool",
+            "Creates a Query Pool Object",
+            deviceHandle,
+            pCreateInfo,
+            pAllocationCallbacks,
+            pHandle
+    );
+
+#endif
+
+    return APICaller.vkCreateQueryPool (
+            deviceHandle,
+            prepareContext ( & context->create.queryPool, pCreateInfo ),
+            AllocatorHandler :: apply ( pAllocationCallbacks ),
+            pHandle
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PERFORMANCE_QUERY_AVAILABLE
+auto engine :: vulkan :: getPhysicalDeviceQueueFamilyPerformanceQueryPasses (
+        Type ( PhysicalDeviceHandle )                   deviceHandle,
+        Type ( QueryPoolPerformanceCreateInfo ) const * pCreateInfo,
+        cds :: uint32                                 * pNumberOfPasses
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || pCreateInfo == nullptr || pNumberOfPasses == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+    auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR",
+            "Acquires the number of asses required to query the performance query pool",
+            deviceHandle,
+            pCreateInfo,
+            pNumberOfPasses
+    );
+
+#endif
+
+    VkQueryPoolPerformanceCreateInfoKHR createInfo {};
+
+    return APICaller.vkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR (
+            deviceHandle,
+            toVulkanFormat ( & createInfo, pCreateInfo ),
+            pNumberOfPasses
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: destroyQueryPool (
+        Type ( DeviceHandle )                           deviceHandle,
+        Type ( QueryPoolHandle )                        poolHandle,
+        Type ( AllocationCallbacks )            const * pAllocationCallbacks
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || poolHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+    auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkDestroyQueryPool",
+            "Destroys a Query Pool",
+            deviceHandle,
+            poolHandle,
+            pAllocationCallbacks
+    );
+
+#endif
+
+    return APICaller.vkDestroyQueryPool (
+            deviceHandle,
+            poolHandle,
+            AllocatorHandler :: apply ( pAllocationCallbacks )
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: commandBufferResetQueryPool (
+        Type ( CommandBufferHandle )    commandBufferHandle,
+        Type ( QueryPoolHandle )        queryPoolHandle,
+        cds :: uint32                   firstQuery,
+        cds :: uint32                   queryCount
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( commandBufferHandle == nullptr || queryPoolHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+    auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkCmdResetQueryPool",
+            "Resets the range of queries in a query pool upon a command buffer's execution",
+            commandBufferHandle,
+            queryPoolHandle,
+            firstQuery,
+            queryCount
+    );
+
+#endif
+
+    return APICaller.vkCmdResetQueryPool (
+            commandBufferHandle,
+            queryPoolHandle,
+            firstQuery,
+            queryCount
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+auto engine :: vulkan :: resetQueryPool (
+        Type ( DeviceHandle )           deviceHandle,
+        Type ( QueryPoolHandle )        queryPoolHandle,
+        cds :: uint32                   firstQuery,
+        cds :: uint32                   queryCount
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || queryPoolHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+    auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkResetQueryPool",
+            "Resets the range of queries in a query pool",
+            deviceHandle,
+            queryPoolHandle,
+            firstQuery,
+            queryCount
+    );
+
+#endif
+
+    return APICaller.vkResetQueryPool (
+            deviceHandle,
+            queryPoolHandle,
+            firstQuery,
+            queryCount
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: commandBufferBeginQuery (
+        Type ( CommandBufferHandle )    commandBufferHandle,
+        Type ( QueryPoolHandle )        queryPoolHandle,
+        cds :: uint32                   query,
+        Type ( QueryControlFlags )      flags
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( commandBufferHandle == nullptr || queryPoolHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+    auto context = ContextManager :: acquire();
+    auto flagsPack = Flags ( flags );
+
+    prepareDump (
+            context.data(),
+            "vkCmdBeginQuery",
+            "Begins a query upon the command buffer's execution",
+            commandBufferHandle,
+            queryPoolHandle,
+            query,
+            flagsPack
+    );
+
+#endif
+
+    return APICaller.vkCmdBeginQuery (
+            commandBufferHandle,
+            queryPoolHandle,
+            query,
+            flags
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_TRANSFORM_FEEDBACK_AVAILABLE
+auto engine :: vulkan :: commandBufferBeginQueryIndexed (
+        Type ( CommandBufferHandle )    commandBufferHandle,
+        Type ( QueryPoolHandle )        queryPoolHandle,
+        cds :: uint32                   query,
+        Type ( QueryControlFlags )      flags,
+        cds :: uint32                   index
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( commandBufferHandle == nullptr || queryPoolHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+    auto context = ContextManager :: acquire();
+    auto flagsPack = Flags ( flags );
+
+    prepareDump (
+            context.data(),
+            "vkCmdBeginQueryIndexedEXT",
+            "Begins an indexed query upon the command buffer's execution",
+            commandBufferHandle,
+            queryPoolHandle,
+            query,
+            flagsPack,
+            index
+    );
+
+#endif
+
+    return APICaller.vkCmdBeginQueryIndexedEXT (
+            commandBufferHandle,
+            queryPoolHandle,
+            query,
+            flags,
+            index
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: commandBufferEndQuery (
+        Type ( CommandBufferHandle )    commandBufferHandle,
+        Type ( QueryPoolHandle )        queryPoolHandle,
+        cds :: uint32                   query
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( commandBufferHandle == nullptr || queryPoolHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+    auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkCmdEndQuery",
+            "Ends a query upon the command buffer's execution",
+            commandBufferHandle,
+            queryPoolHandle,
+            query
+    );
+
+#endif
+
+    return APICaller.vkCmdEndQuery (
+            commandBufferHandle,
+            queryPoolHandle,
+            query
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_TRANSFORM_FEEDBACK_AVAILABLE
+auto engine :: vulkan :: commandBufferEndQueryIndexed (
+        Type ( CommandBufferHandle )    commandBufferHandle,
+        Type ( QueryPoolHandle )        queryPoolHandle,
+        cds :: uint32                   query,
+        cds :: uint32                   index
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( commandBufferHandle == nullptr || queryPoolHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+    auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkCmdEndQueryIndexedEXT",
+            "Ends an indexed query upon the command buffer's execution",
+            commandBufferHandle,
+            queryPoolHandle,
+            query
+    );
+
+#endif
+
+    return APICaller.vkCmdEndQueryIndexedEXT (
+            commandBufferHandle,
+            queryPoolHandle,
+            query,
+            index
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: getQueryPoolResults (
+        Type ( DeviceHandle )       deviceHandle,
+        Type ( QueryPoolHandle )    poolHandle,
+        cds :: uint32               firstQuery,
+        cds :: uint32               queryCount,
+        cds :: uint64               dataSize,
+        void *                      pData,
+        Type ( DeviceSize )         stride,
+        Type ( QueryResultFlags )   flags
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || poolHandle == nullptr || pData == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+    auto context = ContextManager :: acquire();
+    auto flagsPack = Flags (flags);
+
+    prepareDump (
+            context.data(),
+            "vkGetQueryPoolResults",
+            "Retrieves the status and results of a set of queries",
+            deviceHandle,
+            poolHandle,
+            firstQuery,
+            queryCount,
+            dataSize,
+            pData,
+            stride,
+            flagsPack
+    );
+
+#endif
+
+    return APICaller.vkGetQueryPoolResults (
+            deviceHandle,
+            poolHandle,
+            firstQuery,
+            queryCount,
+            dataSize,
+            pData,
+            stride,
+            flags
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: commandBufferCopyQueryPoolResults (
+        Type ( CommandBufferHandle )    commandBufferHandle,
+        Type ( QueryPoolHandle )        queryPoolHandle,
+        cds :: uint32                   firstQuery,
+        cds :: uint32                   queryCount,
+        Type ( BufferHandle )           destinationBuffer,
+        Type ( DeviceSize )             destinationOffset,
+        Type ( DeviceSize )             stride,
+        Type ( QueryResultFlags )       flags
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( commandBufferHandle == nullptr || queryPoolHandle == nullptr || destinationBuffer == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+    auto context = ContextManager :: acquire();
+    auto flagsPack = Flags (flags);
+
+    prepareDump (
+            context.data(),
+            "vkCmdCopyQueryPoolResults",
+            "Copies the status and results of a set of queries onto a buffer upon a command buffer's execution",
+            commandBufferHandle,
+            queryPoolHandle,
+            firstQuery,
+            queryCount,
+            destinationBuffer,
+            destinationOffset,
+            stride,
+            flagsPack
+    );
+
+#endif
+
+    return APICaller.vkCmdCopyQueryPoolResults (
+            commandBufferHandle,
+            queryPoolHandle,
+            firstQuery,
+            queryCount,
+            destinationBuffer,
+            destinationOffset,
+            stride,
+            flags
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto engine :: vulkan :: commandBufferWriteTimestamp (
+        Type ( CommandBufferHandle )    commandBufferHandle,
+        Type ( PipelineStageFlags )     stageFlags,
+        Type ( QueryPoolHandle )        queryPoolHandle,
+        cds :: uint32                   query
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( commandBufferHandle == nullptr || queryPoolHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+    auto context = ContextManager :: acquire();
+    auto flagsPack = Flags (stageFlags);
+
+    prepareDump (
+            context.data(),
+            "vkCmdWriteTimestamp",
+            "Requests a timestamp upon the command buffer's execution",
+            commandBufferHandle,
+            flagsPack,
+            queryPoolHandle,
+            query
+    );
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+
+    return APICaller.vkCmdWriteTimestamp2 (
+            commandBufferHandle,
+            stageFlags,
+            queryPoolHandle,
+            query
+    );
+
+#elif __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
+
+    return APICaller.vkCmdWriteTimestamp2KHR (
+            commandBufferHandle,
+            stageFlags,
+            queryPoolHandle,
+            query
+    );
+
+#else
+
+    return APICaller.vkCmdWriteTimestamp (
+            commandBufferHandle,
+            stageFlags,
+            queryPoolHandle,
+            query
+    );
+
+#endif
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PERFORMANCE_QUERY_AVAILABLE
+NoDiscard MaybeUnused auto engine :: vulkan :: acquireProfilingLock (
+        Type ( DeviceHandle )                       deviceHandle,
+        Type ( AcquireProfilingLockInfo )   const * pInfo
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || pInfo == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+    auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkAcquireProfilingLockKHR",
+            "Acquires the profiling lock for registering profile queries",
+            deviceHandle,
+            pInfo
+    );
+
+#endif
+
+    VkAcquireProfilingLockInfoKHR info;
+
+    return APICaller.vkAcquireProfilingLockKHR (
+            deviceHandle,
+            toVulkanFormat ( & info, pInfo )
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_INTEL_PERFORMANCE_QUERY_AVAILABLE
+NoDiscard MaybeUnused auto engine :: vulkan :: initializePerformanceAPIIntel (
+        Type ( DeviceHandle )                               deviceHandle,
+        Type ( InitializePerformanceAPIInfoIntel )  const * pInfo
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || pInfo == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+    auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkInitializePerformanceApiINTEL",
+            "Initializes the Intel Performance API",
+            deviceHandle,
+            pInfo
+    );
+
+#endif
+
+    VkInitializePerformanceApiInfoINTEL info;
+
+    return APICaller.vkInitializePerformanceApiINTEL (
+            deviceHandle,
+            toVulkanFormat ( & info, pInfo )
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_INTEL_PERFORMANCE_QUERY_AVAILABLE
+NoDiscard MaybeUnused auto engine :: vulkan :: uninitializePerformanceAPIIntel (
+        Type ( DeviceHandle )                               deviceHandle
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+    auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkUninitializePerformanceApiINTEL",
+            "Un-Initializes the Intel Performance API",
+            deviceHandle
+    );
+
+#endif
+
+    return APICaller.vkUninitializePerformanceApiINTEL ( deviceHandle );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_INTEL_PERFORMANCE_QUERY_AVAILABLE
+NoDiscard MaybeUnused auto engine :: vulkan :: getPerformanceParameterIntel (
+        Type ( DeviceHandle )                       deviceHandle,
+        Type ( PerformanceParameterTypeIntel )      parameterType,
+        Type ( PerformanceValueIntel )            * pValue
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || pValue == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+    auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkGetPerformanceParameterINTEL",
+            "Acquires a performance parameter's data",
+            deviceHandle,
+            parameterType,
+            pValue
+    );
+
+#endif
+
+    VkPerformanceValueINTEL value;
+
+    if (
+            auto result = APICaller.vkGetPerformanceParameterINTEL (
+                    deviceHandle,
+                    static_cast < VkPerformanceParameterTypeINTEL > ( parameterType ),
+                    & value
+            ); result != ResultSuccess
+    ) {
+        return result;
+    }
+
+    pValue->type = static_cast < Type ( PerformanceValueTypeIntel ) > ( value.type );
+    switch ( value.type ) {
+        case VK_PERFORMANCE_VALUE_TYPE_UINT32_INTEL:
+            pValue->data.value32 = value.data.value32;
+            break;
+        case VK_PERFORMANCE_VALUE_TYPE_UINT64_INTEL:
+            pValue->data.value64 = value.data.value64;
+            break;
+        case VK_PERFORMANCE_VALUE_TYPE_FLOAT_INTEL:
+            pValue->data.valueFloat = value.data.valueFloat;
+            break;
+        case VK_PERFORMANCE_VALUE_TYPE_BOOL_INTEL:
+            pValue->data.valueBool  = value.data.valueBool;
+            break;
+        case VK_PERFORMANCE_VALUE_TYPE_STRING_INTEL:
+            pValue->data.valueString    = value.data.valueString;
+            break;
+        default:
+            break;
+    }
+
+    return ResultSuccess;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_INTEL_PERFORMANCE_QUERY_AVAILABLE
+NoDiscard MaybeUnused auto engine :: vulkan :: commandBufferSetPerformanceMarkerIntel (
+        Type ( CommandBufferHandle )                deviceHandle,
+        Type ( PerformanceMarkerInfoIntel ) const * pInfo
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || pInfo == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+    auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkCmdSetPerformanceMarkerINTEL",
+            "Sets a Performance Marker to be set upon a command buffer's exection",
+            deviceHandle,
+            pInfo
+    );
+
+#endif
+
+    VkPerformanceMarkerInfoINTEL info;
+
+    return APICaller.vkCmdSetPerformanceMarkerINTEL (
+            deviceHandle,
+            toVulkanFormat ( & info, pInfo )
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_INTEL_PERFORMANCE_QUERY_AVAILABLE
+NoDiscard MaybeUnused auto engine :: vulkan :: commandBufferSetPerformanceStreamMarkerIntel (
+        Type ( CommandBufferHandle )                      deviceHandle,
+        Type ( PerformanceStreamMarkerInfoIntel ) const * pInfo
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || pInfo == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+    auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkCmdSetPerformanceStreamMarkerINTEL",
+            "Sets a Performance Stream Marker to be set upon a command buffer's exection",
+            deviceHandle,
+            pInfo
+    );
+
+#endif
+
+    VkPerformanceStreamMarkerInfoINTEL info;
+
+    return APICaller.vkCmdSetPerformanceStreamMarkerINTEL (
+            deviceHandle,
+            toVulkanFormat ( & info, pInfo )
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_INTEL_PERFORMANCE_QUERY_AVAILABLE
+NoDiscard MaybeUnused auto engine :: vulkan :: commandBufferSetPerformanceOverrideIntel (
+        Type ( CommandBufferHandle )                  deviceHandle,
+        Type ( PerformanceOverrideInfoIntel ) const * pInfo
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || pInfo == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+    auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkCmdSetPerformanceOverrideINTEL",
+            "Sets a Performance Override to be set upon a command buffer's execution",
+            deviceHandle,
+            pInfo
+    );
+
+#endif
+
+    VkPerformanceOverrideInfoINTEL info;
+
+    return APICaller.vkCmdSetPerformanceOverrideINTEL (
+            deviceHandle,
+            toVulkanFormat ( & info, pInfo )
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_INTEL_PERFORMANCE_QUERY_AVAILABLE
+NoDiscard MaybeUnused auto engine :: vulkan :: acquirePerformanceConfigurationIntel (
+        Type ( DeviceHandle )                                       deviceHandle,
+        Type ( PerformanceConfigurationAcquireInfoIntel )   const * pInfo,
+        Type ( PerformanceConfigurationHandleIntel )              * pHandle
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || pInfo == nullptr || pHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+    auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkAcquirePerformanceConfigurationINTEL",
+            "Acquires a Performance Configuration Handle",
+            deviceHandle,
+            pInfo,
+            pHandle
+    );
+
+#endif
+
+    VkPerformanceConfigurationAcquireInfoINTEL info;
+
+    return APICaller.vkAcquirePerformanceConfigurationINTEL (
+            deviceHandle,
+            toVulkanFormat ( & info, pInfo ),
+            pHandle
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_INTEL_PERFORMANCE_QUERY_AVAILABLE
+NoDiscard MaybeUnused auto engine :: vulkan :: queueSetPerformanceConfigurationIntel (
+        Type ( QueueHandle )                            queueHandle,
+        Type ( PerformanceConfigurationHandleIntel )    configurationHandle
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( queueHandle == nullptr || configurationHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+    auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkQueueSetPerformanceConfigurationINTEL",
+            "Sets a configuration set command upon a queue",
+            queueHandle,
+            configurationHandle
+    );
+
+#endif
+
+    return APICaller.vkQueueSetPerformanceConfigurationINTEL (
+            queueHandle,
+            configurationHandle
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_INTEL_PERFORMANCE_QUERY_AVAILABLE
+NoDiscard MaybeUnused auto engine :: vulkan :: releasePerformanceConfigurationIntel (
+        Type ( DeviceHandle )                           deviceHandle,
+        Type ( PerformanceConfigurationHandleIntel )    configurationHandle
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( deviceHandle == nullptr || configurationHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+    auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkReleasePerformanceConfigurationINTEL",
+            "Releases a performance configuration handle",
+            deviceHandle,
+            configurationHandle
+    );
+
+#endif
+
+    return APICaller.vkReleasePerformanceConfigurationINTEL (
+            deviceHandle,
+            configurationHandle
+    );
+}
+#endif

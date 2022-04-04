@@ -1682,6 +1682,191 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         ) noexcept -> Type ( Result );
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+        NoDiscard MaybeUnused extern auto createQueryPool (
+                Type ( DeviceHandle ),
+                Type ( QueryPoolCreateInfo )    const *,
+                Type ( AllocationCallbacks )    const *,
+                Type ( QueryPoolHandle )              *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PERFORMANCE_QUERY_AVAILABLE
+        NoDiscard MaybeUnused extern auto getPhysicalDeviceQueueFamilyPerformanceQueryPasses (
+                Type ( PhysicalDeviceHandle ),
+                Type ( QueryPoolPerformanceCreateInfo ) const *,
+                cds :: uint32                                 *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+        NoDiscard MaybeUnused extern auto destroyQueryPool (
+                Type ( DeviceHandle ),
+                Type ( QueryPoolHandle ),
+                Type ( AllocationCallbacks )    const *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+        NoDiscard MaybeUnused extern auto commandBufferResetQueryPool (
+                Type ( CommandBufferHandle ),
+                Type ( QueryPoolHandle ),
+                cds :: uint32,
+                cds :: uint32
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
+        NoDiscard MaybeUnused extern auto resetQueryPool (
+                Type ( DeviceHandle ),
+                Type ( QueryPoolHandle ),
+                cds :: uint32,
+                cds :: uint32
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+        NoDiscard MaybeUnused extern auto commandBufferBeginQuery (
+                Type ( CommandBufferHandle ),
+                Type ( QueryPoolHandle ),
+                cds :: uint32,
+                Type ( QueryControlFlags )
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_TRANSFORM_FEEDBACK_AVAILABLE
+        NoDiscard MaybeUnused extern auto commandBufferBeginQueryIndexed (
+                Type ( CommandBufferHandle ),
+                Type ( QueryPoolHandle ),
+                cds :: uint32,
+                Type ( QueryControlFlags ),
+                cds :: uint32
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+        NoDiscard MaybeUnused extern auto commandBufferEndQuery (
+                Type ( CommandBufferHandle ),
+                Type ( QueryPoolHandle ),
+                cds :: uint32
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_TRANSFORM_FEEDBACK_AVAILABLE
+        NoDiscard MaybeUnused extern auto commandBufferEndQueryIndexed (
+                Type ( CommandBufferHandle ),
+                Type ( QueryPoolHandle ),
+                cds :: uint32,
+                cds :: uint32
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+        NoDiscard MaybeUnused extern auto getQueryPoolResults (
+                Type ( DeviceHandle ),
+                Type ( QueryPoolHandle ),
+                cds :: uint32,
+                cds :: uint32,
+                cds :: uint64,
+                void *,
+                Type ( DeviceSize ),
+                Type ( QueryResultFlags )
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+        NoDiscard MaybeUnused extern auto commandBufferCopyQueryPoolResults (
+                Type ( CommandBufferHandle ),
+                Type ( QueryPoolHandle ),
+                cds :: uint32,
+                cds :: uint32,
+                Type ( BufferHandle ),
+                Type ( DeviceSize ),
+                Type ( DeviceSize ),
+                Type ( QueryResultFlags )
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+        NoDiscard MaybeUnused extern auto commandBufferWriteTimestamp (
+                Type ( CommandBufferHandle ),
+                Type ( PipelineStageFlags ),
+                Type ( QueryPoolHandle ),
+                cds :: uint32
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PERFORMANCE_QUERY_AVAILABLE
+        NoDiscard MaybeUnused extern auto acquireProfilingLock (
+                Type ( DeviceHandle ),
+                Type ( AcquireProfilingLockInfo )   const *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_INTEL_PERFORMANCE_QUERY_AVAILABLE
+        NoDiscard MaybeUnused extern auto initializePerformanceAPIIntel (
+                Type ( DeviceHandle ),
+                Type ( InitializePerformanceAPIInfoIntel )  const *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_INTEL_PERFORMANCE_QUERY_AVAILABLE
+        NoDiscard MaybeUnused extern auto uninitializePerformanceAPIIntel (
+                Type ( DeviceHandle )
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_INTEL_PERFORMANCE_QUERY_AVAILABLE
+        NoDiscard MaybeUnused extern auto getPerformanceParameterIntel (
+                Type ( DeviceHandle ),
+                Type ( PerformanceParameterTypeIntel ),
+                Type ( PerformanceValueIntel )          *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_INTEL_PERFORMANCE_QUERY_AVAILABLE
+        NoDiscard MaybeUnused extern auto commandBufferSetPerformanceMarkerIntel (
+                Type ( CommandBufferHandle ),
+                Type ( PerformanceMarkerInfoIntel ) const *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_INTEL_PERFORMANCE_QUERY_AVAILABLE
+        NoDiscard MaybeUnused extern auto commandBufferSetPerformanceStreamMarkerIntel (
+                Type ( CommandBufferHandle ),
+                Type ( PerformanceStreamMarkerInfoIntel ) const *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_INTEL_PERFORMANCE_QUERY_AVAILABLE
+        NoDiscard MaybeUnused extern auto commandBufferSetPerformanceOverrideIntel (
+                Type ( CommandBufferHandle ),
+                Type ( PerformanceOverrideInfoIntel ) const *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_INTEL_PERFORMANCE_QUERY_AVAILABLE
+        NoDiscard MaybeUnused extern auto acquirePerformanceConfigurationIntel (
+                Type ( DeviceHandle ),
+                Type ( PerformanceConfigurationAcquireInfoIntel )   const *,
+                Type ( PerformanceConfigurationHandleIntel )              *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_INTEL_PERFORMANCE_QUERY_AVAILABLE
+        NoDiscard MaybeUnused extern auto queueSetPerformanceConfigurationIntel (
+                Type ( QueueHandle ),
+                Type ( PerformanceConfigurationHandleIntel )
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_INTEL_PERFORMANCE_QUERY_AVAILABLE
+        NoDiscard MaybeUnused extern auto releasePerformanceConfigurationIntel (
+                Type ( DeviceHandle ),
+                Type ( PerformanceConfigurationHandleIntel )
+        ) noexcept -> Type ( Result );
+#endif
+
     } /// namespace vulkan
 
 } /// namespace engine

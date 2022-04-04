@@ -7,7 +7,7 @@
 
 #define __C_ENG_DEFAULT_NAMING_PREFIX V
 
-//#define VK_ENABLE_BETA_EXTENSIONS
+#define VK_ENABLE_BETA_EXTENSIONS
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 #include <GLFW/glfw3native.h>

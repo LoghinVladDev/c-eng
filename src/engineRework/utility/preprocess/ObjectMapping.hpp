@@ -169,7 +169,7 @@
 #define __C_ENG_OBJECT_MAP_PARENT_CLASS(_typename, _baseFormula)                    __C_ENG_OBJECT_MAP_PARENT_CLASS_ ## _baseFormula
 #define __C_ENG_OBJECT_MAP_FIELD_CLASS(_typename, _baseFormula)                     __C_ENG_OBJECT_MAP_FIELD_CLASS_GEN
 #define __C_ENG_OBJECT_MAP_CONST_CLASS(_typename, _baseFormula)                     __C_ENG_OBJECT_MAP_CONST_GEN
-
+#define __C_ENG_OBJECT_MAP_TO_STRING_CLASS(_typename, _baseFormula)
 
 #define __C_ENG_OBJECT_MAP_CLASS_NESTED_CLASS(_typename, _nesterFormula, _baseFormula)              _typename
 #define __C_ENG_OBJECT_MAP_DECLARATION_NESTED_CLASS(_typename, _nesterFormula, _baseFormula)         \
@@ -437,6 +437,7 @@
 #define __C_ENG_OBJECT_MAP_DESTRUCTOR_STRUCT(_typename, _baseFormula)               ~ __C_ENG_OBJECT_MAP_CLASS_STRUCT( _typename, _baseFormula )
 #define __C_ENG_OBJECT_MAP_SELF_STRUCT(_typename, _baseFormula)                     __C_ENG_OBJECT_MAP_CLASS_STRUCT( _typename, _baseFormula )
 #define __C_ENG_OBJECT_MAP_PARENT_STRUCT(_typename, _baseFormula)                   __C_ENG_OBJECT_MAP_PARENT_STRUCT_ ## _baseFormula
+#define __C_ENG_OBJECT_MAP_TO_STRING_STRUCT(_typename, _baseFormula)                NoDiscard MaybeUnused auto toString ( Type ( _typename ) const & ) noexcept -> cds :: String;
 
 
 #define __C_ENG_OBJECT_MAP_CLASS_UNION(_typename, _baseFormula)                    __C_ENG_TYPE ( _typename )
@@ -445,6 +446,7 @@
 #define __C_ENG_OBJECT_MAP_DESTRUCTOR_UNION(_typename, _baseFormula)               ~ __C_ENG_OBJECT_MAP_CLASS_UNION( _typename, _baseFormula )
 #define __C_ENG_OBJECT_MAP_SELF_UNION(_typename, _baseFormula)                     __C_ENG_OBJECT_MAP_CLASS_UNION( _typename, _baseFormula )
 #define __C_ENG_OBJECT_MAP_PARENT_UNION(_typename, _baseFormula)                   __C_ENG_OBJECT_MAP_PARENT_UNION_ ## _baseFormula
+#define __C_ENG_OBJECT_MAP_TO_STRING_UNION(_typename, _baseFormula)                NoDiscard MaybeUnused auto toString ( Type ( _typename ) const & ) noexcept -> cds :: String;
 
 
 #define __C_ENG_OBJECT_MAP_CLASS_ENUM(_typename, _baseFormula)                      __C_ENG_TYPE ( _typename )
@@ -452,6 +454,8 @@
 #define __C_ENG_OBJECT_MAP_BASE_TYPE_ENUM(_typename, _baseFormula)                  __C_ENG_OBJECT_MAP_BASE_TYPE_ ## _baseFormula
 #define __C_ENG_OBJECT_MAP_DECLARATION_ENUM(_typename, _baseFormula)                enum __C_ENG_OBJECT_MAP_CLASS_ENUM(_typename, _baseFormula) __C_ENG_OBJECT_MAP_BASE_TYPE_ ## _baseFormula
 #define __C_ENG_OBJECT_MAP_FIELD_ENUM(_typename, _baseFormula)                      __C_ENG_OBJECT_MAP_FIELD_ENUM_GEN
+#define __C_ENG_OBJECT_MAP_TO_STRING_ENUM(_typename, _baseFormula)                  NoDiscard MaybeUnused auto toString ( Type ( _typename ) ) noexcept -> cds :: StringLiteral;
+
 
 #define __C_ENG_OBJECT_MAP_FIELD_CASTER_GENERATOR_ENUM(_typename, _baseFormula)     __C_ENG_OBJECT_MAP_CAST_ ## _baseFormula
 #define __C_ENG_OBJECT_MAP_CAST_NO_TYPE
@@ -539,6 +543,10 @@
 #define __C_ENG_OBJECT_MAP_FIELD_CLASS_GEN_SETTER_ACCESS_MODIFIER_SET_INLINE(...)           public:
 #define __C_ENG_OBJECT_MAP_FIELD_CLASS_GEN_SETTER_ACCESS_MODIFIER_SET(...)                  public:
 
+#define __C_ENG_OBJECT_MAP_TO_STRING_HEADER
+#define __C_ENG_OBJECT_MAP_TO_STRING_SOURCE
+#define __C_ENG_OBJECT_MAP_TO_STRING_NESTED_CLASS(...)
+
 
 #define Class                                                                       __C_ENG_OBJECT_MAP_META_CALL(__C_ENG_OBJECT_MAP_DECLARATION_,     C_ENG_MAP_START)
 #define Struct                                                                      __C_ENG_OBJECT_MAP_META_CALL(__C_ENG_OBJECT_MAP_DECLARATION_,     C_ENG_MAP_START)
@@ -554,10 +562,22 @@
 #define Type                                                                        __C_ENG_TYPE
 #define NoDiscard                                                                   __C_ENG_NO_DISCARD
 #define MaybeUnused                                                                 __C_ENG_MAYBE_UNUSED
+#define __GenerateToString                                                          __C_ENG_OBJECT_MAP_META_CALL(__C_ENG_OBJECT_MAP_TO_STRING_,       C_ENG_MAP_START)
 
 
 #elif defined(C_ENG_MAP_END) && defined(C_ENG_MAP_START)
 
+__GenerateToString
+
+#undef __GenerateToString
+
+#undef __C_ENG_OBJECT_MAP_TO_STRING_CLASS
+#undef __C_ENG_OBJECT_MAP_TO_STRING_UNION
+#undef __C_ENG_OBJECT_MAP_TO_STRING_STRUCT
+#undef __C_ENG_OBJECT_MAP_TO_STRING_ENUM
+#undef __C_ENG_OBJECT_MAP_TO_STRING_HEADER
+#undef __C_ENG_OBJECT_MAP_TO_STRING_SOURCE
+#undef __C_ENG_OBJECT_MAP_TO_STRING_NESTED_CLASS
 
 #undef __C_ENG_OBJECT_MAP_CLASS_CLASS
 #undef __C_ENG_OBJECT_MAP_DECLARATION_CLASS

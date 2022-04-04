@@ -636,7 +636,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
             Field ( VideoEncodeH265SessionParametersAddInfo,                               VkStructureType :: VK_STRUCTURE_TYPE_VIDEO_ENCODE_H265_SESSION_PARAMETERS_ADD_INFO_EXT ),
             Field ( VideoEncodeH265VCLFrameInfo,                                           VkStructureType :: VK_STRUCTURE_TYPE_VIDEO_ENCODE_H265_VCL_FRAME_INFO_EXT ),
             Field ( VideoEncodeH265DPBSlotInfo,                                            VkStructureType :: VK_STRUCTURE_TYPE_VIDEO_ENCODE_H265_DPB_SLOT_INFO_EXT ),
-            Field ( VideoEncodeH265NALUSlice,                                              VkStructureType :: VK_STRUCTURE_TYPE_VIDEO_ENCODE_H265_NALU_SLICE_EXT ),
+            Field ( VideoEncodeH265NALUSliceSegment,                                       VkStructureType :: VK_STRUCTURE_TYPE_VIDEO_ENCODE_H265_NALU_SLICE_SEGMENT_EXT ),
             Field ( VideoEncodeH265EmitPictureParameters,                                  VkStructureType :: VK_STRUCTURE_TYPE_VIDEO_ENCODE_H265_EMIT_PICTURE_PARAMETERS_EXT ),
             Field ( VideoEncodeH265Profile,                                                VkStructureType :: VK_STRUCTURE_TYPE_VIDEO_ENCODE_H265_PROFILE_EXT ),
             Field ( VideoEncodeH265ReferenceLists,                                         VkStructureType :: VK_STRUCTURE_TYPE_VIDEO_ENCODE_H265_REFERENCE_LISTS_EXT ),
@@ -1263,7 +1263,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 
 #if __C_ENG_VULKAN_API_EXTENSION_INTEL_PERFORMANCE_QUERY_AVAILABLE
 
-            Field ( QueryPoolPerformanceQueryCreateInfoIntel,                              VkStructureType :: VK_STRUCTURE_TYPE_QUERY_POOL_PERFORMANCE_QUERY_CREATE_INFO_INTEL ),
+            Field ( QueryPoolPerformanceCreateInfoIntel,                                   VkStructureType :: VK_STRUCTURE_TYPE_QUERY_POOL_PERFORMANCE_QUERY_CREATE_INFO_INTEL ),
             Field ( InitializePerformanceAPIInfoIntel,                                     VkStructureType :: VK_STRUCTURE_TYPE_INITIALIZE_PERFORMANCE_API_INFO_INTEL ),
             Field ( PerformanceMarkerInfoIntel,                                            VkStructureType :: VK_STRUCTURE_TYPE_PERFORMANCE_MARKER_INFO_INTEL ),
             Field ( PerformanceStreamMarkerInfoIntel,                                      VkStructureType :: VK_STRUCTURE_TYPE_PERFORMANCE_STREAM_MARKER_INFO_INTEL ),
@@ -5376,6 +5376,158 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #include <ObjectMapping.hpp>
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+#define C_ENG_MAP_START ENUM ( QueryType, TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( Occlusion,                                  VkQueryType :: VK_QUERY_TYPE_OCCLUSION ),
+            Field ( PipelineStatistics,                         VkQueryType :: VK_QUERY_TYPE_PIPELINE_STATISTICS ),
+            Field ( Timestamp,                                  VkQueryType :: VK_QUERY_TYPE_TIMESTAMP ),
+#if __C_ENG_VULKAN_BETA_EXTENSIONS_ENABLED && __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_QUEUE_AVAILABLE
+            Field ( ResultStatusOnly,                           VkQueryType :: VK_QUERY_TYPE_RESULT_STATUS_ONLY_KHR ),
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_TRANSFORM_FEEDBACK_AVAILABLE
+            Field ( TransformFeedbackStream,                    VkQueryType :: VK_QUERY_TYPE_TRANSFORM_FEEDBACK_STREAM_EXT ),
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PERFORMANCE_QUERY_AVAILABLE
+            Field ( PerformanceQuery,                           VkQueryType :: VK_QUERY_TYPE_PERFORMANCE_QUERY_KHR ),
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+            Field ( AccelerationStructureCompactedSize,         VkQueryType :: VK_QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_KHR ),
+            Field ( AccelerationStructureSerializationSize,     VkQueryType :: VK_QUERY_TYPE_ACCELERATION_STRUCTURE_SERIALIZATION_SIZE_KHR ),
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+            Field ( AccelerationStructureCompactedSizeNVidia,   VkQueryType :: VK_QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_NV ),
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_INTEL_PERFORMANCE_QUERY_AVAILABLE
+            Field ( PerformanceQueryIntel,                      VkQueryType :: VK_QUERY_TYPE_PERFORMANCE_QUERY_INTEL ),
+#endif
+#if __C_ENG_VULKAN_BETA_EXTENSIONS_ENABLED && __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_ENCODE_QUEUE_AVAILABLE
+            Field ( VideoEncodeBitstreamBufferRange,            VkQueryType :: VK_QUERY_TYPE_VIDEO_ENCODE_BITSTREAM_BUFFER_RANGE_KHR ),
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_PRIMITIVES_GENERATED_QUERY_AVAILABLE
+            Field ( PrimitivesGenerated,                        VkQueryType :: VK_QUERY_TYPE_PRIMITIVES_GENERATED_EXT ),
+#endif
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_INTEL_PERFORMANCE_QUERY_AVAILABLE
+#define C_ENG_MAP_START ENUM ( QueryPoolSamplingModeIntel, TYPE ( cds :: uint8 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( Manual,  VkQueryPoolSamplingModeINTEL :: VK_QUERY_POOL_SAMPLING_MODE_MANUAL_INTEL ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+#define C_ENG_MAP_START ENUM ( QueryResultFlag, TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( 64,                 VkQueryResultFlagBits :: VK_QUERY_RESULT_64_BIT ),
+            Field ( Wait,               VkQueryResultFlagBits :: VK_QUERY_RESULT_WAIT_BIT ),
+            Field ( WithAvailability,   VkQueryResultFlagBits :: VK_QUERY_RESULT_WITH_AVAILABILITY_BIT ),
+            Field ( Partial,            VkQueryResultFlagBits :: VK_QUERY_RESULT_PARTIAL_BIT ),
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_QUEUE_AVAILABLE
+            Field ( WithStatus,         VkQueryResultFlagBits :: VK_QUERY_RESULT_WITH_STATUS_BIT_KHR ),
+#endif
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_QUEUE_AVAILABLE
+#define C_ENG_MAP_START ENUM ( QueryResultStatus, TYPE ( cds :: sint8 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( Error,      VkQueryResultStatusKHR :: VK_QUERY_RESULT_STATUS_ERROR_KHR ),
+            Field ( NotReady,   VkQueryResultStatusKHR :: VK_QUERY_RESULT_STATUS_NOT_READY_KHR ),
+            Field ( Complete,   VkQueryResultStatusKHR :: VK_QUERY_RESULT_STATUS_COMPLETE_KHR ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+#define C_ENG_MAP_START ENUM ( PipelineDepthStencilStateCreateFlag, TYPE ( cds :: uint32 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+#if __C_ENG_VULKAN_API_EXTENSION_ARM_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_AVAILABLE
+            Field ( RasterizationOrderAttachmentDepthAccess,    VkPipelineDepthStencilStateCreateFlagBits :: VK_PIPELINE_DEPTH_STENCIL_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_DEPTH_ACCESS_BIT_ARM ),
+            Field ( RasterizationOrderAttachmentStencilAccess,  VkPipelineDepthStencilStateCreateFlagBits :: VK_PIPELINE_DEPTH_STENCIL_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_STENCIL_ACCESS_BIT_ARM ),
+#endif
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_INTEL_PERFORMANCE_QUERY_AVAILABLE
+#define C_ENG_MAP_START ENUM ( PerformanceParameterTypeIntel, TYPE ( cds :: uint8 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( HardwareCounterSupported,   VkPerformanceParameterTypeINTEL :: VK_PERFORMANCE_PARAMETER_TYPE_HW_COUNTERS_SUPPORTED_INTEL ),
+            Field ( StreamMarkerValidBits,      VkPerformanceParameterTypeINTEL :: VK_PERFORMANCE_PARAMETER_TYPE_STREAM_MARKER_VALID_BITS_INTEL ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_INTEL_PERFORMANCE_QUERY_AVAILABLE
+#define C_ENG_MAP_START ENUM ( PerformanceValueTypeIntel, TYPE ( cds :: uint8 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( UInt32, VkPerformanceValueTypeINTEL :: VK_PERFORMANCE_VALUE_TYPE_UINT32_INTEL ),
+            Field ( UInt64, VkPerformanceValueTypeINTEL :: VK_PERFORMANCE_VALUE_TYPE_UINT64_INTEL ),
+            Field ( Float,  VkPerformanceValueTypeINTEL :: VK_PERFORMANCE_VALUE_TYPE_FLOAT_INTEL ),
+            Field ( Bool,   VkPerformanceValueTypeINTEL :: VK_PERFORMANCE_VALUE_TYPE_BOOL_INTEL ),
+            Field ( String, VkPerformanceValueTypeINTEL :: VK_PERFORMANCE_VALUE_TYPE_STRING_INTEL ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_INTEL_PERFORMANCE_QUERY_AVAILABLE
+#define C_ENG_MAP_START ENUM ( PerformanceOverrideTypeIntel, TYPE ( cds :: uint8 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( NullHardware,   VkPerformanceOverrideTypeINTEL :: VK_PERFORMANCE_OVERRIDE_TYPE_NULL_HARDWARE_INTEL ),
+            Field ( FlushGPUCaches, VkPerformanceOverrideTypeINTEL :: VK_PERFORMANCE_OVERRIDE_TYPE_FLUSH_GPU_CACHES_INTEL ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_INTEL_PERFORMANCE_QUERY_AVAILABLE
+#define C_ENG_MAP_START ENUM ( PerformanceConfigurationTypeIntel, TYPE ( cds :: uint8 ) )
+#include <ObjectMapping.hpp>
+
+        Enum {
+            Field ( CommandQueueMetricsDiscoveryActivated,   VkPerformanceConfigurationTypeINTEL :: VK_PERFORMANCE_CONFIGURATION_TYPE_COMMAND_QUEUE_METRICS_DISCOVERY_ACTIVATED_INTEL ),
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
 
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 
@@ -5420,6 +5572,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_ALIAS ( DescriptorSetLayoutHandle,              VkDescriptorSetLayout );
         __C_ENG_ALIAS ( DescriptorPoolHandle,                   VkDescriptorPool );
         __C_ENG_ALIAS ( DescriptorSetHandle,                    VkDescriptorSet );
+        __C_ENG_ALIAS ( QueryPoolHandle,                        VkQueryPool );
 
         __C_ENG_ALIAS ( InstanceCreateFlags,                    VkInstanceCreateFlags );
         __C_ENG_ALIAS ( DebugMessengerCreateFlags,              VkDebugUtilsMessengerCreateFlagsEXT );
@@ -5439,6 +5592,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_ALIAS ( CommandBufferUsageFlags,                VkCommandBufferUsageFlags );
         __C_ENG_ALIAS ( QueryControlFlags,                      VkQueryControlFlags );
         __C_ENG_ALIAS ( QueryPipelineStatisticFlags,            VkQueryPipelineStatisticFlags );
+        __C_ENG_ALIAS ( QueryPoolCreateFlags,                   VkQueryPoolCreateFlags );
         __C_ENG_ALIAS ( FenceCreateFlags,                       VkFenceCreateFlags );
         __C_ENG_ALIAS ( SemaphoreCreateFlags,                   VkSemaphoreCreateFlags );
         __C_ENG_ALIAS ( EventCreateFlags,                       VkEventCreateFlags );
@@ -5474,6 +5628,7 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_ALIAS ( PipelineLayoutCreateFlags,              VkPipelineLayoutCreateFlags );
         __C_ENG_ALIAS ( DescriptorPoolCreateFlags,              VkDescriptorPoolCreateFlags );
         __C_ENG_ALIAS ( DescriptorPoolResetFlags,               VkDescriptorPoolResetFlags );
+        __C_ENG_ALIAS ( QueryResultFlags,                       VkQueryResultFlags );
 
         __C_ENG_ALIAS ( AllocationFunction,                     PFN_vkAllocationFunction );
         __C_ENG_ALIAS ( ReallocationFunction,                   PFN_vkReallocationFunction );
@@ -5509,6 +5664,14 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         __C_ENG_ALIAS ( PipelineCreationFeedbackFlags,      VkPipelineCreationFeedbackFlags );
 #elif __C_ENG_VULKAN_API_EXTENSION_PIPELINE_CREATION_FEEDBACK_AVAILABLE
         __C_ENG_ALIAS ( PipelineCreationFeedbackFlags,      VkPipelineCreationFeedbackFlagsEXT );
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PERFORMANCE_QUERY_AVAILABLE
+        __C_ENG_ALIAS ( AcquireProfilingLockFlags,          VkAcquireProfilingLockFlagsKHR );
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_INTEL_PERFORMANCE_QUERY_AVAILABLE
+        __C_ENG_ALIAS ( PerformanceConfigurationHandleIntel,    VkPerformanceConfigurationINTEL );
 #endif
 
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
@@ -15263,1804 +15426,212 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #include <ObjectMapping.hpp>
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( QueryPoolCreateInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                              structureType;
+            Type ( GenericStructure )                   const * pNext;
+            Type ( QueryPoolCreateFlags )                       flags;
+            Type ( QueryType )                                  queryType;
+            cds :: uint32                                       queryCount;
+            Type ( QueryPipelineStatisticFlags )                pipelineStatistics;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PERFORMANCE_QUERY_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( QueryPoolPerformanceCreateInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                              structureType;
+            Type ( GenericStructure )                   const * pNext;
+            cds :: uint32                                       queueFamilyIndex;
+            cds :: uint32                                       counterIndexCount;
+            cds :: uint32                               const * pCounterIndices;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_INTEL_PERFORMANCE_QUERY_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( QueryPoolPerformanceCreateInfoIntel, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                              structureType;
+            Type ( GenericStructure )                   const * pNext;
+            Type ( QueryPoolSamplingModeIntel )                 performanceCountersSampling;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PERFORMANCE_QUERY_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( AcquireProfilingLockInfo, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                              structureType;
+            Type ( GenericStructure )                   const * pNext;
+            Type ( AcquireProfilingLockFlags )                  flags;
+            cds :: uint64                                       timeout;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_INTEL_PERFORMANCE_QUERY_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( InitializePerformanceAPIInfoIntel, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                              structureType;
+            Type ( GenericStructure )                   const * pNext;
+            void                                              * pUserData;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_INTEL_PERFORMANCE_QUERY_AVAILABLE
+#define C_ENG_MAP_START UNION ( PerformanceValueDataIntel, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Union {
+            cds :: uint32           value32;
+            cds :: uint64           value64;
+            float                   valueFloat;
+            Type ( Bool )           valueBool;
+            cds :: StringLiteral    valueString;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_INTEL_PERFORMANCE_QUERY_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( PerformanceValueIntel, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( PerformanceValueTypeIntel )  type;
+            Type ( PerformanceValueDataIntel )  data;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_INTEL_PERFORMANCE_QUERY_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( PerformanceMarkerInfoIntel, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )              structureType;
+            Type ( GenericStructure )   const * pNext;
+            cds :: uint64                       marker;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_INTEL_PERFORMANCE_QUERY_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( PerformanceStreamMarkerInfoIntel, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )              structureType;
+            Type ( GenericStructure )   const * pNext;
+            cds :: uint32                       marker;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_INTEL_PERFORMANCE_QUERY_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( PerformanceOverrideInfoIntel, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                      structureType;
+            Type ( GenericStructure )           const * pNext;
+            Type ( PerformanceOverrideTypeIntel )       type;
+            Type ( Bool )                               enable;
+            cds :: uint64                               parameter;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_INTEL_PERFORMANCE_QUERY_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( PerformanceConfigurationAcquireInfoIntel, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                      structureType;
+            Type ( GenericStructure )           const * pNext;
+            Type ( PerformanceConfigurationTypeIntel )  type;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_QUEUE_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( QueueFamilyQueryResultStatusProperties2, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                      structureType;
+            Type ( GenericStructure )           const * pNext;
+            Type ( Bool )                               supported;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
 
 #define C_ENG_MAP_START     HEADER
 #include <ObjectMapping.hpp>
 
 
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
-
-        NoDiscard auto toString ( Type ( Result ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( StructureType ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( DebugMessageSeverityFlag ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( DebugMessageTypeFlag ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( ValidationFeatureEnable ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( ValidationFeatureDisable ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( PhysicalDeviceType ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( VendorID ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( SampleCountFlag ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( PointClippingBehavior ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( ShaderStageFlag ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( QueueFlag ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( PipelineStageFlag ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( AccessFlag ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( DeviceQueueCreateFlag ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( ObjectType ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( ImageUsageFlag ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( Format ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( SharingMode ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( ImageViewCreateFlag ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( ImageViewType ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( ComponentSwizzle ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( ImageAspectFlag ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( CommandPoolCreateFlag ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( CommandPoolResetFlag ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( CommandBufferResetFlag ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( CommandBufferLevel ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( CommandBufferUsageFlag ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( QueryPipelineStatisticFlag ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( QueryControlFlag ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( FenceCreateFlag ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( EventCreateFlag ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( DependencyFlag ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( ImageLayout ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( AttachmentLoadOperation ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( AttachmentStoreOperation ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( RenderPassCreateFlag ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( AttachmentDescriptionFlag ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( SubpassDescriptionFlag ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( PipelineBindPoint ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( FrameBufferCreateFlag ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( ImageCreateFlag ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( SubpassContents ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( PipelineCreateFlag ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( PipelineShaderStageCreateFlag ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( VertexInputRate ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( PrimitiveTopology ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( PolygonMode ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( CullModeFlag ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( FrontFace ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( CompareOperation ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( StencilOperation ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( LogicOperation ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( PipelineColorBlendStateCreateFlag ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( ColorComponentFlag ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( BlendFactor ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( BlendOperation ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( DynamicState ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( PipelineCacheCreateFlag ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( PipelineCacheHeaderVersionValue ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( MemoryPropertyFlag ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( MemoryHeapFlag ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( BufferCreateFlag ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( BufferUsageFlag ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( ImageType ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( ImageTiling ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( IndexType ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( SamplerCreateFlag ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( Filter ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( SamplerMipmapMode ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( SamplerAddressMode ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( BorderColor ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( DescriptorSetLayoutCreateFlag ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( DescriptorType ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( DescriptorPoolCreateFlag ) ) noexcept -> cds :: StringLiteral;
-
+        NoDiscard MaybeUnused auto toString ( Type ( Offset2D ) const & ) noexcept -> cds :: String;
+        NoDiscard MaybeUnused auto toString ( Type ( Offset3D ) const & ) noexcept -> cds :: String;
+        NoDiscard MaybeUnused auto toString ( Type ( Extent2D ) const & ) noexcept -> cds :: String;
+        NoDiscard MaybeUnused auto toString ( Type ( Extent3D ) const & ) noexcept -> cds :: String;
+        NoDiscard MaybeUnused auto toString ( Type ( Rect ) const & ) noexcept -> cds :: String;
+        NoDiscard MaybeUnused auto toString ( Type ( DeviceSize ) ) noexcept -> cds :: String;
 #endif
-
-#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
-
-        NoDiscard auto toString ( Type ( SubgroupFeatureFlag ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( ExternalFenceHandleTypeFlag ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( FenceImportFlag ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( SemaphoreImportFlag ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( TessellationDomainOrigin ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( ExternalMemoryHandleTypeFlag ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( MemoryAllocateFlag ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( PeerMemoryFeatureFlag ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( SamplerYCBCRModelConversion ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( SamplerYCBCRRange ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( ChromaLocation ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( DescriptorUpdateTemplateType ) ) noexcept -> cds :: StringLiteral;
-
-#endif
-
-#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
-
-        NoDiscard auto toString ( Type ( DriverID ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( ShaderFloatControlsIndependence ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( ResolveModeFlag ) ) noexcept -> cds :: StringLiteral;
-
-        NoDiscard auto toString ( Type ( ImageFormatListCreateInfo ) const & ) noexcept -> cds :: String;
-
-        NoDiscard auto toString ( Type ( SamplerReductionMode ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( DescriptorBindingFlag ) ) noexcept -> cds :: StringLiteral;
-
-#endif
-
-#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
-        NoDiscard auto toString ( Type ( SubmitFlag ) ) noexcept -> cds :: StringLiteral;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PIPELINE_EXECUTABLE_PROPERTIES_AVAILABLE
-        NoDiscard auto toString ( Type ( PipelineExecutableStatisticFormat ) ) noexcept -> cds :: StringLiteral;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_CONSERVATIVE_RASTERIZATION_AVAILABLE
-        NoDiscard auto toString ( Type ( ConservativeRasterizationMode ) ) noexcept -> cds :: StringLiteral;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_FRAMEBUFFER_MIXED_SAMPLES_AVAILABLE
-        NoDiscard auto toString ( Type ( CoverageModulationModeNVidia ) ) noexcept -> cds :: StringLiteral;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_BLEND_OPERATION_ADVANCED_AVAILABLE
-        NoDiscard auto toString ( Type ( BlendOverlap ) ) noexcept -> cds :: StringLiteral;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_VIDEO_DECODE_H264_AVAILABLE
-        NoDiscard auto toString ( Type ( VideoDecodeH264PictureLayoutFlag ) ) noexcept -> cds :: StringLiteral;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_QUEUE_AVAILABLE
-        NoDiscard auto toString ( Type ( VideoChromaSubsamplingFlag ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( VideoComponentBitDepthFlag ) ) noexcept -> cds :: StringLiteral;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_COVERAGE_REDUCTION_MODE_AVAILABLE
-        NoDiscard auto toString ( Type ( CoverageReductionModeNVidia ) ) noexcept -> cds :: StringLiteral;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_AMD_RASTERIZATION_ORDER_AVAILABLE
-        NoDiscard auto toString ( Type ( RasterizationOrderAMD ) ) noexcept -> cds :: StringLiteral;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_PROVOKING_VERTEX_AVAILABLE
-        NoDiscard auto toString ( Type ( ProvokingVertexMode ) ) noexcept -> cds :: StringLiteral;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_RAY_TRACING_PIPELINE_AVAILABLE
-        NoDiscard auto toString ( Type ( ShaderGroupShader ) ) noexcept -> cds :: StringLiteral;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
-        NoDiscard auto toString ( Type ( AccelerationStructureType ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( BuildAccelerationStructureFlag ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( GeometryType ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( GeometryFlag ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( AccelerationStructureCreateFlag ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( AccelerationStructureBuildType ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( BuildAccelerationStructureMode ) ) noexcept -> cds :: StringLiteral;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
-        NoDiscard auto toString ( Type ( AccelerationStructureTypeNVidia ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( BuildAccelerationStructureFlagNVidia ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( GeometryTypeNVidia ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( GeometryFlagNVidia ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( AccelerationStructureMemoryRequirementsTypeNVidia ) ) noexcept -> cds :: StringLiteral;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_LINE_RASTERIZATION_AVAILABLE
-        NoDiscard auto toString ( Type ( LineRasterizationMode ) ) noexcept -> cds :: StringLiteral;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_AMD_PIPELINE_COMPILER_CONTROL_AVAILABLE
-        NoDiscard auto toString ( Type ( PipelineCompilerControlFlagAMD ) ) noexcept -> cds :: StringLiteral;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_VIEWPORT_SWIZZLE_AVAILABLE
-        NoDiscard auto toString ( Type ( ViewportCoordinateSwizzleNVidia ) ) noexcept -> cds :: StringLiteral;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_RAY_TRACING_PIPELINE_AVAILABLE
-        NoDiscard auto toString ( Type ( RayTracingShaderGroupType ) ) noexcept -> cds :: StringLiteral;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_FRAGMENT_SHADING_RATE_ENUMS_AVAILABLE
-        NoDiscard auto toString ( Type ( FragmentShadingRateNVidia ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( FragmentShadingRateTypeNVidia ) ) noexcept -> cds :: StringLiteral;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_FRAGMENT_SHADING_RATE_AVAILABLE
-        NoDiscard auto toString ( Type ( FragmentShadingRateCombinerOperation ) ) noexcept -> cds :: StringLiteral;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXTERNAL_MEMORY_AVAILABLE
-        NoDiscard auto toString ( Type ( ExternalMemoryHandleTypeFlagNVidia ) ) noexcept -> cds :: StringLiteral;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_DISCARD_RECTANGLES_AVAILABLE
-        NoDiscard auto toString ( Type ( DiscardRectangleMode ) ) noexcept -> cds :: StringLiteral;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_COOPERATIVE_MATRIX_AVAILABLE
-        NoDiscard auto toString ( Type ( ComponentTypeNVidia ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( ScopeNVidia ) ) noexcept -> cds :: StringLiteral;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SHADING_RATE_IMAGE_AVAILABLE
-        NoDiscard auto toString ( Type ( CoarseSampleOrderTypeNVidia ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( ShadingRatePaletteEntryNVidia ) ) noexcept -> cds :: StringLiteral;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_DISPLAY_CONTROL_AVAILABLE
-        NoDiscard auto toString ( Type ( DeviceEventType ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( DeviceEventInfo ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( DisplayEventType ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( DisplayEventInfo ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_DEBUG_REPORT_AVAILABLE
-        NoDiscard auto toString ( Type ( DebugReportFlag ) ) noexcept -> cds :: StringLiteral;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SURFACE_AVAILABLE
-        NoDiscard auto toString ( Type ( ColorSpace ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( SurfaceTransformFlag ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( CompositeAlphaFlag ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( PresentMode ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( SurfaceCapabilities ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( SurfaceFormat ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SWAP_CHAIN_AVAILABLE
-        NoDiscard auto toString ( Type ( SwapChainCreateFlag ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( SwapChainCreateInfo ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_GET_SURFACE_CAPABILITIES_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( SurfaceFormat2 ) const & ) noexcept -> cds :: String;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceSurfaceInfo ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_FULL_SCREEN_EXCLUSIVE_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( FullScreenExclusive ) ) noexcept -> cds :: StringLiteral;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( SurfaceFullScreenExclusiveInfo ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_AMD_SHADER_CORE_PROPERTIES_2_AVAILABLE
-        NoDiscard auto toString ( Type ( ShaderCorePropertiesFlagAMD ) ) noexcept -> cds :: StringLiteral;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_AMD_SHADER_INFO_AVAILABLE
-        NoDiscard auto toString ( Type ( ShaderInfoTypeAMD ) ) noexcept -> cds :: StringLiteral;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_GLOBAL_PRIORITY_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( QueueGlobalPriority ) ) noexcept -> cds :: StringLiteral;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_QUEUE_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( VideoCodecOperationFlag ) ) noexcept -> cds :: StringLiteral;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PERFORMANCE_QUERY_AVAILABLE
-        NoDiscard auto toString ( Type ( PerformanceCounterUnit ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( PerformanceCounterScope ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( PerformanceCounterStorage ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( PerformanceCounterDescriptionFlag ) ) noexcept -> cds :: StringLiteral;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_DISPLAY_SURFACE_COUNTER_AVAILABLE
-        NoDiscard auto toString ( Type ( SurfaceCapabilities2 ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( SurfaceCounterFlag ) ) noexcept -> cds :: StringLiteral;
-#endif
-
-#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_PIPELINE_CREATION_FEEDBACK_AVAILABLE
-        NoDiscard auto toString ( Type ( PipelineCreationFeedbackFlag ) ) noexcept -> cds :: StringLiteral;
-#endif
-
-#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
-
-        NoDiscard auto toString ( Type ( Offset2D ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( Offset3D ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( Extent2D ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( Extent3D ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( Rect ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( Viewport ) const & ) noexcept -> cds :: String;
-
-        NoDiscard auto toString ( Type ( Version ) const & ) noexcept -> cds :: String;
-
-        NoDiscard auto toString ( Type ( DeviceSize ) ) noexcept -> cds :: String;
-
-        NoDiscard auto toString ( Type ( ApplicationInfo ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( InstanceCreateInfo ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( LayerProperties ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( ExtensionProperties ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( AllocationCallbacks ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( ValidationFeatures ) const & ) noexcept -> cds :: String;
-
-        NoDiscard auto toString ( Type ( PhysicalDeviceLimits ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( PhysicalDeviceSparseProperties ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( PhysicalDeviceProperties ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( PhysicalDeviceFeatures ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( PhysicalDeviceDetails ) const & ) noexcept -> cds :: String;
-
-        NoDiscard auto toString ( Type ( QueueFamilyProperties ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( QueueFamilyExtendedProperties ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( QueueFamilyDetails ) const & ) noexcept -> cds :: String;
-
-        NoDiscard auto toString ( Type ( DeviceCreateInfo ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( DeviceQueueCreateInfo ) const & ) noexcept -> cds :: String;
-
-        NoDiscard auto toString ( Type ( ComponentMapping ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( ImageSubresourceRange ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( ImageViewCreateInfo ) const & ) noexcept -> cds :: String;
-
-        NoDiscard auto toString ( Type ( CommandPoolCreateInfo ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( CommandBufferAllocateInfo ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( CommandBufferBeginInfo ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( CommandBufferInheritanceInfo ) const & ) noexcept -> cds :: String;
-
-        NoDiscard auto toString ( Type ( SubmitInfo ) const & ) noexcept -> cds :: String;
-
-        NoDiscard auto toString ( Type ( FenceCreateInfo ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( SemaphoreCreateInfo ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( EventCreateInfo ) const & ) noexcept -> cds :: String;
-
-        NoDiscard auto toString ( Type ( MemoryBarrier ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( BufferMemoryBarrier ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( ImageMemoryBarrier ) const & ) noexcept -> cds :: String;
-
-        NoDiscard auto toString ( Type ( ClearColorValue ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( ClearDepthStencilValue ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( ClearValue ) const & ) noexcept -> cds :: String;
-
-        NoDiscard auto toString ( Type ( RenderPassCreateInfo ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( AttachmentDescription ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( SubpassDescription ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( AttachmentReference ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( SubpassDependency ) const & ) noexcept -> cds :: String;
-
-        NoDiscard auto toString ( Type ( FrameBufferCreateInfo ) const & ) noexcept -> cds :: String;
-
-        NoDiscard auto toString ( Type ( RenderPassBeginInfo ) const & ) noexcept -> cds :: String;
-
-        NoDiscard auto toString ( Type ( ShaderModuleCreateInfo ) const & ) noexcept -> cds :: String;
-        
-        NoDiscard auto toString ( Type ( ComputePipelineCreateInfo ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( PipelineShaderStageCreateInfo ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( SpecializationInfo ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( SpecializationMapEntry ) const & ) noexcept -> cds :: String;
-
-        NoDiscard auto toString ( Type ( GraphicsPipelineCreateInfo ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( PipelineVertexInputStateCreateInfo ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( PipelineInputAssemblyStateCreateInfo ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( PipelineTessellationStateCreateInfo ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( PipelineViewportStateCreateInfo ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( PipelineRasterizationStateCreateInfo ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( PipelineMultisampleStateCreateInfo ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( PipelineDepthStencilStateCreateInfo ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( PipelineColorBlendStateCreateInfo ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( PipelineDynamicStateCreateInfo ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( VertexInputBindingDescription ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( VertexInputAttributeDescription ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( StencilOperationState ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( PipelineColorBlendAttachmentState ) const & ) noexcept -> cds :: String;
-
-        NoDiscard auto toString ( Type ( PipelineCacheCreateInfo ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( PipelineCacheHeaderVersionOne ) const & ) noexcept -> cds :: String;
-
-        NoDiscard auto toString ( Type ( MemoryType ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( MemoryHeap ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( PhysicalDeviceMemoryProperties ) const & ) noexcept -> cds :: String;
-
-        NoDiscard auto toString ( Type ( MemoryAllocateInfo ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( MappedMemoryRange ) const & ) noexcept -> cds :: String;
-
-        NoDiscard auto toString ( Type ( BufferCreateInfo ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( BufferViewCreateInfo ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( ImageCreateInfo ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( SubresourceLayout ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( ImageSubresource ) const & ) noexcept -> cds :: String;
-
-        NoDiscard auto toString ( Type ( MemoryRequirements ) const & ) noexcept -> cds :: String;
-
-        NoDiscard auto toString ( Type ( SamplerCreateInfo ) const & ) noexcept -> cds :: String;
-
-        NoDiscard auto toString ( Type ( DescriptorSetLayoutCreateInfo ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( DescriptorSetLayoutBinding ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( PushConstantRange ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( PipelineLayoutCreateInfo ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( DescriptorPoolSize ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( DescriptorPoolCreateInfo ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( DescriptorSetAllocateInfo ) const & ) noexcept -> cds :: String;
-
-        NoDiscard auto toString ( Type ( WriteDescriptorSet ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( DescriptorBufferInfo ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( DescriptorImageInfo ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( CopyDescriptorSet ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
-
-        NoDiscard auto toString ( Type ( PhysicalDeviceExtendedProperties ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( PhysicalDeviceVulkan11Properties ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( PhysicalDeviceIDProperties ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( PhysicalDeviceMaintenanceProperties ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( PhysicalDeviceMultiviewProperties ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( PhysicalDevicePointClippingProperties ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( PhysicalDeviceProtectedMemoryProperties ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( PhysicalDeviceSubgroupProperties ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( PhysicalDeviceGroupProperties ) const & ) noexcept -> cds :: String;
-
-        NoDiscard auto toString ( Type ( PhysicalDeviceExtendedFeatures ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( PhysicalDeviceVulkan11Features ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( PhysicalDevice16BitStorageFeatures ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( PhysicalDeviceMultiviewFeatures ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( PhysicalDeviceProtectedMemoryFeatures ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( PhysicalDeviceSamplerYCBCRConversionFeatures ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( PhysicalDeviceShaderDrawParametersFeatures ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( PhysicalDeviceVariablePointersFeatures ) const & ) noexcept -> cds :: String;
-
-        NoDiscard auto toString ( Type ( DeviceGroupDeviceCreateInfo ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( DeviceQueueInfo ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( ImageViewUsageCreateInfo ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( SamplerYCBCRConversionInfo ) const & ) noexcept -> cds :: String;
-
-        NoDiscard auto toString ( Type ( DeviceGroupSubmitInfo ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( ProtectedSubmitInfo ) const & ) noexcept -> cds :: String;
-
-        NoDiscard auto toString ( Type ( ExportFenceCreateInfo ) const & ) noexcept -> cds :: String;
-
-        NoDiscard auto toString ( Type ( DeviceGroupRenderPassBeginInfo ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( InputAttachmentAspectReference ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( RenderPassInputAttachmentAspectCreateInfo ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( RenderPassMultiviewCreateInfo ) const & ) noexcept -> cds :: String;
-
-        NoDiscard auto toString ( Type ( PipelineTessellationDomainOriginStateCreateInfo ) const & ) noexcept -> cds :: String;
-
-        NoDiscard auto toString ( Type ( PhysicalDeviceMemoryProperties2 ) const & ) noexcept -> cds :: String;
-
-        NoDiscard auto toString ( Type ( ExportMemoryAllocateInfo ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( ExternalMemoryBufferCreateInfo ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( ExternalMemoryImageCreateInfo ) const & ) noexcept -> cds :: String;
-
-        NoDiscard auto toString ( Type ( MemoryRequirements2 ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( MemoryDedicatedRequirements ) const & ) noexcept -> cds :: String;
-
-        NoDiscard auto toString ( Type ( SamplerYCBCRConversionCreateInfo ) const & ) noexcept -> cds :: String;
-
-        NoDiscard auto toString ( Type ( DescriptorSetLayoutSupport ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( DescriptorUpdateTemplateEntry ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( DescriptorUpdateTemplateCreateInfo ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DEVICE_GROUP_AVAILABLE
-        NoDiscard auto toString ( Type ( DeviceGroupCommandBufferBeginInfo ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE && __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SWAP_CHAIN_AVAILABLE
-        NoDiscard auto toString ( Type ( ImageSwapChainCreateInfo ) const & ) noexcept -> cds :: String;
-#endif
-
-
-#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
-        NoDiscard auto toString ( Type ( ConformanceVersion ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( PhysicalDeviceVulkan12Properties ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( PhysicalDeviceDriverProperties ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( PhysicalDeviceDepthStencilResolveProperties ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( PhysicalDeviceDescriptorIndexingProperties ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( PhysicalDeviceFloatControlsProperties ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( PhysicalDeviceSamplerFilterMinmaxProperties ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( PhysicalDeviceTimelineSemaphoreProperties ) const & ) noexcept -> cds :: String;
-
-        NoDiscard auto toString ( Type ( PhysicalDevice8BitStorageFeatures ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( PhysicalDeviceVulkan12Features ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( PhysicalDeviceBufferDeviceAddressFeatures ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( PhysicalDeviceDescriptorIndexingFeatures ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( PhysicalDeviceHostQueryResetFeatures ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( PhysicalDeviceImagelessFrameBufferFeatures ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( PhysicalDeviceScalarBlockLayoutFeatures ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( PhysicalDeviceSeparateDepthStencilLayoutsFeatures ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( PhysicalDeviceShaderAtomicInt64Features ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( PhysicalDeviceShaderFloat16Int8Features ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( PhysicalDeviceShaderSubgroupExtendedTypesFeatures ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( PhysicalDeviceTimelineSemaphoreFeatures ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( PhysicalDeviceUniformBufferStandardLayoutFeatures ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( PhysicalDeviceVulkanMemoryModelFeatures ) const & ) noexcept -> cds :: String;
-
-        NoDiscard auto toString ( Type ( TimelineSemaphoreSubmitInfo ) const & ) noexcept -> cds :: String;
-
-        NoDiscard auto toString ( Type ( AttachmentDescription2 ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( AttachmentDescriptionStencilLayout ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( AttachmentReferenceStencilLayout ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( AttachmentReference2 ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( SubpassDescription2 ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( SubpassDescriptionDepthStencilResolve ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( SubpassDependency2 ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( RenderPassCreateInfo2 ) const & ) noexcept -> cds :: String;
-
-        NoDiscard auto toString ( Type ( FrameBufferAttachmentImageInfo ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( FrameBufferAttachmentsCreateInfo ) const & ) noexcept -> cds :: String;
-
-        NoDiscard auto toString ( Type ( RenderPassAttachmentBeginInfo ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( SubpassBeginInfo ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( SubpassEndInfo ) const & ) noexcept -> cds :: String;
-
-        NoDiscard auto toString ( Type ( DeviceMemoryOpaqueCaptureAddressInfo ) const & ) noexcept -> cds :: String;
-
-        NoDiscard auto toString ( Type ( BufferOpaqueCaptureAddressCreateInfo ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( ImageStencilUsageCreateInfo ) const & ) noexcept -> cds :: String;
-
-        NoDiscard auto toString ( Type ( SamplerReductionModeCreateInfo ) const & ) noexcept -> cds :: String;
-
-        NoDiscard auto toString ( Type ( DescriptorSetLayoutBindingFlagsCreateInfo ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( DescriptorSetVariableDescriptorCountLayoutSupport ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( DescriptorSetVariableDescriptorCountAllocateInfo ) const & ) noexcept -> cds :: String;
-
-        NoDiscard auto toString ( Type ( BufferDeviceAddressInfo ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
-        NoDiscard auto toString ( Type ( PhysicalDeviceVulkan13Properties ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( PhysicalDeviceVulkan13Features ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_PIPELINE_CREATION_FEEDBACK_AVAILABLE
-        NoDiscard auto toString ( Type ( PipelineCreationFeedback ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( PipelineCreationFeedbackCreateInfo ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE
-        NoDiscard auto toString ( Type ( PipelineRenderingCreateInfo ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_SUBGROUP_SIZE_CONTROL_AVAILABLE
-        NoDiscard auto toString ( Type ( PipelineShaderStageRequiredSubgroupSizeCreateInfo ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_INLINE_UNIFORM_BLOCK_AVAILABLE
-        NoDiscard auto toString ( Type ( DescriptorPoolInlineUniformBlockCreateInfo ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( WriteDescriptorSetInlineUniformBlock ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_DEBUG_UTILS_AVAILABLE
-        NoDiscard auto toString ( Type ( DebugMessengerCreateInfo ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_RAY_TRACING_PIPELINE_AVAILABLE
-        NoDiscard auto toString ( Type ( RayTracingPipelineCreateInfo ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( RayTracingShaderGroupCreateInfo ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( PipelineLibraryCreateInfo ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( RayTracingPipelineInterfaceCreateInfo ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
-        NoDiscard auto toString ( Type ( AccelerationStructureCreateInfo ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( AccelerationStructureBuildGeometryInfo ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( AccelerationStructureGeometry ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( AccelerationStructureGeometryData ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( DeviceOrHostAddress ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( DeviceOrHostAddressConst ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( AccelerationStructureGeometryTrianglesData ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( AccelerationStructureGeometryAabbsData ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( AccelerationStructureGeometryInstancesData ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( AccelerationStructureBuildSizesInfo ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( AccelerationStructureDeviceAddressInfo ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( WriteDescriptorSetAccelerationStructure ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_MOTION_BLUR_AVAILABLE
-        NoDiscard auto toString ( Type ( AccelerationStructureMotionInfoNVidia ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( AccelerationStructureGeometryMotionTrianglesDataNVidia ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
-        NoDiscard auto toString ( Type ( RayTracingShaderGroupCreateInfoNVidia ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( RayTracingPipelineCreateInfoNVidia ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( AccelerationStructureCreateInfoNVidia ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( AccelerationStructureInfoNVidia ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( GeometryAABBNVidia ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( GeometryTrianglesNVidia ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( GeometryDataNVidia ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( GeometryNVidia ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( AccelerationStructureMemoryRequirementsInfoNVidia ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( BindAccelerationStructureMemoryInfoNVidia ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( WriteDescriptorSetAccelerationStructureNVidia ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PIPELINE_EXECUTABLE_PROPERTIES_AVAILABLE
-        NoDiscard auto toString ( Type ( PipelineInfo ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( PipelineExecutableProperties ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( PipelineExecutableStatistic ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( PipelineExecutableInfo ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( PipelineExecutableInternalRepresentation ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_AMD_SHADER_INFO_AVAILABLE
-        NoDiscard auto toString ( Type ( ShaderResourceUsageAMD ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( ShaderStatisticsInfoAMD ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_GOOGLE_FUCHSIA_BUFFER_COLLECTION_AVAILABLE
-        NoDiscard auto toString ( Type ( BufferCollectionBufferCreateInfoFuchsia ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( BufferCollectionImageCreateInfoFuchsia ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_VALVE_MUTABLE_DESCRIPTOR_TYPE_AVAILABLE
-        NoDiscard auto toString ( Type ( MutableDescriptorTypeListValve ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( MutableDescriptorTypeCreateInfoValve ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_BORDER_COLOR_SWIZZLE_AVAILABLE
-        NoDiscard auto toString ( Type ( SamplerBorderColorComponentMappingCreateInfo ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_CUSTOM_BORDER_COLOR_AVAILABLE
-        NoDiscard auto toString ( Type ( SamplerCustomBorderColorCreateInfo ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_VIDEO_DECODE_H264_AVAILABLE
-        NoDiscard auto toString ( Type ( VideoDecodeH264Profile ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_ASTC_DECODE_MODE_AVAILABLE
-        NoDiscard auto toString ( Type ( ImageViewASTCDecodeMode ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_IMAGE_VIEW_MIN_LOD_AVAILABLE
-        NoDiscard auto toString ( Type ( ImageViewMinLodCreateInfo ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_VIDEO_DECODE_H265_AVAILABLE
-        NoDiscard auto toString ( Type ( VideoDecodeH265Profile ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_VIDEO_ENCODE_H264_AVAILABLE
-        NoDiscard auto toString ( Type ( VideoEncodeH264Profile ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_VIDEO_ENCODE_H265_AVAILABLE
-        NoDiscard auto toString ( Type ( VideoEncodeH265Profile ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_QUEUE_AVAILABLE
-        NoDiscard auto toString ( Type ( VideoProfile ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( VideoProfiles ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_BUFFER_DEVICE_ADDRESS_AVAILABLE
-        NoDiscard auto toString ( Type ( BufferDeviceAddressCreateInfo ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_IMAGE_DRM_FORMAT_MODIFIER_AVAILABLE
-        NoDiscard auto toString ( Type ( ImageDrmFormatModifierProperties ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( ImageDrmFormatModifierExplicitCreateInfo ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( ImageDrmFormatModifierListCreateInfo ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_ANDROID_EXTERNAL_MEMORY_ANDROID_HARDWARE_BUFFER_AVAILABLE
-        NoDiscard auto toString ( Type ( ExternalFormatAndroid ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEDICATED_ALLOCATION_AVAILABLE
-        NoDiscard auto toString ( Type ( DedicatedAllocationMemoryAllocateInfoNVidia ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( DedicatedAllocationBufferCreateInfoNVidia ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( DedicatedAllocationImageCreateInfoNVidia ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXTERNAL_MEMORY_AVAILABLE
-        NoDiscard auto toString ( Type ( ExportMemoryAllocateInfoNVidia ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( ExternalMemoryImageCreateInfoNVidia ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_MEMORY_WIN32_AVAILABLE
-        NoDiscard auto toString ( Type ( ExportMemoryWin32HandleInfo ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( ImportMemoryWin32HandleInfo ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( MemoryGetWin32HandleInfo ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( MemoryWin32HandleProperties ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXTERNAL_MEMORY_WIN32_AVAILABLE
-        NoDiscard auto toString ( Type ( ExportMemoryWin32HandleInfoNVidia ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( ImportMemoryWin32HandleInfoNVidia ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_ANDROID_EXTERNAL_MEMORY_ANDROID_HARDWARE_BUFFER_AVAILABLE
-        NoDiscard auto toString ( Type ( ImportAndroidHardwareBufferInfoAndroid ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_GOOGLE_FUCHSIA_BUFFER_COLLECTION_AVAILABLE
-        NoDiscard auto toString ( Type ( ImportMemoryBufferCollectionFuchsia ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_MEMORY_FD_AVAILABLE
-        NoDiscard auto toString ( Type ( ImportMemoryFdInfo ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( MemoryGetFdInfo ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( MemoryFdProperties ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_EXTERNAL_MEMORY_HOST_AVAILABLE
-        NoDiscard auto toString ( Type ( ImportMemoryHostPointerInfo ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( MemoryHostPointerProperties ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_GOOGLE_FUCHSIA_EXTERNAL_MEMORY_AVAILABLE
-        NoDiscard auto toString ( Type ( ImportMemoryZirconHandleFuchsia ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXTERNAL_MEMORY_RDMA_AVAILABLE
-        NoDiscard auto toString ( Type ( MemoryGetRemoteAddressInfoNVidia ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
-        NoDiscard auto toString ( Type ( MemoryAllocateFlagsInfo ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
-        NoDiscard auto toString ( Type ( MemoryDedicatedAllocateInfo ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
-        NoDiscard auto toString ( Type ( MemoryOpaqueCaptureAddressAllocateInfo ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_MEMORY_PRIORITY_AVAILABLE
-        NoDiscard auto toString ( Type ( MemoryPriorityAllocateInfo ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_FRAMEBUFFER_MIXED_SAMPLES_AVAILABLE
-        NoDiscard auto toString ( Type ( PipelineCoverageModulationStateCreateInfoNVidia ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_COLOR_WRITE_ENABLE_AVAILABLE
-        NoDiscard auto toString ( Type ( PipelineColorWriteCreateInfo ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_MEMORY_BUDGET_AVAILABLE
-        NoDiscard auto toString ( Type ( PhysicalDeviceMemoryBudgetProperties ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_BLEND_OPERATION_ADVANCED_AVAILABLE
-        NoDiscard auto toString ( Type ( PipelineColorBlendAdvancedStateCreateInfo ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_SAMPLE_LOCATIONS_AVAILABLE
-        NoDiscard auto toString ( Type ( PipelineSampleLocationsStateCreateInfo ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_COVERAGE_REDUCTION_MODE_AVAILABLE
-        NoDiscard auto toString ( Type ( PipelineCoverageReductionStateCreateInfoNVidia ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_FRAGMENT_COVERAGE_TO_COLOR_AVAILABLE
-        NoDiscard auto toString ( Type ( PipelineCoverageToColorStateCreateInfoNVidia ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_AMD_RASTERIZATION_ORDER_AVAILABLE
-        NoDiscard auto toString ( Type ( PipelineRasterizationStateRasterizationOrderAMD ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_TRANSFORM_FEEDBACK_AVAILABLE
-        NoDiscard auto toString ( Type ( PipelineRasterizationStateStreamCreateInfo ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_PROVOKING_VERTEX_AVAILABLE
-        NoDiscard auto toString ( Type ( PipelineRasterizationProvokingVertexStateCreateInfo ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_DEPTH_CLIP_CONTROL_AVAILABLE
-        NoDiscard auto toString ( Type ( PipelineViewportDepthClipControlCreateInfo ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_LINE_RASTERIZATION_AVAILABLE
-        NoDiscard auto toString ( Type ( PipelineRasterizationLineStateCreateInfo ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_CONSERVATIVE_RASTERIZATION_AVAILABLE
-        NoDiscard auto toString ( Type ( PipelineRasterizationConservativeStateCreateInfo ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_REPRESENTATIVE_FRAGMENT_TEST_AVAILABLE
-        NoDiscard auto toString ( Type ( PipelineRepresentativeFragmentTestStateCreateInfoNVidia ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_VALIDATION_CACHE_AVAILABLE
-        NoDiscard auto toString ( Type ( ShaderModuleValidationCacheCreateInfo ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( ValidationCacheCreateInfo ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_VERTEX_ATTRIBUTE_DIVISOR_AVAILABLE
-        NoDiscard auto toString ( Type ( PipelineVertexInputDivisorStateCreateInfo ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( VertexInputBindingDivisorDescription ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_COOPERATIVE_MATRIX_AVAILABLE
-        NoDiscard auto toString ( Type ( CooperativeMatrixPropertiesNVidia ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SCISSOR_EXCLUSIVE_AVAILABLE
-        NoDiscard auto toString ( Type ( PipelineViewportExclusiveScissorStateCreateInfoNVidia ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_CLIP_SPACE_W_SCALING_AVAILABLE
-        NoDiscard auto toString ( Type ( ViewportWScalingNVidia ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( PipelineViewportWScalingStateCreateInfoNVidia ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_VIEWPORT_SWIZZLE_AVAILABLE
-        NoDiscard auto toString ( Type ( ViewportSwizzleNVidia ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( PipelineViewportSwizzleStateCreateInfoNVidia ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SHADING_RATE_IMAGE_AVAILABLE
-        NoDiscard auto toString ( Type ( CoarseSampleLocationNVidia ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( CoarseSampleOrderCustomNVidia ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( PipelineViewportCoarseSampleOrderStateCreateInfoNVidia ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( ShadingRatePaletteNVidia ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( PipelineViewportShadingRateImageStateCreateInfoNVidia ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_FRAGMENT_SHADING_RATE_AVAILABLE
-        NoDiscard auto toString ( Type ( PipelineFragmentShadingRateStateCreateInfo ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEVICE_GENERATED_COMMANDS_AVAILABLE
-        NoDiscard auto toString ( Type ( GraphicsShaderGroupCreateInfoNVidia ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( GraphicsPipelineShaderGroupsCreateInfoNVidia ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_AMD_PIPELINE_COMPILER_CONTROL_AVAILABLE
-        NoDiscard auto toString ( Type ( PipelineCompilerControlCreateInfoAMD ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_SAMPLE_LOCATIONS_AVAILABLE
-        NoDiscard auto toString ( Type ( AttachmentSampleLocations ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( SubpassSampleLocations ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( RenderPassSampleLocationsBeginInfo ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_FRAGMENT_DENSITY_MAP_AVAILABLE
-        NoDiscard auto toString ( Type ( RenderPassFragmentDensityMapCreateInfo ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_QUALCOMM_RENDER_PASS_TRANSFORM_AVAILABLE
-        NoDiscard auto toString ( Type ( RenderPassTransformBeginInfoQualcomm ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_QUALCOMM_FRAGMENT_DENSITY_MAP_OFFSET_AVAILABLE
-        NoDiscard auto toString ( Type ( SubpassFragmentDensityMapOffsetEndInfoQualcomm ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_FRAGMENT_SHADING_RATE_AVAILABLE
-        NoDiscard auto toString ( Type ( FragmentShadingRateAttachmentInfo ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_HUAWEI_SUBPASS_SHADING_AVAILABLE
-        NoDiscard auto toString ( Type ( SubpassShadingPipelineCreateInfoHuawei ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
-        NoDiscard auto toString ( Type ( SemaphoreSubmitInfo ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( CommandBufferSubmitInfo ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( SubmitInfo2 ) const & ) noexcept -> cds :: String;
-
-        NoDiscard auto toString ( Type ( MemoryBarrier2 ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( BufferMemoryBarrier2 ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( ImageMemoryBarrier2 ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( DependencyInfo ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_VALIDATION_FLAGS_AVAILABLE
-        NoDiscard auto toString ( Type ( ValidationCheck ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( ValidationFlags ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_FENCE_WIN32_AVAILABLE
-        NoDiscard auto toString ( Type ( ImportFenceWin32HandleInfo ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_FENCE_FD_AVAILABLE
-        NoDiscard auto toString ( Type ( ImportFenceFdInfo ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_DEBUG_REPORT_AVAILABLE
-        NoDiscard auto toString ( Type ( DebugReportCreateInfo ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_FENCE_WIN32_AVAILABLE
-        NoDiscard auto toString ( Type ( ExportFenceWin32HandleInfo ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_FENCE_FD_AVAILABLE
-        NoDiscard auto toString ( Type ( FenceGetFDInfo ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PERFORMANCE_QUERY_AVAILABLE
-        NoDiscard auto toString ( Type ( PerformanceQuerySubmitInfo ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_WIN32_KEYED_MUTEX_AVAILABLE
-        NoDiscard auto toString ( Type ( Win32KeyedMutexAcquireReleaseInfo ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_WIN32_KEYED_MUTEX_AVAILABLE
-        NoDiscard auto toString ( Type ( Win32KeyedMutexAcquireReleaseInfoNVidia ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_SEMAPHORE_WIN32_AVAILABLE
-        NoDiscard auto toString ( Type ( D3D12FenceSubmitInfo ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_PCI_BUS_INFO_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDevicePCIBusInfoProperties ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_PHYSICAL_DEVICE_DRM_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceDRMProperties ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceAccelerationStructureProperties ) const & ) noexcept -> cds :: String;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceAccelerationStructureFeatures ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_BLEND_OPERATION_ADVANCED_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceBlendOperationAdvancedProperties ) const & ) noexcept -> cds :: String;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceBlendOperationAdvancedFeatures ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_CONSERVATIVE_RASTERIZATION_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceConservativeRasterizationProperties ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_COOPERATIVE_MATRIX_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceCooperativeMatrixPropertiesNVidia ) const & ) noexcept -> cds :: String;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceCooperativeMatrixFeaturesNVidia ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_CUSTOM_BORDER_COLOR_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceCustomBorderColorProperties ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEVICE_GENERATED_COMMANDS_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceDeviceGeneratedCommandsPropertiesNVidia ) const & ) noexcept -> cds :: String;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceDeviceGeneratedCommandsFeaturesNVidia ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_DISCARD_RECTANGLES_AVAILABLE
-        NoDiscard auto toString ( Type ( PhysicalDeviceDiscardRectangleProperties ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( PipelineDiscardRectangleStateCreateInfo ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_EXTERNAL_MEMORY_HOST_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceExternalMemoryHostProperties ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_FRAGMENT_DENSITY_MAP_2_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceFragmentDensityMap2Properties ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_QUALCOMM_FRAGMENT_DENSITY_MAP_OFFSET_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceFragmentDensityMapOffsetPropertiesQualcomm ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_FRAGMENT_DENSITY_MAP_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceFragmentDensityMapProperties ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_FRAGMENT_SHADING_RATE_ENUMS_AVAILABLE
-        NoDiscard auto toString ( Type ( PhysicalDeviceFragmentShadingRateEnumsPropertiesNVidia ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( PipelineFragmentShadingRateEnumStateCreateInfoNVidia ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_FRAGMENT_SHADING_RATE_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceFragmentShadingRateProperties ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_INLINE_UNIFORM_BLOCK_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceInlineUniformBlockProperties ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_LINE_RASTERIZATION_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceLineRasterizationProperties ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_MAINTENANCE_4_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceMaintenance4Properties ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_MESH_SHADER_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceMeshShaderPropertiesNVidia ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_MULTI_DRAW_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceMultiDrawProperties ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE && __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXPERIMENTAL_MULTIVIEW_PER_VIEW_ATTRIBUTES_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceMultiviewPerViewAttributesPropertiesNVidia ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_BETA_EXTENSIONS_ENABLED && __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PORTABILITY_SUBSET_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDevicePortabilitySubsetProperties ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_PROVOKING_VERTEX_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceProvokingVertexProperties ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PUSH_DESCRIPTOR_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDevicePushDescriptorProperties ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_RAY_TRACING_PIPELINE_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceRayTracingPipelineProperties ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceRayTracingPropertiesNVidia ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_ROBUSTNESS_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceRobustnessProperties ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_SAMPLE_LOCATIONS_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceSampleLocationsProperties ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_AMD_SHADER_CORE_PROPERTIES_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceShaderCorePropertiesAMD ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_AMD_SHADER_CORE_PROPERTIES_2_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceShaderCoreProperties2AMD ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SHADER_SM_BUILTINS_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceShaderSMBuiltinsPropertiesNVidia ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SHADING_RATE_IMAGE_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceShadingRateImagePropertiesNVidia ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_SUBGROUP_SIZE_CONTROL_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceSubgroupSizeControlProperties ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_HUAWEI_SUBPASS_SHADING_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceSubpassShadingPropertiesHuawei ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_TEXEL_BUFFER_ALIGNMENT_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceTexelBufferAlignmentProperties ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_TRANSFORM_FEEDBACK_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceTransformFeedbackProperties ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_VERTEX_ATTRIBUTE_DIVISOR_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceVertexAttributeDivisorProperties ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_INTEGER_DOT_PRODUCT_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceShaderIntegerDotProductProperties ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PERFORMANCE_QUERY_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDevicePerformanceQueryProperties ) const & ) noexcept -> cds :: String;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PerformanceCounter ) const & ) noexcept -> cds :: String;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PerformanceCounterDescription ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEVICE_DIAGNOSTIC_CHECKPOINTS_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( QueueFamilyCheckpointPropertiesNVidia ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_GLOBAL_PRIORITY_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( DeviceQueueGlobalPriorityCreateInfo ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_GLOBAL_PRIORITY_QUERY_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( QueueFamilyGlobalPriorityProperties ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_QUEUE_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( QueueFamilyQueryResultStatusProperties ) const & ) noexcept -> cds :: String;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( VideoQueueFamilyProperties ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEVICE_DIAGNOSTICS_CONFIG_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( DeviceDiagnosticsConfigFlagNVidia ) ) noexcept -> cds :: StringLiteral;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( DeviceDiagnosticsConfigCreateInfoNVidia ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_AMD_MEMORY_OVERALLOCATION_BEHAVIOUR_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( MemoryOverallocationBehaviorAMD ) ) noexcept -> cds :: StringLiteral;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( DeviceMemoryOverallocationCreateInfoAMD ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_PRIVATE_DATA_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( DevicePrivateDataCreateInfo ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_4444_FORMATS_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDevice4444FormatsFeatures ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_ASTC_DECODE_MODE_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceASTCDecodeFeatures ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_BORDER_COLOR_SWIZZLE_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceBorderColorSwizzleFeatures ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_AMD_DEVICE_COHERENT_MEMORY_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceCoherentMemoryFeaturesAMD ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_COLOR_WRITE_ENABLE_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceColorWriteEnableFeatures ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_COMPUTE_SHADER_DERIVATIVES_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceComputeShaderDerivativesFeaturesNVidia ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_CONDITIONAL_RENDERING_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceConditionalRenderingFeatures ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_CORNER_SAMPLED_IMAGE_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceCornerSampledImageFeaturesNVidia ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_COVERAGE_REDUCTION_MODE_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceCoverageReductionModeFeaturesNVidia ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_CUSTOM_BORDER_COLOR_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceCustomBorderColorFeatures ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEDICATED_ALLOCATION_IMAGE_ALIASING_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceDedicatedAllocationImageAliasingFeaturesNVidia ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_DEPTH_CLIP_CONTROL_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceDepthClipControlFeatures ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_DEPTH_CLIP_ENABLE_AVAILABLE
-
-        NoDiscard auto toString ( Type ( PhysicalDeviceDepthClipEnableFeatures ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( PipelineRasterizationDepthClipStateCreateInfo ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_DEVICE_MEMORY_REPORT_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceDeviceMemoryReportFeatures ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_DEVICE_DIAGNOSTICS_CONFIG_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceDiagnosticsConfigFeaturesNVidia ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceDynamicRenderingFeatures ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SCISSOR_EXCLUSIVE_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceExclusiveScissorFeaturesNVidia ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_EXTENDED_DYNAMIC_STATE_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceExtendedDynamicStateFeatures ) const & ) noexcept -> cds :: String;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceExtendedDynamicState2Features ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXTERNAL_MEMORY_RDMA_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceExternalMemoryRDMAFeaturesNVidia ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_FRAGMENT_DENSITY_MAP_2_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceFragmentDensityMap2Features ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_FRAGMENT_DENSITY_MAP_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceFragmentDensityMapFeatures ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_QUALCOMM_FRAGMENT_DENSITY_MAP_OFFSET_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceFragmentDensityMapOffsetFeaturesQualcomm ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_FRAGMENT_SHADER_BARYCENTRIC_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceFragmentShaderBarycentricFeaturesNVidia ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_FRAGMENT_SHADER_INTERLOCK_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceFragmentShaderInterlockFeatures ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_FRAGMENT_SHADING_RATE_ENUMS_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceFragmentShadingRateEnumsFeaturesNVidia ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_FRAGMENT_SHADING_RATE_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceFragmentShadingRateFeatures ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_GLOBAL_PRIORITY_QUERY_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceGlobalPriorityQueryFeatures ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_IMAGE_ROBUSTNESS_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceImageRobustnessFeatures ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_IMAGE_VIEW_MIN_LOD_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceImageViewMinLODFeatures ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_INDEX_TYPE_UINT8_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceIndexTypeUInt8Features ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_INHERITED_VIEWPORT_SCISSOR_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceInheritedViewportScissorFeaturesNVidia ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_INLINE_UNIFORM_BLOCK_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceInlineUniformBlockFeatures ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_HUAWEI_INVOCATION_MASK_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceInvocationMaskFeaturesHuawei ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_LINE_RASTERIZATION_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceLineRasterizationFeatures ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_LINEAR_COLOR_ATTACHMENT_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceLinearColorAttachmentFeaturesNVidia ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_MAINTENANCE_4_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceMaintenance4Features ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_MEMORY_PRIORITY_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceMemoryPriorityFeatures ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_MESH_SHADER_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceMeshShaderFeaturesNVidia ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_MULTI_DRAW_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceMultiDrawFeatures ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_VALVE_MUTABLE_DESCRIPTOR_TYPE_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceMutableDescriptorTypeFeaturesValve ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_PAGEABLE_DEVICE_LOCAL_MEMORY_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDevicePageableDeviceLocalMemoryFeatures ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PERFORMANCE_QUERY_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDevicePerformanceQueryFeatures ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_PIPELINE_CREATION_CACHE_CONTROL_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDevicePipelineCreationCacheControlFeatures ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PIPELINE_EXECUTABLE_PROPERTIES_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDevicePipelineExecutablePropertiesFeatures ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_BETA_EXTENSIONS_ENABLED && __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PORTABILITY_SUBSET_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDevicePortabilitySubsetFeatures ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PRESENT_ID_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDevicePresentIDFeatures ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PRESENT_WAIT_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDevicePresentWaitFeatures ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_PRIMITIVE_TOPOLOGY_LIST_RESTART_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDevicePrimitiveTopologyListRestartFeatures ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_PRIVATE_DATA_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDevicePrivateDataFeatures ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_PROVOKING_VERTEX_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceProvokingVertexFeatures ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_RGBA_10_X_6_FORMATS_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceRGBA10x6FormatsFeatures ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_ARM_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceRasterizationOrderAttachmentAccessFeaturesARM ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_RAY_QUERY_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceRayQueryFeatures ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_MOTION_BLUR_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceRayTracingMotionBlurFeaturesNVidia ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_RAY_TRACING_PIPELINE_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceRayTracingPipelineFeatures ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_REPRESENTATIVE_FRAGMENT_TEST_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceRepresentativeFragmentTestFeaturesNVidia ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_ROBUSTNESS_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceRobustnessFeatures ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_SHADER_ATOMIC_FLOAT_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceShaderAtomicFloatFeatures ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_SHADER_ATOMIC_FLOAT_2_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceShaderAtomicFloat2Features ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_CLOCK_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceShaderClockFeatures ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_SHADER_DEMOTE_TO_HELPER_INVOCATION_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceShaderDemoteToHelperInvocationFeatures ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_SHADER_IMAGE_ATOMIC_INT64_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceShaderImageAtomicInt64Features ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SHADER_IMAGE_FOOTPRINT_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceShaderImageFootprintFeaturesNVidia ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_INTEGER_DOT_PRODUCT_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceShaderIntegerDotProductFeatures ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_INTEL_SHADER_INTEGER_FUNCTIONS_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceShaderIntegerFunctionsFeaturesIntel ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SHADER_SM_BUILTINS_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceShaderSMBuiltinsFeaturesNVidia ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_SUBGROUP_UNIFORM_CONTROL_FLOW_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceShaderSubgroupUniformControlFlowFeatures ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SHADER_TERMINATE_INVOCATION_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceShaderTerminateInvocationFeatures ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SHADING_RATE_IMAGE_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceShadingRateImageFeaturesNVidia ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_SUBGROUP_SIZE_CONTROL_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceSubgroupSizeControlFeatures ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_HUAWEI_SUBPASS_SHADING_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceSubpassShadingFeaturesHuawei ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceSynchronizationFeatures ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_TEXEL_BUFFER_ALIGNMENT_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceTexelBufferAlignmentFeatures ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_TEXTURE_COMPRESSION_ASTC_HDR_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceTextureCompressionASTCHDRFeatures ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_TRANSFORM_FEEDBACK_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceTransformFeedbackFeatures ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_VERTEX_ATTRIBUTE_DIVISOR_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceVertexAttributeDivisorFeatures ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_VERTEX_INPUT_DYNAMIC_STATE_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceVertexInputDynamicStateFeatures ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_WORKGROUP_MEMORY_EXPLICIT_LAYOUT_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceWorkgroupMemoryExplicitLayoutFeatures ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_YCBCR_2_PLANE_444_FORMATS_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceYCBCR2Plane444FormatsFeatures ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_YCBCR_IMAGE_ARRAYS_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceYCBCRImageArraysFeatures ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ZERO_INITIALIZE_WORKGROUP_MEMORY_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( PhysicalDeviceZeroInitializeWorkgroupMemoryFeatures ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_DEVICE_MEMORY_REPORT_AVAILABLE
-
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( DeviceMemoryReportFlag ) ) noexcept -> cds :: StringLiteral;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( DeviceMemoryReportEventType ) ) noexcept -> cds :: StringLiteral;
-        __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( DeviceDeviceMemoryReportCreateInfo ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_DYNAMIC_RENDERING_AVAILABLE || __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
-
-        NoDiscard auto toString ( Type ( RenderingFlag ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( CommandBufferInheritanceRenderingInfo ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( RenderingAttachmentInfo ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( RenderingInfo ) const & ) noexcept -> cds :: String;
-
 #if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_FRAMEBUFFER_MIXED_SAMPLES_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_AMD_MIXED_ATTACHMENT_SAMPLES_AVAILABLE
-        NoDiscard auto toString ( hidden :: __AttachmentSampleCountInfo const & ) noexcept -> cds :: String;
+        NoDiscard MaybeUnused auto toString ( hidden :: __AttachmentSampleCountInfo const & ) noexcept -> cds :: String;
 #endif
 
-#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_EXPERIMENTAL_MULTIVIEW_PER_VIEW_ATTRIBUTES_AVAILABLE
-        NoDiscard auto toString ( Type ( MultiviewPerViewAttributesInfoNVidia ) const & ) noexcept -> cds :: String;
-#endif
+        NoDiscard auto compare ( Type ( Version ) const &, Type ( Version ) const & ) noexcept -> __C_ENG_TYPE ( CompareResult );
 
-#if __C_ENG_VULKAN_API_EXTENSION_FRAGMENT_DENSITY_MAP_AVAILABLE
-        NoDiscard auto toString ( Type ( RenderingFragmentDensityMapAttachmentInfo ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_FRAGMENT_SHADING_RATE_AVAILABLE
-        NoDiscard auto toString ( Type ( RenderingFragmentShadingRateAttachmentInfo ) const & ) noexcept -> cds :: String;
-#endif
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_CONDITIONAL_RENDERING_AVAILABLE
-
-        NoDiscard auto toString ( Type ( CommandBufferInheritanceConditionalRenderingInfo ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_QUALCOMM_RENDER_PASS_TRANSFORM_AVAILABLE
-
-        NoDiscard auto toString ( Type ( CommandBufferInheritanceRenderPassTransformInfoQualcomm ) const & ) noexcept -> cds :: String;
-
-#endif
-
-#if __C_ENG_VULKAN_API_VERSION_1_1_AVAILABLE
-        NoDiscard auto toString ( Type ( ExternalSemaphoreHandleTypeFlag ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( ExportSemaphoreCreateInfo ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_VERSION_1_2_AVAILABLE
-        NoDiscard auto toString ( Type ( SemaphoreType ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( SemaphoreWaitFlag ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( SemaphoreTypeCreateInfo ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( SemaphoreWaitInfo ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( SemaphoreSignalInfo ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_SEMAPHORE_WIN32_AVAILABLE
-        NoDiscard auto toString ( Type ( SemaphoreGetWin32HandleInfo ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( ImportSemaphoreWin32HandleInfo ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_EXTERNAL_SEMAPHORE_FD_AVAILABLE
-        NoDiscard auto toString ( Type ( SemaphoreGetFdInfo ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( ImportSemaphoreFdInfo ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_GOOGLE_FUCHSIA_EXTERNAL_SEMAPHORE_AVAILABLE
-        NoDiscard auto toString ( Type ( SemaphoreGetZirconHandleInfoGoogle ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( ImportSemaphoreZirconHandleInfoGoogle ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_SAMPLE_LOCATIONS_AVAILABLE
-        NoDiscard auto toString ( Type ( SampleLocation ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( SampleLocationsInfo ) const & ) noexcept -> cds :: String;
-#endif
-
-#if __C_ENG_VULKAN_API_EXTENSION_CALIBRATED_TIMESTAMPS_AVAILABLE
-        NoDiscard auto toString ( Type ( TimeDomain ) ) noexcept -> cds :: StringLiteral;
-        NoDiscard auto toString ( Type ( CalibratedTimestampInfo ) const & ) noexcept -> cds :: String;
-        NoDiscard auto toString ( Type ( GetCalibratedTimestamps ) const & ) noexcept -> cds :: String;
-#endif
-
-        __C_ENG_NO_DISCARD auto compare ( __C_ENG_TYPE ( Version ) const &, __C_ENG_TYPE ( Version ) const & ) noexcept -> __C_ENG_TYPE ( CompareResult );
-
-        __C_ENG_NO_DISCARD auto uInt32ToInstanceVersion ( cds :: uint32 ) noexcept -> __C_ENG_TYPE ( Version );
-        __C_ENG_NO_DISCARD auto instanceVersionToUInt32 ( __C_ENG_TYPE ( Version ) const & ) noexcept -> cds :: uint32;
-        __C_ENG_NO_DISCARD auto versionReadableFormat ( __C_ENG_TYPE ( Version ) const & ) noexcept -> cds :: String;
+        NoDiscard auto uInt32ToInstanceVersion ( cds :: uint32 ) noexcept -> Type ( Version );
+        NoDiscard auto instanceVersionToUInt32 ( Type ( Version ) const & ) noexcept -> cds :: uint32;
+        NoDiscard auto versionReadableFormat ( Type ( Version ) const & ) noexcept -> cds :: String;
 
         namespace versionConstants {
 
-            constexpr static __C_ENG_TYPE ( Version ) const nullVersion                         = { .variant = 0U, .major = 0U, .minor = 0U, .patch = 0U };
-            constexpr static __C_ENG_TYPE ( Version ) const version10      __C_ENG_MAYBE_UNUSED = { .variant = 0U, .major = 1U, .minor = 0U, .patch = 0U };
-            constexpr static __C_ENG_TYPE ( Version ) const version11                           = { .variant = 0U, .major = 1U, .minor = 1U, .patch = 0U };
-            constexpr static __C_ENG_TYPE ( Version ) const version12      __C_ENG_MAYBE_UNUSED = { .variant = 0U, .major = 1U, .minor = 2U, .patch = 0U };
+            constexpr static Type ( Version ) const nullVersion             = { .variant = 0U, .major = 0U, .minor = 0U, .patch = 0U };
+            constexpr static Type ( Version ) const version10   MaybeUnused = { .variant = 0U, .major = 1U, .minor = 0U, .patch = 0U };
+            constexpr static Type ( Version ) const version11               = { .variant = 0U, .major = 1U, .minor = 1U, .patch = 0U };
+            constexpr static Type ( Version ) const version12   MaybeUnused = { .variant = 0U, .major = 1U, .minor = 2U, .patch = 0U };
 
         }
 

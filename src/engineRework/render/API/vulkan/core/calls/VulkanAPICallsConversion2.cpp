@@ -8521,5 +8521,355 @@ namespace engine :: vulkan {
     }
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    auto prepareContext (
+            CreateQueryPoolContext             * pContext,
+            Type ( QueryPoolCreateInfo ) const * pSource
+    ) noexcept -> VkQueryPoolCreateInfo * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pContext == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        auto pCurrent   = reinterpret_cast < Type ( GenericInStructure ) const * > ( pSource->pNext );
+        auto pCurrentVk = reinterpret_cast < VkBaseOutStructure * > ( toVulkanFormat ( & pContext->createInfo, pSource ) );
+
+        while ( pCurrent != nullptr ) {
+
+            switch ( pCurrent->structureType ) {
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PERFORMANCE_QUERY_AVAILABLE
+
+                case StructureTypeQueryPoolPerformanceCreateInfo:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                            toVulkanFormat (
+                                    & pContext->performanceQueryCreateInfo,
+                                    reinterpret_cast < Type ( QueryPoolPerformanceCreateInfo ) const * > ( pCurrent )
+                            )
+                    );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_INTEL_PERFORMANCE_QUERY_AVAILABLE
+
+                case StructureTypeQueryPoolPerformanceCreateInfoIntel:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                            toVulkanFormat (
+                                    & pContext->performanceQueryCreateInfoIntel,
+                                    reinterpret_cast < Type ( QueryPoolPerformanceCreateInfoIntel ) const * > ( pCurrent )
+                            )
+                    );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VIDEO_DECODE_H264_AVAILABLE
+
+                case StructureTypeVideoDecodeH264Profile:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                            toVulkanFormat (
+                                    & pContext->decodeH264Profile,
+                                    reinterpret_cast < Type ( VideoDecodeH264Profile ) const * > ( pCurrent )
+                            )
+                    );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VIDEO_DECODE_H265_AVAILABLE
+
+                case StructureTypeVideoDecodeH265Profile:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                            toVulkanFormat (
+                                    & pContext->decodeH265Profile,
+                                    reinterpret_cast < Type ( VideoDecodeH265Profile ) const * > ( pCurrent )
+                            )
+                    );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VIDEO_ENCODE_H264_AVAILABLE
+
+                case StructureTypeVideoEncodeH264Profile:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                            toVulkanFormat (
+                                    & pContext->encodeH264Profile,
+                                    reinterpret_cast < Type ( VideoEncodeH264Profile ) const * > ( pCurrent )
+                            )
+                    );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_VIDEO_ENCODE_H265_AVAILABLE
+
+                case StructureTypeVideoEncodeH265Profile:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                            toVulkanFormat (
+                                    & pContext->encodeH265Profile,
+                                    reinterpret_cast < Type ( VideoEncodeH265Profile ) const * > ( pCurrent )
+                            )
+                    );
+                    break;
+
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_QUEUE_AVAILABLE
+
+                case StructureTypeVideoProfile:
+                    pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                            toVulkanFormat (
+                                    & pContext->videoProfile,
+                                    reinterpret_cast < Type ( VideoProfile ) const * > ( pCurrent )
+                            )
+                    );
+                    break;
+
+#endif
+
+                default:
+                    break;
+            }
+
+            pCurrentVk  = pCurrentVk->pNext == nullptr ? pCurrentVk : pCurrentVk->pNext;
+            pCurrent    = pCurrent->pNext;
+        }
+
+        pCurrentVk->pNext = nullptr;
+
+        return & pContext->createInfo;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    auto toVulkanFormat (
+            VkQueryPoolCreateInfo              * pDestination,
+            Type ( QueryPoolCreateInfo ) const * pSource
+    ) noexcept -> VkQueryPoolCreateInfo * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType              = VK_STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO,
+                .pNext              = nullptr,
+                .flags              = pSource->flags,
+                .queryType          = static_cast < VkQueryType > ( pSource->queryType ),
+                .queryCount         = pSource->queryCount,
+                .pipelineStatistics = pSource->pipelineStatistics
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PERFORMANCE_QUERY_AVAILABLE
+    auto toVulkanFormat (
+            VkQueryPoolPerformanceCreateInfoKHR           * pDestination,
+            Type ( QueryPoolPerformanceCreateInfo ) const * pSource
+    ) noexcept -> VkQueryPoolPerformanceCreateInfoKHR * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType              = VK_STRUCTURE_TYPE_QUERY_POOL_PERFORMANCE_CREATE_INFO_KHR,
+                .pNext              = nullptr,
+                .queueFamilyIndex   = pSource->queueFamilyIndex,
+                .counterIndexCount  = pSource->counterIndexCount,
+                .pCounterIndices    = pSource->pCounterIndices
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_INTEL_PERFORMANCE_QUERY_AVAILABLE
+    auto toVulkanFormat (
+            VkQueryPoolPerformanceQueryCreateInfoINTEL         * pDestination,
+            Type ( QueryPoolPerformanceCreateInfoIntel ) const * pSource
+    ) noexcept -> VkQueryPoolPerformanceQueryCreateInfoINTEL * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                          = VK_STRUCTURE_TYPE_QUERY_POOL_PERFORMANCE_QUERY_CREATE_INFO_INTEL,
+                .pNext                          = nullptr,
+                .performanceCountersSampling    = static_cast < VkQueryPoolSamplingModeINTEL > ( pSource->performanceCountersSampling )
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PERFORMANCE_QUERY_AVAILABLE
+    auto toVulkanFormat (
+            VkAcquireProfilingLockInfoKHR           * pDestination,
+            Type ( AcquireProfilingLockInfo ) const * pSource
+    ) noexcept -> VkAcquireProfilingLockInfoKHR * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                          = VK_STRUCTURE_TYPE_ACQUIRE_PROFILING_LOCK_INFO_KHR,
+                .pNext                          = nullptr,
+                .flags                          = pSource->flags,
+                .timeout                        = pSource->timeout
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_INTEL_PERFORMANCE_QUERY_AVAILABLE
+    auto toVulkanFormat (
+            VkInitializePerformanceApiInfoINTEL              * pDestination,
+            Type ( InitializePerformanceAPIInfoIntel ) const * pSource
+    ) noexcept -> VkInitializePerformanceApiInfoINTEL * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                          = VK_STRUCTURE_TYPE_INITIALIZE_PERFORMANCE_API_INFO_INTEL,
+                .pNext                          = nullptr,
+                .pUserData                      = pSource->pUserData
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_INTEL_PERFORMANCE_QUERY_AVAILABLE
+    auto toVulkanFormat (
+            VkPerformanceMarkerInfoINTEL              * pDestination,
+            Type ( PerformanceMarkerInfoIntel ) const * pSource
+    ) noexcept -> VkPerformanceMarkerInfoINTEL * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                          = VK_STRUCTURE_TYPE_PERFORMANCE_MARKER_INFO_INTEL,
+                .pNext                          = nullptr,
+                .marker                         = pSource->marker
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_INTEL_PERFORMANCE_QUERY_AVAILABLE
+    auto toVulkanFormat (
+            VkPerformanceStreamMarkerInfoINTEL              * pDestination,
+            Type ( PerformanceStreamMarkerInfoIntel ) const * pSource
+    ) noexcept -> VkPerformanceStreamMarkerInfoINTEL * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                          = VK_STRUCTURE_TYPE_PERFORMANCE_STREAM_MARKER_INFO_INTEL,
+                .pNext                          = nullptr,
+                .marker                         = pSource->marker
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_INTEL_PERFORMANCE_QUERY_AVAILABLE
+    auto toVulkanFormat (
+            VkPerformanceOverrideInfoINTEL              * pDestination,
+            Type ( PerformanceOverrideInfoIntel ) const * pSource
+    ) noexcept -> VkPerformanceOverrideInfoINTEL * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                          = VK_STRUCTURE_TYPE_PERFORMANCE_OVERRIDE_INFO_INTEL,
+                .pNext                          = nullptr,
+                .type                           = static_cast < VkPerformanceOverrideTypeINTEL > ( pSource->type ),
+                .enable                         = pSource->enable,
+                .parameter                      = pSource->parameter
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_INTEL_PERFORMANCE_QUERY_AVAILABLE
+    auto toVulkanFormat (
+            VkPerformanceConfigurationAcquireInfoINTEL              * pDestination,
+            Type ( PerformanceConfigurationAcquireInfoIntel ) const * pSource
+    ) noexcept -> VkPerformanceConfigurationAcquireInfoINTEL * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType                          = VK_STRUCTURE_TYPE_PERFORMANCE_CONFIGURATION_ACQUIRE_INFO_INTEL,
+                .pNext                          = nullptr,
+                .type                           = static_cast < VkPerformanceConfigurationTypeINTEL > ( pSource->type ),
+        };
+
+        return pDestination;
+    }
+#endif
+
 
 } // namespace vulkan :: engine

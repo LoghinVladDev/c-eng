@@ -525,30 +525,6 @@ namespace engine {
     __C_ENG_NO_DISCARD auto toString ( bool ) noexcept -> cds :: StringLiteral;
     __C_ENG_NO_DISCARD auto toString ( void const * ) noexcept -> cds :: String;
 
-    __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( EngineState ) ) noexcept -> cds :: StringLiteral;
-    __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( LogLevel ) ) noexcept -> cds :: StringLiteral;
-    __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( EventType ) ) noexcept -> cds :: StringLiteral;
-    __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( KeyModifier ) ) noexcept -> cds :: StringLiteral;
-    __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( Key ) ) noexcept -> cds :: StringLiteral;
-    __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( MouseButton ) ) noexcept -> cds :: StringLiteral;
-    __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( WindowType ) ) noexcept -> cds :: StringLiteral;
-    __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( WindowFlag ) ) noexcept -> cds :: StringLiteral;
-    __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( ControllerHatState ) ) noexcept -> cds :: StringLiteral;
-    __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( CompareResult ) ) noexcept -> cds :: StringLiteral;
-    __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( RenderAPIType ) ) noexcept -> cds :: StringLiteral;
-
-    __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( Position ) const & ) noexcept -> cds :: String;
-    __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( Size ) const & ) noexcept -> cds :: String;
-    __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( ColorChannelsDepth ) const & ) noexcept -> cds :: String;
-    __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( MonitorVideoModeProperties ) const & ) noexcept -> cds :: String;
-    __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( ContentScale ) const & ) noexcept -> cds :: String;
-    __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( MonitorWorkArea ) const & ) noexcept -> cds :: String;
-    __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( MonitorGammaRamp ) const & ) noexcept -> cds :: String;
-    __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( MonitorProperties ) const & ) noexcept -> cds :: String;
-    __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( RenderInstanceSurfaceAttachData ) const & ) noexcept -> cds :: String;
-    __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( RenderInstanceSurfaceDetachData ) const & ) noexcept -> cds :: String;
-    __C_ENG_NO_DISCARD auto toString ( __C_ENG_TYPE ( RenderInstanceSurfaceCallbackInfo ) const & ) noexcept -> cds :: String;
-
     __C_ENG_NO_DISCARD auto keyModifiersToString ( __C_ENG_TYPE ( KeyModifiers ) ) noexcept -> cds :: String;
     __C_ENG_NO_DISCARD auto windowFlagsToString ( __C_ENG_TYPE ( WindowFlags ) ) noexcept -> cds :: String;
 

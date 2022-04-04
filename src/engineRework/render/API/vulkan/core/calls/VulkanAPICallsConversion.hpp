@@ -4585,6 +4585,76 @@ namespace engine :: vulkan {
     ) noexcept -> VkBufferDeviceAddressInfo *;
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto prepareContext (
+            CreateQueryPoolContext                *,
+            Type ( QueryPoolCreateInfo )    const *
+    ) noexcept -> VkQueryPoolCreateInfo *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto toVulkanFormat (
+            VkQueryPoolCreateInfo              *,
+            Type ( QueryPoolCreateInfo ) const *
+    ) noexcept -> VkQueryPoolCreateInfo *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PERFORMANCE_QUERY_AVAILABLE
+    extern auto toVulkanFormat (
+            VkQueryPoolPerformanceCreateInfoKHR           *,
+            Type ( QueryPoolPerformanceCreateInfo ) const *
+    ) noexcept -> VkQueryPoolPerformanceCreateInfoKHR *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_INTEL_PERFORMANCE_QUERY_AVAILABLE
+    extern auto toVulkanFormat (
+            VkQueryPoolPerformanceQueryCreateInfoINTEL         *,
+            Type ( QueryPoolPerformanceCreateInfoIntel ) const *
+    ) noexcept -> VkQueryPoolPerformanceQueryCreateInfoINTEL *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PERFORMANCE_QUERY_AVAILABLE
+    extern auto toVulkanFormat (
+            VkAcquireProfilingLockInfoKHR           *,
+            Type ( AcquireProfilingLockInfo ) const *
+    ) noexcept -> VkAcquireProfilingLockInfoKHR *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_INTEL_PERFORMANCE_QUERY_AVAILABLE
+    extern auto toVulkanFormat (
+            VkInitializePerformanceApiInfoINTEL              *,
+            Type ( InitializePerformanceAPIInfoIntel ) const *
+    ) noexcept -> VkInitializePerformanceApiInfoINTEL *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_INTEL_PERFORMANCE_QUERY_AVAILABLE
+    extern auto toVulkanFormat (
+            VkPerformanceMarkerInfoINTEL              *,
+            Type ( PerformanceMarkerInfoIntel ) const *
+    ) noexcept -> VkPerformanceMarkerInfoINTEL *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_INTEL_PERFORMANCE_QUERY_AVAILABLE
+    extern auto toVulkanFormat (
+            VkPerformanceStreamMarkerInfoINTEL              *,
+            Type ( PerformanceStreamMarkerInfoIntel ) const *
+    ) noexcept -> VkPerformanceStreamMarkerInfoINTEL *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_INTEL_PERFORMANCE_QUERY_AVAILABLE
+    extern auto toVulkanFormat (
+            VkPerformanceOverrideInfoINTEL              *,
+            Type ( PerformanceOverrideInfoIntel ) const *
+    ) noexcept -> VkPerformanceOverrideInfoINTEL *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_INTEL_PERFORMANCE_QUERY_AVAILABLE
+    extern auto toVulkanFormat (
+            VkPerformanceConfigurationAcquireInfoINTEL              *,
+            Type ( PerformanceConfigurationAcquireInfoIntel ) const *
+    ) noexcept -> VkPerformanceConfigurationAcquireInfoINTEL *;
+#endif
+
 } // namespace engine :: vulkan
 
 #define C_ENG_MAP_END

@@ -14,6 +14,29 @@ using namespace engine; // NOLINT(clion-misra-cpp2008-7-3-4)
 #define C_ENG_MAP_START     SOURCE
 #include <ObjectMapping.hpp>
 
+template < typename T, typename F >
+inline auto flagsToString ( F flags ) noexcept -> String {
+    String asString = "0b" + Long ( static_cast < uint64 > ( flags ) ).toString(2) + " = ( ";
+    constexpr cds :: uint64 flagMax = 1ULL << 63ULL;
+
+    for ( cds :: uint64 i = 1ULL; true; i <<= 1ULL ) {
+        if ( ( i & flags ) != 0ULL ) {
+            asString += engine :: vulkan :: toString ( static_cast < T > ( i ) ) + "; "_s;
+        }
+
+        if ( i == flagMax ) {
+            break;
+        }
+    }
+
+    return asString.removeSuffix("; ") + " )";
+}
+
+template < typename F >
+inline auto flagsToString ( F flags ) noexcept -> String {
+    return "0b" + Long ( static_cast < uint64 > ( flags ) ).toString(2);
+}
+
 #if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
 auto vulkan :: toString (
         vulkan :: __C_ENG_TYPE ( Result ) result
@@ -485,7 +508,7 @@ auto vulkan :: toString (
         case StructureTypeVideoEncodeH265SessionParametersAddInfo:                               { asString = "StructureTypeVideoEncodeH265SessionParametersAddInfo";                               break; }
         case StructureTypeVideoEncodeH265VCLFrameInfo:                                           { asString = "StructureTypeVideoEncodeH265VCLFrameInfo";                                           break; }
         case StructureTypeVideoEncodeH265DPBSlotInfo:                                            { asString = "StructureTypeVideoEncodeH265DPBSlotInfo";                                            break; }
-        case StructureTypeVideoEncodeH265NALUSlice:                                              { asString = "StructureTypeVideoEncodeH265NALUSlice";                                              break; }
+        case StructureTypeVideoEncodeH265NALUSliceSegment:                                       { asString = "StructureTypeVideoEncodeH265NALUSlice";                                              break; }
         case StructureTypeVideoEncodeH265EmitPictureParameters:                                  { asString = "StructureTypeVideoEncodeH265EmitPictureParameters";                                  break; }
         case StructureTypeVideoEncodeH265Profile:                                                { asString = "StructureTypeVideoEncodeH265Profile";                                                break; }
         case StructureTypeVideoEncodeH265ReferenceLists:                                         { asString = "StructureTypeVideoEncodeH265ReferenceLists";                                         break; }
@@ -1094,7 +1117,7 @@ auto vulkan :: toString (
 
 #if __C_ENG_VULKAN_API_EXTENSION_INTEL_PERFORMANCE_QUERY_AVAILABLE
 
-        case StructureTypeQueryPoolPerformanceQueryCreateInfoIntel:                              { asString = "StructureTypeQueryPoolPerformanceQueryCreateInfoIntel";                              break; }
+        case StructureTypeQueryPoolPerformanceCreateInfoIntel:                                   { asString = "StructureTypeQueryPoolPerformanceQueryCreateInfoIntel";                              break; }
         case StructureTypeInitializePerformanceAPIInfoIntel:                                     { asString = "StructureTypeInitializePerformanceAPIInfoIntel";                                     break; }
         case StructureTypePerformanceMarkerInfoIntel:                                            { asString = "StructureTypePerformanceMarkerInfoIntel";                                            break; }
         case StructureTypePerformanceStreamMarkerInfoIntel:                                      { asString = "StructureTypePerformanceStreamMarkerInfoIntel";                                      break; }
@@ -2397,7 +2420,7 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( InstanceCreateInfo ) ) " "
             "{ type = "_s               + toString ( createInfo.structureType ) +
             ", next = "                 + :: toString ( createInfo.pNext ) +
-            ", flags = "                + "0b" + Long ( createInfo.flags ).toString(2) +
+            ", flags = "                + :: flagsToString ( createInfo.flags ) +
             ", applicationInfo = "      + :: toString ( createInfo.pApplicationInfo ) +
             ", enabledLayers = "        + stringArrayToString ( createInfo.pEnabledLayerNames, createInfo.enabledLayerCount ) +
             ", enabledExtensions = "    + stringArrayToString ( createInfo.pEnabledExtensionNames, createInfo.enabledExtensionCount ) +
@@ -2413,9 +2436,9 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( DebugMessengerCreateInfo ) ) " "
             "{ type = "_s               + toString ( createInfo.structureType ) +
             ", next = "                 + :: toString ( createInfo.pNext ) +
-            ", flags = "                + "0b" + Long ( createInfo.flags ).toString(2) +
-            ", messageSeverityFlags = " + "0b" + Long ( createInfo.messageSeverityFlags ).toString(2) +
-            ", messageTypeFlags = "     + "0b" + Long ( createInfo.messageTypeFlags ).toString(2) +
+            ", flags = "                + :: flagsToString ( createInfo.flags ) +
+            ", messageSeverityFlags = " + :: flagsToString < Type ( DebugMessageSeverityFlag ) > ( createInfo.messageSeverityFlags ) +
+            ", messageTypeFlags = "     + :: flagsToString < Type ( DebugMessageTypeFlag ) > ( createInfo.messageTypeFlags ) +
             ", callback = "             + :: toString ( createInfo.callback ) +
             ", userData = "             + :: toString ( createInfo.pCallbackUserData ) +
             " }";
@@ -2595,16 +2618,16 @@ auto vulkan :: toString (
             ", maxFramebufferWidth = "                              + deviceLimits.maxFramebufferWidth +
             ", maxFramebufferHeight = "                             + deviceLimits.maxFramebufferHeight +
             ", maxFramebufferLayers = "                             + deviceLimits.maxFramebufferLayers +
-            ", framebufferColorSampleCounts = "                     + "0b" + Long ( deviceLimits.framebufferColorSampleCounts ).toString(2) +
-            ", framebufferDepthSampleCounts = "                     + "0b" + Long ( deviceLimits.framebufferDepthSampleCounts ).toString(2) +
-            ", framebufferStencilSampleCounts = "                   + "0b" + Long ( deviceLimits.framebufferStencilSampleCounts ).toString(2) +
-            ", framebufferNoAttachmentsSampleCounts = "             + "0b" + Long ( deviceLimits.framebufferNoAttachmentsSampleCounts ).toString(2) +
+            ", framebufferColorSampleCounts = "                     + :: flagsToString < Type ( SampleCountFlag ) > ( deviceLimits.framebufferColorSampleCounts ) +
+            ", framebufferDepthSampleCounts = "                     + :: flagsToString < Type ( SampleCountFlag ) > ( deviceLimits.framebufferDepthSampleCounts ) +
+            ", framebufferStencilSampleCounts = "                   + :: flagsToString < Type ( SampleCountFlag ) > ( deviceLimits.framebufferStencilSampleCounts ) +
+            ", framebufferNoAttachmentsSampleCounts = "             + :: flagsToString < Type ( SampleCountFlag ) > ( deviceLimits.framebufferNoAttachmentsSampleCounts ) +
             ", maxColorAttachments = "                              + deviceLimits.maxColorAttachments +
-            ", sampledImageColorSampleCounts = "                    + "0b" + Long ( deviceLimits.sampledImageColorSampleCounts ).toString(2) +
-            ", sampledImageIntegerSampleCounts = "                  + "0b" + Long ( deviceLimits.sampledImageIntegerSampleCounts ).toString(2) +
-            ", sampledImageDepthSampleCounts = "                    + "0b" + Long ( deviceLimits.sampledImageDepthSampleCounts ).toString(2) +
-            ", sampledImageStencilSampleCounts = "                  + "0b" + Long ( deviceLimits.sampledImageStencilSampleCounts ).toString(2) +
-            ", storageImageSampleCounts = "                         + "0b" + Long ( deviceLimits.storageImageSampleCounts ).toString(2) +
+            ", sampledImageColorSampleCounts = "                    + :: flagsToString < Type ( SampleCountFlag ) > ( deviceLimits.sampledImageColorSampleCounts ) +
+            ", sampledImageIntegerSampleCounts = "                  + :: flagsToString < Type ( SampleCountFlag ) > ( deviceLimits.sampledImageIntegerSampleCounts ) +
+            ", sampledImageDepthSampleCounts = "                    + :: flagsToString < Type ( SampleCountFlag ) > ( deviceLimits.sampledImageDepthSampleCounts ) +
+            ", sampledImageStencilSampleCounts = "                  + :: flagsToString < Type ( SampleCountFlag ) > ( deviceLimits.sampledImageStencilSampleCounts ) +
+            ", storageImageSampleCounts = "                         + :: flagsToString < Type ( SampleCountFlag ) > ( deviceLimits.storageImageSampleCounts ) +
             ", maxSampleMaskWords = "                               + deviceLimits.maxSampleMaskWords +
             ", timestampComputeAndGraphics = "                      + ( deviceLimits.timestampComputeAndGraphics == VK_TRUE ? "true" : "false" ) +
             ", timestampPeriod = "                                  + deviceLimits.timestampPeriod +
@@ -2714,8 +2737,8 @@ auto vulkan :: toString (
             ", deviceNodeMask = "                       + properties.deviceNodeMask +
             ", deviceLUIDValid = "                      + ( properties.deviceLUIDValid == VK_TRUE ? "true" : "false" ) +
             ", subgroupSize = "                         + properties.subgroupSize +
-            ", subgroupSupportedStages = "              + "0b" + Long ( properties.subgroupSupportedStages ).toString(2) +
-            ", subgroupSupportedOperations = "          + "0b" + Long ( properties.subgroupSupportedOperations ).toString(2) +
+            ", subgroupSupportedStages = "              + :: flagsToString < Type ( ShaderStageFlag ) > ( properties.subgroupSupportedStages ) +
+            ", subgroupSupportedOperations = "          + :: flagsToString < Type ( SubgroupFeatureFlag ) > ( properties.subgroupSupportedOperations ) +
             ", subgroupQuadOperationsInAllStages = "    + ( properties.subgroupQuadOperationsInAllStages == VK_TRUE ? "true" : "false" ) +
             ", pointClippingBehavior = "                + toString ( properties.pointClippingBehavior ) +
             ", maxMultiviewViewCount = "                + properties.maxMultiviewViewCount +
@@ -2795,8 +2818,8 @@ auto vulkan :: toString (
             "{ type = "_s                               + toString ( properties.structureType ) +
             ", pNext = "                                + :: toString ( properties.pNext ) +
             ", subgroupSize = "                         + properties.subgroupSize +
-            ", supportedStages = "                      + "0b" + Long ( properties.supportedStages ).toString(2) +
-            ", supportedOperations = "                  + "0b" + Long ( properties.supportedOperations ).toString(2) +
+            ", supportedStages = "                      + :: flagsToString < Type ( ShaderStageFlag ) > ( properties.supportedStages ) +
+            ", supportedOperations = "                  + :: flagsToString < Type ( SubgroupFeatureFlag ) > ( properties.supportedOperations ) +
             ", quadOperationsInAllStages = "            + ( properties.quadOperationsInAllStages == VK_TRUE ? "true" : "false" ) +
             " }";
 }
@@ -2920,8 +2943,8 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceDepthStencilResolveProperties ) ) " "
             "{ type = "_s                       + toString ( properties.structureType ) +
             ", pNext = "                        + :: toString ( properties.pNext ) +
-            ", supportedDepthResolveModes = "   + "0b" + Long ( properties.supportedDepthResolveModes ).toString(2) +
-            ", supportedStencilResolveModes = " + "0b" + Long ( properties.supportedStencilResolveModes ).toString(2) +
+            ", supportedDepthResolveModes = "   + :: flagsToString < Type ( ResolveModeFlag ) > ( properties.supportedDepthResolveModes ) +
+            ", supportedStencilResolveModes = " + :: flagsToString < Type ( ResolveModeFlag ) > ( properties.supportedStencilResolveModes ) +
             ", independentResolveNone = "       + ( properties.independentResolveNone == VK_TRUE ? "true" : "false" ) +
             ", independentResolve = "           + ( properties.independentResolve == VK_TRUE ? "true" : "false" ) +
             " }";
@@ -2967,8 +2990,8 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceFloatControlsProperties ) ) " "
             "{ type = "_s                                   + toString ( properties.structureType ) +
             ", pNext = "                                    + :: toString ( properties.pNext ) +
-            ", denormBehaviorIndependence = "               + "0b" + Long ( properties.denormBehaviorIndependence ).toString(2) +
-            ", roundingModeIndependence = "                 + "0b" + Long ( properties.roundingModeIndependence ).toString(2) +
+            ", denormBehaviorIndependence = "               + toString ( properties.denormBehaviorIndependence ) +
+            ", roundingModeIndependence = "                 + toString ( properties.roundingModeIndependence ) +
             ", shaderSignedZeroInfNanPreserveFloat16 = "    + ( properties.shaderSignedZeroInfNanPreserveFloat16 == VK_TRUE ? "true" : "false" ) +
             ", shaderSignedZeroInfNanPreserveFloat32 = "    + ( properties.shaderSignedZeroInfNanPreserveFloat32 == VK_TRUE ? "true" : "false" ) +
             ", shaderSignedZeroInfNanPreserveFloat64 = "    + ( properties.shaderSignedZeroInfNanPreserveFloat64 == VK_TRUE ? "true" : "false" ) +
@@ -3124,7 +3147,7 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceCooperativeMatrixPropertiesNVidia ) ) " "
            "{ type = "_s                                        + toString ( properties.structureType ) +
            ", pNext = "                                         + :: toString ( properties.pNext ) +
-           ", cooperativeMatrixSupportedStages = "              + "0b" + Long ( properties.cooperativeMatrixSupportedStages ).toString(2) +
+           ", cooperativeMatrixSupportedStages = "              + :: flagsToString < Type ( ShaderStageFlag ) > ( properties.cooperativeMatrixSupportedStages ) +
            " }";
 }
 
@@ -3434,7 +3457,7 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PerformanceCounterDescription ) ) " "
            "{ type = "_s                            + toString ( properties.structureType ) +
            ", pNext = "                             + :: toString ( properties.pNext ) +
-           ", flags = "                             + "0b" + Long ( properties.flags ).toString(2) +
+           ", flags = "                             + :: flagsToString < Type ( PerformanceCounterDescriptionFlag ) > ( properties.flags ) +
            ", name = "                              + properties.name +
            ", category = "                          + properties.category +
            ", description = "                       + properties.description +
@@ -3605,7 +3628,7 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( PhysicalDeviceShaderCoreProperties2AMD ) ) " "
            "{ type = "_s                            + toString ( properties.structureType ) +
            ", pNext = "                             + :: toString ( properties.pNext ) +
-           ", shaderCoreFeatures = "                + "0b" + Long ( properties.shaderCoreFeatures ).toString(2) +
+           ", shaderCoreFeatures = "                + :: flagsToString ( properties.shaderCoreFeatures ) +
            ", activeComputeUnitCount = "            + properties.activeComputeUnitCount +
            " }";
 }
@@ -3657,7 +3680,7 @@ auto vulkan :: toString (
            ", minSubgroupSize = "                   + properties.minSubgroupSize +
            ", maxSubgroupSize = "                   + properties.maxSubgroupSize +
            ", maxComputeWorkgroupSubgroups = "      + properties.maxComputeWorkgroupSubgroups +
-           ", requiredSubgroupSizeStages = "        + "0b" + Long ( properties.requiredSubgroupSizeStages ).toString(2) +
+           ", requiredSubgroupSizeStages = "        + :: flagsToString < Type ( ShaderStageFlag ) > ( properties.requiredSubgroupSizeStages ) +
            " }";
 }
 
@@ -4525,7 +4548,7 @@ auto vulkan :: toString (
 ) noexcept -> String {
 
     return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( QueueFamilyProperties ) ) " "
-            "{ queueFlags = "_s                 + "0b" + Long ( properties.queueFlags ).toString(2) +
+            "{ queueFlags = "_s                 + :: flagsToString < Type ( QueueFlag ) > ( properties.queueFlags ) +
             ", queueCount = "                   + properties.queueCount +
             ", timestampValidBits = "           + properties.timestampValidBits +
             ", minImageTransferGranularity = "  + toString ( properties.minImageTransferGranularity ) +
@@ -4583,7 +4606,7 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( QueueFamilyCheckpointPropertiesNVidia ) ) " "
            "{ type = "_s                        + toString ( properties.structureType ) +
            ", pNext = "                         + :: toString ( properties.pNext ) +
-           ", checkpointExecutionStageMask = "  + "0b" + Long ( static_cast < uint64 > (properties.checkpointExecutionStageMask ) ).toString(2) +
+           ", checkpointExecutionStageMask = "  + :: flagsToString < Type ( PipelineStageFlag ) > ( properties.checkpointExecutionStageMask ) +
            " }";
 }
 
@@ -4655,7 +4678,7 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( VideoQueueFamilyProperties ) ) " "
             "{ type = "_s               + toString ( properties.structureType ) +
             ", pNext = "                + :: toString ( properties.pNext ) +
-            ", videoCodecOperations = " + "0b" + Long ( properties.videoCodecOperations ).toString(2) +
+            ", videoCodecOperations = " + :: flagsToString < Type ( VideoCodecOperationFlag ) > ( properties.videoCodecOperations ) +
             " }";
 }
 
@@ -4691,7 +4714,7 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( DeviceQueueCreateInfo ) ) " "
            "{ type = "_s                + toString ( info.structureType ) +
            ", pNext = "                 + :: toString ( info.pNext ) +
-           ", flags = "                 + "0b" + Long ( info.flags ).toString(2) +
+           ", flags = "                 + :: flagsToString ( info.flags ) +
            ", queueFamilyIndex = "      + info.queueFamilyIndex +
            ", queueCount = "            + info.queueCount +
            ", pQueuePriorities = "      + queuePrioritiesAsString +
@@ -4727,7 +4750,7 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( DeviceCreateInfo ) ) " "
            "{ type = "_s                    + toString ( info.structureType ) +
            ", pNext = "                     + :: toString ( info.pNext ) +
-           ", flags = "                     + "0b" + Long ( info.flags ).toString(2) +
+           ", flags = "                     + :: flagsToString ( info.flags ) +
            ", queueCreateInfoCount = "      + info.queueCreateInfoCount +
            ", pQueueCreateInfos = "         + queueCreateInfosAsString +
 
@@ -4847,7 +4870,7 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( DeviceDeviceMemoryReportCreateInfo ) ) " "
            "{ type = "_s                        + toString ( info.structureType ) +
            ", pNext = "                         + :: toString ( info.pNext ) +
-           ", flags = "                         + "0b" + Long ( info.flags ).toString (2) +
+           ", flags = "                         + :: flagsToString < Type ( DeviceMemoryReportFlag ) > ( info.flags ) +
            ", callback = "                      + :: toString ( info.callback ) +
            ", pUserData = "                     + :: toString ( info.pUserData ) +
            " }";
@@ -4878,7 +4901,7 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( DeviceDiagnosticsConfigCreateInfoNVidia ) ) " "
            "{ type = "_s                    + toString ( info.structureType ) +
            ", pNext = "                     + :: toString ( info.pNext ) +
-           ", flags = "                     + "0b" + Long ( info.flags ).toString(2) +
+           ", flags = "                     + :: flagsToString < Type ( DeviceDiagnosticsConfigFlagNVidia ) > ( info.flags ) +
            " }";
 }
 
@@ -6733,7 +6756,7 @@ auto vulkan :: toString (
            ", minSubgroupSize = "                                                               + properties.minSubgroupSize +
            ", maxSubgroupSize = "                                                               + properties.maxSubgroupSize +
            ", maxComputeWorkgroupSubgroups = "                                                  + properties.maxComputeWorkgroupSubgroups +
-           ", requiredSubgroupSizeStages = "                                                    + "0b" + Long ( properties.requiredSubgroupSizeStages ).toString(2) +
+           ", requiredSubgroupSizeStages = "                                                    + :: flagsToString < Type ( ShaderStageFlag ) > ( properties.requiredSubgroupSizeStages ) +
            ", maxInlineUniformBlockSize = "                                                     + properties.maxInlineUniformBlockSize +
            ", maxPerStageDescriptorInlineUniformBlocks = "                                      + properties.maxPerStageDescriptorInlineUniformBlocks +
            ", maxPerStageDescriptorUpdateAfterBindInlineUniformBlocks = "                       + properties.maxPerStageDescriptorUpdateAfterBindInlineUniformBlocks +
@@ -6814,7 +6837,7 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( __C_ENG_TYPE ( DeviceQueueInfo ) ) " "
             "{ type = "_s           + toString ( info.structureType ) +
             ", pNext = "            + :: toString ( info.pNext ) +
-            ", flags = "            + "0b" + Long ( info.flags ).toString(2) +
+            ", flags = "            + :: flagsToString < Type ( DeviceQueueCreateFlag ) > ( info.flags ) +
             ", queueFamilyIndex = " + info.queueFamilyIndex +
             ", queueIndex = "       + info.queueIndex +
             " }";
@@ -6951,10 +6974,10 @@ auto vulkan :: toString (
             ", minImageExtent = "           + toString ( capabilities.minImageExtent ) +
             ", maxImageExtent = "           + toString ( capabilities.maxImageExtent ) +
             ", maxImageArrayLayers = "      + toString ( capabilities.maxImageArrayLayers ) +
-            ", supportedTransforms = "      + "0b" + Long ( capabilities.supportedTransforms ).toString(2) +
+            ", supportedTransforms = "      + :: flagsToString < Type ( SurfaceTransformFlag ) > ( capabilities.supportedTransforms ) +
             ", currentTransform = "         + toString ( capabilities.currentTransform ) +
-            ", supportedCompositeAlpha = "  + "0b" + Long ( capabilities.supportedCompositeAlpha ).toString(2) +
-            ", supportedUsageFlags = "      + "0b" + Long ( capabilities.supportedUsageFlags ).toString(2) +
+            ", supportedCompositeAlpha = "  + :: flagsToString < Type ( CompositeAlphaFlag ) > ( capabilities.supportedCompositeAlpha ) +
+            ", supportedUsageFlags = "      + :: flagsToString < Type ( ImageUsageFlag ) > ( capabilities.supportedUsageFlags ) +
             " }";
 }
 
@@ -7037,11 +7060,11 @@ auto vulkan :: toString (
            ", minImageExtent = "           + toString ( capabilities.minImageExtent ) +
            ", maxImageExtent = "           + toString ( capabilities.maxImageExtent ) +
            ", maxImageArrayLayers = "      + toString ( capabilities.maxImageArrayLayers ) +
-           ", supportedTransforms = "      + "0b" + Long ( capabilities.supportedTransforms ).toString(2) +
+           ", supportedTransforms = "      + :: flagsToString < Type ( SurfaceTransformFlag ) > ( capabilities.supportedTransforms ) +
            ", currentTransform = "         + toString ( capabilities.currentTransform ) +
-           ", supportedCompositeAlpha = "  + "0b" + Long ( capabilities.supportedCompositeAlpha ).toString(2) +
-           ", supportedUsageFlags = "      + "0b" + Long ( capabilities.supportedUsageFlags ).toString(2) +
-           ", supportedSurfaceCounters = " + "0b" + Long ( capabilities.supportedSurfaceCounters ).toString(2) +
+           ", supportedCompositeAlpha = "  + :: flagsToString < Type ( CompositeAlphaFlag ) > ( capabilities.supportedCompositeAlpha ) +
+           ", supportedUsageFlags = "      + :: flagsToString < Type ( ImageUsageFlag ) > ( capabilities.supportedUsageFlags ) +
+           ", supportedSurfaceCounters = " + :: flagsToString < Type ( SurfaceCounterFlag ) > ( capabilities.supportedSurfaceCounters ) +
            " }";
 }
 
@@ -7445,13 +7468,13 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( Type ( SwapChainCreateInfo ) ) " "
             "{ structureType = "_s          + toString ( createInfo.structureType ) +
             ", pNext = "                    + :: toString ( createInfo.pNext ) +
-            ", flags = "                    + "0b" + Long ( createInfo.flags ).toString(2) +
+            ", flags = "                    + :: flagsToString < Type ( SwapChainCreateFlag ) > ( createInfo.flags ) +
             ", minImageCount = "            + createInfo.minImageCount +
             ", imageFormat = "              + toString ( createInfo.imageFormat ) +
             ", imageColorSpace = "          + toString ( createInfo.imageColorSpace ) +
             ", imageExtent = "              + toString ( createInfo.imageExtent ) +
             ", imageArrayLayers = "         + createInfo.imageArrayLayers +
-            ", imageUsage = "               + "0b" + Long ( createInfo.imageUsage ).toString(2) +
+            ", imageUsage = "               + :: flagsToString < Type ( ImageUsageFlag ) > ( createInfo.imageUsage ) +
             ", imageSharingMode = "         + toString ( createInfo.imageSharingMode ) +
             ", queueFamilyIndexCount = "    + createInfo.queueFamilyIndexCount +
             ", queueFamilyIndices = "       + indicesAsString ( createInfo.queueFamilyIndexCount, createInfo.pQueueFamilyIndices ) +
@@ -7626,7 +7649,7 @@ auto vulkan :: toString (
 ) noexcept -> String {
 
     return __C_ENG_STRINGIFY ( Type ( ImageSubresourceRange ) ) ""
-            "{ aspectMask = "_s     + "0b" + Long ( range.aspectMask ).toString(2) +
+            "{ aspectMask = "_s     + :: flagsToString < Type ( ImageAspectFlag ) > ( range.aspectMask ) +
             ", baseMipLevel = "     + range.baseMipLevel +
             ", levelCount = "       + range.levelCount +
             ", baseArrayLayer = "   + range.baseArrayLayer +
@@ -7641,7 +7664,7 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( Type ( ImageViewCreateInfo ) ) ""
             "{ structureType = "_s  + toString ( createInfo.structureType ) +
             ", pNext = "            + :: toString ( createInfo.pNext ) +
-            ", flags = "            + "0b" + Long ( createInfo.flags ).toString(2) +
+            ", flags = "            + :: flagsToString < Type ( ImageViewCreateFlag ) > ( createInfo.flags ) +
             ", image = "            + :: toString ( createInfo.image ) +
             ", viewType = "         + toString ( createInfo.viewType ) +
             ", format = "           + toString ( createInfo.format ) +
@@ -7661,7 +7684,7 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( Type ( ImageViewUsageCreateInfo ) ) ""
            "{ structureType = "_s  + toString ( createInfo.structureType ) +
            ", pNext = "            + :: toString ( createInfo.pNext ) +
-           ", usage = "            + "0b" + Long ( createInfo.usage ).toString(2) +
+           ", usage = "            + :: flagsToString < Type ( ImageUsageFlag ) > ( createInfo.usage ) +
            " }";
 }
 
@@ -7799,7 +7822,7 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( Type ( CommandPoolCreateInfo ) ) " "
             "{ structureType = "_s  + toString ( createInfo.structureType ) +
             ", pNext = "            + :: toString ( createInfo.pNext ) +
-            ", flags = "            + "0b" + Long ( createInfo.flags ).toString(2) +
+            ", flags = "            + :: flagsToString < Type ( CommandPoolCreateFlag ) > ( createInfo.flags ) +
             ", queueFamilyIndex = " + createInfo.queueFamilyIndex +
             " }";
 }
@@ -7824,7 +7847,7 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( Type ( CommandBufferBeginInfo ) ) " "
            "{ structureType = "_s      + toString ( beginInfo.structureType ) +
            ", pNext = "                + :: toString ( beginInfo.pNext ) +
-           ", flags = "                + "0b" + Long ( beginInfo.flags ).toString(2) +
+           ", flags = "                + :: flagsToString < Type ( CommandBufferUsageFlag ) > ( beginInfo.flags ) +
            ", pInheritanceInfo = "     + :: toString ( beginInfo.pInheritanceInfo ) +
            " }";
 }
@@ -7840,8 +7863,8 @@ auto vulkan :: toString (
            ", subpass = "              + inheritanceInfo.subpass +
            ", frameBuffer = "          + :: toString ( inheritanceInfo.frameBuffer ) +
            ", occlusionQueryEnable"    + ( inheritanceInfo.occlusionQueryEnable == VK_TRUE ? "true" : "false" ) +
-           ", queryFlags = "           + "0b" + Long ( inheritanceInfo.queryFlags ).toString(2) +
-           ", pipelineStatistics = "   + "0b" + Long ( inheritanceInfo.pipelineStatistics ).toString(2) +
+           ", queryFlags = "           + :: flagsToString < Type ( QueryControlFlag ) > ( inheritanceInfo.queryFlags ) +
+           ", pipelineStatistics = "   + :: flagsToString < Type ( QueryPipelineStatisticFlag ) > ( inheritanceInfo.pipelineStatistics ) +
            " }";
 }
 
@@ -7912,7 +7935,7 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( Type ( CommandBufferInheritanceRenderingInfo ) ) " "
            "{ structureType = "_s                  + toString ( info.structureType ) +
            ", pNext = "                            + :: toString ( info.pNext ) +
-           ", flags = "                            + "0b" + Long ( info.flags ).toString(2) +
+           ", flags = "                            + :: flagsToString < Type ( RenderingFlag ) > ( info.flags ) +
            ", viewMask = "                         + info.viewMask +
            ", colorAttachmentCount = "             + info.colorAttachmentCount +
            ", colorAttachments = "                 + formatsToString ( info.colorAttachmentCount, info.pColorAttachmentFormats ) +
@@ -8020,7 +8043,7 @@ auto vulkan :: toString (
             ", pNext = "                    + :: toString ( info.pNext ) +
             ", semaphore = "                + :: toString ( info.semaphore ) +
             ", value = "                    + info.value +
-            ", stageMask = "                + "0b" + Long ( static_cast < uint64 > ( info.stageMask ) ).toString(2) +
+            ", stageMask = "                + :: flagsToString < Type ( PipelineStageFlag ) > ( info.stageMask ) +
             ", deviceIndex = "              + info.deviceIndex +
             " }";
 }
@@ -8088,7 +8111,7 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( Type ( SubmitInfo2 ) ) " "
             "{ structureType = "_s          + toString ( info.structureType ) +
             ", pNext = "                    + engine :: toString ( info.pNext ) +
-            ", flags = "                    + "0b" + Long ( info.flags ).toString(2) +
+            ", flags = "                    + :: flagsToString < Type ( SubmitFlag ) > ( info.flags ) +
             ", waitSemaphoreInfoCount = "   + info.waitSemaphoreInfoCount +
             ", waitSemaphoreInfos = "       + :: toStringVulkan ( info.waitSemaphoreInfoCount, info.pWaitSemaphoreInfos ) +
             ", commandBufferInfoCount = "   + info.commandBufferInfoCount +
@@ -8372,7 +8395,7 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( Type ( FenceCreateInfo ) ) " "
             "{ structureType = "_s  + toString ( createInfo.structureType ) +
             ", pNext = "            + engine :: toString ( createInfo.pNext ) +
-            ", flags = "            + "0b" + Long ( createInfo.flags ).toString(2) +
+            ", flags = "            + :: flagsToString < Type ( FenceCreateFlag ) > ( createInfo.flags ) +
             " }";
 }
 
@@ -8403,7 +8426,7 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( Type ( ExportFenceCreateInfo ) ) " "
             "{ structureType = "_s  + toString ( createInfo.structureType ) +
             ", pNext = "            + engine :: toString ( createInfo.pNext ) +
-            ", handleTypes = "      + "0b" + Long ( createInfo.handleTypes ).toString(2) +
+            ", handleTypes = "      + :: flagsToString < Type ( ExternalFenceHandleTypeFlag ) > ( createInfo.handleTypes ) +
             " }";
 }
 
@@ -8467,7 +8490,7 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( Type ( DebugReportCreateInfo ) ) " "
            "{ structureType = "_s  + toString ( info.structureType ) +
            ", pNext = "            + engine :: toString ( info.pNext ) +
-           ", flags = "            + "0b" + Long ( info.flags ).toString(2) +
+           ", flags = "            + :: flagsToString < Type ( DebugReportFlag ) > ( info.flags ) +
            ", callback = "         + engine :: toString ( info.callback ) +
            ", pUserData = "        + engine :: toString ( info.pUserData ) +
            " }";
@@ -8576,7 +8599,7 @@ auto vulkan :: toString (
            "{ structureType = "_s               + toString ( info.structureType ) +
            ", pNext = "                         + engine :: toString ( info.pNext ) +
            ", fence = "                         + engine :: toString ( info.fence ) +
-           ", flags = "                         + "0b" + Long ( info.flags ).toString(2) +
+           ", flags = "                         + :: flagsToString < Type ( FenceImportFlag ) > ( info.flags ) +
            ", handleType = "                    + toString ( info.handleType ) +
            ", handle = "                        + engine :: toString ( info.handle ) +
            ", name = "                          + info.name +
@@ -8593,7 +8616,7 @@ auto vulkan :: toString (
            "{ structureType = "_s               + toString ( info.structureType ) +
            ", pNext = "                         + engine :: toString ( info.pNext ) +
            ", fence = "                         + engine :: toString ( info.fence ) +
-           ", flags = "                         + "0b" + Long ( info.flags ).toString(2) +
+           ", flags = "                         + :: flagsToString < Type ( FenceImportFlag ) > ( info.flags ) +
            ", handleType = "                    + toString ( info.handleType ) +
            ", fd = "                            + info.fd +
            " }";
@@ -8605,10 +8628,10 @@ auto vulkan :: toString (
         Type ( SemaphoreCreateInfo )    const & info
 ) noexcept -> String {
 
-    return __C_ENG_STRINGIFY ( Type ( ImportFenceFdInfo ) ) " "
+    return __C_ENG_STRINGIFY ( Type ( SemaphoreCreateInfo ) ) " "
            "{ structureType = "_s               + toString ( info.structureType ) +
            ", pNext = "                         + engine :: toString ( info.pNext ) +
-           ", flags = "                         + "0b" + Long ( info.flags ).toString(2) +
+           ", flags = "                         + :: flagsToString ( info.flags ) +
            " }";
 }
 #endif
@@ -8641,7 +8664,7 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( Type ( ExportSemaphoreCreateInfo ) ) " "
            "{ structureType = "_s               + toString ( info.structureType ) +
            ", pNext = "                         + engine :: toString ( info.pNext ) +
-           ", handleTypes = "                   + "0b" + Long ( info.handleTypes ).toString(2) +
+           ", handleTypes = "                   + :: flagsToString < Type ( ExternalSemaphoreHandleTypeFlag ) > ( info.handleTypes ) +
            " }";
 }
 #endif
@@ -8692,7 +8715,7 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( Type ( SemaphoreWaitInfo ) ) " "
            "{ structureType = "_s               + toString ( info.structureType ) +
            ", pNext = "                         + engine :: toString ( info.pNext ) +
-           ", flags = "                         + "0b" + Long ( info.flags ).toString(2) +
+           ", flags = "                         + :: flagsToString < Type ( SemaphoreWaitFlag ) > ( info.flags ) +
            ", semaphoreCount = "                + info.semaphoreCount +
            ", pSemaphores = "                   + :: toStringEngine ( info.semaphoreCount, info.pSemaphores ) +
            ", pValues = "                       + :: toStringRegular ( info.semaphoreCount, info.pValues ) +
@@ -8778,7 +8801,7 @@ auto vulkan :: toString (
            "{ structureType = "_s               + toString ( info.structureType ) +
            ", pNext = "                         + engine :: toString ( info.pNext ) +
            ", semaphore = "                     + engine :: toString ( info.semaphore ) +
-           ", flags = "                         + "0b" + Long ( info.flags ).toString(2) +
+           ", flags = "                         + :: flagsToString < Type ( SemaphoreImportFlag ) > ( info.flags ) +
            ", handleType = "                    + toString ( info.handleType ) +
            ", handle = "                        + engine :: toString ( info.handle ) +
            ", name = "                          + info.name +
@@ -8795,7 +8818,7 @@ auto vulkan :: toString (
            "{ structureType = "_s               + toString ( info.structureType ) +
            ", pNext = "                         + engine :: toString ( info.pNext ) +
            ", semaphore = "                     + engine :: toString ( info.semaphore ) +
-           ", flags = "                         + "0b" + Long ( info.flags ).toString(2) +
+           ", flags = "                         + :: flagsToString < Type ( SemaphoreImportFlag ) > ( info.flags ) +
            ", handleType = "                    + toString ( info.handleType ) +
            ", fd = "                            + info.fd +
            " }";
@@ -8811,7 +8834,7 @@ auto vulkan :: toString (
            "{ structureType = "_s               + toString ( info.structureType ) +
            ", pNext = "                         + engine :: toString ( info.pNext ) +
            ", semaphore = "                     + engine :: toString ( info.semaphore ) +
-           ", flags = "                         + "0b" + Long ( info.flags ).toString(2) +
+           ", flags = "                         + :: flagsToString < Type ( SemaphoreImportFlag ) > ( info.flags ) +
            ", handleType = "                    + toString ( info.handleType ) +
            ", zirconHandle = "                  + info.zirconHandle +
            " }";
@@ -8841,7 +8864,7 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( Type ( EventCreateInfo ) ) " "
            "{ structureType = "_s               + toString ( info.structureType ) +
            ", pNext = "                         + engine :: toString ( info.pNext ) +
-           ", flags = "                         + "0b" + Long ( info.flags ).toString(2) +
+           ", flags = "                         + :: flagsToString < Type ( EventCreateFlag ) > ( info.flags ) +
            " }";
 }
 #endif
@@ -8942,10 +8965,10 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( Type ( MemoryBarrier2 ) ) " "
            "{ structureType = "_s               + toString ( barrier.structureType ) +
            ", pNext = "                         + engine :: toString ( barrier.pNext ) +
-           ", sourceStageMask = "               + "0b" + Long ( static_cast < cds :: sint64 > ( barrier.sourceStageMask ) ).toString(2) +
-           ", sourceAccessMask = "              + "0b" + Long ( static_cast < cds :: sint64 > ( barrier.sourceAccessMask ) ).toString(2) +
-           ", destinationStageMask = "          + "0b" + Long ( static_cast < cds :: sint64 > ( barrier.destinationStageMask ) ).toString(2) +
-           ", destinationAccessMask = "         + "0b" + Long ( static_cast < cds :: sint64 > ( barrier.destinationAccessMask ) ).toString(2) +
+           ", sourceStageMask = "               + :: flagsToString < Type ( PipelineStageFlag ) > ( barrier.sourceStageMask ) +
+           ", sourceAccessMask = "              + :: flagsToString < Type ( AccessFlag ) > ( barrier.sourceAccessMask ) +
+           ", destinationStageMask = "          + :: flagsToString < Type ( PipelineStageFlag ) > ( barrier.destinationStageMask ) +
+           ", destinationAccessMask = "         + :: flagsToString < Type ( AccessFlag ) > ( barrier.destinationAccessMask ) +
            " }";
 }
 #endif
@@ -8958,10 +8981,10 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( Type ( BufferMemoryBarrier2 ) ) " "
            "{ structureType = "_s               + toString ( barrier.structureType ) +
            ", pNext = "                         + engine :: toString ( barrier.pNext ) +
-           ", sourceStageMask = "               + "0b" + Long ( static_cast < cds :: sint64 > ( barrier.sourceStageMask ) ).toString(2) +
-           ", sourceAccessMask = "              + "0b" + Long ( static_cast < cds :: sint64 > ( barrier.sourceAccessMask ) ).toString(2) +
-           ", destinationStageMask = "          + "0b" + Long ( static_cast < cds :: sint64 > ( barrier.destinationStageMask ) ).toString(2) +
-           ", destinationAccessMask = "         + "0b" + Long ( static_cast < cds :: sint64 > ( barrier.destinationAccessMask ) ).toString(2) +
+           ", sourceStageMask = "               + :: flagsToString < Type ( PipelineStageFlag ) > ( barrier.sourceStageMask ) +
+           ", sourceAccessMask = "              + :: flagsToString < Type ( AccessFlag ) > ( barrier.sourceAccessMask ) +
+           ", destinationStageMask = "          + :: flagsToString < Type ( PipelineStageFlag ) > ( barrier.destinationStageMask ) +
+           ", destinationAccessMask = "         + :: flagsToString < Type ( AccessFlag ) > ( barrier.destinationAccessMask ) +
            ", sourceQueueFamilyIndex = "        + barrier.sourceQueueFamilyIndex +
            ", destinationQueueFamilyIndex = "   + barrier.destinationQueueFamilyIndex +
            ", buffer = "                        + engine :: toString ( barrier.buffer ) +
@@ -8979,10 +9002,10 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( Type ( ImageMemoryBarrier2 ) ) " "
            "{ structureType = "_s               + toString ( barrier.structureType ) +
            ", pNext = "                         + engine :: toString ( barrier.pNext ) +
-           ", sourceStageMask = "               + "0b" + Long ( static_cast < cds :: sint64 > ( barrier.sourceStageMask ) ).toString(2) +
-           ", sourceAccessMask = "              + "0b" + Long ( static_cast < cds :: sint64 > ( barrier.sourceAccessMask ) ).toString(2) +
-           ", destinationStageMask = "          + "0b" + Long ( static_cast < cds :: sint64 > ( barrier.destinationStageMask ) ).toString(2) +
-           ", destinationAccessMask = "         + "0b" + Long ( static_cast < cds :: sint64 > ( barrier.destinationAccessMask ) ).toString(2) +
+           ", sourceStageMask = "               + :: flagsToString < Type ( PipelineStageFlag ) > ( barrier.sourceStageMask ) +
+           ", sourceAccessMask = "              + :: flagsToString < Type ( AccessFlag ) > ( barrier.sourceAccessMask ) +
+           ", destinationStageMask = "          + :: flagsToString < Type ( PipelineStageFlag ) > ( barrier.destinationStageMask ) +
+           ", destinationAccessMask = "         + :: flagsToString < Type ( AccessFlag ) > ( barrier.destinationAccessMask ) +
            ", oldLayout = "                     + toString ( barrier.oldLayout ) +
            ", newLayout = "                     + toString ( barrier.newLayout ) +
            ", sourceQueueFamilyIndex = "        + barrier.sourceQueueFamilyIndex +
@@ -9001,7 +9024,7 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( Type ( DependencyInfo ) ) " "
            "{ structureType = "_s               + toString ( barrier.structureType ) +
            ", pNext = "                         + engine :: toString ( barrier.pNext ) +
-           ", dependencyFlags = "               + "0b" + Long ( barrier.dependencyFlags ).toString(2) +
+           ", dependencyFlags = "               + :: flagsToString < Type ( DependencyFlag ) > ( barrier.dependencyFlags ) +
            ", memoryBarrierCount = "            + barrier.memoryBarrierCount +
            ", memoryBarriers = "                + :: toStringVulkan ( barrier.memoryBarrierCount, barrier.pMemoryBarriers ) +
            ", bufferMemoryBarrierCount = "      + barrier.bufferMemoryBarrierCount +
@@ -9048,8 +9071,8 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( Type ( MemoryBarrier ) ) " "
            "{ structureType = "_s               + toString ( barrier.structureType ) +
            ", pNext = "                         + engine :: toString ( barrier.pNext ) +
-           ", sourceAccessMask = "              + "0b" + Long ( static_cast < cds :: sint64 > ( barrier.sourceAccessMask ) ).toString(2) +
-           ", destinationAccessMask = "         + "0b" + Long ( static_cast < cds :: sint64 > ( barrier.destinationAccessMask ) ).toString(2) +
+           ", sourceAccessMask = "              + :: flagsToString < Type ( AccessFlag ) > ( barrier.sourceAccessMask ) +
+           ", destinationAccessMask = "         + :: flagsToString < Type ( AccessFlag ) > ( barrier.destinationAccessMask ) +
            " }";
 }
 #endif
@@ -9062,8 +9085,8 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( Type ( BufferMemoryBarrier ) ) " "
            "{ structureType = "_s               + toString ( barrier.structureType ) +
            ", pNext = "                         + engine :: toString ( barrier.pNext ) +
-           ", sourceAccessMask = "              + "0b" + Long ( static_cast < cds :: sint64 > ( barrier.sourceAccessMask ) ).toString(2) +
-           ", destinationAccessMask = "         + "0b" + Long ( static_cast < cds :: sint64 > ( barrier.destinationAccessMask ) ).toString(2) +
+           ", sourceAccessMask = "              + :: flagsToString < Type ( AccessFlag ) > ( barrier.sourceAccessMask ) +
+           ", destinationAccessMask = "         + :: flagsToString < Type ( AccessFlag ) > ( barrier.destinationAccessMask ) +
            ", sourceQueueFamilyIndex = "        + barrier.sourceQueueFamilyIndex +
            ", destinationQueueFamilyIndex = "   + barrier.destinationQueueFamilyIndex +
            ", buffer = "                        + engine :: toString ( barrier.buffer ) +
@@ -9081,8 +9104,8 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( Type ( ImageMemoryBarrier2 ) ) " "
            "{ structureType = "_s               + toString ( barrier.structureType ) +
            ", pNext = "                         + engine :: toString ( barrier.pNext ) +
-           ", sourceAccessMask = "              + "0b" + Long ( static_cast < cds :: sint64 > ( barrier.sourceAccessMask ) ).toString(2) +
-           ", destinationAccessMask = "         + "0b" + Long ( static_cast < cds :: sint64 > ( barrier.destinationAccessMask ) ).toString(2) +
+           ", sourceAccessMask = "              + :: flagsToString < Type ( AccessFlag ) > ( barrier.sourceAccessMask ) +
+           ", destinationAccessMask = "         + :: flagsToString < Type ( AccessFlag ) > ( barrier.destinationAccessMask ) +
            ", oldLayout = "                     + toString ( barrier.oldLayout ) +
            ", newLayout = "                     + toString ( barrier.newLayout ) +
            ", sourceQueueFamilyIndex = "        + barrier.sourceQueueFamilyIndex +
@@ -9243,7 +9266,7 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( Type ( RenderingInfo ) ) " " +
            "{ structureType = "_s               + toString ( info.structureType ) +
            ", pNext = "                         + engine :: toString ( info.pNext ) +
-           ", flags = "                         + "0b" + Long ( info.flags ).toString(2) +
+           ", flags = "                         + :: flagsToString < Type ( RenderingFlag ) > ( info.flags ) +
            ", renderArea = "                    + toString ( info.renderArea ) +
            ", layerCount = "                    + info.layerCount +
            ", viewMask = "                      + info.viewMask +
@@ -9388,7 +9411,7 @@ auto vulkan :: toString (
 ) noexcept -> String {
 
     return __C_ENG_STRINGIFY ( Type ( AttachmentDescription ) ) " " +
-           "{ flags = "_s                           + "0b" + Long ( description.flags ).toString(2) +
+           "{ flags = "_s                           + :: flagsToString < Type ( AttachmentDescriptionFlag ) > ( description.flags ) +
            ", format = "                            + toString ( description.format ) +
            ", samples = "                           + toString ( description.samples ) +
            ", loadOperation = "                     + toString ( description.loadOperation ) +
@@ -9419,7 +9442,7 @@ auto vulkan :: toString (
 ) noexcept -> String {
 
     return __C_ENG_STRINGIFY ( Type ( SubpassDescription ) ) " " +
-           "{ flags = "_s                           + "0b" + Long ( description.flags ).toString(2) +
+           "{ flags = "_s                           + :: flagsToString < Type ( SubpassDescriptionFlag ) > ( description.flags ) +
            ", pipelineBindPoint = "                 + toString ( description.pipelineBindPoint ) +
            ", inputAttachmentCount = "              + description.inputAttachmentCount +
            ", inputAttachments = "                  + :: toStringVulkan ( description.inputAttachmentCount, description.pInputAttachments ) +
@@ -9441,11 +9464,11 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( Type ( SubpassDependency ) ) " " +
            "{ sourceSubpass = "_s       + dependency.sourceSubpass +
            ", destinationSubpass = "    + dependency.destinationSubpass +
-           ", sourceStageMask = "       + "0b" + Long ( static_cast < cds :: uint64 > ( dependency.sourceStageMask ) ).toString(2) +
-           ", destinationStageMask = "  + "0b" + Long ( static_cast < cds :: uint64 > ( dependency.destinationStageMask ) ).toString(2) +
-           ", sourceAccessMask = "      + "0b" + Long ( static_cast < cds :: uint64 > ( dependency.sourceAccessMask ) ).toString(2) +
-           ", destinationAccessMask = " + "0b" + Long ( static_cast < cds :: uint64 > ( dependency.destinationAccessMask ) ).toString(2) +
-           ", dependencyFlags = "       + "0b" + Long ( static_cast < cds :: uint64 > ( dependency.dependencyFlags ) ).toString(2) +
+           ", sourceStageMask = "       + :: flagsToString < Type ( PipelineStageFlag ) > ( dependency.sourceStageMask ) +
+           ", destinationStageMask = "  + :: flagsToString < Type ( PipelineStageFlag ) > ( dependency.destinationStageMask ) +
+           ", sourceAccessMask = "      + :: flagsToString < Type ( AccessFlag ) > ( dependency.sourceAccessMask ) +
+           ", destinationAccessMask = " + :: flagsToString < Type ( AccessFlag ) > ( dependency.destinationAccessMask ) +
+           ", dependencyFlags = "       + :: flagsToString < Type ( DependencyFlag ) > ( dependency.dependencyFlags ) +
            " }";
 }
 #endif
@@ -9458,7 +9481,7 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( Type ( RenderPassCreateInfo ) ) " " +
            "{ structureType = "_s                   + toString ( info.structureType ) +
            ", pNext = "                             + engine :: toString ( info.pNext ) +
-           ", flags = "                             + "0b" + Long ( info.flags ).toString(2) +
+           ", flags = "                             + :: flagsToString < Type ( RenderPassCreateFlag ) > ( info.flags ) +
            ", attachmentCount = "                   + info.attachmentCount +
            ", attachments = "                       + :: toStringVulkan ( info.attachmentCount, info.pAttachments ) +
            ", subpassCount = "                      + info.subpassCount +
@@ -9504,7 +9527,7 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( Type ( InputAttachmentAspectReference ) ) " " +
            "{ subpass = "_s                     + reference.subpass +
            ", inputAttachmentIndex = "          + reference.inputAttachmentIndex +
-           ", aspectMask = "                    + "0b" + Long ( reference.aspectMask ).toString(2) +
+           ", aspectMask = "                    + :: flagsToString < Type ( ImageAspectFlag ) > ( reference.aspectMask ) +
            " }";
 }
 #endif
@@ -9535,7 +9558,7 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( Type ( AttachmentDescription2 ) ) " " +
            "{ structureType = "_s                   + toString ( description.structureType ) +
            ", pNext = "                             + engine :: toString ( description.pNext ) +
-           ", flags = "                             + "0b" + Long ( description.flags ).toString(2) +
+           ", flags = "                             + :: flagsToString < Type ( AttachmentDescriptionFlag ) > ( description.flags ) +
            ", format = "                            + toString ( description.format ) +
            ", samples = "                           + toString ( description.samples ) +
            ", loadOperation = "                     + toString ( description.loadOperation ) +
@@ -9585,7 +9608,7 @@ auto vulkan :: toString (
            ", pNext = "                             + engine :: toString ( reference.pNext ) +
            ", attachment = "                        + reference.attachment +
            ", layout = "                            + toString ( reference.layout ) +
-           ", aspectMask = "                        + "0b" + Long ( reference.aspectMask ).toString(2) +
+           ", aspectMask = "                        + :: flagsToString < Type ( ImageAspectFlag ) > ( reference.aspectMask ) +
            " }";
 }
 #endif
@@ -9598,7 +9621,7 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( Type ( SubpassDescription2 ) ) " " +
            "{ structureType = "_s                   + toString ( description.structureType ) +
            ", pNext = "                             + engine :: toString ( description.pNext ) +
-           ", flags = "                             + "0b" + Long ( description.flags ).toString(2) +
+           ", flags = "                             + :: flagsToString < Type ( SubpassDescriptionFlag ) > ( description.flags ) +
            ", pipelineBindPoint = "                 + toString ( description.pipelineBindPoint ) +
            ", viewMask = "                          + description.viewMask +
            ", inputAttachmentCount = "              + description.inputAttachmentCount +
@@ -9638,11 +9661,11 @@ auto vulkan :: toString (
            ", pNext = "                 + engine :: toString ( dependency.pNext ) +
            "{ sourceSubpass = "_s       + dependency.sourceSubpass +
            ", destinationSubpass = "    + dependency.destinationSubpass +
-           ", sourceStageMask = "       + "0b" + Long ( static_cast < cds :: uint64 > ( dependency.sourceStageMask ) ).toString(2) +
-           ", destinationStageMask = "  + "0b" + Long ( static_cast < cds :: uint64 > ( dependency.destinationStageMask ) ).toString(2) +
-           ", sourceAccessMask = "      + "0b" + Long ( static_cast < cds :: uint64 > ( dependency.sourceAccessMask ) ).toString(2) +
-           ", destinationAccessMask = " + "0b" + Long ( static_cast < cds :: uint64 > ( dependency.destinationAccessMask ) ).toString(2) +
-           ", dependencyFlags = "       + "0b" + Long ( static_cast < cds :: uint64 > ( dependency.dependencyFlags ) ).toString(2) +
+           ", sourceStageMask = "       + :: flagsToString < Type ( PipelineStageFlag ) > ( dependency.sourceStageMask ) +
+           ", destinationStageMask = "  + :: flagsToString < Type ( PipelineStageFlag ) > ( dependency.destinationStageMask ) +
+           ", sourceAccessMask = "      + :: flagsToString < Type ( AccessFlag ) > ( dependency.sourceAccessMask ) +
+           ", destinationAccessMask = " + :: flagsToString < Type ( AccessFlag ) > ( dependency.destinationAccessMask ) +
+           ", dependencyFlags = "       + :: flagsToString < Type ( DependencyFlag ) > ( dependency.dependencyFlags ) +
            ", viewOffset = "            + dependency.viewOffset +
            " }";
 }
@@ -9656,7 +9679,7 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( Type ( RenderPassCreateInfo2 ) ) " " +
            "{ structureType = "_s                   + toString ( info.structureType ) +
            ", pNext = "                             + engine :: toString ( info.pNext ) +
-           ", flags = "                             + "0b" + Long ( info.flags ).toString(2) +
+           ", flags = "                             + :: flagsToString < Type ( RenderPassCreateFlag ) > ( info.flags ) +
            ", attachmentCount = "                   + info.attachmentCount +
            ", attachments = "                       + :: toStringVulkan ( info.attachmentCount, info.pAttachments ) +
            ", subpassCount = "                      + info.subpassCount +
@@ -9753,7 +9776,7 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( Type ( FrameBufferCreateInfo ) ) " " +
            "{ structureType = "_s                   + toString ( info.structureType ) +
            ", pNext = "                             + engine :: toString ( info.pNext ) +
-           ", flags = "                             + "0b" + Long ( info.flags ).toString(2) +
+           ", flags = "                             + :: flagsToString < Type ( FrameBufferCreateFlag ) > ( info.flags ) +
            ", renderPass = "                        + engine :: toString ( info.renderPass ) +
            ", attachmentCount = "                   + info.attachmentCount +
            ", attachments = "                       + :: toStringEngine ( info.attachmentCount, info.pAttachments ) +
@@ -9772,7 +9795,7 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( Type ( FrameBufferAttachmentImageInfo ) ) " " +
            "{ structureType = "_s                   + toString ( info.structureType ) +
            ", pNext = "                             + engine :: toString ( info.pNext ) +
-           ", flags = "                             + "0b" + Long ( info.flags ).toString(2) +
+           ", flags = "                             + :: flagsToString < Type ( ImageCreateFlag ) > ( info.flags ) +
            ", usage = "                             + toString ( info.usage ) +
            ", width = "                             + info.width +
            ", height = "                            + info.height +
@@ -9944,7 +9967,7 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( Type ( ShaderModuleCreateInfo ) ) " " +
            "{ structureType = "_s                       + toString ( info.structureType ) +
            ", pNext = "                                 + engine :: toString ( info.pNext ) +
-           ", flags = "                                 + "0b" + Long ( info.flags ).toString(2) +
+           ", flags = "                                 + :: flagsToString ( info.flags ) +
            ", codeSize = "                              + info.codeSize +
            ", pCode = "                                 + engine :: toString ( info.pCode ) +
            " }";
@@ -10037,7 +10060,7 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( Type ( ValidationCacheCreateInfo ) ) " " +
            "{ structureType = "_s   + toString ( info.structureType ) +
            ", pNext = "             + engine :: toString ( info.pNext ) +
-           ", flags = "             + "0b" + Long ( info.flags ).toString(2) +
+           ", flags = "             + :: flagsToString ( info.flags ) +
            ", initialDataSize = "   + info.initialDataSize +
            ", pInitialData = "      + engine :: toString ( info.pInitialData ) +
            " }";
@@ -10164,7 +10187,7 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( Type ( PipelineShaderStageCreateInfo ) ) " " +
            "{ structureType = "_s       + toString ( info.structureType ) +
            ", pNext = "                 + engine :: toString ( info.pNext ) +
-           ", flags = "                 + "0b" + Long ( info.flags ).toString(2) +
+           ", flags = "                 + :: flagsToString < Type ( PipelineShaderStageCreateFlag ) > ( info.flags ) +
            ", stage = "                 + toString ( info.stage ) +
            ", module = "                + engine :: toString ( info.module ) +
            ", name = "                  + info.pName +
@@ -10181,7 +10204,7 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( Type ( ComputePipelineCreateInfo ) ) " " +
            "{ structureType = "_s       + toString ( info.structureType ) +
            ", pNext = "                 + engine :: toString ( info.pNext ) +
-           ", flags = "                 + "0b" + Long ( info.flags ).toString(2) +
+           ", flags = "                 + :: flagsToString ( info.flags ) +
            ", stage = "                 + toString ( info.stage ) +
            ", layout = "                + engine :: toString ( info.layout ) +
            ", basePipelineHandle = "    + engine :: toString ( info.basePipelineHandle ) +
@@ -10211,7 +10234,7 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( Type ( PipelineCompilerControlCreateInfoAMD ) ) " " +
            "{ structureType = "_s       + toString ( info.structureType ) +
            ", pNext = "                 + engine :: toString ( info.pNext ) +
-           ", compilerControlFlags = "  + "0b" + Long ( info.compilerControlFlags ).toString(2) +
+           ", compilerControlFlags = "  + :: flagsToString < Type ( PipelineCompilerControlFlagAMD ) > ( info.compilerControlFlags ) +
            " }";
 }
 #endif
@@ -10239,7 +10262,7 @@ auto vulkan :: toString (
 ) noexcept -> String {
 
     return __C_ENG_STRINGIFY ( Type ( PipelineCreationFeedback ) ) " " +
-           "{ flags = "_s   + "0b" + Long ( info.flags ).toString(2) +
+           "{ flags = "_s   + :: flagsToString < Type ( PipelineCreationFeedbackFlag ) > ( info.flags ) +
            ", duration = "  + info.duration +
            " }";
 }
@@ -10978,7 +11001,7 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( Type ( PipelineVertexInputStateCreateInfo ) ) " " +
            "{ structureType = "_s                   + toString ( info.structureType ) +
            ", pNext = "                             + engine :: toString ( info.pNext ) +
-           ", flags = "                             + "0b" + Long ( info.flags ).toString(2) +
+           ", flags = "                             + :: flagsToString ( info.flags ) +
            ", vertexBindingDescriptionCount = "     + info.vertexBindingDescriptionCount +
            ", VertexBindingDescriptions = "         + :: toStringVulkan ( info.vertexBindingDescriptionCount, info.pVertexBindingDescriptions ) +
            ", vertexAttributeDescriptionCount = "   + info.vertexAttributeDescriptionCount +
@@ -10995,7 +11018,7 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( Type ( PipelineInputAssemblyStateCreateInfo ) ) " " +
            "{ structureType = "_s                   + toString ( info.structureType ) +
            ", pNext = "                             + engine :: toString ( info.pNext ) +
-           ", flags = "                             + "0b" + Long ( info.flags ).toString(2) +
+           ", flags = "                             + :: flagsToString ( info.flags ) +
            ", topology = "                          + toString ( info.topology ) +
            ", primitiveRestartEnable = "            + ( info.primitiveRestartEnable == VK_TRUE ? "true" : "false" ) +
            " }";
@@ -11010,7 +11033,7 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( Type ( PipelineTessellationStateCreateInfo ) ) " " +
            "{ structureType = "_s                   + toString ( info.structureType ) +
            ", pNext = "                             + engine :: toString ( info.pNext ) +
-           ", flags = "                             + "0b" + Long ( info.flags ).toString(2) +
+           ", flags = "                             + :: flagsToString ( info.flags ) +
            ", patchControlPoints = "                + info.patchControlPoints +
            " }";
 }
@@ -11024,7 +11047,7 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( Type ( PipelineViewportStateCreateInfo ) ) " " +
            "{ structureType = "_s                   + toString ( info.structureType ) +
            ", pNext = "                             + engine :: toString ( info.pNext ) +
-           ", flags = "                             + "0b" + Long ( info.flags ).toString(2) +
+           ", flags = "                             + :: flagsToString ( info.flags ) +
            ", viewportCount = "                     + info.viewportCount +
            ", viewports = "                         + :: toStringVulkan ( info.viewportCount, info.pViewports ) +
            ", scissorCount = "                      + info.scissorCount +
@@ -11041,11 +11064,11 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( Type ( PipelineRasterizationStateCreateInfo ) ) " " +
            "{ structureType = "_s                   + toString ( info.structureType ) +
            ", pNext = "                             + engine :: toString ( info.pNext ) +
-           ", flags = "                             + "0b" + Long ( info.flags ).toString(2) +
+           ", flags = "                             + :: flagsToString ( info.flags ) +
            ", depthClampEnable = "                  + ( info.depthClampEnable == VK_TRUE ? "true" : "false" ) +
            ", rasterizerDiscardEnable = "           + ( info.rasterizerDiscardEnable == VK_TRUE ? "true" : "false" ) +
            ", polygonMode = "                       + toString ( info.polygonMode ) +
-           ", cullMode = "                          + "0b" + Long ( info.cullMode ).toString(2) +
+           ", cullMode = "                          + :: flagsToString < Type ( CullModeFlag ) > ( info.cullMode ) +
            ", frontFace = "                         + toString ( info.frontFace ) +
            ", depthBiasEnable = "                   + ( info.depthBiasEnable == VK_TRUE ? "true" : "false" ) +
            ", depthBiasConstantFactor = "           + info.depthBiasConstantFactor +
@@ -11064,7 +11087,7 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( Type ( PipelineMultisampleStateCreateInfo ) ) " " +
            "{ structureType = "_s                   + toString ( info.structureType ) +
            ", pNext = "                             + engine :: toString ( info.pNext ) +
-           ", flags = "                             + "0b" + Long ( info.flags ).toString(2) +
+           ", flags = "                             + :: flagsToString ( info.flags ) +
            ", rasterizationSamples = "              + toString ( info.rasterizationSamples ) +
            ", sampleShadingEnable = "               + ( info.sampleShadingEnable == VK_TRUE ? "true" : "false" ) +
            ", minSampleShading = "                  + info.minSampleShading +
@@ -11100,7 +11123,7 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( Type ( PipelineDepthStencilStateCreateInfo ) ) " " +
            "{ structureType = "_s                   + toString ( info.structureType ) +
            ", pNext = "                             + engine :: toString ( info.pNext ) +
-           ", flags = "                             + "0b" + Long ( info.flags ).toString(2) +
+           ", flags = "                             + :: flagsToString < Type ( PipelineDepthStencilStateCreateFlag ) > ( info.flags ) +
            ", depthTestEnable = "                   + ( info.depthTestEnable == VK_TRUE ? "true" : "false" ) +
            ", depthWriteEnable = "                  + ( info.depthWriteEnable == VK_TRUE ? "true" : "false" ) +
            ", depthCompareOperation = "             + toString ( info.depthCompareOperation ) +
@@ -11127,7 +11150,7 @@ auto vulkan :: toString (
            ", sourceAlphaBlendFactor = "          + toString ( info.sourceAlphaBlendFactor ) +
            ", destinationAlphaBlendFactor = "     + toString ( info.destinationAlphaBlendFactor ) +
            ", alphaBlendOperation = "             + toString ( info.alphaBlendOperation ) +
-           ", colorWriteMask = "                  + "0b" + Long ( info.colorWriteMask ).toString(2) +
+           ", colorWriteMask = "                  + :: flagsToString < Type ( ColorComponentFlag ) > ( info.colorWriteMask ) +
            " }";
 }
 #endif
@@ -11140,7 +11163,7 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( Type ( PipelineColorBlendStateCreateInfo ) ) " " +
            "{ structureType = "_s                   + toString ( info.structureType ) +
            ", pNext = "                             + engine :: toString ( info.pNext ) +
-           ", flags = "                             + "0b" + Long ( info.flags ).toString(2) +
+           ", flags = "                             + :: flagsToString < Type ( PipelineColorBlendStateCreateFlag ) > ( info.flags ) +
            ", logicOperationEnable = "              + ( info.logicOperationEnable == VK_TRUE ? "true" : "false" ) +
            ", logicOperation = "                    + toString ( info.logicOperation ) +
            ", attachmentCount = "                   + info.attachmentCount +
@@ -11158,7 +11181,7 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( Type ( PipelineDynamicStateCreateInfo ) ) " " +
            "{ structureType = "_s                   + toString ( info.structureType ) +
            ", pNext = "                             + engine :: toString ( info.pNext ) +
-           ", flags = "                             + "0b" + Long ( info.flags ).toString(2) +
+           ", flags = "                             + :: flagsToString ( info.flags ) +
            ", dynamicStateCount = "                 + info.dynamicStateCount +
            ", dynamicStates = "                     + :: toStringVulkan ( info.dynamicStateCount, info.pDynamicStates ) +
            " }";
@@ -11173,7 +11196,7 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( Type ( GraphicsPipelineCreateInfo ) ) " " +
            "{ structureType = "_s                   + toString ( info.structureType ) +
            ", pNext = "                             + engine :: toString ( info.pNext ) +
-           ", flags = "                             + "0b" + Long ( info.flags ).toString(2) +
+           ", flags = "                             + :: flagsToString < Type ( PipelineCreateFlag ) > ( info.flags ) +
            ", stageCount = "                        + info.stageCount +
            ", stages = "                            + :: toStringVulkan ( info.stageCount, info.pStages ) +
            ", pVertexInputState = "                 + engine :: toString ( info.pVertexInputState ) +
@@ -11257,7 +11280,7 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( Type ( PipelineDiscardRectangleStateCreateInfo ) ) " " +
            "{ structureType = "_s                   + toString ( info.structureType ) +
            ", pNext = "                             + engine :: toString ( info.pNext ) +
-           ", flags = "                             + "0b" + Long ( info.flags ).toString(2) +
+           ", flags = "                             + :: flagsToString ( info.flags ) +
            ", discardRectangleMode = "              + toString ( info.discardRectangleMode ) +
            ", discardRectangleCount = "             + info.discardRectangleCount +
            ", discardRectangles = "                 + :: toStringVulkan ( info.discardRectangleCount, info.pDiscardRectangles ) +
@@ -11455,7 +11478,7 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( Type ( PipelineViewportSwizzleStateCreateInfoNVidia ) ) " " +
            "{ structureType = "_s                   + toString ( info.structureType ) +
            ", pNext = "                             + engine :: toString ( info.pNext ) +
-           ", flags = "                             + "0b" + Long ( info.flags ).toString(2) +
+           ", flags = "                             + :: flagsToString ( info.flags ) +
            ", viewportCount = "                     + info.viewportCount +
            ", viewportSwizzles = "                  + :: toStringVulkan ( info.viewportCount, info.pViewportSwizzles ) +
            " }";
@@ -11468,8 +11491,8 @@ auto vulkan :: toString (
 ) noexcept -> String {
 
     return __C_ENG_STRINGIFY ( Type ( ViewportSwizzleNVidia ) ) " " +
-           "{ xCoefficient = "_s   + toString ( info.xCoefficient ) +
-           ", yCoefficient = "     + toString ( info.yCoefficient ) +
+           "{ xCoefficient = "_s   + info.xCoefficient +
+           ", yCoefficient = "     + info.yCoefficient +
            " }";
 }
 #endif
@@ -11497,7 +11520,7 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( Type ( PipelineRasterizationConservativeStateCreateInfo ) ) " " +
            "{ structureType = "_s                   + toString ( info.structureType ) +
            ", pNext = "                             + engine :: toString ( info.pNext ) +
-           ", flags = "                             + "0b" + Long ( info.flags ).toString(2) +
+           ", flags = "                             + :: flagsToString ( info.flags ) +
            ", conservativeRasterizationMode = "     + toString ( info.conservativeRasterizationMode ) +
            ", extraPrimitiveOverestimationSize = "  + info.extraPrimitiveOverestimationSize +
            " }";
@@ -11512,7 +11535,7 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( Type ( PipelineRasterizationDepthClipStateCreateInfo ) ) " " +
            "{ structureType = "_s                   + toString ( info.structureType ) +
            ", pNext = "                             + engine :: toString ( info.pNext ) +
-           ", flags = "                             + "0b" + Long ( info.flags ).toString(2) +
+           ", flags = "                             + :: flagsToString ( info.flags ) +
            ", depthClipEnable = "                   + ( info.depthClipEnable == VK_TRUE ? "true" : "false" ) +
            " }";
 }
@@ -11568,7 +11591,7 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( Type ( PipelineRasterizationStateStreamCreateInfo ) ) " " +
            "{ structureType = "_s                   + toString ( info.structureType ) +
            ", pNext = "                             + engine :: toString ( info.pNext ) +
-           ", flags = "                             + "0b" + Long ( info.flags ).toString(2) +
+           ", flags = "                             + :: flagsToString ( info.flags ) +
            ", rasterizationStream = "               + info.rasterizationStream +
            " }";
 }
@@ -11582,7 +11605,7 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( Type ( PipelineCoverageModulationStateCreateInfoNVidia ) ) " " +
            "{ structureType = "_s                   + toString ( info.structureType ) +
            ", pNext = "                             + engine :: toString ( info.pNext ) +
-           ", flags = "                             + "0b" + Long ( info.flags ).toString(2) +
+           ", flags = "                             + :: flagsToString ( info.flags ) +
            ", coverageModulationMode = "            + toString ( info.coverageModulationMode ) +
            ", coverageModulationTableEnable = "     + ( info.coverageModulationTableEnable == VK_TRUE ? "true" : "false" ) +
            ", coverageModulationTableCount = "      + info.coverageModulationTableCount +
@@ -11599,7 +11622,7 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( Type ( PipelineCoverageReductionStateCreateInfoNVidia ) ) " " +
            "{ structureType = "_s                   + toString ( info.structureType ) +
            ", pNext = "                             + engine :: toString ( info.pNext ) +
-           ", flags = "                             + "0b" + Long ( info.flags ).toString(2) +
+           ", flags = "                             + :: flagsToString ( info.flags ) +
            ", coverageReductionMode = "             + toString ( info.coverageReductionMode ) +
            " }";
 }
@@ -11613,7 +11636,7 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( Type ( PipelineCoverageToColorStateCreateInfoNVidia ) ) " " +
            "{ structureType = "_s                   + toString ( info.structureType ) +
            ", pNext = "                             + engine :: toString ( info.pNext ) +
-           ", flags = "                             + "0b" + Long ( info.flags ).toString(2) +
+           ", flags = "                             + :: flagsToString ( info.flags ) +
            ", coverageToColorEnable = "             + ( info.coverageToColorEnable == VK_TRUE ? "true" : "false" ) +
            ", coverageToColorLocation = "           + info.coverageToColorLocation +
            " }";
@@ -11723,7 +11746,7 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( Type ( RayTracingPipelineCreateInfoNVidia ) ) " " +
            "{ structureType = "_s                   + toString ( info.structureType ) +
            ", pNext = "                             + engine :: toString ( info.pNext ) +
-           ", flags = "                             + "0b" + Long ( info.flags ).toString(2) +
+           ", flags = "                             + :: flagsToString < Type ( PipelineCreateFlag ) > ( info.flags ) +
            ", stageCount = "                        + info.stageCount +
            ", stages = "                            + :: toStringVulkan ( info.stageCount, info.pStages ) +
            ", groupCount = "                        + info.groupCount +
@@ -11790,7 +11813,7 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( Type ( RayTracingPipelineCreateInfo ) ) " " +
            "{ structureType = "_s                   + toString ( info.structureType ) +
            ", pNext = "                             + engine :: toString ( info.pNext ) +
-           ", flags = "                             + "0b" + Long ( info.flags ).toString(2) +
+           ", flags = "                             + :: flagsToString < Type ( PipelineCreateFlag ) > ( info.flags ) +
            ", stageCount = "                        + info.stageCount +
            ", stages = "                            + :: toStringVulkan ( info.stageCount, info.pStages ) +
            ", groupCount = "                        + info.groupCount +
@@ -11846,7 +11869,7 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( Type ( PipelineCacheCreateInfo ) ) " " +
            "{ structureType = "_s                   + toString ( info.structureType ) +
            ", pNext = "                             + engine :: toString ( info.pNext ) +
-           ", flags = "                             + "0b" + Long ( info.flags ).toString(2) +
+           ", flags = "                             + :: flagsToString < Type ( PipelineCacheCreateFlag ) > ( info.flags ) +
            ", initialDataSize = "                   + info.initialDataSize +
            ", pInitialData = "                      + engine :: toString ( info.pInitialData ) +
            " }";
@@ -11889,7 +11912,7 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( Type ( PipelineExecutableProperties ) ) " " +
             "{ structureType = "_s                  + toString ( info.structureType ) +
             ", pNext = "                            + engine :: toString ( info.pNext ) +
-            ", stages = "                           + "0b" + Long ( info.stages ).toString(2) +
+            ", stages = "                           + :: flagsToString < Type ( ShaderStageFlag ) > ( info.stages ) +
             ", name = "                             + info.name +
             ", description = "                      + info.description +
             ", subgroupSize = "                     + info.subgroupSize +
@@ -12017,7 +12040,7 @@ auto vulkan :: toString (
 ) noexcept -> String {
 
     return __C_ENG_STRINGIFY ( Type ( ShaderStatisticsInfoAMD ) ) " " +
-           "{ shaderStageMask = "_s               + "0b" + Long ( info.shaderStageMask ).toString(2) +
+           "{ shaderStageMask = "_s               + :: flagsToString < Type ( ShaderStageFlag ) > ( info.shaderStageMask ) +
            ", resourceUsage = "                   + toString ( info.resourceUsage ) +
            ", numPhysicalVgrps = "                + info.numPhysicalVgrps +
            ", numPhysicalSgrps = "                + info.numPhysicalSgrps +
@@ -12081,7 +12104,7 @@ auto vulkan :: toString (
 ) noexcept -> String {
 
     return __C_ENG_STRINGIFY ( Type ( MemoryType ) ) " " +
-           "{ propertyFlags = "_s             + "0b" + Long ( info.propertyFlags ).toString(2) +
+           "{ propertyFlags = "_s             + :: flagsToString < Type ( MemoryPropertyFlag ) > ( info.propertyFlags ) +
            ", heapIndex = "                   + info.heapIndex +
            " }";
 }
@@ -12094,7 +12117,7 @@ auto vulkan :: toString (
 
     return __C_ENG_STRINGIFY ( Type ( MemoryHeap ) ) " " +
            "{ size = "_s                + toString ( info.size ) +
-           ", flags = "                 + "0b" + Long ( info.flags ).toString(2) +
+           ", flags = "                 + :: flagsToString < Type ( MemoryHeapFlag ) > ( info.flags ) +
            " }";
 }
 #endif
@@ -12251,7 +12274,7 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( Type ( ExportMemoryAllocateInfo ) ) " " +
            "{ structureType = "_s   + toString ( info.structureType ) +
            ", pNext = "             + engine :: toString ( info.pNext ) +
-           ", handleTypes = "       + "0b" + Long ( info.handleTypes ).toString(2) +
+           ", handleTypes = "       + :: flagsToString < Type ( ExternalMemoryHandleTypeFlag ) > ( info.handleTypes ) +
            " }";
 }
 #endif
@@ -12264,7 +12287,7 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( Type ( ExportMemoryAllocateInfoNVidia ) ) " " +
            "{ structureType = "_s   + toString ( info.structureType ) +
            ", pNext = "             + engine :: toString ( info.pNext ) +
-           ", handleTypes = "       + "0b" + Long ( info.handleTypes ).toString(2) +
+           ", handleTypes = "       + :: flagsToString < Type ( ExternalMemoryHandleTypeFlag ) > ( info.handleTypes ) +
            " }";
 }
 #endif
@@ -12361,7 +12384,7 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( Type ( ImportMemoryWin32HandleInfoNVidia ) ) " " +
            "{ structureType = "_s   + toString ( info.structureType ) +
            ", pNext = "             + engine :: toString ( info.pNext ) +
-           ", handleType = "        + "0b" + Long ( info.handleType ).toString(2) +
+           ", handleType = "        + :: flagsToString < Type ( ExternalMemoryHandleTypeFlag ) > ( info.handleTypes ) +
            ", handle = "            + engine :: toString ( info.handle ) +
            " }";
 }
@@ -12389,7 +12412,7 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( Type ( MemoryAllocateFlagsInfo ) ) " " +
            "{ structureType = "_s   + toString ( info.structureType ) +
            ", pNext = "             + engine :: toString ( info.pNext ) +
-           ", flags = "             + "0b" + Long ( info.flags ).toString(2) +
+           ", flags = "             + :: flagsToString < Type ( MemoryAllocateFlag ) > ( info.flags ) +
            ", deviceMask = "        + info.deviceMask +
            " }";
 }
@@ -12641,9 +12664,9 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( Type ( BufferCreateInfo ) ) " " +
            "{ structureType = "_s       + toString ( info.structureType ) +
            ", pNext = "                 + engine :: toString ( info.pNext ) +
-           ", flags = "                 + "0b" + Long ( info.flags ).toString(2) +
+           ", flags = "                 + :: flagsToString < Type ( BufferCreateFlag ) > ( info.flags ) +
            ", size = "                  + toString ( info.size ) +
-           ", usage = "                 + "0b" + Long ( info.usage ).toString(2) +
+           ", usage = "                 + :: flagsToString < Type ( BufferUsageFlag ) > ( info.usage ) +
            ", sharingMode = "           + toString ( info.sharingMode ) +
            ", queueFamilyIndexCount = " + info.queueFamilyIndexCount +
            ", queueFamilyIndices = "    + :: toStringRegular ( info.queueFamilyIndexCount, info.pQueueFamilyIndices ) +
@@ -12766,7 +12789,7 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( Type ( ExternalMemoryBufferCreateInfo ) ) " " +
            "{ structureType = "_s       + toString ( info.structureType ) +
            ", pNext = "                 + engine :: toString ( info.pNext ) +
-           ", handleTypes = "           + "0b" + Long ( info.handleTypes ).toString(2) +
+           ", handleTypes = "           + :: flagsToString < Type ( ExternalMemoryHandleTypeFlag ) > ( info.handleTypes ) +
            " }";
 }
 #endif
@@ -12833,9 +12856,9 @@ auto vulkan :: toString (
            "{ structureType = "_s       + toString ( info.structureType ) +
            ", pNext = "                 + engine :: toString ( info.pNext ) +
            ", videoCodecOperation = "   + toString ( info.videoCodecOperation ) +
-           ", chromaSubsampling = "     + "0b" + Long ( info.chromaSubsampling ).toString(2) +
-           ", lumaBitDepth = "          + "0b" + Long ( info.lumaBitDepth ).toString(2) +
-           ", chromaBitDepth = "        + "0b" + Long ( info.chromaBitDepth ).toString(2) +
+           ", chromaSubsampling = "     + :: flagsToString < Type ( VideoChromaSubsamplingFlag ) > ( info.chromaSubsampling ) +
+           ", lumaBitDepth = "          + :: flagsToString < Type ( VideoComponentBitDepthFlag ) > ( info.lumaBitDepth ) +
+           ", chromaBitDepth = "        + :: flagsToString < Type ( VideoComponentBitDepthFlag ) > ( info.chromaBitDepth ) +
            " }";
 }
 #endif
@@ -12862,7 +12885,7 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( Type ( BufferViewCreateInfo ) ) " " +
            "{ structureType = "_s       + toString ( info.structureType ) +
            ", pNext = "                 + engine :: toString ( info.pNext ) +
-           ", flags = "                 + "0b" + Long ( info.flags ).toString(2) +
+           ", flags = "                 + :: flagsToString ( info.flags ) +
            ", buffer = "                + engine :: toString ( info.buffer ) +
            ", format = "                + toString ( info.format ) +
            ", offset = "                + toString ( info.offset ) +
@@ -12915,7 +12938,7 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( Type ( ImageCreateInfo ) ) " " +
            "{ structureType = "_s       + toString ( info.structureType ) +
            ", pNext = "                 + engine :: toString ( info.pNext ) +
-           ", flags = "                 + "0b" + Long ( info.flags ).toString(2) +
+           ", flags = "                 + :: flagsToString < Type ( ImageCreateFlag ) > ( info.flags ) +
            ", imageType = "             + toString ( info.imageType ) +
            ", format = "                + toString ( info.format ) +
            ", extent = "                + toString ( info.extent ) +
@@ -12923,7 +12946,7 @@ auto vulkan :: toString (
            ", arrayLayers = "           + info.arrayLayers +
            ", samples = "               + toString ( info.samples ) +
            ", tiling = "                + toString ( info.tiling ) +
-           ", usage = "                 + "0b" + Long ( info.usage ).toString(2) +
+           ", usage = "                 + :: flagsToString < Type ( ImageUsageFlag ) > ( info.usage ) +
            ", sharingMode = "           + toString ( info.sharingMode ) +
            ", queueFamilyIndexCount = " + info.queueFamilyIndexCount +
            ", queueFamilyIndices = "    + :: toStringRegular ( info.queueFamilyIndexCount, info.pQueueFamilyIndices ) +
@@ -12980,7 +13003,7 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( Type ( ExternalMemoryImageCreateInfo ) ) " " +
            "{ structureType = "_s       + toString ( info.structureType ) +
            ", pNext = "                 + engine :: toString ( info.pNext ) +
-           ", handleTypes = "           + "0b" + Long ( info.handleTypes ).toString(2) +
+           ", handleTypes = "           + :: flagsToString < Type ( ExternalMemoryHandleTypeFlag ) > ( info.handleTypes ) +
            " }";
 }
 #endif
@@ -12993,7 +13016,7 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( Type ( ExternalMemoryImageCreateInfoNVidia ) ) " " +
            "{ structureType = "_s       + toString ( info.structureType ) +
            ", pNext = "                 + engine :: toString ( info.pNext ) +
-           ", handleTypes = "           + "0b" + Long ( info.handleTypes ).toString(2) +
+           ", handleTypes = "           + :: flagsToString < Type ( ExternalMemoryHandleTypeFlag ) > ( info.handleTypes ) +
            " }";
 }
 #endif
@@ -13050,7 +13073,7 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( Type ( ImageStencilUsageCreateInfo ) ) " " +
            "{ structureType = "_s               + toString ( info.structureType ) +
            ", pNext = "                         + engine :: toString ( info.pNext ) +
-           ", stencilUsage = "                  + "0b" + Long ( info.stencilUsage ).toString(2) +
+           ", stencilUsage = "                  + :: flagsToString < Type ( ImageUsageFlag ) > ( info.stencilUsage ) +
            " }";
 }
 #endif
@@ -13074,7 +13097,7 @@ auto vulkan :: toString (
 ) noexcept -> String {
 
     return __C_ENG_STRINGIFY ( Type ( ImageSubresource ) ) " " +
-           "{ aspectMask = "_s  + "0b" + Long ( info.aspectMask ).toString(2) +
+           "{ aspectMask = "_s  + :: flagsToString < Type ( ImageAspectFlag ) > ( info.aspectMask ) +
            ", mipLevel = "      + info.mipLevel +
            ", arrayLayer = "    + info.arrayLayer +
            " }";
@@ -13329,7 +13352,7 @@ auto vulkan :: toString (
            ", pNext = "                         + engine :: toString ( info.pNext ) +
            ", geometryType = "                  + toString ( info.geometryType ) +
            ", geometry = "                      + toString ( info.geometry ) +
-           ", flags = "                         + "0b" + Long ( info.flags ).toString(2) +
+           ", flags = "                         + :: flagsToString < Type ( GeometryFlagNVidia ) > ( info.flags ) +
            " }";
 }
 #endif
@@ -13343,7 +13366,7 @@ auto vulkan :: toString (
            "{ structureType = "_s               + toString ( info.structureType ) +
            ", pNext = "                         + engine :: toString ( info.pNext ) +
            ", type = "                          + toString ( info.type ) +
-           ", flags = "                         + "0b" + Long ( info.flags ).toString(2) +
+           ", flags = "                         + :: flagsToString < Type ( BuildAccelerationStructureFlagNVidia ) > ( info.flags ) +
            ", instanceCount = "                 + info.instanceCount +
            ", geometryCount = "                 + info.geometryCount +
            ", geometries = "                    + :: toStringVulkan ( info.geometryCount, info.pGeometries ) +
@@ -13424,7 +13447,7 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( Type ( AccelerationStructureCreateInfo ) ) " " +
            "{ structureType = "_s               + toString ( info.structureType ) +
            ", pNext = "                         + engine :: toString ( info.pNext ) +
-           ", flags = "                         + "0b" + Long ( info.flags ).toString(2) +
+           ", flags = "                         + :: flagsToString < Type ( AccelerationStructureCreateFlag ) > ( info.flags ) +
            ", buffer = "                        + engine :: toString ( info.buffer ) +
            ", offset = "                        + engine :: toString ( info.offset ) +
            ", size = "                          + engine :: toString ( info.size ) +
@@ -13443,7 +13466,7 @@ auto vulkan :: toString (
            "{ structureType = "_s               + toString ( info.structureType ) +
            ", pNext = "                         + engine :: toString ( info.pNext ) +
            ", maxInstances = "                  + info.maxInstances +
-           ", flags = "                         + "0b" + Long ( info.flags ).toString(2) +
+           ", flags = "                         + :: flagsToString ( info.flags )  +
            " }";
 }
 #endif
@@ -13552,7 +13575,7 @@ auto vulkan :: toString (
            ", pNext = "                         + engine :: toString ( info.pNext ) +
            ", geometryType = "                  + toString ( info.geometryType ) +
            ", geometry = "                      + toString ( info.geometry ) +
-           ", flags = "                         + "0b" + Long ( info.flags ).toString(2) +
+           ", flags = "                         + :: flagsToString < Type ( GeometryFlag ) > ( info.flags ) +
            " }";
 }
 #endif
@@ -13566,7 +13589,7 @@ auto vulkan :: toString (
            "{ structureType = "_s               + toString ( info.structureType ) +
            ", pNext = "                         + engine :: toString ( info.pNext ) +
            ", type = "                          + toString ( info.type ) +
-           ", flags = "                         + "0b" + Long ( info.flags ).toString(2) +
+           ", flags = "                         + :: flagsToString < Type ( BuildAccelerationStructureFlag ) > ( info.flags ) +
            ", mode = "                          + toString ( info.mode ) +
            ", source = "                        + engine :: toString ( info.source ) +
            ", destination = "                   + engine :: toString ( info.destination ) +
@@ -13830,7 +13853,7 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( Type ( SamplerCreateInfo ) ) " " +
            "{ structureType = "_s           + toString ( info.structureType ) +
            ", pNext = "                     + engine :: toString ( info.pNext ) +
-           ", flags = "                     + "0b" + Long ( info.flags ).toString(2) +
+           ", flags = "                     + :: flagsToString < Type ( SamplerCreateFlag ) > ( info.flags ) +
            ", magFilter = "                 + toString ( info.magFilter ) +
            ", minFilter = "                 + toString ( info.minFilter ) +
            ", mipmapMode = "                + toString ( info.mipmapMode ) +
@@ -14049,7 +14072,7 @@ auto vulkan :: toString (
            "{ binding = "_s             + info.binding +
            ", descriptorType = "        + engine :: toString ( info.descriptorType ) +
            ", descriptorCount = "       + info.descriptorCount +
-           ", stageFlags = "            + "0b" + Long ( info.stageFlags ).toString(2) +
+           ", stageFlags = "            + :: flagsToString < Type ( ShaderStageFlag ) > ( info.stageFlags ) +
            ", pImmutableSamplers = "    + engine :: toString ( info.pImmutableSamplers ) +
            " }";
 }
@@ -14063,7 +14086,7 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( Type ( DescriptorSetLayoutCreateInfo ) ) " " +
            "{ structureType = "_s               + toString ( info.structureType ) +
            ", pNext = "                         + engine :: toString ( info.pNext ) +
-           ", flags = "                         + "0b" + Long ( info.flags ).toString(2) +
+           ", flags = "                         + :: flagsToString < Type ( DescriptorSetLayoutCreateFlag ) > ( info.flags ) +
            ", bindingCount = "                  + info.bindingCount +
            ", bindings = "                      + :: toStringVulkan ( info.bindingCount, info.pBindings ) +
            " }";
@@ -14142,7 +14165,7 @@ auto vulkan :: toString (
 ) noexcept -> String {
 
     return __C_ENG_STRINGIFY ( Type ( PushConstantRange ) ) " " +
-           "{ stageFlags = "_s  + "0b" + Long ( info.stageFlags ).toString(2) +
+           "{ stageFlags = "_s  + :: flagsToString < Type ( ShaderStageFlag ) > ( info.stageFlags ) +
            ", offset = "        + info.offset +
            ", size = "          + info.size +
            " }";
@@ -14157,7 +14180,7 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( Type ( PipelineLayoutCreateInfo ) ) " " +
            "{ structureType = "_s                   + toString ( info.structureType ) +
            ", pNext = "                             + engine :: toString ( info.pNext ) +
-           ", flags = "                             + "0b" + Long ( info.flags ).toString(2) +
+           ", flags = "                             + :: flagsToString ( info.flags ) +
            ", setLayoutCount = "                    + info.setLayoutCount +
            ", setLayouts = "                        + :: toStringEngine ( info.setLayoutCount, info.pSetLayouts ) +
            ", pushConstantRangeCount = "            + info.pushConstantRangeCount +
@@ -14195,7 +14218,7 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( Type ( DescriptorPoolCreateInfo ) ) " " +
            "{ structureType = "_s                   + toString ( info.structureType ) +
            ", pNext = "                             + engine :: toString ( info.pNext ) +
-           ", flags = "                             + "0b" + Long ( info.flags ).toString(2) +
+           ", flags = "                             + :: flagsToString < Type ( DescriptorPoolCreateFlag ) > ( info.flags ) +
            ", maxSets = "                           + info.maxSets +
            ", poolSizeCount = "                     + info.poolSizeCount +
            ", poolSizes = "                         + :: toStringVulkan ( info.poolSizeCount, info.pPoolSizes ) +
@@ -14406,7 +14429,7 @@ auto vulkan :: toString (
     return __C_ENG_STRINGIFY ( Type ( DescriptorUpdateTemplateCreateInfo ) ) " " +
            "{ structureType = "_s                   + toString ( info.structureType ) +
            ", pNext = "                             + engine :: toString ( info.pNext ) +
-           ", flags = "                             + "0b" + Long ( info.flags ).toString(2) +
+           ", flags = "                             + :: flagsToString ( info.flags ) +
            ", descriptorUpdateEntryCount = "        + info.descriptorUpdateEntryCount +
            ", descriptorUpdateEntries = "           + :: toStringVulkan ( info.descriptorUpdateEntryCount, info.pDescriptorUpdateEntries ) +
            ", templateType = "                      + toString ( info.templateType ) +
@@ -14427,6 +14450,395 @@ auto vulkan :: toString (
            "{ structureType = "_s                   + toString ( info.structureType ) +
            ", pNext = "                             + engine :: toString ( info.pNext ) +
            ", buffer = "                            + engine :: toString ( info.buffer ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( QueryType )  type
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( type ) {
+        case QueryTypeOcclusion:                                { asString = "Occlusion";      break; }
+        case QueryTypePipelineStatistics:                       { asString = "Pipeline Statistics";      break; }
+        case QueryTypeTimestamp:                                { asString = "Timestamp";      break; }
+#if __C_ENG_VULKAN_BETA_EXTENSIONS_ENABLED && __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_QUEUE_AVAILABLE
+        case QueryTypeResultStatusOnly:                         { asString = "Result Status Only";      break; }
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_TRANSFORM_FEEDBACK_AVAILABLE
+        case QueryTypeTransformFeedbackStream:                  { asString = "Transform Feedback Stream";      break; }
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PERFORMANCE_QUERY_AVAILABLE
+        case QueryTypePerformanceQuery:                         { asString = "Performance Query";      break; }
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_ACCELERATION_STRUCTURE_AVAILABLE
+        case QueryTypeAccelerationStructureCompactedSize:       { asString = "Acceleration Structure Compacted Size";      break; }
+        case QueryTypeAccelerationStructureSerializationSize:   { asString = "Acceleration Structure Serialization Size";      break; }
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_RAY_TRACING_AVAILABLE
+        case QueryTypeAccelerationStructureCompactedSizeNVidia: { asString = "Acceleration Structure Compacted Size NVidia";      break; }
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_INTEL_PERFORMANCE_QUERY_AVAILABLE
+        case QueryTypePerformanceQueryIntel:                    { asString = "PerformanceQueryIntel";      break; }
+#endif
+#if __C_ENG_VULKAN_BETA_EXTENSIONS_ENABLED && __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_ENCODE_QUEUE_AVAILABLE
+        case QueryTypeVideoEncodeBitstreamBufferRange:          { asString = "Video Encode Bitstream Buffer Range";      break; }
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_PRIMITIVES_GENERATED_QUERY_AVAILABLE
+        case QueryTypePrimitivesGenerated:                      { asString = "Primitives Generated";      break; }
+#endif
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( QueryPoolCreateInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( QueryPoolCreateInfo ) ) " " +
+           "{ structureType = "_s                   + toString ( info.structureType ) +
+           ", pNext = "                             + engine :: toString ( info.pNext ) +
+           ", flags = "                             + :: flagsToString ( info.flags ) +
+           ", queryType = "                         + toString ( info.queryType ) +
+           ", queryCount = "                        + info.queryCount +
+           ", pipelineStatistics = "                + :: flagsToString < Type ( QueryPipelineStatisticFlag ) > ( info.pipelineStatistics ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_INTEL_PERFORMANCE_QUERY_AVAILABLE
+auto vulkan :: toString (
+        Type ( QueryPoolSamplingModeIntel )  type
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( type ) {
+        case QueryPoolSamplingModeIntelManual:  { asString = "Manual";  break; }
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PERFORMANCE_QUERY_AVAILABLE
+auto vulkan :: toString (
+        Type ( QueryPoolPerformanceCreateInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( QueryPoolPerformanceCreateInfo ) ) " " +
+           "{ structureType = "_s                   + toString ( info.structureType ) +
+           ", pNext = "                             + engine :: toString ( info.pNext ) +
+           ", queueFamilyIndex = "                  + info.queueFamilyIndex +
+           ", counterIndexCount = "                 + info.counterIndexCount +
+           ", counterIndices = "                    + :: toStringRegular ( info.counterIndexCount, info.pCounterIndices ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_INTEL_PERFORMANCE_QUERY_AVAILABLE
+auto vulkan :: toString (
+        Type ( QueryPoolPerformanceCreateInfoIntel ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( QueryPoolPerformanceCreateInfoIntel ) ) " " +
+           "{ structureType = "_s                   + toString ( info.structureType ) +
+           ", pNext = "                             + engine :: toString ( info.pNext ) +
+           ", performanceCountersSampling = "       + toString ( info.performanceCountersSampling ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( QueryResultFlag )  flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case QueryResultFlag64:                 { asString = "64";                  break; }
+        case QueryResultFlagWait:               { asString = "Wait";                break; }
+        case QueryResultFlagWithAvailability:   { asString = "With Availability";   break; }
+        case QueryResultFlagPartial:            { asString = "Partial";             break; }
+        case QueryResultFlagWithStatus:         { asString = "With Status";         break; }
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_QUEUE_AVAILABLE
+auto vulkan :: toString (
+        Type ( QueryResultStatus )  flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case QueryResultStatusError:      { asString = "Error";      break; }
+        case QueryResultStatusNotReady:   { asString = "Not Ready";  break; }
+        case QueryResultStatusComplete:   { asString = "Complete";   break; }
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( PipelineDepthStencilStateCreateFlag )  flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+#if __C_ENG_VULKAN_API_EXTENSION_ARM_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_AVAILABLE
+        case PipelineDepthStencilStateCreateFlagRasterizationOrderAttachmentDepthAccess:    { asString = "Rasterization Order Attachment Depth Access";     break; }
+        case PipelineDepthStencilStateCreateFlagRasterizationOrderAttachmentStencilAccess:  { asString = "Rasterization Order Attachment Stencil Access";   break; }
+#endif
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( ImageUsageFlag )  flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case ImageUsageFlagTransferSource:                  { asString = "Transfer Source";                     break; }
+        case ImageUsageFlagTransferDestination:             { asString = "Transfer Destination";                break; }
+        case ImageUsageFlagSampled:                         { asString = "Sampled";                             break; }
+        case ImageUsageFlagStorage:                         { asString = "Storage";                             break; }
+        case ImageUsageFlagColorAttachment:                 { asString = "Color Attachment";                    break; }
+        case ImageUsageFlagDepthStencilAttachment:          { asString = "Depth Stencil Attachment";            break; }
+        case ImageUsageFlagTransientAttachment:             { asString = "Transient Attachment";                break; }
+        case ImageUsageFlagInputAttachment:                 { asString = "Input Attachment";                    break; }
+#if __C_ENG_VULKAN_BETA_EXTENSIONS_ENABLED && __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_DECODE_QUEUE_AVAILABLE
+        case ImageUsageFlagVideoDecodeDestination:          { asString = "Video Decode Destination";            break; }
+        case ImageUsageFlagVideoDecodeSource:               { asString = "Video Decode Source";                 break; }
+        case ImageUsageFlagVideoDecodeDPB:                  { asString = "Video Decode DPB";                    break; }
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_FRAGMENT_DENSITY_MAP_AVAILABLE
+        case ImageUsageFlagFragmentDensityMap:              { asString = "Fragment Density Map";                break; }
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_FRAGMENT_SHADING_RATE_AVAILABLE
+        case ImageUsageFlagFragmentShadingRateAttachment:   { asString = "Fragment Shading Rate Attachment";    break; }
+#endif
+#if __C_ENG_VULKAN_BETA_EXTENSIONS_ENABLED && __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_ENCODE_QUEUE_AVAILABLE
+        case ImageUsageFlagVideoEncodeDestination:          { asString = "Video Encode Destination";            break; }
+        case ImageUsageFlagVideoEncodeSource:               { asString = "Video Encode Source";                 break; }
+        case ImageUsageFlagVideoEncodeDPB:                  { asString = "Video Encode DPB";                    break; }
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_HUAWEI_INVOCATION_MASK_AVAILABLE
+        case ImageUsageFlagInvocationMaskHuawei:            { asString = "Invocation Mask Huawei";              break; }
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_NVIDIA_SHADING_RATE_IMAGE_AVAILABLE && ! __C_ENG_VULKAN_API_EXTENSION_KHRONOS_FRAGMENT_SHADING_RATE_AVAILABLE
+        case ImageUsageFlagShadingRateImageNVidia:          { asString = "Shading Rate Image NVidia";           break; }
+#endif
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PERFORMANCE_QUERY_AVAILABLE
+auto vulkan :: toString (
+        Type ( AcquireProfilingLockInfo ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( AcquireProfilingLockInfo ) ) " " +
+           "{ structureType = "_s                   + toString ( info.structureType ) +
+           ", pNext = "                             + engine :: toString ( info.pNext ) +
+           ", flags = "                             + :: flagsToString ( info.flags ) +
+           ", timeout = "                           + info.timeout +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_INTEL_PERFORMANCE_QUERY_AVAILABLE
+auto vulkan :: toString (
+        Type ( InitializePerformanceAPIInfoIntel ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( InitializePerformanceAPIInfoIntel ) ) " " +
+           "{ structureType = "_s                   + toString ( info.structureType ) +
+           ", pNext = "                             + engine :: toString ( info.pNext ) +
+           ", pUserData = "                         + engine :: toString ( info.pUserData ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_INTEL_PERFORMANCE_QUERY_AVAILABLE
+auto vulkan :: toString (
+        Type ( PerformanceParameterTypeIntel )  flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case PerformanceParameterTypeIntelHardwareCounterSupported: { asString = "Hardware Counter Supported";  break; }
+        case PerformanceParameterTypeIntelStreamMarkerValidBits:    { asString = "Stream Marker Valid Bits";    break; }
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_INTEL_PERFORMANCE_QUERY_AVAILABLE
+auto vulkan :: toString (
+        Type ( PerformanceValueTypeIntel )  flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case PerformanceValueTypeIntelUInt32:   { asString = "UInt32";  break; }
+        case PerformanceValueTypeIntelUInt64:   { asString = "UInt64";  break; }
+        case PerformanceValueTypeIntelFloat:    { asString = "Float";   break; }
+        case PerformanceValueTypeIntelBool:     { asString = "Bool";    break; }
+        case PerformanceValueTypeIntelString:   { asString = "String";  break; }
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_INTEL_PERFORMANCE_QUERY_AVAILABLE
+auto vulkan :: toString (
+        Type ( PerformanceOverrideTypeIntel )  flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case PerformanceOverrideTypeIntelNullHardware:       { asString = "Null Hardware";       break; }
+        case PerformanceOverrideTypeIntelFlushGPUCaches:     { asString = "Flush GPU Caches";    break; }
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_INTEL_PERFORMANCE_QUERY_AVAILABLE
+auto vulkan :: toString (
+        Type ( PerformanceConfigurationTypeIntel )  flag
+) noexcept -> StringLiteral {
+
+    StringLiteral asString = "";
+
+    switch ( flag ) {
+        case PerformanceConfigurationTypeIntelCommandQueueMetricsDiscoveryActivated:       { asString = "Command Queue Metrics Discovery Activated";       break; }
+    }
+
+    return asString;
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_INTEL_PERFORMANCE_QUERY_AVAILABLE
+auto vulkan :: toString (
+        Type ( PerformanceValueDataIntel ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( PerformanceValueDataIntel ) );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_INTEL_PERFORMANCE_QUERY_AVAILABLE
+auto vulkan :: toString (
+        Type ( PerformanceValueIntel ) const & info
+) noexcept -> String {
+
+    String asString = __C_ENG_STRINGIFY ( Type ( PerformanceValueIntel ) ) " " +
+           "{ type = "_s    + toString ( info.type ) +
+           ", value = ";
+
+    switch ( info.type ) {
+        case PerformanceValueTypeIntelUInt32:   { asString += info.data.value32;                                    break; }
+        case PerformanceValueTypeIntelUInt64:   { asString += info.data.value64;                                    break; }
+        case PerformanceValueTypeIntelFloat:    { asString += info.data.valueFloat;                                 break; }
+        case PerformanceValueTypeIntelBool:     { asString += (info.data.valueBool == VK_TRUE ? "true" : "false");  break; }
+        case PerformanceValueTypeIntelString:   { asString += info.data.valueString;                                break; }
+    }
+
+    return asString + " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_INTEL_PERFORMANCE_QUERY_AVAILABLE
+auto vulkan :: toString (
+        Type ( PerformanceMarkerInfoIntel ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( PerformanceMarkerInfoIntel ) ) " " +
+           "{ structureType = "_s                   + toString ( info.structureType ) +
+           ", pNext = "                             + engine :: toString ( info.pNext ) +
+           ", marker = "                            + engine :: toString ( info.marker ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_INTEL_PERFORMANCE_QUERY_AVAILABLE
+auto vulkan :: toString (
+        Type ( PerformanceStreamMarkerInfoIntel ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( PerformanceStreamMarkerInfoIntel ) ) " " +
+           "{ structureType = "_s                   + toString ( info.structureType ) +
+           ", pNext = "                             + engine :: toString ( info.pNext ) +
+           ", marker = "                            + engine :: toString ( info.marker ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_INTEL_PERFORMANCE_QUERY_AVAILABLE
+auto vulkan :: toString (
+        Type ( PerformanceOverrideInfoIntel ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( PerformanceOverrideInfoIntel ) ) " " +
+           "{ structureType = "_s                   + toString ( info.structureType ) +
+           ", pNext = "                             + engine :: toString ( info.pNext ) +
+           ", type = "                              + toString ( info.type ) +
+           ", enable = "                            + ( info.enable == VK_TRUE ? "true" : "false" ) +
+           ", parameter = "                         + info.parameter +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_INTEL_PERFORMANCE_QUERY_AVAILABLE
+auto vulkan :: toString (
+        Type ( PerformanceConfigurationAcquireInfoIntel ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( PerformanceConfigurationAcquireInfoIntel ) ) " " +
+           "{ structureType = "_s                   + toString ( info.structureType ) +
+           ", pNext = "                             + engine :: toString ( info.pNext ) +
+           ", type = "                              + toString ( info.type ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_QUEUE_AVAILABLE
+auto vulkan :: toString (
+        Type ( QueueFamilyQueryResultStatusProperties2 ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( QueueFamilyQueryResultStatusProperties2 ) ) " " +
+           "{ structureType = "_s                   + toString ( info.structureType ) +
+           ", pNext = "                             + engine :: toString ( info.pNext ) +
+           ", supported = "                         + ( info.supported == VK_TRUE ? "true" : "false" ) +
            " }";
 }
 #endif

@@ -120,6 +120,7 @@ enum class SharedContextType {
     UpdateDescriptorSets,
     CreateDescriptorUpdateTemplate,
     GetDeviceBufferAddress,
+    CreateQueryPool,
 };
 
 union SpecializedContextType {
@@ -1944,6 +1945,34 @@ struct GetDeviceBufferAddressContext {
 #endif
 };
 
+struct CreateQueryPoolContext {
+    CommonItems                                                     common;
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    VkQueryPoolCreateInfo                                           createInfo;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PERFORMANCE_QUERY_AVAILABLE
+    VkQueryPoolPerformanceCreateInfoKHR                             performanceQueryCreateInfo;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_INTEL_PERFORMANCE_QUERY_AVAILABLE
+    VkQueryPoolPerformanceQueryCreateInfoINTEL                      performanceQueryCreateInfoIntel;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_VIDEO_DECODE_H264_AVAILABLE
+    VkVideoDecodeH264ProfileEXT                                     decodeH264Profile;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_VIDEO_DECODE_H265_AVAILABLE
+    VkVideoDecodeH265ProfileEXT                                     decodeH265Profile;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_VIDEO_ENCODE_H264_AVAILABLE
+    VkVideoEncodeH264ProfileEXT                                     encodeH264Profile;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_VIDEO_ENCODE_H265_AVAILABLE
+    VkVideoEncodeH265ProfileEXT                                     encodeH265Profile;
+#endif
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_VIDEO_QUEUE_AVAILABLE
+    VkVideoProfileKHR                                               videoProfile;
+#endif
+};
+
 union GetMemorySharedContext {
     GetMemoryWin32Context                   win32;
     GetMemoryFdContext                      fd;
@@ -2019,6 +2048,7 @@ union CreateSharedContext {
     CreateAccelerationStructureSharedContext                            accelerationStructure;
     CreateSamplerContext                                                sampler;
     CreateDescriptorSharedContext                                       descriptor;
+    CreateQueryPoolContext                                              queryPool;
 };
 
 union GetPipelineSharedContext {
@@ -2273,6 +2303,7 @@ constexpr auto toString ( SharedContextType type ) noexcept -> cds :: StringLite
         case SharedContextType :: UpdateDescriptorSets:                                       return "UpdateDescriptorSets";
         case SharedContextType :: CreateDescriptorUpdateTemplate:                             return "CreateDescriptorUpdateTemplate";
         case SharedContextType :: GetDeviceBufferAddress:                                     return "GetDeviceBufferAddress";
+        case SharedContextType :: CreateQueryPool:                                            return "CreateQueryPool";
     }
 }
 

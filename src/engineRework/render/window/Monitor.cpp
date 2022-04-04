@@ -352,7 +352,7 @@ __C_ENG_MAYBE_UNUSED auto Self :: initMonitorHandler () noexcept -> void {
 
 static auto monitorChangeDetectedCallback (
         Self :: Handle  handle,
-        sint32                  event
+        sint32          event
 ) noexcept -> void {
 
     if ( event == GLFW_CONNECTED ) {
@@ -361,7 +361,7 @@ static auto monitorChangeDetectedCallback (
 
         (void) __C_ENG_TYPE ( Logger ) :: instance().info (
                 "Monitor with handle " +
-                :: toString ( handle ) +
+                engine :: toString ( handle ) +
                 " connected"
         );
 
@@ -369,7 +369,7 @@ static auto monitorChangeDetectedCallback (
 
         (void) __C_ENG_TYPE ( Logger ) :: instance().info (
                 "Monitor with handle " +
-                :: toString ( handle ) +
+                engine :: toString ( handle ) +
                 " disconnected"
         );
 
@@ -383,7 +383,7 @@ static auto monitorChangeDetectedCallback (
         if ( pMonitor == nullptr ) {
             (void) __C_ENG_TYPE ( Logger ) :: instance().warning (
                     "Monitor change detected, handle " +
-                    :: toString ( handle ) +
+                    engine :: toString ( handle ) +
                     " disconnected, but did not previously exist"
             );
         } else {
@@ -434,9 +434,9 @@ __C_ENG_MAYBE_UNUSED auto Self :: setGamma (
 
 auto Self :: toString () const noexcept -> String {
     return __C_ENG_STRINGIFY ( Self ) " "
-           "{ handle = "_s              + :: toString ( this->handle() ) +
-           "{ windowOnMonitor = "_s     + :: toString ( this->windowOnMonitor() ) +
-           ", properties = "            + :: toString ( this->properties() ) +
+           "{ handle = "_s              + engine :: toString ( this->handle() ) +
+           "{ windowOnMonitor = "_s     + engine :: toString ( this->windowOnMonitor() ) +
+           ", properties = "            + engine :: toString ( this->properties() ) +
            ", availableVideoModes = "   + this->availableVideoModes().toString() +
            " }";
 }

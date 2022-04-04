@@ -2458,6 +2458,11 @@ namespace engine :: vulkan {
 #include <calls/util/APICallerGenerator.hpp>
 #endif
 
+#if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PERFORMANCE_QUERY_AVAILABLE
+#define CALL_POINT CALL ( vkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR, INSTANCE, EXTENSION ( VK_KHR_PERFORMANCE_QUERY ) )
+#include <calls/util/APICallerGenerator.hpp>
+#endif
+
     public:
         inline auto acquireHandlesForDevice (
                 engine :: vulkan :: Type ( DeviceHandle )               handle,
