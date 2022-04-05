@@ -15603,6 +15603,303 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
 #include <ObjectMapping.hpp>
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( ClearAttachment, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( ImageAspectFlags )   aspectMask;
+            cds :: uint32               colorAttachment;
+            Type ( ClearValue )         clearValue;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( ClearRect, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( Rect )   rect;
+            cds :: uint32   baseArrayLayer;
+            cds :: uint32   layerCount;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( BufferCopy, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( DeviceSize ) sourceOffset;
+            Type ( DeviceSize ) destinationOffset;
+            Type ( DeviceSize ) size;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_COPY_COMMANDS_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( BufferCopy2, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                      structureType;
+            Type ( GenericStructure )           const * pNext;
+            Type ( DeviceSize )                         sourceOffset;
+            Type ( DeviceSize )                         destinationOffset;
+            Type ( DeviceSize )                         size;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_COPY_COMMANDS_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( CopyBufferInfo2, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                      structureType;
+            Type ( GenericStructure )           const * pNext;
+            Type ( BufferHandle )                       sourceBuffer;
+            Type ( BufferHandle )                       destinationBuffer;
+            cds :: uint32                               regionCount;
+            Type ( BufferCopy2 )                const * pRegions;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( ImageSubresourceLayers, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( ImageAspectFlags )   aspectMask;
+            cds :: uint32               mipLevel;
+            cds :: uint32               baseArrayLayer;
+            cds :: uint32               layerCount;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( ImageCopy, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( ImageSubresourceLayers ) sourceSubresource;
+            Type ( Offset3D )               sourceOffset;
+            Type ( ImageSubresourceLayers ) destinationSubresource;
+            Type ( Offset3D )               destinationOffset;
+            Type ( Extent3D )               extent;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_COPY_COMMANDS_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( ImageCopy2, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                      structureType;
+            Type ( GenericStructure )           const * pNext;
+            Type ( ImageSubresourceLayers )             sourceSubresource;
+            Type ( Offset3D )                           sourceOffset;
+            Type ( ImageSubresourceLayers )             destinationSubresource;
+            Type ( Offset3D )                           destinationOffset;
+            Type ( Extent3D )                           extent;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_COPY_COMMANDS_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( CopyImageInfo2, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )                      structureType;
+            Type ( GenericStructure )           const * pNext;
+            Type ( ImageHandle )                        sourceImage;
+            Type ( ImageLayout )                        sourceImageLayout;
+            Type ( ImageHandle )                        destinationImage;
+            Type ( ImageLayout )                        destinationImageLayout;
+            cds :: uint32                               regionCount;
+            Type ( ImageCopy2 )                 const * pRegions;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( BufferImageCopy, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( DeviceSize )             bufferOffset;
+            cds :: uint32                   bufferRowLength;
+            cds :: uint32                   bufferImageHeight;
+            Type ( ImageSubresourceLayers ) imageSubresource;
+            Type ( Offset3D )               imageOffset;
+            Type ( Extent3D )               imageExtent;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_COPY_COMMANDS_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( BufferImageCopy2, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )              structureType;
+            Type ( GenericStructure )   const * pNext;
+            Type ( DeviceSize )                 bufferOffset;
+            cds :: uint32                       bufferRowLength;
+            cds :: uint32                       bufferImageHeight;
+            Type ( ImageSubresourceLayers )     imageSubresource;
+            Type ( Offset3D )                   imageOffset;
+            Type ( Extent3D )                   imageExtent;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_COPY_COMMANDS_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( CopyBufferToImageInfo2, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )              structureType;
+            Type ( GenericStructure )   const * pNext;
+            Type ( BufferHandle )               sourceBuffer;
+            Type ( ImageHandle )                destinationImage;
+            Type ( ImageLayout )                destinationImageLayout;
+            cds :: uint32                       regionCount;
+            Type ( BufferImageCopy2 )   const * pRegions;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_COPY_COMMANDS_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( CopyImageToBufferInfo2, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )              structureType;
+            Type ( GenericStructure )   const * pNext;
+            Type ( ImageHandle )                sourceImage;
+            Type ( ImageLayout )                sourceImageLayout;
+            Type ( BufferHandle )               destinationBuffer;
+            cds :: uint32                       regionCount;
+            Type ( BufferImageCopy2 )   const * pRegions;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_QUALCOMM_ROTATED_COPY_COMMANDS_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( CopyCommandTransformInfoQualcomm, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )              structureType;
+            Type ( GenericStructure )   const * pNext;
+            Type ( SurfaceTransformFlag )       transform;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( ImageBlit, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( ImageSubresourceLayers ) sourceSubresource;
+            Type ( Offset3D )               sourceOffsets [2];
+            Type ( ImageSubresourceLayers ) destinationSubresource;
+            Type ( Offset3D )               destinationOffsets [2];
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_COPY_COMMANDS_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( ImageBlit2, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )              structureType;
+            Type ( GenericStructure )   const * pNext;
+            Type ( ImageSubresourceLayers )     sourceSubresource;
+            Type ( Offset3D )                   sourceOffsets [2];
+            Type ( ImageSubresourceLayers )     destinationSubresource;
+            Type ( Offset3D )                   destinationOffsets [2];
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_COPY_COMMANDS_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( BlitImageInfo2, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( StructureType )              structureType;
+            Type ( GenericStructure )   const * pNext;
+            Type ( ImageHandle )                sourceImage;
+            Type ( ImageLayout )                sourceImageLayout;
+            Type ( ImageHandle )                destinationImage;
+            Type ( ImageLayout )                destinationImageLayout;
+            cds :: uint32                       regionCount;
+            Type ( ImageBlit2 )         const * pRegions;
+            Type ( Filter )                     filter;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+#define C_ENG_MAP_START STRUCT ( ImageResolve, NO_PARENT )
+#include <ObjectMapping.hpp>
+
+        Struct {
+            Type ( ImageSubresourceLayers ) sourceSubresource;
+            Type ( Offset3D )               sourceOffset;
+            Type ( ImageSubresourceLayers ) destinationSubresource;
+            Type ( Offset3D )               destinationOffset;
+            Type ( Extent3D )               extent;
+        };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+#endif
+
 
 #define C_ENG_MAP_START     HEADER
 #include <ObjectMapping.hpp>

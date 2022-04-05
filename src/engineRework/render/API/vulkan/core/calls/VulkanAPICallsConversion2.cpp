@@ -8871,5 +8871,1390 @@ namespace engine :: vulkan {
     }
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    auto prepareContext (
+            ClearColorImageContext         * pContext,
+            Type ( ClearColorValue ) const * pSource
+    ) noexcept -> VkClearColorValue * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pContext == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        (void) std :: memcpy ( & pContext->color, pSource, sizeof ( VkClearColorValue ) );
+
+        return & pContext->color;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    auto prepareContext (
+            ClearColorImageContext                * pContext,
+            uint32                                  count,
+            Type ( ImageSubresourceRange )  const * pSource
+    ) noexcept -> VkImageSubresourceRange * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pContext == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        if ( count > engine :: vulkan :: config :: clearImageSubresourceRangeCount ) {
+            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, String :: f (
+                    "config :: clearImageSubresourceRangeCount = %d. Minimum Required = %d",
+                    engine :: vulkan :: config :: clearImageSubresourceRangeCount,
+                    count
+            ))
+
+            count = engine :: vulkan :: config :: clearImageSubresourceRangeCount;
+        }
+
+        for ( uint32 i = 0U; i < count; ++ i ) {
+            pContext->ranges[i] = {
+                    .aspectMask     = pSource->aspectMask,
+                    .baseMipLevel   = pSource->baseMipLevel,
+                    .levelCount     = pSource->levelCount,
+                    .baseArrayLayer = pSource->baseArrayLayer,
+                    .layerCount     = pSource->layerCount
+            };
+        }
+
+        return & pContext->ranges[0];
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    auto prepareContext (
+            ClearDepthStencilImageContext         * pContext,
+            Type ( ClearDepthStencilValue ) const * pSource
+    ) noexcept -> VkClearDepthStencilValue * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pContext == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        pContext->depthStencil = {
+                .depth      = pSource->depth,
+                .stencil    = pSource->stencil
+        };
+
+        return & pContext->depthStencil;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    auto prepareContext (
+            ClearDepthStencilImageContext         * pContext,
+            uint32                                  count,
+            Type ( ImageSubresourceRange )  const * pSource
+    ) noexcept -> VkImageSubresourceRange * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pContext == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        if ( count > engine :: vulkan :: config :: clearImageSubresourceRangeCount ) {
+            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, String :: f (
+                    "config :: clearImageSubresourceRangeCount = %d. Minimum Required = %d",
+                    engine :: vulkan :: config :: clearImageSubresourceRangeCount,
+                    count
+            ))
+
+            count = engine :: vulkan :: config :: clearImageSubresourceRangeCount;
+        }
+
+        for ( uint32 i = 0U; i < count; ++ i ) {
+            pContext->ranges[i] = {
+                    .aspectMask     = pSource->aspectMask,
+                    .baseMipLevel   = pSource->baseMipLevel,
+                    .levelCount     = pSource->levelCount,
+                    .baseArrayLayer = pSource->baseArrayLayer,
+                    .layerCount     = pSource->layerCount
+            };
+        }
+
+        return & pContext->ranges[0];
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    auto prepareContext (
+            ClearAttachmentsContext         * pContext,
+            uint32                            count,
+            Type ( ClearAttachment )  const * pSource
+    ) noexcept -> VkClearAttachment * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pContext == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        if ( count > engine :: vulkan :: config :: clearAttachmentCount ) {
+            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, String :: f (
+                    "config :: clearAttachmentCount = %d. Minimum Required = %d",
+                    engine :: vulkan :: config :: clearAttachmentCount,
+                    count
+            ))
+
+            count = engine :: vulkan :: config :: clearAttachmentCount;
+        }
+
+        for ( uint32 i = 0U; i < count; ++ i ) {
+            (void) toVulkanFormat ( & pContext->attachments[i], & pSource[i] );
+        }
+
+        return & pContext->attachments[0];
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    auto prepareContext (
+            ClearAttachmentsContext         * pContext,
+            uint32                            count,
+            Type ( ClearRect )        const * pSource
+    ) noexcept -> VkClearRect * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pContext == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        if ( count > engine :: vulkan :: config :: clearRectCount ) {
+            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, String :: f (
+                    "config :: clearRectCount = %d. Minimum Required = %d",
+                    engine :: vulkan :: config :: clearRectCount,
+                    count
+            ))
+
+            count = engine :: vulkan :: config :: clearRectCount;
+        }
+
+        for ( uint32 i = 0U; i < count; ++ i ) {
+            (void) toVulkanFormat ( & pContext->rects[i], & pSource[i] );
+        }
+
+        return & pContext->rects[0];
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    auto toVulkanFormat (
+            VkClearAttachment              * pDestination,
+            Type ( ClearAttachment ) const * pSource
+    ) noexcept -> VkClearAttachment * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        pDestination->aspectMask        = pSource->aspectMask;
+        pDestination->colorAttachment   = pSource->colorAttachment;
+        (void) std :: memcpy ( & pDestination->clearValue, & pSource->clearValue, sizeof ( VkClearValue ) );
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    auto toVulkanFormat (
+            VkClearRect              * pDestination,
+            Type ( ClearRect ) const * pSource
+    ) noexcept -> VkClearRect * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .rect           = {
+                        .offset         = {
+                                .x              = pSource->rect.offset.x,
+                                .y              = pSource->rect.offset.y
+                        },
+                        .extent         = {
+                                .width          = pSource->rect.extent.width,
+                                .height         = pSource->rect.extent.height,
+                        }
+                },
+                .baseArrayLayer = pSource->baseArrayLayer,
+                .layerCount     = pSource->layerCount
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    auto prepareContext (
+            CopyBufferContext               * pContext,
+            uint32                            count,
+            Type ( BufferCopy )       const * pSource
+    ) noexcept -> VkBufferCopy * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pContext == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        if ( count > engine :: vulkan :: config :: bufferCopyCount ) {
+            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, String :: f (
+                    "config :: bufferCopyCount = %d. Minimum Required = %d",
+                    engine :: vulkan :: config :: bufferCopyCount,
+                    count
+            ))
+
+            count = engine :: vulkan :: config :: bufferCopyCount;
+        }
+
+        for ( uint32 i = 0U; i < count; ++ i ) {
+            (void) toVulkanFormat ( & pContext->copies[i], & pSource[i] );
+        }
+
+        return & pContext->copies[0];
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    auto toVulkanFormat (
+            VkBufferCopy              * pDestination,
+            Type ( BufferCopy ) const * pSource
+    ) noexcept -> VkBufferCopy * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .srcOffset  = pSource->sourceOffset,
+                .dstOffset  = pSource->destinationOffset,
+                .size       = pSource->size
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_COPY_COMMANDS_AVAILABLE
+    auto prepareContext (
+            CopyBuffer2Context               * pContext,
+            Type ( CopyBufferInfo2 )   const * pSource
+    ) noexcept -> VkCopyBufferInfo2_t * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pContext == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        return prepareSubcontext (
+                reinterpret_cast < CommonContext * > ( pContext ),
+                & pContext->info,
+                pSource
+        );
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_COPY_COMMANDS_AVAILABLE
+    auto prepareSubcontext (
+            CommonContext                   * pRootContext,
+            CopyBufferInfo2Subcontext       * pContext,
+            Type ( CopyBufferInfo2 )  const * pSource
+    ) noexcept -> VkCopyBufferInfo2_t * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pRootContext == nullptr || pContext == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        (void) toVulkanFormat ( & pContext->info, pSource );
+
+        pContext->info.pRegions = & pContext->copies[0];
+
+        if ( pContext->info.regionCount > engine :: vulkan :: config :: bufferCopyCount ) {
+            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pRootContext, ResultErrorConfigurationArraySizeSmall, String :: f (
+                    "config :: bufferCopyCount = %d. Minimum Required = %d",
+                    engine :: vulkan :: config :: bufferCopyCount,
+                    pContext->info.regionCount
+            ))
+
+            pContext->info.regionCount = engine :: vulkan :: config :: bufferCopyCount;
+        }
+
+        for ( uint32 i = 0U; i < pContext->info.regionCount; ++ i ) {
+            (void) toVulkanFormat ( & pContext->copies[i], & pSource->pRegions[i] );
+        }
+
+        return & pContext->info;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_COPY_COMMANDS_AVAILABLE
+    auto toVulkanFormat (
+            VkBufferCopy2_t            * pDestination,
+            Type ( BufferCopy2 ) const * pSource
+    ) noexcept -> VkBufferCopy2_t * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+                .sType      = VK_STRUCTURE_TYPE_BUFFER_COPY_2,
+#else
+                .sType      = VK_STRUCTURE_TYPE_BUFFER_COPY_2_KHR,
+#endif
+                .pNext      = nullptr,
+                .srcOffset  = pSource->sourceOffset,
+                .dstOffset  = pSource->destinationOffset,
+                .size       = pSource->size
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_COPY_COMMANDS_AVAILABLE
+    auto toVulkanFormat (
+            VkCopyBufferInfo2_t              * pDestination,
+            Type ( CopyBufferInfo2 )   const * pSource
+    ) noexcept -> VkCopyBufferInfo2_t * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+                .sType          = VK_STRUCTURE_TYPE_COPY_BUFFER_INFO_2,
+#else
+                .sType          = VK_STRUCTURE_TYPE_COPY_BUFFER_INFO_2_KHR,
+#endif
+                .pNext          = nullptr,
+                .srcBuffer      = pSource->sourceBuffer,
+                .dstBuffer      = pSource->destinationBuffer,
+                .regionCount    = pSource->regionCount,
+                .pRegions       = nullptr
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    auto prepareContext (
+            CopyImageContext                * pContext,
+            uint32                            count,
+            Type ( ImageCopy )        const * pSource
+    ) noexcept -> VkImageCopy * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pContext == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        if ( count > engine :: vulkan :: config :: imageCopyCount ) {
+            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, String :: f (
+                    "config :: imageCopyCount = %d. Minimum Required = %d",
+                    engine :: vulkan :: config :: imageCopyCount,
+                    count
+            ))
+
+            count = engine :: vulkan :: config :: imageCopyCount;
+        }
+
+        for ( uint32 i = 0U; i < count; ++ i ) {
+            (void) toVulkanFormat ( & pContext->copies[i], & pSource[i] );
+        }
+
+        return & pContext->copies[0];
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    auto toVulkanFormat (
+            VkImageCopy              * pDestination,
+            Type ( ImageCopy ) const * pSource
+    ) noexcept -> VkImageCopy * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .srcSubresource = {
+                        .aspectMask     = pSource->sourceSubresource.aspectMask,
+                        .mipLevel       = pSource->sourceSubresource.mipLevel,
+                        .baseArrayLayer = pSource->sourceSubresource.baseArrayLayer,
+                        .layerCount     = pSource->sourceSubresource.layerCount
+                },
+                .srcOffset      = {
+                        .x              = pSource->sourceOffset.x,
+                        .y              = pSource->sourceOffset.y,
+                        .z              = pSource->sourceOffset.z
+                },
+                .dstSubresource = {
+                        .aspectMask     = pSource->destinationSubresource.aspectMask,
+                        .mipLevel       = pSource->destinationSubresource.mipLevel,
+                        .baseArrayLayer = pSource->destinationSubresource.baseArrayLayer,
+                        .layerCount     = pSource->destinationSubresource.layerCount
+                },
+                .dstOffset      = {
+                    .x                  = pSource->destinationOffset.x,
+                    .y                  = pSource->destinationOffset.y,
+                    .z                  = pSource->destinationOffset.z
+                },
+                .extent         = {
+                        .width          = pSource->extent.width,
+                        .height         = pSource->extent.height,
+                        .depth          = pSource->extent.depth
+                }
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_COPY_COMMANDS_AVAILABLE
+    auto prepareContext (
+            CopyImage2Context               * pContext,
+            Type ( CopyImageInfo2 )   const * pSource
+    ) noexcept -> VkCopyImageInfo2_t * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pContext == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        return prepareSubcontext (
+                reinterpret_cast < CommonContext * > ( pContext ),
+                & pContext->info,
+                pSource
+        );
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_COPY_COMMANDS_AVAILABLE
+    auto prepareSubcontext (
+            CommonContext                  * pRootContext,
+            CopyImageInfo2Subcontext       * pContext,
+            Type ( CopyImageInfo2 )  const * pSource
+    ) noexcept -> VkCopyImageInfo2_t * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pRootContext == nullptr || pContext == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        (void) toVulkanFormat ( & pContext->info, pSource );
+
+        pContext->info.pRegions = & pContext->copies[0];
+
+        if ( pContext->info.regionCount > engine :: vulkan :: config :: imageCopyCount ) {
+            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pRootContext, ResultErrorConfigurationArraySizeSmall, String :: f (
+                    "config :: imageCopyCount = %d. Minimum Required = %d",
+                    engine :: vulkan :: config :: imageCopyCount,
+                    pContext->info.regionCount
+            ))
+
+            pContext->info.regionCount = engine :: vulkan :: config :: imageCopyCount;
+        }
+
+        for ( uint32 i = 0U; i < pContext->info.regionCount; ++ i ) {
+            (void) toVulkanFormat ( & pContext->copies[i], & pSource->pRegions[i] );
+        }
+
+        return & pContext->info;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_COPY_COMMANDS_AVAILABLE
+    auto toVulkanFormat (
+            VkImageCopy2_t            * pDestination,
+            Type ( ImageCopy2 ) const * pSource
+    ) noexcept -> VkImageCopy2_t * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+                .sType          = VK_STRUCTURE_TYPE_IMAGE_COPY_2,
+#else
+                .sType          = VK_STRUCTURE_TYPE_IMAGE_COPY_2_KHR,
+#endif
+                .pNext          = nullptr,
+                .srcSubresource = {
+                        .aspectMask     = pSource->sourceSubresource.aspectMask,
+                        .mipLevel       = pSource->sourceSubresource.mipLevel,
+                        .baseArrayLayer = pSource->sourceSubresource.baseArrayLayer,
+                        .layerCount     = pSource->sourceSubresource.layerCount
+                },
+                .srcOffset      = {
+                        .x              = pSource->sourceOffset.x,
+                        .y              = pSource->sourceOffset.y,
+                        .z              = pSource->sourceOffset.z
+                },
+                .dstSubresource = {
+                        .aspectMask     = pSource->destinationSubresource.aspectMask,
+                        .mipLevel       = pSource->destinationSubresource.mipLevel,
+                        .baseArrayLayer = pSource->destinationSubresource.baseArrayLayer,
+                        .layerCount     = pSource->destinationSubresource.layerCount
+                },
+                .dstOffset      = {
+                        .x              = pSource->destinationOffset.x,
+                        .y              = pSource->destinationOffset.y,
+                        .z              = pSource->destinationOffset.z
+                },
+                .extent         = {
+                        .width          = pSource->extent.width,
+                        .height         = pSource->extent.height,
+                        .depth          = pSource->extent.depth
+                }
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_COPY_COMMANDS_AVAILABLE
+    auto toVulkanFormat (
+            VkCopyImageInfo2_t              * pDestination,
+            Type ( CopyImageInfo2 )   const * pSource
+    ) noexcept -> VkCopyImageInfo2_t * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+                .sType          = VK_STRUCTURE_TYPE_COPY_IMAGE_INFO_2,
+#else
+                .sType          = VK_STRUCTURE_TYPE_COPY_IMAGE_INFO_2_KHR,
+#endif
+                .pNext          = nullptr,
+                .srcImage       = pSource->sourceImage,
+                .srcImageLayout = static_cast < VkImageLayout > ( pSource->sourceImageLayout ),
+                .dstImage       = pSource->destinationImage,
+                .dstImageLayout = static_cast < VkImageLayout > ( pSource->destinationImageLayout ),
+                .regionCount    = pSource->regionCount,
+                .pRegions       = nullptr
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    auto prepareContext (
+            CopyBufferToImageOrImageToBufferContext   * pContext,
+            uint32                                      count,
+            Type ( BufferImageCopy )            const * pSource
+    ) noexcept -> VkBufferImageCopy * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pContext == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        if ( count > engine :: vulkan :: config :: bufferImageCopyCount ) {
+            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, String :: f (
+                    "config :: bufferImageCopyCount = %d. Minimum Required = %d",
+                    engine :: vulkan :: config :: bufferImageCopyCount,
+                    count
+            ))
+
+            count = engine :: vulkan :: config :: bufferImageCopyCount;
+        }
+
+        for ( uint32 i = 0U; i < count; ++ i ) {
+            (void) toVulkanFormat ( & pContext->copies[i], & pSource[i] );
+        }
+
+        return & pContext->copies[0];
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    auto toVulkanFormat (
+            VkBufferImageCopy              * pDestination,
+            Type ( BufferImageCopy ) const * pSource
+    ) noexcept -> VkBufferImageCopy * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .bufferOffset       = pSource->bufferOffset,
+                .bufferRowLength    = pSource->bufferRowLength,
+                .bufferImageHeight  = pSource->bufferImageHeight,
+                .imageSubresource   = {
+                        .aspectMask         = pSource->imageSubresource.aspectMask,
+                        .mipLevel           = pSource->imageSubresource.mipLevel,
+                        .baseArrayLayer     = pSource->imageSubresource.baseArrayLayer,
+                        .layerCount         = pSource->imageSubresource.layerCount
+                },
+                .imageOffset        = {
+                        .x                  = pSource->imageOffset.x,
+                        .y                  = pSource->imageOffset.y,
+                        .z                  = pSource->imageOffset.z
+                },
+                .imageExtent        = {
+                        .width              = pSource->imageExtent.width,
+                        .height             = pSource->imageExtent.height,
+                        .depth              = pSource->imageExtent.depth
+                }
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_COPY_COMMANDS_AVAILABLE
+    auto prepareContext (
+            CopyBufferToImageOrImageToBuffer2Context              * pContext,
+            Type ( CopyBufferToImageInfo2 )                 const * pSource
+    ) noexcept -> VkCopyBufferToImageInfo2_t * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pContext == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        return prepareSubcontext (
+                reinterpret_cast < CommonContext * > ( pContext ),
+                & pContext->info,
+                pSource
+        );
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_COPY_COMMANDS_AVAILABLE
+    auto prepareContext (
+            CopyBufferToImageOrImageToBuffer2Context              * pContext,
+            Type ( CopyImageToBufferInfo2 )                 const * pSource
+    ) noexcept -> VkCopyImageToBufferInfo2_t * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pContext == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        return prepareSubcontext (
+                reinterpret_cast < CommonContext * > ( pContext ),
+                & pContext->info,
+                pSource
+        );
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_COPY_COMMANDS_AVAILABLE
+    auto prepareSubcontext (
+            CommonContext                                     * pRootContext,
+            CopyBufferToImageOrImageToBuffer2Subcontext       * pContext,
+            Type ( CopyBufferToImageInfo2 )             const * pSource
+    ) noexcept -> VkCopyBufferToImageInfo2_t * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pRootContext == nullptr || pContext == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        (void) toVulkanFormat ( & pContext->bufferToImage, pSource );
+
+        pContext->bufferToImage.pRegions = & pContext->copies[0];
+
+        if ( pContext->bufferToImage.regionCount > engine :: vulkan :: config :: bufferImageCopyCount ) {
+            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pRootContext, ResultErrorConfigurationArraySizeSmall, String :: f (
+                    "config :: bufferImageCopyCount = %d. Minimum Required = %d",
+                    engine :: vulkan :: config :: bufferImageCopyCount,
+                    pContext->bufferToImage.regionCount
+            ))
+
+            pContext->bufferToImage.regionCount = engine :: vulkan :: config :: bufferImageCopyCount;
+        }
+
+        for ( uint32 i = 0U; i < pContext->bufferToImage.regionCount; ++ i ) {
+
+            auto pCurrent   = reinterpret_cast < Type ( GenericInStructure ) const * > ( pSource->pNext );
+            auto pCurrentVk = reinterpret_cast < VkBaseOutStructure * > ( toVulkanFormat ( & pContext->copies[i], & pSource->pRegions[i] ) );
+
+            while ( pCurrent != nullptr ) {
+
+                switch ( pCurrent->structureType ) {
+
+#if __C_ENG_VULKAN_API_EXTENSION_QUALCOMM_ROTATED_COPY_COMMANDS_AVAILABLE
+
+                    case StructureTypeCopyCommandTransformInfoQualcomm:
+                        pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                                toVulkanFormat (
+                                        & pContext->copyCommandsTransforms[i],
+                                        reinterpret_cast < Type ( CopyCommandTransformInfoQualcomm ) const * > ( pCurrent )
+                                )
+                        );
+                        break;
+
+#endif
+
+                    default:
+                        break;
+                }
+
+                pCurrentVk  = pCurrentVk->pNext == nullptr ? pCurrentVk : pCurrentVk->pNext;
+                pCurrent    = pCurrent->pNext;
+            }
+
+            pCurrentVk->pNext = nullptr;
+        }
+
+        return & pContext->bufferToImage;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_COPY_COMMANDS_AVAILABLE
+    auto prepareSubcontext (
+            CommonContext                                     * pRootContext,
+            CopyBufferToImageOrImageToBuffer2Subcontext       * pContext,
+            Type ( CopyImageToBufferInfo2 )             const * pSource
+    ) noexcept -> VkCopyImageToBufferInfo2_t * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pRootContext == nullptr || pContext == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        (void) toVulkanFormat ( & pContext->imageToBuffer, pSource );
+
+        pContext->imageToBuffer.pRegions = & pContext->copies[0];
+
+        if ( pContext->imageToBuffer.regionCount > engine :: vulkan :: config :: bufferImageCopyCount ) {
+            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pRootContext, ResultErrorConfigurationArraySizeSmall, String :: f (
+                    "config :: bufferImageCopyCount = %d. Minimum Required = %d",
+                    engine :: vulkan :: config :: bufferImageCopyCount,
+                    pContext->imageToBuffer.regionCount
+            ))
+
+            pContext->imageToBuffer.regionCount = engine :: vulkan :: config :: bufferImageCopyCount;
+        }
+
+        for ( uint32 i = 0U; i < pContext->imageToBuffer.regionCount; ++ i ) {
+
+            auto pCurrent   = reinterpret_cast < Type ( GenericInStructure ) const * > ( pSource->pNext );
+            auto pCurrentVk = reinterpret_cast < VkBaseOutStructure * > ( toVulkanFormat ( & pContext->copies[i], & pSource->pRegions[i] ) );
+
+            while ( pCurrent != nullptr ) {
+
+                switch ( pCurrent->structureType ) {
+
+#if __C_ENG_VULKAN_API_EXTENSION_QUALCOMM_ROTATED_COPY_COMMANDS_AVAILABLE
+
+                    case StructureTypeCopyCommandTransformInfoQualcomm:
+                        pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                                toVulkanFormat (
+                                        & pContext->copyCommandsTransforms[i],
+                                        reinterpret_cast < Type ( CopyCommandTransformInfoQualcomm ) const * > ( pCurrent )
+                                )
+                        );
+                        break;
+
+#endif
+
+                    default:
+                        break;
+                }
+
+                pCurrentVk  = pCurrentVk->pNext == nullptr ? pCurrentVk : pCurrentVk->pNext;
+                pCurrent    = pCurrent->pNext;
+            }
+
+            pCurrentVk->pNext = nullptr;
+        }
+
+        return & pContext->imageToBuffer;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_COPY_COMMANDS_AVAILABLE
+    auto toVulkanFormat (
+            VkBufferImageCopy2_t            * pDestination,
+            Type ( BufferImageCopy2 ) const * pSource
+    ) noexcept -> VkBufferImageCopy2_t * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+                .sType              = VK_STRUCTURE_TYPE_BUFFER_IMAGE_COPY_2,
+#else
+                .sType              = VK_STRUCTURE_TYPE_BUFFER_IMAGE_COPY_2_KHR,
+#endif
+                .pNext              = nullptr,
+                .bufferOffset       = pSource->bufferOffset,
+                .bufferRowLength    = pSource->bufferRowLength,
+                .bufferImageHeight  = pSource->bufferImageHeight,
+                .imageSubresource   = {
+                        .aspectMask         = pSource->imageSubresource.aspectMask,
+                        .mipLevel           = pSource->imageSubresource.mipLevel,
+                        .baseArrayLayer     = pSource->imageSubresource.baseArrayLayer,
+                        .layerCount         = pSource->imageSubresource.layerCount
+                },
+                .imageOffset        = {
+                        .x                  = pSource->imageOffset.x,
+                        .y                  = pSource->imageOffset.y,
+                        .z                  = pSource->imageOffset.z
+                },
+                .imageExtent        = {
+                        .width              = pSource->imageExtent.width,
+                        .height             = pSource->imageExtent.height,
+                        .depth              = pSource->imageExtent.depth
+                }
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_COPY_COMMANDS_AVAILABLE
+    auto toVulkanFormat (
+            VkCopyBufferToImageInfo2_t              * pDestination,
+            Type ( CopyBufferToImageInfo2 )   const * pSource
+    ) noexcept -> VkCopyBufferToImageInfo2_t * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+                .sType          = VK_STRUCTURE_TYPE_COPY_BUFFER_TO_IMAGE_INFO_2,
+#else
+                .sType          = VK_STRUCTURE_TYPE_COPY_BUFFER_TO_IMAGE_INFO_2_KHR,
+#endif
+                .pNext          = nullptr,
+                .srcBuffer      = pSource->sourceBuffer,
+                .dstImage       = pSource->destinationImage,
+                .dstImageLayout = static_cast < VkImageLayout > ( pSource->destinationImageLayout ),
+                .regionCount    = pSource->regionCount,
+                .pRegions       = nullptr
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_COPY_COMMANDS_AVAILABLE
+    auto toVulkanFormat (
+            VkCopyImageToBufferInfo2_t              * pDestination,
+            Type ( CopyImageToBufferInfo2 )   const * pSource
+    ) noexcept -> VkCopyImageToBufferInfo2_t * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+                .sType          = VK_STRUCTURE_TYPE_COPY_IMAGE_TO_BUFFER_INFO_2,
+#else
+                .sType          = VK_STRUCTURE_TYPE_COPY_IMAGE_TO_BUFFER_INFO_2_KHR,
+#endif
+                .pNext          = nullptr,
+                .srcImage       = pSource->sourceImage,
+                .srcImageLayout = static_cast < VkImageLayout > ( pSource->sourceImageLayout ),
+                .dstBuffer      = pSource->destinationBuffer,
+                .regionCount    = pSource->regionCount,
+                .pRegions       = nullptr
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_QUALCOMM_ROTATED_COPY_COMMANDS_AVAILABLE
+    auto toVulkanFormat (
+            VkCopyCommandTransformInfoQCOM              * pDestination,
+            Type ( CopyCommandTransformInfoQualcomm )   const * pSource
+    ) noexcept -> VkCopyCommandTransformInfoQCOM * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .sType          = VK_STRUCTURE_TYPE_COPY_COMMAND_TRANSFORM_INFO_QCOM,
+                .pNext          = nullptr,
+                .transform      = static_cast < VkSurfaceTransformFlagBitsKHR > ( pSource->transform )
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    auto prepareContext (
+            BlitImageContext                * pContext,
+            uint32                            count,
+            Type ( ImageBlit )        const * pSource
+    ) noexcept -> VkImageBlit * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pContext == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        if ( count > engine :: vulkan :: config :: imageBlitCount ) {
+            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, String :: f (
+                    "config :: imageBlitCount = %d. Minimum Required = %d",
+                    engine :: vulkan :: config :: imageBlitCount,
+                    count
+            ))
+
+            count = engine :: vulkan :: config :: imageBlitCount;
+        }
+
+        for ( uint32 i = 0U; i < count; ++ i ) {
+            (void) toVulkanFormat ( & pContext->blits[i], & pSource[i] );
+        }
+
+        return & pContext->blits[0];
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    auto toVulkanFormat (
+            VkImageBlit              * pDestination,
+            Type ( ImageBlit ) const * pSource
+    ) noexcept -> VkImageBlit * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .srcSubresource = {
+                        .aspectMask     = pSource->sourceSubresource.aspectMask,
+                        .mipLevel       = pSource->sourceSubresource.mipLevel,
+                        .baseArrayLayer = pSource->sourceSubresource.baseArrayLayer,
+                        .layerCount     = pSource->sourceSubresource.layerCount
+                },
+                .srcOffsets     = {
+                        {
+                               .x              = pSource->sourceOffsets[0].x,
+                               .y              = pSource->sourceOffsets[0].y,
+                               .z              = pSource->sourceOffsets[0].z
+                        },
+                        {
+                               .x              = pSource->sourceOffsets[1].x,
+                               .y              = pSource->sourceOffsets[1].y,
+                               .z              = pSource->sourceOffsets[1].z
+                        }
+                },
+                .dstSubresource = {
+                        .aspectMask     = pSource->destinationSubresource.aspectMask,
+                        .mipLevel       = pSource->destinationSubresource.mipLevel,
+                        .baseArrayLayer = pSource->destinationSubresource.baseArrayLayer,
+                        .layerCount     = pSource->destinationSubresource.layerCount
+                },
+                .dstOffsets     = {
+                        {
+                                .x              = pSource->destinationOffsets[0].x,
+                                .y              = pSource->destinationOffsets[0].y,
+                                .z              = pSource->destinationOffsets[0].z
+                        },
+                        {
+                                .x              = pSource->destinationOffsets[1].x,
+                                .y              = pSource->destinationOffsets[1].y,
+                                .z              = pSource->destinationOffsets[1].z
+                        }
+                }
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_COPY_COMMANDS_AVAILABLE
+    auto prepareContext (
+            BlitImage2Context               * pContext,
+            Type ( BlitImageInfo2 )   const * pSource
+    ) noexcept -> VkBlitImageInfo2_t * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pContext == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        return prepareSubcontext (
+                reinterpret_cast < CommonContext * > ( pContext ),
+                & pContext->info,
+                pSource
+        );
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_COPY_COMMANDS_AVAILABLE
+    auto prepareSubcontext (
+            CommonContext                  * pRootContext,
+            BlitImageInfo2Subcontext       * pContext,
+            Type ( BlitImageInfo2 )  const * pSource
+    ) noexcept -> VkBlitImageInfo2_t * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pRootContext == nullptr || pContext == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        (void) toVulkanFormat ( & pContext->info, pSource );
+
+        pContext->info.pRegions = & pContext->blits[0];
+
+        if ( pContext->info.regionCount > engine :: vulkan :: config :: imageBlitCount ) {
+            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pRootContext, ResultErrorConfigurationArraySizeSmall, String :: f (
+                    "config :: imageBlitCount = %d. Minimum Required = %d",
+                    engine :: vulkan :: config :: imageBlitCount,
+                    pContext->info.regionCount
+            ))
+
+            pContext->info.regionCount = engine :: vulkan :: config :: imageBlitCount;
+        }
+
+        for ( uint32 i = 0U; i < pContext->info.regionCount; ++ i ) {
+
+            auto pCurrent   = reinterpret_cast < Type ( GenericInStructure ) const * > ( pSource->pNext );
+            auto pCurrentVk = reinterpret_cast < VkBaseOutStructure * > ( toVulkanFormat ( & pContext->blits[i], & pSource->pRegions[i] ) );
+
+            while ( pCurrent != nullptr ) {
+
+                switch ( pCurrent->structureType ) {
+
+#if __C_ENG_VULKAN_API_EXTENSION_QUALCOMM_ROTATED_COPY_COMMANDS_AVAILABLE
+
+                    case StructureTypeCopyCommandTransformInfoQualcomm:
+                        pCurrentVk->pNext = reinterpret_cast < VkBaseOutStructure * > (
+                                toVulkanFormat (
+                                        & pContext->copyCommandTransforms[i],
+                                        reinterpret_cast < Type ( CopyCommandTransformInfoQualcomm ) const * > ( pCurrent )
+                                )
+                        );
+                        break;
+
+#endif
+
+                    default:
+                        break;
+                }
+
+                pCurrentVk  = pCurrentVk->pNext == nullptr ? pCurrentVk : pCurrentVk->pNext;
+                pCurrent    = pCurrent->pNext;
+            }
+
+            pCurrentVk->pNext = nullptr;
+        }
+
+        return & pContext->info;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_COPY_COMMANDS_AVAILABLE
+    auto toVulkanFormat (
+            VkImageBlit2_t            * pDestination,
+            Type ( ImageBlit2 ) const * pSource
+    ) noexcept -> VkImageBlit2_t * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+                .sType          = VK_STRUCTURE_TYPE_IMAGE_BLIT_2,
+#else
+                .sType          = VK_STRUCTURE_TYPE_IMAGE_BLIT_2_KHR,
+#endif
+                .pNext          = nullptr,
+                .srcSubresource = {
+                        .aspectMask     = pSource->sourceSubresource.aspectMask,
+                        .mipLevel       = pSource->sourceSubresource.mipLevel,
+                        .baseArrayLayer = pSource->sourceSubresource.baseArrayLayer,
+                        .layerCount     = pSource->sourceSubresource.layerCount
+                },
+                .srcOffsets     = {
+                        {
+                                .x              = pSource->sourceOffsets[0].x,
+                                .y              = pSource->sourceOffsets[0].y,
+                                .z              = pSource->sourceOffsets[0].z
+                        },
+                        {
+                                .x              = pSource->sourceOffsets[1].x,
+                                .y              = pSource->sourceOffsets[1].y,
+                                .z              = pSource->sourceOffsets[1].z
+                        }
+                },
+                .dstSubresource = {
+                        .aspectMask     = pSource->destinationSubresource.aspectMask,
+                        .mipLevel       = pSource->destinationSubresource.mipLevel,
+                        .baseArrayLayer = pSource->destinationSubresource.baseArrayLayer,
+                        .layerCount     = pSource->destinationSubresource.layerCount
+                },
+                .dstOffsets     = {
+                        {
+                                .x              = pSource->destinationOffsets[0].x,
+                                .y              = pSource->destinationOffsets[0].y,
+                                .z              = pSource->destinationOffsets[0].z
+                        },
+                        {
+                                .x              = pSource->destinationOffsets[1].x,
+                                .y              = pSource->destinationOffsets[1].y,
+                                .z              = pSource->destinationOffsets[1].z
+                        }
+                }
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_COPY_COMMANDS_AVAILABLE
+    auto toVulkanFormat (
+            VkBlitImageInfo2_t              * pDestination,
+            Type ( BlitImageInfo2 )   const * pSource
+    ) noexcept -> VkBlitImageInfo2_t * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+                .sType          = VK_STRUCTURE_TYPE_BLIT_IMAGE_INFO_2,
+#else
+                .sType          = VK_STRUCTURE_TYPE_BLIT_IMAGE_INFO_2_KHR,
+#endif
+                .pNext          = nullptr,
+                .srcImage       = pSource->sourceImage,
+                .srcImageLayout = static_cast < VkImageLayout > ( pSource->sourceImageLayout ),
+                .dstImage       = pSource->destinationImage,
+                .dstImageLayout = static_cast < VkImageLayout > ( pSource->destinationImageLayout ),
+                .regionCount    = pSource->regionCount,
+                .pRegions       = nullptr,
+                .filter         = static_cast < VkFilter > ( pSource->filter )
+        };
+
+        return pDestination;
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    auto prepareContext (
+            ResolveImageContext                * pContext,
+            uint32                               count,
+            Type ( ImageResolve )        const * pSource
+    ) noexcept -> VkImageResolve * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pContext == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        if ( count > engine :: vulkan :: config :: imageResolveCount ) {
+            __C_ENG_DIAG_SET_CONTEXT_ERROR ( pContext, ResultErrorConfigurationArraySizeSmall, String :: f (
+                    "config :: imageResolveCount = %d. Minimum Required = %d",
+                    engine :: vulkan :: config :: imageResolveCount,
+                    count
+            ))
+
+            count = engine :: vulkan :: config :: imageResolveCount;
+        }
+
+        for ( uint32 i = 0U; i < count; ++ i ) {
+            (void) toVulkanFormat ( & pContext->resolves[i], & pSource[i] );
+        }
+
+        return & pContext->resolves[0];
+    }
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    auto toVulkanFormat (
+            VkImageResolve              * pDestination,
+            Type ( ImageResolve ) const * pSource
+    ) noexcept -> VkImageResolve * {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+        if ( pDestination == nullptr || pSource == nullptr ) {
+            return nullptr;
+        }
+
+#endif
+
+        * pDestination = {
+                .srcSubresource = {
+                        .aspectMask     = pSource->sourceSubresource.aspectMask,
+                        .mipLevel       = pSource->sourceSubresource.mipLevel,
+                        .baseArrayLayer = pSource->sourceSubresource.baseArrayLayer,
+                        .layerCount     = pSource->sourceSubresource.layerCount
+                },
+                .srcOffset      = {
+                        .x              = pSource->sourceOffset.x,
+                        .y              = pSource->sourceOffset.y,
+                        .z              = pSource->sourceOffset.z
+                },
+                .dstSubresource = {
+                        .aspectMask     = pSource->destinationSubresource.aspectMask,
+                        .mipLevel       = pSource->destinationSubresource.mipLevel,
+                        .baseArrayLayer = pSource->destinationSubresource.baseArrayLayer,
+                        .layerCount     = pSource->destinationSubresource.layerCount
+                },
+                .dstOffset      = {
+                        .x              = pSource->destinationOffset.x,
+                        .y              = pSource->destinationOffset.y,
+                        .z              = pSource->destinationOffset.z
+                },
+                .extent         = {
+                        .width          = pSource->extent.width,
+                        .height         = pSource->extent.height,
+                        .depth          = pSource->extent.depth
+                }
+        };
+
+        return pDestination;
+    }
+#endif
+
 
 } // namespace vulkan :: engine

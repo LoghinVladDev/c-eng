@@ -121,6 +121,18 @@ enum class SharedContextType {
     CreateDescriptorUpdateTemplate,
     GetDeviceBufferAddress,
     CreateQueryPool,
+    ClearColorImage,
+    ClearDepthStencilImage,
+    ClearAttachments,
+    CopyBuffer,
+    CopyBuffer2,
+    CopyImage,
+    CopyImage2,
+    CopyBufferToImageOrImageToBuffer,
+    CopyBufferToImageOrImageToBuffer2,
+    BlitImage,
+    BlitImage2,
+    ResolveImage,
 };
 
 union SpecializedContextType {
@@ -151,6 +163,14 @@ enum class ParameterType {
     SurfaceFormat,
     Extent2DPtr,
     CooperativeMatrixPropertiesNVidia,
+    ImageSubresourceRange,
+    ClearAttachment,
+    ClearRect,
+    BufferCopy,
+    ImageCopy,
+    BufferImageCopy,
+    ImageBlit,
+    ImageResolve,
 
     PhysicalDevicePropertiesPtr,
     PhysicalDeviceFeaturesPtr,
@@ -1973,6 +1993,128 @@ struct CreateQueryPoolContext {
 #endif
 };
 
+struct ClearColorImageContext {
+    CommonItems                                                     common;
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    VkClearColorValue                                               color;
+    VkImageSubresourceRange                                         ranges [ engine :: vulkan :: config :: clearImageSubresourceRangeCount ];
+#endif
+};
+
+struct ClearDepthStencilImageContext {
+    CommonItems                                                     common;
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    VkClearDepthStencilValue                                        depthStencil;
+    VkImageSubresourceRange                                         ranges [ engine :: vulkan :: config :: clearImageSubresourceRangeCount ];
+#endif
+};
+
+struct ClearAttachmentsContext {
+    CommonItems                                                     common;
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    VkClearAttachment                                               attachments [ engine :: vulkan :: config :: clearAttachmentCount ];
+    VkClearRect                                                     rects [ engine :: vulkan :: config :: clearRectCount ];
+#endif
+};
+
+struct CopyBufferContext {
+    CommonItems                                                     common;
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    VkBufferCopy                                                    copies [ engine :: vulkan :: config :: bufferCopyCount ];
+#endif
+};
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_COPY_COMMANDS_AVAILABLE
+struct CopyBufferInfo2Subcontext {
+    VkCopyBufferInfo2_t                                             info;
+    VkBufferCopy2_t                                                 copies [ engine :: vulkan :: config :: bufferCopyCount ];
+};
+#endif
+
+struct CopyBuffer2Context {
+    CommonItems                                                     common;
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_COPY_COMMANDS_AVAILABLE
+    CopyBufferInfo2Subcontext                                       info;
+#endif
+};
+
+struct CopyImageContext {
+    CommonItems                                                     common;
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    VkImageCopy                                                     copies [ engine :: vulkan :: config :: imageCopyCount ];
+#endif
+};
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_COPY_COMMANDS_AVAILABLE
+struct CopyImageInfo2Subcontext {
+    VkCopyImageInfo2_t                                              info;
+    VkImageCopy2_t                                                  copies [ engine :: vulkan :: config :: imageCopyCount ];
+};
+#endif
+
+struct CopyImage2Context {
+    CommonItems                                                     common;
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_COPY_COMMANDS_AVAILABLE
+    CopyImageInfo2Subcontext                                        info;
+#endif
+};
+
+struct BlitImageContext {
+    CommonItems                                                     common;
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    VkImageBlit                                                     blits [ engine :: vulkan :: config :: imageBlitCount ];
+#endif
+};
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_COPY_COMMANDS_AVAILABLE
+struct BlitImageInfo2Subcontext {
+    VkBlitImageInfo2_t                                              info;
+    VkImageBlit2_t                                                  blits [ engine :: vulkan :: config :: imageBlitCount ];
+#if __C_ENG_VULKAN_API_EXTENSION_QUALCOMM_ROTATED_COPY_COMMANDS_AVAILABLE
+    VkCopyCommandTransformInfoQCOM                                  copyCommandTransforms [ engine :: vulkan :: config :: imageBlitCount ];
+#endif
+};
+#endif
+
+struct BlitImage2Context {
+    CommonItems                                                     common;
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_COPY_COMMANDS_AVAILABLE
+    BlitImageInfo2Subcontext                                        info;
+#endif
+};
+
+struct CopyBufferToImageOrImageToBufferContext {
+    CommonItems                                                     common;
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    VkBufferImageCopy                                               copies [ engine :: vulkan :: config :: bufferImageCopyCount ];
+#endif
+};
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_COPY_COMMANDS_AVAILABLE
+struct CopyBufferToImageOrImageToBuffer2Subcontext {
+    VkCopyBufferToImageInfo2_t                                      bufferToImage;
+    VkCopyImageToBufferInfo2_t                                      imageToBuffer;
+    VkBufferImageCopy2_t                                            copies [ engine :: vulkan :: config :: imageCopyCount ];
+#if __C_ENG_VULKAN_API_EXTENSION_QUALCOMM_ROTATED_COPY_COMMANDS_AVAILABLE
+    VkCopyCommandTransformInfoQCOM                                  copyCommandsTransforms [ engine :: vulkan :: config :: imageCopyCount ];
+#endif
+};
+#endif
+
+struct CopyBufferToImageOrImageToBuffer2Context {
+    CommonItems                                                     common;
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_COPY_COMMANDS_AVAILABLE
+    CopyBufferToImageOrImageToBuffer2Subcontext                     info;
+#endif
+};
+
+struct ResolveImageContext {
+    CommonItems                                                     common;
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    VkImageResolve                                                  resolves [ engine :: vulkan :: config :: imageResolveCount ];
+#endif
+};
+
 union GetMemorySharedContext {
     GetMemoryWin32Context                   win32;
     GetMemoryFdContext                      fd;
@@ -2194,6 +2336,32 @@ union UpdateSharedContext {
     UpdateDescriptorSharedContext                                       descriptor;
 };
 
+union ClearColorSharedContext {
+    ClearColorImageContext                                              image;
+};
+
+union ClearDepthStencilSharedContext {
+    ClearDepthStencilImageContext                                       image;
+};
+
+union ClearSharedContext {
+    ClearColorSharedContext                                             color;
+    ClearDepthStencilSharedContext                                      depthStencil;
+    ClearAttachmentsContext                                             attachments;
+};
+
+union CopySharedContext {
+    CopyBufferContext                                                   buffer;
+    CopyBuffer2Context                                                  buffer2;
+    CopyImageContext                                                    image;
+    CopyImage2Context                                                   image2;
+    CopyBufferToImageOrImageToBufferContext                             bufferToImageOrImageToBuffer;
+    CopyBufferToImageOrImageToBuffer2Context                            bufferToImageOrImageToBuffer2;
+    BlitImageContext                                                    blitImage;
+    BlitImage2Context                                                   blitImage2;
+    ResolveImageContext                                                 resolveImage;
+};
+
 union SharedContext {
     CommonContext                                                       common;
     CreateSharedContext                                                 create;
@@ -2209,6 +2377,8 @@ union SharedContext {
     SignalSharedContext                                                 signal;
     BindSharedContext                                                   bind;
     UpdateSharedContext                                                 update;
+    ClearSharedContext                                                  clear;
+    CopySharedContext                                                   copy;
 };
 
 constexpr auto toString ( ContextType type ) noexcept -> cds :: StringLiteral {
@@ -2304,6 +2474,18 @@ constexpr auto toString ( SharedContextType type ) noexcept -> cds :: StringLite
         case SharedContextType :: CreateDescriptorUpdateTemplate:                             return "CreateDescriptorUpdateTemplate";
         case SharedContextType :: GetDeviceBufferAddress:                                     return "GetDeviceBufferAddress";
         case SharedContextType :: CreateQueryPool:                                            return "CreateQueryPool";
+        case SharedContextType :: ClearColorImage:                                            return "ClearColorImage";
+        case SharedContextType :: ClearDepthStencilImage:                                     return "ClearDepthStencilImage";
+        case SharedContextType :: ClearAttachments:                                           return "ClearAttachments";
+        case SharedContextType :: CopyBuffer:                                                 return "CopyBuffer";
+        case SharedContextType :: CopyBuffer2:                                                return "CopyBuffer2";
+        case SharedContextType :: CopyImage:                                                  return "CopyImage";
+        case SharedContextType :: CopyImage2:                                                 return "CopyImage2";
+        case SharedContextType :: CopyBufferToImageOrImageToBuffer:                           return "CopyBufferToImageOrImageToBuffer";
+        case SharedContextType :: CopyBufferToImageOrImageToBuffer2:                          return "CopyBufferToImageOrImageToBuffer2";
+        case SharedContextType :: BlitImage:                                                  return "BlitImage";
+        case SharedContextType :: BlitImage2:                                                 return "BlitImage2";
+        case SharedContextType :: ResolveImage:                                               return "ResolveImage";
     }
 }
 

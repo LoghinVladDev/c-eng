@@ -4655,6 +4655,286 @@ namespace engine :: vulkan {
     ) noexcept -> VkPerformanceConfigurationAcquireInfoINTEL *;
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto prepareContext (
+            ClearColorImageContext            *,
+            Type ( ClearColorValue )    const *
+    ) noexcept -> VkClearColorValue *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto prepareContext (
+            ClearColorImageContext                  *,
+            cds :: uint32,
+            Type ( ImageSubresourceRange )    const *
+    ) noexcept -> VkImageSubresourceRange *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto prepareContext (
+            ClearDepthStencilImageContext            *,
+            Type ( ClearDepthStencilValue )    const *
+    ) noexcept -> VkClearDepthStencilValue *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto prepareContext (
+            ClearDepthStencilImageContext           *,
+            cds :: uint32,
+            Type ( ImageSubresourceRange )    const *
+    ) noexcept -> VkImageSubresourceRange *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto prepareContext (
+            ClearAttachmentsContext           *,
+            cds :: uint32,
+            Type ( ClearAttachment )    const *
+    ) noexcept -> VkClearAttachment *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto prepareContext (
+            ClearAttachmentsContext           *,
+            cds :: uint32,
+            Type ( ClearRect )          const *
+    ) noexcept -> VkClearRect *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto toVulkanFormat (
+            VkClearAttachment              *,
+            Type ( ClearAttachment ) const *
+    ) noexcept -> VkClearAttachment *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto toVulkanFormat (
+            VkClearRect              *,
+            Type ( ClearRect ) const *
+    ) noexcept -> VkClearRect *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto prepareContext (
+            CopyBufferContext         *,
+            cds :: uint32,
+            Type ( BufferCopy ) const *
+    ) noexcept -> VkBufferCopy *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_COPY_COMMANDS_AVAILABLE
+    extern auto prepareContext (
+            CopyBuffer2Context             *,
+            Type ( CopyBufferInfo2 ) const *
+    ) noexcept -> VkCopyBufferInfo2_t *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto toVulkanFormat (
+            VkBufferCopy              *,
+            Type ( BufferCopy ) const *
+    ) noexcept -> VkBufferCopy *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_COPY_COMMANDS_AVAILABLE
+    extern auto prepareSubcontext (
+            CommonContext                   *,
+            CopyBufferInfo2Subcontext       *,
+            Type ( CopyBufferInfo2 )  const *
+    ) noexcept -> VkCopyBufferInfo2_t *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_COPY_COMMANDS_AVAILABLE
+    extern auto toVulkanFormat (
+            VkBufferCopy2_t            *,
+            Type ( BufferCopy2 ) const *
+    ) noexcept -> VkBufferCopy2_t *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_COPY_COMMANDS_AVAILABLE
+    extern auto toVulkanFormat (
+            VkCopyBufferInfo2_t              *,
+            Type ( CopyBufferInfo2 )   const *
+    ) noexcept -> VkCopyBufferInfo2_t *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto prepareContext (
+            CopyImageContext          *,
+            cds :: uint32,
+            Type ( ImageCopy )  const *
+    ) noexcept -> VkImageCopy *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_COPY_COMMANDS_AVAILABLE
+    extern auto prepareContext (
+            CopyImage2Context             *,
+            Type ( CopyImageInfo2 ) const *
+    ) noexcept -> VkCopyImageInfo2_t *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto toVulkanFormat (
+            VkImageCopy              *,
+            Type ( ImageCopy ) const *
+    ) noexcept -> VkImageCopy *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_COPY_COMMANDS_AVAILABLE
+    extern auto prepareSubcontext (
+            CommonContext                  *,
+            CopyImageInfo2Subcontext       *,
+            Type ( CopyImageInfo2 )  const *
+    ) noexcept -> VkCopyImageInfo2_t *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_COPY_COMMANDS_AVAILABLE
+    extern auto toVulkanFormat (
+            VkImageCopy2_t            *,
+            Type ( ImageCopy2 ) const *
+    ) noexcept -> VkImageCopy2_t *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_COPY_COMMANDS_AVAILABLE
+    extern auto toVulkanFormat (
+            VkCopyImageInfo2_t              *,
+            Type ( CopyImageInfo2 )   const *
+    ) noexcept -> VkCopyImageInfo2_t *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto prepareContext (
+            BlitImageContext          *,
+            cds :: uint32,
+            Type ( ImageBlit )  const *
+    ) noexcept -> VkImageBlit *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_COPY_COMMANDS_AVAILABLE
+    extern auto prepareContext (
+            BlitImage2Context             *,
+            Type ( BlitImageInfo2 ) const *
+    ) noexcept -> VkBlitImageInfo2_t *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto toVulkanFormat (
+            VkImageBlit              *,
+            Type ( ImageBlit ) const *
+    ) noexcept -> VkImageBlit *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_COPY_COMMANDS_AVAILABLE
+    extern auto prepareSubcontext (
+            CommonContext                  *,
+            BlitImageInfo2Subcontext       *,
+            Type ( BlitImageInfo2 )  const *
+    ) noexcept -> VkBlitImageInfo2_t *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_COPY_COMMANDS_AVAILABLE
+    extern auto toVulkanFormat (
+            VkImageBlit2_t            *,
+            Type ( ImageBlit2 ) const *
+    ) noexcept -> VkImageBlit2_t *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_COPY_COMMANDS_AVAILABLE
+    extern auto toVulkanFormat (
+            VkBlitImageInfo2_t              *,
+            Type ( BlitImageInfo2 )   const *
+    ) noexcept -> VkBlitImageInfo2_t *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto prepareContext (
+            CopyBufferToImageOrImageToBufferContext     *,
+            cds :: uint32,
+            Type ( BufferImageCopy )              const *
+    ) noexcept -> VkBufferImageCopy *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_COPY_COMMANDS_AVAILABLE
+    extern auto prepareContext (
+            CopyBufferToImageOrImageToBuffer2Context            *,
+            Type ( CopyBufferToImageInfo2 )               const *
+    ) noexcept -> VkCopyBufferToImageInfo2_t *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_COPY_COMMANDS_AVAILABLE
+    extern auto prepareContext (
+            CopyBufferToImageOrImageToBuffer2Context            *,
+            Type ( CopyImageToBufferInfo2 )               const *
+    ) noexcept -> VkCopyImageToBufferInfo2_t *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto toVulkanFormat (
+            VkBufferImageCopy              *,
+            Type ( BufferImageCopy ) const *
+    ) noexcept -> VkBufferImageCopy *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_COPY_COMMANDS_AVAILABLE
+    extern auto prepareSubcontext (
+            CommonContext                                   *,
+            CopyBufferToImageOrImageToBuffer2Subcontext     *,
+            Type ( CopyBufferToImageInfo2 )           const *
+    ) noexcept -> VkCopyBufferToImageInfo2_t *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_COPY_COMMANDS_AVAILABLE
+    extern auto prepareSubcontext (
+            CommonContext                                   *,
+            CopyBufferToImageOrImageToBuffer2Subcontext     *,
+            Type ( CopyImageToBufferInfo2 )           const *
+    ) noexcept -> VkCopyImageToBufferInfo2_t *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_COPY_COMMANDS_AVAILABLE
+    extern auto toVulkanFormat (
+            VkBufferImageCopy2_t            *,
+            Type ( BufferImageCopy2 ) const *
+    ) noexcept -> VkBufferImageCopy2_t *;
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_QUALCOMM_ROTATED_COPY_COMMANDS_AVAILABLE
+    extern auto toVulkanFormat (
+            VkCopyCommandTransformInfoQCOM                  *,
+            Type ( CopyCommandTransformInfoQualcomm ) const *
+    ) noexcept -> VkCopyCommandTransformInfoQCOM *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_COPY_COMMANDS_AVAILABLE
+    extern auto toVulkanFormat (
+            VkCopyBufferToImageInfo2_t              *,
+            Type ( CopyBufferToImageInfo2 )   const *
+    ) noexcept -> VkCopyBufferToImageInfo2_t *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_COPY_COMMANDS_AVAILABLE
+    extern auto toVulkanFormat (
+            VkCopyImageToBufferInfo2_t              *,
+            Type ( CopyImageToBufferInfo2 )   const *
+    ) noexcept -> VkCopyImageToBufferInfo2_t *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto prepareContext (
+            ResolveImageContext          *,
+            cds :: uint32,
+            Type ( ImageResolve )  const *
+    ) noexcept -> VkImageResolve *;
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+    extern auto toVulkanFormat (
+            VkImageResolve              *,
+            Type ( ImageResolve ) const *
+    ) noexcept -> VkImageResolve *;
+#endif
+
 } // namespace engine :: vulkan
 
 #define C_ENG_MAP_END

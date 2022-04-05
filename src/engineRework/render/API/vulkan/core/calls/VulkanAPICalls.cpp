@@ -9445,3 +9445,832 @@ NoDiscard MaybeUnused auto engine :: vulkan :: releasePerformanceConfigurationIn
     );
 }
 #endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+NoDiscard MaybeUnused auto engine :: vulkan :: commandBufferClearColorImage (
+        Type ( CommandBufferHandle )            commandBufferHandle,
+        Type ( ImageHandle )                    imageHandle,
+        Type ( ImageLayout )                    imageLayout,
+        Type ( ClearColorValue )        const * pColor,
+        cds :: uint32                           rangeCount,
+        Type ( ImageSubresourceRange )  const * pRanges
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( commandBufferHandle == nullptr || imageHandle == nullptr || pColor == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    auto context = ContextManager :: acquire();
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    auto arrayPack = DumpedArray {
+        .pCount = & rangeCount,
+        .type   = ParameterType :: ImageSubresourceRange,
+        .size   = sizeof ( Type ( ImageSubresourceRange ) ),
+        .pArray = pRanges
+    };
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: ClearColorImage,
+            "vkCmdClearColorImage",
+            "Clears one or more subranges upon a command buffer's execution",
+            commandBufferHandle,
+            imageHandle,
+            imageLayout,
+            pColor,
+            rangeCount,
+            arrayPack
+    );
+
+#endif
+
+    return APICaller.vkCmdClearColorImage (
+            commandBufferHandle,
+            imageHandle,
+            static_cast < VkImageLayout > ( imageLayout ),
+            prepareContext ( & context->clear.color.image, pColor ),
+            rangeCount,
+            prepareContext ( & context->clear.color.image, rangeCount, & pRanges[0] )
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+NoDiscard MaybeUnused auto engine :: vulkan :: commandBufferClearDepthStencilImage (
+        Type ( CommandBufferHandle )            commandBufferHandle,
+        Type ( ImageHandle )                    imageHandle,
+        Type ( ImageLayout )                    imageLayout,
+        Type ( ClearDepthStencilValue ) const * pColor,
+        cds :: uint32                           rangeCount,
+        Type ( ImageSubresourceRange )  const * pRanges
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( commandBufferHandle == nullptr || imageHandle == nullptr || pColor == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    auto context = ContextManager :: acquire();
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    auto arrayPack = DumpedArray {
+        .pCount = & rangeCount,
+        .type   = ParameterType :: ImageSubresourceRange,
+        .size   = sizeof ( Type ( ImageSubresourceRange ) ),
+        .pArray = pRanges
+    };
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: ClearDepthStencilImage,
+            "vkCmdClearDepthStencilImage",
+            "Clears one or more subranges upon a command buffer's execution",
+            commandBufferHandle,
+            imageHandle,
+            imageLayout,
+            pColor,
+            rangeCount,
+            arrayPack
+    );
+
+#endif
+
+    return APICaller.vkCmdClearDepthStencilImage (
+            commandBufferHandle,
+            imageHandle,
+            static_cast < VkImageLayout > ( imageLayout ),
+            prepareContext ( & context->clear.depthStencil.image, pColor ),
+            rangeCount,
+            prepareContext ( & context->clear.depthStencil.image, rangeCount, & pRanges[0] )
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+NoDiscard MaybeUnused auto engine :: vulkan :: commandBufferClearAttachments (
+        Type ( CommandBufferHandle )        commandBufferHandle,
+        cds :: uint32                       attachmentCount,
+        Type ( ClearAttachment )    const * pAttachments,
+        cds :: uint32                       rectCount,
+        Type ( ClearRect )          const * pRects
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( commandBufferHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    auto context = ContextManager :: acquire();
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    auto attachmentsPack = DumpedArray {
+        .pCount = & attachmentCount,
+        .type   = ParameterType :: ClearAttachment,
+        .size   = sizeof ( Type ( ClearAttachment ) ),
+        .pArray = pAttachments
+    };
+
+    auto rectsPack = DumpedArray {
+        .pCount = & rectCount,
+        .type   = ParameterType :: ClearRect,
+        .size   = sizeof ( Type ( ClearRect ) ),
+        .pArray = pRects
+    };
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: ClearAttachments,
+            "vkCmdClearAttachments",
+            "Clears one or more attachments upon a command buffer's execution",
+            commandBufferHandle,
+            attachmentCount,
+            attachmentsPack,
+            rectCount,
+            rectsPack
+    );
+
+#endif
+
+    return APICaller.vkCmdClearAttachments (
+            commandBufferHandle,
+            attachmentCount,
+            prepareContext ( & context->clear.attachments, attachmentCount, & pAttachments[0] ),
+            rectCount,
+            prepareContext ( & context->clear.attachments, rectCount, & pRects[0] )
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+NoDiscard MaybeUnused auto engine :: vulkan :: commandBufferFillBuffer (
+        Type ( CommandBufferHandle )    commandBufferHandle,
+        Type ( BufferHandle )           destinationBufferHandle,
+        Type ( DeviceSize )             destinationOffset,
+        Type ( DeviceSize )             size,
+        cds :: uint32                   data
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( commandBufferHandle == nullptr || destinationBufferHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+    auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkCmdFillBuffer",
+            "Fills a buffer upon a command buffer's execution",
+            commandBufferHandle,
+            destinationBufferHandle,
+            destinationOffset,
+            size,
+            data
+    );
+
+#endif
+
+    return APICaller.vkCmdFillBuffer (
+            commandBufferHandle,
+            destinationBufferHandle,
+            destinationOffset,
+            size,
+            data
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+NoDiscard MaybeUnused auto engine :: vulkan :: commandBufferUpdateBuffer (
+        Type ( CommandBufferHandle )            commandBufferHandle,
+        Type ( BufferHandle )                   destinationBufferHandle,
+        Type ( DeviceSize )                     destinationOffset,
+        Type ( DeviceSize )                     size,
+        void                            const * pData
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( commandBufferHandle == nullptr || destinationBufferHandle == nullptr || pData == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+    auto context = ContextManager :: acquire();
+
+    prepareDump (
+            context.data(),
+            "vkCmdUpdateBuffer",
+            "Updates a buffer's contents upon a command buffer's execution",
+            commandBufferHandle,
+            destinationBufferHandle,
+            destinationOffset,
+            size,
+            pData
+    );
+
+#endif
+
+    return APICaller.vkCmdUpdateBuffer (
+            commandBufferHandle,
+            destinationBufferHandle,
+            destinationOffset,
+            size,
+            pData
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+NoDiscard MaybeUnused auto engine :: vulkan :: commandBufferCopyBuffer (
+        Type ( CommandBufferHandle )            commandBufferHandle,
+        Type ( BufferHandle )                   sourceBufferHandle,
+        Type ( BufferHandle )                   destinationBufferHandle,
+        cds :: uint32                           regionCount,
+        Type ( BufferCopy )             const * pRegions
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( commandBufferHandle == nullptr || sourceBufferHandle == nullptr || destinationBufferHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    auto context = ContextManager :: acquire();
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    auto arrayPack = DumpedArray {
+        .pCount = & regionCount,
+        .type   = ParameterType :: BufferCopy,
+        .size   = sizeof ( Type ( BufferCopy ) ),
+        .pArray = pRegions
+    };
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: CopyBuffer,
+            "vkCmdCopyBuffer",
+            "Copies a buffer's contents into another upon a command buffer's execution",
+            commandBufferHandle,
+            sourceBufferHandle,
+            destinationBufferHandle,
+            regionCount,
+            arrayPack
+    );
+
+#endif
+
+    return APICaller.vkCmdCopyBuffer (
+            commandBufferHandle,
+            sourceBufferHandle,
+            destinationBufferHandle,
+            regionCount,
+            prepareContext ( & context->copy.buffer, regionCount, & pRegions[0] )
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_COPY_COMMANDS_AVAILABLE
+NoDiscard MaybeUnused auto engine :: vulkan :: commandBufferCopyBuffer (
+        Type ( CommandBufferHandle )            commandBufferHandle,
+        Type ( CopyBufferInfo2 )        const * pInfo
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( commandBufferHandle == nullptr || pInfo == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    auto context = ContextManager :: acquire();
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: CopyBuffer2,
+            "vkCmdCopyBuffer2",
+            "Copies a buffer's contents into another upon a command buffer's execution",
+            commandBufferHandle,
+            pInfo
+    );
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+
+    return APICaller.vkCmdCopyBuffer2 (
+            commandBufferHandle,
+            prepareContext ( & context->copy.buffer2, pInfo )
+    );
+
+#else
+
+    return APICaller.vkCmdCopyBuffer2KHR (
+            commandBufferHandle,
+            prepareContext ( & context->copy.buffer2, pInfo )
+    );
+
+#endif
+
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+NoDiscard MaybeUnused auto engine :: vulkan :: commandBufferCopyImage (
+        Type ( CommandBufferHandle )            commandBufferHandle,
+        Type ( ImageHandle )                    sourceImageHandle,
+        Type ( ImageLayout )                    sourceImageLayout,
+        Type ( ImageHandle )                    destinationImageHandle,
+        Type ( ImageLayout )                    destinationImageLayout,
+        cds :: uint32                           regionCount,
+        Type ( ImageCopy )              const * pRegions
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( commandBufferHandle == nullptr || sourceImageHandle == nullptr || destinationImageHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    auto context = ContextManager :: acquire();
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    auto arrayPack = DumpedArray {
+            .pCount = & regionCount,
+            .type   = ParameterType :: ImageCopy,
+            .size   = sizeof ( Type ( ImageCopy ) ),
+            .pArray = pRegions
+    };
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: CopyImage,
+            "vkCmdCopyImage",
+            "Copies a image's contents into another upon a command buffer's execution",
+            commandBufferHandle,
+            sourceImageHandle,
+            sourceImageLayout,
+            destinationImageHandle,
+            destinationImageLayout,
+            regionCount,
+            arrayPack
+    );
+
+#endif
+
+    return APICaller.vkCmdCopyImage (
+            commandBufferHandle,
+            sourceImageHandle,
+            static_cast < VkImageLayout > ( sourceImageLayout ),
+            destinationImageHandle,
+            static_cast < VkImageLayout > ( destinationImageLayout ),
+            regionCount,
+            prepareContext ( & context->copy.image, regionCount, & pRegions[0] )
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_COPY_COMMANDS_AVAILABLE
+NoDiscard MaybeUnused auto engine :: vulkan :: commandBufferCopyImage (
+        Type ( CommandBufferHandle )            commandBufferHandle,
+        Type ( CopyImageInfo2 )         const * pInfo
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( commandBufferHandle == nullptr || pInfo == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    auto context = ContextManager :: acquire();
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: CopyImage2,
+            "vkCmdCopyImage2",
+            "Copies a image's contents into another upon a command buffer's execution",
+            commandBufferHandle,
+            pInfo
+    );
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+
+    return APICaller.vkCmdCopyImage2 (
+            commandBufferHandle,
+            prepareContext ( & context->copy.image2, pInfo )
+    );
+
+#else
+
+    return APICaller.vkCmdCopyImage2KHR (
+            commandBufferHandle,
+            prepareContext ( & context->copy.image2, pInfo )
+    );
+
+#endif
+
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+NoDiscard MaybeUnused auto engine :: vulkan :: commandBufferCopyBufferToImage (
+        Type ( CommandBufferHandle )            commandBufferHandle,
+        Type ( BufferHandle )                   sourceBuffer,
+        Type ( ImageHandle )                    destinationImageHandle,
+        Type ( ImageLayout )                    destinationImageLayout,
+        cds :: uint32                           regionCount,
+        Type ( BufferImageCopy )        const * pRegions
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( commandBufferHandle == nullptr || sourceBuffer == nullptr || destinationImageHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    auto context = ContextManager :: acquire();
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    auto arrayPack = DumpedArray {
+            .pCount = & regionCount,
+            .type   = ParameterType :: BufferImageCopy,
+            .size   = sizeof ( Type ( BufferImageCopy ) ),
+            .pArray = pRegions
+    };
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: CopyBufferToImageOrImageToBuffer,
+            "vkCmdCopyBufferToImage",
+            "Copies a buffer's contents into an image upon a command buffer's execution",
+            commandBufferHandle,
+            sourceBuffer,
+            destinationImageHandle,
+            destinationImageLayout,
+            regionCount,
+            arrayPack
+    );
+
+#endif
+
+    return APICaller.vkCmdCopyBufferToImage (
+            commandBufferHandle,
+            sourceBuffer,
+            destinationImageHandle,
+            static_cast < VkImageLayout > ( destinationImageLayout ),
+            regionCount,
+            prepareContext ( & context->copy.bufferToImageOrImageToBuffer, regionCount, & pRegions[0] )
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+NoDiscard MaybeUnused auto engine :: vulkan :: commandBufferCopyImageToBuffer (
+        Type ( CommandBufferHandle )            commandBufferHandle,
+        Type ( ImageHandle )                    sourceImageHandle,
+        Type ( ImageLayout )                    sourceImageLayout,
+        Type ( BufferHandle )                   destinationBuffer,
+        cds :: uint32                           regionCount,
+        Type ( BufferImageCopy )        const * pRegions
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( commandBufferHandle == nullptr || sourceImageHandle == nullptr || destinationBuffer == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    auto context = ContextManager :: acquire();
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    auto arrayPack = DumpedArray {
+            .pCount = & regionCount,
+            .type   = ParameterType :: BufferImageCopy,
+            .size   = sizeof ( Type ( BufferImageCopy ) ),
+            .pArray = pRegions
+    };
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: CopyBufferToImageOrImageToBuffer,
+            "vkCmdCopyImageToBuffer",
+            "Copies a image's contents into a buffer upon a command buffer's execution",
+            commandBufferHandle,
+            sourceImageHandle,
+            sourceImageLayout,
+            destinationBuffer,
+            regionCount,
+            arrayPack
+    );
+
+#endif
+
+    return APICaller.vkCmdCopyImageToBuffer (
+            commandBufferHandle,
+            sourceImageHandle,
+            static_cast < VkImageLayout > ( sourceImageLayout ),
+            destinationBuffer,
+            regionCount,
+            prepareContext ( & context->copy.bufferToImageOrImageToBuffer, regionCount, & pRegions[0] )
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_COPY_COMMANDS_AVAILABLE
+NoDiscard MaybeUnused auto engine :: vulkan :: commandBufferCopyBufferToImage (
+        Type ( CommandBufferHandle )                    commandBufferHandle,
+        Type ( CopyBufferToImageInfo2 )         const * pInfo
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( commandBufferHandle == nullptr || pInfo == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    auto context = ContextManager :: acquire();
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: CopyBufferToImageOrImageToBuffer2,
+            "vkCmdCopyBufferToImage2",
+            "Copies a buffer's contents into an image upon a command buffer's execution",
+            commandBufferHandle,
+            pInfo
+    );
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+
+    return APICaller.vkCmdCopyBufferToImage2 (
+            commandBufferHandle,
+            prepareContext ( & context->copy.bufferToImageOrImageToBuffer2, pInfo )
+    );
+
+#else
+
+    return APICaller.vkCmdCopyBufferToImage2KHR (
+            commandBufferHandle,
+            prepareContext ( & context->copy.bufferToImageOrImageToBuffer2, pInfo )
+    );
+
+#endif
+
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_COPY_COMMANDS_AVAILABLE
+NoDiscard MaybeUnused auto engine :: vulkan :: commandBufferCopyImageToBuffer (
+        Type ( CommandBufferHandle )                    commandBufferHandle,
+        Type ( CopyImageToBufferInfo2 )         const * pInfo
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( commandBufferHandle == nullptr || pInfo == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    auto context = ContextManager :: acquire();
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: CopyBufferToImageOrImageToBuffer2,
+            "vkCmdCopyImageToImage2",
+            "Copies an image's contents into a buffer upon a command buffer's execution",
+            commandBufferHandle,
+            pInfo
+    );
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+
+    return APICaller.vkCmdCopyImageToBuffer2 (
+            commandBufferHandle,
+            prepareContext ( & context->copy.bufferToImageOrImageToBuffer2, pInfo )
+    );
+
+#else
+
+    return APICaller.vkCmdCopyImageToBuffer2KHR (
+            commandBufferHandle,
+            prepareContext ( & context->copy.image2, pInfo )
+    );
+
+#endif
+
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+NoDiscard MaybeUnused auto engine :: vulkan :: commandBufferBlitImage (
+        Type ( CommandBufferHandle )            commandBufferHandle,
+        Type ( ImageHandle )                    sourceImageHandle,
+        Type ( ImageLayout )                    sourceImageLayout,
+        Type ( ImageHandle )                    destinationImageHandle,
+        Type ( ImageLayout )                    destinationImageLayout,
+        cds :: uint32                           regionCount,
+        Type ( ImageBlit )              const * pRegions,
+        Type ( Filter )                         filter
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( commandBufferHandle == nullptr || sourceImageHandle == nullptr || destinationImageHandle == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    auto context = ContextManager :: acquire();
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    auto arrayPack = DumpedArray {
+            .pCount = & regionCount,
+            .type   = ParameterType :: ImageBlit,
+            .size   = sizeof ( Type ( ImageBlit ) ),
+            .pArray = pRegions
+    };
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: BlitImage,
+            "vkCmdBlitImage",
+            "Copies and blits a image's contents into another upon a command buffer's execution",
+            commandBufferHandle,
+            sourceImageHandle,
+            sourceImageLayout,
+            destinationImageHandle,
+            destinationImageLayout,
+            regionCount,
+            arrayPack,
+            filter
+    );
+
+#endif
+
+    return APICaller.vkCmdBlitImage (
+            commandBufferHandle,
+            sourceImageHandle,
+            static_cast < VkImageLayout > ( sourceImageLayout ),
+            destinationImageHandle,
+            static_cast < VkImageLayout > ( destinationImageLayout ),
+            regionCount,
+            prepareContext ( & context->copy.blitImage, regionCount, & pRegions[0] ),
+            static_cast < VkFilter > ( filter )
+    );
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_COPY_COMMANDS_AVAILABLE
+NoDiscard MaybeUnused auto engine :: vulkan :: commandBufferBlitImage (
+        Type ( CommandBufferHandle )            commandBufferHandle,
+        Type ( BlitImageInfo2 )         const * pInfo
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( commandBufferHandle == nullptr || pInfo == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+    auto context = ContextManager :: acquire();
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    prepareDump (
+            context.data(),
+            SharedContextType :: BlitImage2,
+            "vkCmdBlitImage2",
+            "Copies and blits a image's contents into another upon a command buffer's execution",
+            commandBufferHandle,
+            pInfo
+    );
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+
+    return APICaller.vkCmdBlitImage2 (
+            commandBufferHandle,
+            prepareContext ( & context->copy.blitImage2, pInfo )
+    );
+
+#else
+
+    return APICaller.vkCmdBlitImage2KHR (
+            commandBufferHandle,
+            prepareContext ( & context->copy.blitImage2, pInfo )
+    );
+
+#endif
+
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_AMD_BUFFER_MARKER_AVAILABLE
+NoDiscard MaybeUnused auto engine :: vulkan :: commandBufferWriteBufferMarkerAMD (
+        Type ( CommandBufferHandle )            commandBufferHandle,
+        Type ( PipelineStageFlags )             stage,
+        Type ( BufferHandle )                   destinationBuffer,
+        Type ( DeviceSize )                     destinationOffset,
+        cds :: uint32                           marker
+) noexcept -> Type ( Result ) {
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    if ( commandBufferHandle == nullptr || destinationBuffer == nullptr ) {
+        return ResultErrorIllegalArgument;
+    }
+
+#endif
+
+#if __C_ENG_VULKAN_CORE_DEFENSIVE_PROGRAMMING_ENABLED
+
+    auto context = ContextManager :: acquire();
+    auto flagsPack = Flags ( stage );
+
+    prepareDump (
+            context.data(),
+            "vkCmdWriteBufferMarker2AMD",
+            "Writes a buffer marker into a buffer upon a command buffer's execution",
+            commandBufferHandle,
+            flagsPack,
+            destinationBuffer,
+            destinationOffset,
+            marker
+    );
+
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_SYNCHRONIZATION_AVAILABLE
+
+    return APICaller.vkCmdWriteBufferMarker2AMD (
+            commandBufferHandle,
+            stage,
+            destinationBuffer,
+            destinationOffset,
+            marker
+    );
+
+#else
+
+    return APICaller.vkCmdWriteBufferMarkerAMD (
+            commandBufferHandle,
+            stage,
+            destinationBuffer,
+            destinationOffset,
+            marker
+    );
+
+#endif
+}
+#endif

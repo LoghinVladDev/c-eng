@@ -14842,3 +14842,286 @@ auto vulkan :: toString (
            " }";
 }
 #endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( ClearAttachment ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( ClearAttachment ) ) " " +
+           "{ aspectMask = "_s      + :: flagsToString < Type ( ImageAspectFlag ) > ( info.aspectMask ) +
+           ", colorAttachment = "   + info.colorAttachment +
+           ", clearValue = "        + (
+                  ( info.aspectMask & Type ( ImageAspectFlag ) :: ImageAspectFlagColor ) != 0U ?
+                  toString ( info.clearValue.color ) :
+                  toString ( info.clearValue.depthStencil )
+           ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( ClearRect ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( ClearRect ) ) " " +
+           "{ rect = "_s            + toString ( info.rect ) +
+           ", baseArrayLayer = "    + info.baseArrayLayer +
+           ", layerCount = "        + info.layerCount +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( BufferCopy ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( BufferCopy ) ) " " +
+           "{ sourceOffset = "_s        + toString ( info.sourceOffset ) +
+           ", destinationOffset = "     + toString ( info.destinationOffset ) +
+           ", size = "                  + toString ( info.size ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_COPY_COMMANDS_AVAILABLE
+auto vulkan :: toString (
+        Type ( BufferCopy2 ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( BufferCopy ) ) " " +
+           "{ structureType = "_s                   + toString ( info.structureType ) +
+           ", pNext = "                             + engine :: toString ( info.pNext ) +
+           ", sourceOffset = "_s                    + toString ( info.sourceOffset ) +
+           ", destinationOffset = "                 + toString ( info.destinationOffset ) +
+           ", size = "                              + toString ( info.size ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_COPY_COMMANDS_AVAILABLE
+auto vulkan :: toString (
+        Type ( CopyBufferInfo2 ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( CopyBufferInfo2 ) ) " " +
+           "{ structureType = "_s                   + toString ( info.structureType ) +
+           ", pNext = "                             + engine :: toString ( info.pNext ) +
+           ", sourceBuffer = "                      + engine :: toString ( info.sourceBuffer ) +
+           ", destinationBuffer = "                 + engine :: toString ( info.destinationBuffer ) +
+           ", regionCount = "                       + info.regionCount +
+           ", regions = "                           + :: toStringVulkan ( info.regionCount, info.pRegions ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( ImageSubresourceLayers ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( ImageSubresourceLayers ) ) " " +
+           "{ aspectMask = "_s      + :: flagsToString < Type ( ImageAspectFlag ) > ( info.aspectMask ) +
+           ", mipLevel = "          + info.mipLevel +
+           ", baseArrayLayer = "    + info.baseArrayLayer +
+           ", layerCount = "        + info.layerCount +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( ImageCopy ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( ImageCopy ) ) " " +
+           "{ sourceSubresource = "_s       + toString ( info.sourceSubresource ) +
+           ", sourceOffset = "              + toString ( info.sourceOffset ) +
+           ", destinationSubresource = "    + toString ( info.destinationSubresource ) +
+           ", destinationOffset = "         + toString ( info.destinationOffset ) +
+           ", extent = "                    + toString ( info.extent ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_COPY_COMMANDS_AVAILABLE
+auto vulkan :: toString (
+        Type ( ImageCopy2 ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( ImageCopy2 ) ) " " +
+           "{ structureType = "_s           + toString ( info.structureType ) +
+           ", pNext = "                     + engine :: toString ( info.pNext ) +
+           ", sourceSubresource = "_s       + toString ( info.sourceSubresource ) +
+           ", sourceOffset = "              + toString ( info.sourceOffset ) +
+           ", destinationSubresource = "    + toString ( info.destinationSubresource ) +
+           ", destinationOffset = "         + toString ( info.destinationOffset ) +
+           ", extent = "                    + toString ( info.extent ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_COPY_COMMANDS_AVAILABLE
+auto vulkan :: toString (
+        Type ( CopyImageInfo2 ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( CopyImageInfo2 ) ) " " +
+           "{ structureType = "_s           + toString ( info.structureType ) +
+           ", pNext = "                     + engine :: toString ( info.pNext ) +
+           ", sourceImage = "               + engine :: toString ( info.sourceImage ) +
+           ", sourceImageLayout = "         + toString ( info.sourceImageLayout ) +
+           ", destinationImage = "          + engine :: toString ( info.destinationImage ) +
+           ", destinationImageLayout = "    + toString ( info.destinationImageLayout ) +
+           ", regionCount = "               + info.regionCount +
+           ", regions = "                   + :: toStringVulkan ( info.regionCount, info.pRegions ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( BufferImageCopy ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( BufferImageCopy ) ) " " +
+           ", bufferOffset = "_s        + toString ( info.bufferOffset ) +
+           ", bufferRowLength = "       + info.bufferRowLength +
+           ", bufferImageHeight = "     + info.bufferImageHeight +
+           ", imageSubresource = "      + toString ( info.imageSubresource ) +
+           ", imageOffset = "           + toString ( info.imageOffset ) +
+           ", imageExtent = "           + toString ( info.imageExtent ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_COPY_COMMANDS_AVAILABLE
+auto vulkan :: toString (
+        Type ( BufferImageCopy2 ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( BufferImageCopy2 ) ) " " +
+           "{ structureType = "_s           + toString ( info.structureType ) +
+           ", pNext = "                     + engine :: toString ( info.pNext ) +
+           ", bufferOffset = "_s            + toString ( info.bufferOffset ) +
+           ", bufferRowLength = "           + info.bufferRowLength +
+           ", bufferImageHeight = "         + info.bufferImageHeight +
+           ", imageSubresource = "          + toString ( info.imageSubresource ) +
+           ", imageOffset = "               + toString ( info.imageOffset ) +
+           ", imageExtent = "               + toString ( info.imageExtent ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_COPY_COMMANDS_AVAILABLE
+auto vulkan :: toString (
+        Type ( CopyBufferToImageInfo2 ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( CopyBufferToImageInfo2 ) ) " " +
+           "{ structureType = "_s           + toString ( info.structureType ) +
+           ", pNext = "                     + engine :: toString ( info.pNext ) +
+           ", sourceBuffer = "              + engine :: toString ( info.sourceBuffer ) +
+           ", destinationImage = "          + engine :: toString ( info.destinationImage ) +
+           ", destinationImageLayout = "    + toString ( info.destinationImageLayout ) +
+           ", regionCount = "               + info.regionCount +
+           ", regions = "                   + :: toStringVulkan ( info.regionCount, info.pRegions ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_COPY_COMMANDS_AVAILABLE
+auto vulkan :: toString (
+        Type ( CopyImageToBufferInfo2 ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( CopyImageToBufferInfo2 ) ) " " +
+           "{ structureType = "_s           + toString ( info.structureType ) +
+           ", pNext = "                     + engine :: toString ( info.pNext ) +
+           ", sourceImage = "               + engine :: toString ( info.sourceImage ) +
+           ", sourceImageLayout = "         + toString ( info.sourceImageLayout ) +
+           ", destinationBuffer = "         + engine :: toString ( info.destinationBuffer ) +
+           ", regionCount = "               + info.regionCount +
+           ", regions = "                   + :: toStringVulkan ( info.regionCount, info.pRegions ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_QUALCOMM_ROTATED_COPY_COMMANDS_AVAILABLE
+auto vulkan :: toString (
+        Type ( CopyCommandTransformInfoQualcomm ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( CopyCommandTransformInfoQualcomm ) ) " " +
+           "{ structureType = "_s           + toString ( info.structureType ) +
+           ", pNext = "                     + engine :: toString ( info.pNext ) +
+           ", transform = "                 + toString ( info.transform ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( ImageBlit ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( ImageBlit ) ) " " +
+           "{ sourceSubresource = "_s           + toString ( info.sourceSubresource ) +
+           ", sourceOffsets = "                 + :: toStringVulkan ( 2, & info.sourceOffsets[0] ) +
+           ", destinationSubresource = "        + toString ( info.destinationSubresource ) +
+           ", destinationOffsets = "            + :: toStringVulkan ( 2, & info.destinationOffsets[0] ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_COPY_COMMANDS_AVAILABLE
+auto vulkan :: toString (
+        Type ( ImageBlit2 ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( ImageBlit2 ) ) " " +
+           "{ structureType = "_s               + toString ( info.structureType ) +
+           ", pNext = "                         + engine :: toString ( info.pNext ) +
+           ", sourceSubresource = "_s           + toString ( info.sourceSubresource ) +
+           ", sourceOffsets = "                 + :: toStringVulkan ( 2, & info.sourceOffsets[0] ) +
+           ", destinationSubresource = "        + toString ( info.destinationSubresource ) +
+           ", destinationOffsets = "            + :: toStringVulkan ( 2, & info.destinationOffsets[0] ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_COPY_COMMANDS_AVAILABLE
+auto vulkan :: toString (
+        Type ( BlitImageInfo2 ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( BlitImageInfo2 ) ) " " +
+           "{ structureType = "_s               + toString ( info.structureType ) +
+           ", pNext = "                         + engine :: toString ( info.pNext ) +
+           ", sourceImage = "                   + engine :: toString ( info.sourceImage ) +
+           ", sourceImageLayout = "             + toString ( info.sourceImageLayout ) +
+           ", destinationImage = "              + engine :: toString ( info.destinationImage ) +
+           ", destinationImageLayout = "        + toString ( info.destinationImageLayout ) +
+           ", regionCount = "                   + info.regionCount +
+           ", regions = "                       + :: toStringVulkan ( info.regionCount, info.pRegions ) +
+           ", filter = "                        + toString ( info.filter ) +
+           " }";
+}
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+auto vulkan :: toString (
+        Type ( ImageResolve ) const & info
+) noexcept -> String {
+
+    return __C_ENG_STRINGIFY ( Type ( ImageResolve ) ) " " +
+           "{ sourceSubresource = "_s           + toString ( info.sourceSubresource ) +
+           ", sourceOffsets = "                 + toString ( info.sourceOffset ) +
+           ", destinationSubresource = "        + toString ( info.destinationSubresource ) +
+           ", destinationOffsets = "            + toString ( info.destinationOffset ) +
+           ", extent = "                        + toString ( info.extent ) +
+           " }";
+}
+#endif

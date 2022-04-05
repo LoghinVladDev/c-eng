@@ -1867,6 +1867,172 @@ namespace engine { // NOLINT(modernize-concat-nested-namespaces)
         ) noexcept -> Type ( Result );
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+        NoDiscard MaybeUnused extern auto commandBufferClearColorImage (
+                Type ( CommandBufferHandle ),
+                Type ( ImageHandle ),
+                Type ( ImageLayout ),
+                Type ( ClearColorValue )        const *,
+                cds :: uint32,
+                Type ( ImageSubresourceRange )  const *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+        NoDiscard MaybeUnused extern auto commandBufferClearDepthStencilImage (
+                Type ( CommandBufferHandle ),
+                Type ( ImageHandle ),
+                Type ( ImageLayout ),
+                Type ( ClearDepthStencilValue ) const *,
+                cds :: uint32,
+                Type ( ImageSubresourceRange )  const *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+        NoDiscard MaybeUnused extern auto commandBufferClearAttachments (
+                Type ( CommandBufferHandle ),
+                cds :: uint32,
+                Type ( ClearAttachment )    const *,
+                cds :: uint32,
+                Type ( ClearRect )          const *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+        NoDiscard MaybeUnused extern auto commandBufferFillBuffer (
+                Type ( CommandBufferHandle ),
+                Type ( BufferHandle ),
+                Type ( DeviceSize ),
+                Type ( DeviceSize ),
+                cds :: uint32
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+        NoDiscard MaybeUnused extern auto commandBufferUpdateBuffer (
+                Type ( CommandBufferHandle ),
+                Type ( BufferHandle ),
+                Type ( DeviceSize ),
+                Type ( DeviceSize ),
+                void                            const *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+        NoDiscard MaybeUnused extern auto commandBufferCopyBuffer (
+                Type ( CommandBufferHandle ),
+                Type ( BufferHandle ),
+                Type ( BufferHandle ),
+                cds :: uint32,
+                Type ( BufferCopy )             const *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_COPY_COMMANDS_AVAILABLE
+        NoDiscard MaybeUnused extern auto commandBufferCopyBuffer (
+                Type ( CommandBufferHandle ),
+                Type ( CopyBufferInfo2 )        const *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+        NoDiscard MaybeUnused extern auto commandBufferCopyImage (
+                Type ( CommandBufferHandle ),
+                Type ( ImageHandle ),
+                Type ( ImageLayout ),
+                Type ( ImageHandle ),
+                Type ( ImageLayout ),
+                cds :: uint32,
+                Type ( ImageCopy )             const *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_COPY_COMMANDS_AVAILABLE
+        NoDiscard MaybeUnused extern auto commandBufferCopyImage (
+                Type ( CommandBufferHandle ),
+                Type ( CopyImageInfo2 )         const *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+        NoDiscard MaybeUnused extern auto commandBufferCopyBufferToImage (
+                Type ( CommandBufferHandle ),
+                Type ( BufferHandle ),
+                Type ( ImageHandle ),
+                Type ( ImageLayout ),
+                cds :: uint32,
+                Type ( BufferImageCopy )    const *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+        NoDiscard MaybeUnused extern auto commandBufferCopyImageToBuffer (
+                Type ( CommandBufferHandle ),
+                Type ( ImageHandle ),
+                Type ( ImageLayout ),
+                Type ( BufferHandle ),
+                cds :: uint32,
+                Type ( BufferImageCopy )    const *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_COPY_COMMANDS_AVAILABLE
+        NoDiscard MaybeUnused extern auto commandBufferCopyBufferToImage (
+                Type ( CommandBufferHandle ),
+                Type ( CopyBufferToImageInfo2 ) const *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_COPY_COMMANDS_AVAILABLE
+        NoDiscard MaybeUnused extern auto commandBufferCopyImageToBuffer (
+                Type ( CommandBufferHandle ),
+                Type ( CopyImageToBufferInfo2 ) const *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+        NoDiscard MaybeUnused extern auto commandBufferBlitImage (
+                Type ( CommandBufferHandle ),
+                Type ( ImageHandle ),
+                Type ( ImageLayout ),
+                Type ( ImageHandle ),
+                Type ( ImageLayout ),
+                cds :: uint32,
+                Type ( ImageBlit )  const *,
+                Type ( Filter )
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE || __C_ENG_VULKAN_API_EXTENSION_KHRONOS_COPY_COMMANDS_AVAILABLE
+        NoDiscard MaybeUnused extern auto commandBufferBlitImage (
+                Type ( CommandBufferHandle ),
+                Type ( BlitImageInfo2 )         const *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_VERSION_1_0_AVAILABLE
+        NoDiscard MaybeUnused extern auto commandBufferResolveImage (
+                Type ( CommandBufferHandle ),
+                Type ( ImageHandle ),
+                Type ( ImageLayout ),
+                Type ( ImageHandle ),
+                Type ( ImageLayout ),
+                cds :: uint32,
+                Type ( ImageResolve )   const *
+        ) noexcept -> Type ( Result );
+#endif
+
+#if __C_ENG_VULKAN_API_EXTENSION_AMD_BUFFER_MARKER_AVAILABLE
+        NoDiscard MaybeUnused extern auto commandBufferWriteBufferMarkerAMD (
+                Type ( CommandBufferHandle ),
+                Type ( PipelineStageFlags ),
+                Type ( BufferHandle ),
+                Type ( DeviceSize ),
+                cds :: uint32
+        ) noexcept -> Type ( Result );
+#endif
+
     } /// namespace vulkan
 
 } /// namespace engine

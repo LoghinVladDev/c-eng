@@ -153,6 +153,17 @@ namespace engine :: vulkan :: config {
     constexpr cds :: uint32 updateCopyDescriptorCount                               = updateDescriptorCount;
 
     constexpr cds :: uint32 descriptorUpdateTemplateEntryCount                      = updateDescriptorCount;
+
+    constexpr cds :: uint32 clearImageSubresourceRangeCount                         = 512U;
+    constexpr cds :: uint32 clearAttachmentCount                                    = 256U;
+    constexpr cds :: uint32 clearRectCount                                          = 256U;
+
+    constexpr cds :: uint32 itemCopyCount                                           = 512U;
+    constexpr cds :: uint32 bufferCopyCount                                         = itemCopyCount;
+    constexpr cds :: uint32 imageCopyCount                                          = itemCopyCount;
+    constexpr cds :: uint32 bufferImageCopyCount                                    = itemCopyCount;
+    constexpr cds :: uint32 imageBlitCount                                          = itemCopyCount;
+    constexpr cds :: uint32 imageResolveCount                                       = itemCopyCount;
 } // namespace engine :: vulkan :: config
 
 #if defined ( __C_ENG_USE_DEFENSIVE_PROGRAMMING ) || ! defined ( NDEBUG )

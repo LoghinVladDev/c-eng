@@ -158,5 +158,27 @@ using VkDeviceGroupDeviceCreateInfo_t                           = VkDeviceGroupD
 using VkDeviceGroupDeviceCreateInfo_t                           = VkDeviceGroupDeviceCreateInfoKHR;
 #endif
 
+#if __C_ENG_VULKAN_API_VERSION_1_3_AVAILABLE
+using VkCopyBufferInfo2_t           = VkCopyBufferInfo2;
+using VkBufferCopy2_t               = VkBufferCopy2;
+using VkCopyImageInfo2_t            = VkCopyImageInfo2;
+using VkImageCopy2_t                = VkImageCopy2;
+using VkBlitImageInfo2_t            = VkBlitImageInfo2;
+using VkImageBlit2_t                = VkImageBlit2;
+using VkCopyBufferToImageInfo2_t    = VkCopyBufferToImageInfo2;
+using VkCopyImageToBufferInfo2_t    = VkCopyImageToBufferInfo2;
+using VkBufferImageCopy2_t          = VkBufferImageCopy2;
+#elif __C_ENG_VULKAN_API_EXTENSION_KHRONOS_COPY_COMMANDS_AVAILABLE
+using VkCopyBufferInfo2_t           = VkCopyBufferInfo2KHR;
+using VkBufferCopy2_t               = VkBufferCopy2KHR;
+using VkCopyImageInfo2_t            = VkCopyImageInfo2KHR;
+using VkImageCopy2_t                = VkImageCopy2KHR;
+using VkBlitImageInfo2_t            = VkBlitImageInfo2KHR;
+using VkImageBlit2_t                = VkImageBlit2KHR;
+using VkCopyBufferToImageInfo2_t    = VkCopyBufferToImageInfo2KHR;
+using VkCopyImageToBufferInfo2_t    = VkCopyImageToBufferInfo2KHR;
+using VkBufferImageCopy2_t          = VkBufferImageCopy2KHR;
+#endif
+
 
 #endif //C_ENG_VULKANAPICALLSPRIVATE_HPP

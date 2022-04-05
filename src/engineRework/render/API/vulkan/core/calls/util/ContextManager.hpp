@@ -364,6 +364,46 @@ inline static auto paramToString (
             return toString ( * pProperties );
         }
 
+        case ParameterType :: ImageSubresourceRange: {
+            auto pProperties = reinterpret_cast < engine :: vulkan :: Type ( ImageSubresourceRange ) const * > ( parameter.pParam );
+            return toString ( * pProperties );
+        }
+
+        case ParameterType :: ClearAttachment: {
+            auto pProperties = reinterpret_cast < engine :: vulkan :: Type ( ClearAttachment ) const * > ( parameter.pParam );
+            return toString ( * pProperties );
+        }
+
+        case ParameterType :: ClearRect: {
+            auto pProperties = reinterpret_cast < engine :: vulkan :: Type ( ClearRect ) const * > ( parameter.pParam );
+            return toString ( * pProperties );
+        }
+
+        case ParameterType :: BufferCopy: {
+            auto pProperties = reinterpret_cast < engine :: vulkan :: Type ( BufferCopy ) const * > ( parameter.pParam );
+            return toString ( * pProperties );
+        }
+
+        case ParameterType :: ImageCopy: {
+            auto pProperties = reinterpret_cast < engine :: vulkan :: Type ( ImageCopy ) const * > ( parameter.pParam );
+            return toString ( * pProperties );
+        }
+
+        case ParameterType :: BufferImageCopy: {
+            auto pProperties = reinterpret_cast < engine :: vulkan :: Type ( BufferImageCopy ) const * > ( parameter.pParam );
+            return toString ( * pProperties );
+        }
+
+        case ParameterType :: ImageBlit: {
+            auto pProperties = reinterpret_cast < engine :: vulkan :: Type ( ImageBlit ) const * > ( parameter.pParam );
+            return toString ( * pProperties );
+        }
+
+        case ParameterType :: ImageResolve: {
+            auto pProperties = reinterpret_cast < engine :: vulkan :: Type ( ImageResolve ) const * > ( parameter.pParam );
+            return toString ( * pProperties );
+        }
+
 #if __C_ENG_VULKAN_API_EXTENSION_KHRONOS_PERFORMANCE_QUERY_AVAILABLE
         case ParameterType :: PerformanceCounter: {
             auto pProperties = reinterpret_cast < engine :: vulkan :: Type ( PerformanceCounter ) const * > ( parameter.pParam );

@@ -2463,6 +2463,11 @@ namespace engine :: vulkan {
 #include <calls/util/APICallerGenerator.hpp>
 #endif
 
+#if __C_ENG_VULKAN_API_EXTENSION_AMD_BUFFER_MARKER_AVAILABLE
+#define CALL_POINT CALL ( vkCmdWriteBufferMarker2AMD, INSTANCE, EXTENSION ( VK_AMD_BUFFER_MARKER ) )
+#include <calls/util/APICallerGenerator.hpp>
+#endif
+
     public:
         inline auto acquireHandlesForDevice (
                 engine :: vulkan :: Type ( DeviceHandle )               handle,
