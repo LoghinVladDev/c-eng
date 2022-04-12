@@ -487,7 +487,7 @@ auto vulkan :: toString (
 #if __C_ENG_VULKAN_BETA_EXTENSIONS_ENABLED && __C_ENG_VULKAN_API_EXTENSION_VIDEO_ENCODE_H264_AVAILABLE
 
         case StructureTypeVideoEncodeH264Capabilities:                                           { asString = "StructureTypeVideoEncodeH264Capabilities";                                           break; }
-        case StructureTypeVideoEncodeH264SessionCreateInfo:                                      { asString = "StructureTypeVideoEncodeH264SessionCreateInfo";                                      break; }
+//        case StructureTypeVideoEncodeH264SessionCreateInfo:                                      { asString = "StructureTypeVideoEncodeH264SessionCreateInfo";                                      break; }
         case StructureTypeVideoEncodeH264SessionParametersCreateInfo:                            { asString = "StructureTypeVideoEncodeH264SessionParametersCreateInfo";                            break; }
         case StructureTypeVideoEncodeH264SessionParametersAddInfo:                               { asString = "StructureTypeVideoEncodeH264SessionParametersAddInfo";                               break; }
         case StructureTypeVideoEncodeH264VCLFrameInfo:                                           { asString = "StructureTypeVideoEncodeH264VCLFrameInfo";                                           break; }
@@ -503,7 +503,7 @@ auto vulkan :: toString (
 #if __C_ENG_VULKAN_BETA_EXTENSIONS_ENABLED && __C_ENG_VULKAN_API_EXTENSION_VIDEO_ENCODE_H265_AVAILABLE
 
         case StructureTypeVideoEncodeH265Capabilities:                                           { asString = "StructureTypeVideoEncodeH265Capabilities";                                           break; }
-        case StructureTypeVideoEncodeH265SessionCreateInfo:                                      { asString = "StructureTypeVideoEncodeH265SessionCreateInfo";                                      break; }
+//        case StructureTypeVideoEncodeH265SessionCreateInfo:                                      { asString = "StructureTypeVideoEncodeH265SessionCreateInfo";                                      break; }
         case StructureTypeVideoEncodeH265SessionParametersCreateInfo:                            { asString = "StructureTypeVideoEncodeH265SessionParametersCreateInfo";                            break; }
         case StructureTypeVideoEncodeH265SessionParametersAddInfo:                               { asString = "StructureTypeVideoEncodeH265SessionParametersAddInfo";                               break; }
         case StructureTypeVideoEncodeH265VCLFrameInfo:                                           { asString = "StructureTypeVideoEncodeH265VCLFrameInfo";                                           break; }
@@ -520,7 +520,7 @@ auto vulkan :: toString (
 #if __C_ENG_VULKAN_BETA_EXTENSIONS_ENABLED && __C_ENG_VULKAN_API_EXTENSION_VIDEO_DECODE_H264_AVAILABLE
 
         case StructureTypeVideoDecodeH264Capabilities:                                           { asString = "StructureTypeVideoDecodeH264Capabilities";                                           break; }
-        case StructureTypeVideoDecodeH264SessionCreateInfo:                                      { asString = "StructureTypeVideoDecodeH264SessionCreateInfo";                                      break; }
+//        case StructureTypeVideoDecodeH264SessionCreateInfo:                                      { asString = "StructureTypeVideoDecodeH264SessionCreateInfo";                                      break; }
         case StructureTypeVideoDecodeH264PictureInfo:                                            { asString = "StructureTypeVideoDecodeH264PictureInfo";                                            break; }
         case StructureTypeVideoDecodeH264MVC:                                                    { asString = "StructureTypeVideoDecodeH264MVC";                                                    break; }
         case StructureTypeVideoDecodeH264Profile:                                                { asString = "StructureTypeVideoDecodeH264Profile";                                                break; }
@@ -1035,7 +1035,7 @@ auto vulkan :: toString (
 #if __C_ENG_VULKAN_BETA_EXTENSIONS_ENABLED && __C_ENG_VULKAN_API_EXTENSION_VIDEO_DECODE_H265_AVAILABLE
 
         case StructureTypeVideoDecodeH265Capabilities:                                           { asString = "StructureTypeVideoDecodeH265Capabilities";                                           break; }
-        case StructureTypeVideoDecodeH265SessionCreateInfo:                                      { asString = "StructureTypeVideoDecodeH265SessionCreateInfo";                                      break; }
+//        case StructureTypeVideoDecodeH265SessionCreateInfo:                                      { asString = "StructureTypeVideoDecodeH265SessionCreateInfo";                                      break; }
         case StructureTypeVideoDecodeH265SessionParametersCreateInfo:                            { asString = "StructureTypeVideoDecodeH265SessionParametersCreateInfo";                            break; }
         case StructureTypeVideoDecodeH265SessionParametersAddInfo:                               { asString = "StructureTypeVideoDecodeH265SessionParametersAddInfo";                               break; }
         case StructureTypeVideoDecodeH265Profile:                                                { asString = "StructureTypeVideoDecodeH265Profile";                                                break; }

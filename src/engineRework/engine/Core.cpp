@@ -11,6 +11,10 @@ using namespace engine; // NOLINT(clion-misra-cpp2008-7-3-4)
 
 #include <CDS/Long>
 
+
+#define C_ENG_MAP_START SOURCE
+#include <ObjectMapping.hpp>
+
 namespace engine {
 
     __C_ENG_NO_DISCARD auto toString (
@@ -545,6 +549,20 @@ namespace engine {
         }
 
         return asString.removeSuffix(", ");
+    }
+
+    auto toString (
+            Type ( ComponentTypeFlag )  flag
+    ) noexcept -> StringLiteral {
+
+        switch ( flag ) {
+            case ComponentTypeFlagNone:         return "None";
+            case ComponentTypeFlagTransform:    return "Transform";
+            case ComponentTypeFlagMesh:         return "Mesh";
+            case ComponentTypeFlagMeshRenderer: return "MeshRenderer";
+        }
+
+        return "Unknown";
     }
 
 }

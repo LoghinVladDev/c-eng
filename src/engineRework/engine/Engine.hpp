@@ -20,12 +20,13 @@ namespace engine {
 
     __C_ENG_PRE_DECLARE_CLASS ( Window );
     __C_ENG_PRE_DECLARE_CLASS ( RenderEngine );
+    __C_ENG_PRE_DECLARE_CLASS ( Scene );
 
     Class {
         Const ( PRIMITIVE_TYPE ( cds :: uint8 ),            versionVariant,         VALUE ( 0 ) )
         Const ( PRIMITIVE_TYPE ( cds :: uint8 ),            versionMajor,           VALUE ( 0 ) )
         Const ( PRIMITIVE_TYPE ( cds :: uint8 ),            versionMinor,           VALUE ( 3 ) )
-        Const ( PRIMITIVE_TYPE ( cds :: uint8 ),            versionPatch,           VALUE ( 247 ) )
+        Const ( PRIMITIVE_TYPE ( cds :: uint8 ),            versionPatch,           VALUE ( 275 ) )
 
         Field ( ENGINE_PRIMITIVE_TYPE ( EngineState ),      state,                  DEFAULT_VALUE ( EngineStateInactive ),  GET_DEFAULT, SET_NONE )
         Field ( ENGINE_PRIMITIVE_TYPE ( Window * ),         window,                 DEFAULT_VALUE ( nullptr ),              GET_DEFAULT, SET ( setWindow ) )
@@ -42,12 +43,17 @@ namespace engine {
 
         Field ( ENGINE_TYPE ( EventHandler ),               eventHandler,           NO_INIT,                                GET_DEFAULT, SET_NONE )
 
+        Field ( ENGINE_PRIMITIVE_TYPE ( Scene * ),          activeScene,            DEFAULT_VALUE ( nullptr ),              GET_DEFAULT, SET_NONE )
+        Field ( ENGINE_PRIMITIVE_TYPE ( Scene * ),          nextScene,              DEFAULT_VALUE ( nullptr ),              GET_NONE,    SET_INLINE(setNextScene) )
+
     private:
         auto initializeSettings () noexcept -> Self &;
         auto initializeRenderEngine () noexcept (false) -> Self &;
         auto startup () noexcept -> Self &;
         auto run () noexcept -> Self &;
         auto shutdown () noexcept -> Self &;
+
+        auto prepareNextScene () noexcept -> Self &;
 
         Constructor () noexcept;
         Destructor () noexcept override;

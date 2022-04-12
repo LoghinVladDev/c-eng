@@ -148,6 +148,10 @@ auto Self :: run () noexcept -> Self & {
 
     while ( ! this->shutdownRequested() ) {
 
+        if ( this->_nextScene != nullptr ) {
+            this->prepareNextScene ();
+        }
+
         if ( this->window() != nullptr ) {
             double frameStartTime = glfwGetTime();
 
@@ -258,4 +262,15 @@ auto Self :: toString () const noexcept -> String {
            ", fps = "               + this->fps() +
            ", attachedWindow = "    + :: toString ( this->window() ) +
            " }";
+}
+
+auto Self :: prepareNextScene () noexcept -> Self & {
+
+    /// init next scene in background
+    /// display loading maybe
+    /// deinit previous scene
+
+    this->_activeScene = cds :: exchange ( this->_nextScene, nullptr );
+
+    return * this;
 }

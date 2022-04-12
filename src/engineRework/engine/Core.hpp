@@ -6,6 +6,7 @@
 #define __C_ENG_CORE_HPP__
 
 #include <CDS/Types>
+#include <CDS/Object>
 #include <string>
 
 namespace cds {
@@ -347,6 +348,19 @@ namespace engine {
 #define C_ENG_MAP_END
 #include <ObjectMapping.hpp>
 
+#define C_ENG_MAP_START ENUM ( ComponentTypeFlag, TYPE ( cds :: uint8 ) )
+#include <ObjectMapping.hpp>
+
+    Enum {
+        Field ( None,           0x00U ),
+        Field ( Transform,      0x01U ),
+        Field ( Mesh,           0x02U ),
+        Field ( MeshRenderer,   0x04U )
+    };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
 
 
 #define C_ENG_MAP_START     STRUCT ( Position, NO_PARENT )
@@ -430,6 +444,7 @@ namespace engine {
     __C_ENG_ALIAS ( MonitorContentScale,    __C_ENG_TYPE ( ContentScale ) );
     __C_ENG_ALIAS ( WindowContentScale,     __C_ENG_TYPE ( ContentScale ) );
     __C_ENG_ALIAS ( WindowFlags,            __C_ENG_TYPE ( Flags ) );
+    __C_ENG_ALIAS ( ComponentTypeFlags,     __C_ENG_TYPE ( Flags ) );
 
 
 #define C_ENG_MAP_START     STRUCT ( MonitorGammaRamp, NO_PARENT )
@@ -494,6 +509,8 @@ namespace engine {
 #include <ObjectMapping.hpp>
 
 
+
+
     __C_ENG_ALIAS (
             RenderInstanceSurfaceAttachCallback,
             auto (*) (
@@ -516,6 +533,18 @@ namespace engine {
         __C_ENG_TYPE ( RenderInstanceSurfaceAttachCallback )    attachCallback;
         __C_ENG_TYPE ( RenderInstanceSurfaceDetachCallback )    detachCallback;
         void                                                  * pUserData;
+    };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START     CLASS ( EngineObject, PARENT ( cds :: Object ) )
+#include <ObjectMapping.hpp>
+
+    Class {
+    public:
+        NoDiscard __CDS_cpplang_VirtualConstexpr virtual auto className () const noexcept -> cds :: StringLiteral = 0;
+        virtual auto clear () noexcept -> Self & = 0;
     };
 
 #define C_ENG_MAP_END

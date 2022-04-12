@@ -160,6 +160,13 @@
 
 #if defined(C_ENG_MAP_START) && !defined(C_ENG_MAP_END)
 
+#define __C_ENG_OBJECT_MAP_DEFINITIONS_CLASS(_typename, _baseFormula)                           \
+                                                                                                \
+public:                                                                                         \
+    NoDiscard constexpr auto className () const noexcept -> cds :: StringLiteral override {     \
+        return __C_ENG_STRINGIFY ( Type ( _typename ) );                                        \
+    }
+
 
 #define __C_ENG_OBJECT_MAP_CLASS_CLASS(_typename, _baseFormula)                     __C_ENG_TYPE ( _typename )
 #define __C_ENG_OBJECT_MAP_DECLARATION_CLASS(_typename, _baseFormula)               class __C_ENG_OBJECT_MAP_CLASS_CLASS( _typename, _baseFormula ) __C_ENG_OBJECT_MAP_PARENT_DECLARATION_ ## _baseFormula
@@ -564,12 +571,21 @@
 #define MaybeUnused                                                                 __C_ENG_MAYBE_UNUSED
 #define __GenerateToString                                                          __C_ENG_OBJECT_MAP_META_CALL(__C_ENG_OBJECT_MAP_TO_STRING_,       C_ENG_MAP_START)
 
+#define ClassDefs                                                                   __C_ENG_OBJECT_MAP_META_CALL(__C_ENG_OBJECT_MAP_DEFINITIONS_,     C_ENG_MAP_START)
 
 #elif defined(C_ENG_MAP_END) && defined(C_ENG_MAP_START)
 
 __GenerateToString
 
 #undef __GenerateToString
+#undef ClassDefs
+
+#undef __C_ENG_OBJECT_MAP_DEFINITIONS_CLASS
+#undef __C_ENG_OBJECT_MAP_DEFINITIONS_STRUCT
+#undef __C_ENG_OBJECT_MAP_DEFINITIONS_NESTED_CLASS
+#undef __C_ENG_OBJECT_MAP_DEFINITIONS_ENUM
+#undef __C_ENG_OBJECT_MAP_DEFINITIONS_HEADER
+#undef __C_ENG_OBJECT_MAP_DEFINITIONS_SOURCE
 
 #undef __C_ENG_OBJECT_MAP_TO_STRING_CLASS
 #undef __C_ENG_OBJECT_MAP_TO_STRING_UNION
