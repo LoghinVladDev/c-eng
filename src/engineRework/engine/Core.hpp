@@ -348,14 +348,15 @@ namespace engine {
 #define C_ENG_MAP_END
 #include <ObjectMapping.hpp>
 
-#define C_ENG_MAP_START ENUM ( ComponentTypeFlag, TYPE ( cds :: uint8 ) )
+#define C_ENG_MAP_START ENUM ( ComponentTypeFlag, TYPE ( cds :: uint32 ) )
 #include <ObjectMapping.hpp>
 
     Enum {
-        Field ( None,           0x00U ),
-        Field ( Transform,      0x01U ),
-        Field ( Mesh,           0x02U ),
-        Field ( MeshRenderer,   0x04U )
+        Field ( None,           0x00000000U ),
+        Field ( Transform,      0x00000001U ),
+        Field ( Mesh,           0x00000002U ),
+        Field ( MeshRenderer,   0x00000004U ),
+        Field ( Custom,         0x80000000U ),
     };
 
 #define C_ENG_MAP_END
@@ -551,6 +552,9 @@ namespace engine {
 #include <ObjectMapping.hpp>
 
 
+#define C_ENG_MAP_START HEADER
+#include <ObjectMapping.hpp>
+
     __C_ENG_NO_DISCARD auto toString ( bool ) noexcept -> cds :: StringLiteral;
     __C_ENG_NO_DISCARD auto toString ( void const * ) noexcept -> cds :: String;
 
@@ -645,6 +649,42 @@ namespace engine {
             equals ( left.gammaRamp, right.gammaRamp ) &&
             equals ( left.activeVideoMode, right.activeVideoMode );
     }
+
+
+    using                   ComponentTypeReducedFlag            = cds :: uint8;
+    constexpr cds :: uint32 componentTypeReducedFlagMaxValue    = 32U;
+
+    NoDiscard constexpr auto reduceComponentTypeFlag ( Type ( ComponentTypeFlag ) flag ) noexcept -> ComponentTypeReducedFlag {
+        cds :: uint32 flagValue     = 1U;
+        cds :: uint8  reducedValue  = 0U;
+
+        while ( reducedValue < componentTypeReducedFlagMaxValue ) {
+
+            if ( flagValue == static_cast < cds :: uint32 > ( flag ) ) {
+                return reducedValue;
+            }
+
+            ++ reducedValue;
+        }
+
+        return componentTypeReducedFlagMaxValue - 1U;
+    }
+
+    NoDiscard constexpr auto componentTypeFlagFromReduced ( ComponentTypeReducedFlag flag ) noexcept -> Type ( ComponentTypeFlag ) {
+        if ( static_cast < cds :: uint32 > ( flag ) >= componentTypeReducedFlagMaxValue ) {
+            return ComponentTypeFlagNone;
+        }
+
+        return static_cast < Type ( ComponentTypeFlag ) > ( 1U << static_cast < cds :: uint32 > ( flag ) );
+    }
+
+    NoDiscard auto stringToComponentTypeFlag ( cds :: StringLiteral ) noexcept -> Type ( ComponentTypeFlag );
+    NoDiscard inline auto stringToComponentTypeFlag ( cds :: String const & string ) noexcept -> Type ( ComponentTypeFlag ) {
+        return stringToComponentTypeFlag ( string.cStr() );
+    }
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
 
 }
 

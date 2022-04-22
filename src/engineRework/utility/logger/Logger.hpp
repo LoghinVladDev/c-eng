@@ -93,4 +93,70 @@ namespace engine {
 #include <ObjectMapping.hpp>
 
 
+#include <sstream>
+#define C_ENG_MAP_START CLASS ( LogStream,  PARENT ( cds :: Object ) )
+#include <ObjectMapping.hpp>
+
+namespace engine {
+
+    namespace hidden { // NOLINT(modernize-concat-nested-namespaces)
+        namespace impl {
+            Class {
+                Field ( ENGINE_PRIMITIVE_TYPE ( LogLevel const ),   logLevel,   NO_INIT,                GET_NONE,   SET_NONE );
+                Field ( TYPE ( std :: ostringstream ),              stream,     NO_INIT,                GET_NONE,   SET_NONE );
+                Field ( PRIMITIVE_TYPE ( bool ),                    moved,      DEFAULT_VALUE (false),  GET_NONE,   SET_NONE );
+
+            public:
+                explicit Constructor ( Type ( LogLevel ) level ) noexcept :
+                        _logLevel ( level ) {
+
+                }
+
+                Constructor ( Self && obj ) noexcept :
+                        _logLevel ( obj._logLevel ),
+                        _stream ( std :: move ( obj._stream ) ) {
+
+                    obj._moved = true;
+                }
+
+                Destructor () noexcept {
+
+                    if ( ! this->_moved ) {
+                        (void) Type ( Logger ) :: instance().log ( this->_stream.str(), this->_logLevel );
+                    }
+                }
+
+                template < typename T >
+                inline auto operator << ( T const & obj ) && noexcept -> Self {
+
+                    this->_stream << obj;
+                    return std :: move ( * this );
+                }
+            };
+        }
+    }
+
+    namespace log {
+        inline auto info () noexcept -> hidden :: impl :: Self {
+            return hidden :: impl :: Self ( LogLevelInfo );
+        }
+
+        inline auto warn () noexcept -> hidden :: impl :: Self {
+            return hidden :: impl :: Self ( LogLevelWarning );
+        }
+
+        inline auto err () noexcept -> hidden :: impl :: Self {
+            return hidden :: impl :: Self ( LogLevelError );
+        }
+
+        inline auto sys () noexcept -> hidden :: impl :: Self {
+            return hidden :: impl :: Self ( LogLevelSystem );
+        }
+    }
+}
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+
 #endif //__C_ENG_LOGGER_HPP__

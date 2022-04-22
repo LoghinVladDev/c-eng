@@ -22,15 +22,22 @@ namespace engine {
     Class {
         ClassDefs
 
+        Const ( TYPE ( cds :: String ),    sceneNameKey,       VALUE ( "sceneName" ) )
+        Const ( TYPE ( cds :: String ),    rootEntitiesKey,    VALUE ( "rootEntities" ) )
+
     private:
+        auto loadEntity ( cds :: json :: standard :: JsonObject const & ) noexcept (false) -> cds :: UniquePointer < Type ( Entity ) >;
+
         using DirectEntities    = cds :: Array < cds :: UniquePointer < Type ( Entity ) > >;
-        using IndirectEntities  = cds :: Array < cds :: ForeignPointer < Type ( Entity ) > >;
+        using IndirectEntities  = cds :: DoubleLinkedList < cds :: ForeignPointer < Type ( Entity ) > >;
         using Shaders           = cds :: Array < cds :: UniquePointer < Type ( Shader ) > >;
 
         Field ( TYPE ( IndirectEntities ),      entities,       NO_INIT, GET_DEFAULT, SET_NONE )
         Field ( TYPE ( DirectEntities ),        rootEntities,   NO_INIT, GET_DEFAULT, SET_NONE )
 
         Field ( TYPE ( cds :: String ),         name,           NO_INIT, GET_DEFAULT, SET_DEFAULT )
+
+        auto removeNonRoot ( cds :: ForeignPointer < Type ( Entity ) > const & ) noexcept -> Self &;
 
     public:
         Constructor () noexcept = default;
@@ -45,6 +52,8 @@ namespace engine {
         auto loadFrom ( cds :: json :: standard :: JsonObject const & ) noexcept (false) -> Self &;
         auto dumpTo ( cds :: json :: standard :: JsonObject & ) noexcept -> Self &;
         auto clear () noexcept -> Self & override;
+
+        auto remove ( cds :: ForeignPointer < Type ( Entity ) > const & ) noexcept -> Self &;
     };
 
 }

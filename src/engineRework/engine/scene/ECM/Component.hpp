@@ -8,6 +8,7 @@
 #include <Preprocess.hpp>
 #include <CDS/Object>
 #include <Core.hpp>
+#include <CDS/experimental/JSON>
 
 
 #define C_ENG_MAP_START CLASS ( Component, ENGINE_PARENT ( EngineObject ) )
@@ -18,9 +19,15 @@ namespace engine {
         ClassDefs
 
     public:
+        Const ( TYPE ( cds :: String ), typeKey,    VALUE ( "type" ) )
+
         NoDiscard __CDS_cpplang_VirtualConstexpr virtual auto type () const noexcept -> Type ( ComponentTypeFlag ) = 0;
-        auto loadFrom ( cds :: JSON const & ) noexcept -> Self &;
-        auto dumpTo ( cds :: JSON & json ) noexcept -> Self &;
+        virtual auto loadFrom ( cds :: json :: standard :: JsonObject const & ) noexcept -> Self & = 0;
+        auto dumpTo ( cds :: json :: standard :: JsonObject & ) noexcept -> Self &;
+        NoDiscard auto copy () const noexcept -> Self * override = 0;
+        auto static instantiate ( cds :: json :: standard :: JsonObject const & ) noexcept (false) -> cds :: UniquePointer < Type ( Component ) >;
+        auto static instantiate ( Type ( ComponentTypeFlag ) ) noexcept (false) -> cds :: UniquePointer < Type ( Component ) >;
+        auto clear () noexcept -> Self & override = 0;
     };
 
 }

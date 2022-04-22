@@ -560,9 +560,20 @@ namespace engine {
             case ComponentTypeFlagTransform:    return "Transform";
             case ComponentTypeFlagMesh:         return "Mesh";
             case ComponentTypeFlagMeshRenderer: return "MeshRenderer";
+            case ComponentTypeFlagCustom:       return "Custom";
         }
 
         return "Unknown";
+    }
+
+    auto stringToComponentTypeFlag ( StringLiteral component ) noexcept -> Type ( ComponentTypeFlag ) {
+
+        if ( std :: strcmp ( component, "Transform" ) == 0 )    { return ComponentTypeFlagTransform; }
+        if ( std :: strcmp ( component, "Mesh" ) == 0 )         { return ComponentTypeFlagMesh; }
+        if ( std :: strcmp ( component, "MeshRenderer" ) == 0 ) { return ComponentTypeFlagMeshRenderer; }
+        if ( std :: strcmp ( component, "Custom" ) == 0 )       { return ComponentTypeFlagCustom; }
+
+        return ComponentTypeFlagCustom;
     }
 
 }
