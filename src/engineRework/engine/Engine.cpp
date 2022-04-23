@@ -148,9 +148,7 @@ auto Self :: run () noexcept -> Self & {
 
     while ( ! this->shutdownRequested() ) {
 
-        if ( this->_nextScene != nullptr ) {
-            this->prepareNextScene ();
-        }
+        (void) this->prepareNextScene ();
 
         if ( this->window() != nullptr ) {
             double frameStartTime = glfwGetTime();
@@ -163,12 +161,12 @@ auto Self :: run () noexcept -> Self & {
 
             this->_frameDeltaTime = frameEndTime - frameStartTime;
 
-            if ( (this->frameCount() + 1ULL) % this->_fpsUpdateFrameTime == 0ULL ) {
-                this->_fps = 1000.0 / ( ( frameEndTime - lastFPSUpdateTime ) / static_cast < double > (this->_fpsUpdateFrameTime) );
+            if ( (this->frameCount() + 1ULL) % this->FPSUpdateFrameTime() == 0ULL ) {
+                this->_fps = 1000.0 / ( ( frameEndTime - lastFPSUpdateTime ) / static_cast < double > (this->FPSUpdateFrameTime()) );
                 lastFPSUpdateTime = frameEndTime;
             }
 
-            if ( this->logFPSToConsole() && ( this->frameCount() + 1ULL) % this->_showFpsEveryTick == 0ULL ) {
+            if ( this->logFPSToConsole() && ( this->frameCount() + 1ULL) % this->FPSUpdateTickValue() == 0ULL ) {
                 std :: cout << "FPS : " << this->_fps << '\n';
             }
 
@@ -256,21 +254,37 @@ auto Self :: toString () const noexcept -> String {
            "{ state = "_s           + :: toString ( this->state() ) +
            ", lastFrameDelta = "    + this->frameDeltaTime() +
            ", frameCount = "        + this->frameCount() +
-           ", fpsUpdateEvery = "    + this->fpsUpdateFrameTime() + " ticks" +
-           ", showFpsEvery = "      + this->showFpsEveryTick() + " ticks" +
+           ", fpsUpdateEvery = "    + this->FPSUpdateFrameTime() + " ticks" +
+           ", showFpsEvery = "      + this->FPSUpdateTickValue() + " ticks" +
            ", logFpsToConsole = "   + :: toString ( this->logFPSToConsole() ) +
            ", fps = "               + this->fps() +
            ", attachedWindow = "    + :: toString ( this->window() ) +
            " }";
 }
 
+auto Self :: loadNextSceneFrom ( Path const & path ) noexcept -> Self & {
+
+    (void) this->_sceneLoader.start ( path );
+    return * this;
+}
+
 auto Self :: prepareNextScene () noexcept -> Self & {
 
     /// init next scene in background
-    /// display loading maybe
-    /// deinit previous scene
+    if ( this->_sceneLoader.state() != SceneLoaderStateSceneReady ) {
+        return * this;
+    }
 
-    this->_activeScene = cds :: exchange ( this->_nextScene, nullptr );
+    /// loading scene required, insert into Self :: loadNextSceneFrom
+
+    if ( this->_activeScene != nullptr ) {
+        /// do this on another thread as well!!!
+        (void) this->_activeScene->clear();
+    }
+
+    this->_activeScene = this->_sceneLoader.acquire();
+
+    /// transition until move should be introduced as well later
 
     return * this;
 }

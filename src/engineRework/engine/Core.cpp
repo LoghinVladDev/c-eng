@@ -566,6 +566,19 @@ namespace engine {
         return "Unknown";
     }
 
+    auto toString (
+            Type ( SceneLoaderState ) state
+    ) noexcept -> StringLiteral {
+
+        switch ( state ) {
+            case SceneLoaderStateIdle:          return "Idle";
+            case SceneLoaderStateLoading:       return "Loading";
+            case SceneLoaderStateSceneReady:    return "SceneReady";
+        }
+
+        return "Unknown";
+    }
+
     auto stringToComponentTypeFlag ( StringLiteral component ) noexcept -> Type ( ComponentTypeFlag ) {
 
         if ( std :: strcmp ( component, "Transform" ) == 0 )    { return ComponentTypeFlagTransform; }

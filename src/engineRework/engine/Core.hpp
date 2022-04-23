@@ -362,6 +362,18 @@ namespace engine {
 #define C_ENG_MAP_END
 #include <ObjectMapping.hpp>
 
+#define C_ENG_MAP_START ENUM ( SceneLoaderState, TYPE ( cds :: uint8 ) )
+#include <ObjectMapping.hpp>
+
+    Enum {
+        Field ( Idle,       0 ),
+        Field ( Loading,    1 ),
+        Field ( SceneReady, 2 ),
+    };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
 
 
 #define C_ENG_MAP_START     STRUCT ( Position, NO_PARENT )
@@ -546,6 +558,7 @@ namespace engine {
     public:
         NoDiscard __CDS_cpplang_VirtualConstexpr virtual auto className () const noexcept -> cds :: StringLiteral = 0;
         virtual auto clear () noexcept -> Self & = 0;
+        Destructor () noexcept override = default;
     };
 
 #define C_ENG_MAP_END

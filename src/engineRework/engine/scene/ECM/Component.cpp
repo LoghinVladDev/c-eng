@@ -3,7 +3,6 @@
 //
 
 #include "Component.hpp"
-#include <scene/ECM/Entity.hpp>
 #include <Logger.hpp>
 
 using namespace engine;

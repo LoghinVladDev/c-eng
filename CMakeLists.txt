@@ -191,10 +191,29 @@ set (
 )
 
 set (
+        ENGINE_SCENE_ECM_SOURCES
+
+        src/engineRework/engine/scene/ECM/Component.cpp
+        src/engineRework/engine/scene/ECM/Component.hpp
+        src/engineRework/engine/scene/ECM/Entity.cpp
+        src/engineRework/engine/scene/ECM/Entity.cpp
+)
+
+set (
+        ENGINE_SCENE_SOURCES
+
+        ${ENGINE_SCENE_ECM_SOURCES}
+
+        src/engineRework/engine/scene/Scene.cpp
+        src/engineRework/engine/scene/Scene.hpp
+)
+
+set (
         ENGINE_SOURCES
 
         ${ENGINE_EVENT_SOURCES}
         ${ENGINE_INPUT_SOURCES}
+        ${ENGINE_SCENE_SOURCES}
 
         src/engineRework/engine/Core.cpp
         src/engineRework/engine/Core.hpp

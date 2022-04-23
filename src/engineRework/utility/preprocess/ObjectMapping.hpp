@@ -165,7 +165,16 @@
 public:                                                                                         \
     NoDiscard constexpr auto className () const noexcept -> cds :: StringLiteral override {     \
         return __C_ENG_STRINGIFY ( Type ( _typename ) );                                        \
-    }
+    }                                                                                           \
+private:
+
+#define __C_ENG_OBJECT_MAP_DEFINITIONS_NESTED_CLASS(_typename, _nester, _baseFormula)           \
+                                                                                                \
+public:                                                                                         \
+    NoDiscard constexpr auto className () const noexcept -> cds :: StringLiteral override {     \
+        return __C_ENG_STRINGIFY ( __C_ENG_OBJECT_MAP_DECLARATION_NESTED_CLASS_EXTRACT_NESTER_ ## _nester::_typename );                             \
+    }                                                                                           \
+private:
 
 
 #define __C_ENG_OBJECT_MAP_CLASS_CLASS(_typename, _baseFormula)                     __C_ENG_TYPE ( _typename )
@@ -878,6 +887,8 @@ __GenerateToString
 #undef __C_ENG_OBJECT_MAP_DESTRUCTOR_UNION
 #undef __C_ENG_OBJECT_MAP_SELF_UNION
 #undef __C_ENG_OBJECT_MAP_PARENT_UNION
+
+#undef __C_ENG_OBJECT_MAP_DEFINITIONS_NESTED_CLASS
 
 
 #undef Class

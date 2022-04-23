@@ -5,6 +5,9 @@
 #include "Scene.hpp"
 #include <scene/ECM/Entity.hpp>
 #include <Logger.hpp>
+#include <CDS/Queue>
+#include <CDS/Thread>
+#include <CDS/Path>
 
 using namespace cds;
 using namespace engine;
@@ -17,6 +20,10 @@ Self :: Constructor ( Self && object ) noexcept :
         _entities ( std :: move ( object._entities ) ),
         _rootEntities ( std :: move ( object._rootEntities ) ) {
 
+}
+
+Self :: Destructor () noexcept {
+    (void) this-> Self :: clear ();
 }
 
 auto Self :: operator = ( Self && object ) noexcept -> Self & {
@@ -182,5 +189,109 @@ auto Self :: removeNonRoot ( ForeignPointer < Type ( Entity ) > const & entity )
         (void) this->removeNonRoot( child );
     }
 
+    return * this;
+}
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START NESTED_CLASS ( Loader, ENGINE_TYPE ( Scene ), ENGINE_PARENT ( EngineObject ) )
+#include <ObjectMapping.hpp>
+
+auto Self :: start ( Path const & path ) noexcept -> Self & {
+    if ( this->state() != SceneLoaderStateIdle ) {
+        (void) this->cancel();
+    }
+
+    this->_threadKeepAlive  = true;
+    this->_scene            = new Type ( Scene );
+
+    this->_thread = new Runnable ([this, path]{
+
+        enum class ThreadState {
+            LoadingSceneBasics,
+
+        };
+
+        this->_state = SceneLoaderStateLoading;
+
+        try {
+            auto json = json :: loadJson ( path );
+
+            try {
+                this->_scene->name() = json.getString ( Nester :: sceneNameKey );
+            } catch ( KeyException const & keyException ) {
+                log :: warn() << "Key '" << Nester :: sceneNameKey << "' does not exist : " << keyException.toString();
+            } catch ( TypeException const & ) {
+                log :: warn() << "Invalid Type for key '" << Nester :: sceneNameKey << "'";
+            }
+
+            try {
+//                auto const & rootEntityArray = json.getArray ( Nester :: rootEntitiesKey );
+                Queue < Pair < Reference < json :: standard :: JsonObject const >, ForeignPointer < Type ( Entity ) > > > entitiesToParse;
+
+                auto const & currentlyParsing   = json.getArray ( Nester :: rootEntitiesKey );
+                auto currentlyAt                = currentlyParsing.begin();
+                bool parsingRoot                = true;
+
+                while ( this->_threadKeepAlive ) {
+
+                    if ( parsingRoot ) {
+                        if ( currentlyAt != currentlyParsing.end() ) {
+                            /// load entity & save children to parse
+
+                            try {
+                                auto const & rootEntityJson = (* currentlyAt).getJson();
+
+                            } catch ( TypeException const & typeException ) {
+                                log :: warn() << "Invalid Type for entity : " << typeException;
+                            }
+
+                            ++ currentlyAt;
+                        } else {
+                            parsingRoot = false;
+                        }
+                    }
+
+                    if ( ! entitiesToParse.empty() ) {
+                        /// parse children
+                    }
+                }
+
+            } catch ( KeyException const & keyException ) {
+                log :: warn() << "Key '" << Nester :: rootEntitiesKey << "' does not exist : " << keyException.toString();
+            } catch ( TypeException const & ) {
+                log :: warn() << "Invalid Type for key '" << Nester :: rootEntitiesKey << "'";
+            }
+
+//            while ( this->_threadKeepAlive ) {
+//
+//            }
+
+            this->_state = SceneLoaderStateSceneReady;
+
+        } catch ( Exception const & exception ) {
+            log :: err()
+                    << "Failed to load scene at '"
+                    << path.toString()
+                    << "', reason = "
+                    << exception.toString();
+        }
+
+        this->_state = SceneLoaderStateIdle;
+    });
+
+    return * this;
+}
+
+auto Self :: acquire () noexcept -> Nester * {
+    return this->_scene.release();
+}
+
+auto Self :: cancel () noexcept -> Self & {
+    return * this;
+}
+
+auto Self :: clear () noexcept -> Self & {
     return * this;
 }
