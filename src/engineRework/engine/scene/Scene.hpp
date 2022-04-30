@@ -10,6 +10,7 @@
 #include <CDS/Array>
 #include <CDS/Pointer>
 #include <CDS/Queue>
+#include <CDS/HashMap>
 #include <CDS/experimental/JSON>
 #include <scene/ECM/Entity.hpp>
 
@@ -31,18 +32,23 @@ namespace engine {
 
         auto loadEntity ( cds :: json :: standard :: JsonObject const & ) noexcept (false) -> cds :: UniquePointer < Type ( Entity ) >;
 
-        using DirectEntities    = cds :: Array < cds :: UniquePointer < Type ( Entity ) > >;
-        using IndirectEntities  = cds :: DoubleLinkedList < cds :: ForeignPointer < Type ( Entity ) > >;
-        using Shaders           = cds :: Array < cds :: UniquePointer < Type ( Shader ) > >;
+        using DirectEntities        = cds :: Array < cds :: UniquePointer < Type ( Entity ) > >;
+        using IndirectEntities      = cds :: DoubleLinkedList < cds :: ForeignPointer < Type ( Entity ) > >;
+        using NameMappedEntities    = cds :: HashMap < cds :: String, cds :: ForeignPointer < Type ( Entity ) > >;
+        using Shaders               = cds :: Array < cds :: UniquePointer < Type ( Shader ) > >;
 
-        Field ( TYPE ( IndirectEntities ),      entities,       NO_INIT, GET_DEFAULT, SET_NONE )
-        Field ( TYPE ( DirectEntities ),        rootEntities,   NO_INIT, GET_DEFAULT, SET_NONE )
+        Field ( TYPE ( IndirectEntities ),      entities,           NO_INIT, GET_DEFAULT, SET_NONE )
+        Field ( TYPE ( DirectEntities ),        rootEntities,       NO_INIT, GET_DEFAULT, SET_NONE )
+        Field ( TYPE ( NameMappedEntities ),    nameMappedEntities, NO_INIT, GET_DEFAULT, SET_NONE )
 
-        Field ( TYPE ( cds :: String ),         name,           NO_INIT, GET_DEFAULT, SET_DEFAULT )
+        Field ( TYPE ( cds :: String ),         name,               NO_INIT, GET_DEFAULT, SET_DEFAULT )
+        Field ( TYPE ( cds :: String ),         unusedEntityName,   NO_INIT, GET_DEFAULT, SET_DEFAULT )
 
         auto removeNonRoot ( cds :: ForeignPointer < Type ( Entity ) > const & ) noexcept -> Self &;
 
     public:
+        auto generateUnusedEntityName () noexcept -> cds :: String const &;
+
         Constructor () noexcept = default;
         Constructor ( Self const & ) noexcept = delete;
         Constructor ( Self && ) noexcept;
@@ -95,6 +101,8 @@ namespace engine {
         auto loaderThreadError () noexcept -> void;
         auto loaderThreadCleanup () noexcept -> void;
 
+        auto validationStateCheckDuplicateName () noexcept -> void;
+
         enum class LoaderThreadState {
             Idle,
             LoadingJsonFile,
@@ -104,40 +112,55 @@ namespace engine {
             LoadingSceneEntityChildren,
             Error,
             Cleanup,
-            Done
+            Done,
+
+            ValidationStateCheckDuplicateName,
         };
 
         constexpr static auto stateFunction ( LoaderThreadState state ) noexcept -> LoaderThreadStateFunction {
             switch ( state ) {
-                case LoaderThreadState :: Idle:                         return & Self :: loaderThreadIdle;
-                case LoaderThreadState :: LoadingJsonFile:              return & Self :: loaderThreadLoadingJsonFile;
-                case LoaderThreadState :: LoadingSceneProperties:       return & Self :: loaderThreadLoadingSceneProperties;
-                case LoaderThreadState :: LoadingSceneRootEntityArray:  return & Self :: loaderThreadLoadingSceneRootEntityArray;
-                case LoaderThreadState :: LoadingSceneEntity:           return & Self :: loaderThreadLoadingSceneEntity;
-                case LoaderThreadState :: LoadingSceneEntityChildren:   return & Self :: loaderThreadLoadingSceneEntityChildren;
-                case LoaderThreadState :: Error:                        return & Self :: loaderThreadError;
-                case LoaderThreadState :: Cleanup:                      return & Self :: loaderThreadCleanup;
-                case LoaderThreadState :: Done:                         return nullptr;
+                case LoaderThreadState :: Idle:                                 return & Self :: loaderThreadIdle;
+                case LoaderThreadState :: LoadingJsonFile:                      return & Self :: loaderThreadLoadingJsonFile;
+                case LoaderThreadState :: LoadingSceneProperties:               return & Self :: loaderThreadLoadingSceneProperties;
+                case LoaderThreadState :: LoadingSceneRootEntityArray:          return & Self :: loaderThreadLoadingSceneRootEntityArray;
+                case LoaderThreadState :: LoadingSceneEntity:                   return & Self :: loaderThreadLoadingSceneEntity;
+                case LoaderThreadState :: LoadingSceneEntityChildren:           return & Self :: loaderThreadLoadingSceneEntityChildren;
+                case LoaderThreadState :: Error:                                return & Self :: loaderThreadError;
+                case LoaderThreadState :: Cleanup:                              return & Self :: loaderThreadCleanup;
+                case LoaderThreadState :: ValidationStateCheckDuplicateName:    return & Self :: validationStateCheckDuplicateName;
+                case LoaderThreadState :: Done:                                 return nullptr;
             }
         }
 
         constexpr static auto stateToString ( LoaderThreadState state ) noexcept -> cds :: StringLiteral {
             switch ( state ) {
-                case LoaderThreadState :: Idle:                         return "Idle";
-                case LoaderThreadState :: LoadingJsonFile:              return "LoadingJsonFile";
-                case LoaderThreadState :: LoadingSceneProperties:       return "LoadingSceneProperties";
-                case LoaderThreadState :: LoadingSceneRootEntityArray:  return "LoadingSceneRootEntityArray";
-                case LoaderThreadState :: LoadingSceneEntity:           return "LoadingSceneEntity";
-                case LoaderThreadState :: LoadingSceneEntityChildren:   return "LoadingSceneEntityChildren";
-                case LoaderThreadState :: Error:                        return "Error";
-                case LoaderThreadState :: Cleanup:                      return "Cleanup";
-                case LoaderThreadState :: Done:                         return "Done";
+                case LoaderThreadState :: Idle:                                 return "Idle";
+                case LoaderThreadState :: LoadingJsonFile:                      return "LoadingJsonFile";
+                case LoaderThreadState :: LoadingSceneProperties:               return "LoadingSceneProperties";
+                case LoaderThreadState :: LoadingSceneRootEntityArray:          return "LoadingSceneRootEntityArray";
+                case LoaderThreadState :: LoadingSceneEntity:                   return "LoadingSceneEntity";
+                case LoaderThreadState :: LoadingSceneEntityChildren:           return "LoadingSceneEntityChildren";
+                case LoaderThreadState :: Error:                                return "Error";
+                case LoaderThreadState :: Cleanup:                              return "Cleanup";
+                case LoaderThreadState :: ValidationStateCheckDuplicateName:    return "ValidationStateCheckDuplicateName";
+                case LoaderThreadState :: Done:                                 return "Done";
             }
         }
 
         inline auto setNextState ( LoaderThreadState state ) noexcept -> void {
             this->_loaderThreadControl.state    = state;
             this->_loaderThreadControl.function = Self :: stateFunction ( this->_loaderThreadControl.state );
+            this->resetValidationState();
+        }
+
+        inline auto setNextValidationState ( LoaderThreadState state ) noexcept -> void {
+            this->_loaderThreadControl.validationData.state     = state;
+            this->_loaderThreadControl.validationData.function  = Self :: stateFunction ( this->_loaderThreadControl.validationData.state );
+        }
+
+        inline auto resetValidationState () noexcept -> void {
+            this->_loaderThreadControl.validationData.function  = nullptr;
+            this->_loaderThreadControl.validationData.passed    = true;
         }
 
         inline auto setError ( cds :: String const & errorReason ) noexcept -> void {
@@ -168,11 +191,53 @@ namespace engine {
             LoaderThreadState                                           errorState;
         };
 
+#ifndef NDEBUG
+
+        struct LoaderThreadTestingData {
+            cds :: uint32       idleStateCount                          = 0U;
+            cds :: uint32       loadingJsonFileStateCount               = 0U;
+            cds :: uint32       loadingScenePropertiesStateCount        = 0U;
+            cds :: uint32       loadingSceneRootEntityArrayStateCount   = 0U;
+            cds :: uint32       loadingSceneEntityStateCount            = 0U;
+            cds :: uint32       loadingSceneEntityChildrenStateCount    = 0U;
+            cds :: uint32       errorStateCount                         = 0U;
+            cds :: uint32       cleanupStateCount                       = 0U;
+            cds :: uint32       doneStateCount                          = 0U;
+            cds :: uint32       validationStateCount                    = 0U;
+        };
+
+        inline auto stateCount ( LoaderThreadState state ) noexcept -> cds :: uint32 & {
+            switch ( state ) {
+                case LoaderThreadState :: Idle:                                 return this->_loaderThreadControl.test.idleStateCount;
+                case LoaderThreadState :: LoadingJsonFile:                      return this->_loaderThreadControl.test.loadingJsonFileStateCount;
+                case LoaderThreadState :: LoadingSceneProperties:               return this->_loaderThreadControl.test.loadingScenePropertiesStateCount;
+                case LoaderThreadState :: LoadingSceneRootEntityArray:          return this->_loaderThreadControl.test.loadingSceneRootEntityArrayStateCount;
+                case LoaderThreadState :: LoadingSceneEntity:                   return this->_loaderThreadControl.test.loadingSceneEntityStateCount;
+                case LoaderThreadState :: LoadingSceneEntityChildren:           return this->_loaderThreadControl.test.loadingSceneEntityChildrenStateCount;
+                case LoaderThreadState :: Error:                                return this->_loaderThreadControl.test.errorStateCount;
+                case LoaderThreadState :: Cleanup:                              return this->_loaderThreadControl.test.cleanupStateCount;
+                case LoaderThreadState :: Done:                                 return this->_loaderThreadControl.test.doneStateCount;
+                case LoaderThreadState :: ValidationStateCheckDuplicateName:    return this->_loaderThreadControl.test.validationStateCount;
+            }
+        }
+
+#endif
+
+        struct LoaderThreadValidationData {
+            LoaderThreadState           state;
+            LoaderThreadStateFunction   function;
+            bool                        passed;
+        };
+
         struct LoaderThreadControl {
             LoaderThreadState           state;
             LoaderThreadStateFunction   function;
             LoaderThreadInput           input;
             LoaderThreadData            data;
+            LoaderThreadValidationData  validationData;
+#ifndef NDEBUG
+            LoaderThreadTestingData     test;
+#endif
         };
 
         Field ( TYPE ( LoaderThreadControl ),       loaderThreadControl, NO_INIT, GET_NONE, SET_NONE )

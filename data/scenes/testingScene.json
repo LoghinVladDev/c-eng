@@ -1,0 +1,61 @@
+{
+  "sceneName": "testScene",
+  "rootEntities": [
+    {
+      "type": "GameObject",
+      "name": "Object 1"
+    },
+    {
+      "type": "GameObject",
+      "name": "Object 2",
+      "components": []
+    },
+    {
+      "type": "GameObject",
+      "name": "Object 3",
+      "components": [
+        {
+          "type": "Transform"
+        },
+        {
+          "type": "MeshRenderer"
+        }
+      ]
+    },
+    {
+      "type": "GameObject",
+      "name": "Object 4",
+      "children": []
+    },
+    {
+      "type": "GameObject",
+      "name": "Object 4",
+      "children": []
+    },
+    {
+      "type": "GameObject",
+      "name": "Object 5",
+      "children": []
+    },
+    {
+      "type": "GameObject",
+      "name": "Object 6",
+      "children": [
+        {
+          "type": "GameObject",
+          "name": "Object 7"
+        },
+        {
+          "type": "GameObject",
+          "name": "Object 8",
+          "children": []
+        },
+        {
+          "type": "GameObject",
+          "name": "Object 8",
+          "components": []
+        }
+      ]
+    }
+  ]
+}

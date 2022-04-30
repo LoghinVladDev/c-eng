@@ -93,7 +93,7 @@ auto Self :: loadFrom ( json :: standard :: JsonObject const & json ) noexcept -
         log :: info() << "Unnamed Entity in scene, assigning default name";
 
         static int nameCounter = 1;
-        this->name() = "Unnamed Entity "_s + nameCounter ++;
+        this->name() = this->scene()->generateUnusedEntityName();
 
     } catch ( TypeException const & typeException ) {
         log :: warn() << "Entity Has Name Field, format not ok : " << typeException.toString();

@@ -10,25 +10,29 @@
 using namespace engine; // NOLINT(clion-misra-cpp2008-7-3-4)
 using namespace cds; // NOLINT(clion-misra-cpp2008-7-3-4)
 
+#define C_ENG_MAP_START SOURCE
+#include <ObjectMapping.hpp>
+
 int main (
         int argumentCount,
         char ** arguments
 ) {
 
-    if ( static_cast < bool > ( __C_ENG_TYPE ( Settings ) :: instance().get( __C_ENG_TYPE ( Settings ) :: keyLogToConsole ) ) ) { // NOLINT(clion-misra-cpp2008-5-0-13)
-        __C_ENG_TYPE ( Logger ) :: instance ().mirrorToConsole() = true;
+    if ( static_cast < bool > ( Type ( Settings ) :: instance().get( Type ( Settings ) :: keyLogToConsole ) ) ) { // NOLINT(clion-misra-cpp2008-5-0-13)
+        Type ( Logger ) :: instance ().mirrorToConsole() = true;
     }
 
-    (void) __C_ENG_TYPE ( Logger ) :: instance().system ( "Engine Main Test Application Start" );
+    (void) Type ( Logger ) :: instance().system ( "Engine Main Test Application Start" );
 
-    __C_ENG_TYPE ( Window ) window;
+    Type ( Window ) window;
     (void) window.resize(1366U, 768U);
     (void) window.init();
 
-    (void) __C_ENG_TYPE ( Engine ) :: instance().setWindow ( & window );
-    (void) __C_ENG_TYPE ( Engine ) :: instance().start ();
+    (void) Type ( Engine ) :: instance().setWindow ( & window );
+    (void) Type ( Engine ) :: instance().loadNextSceneFrom ( "./../data/scenes/testingScene.json" );
+    (void) Type ( Engine ) :: instance().start ();
 
-    (void) __C_ENG_TYPE ( Logger ) :: instance().system ( "Engine Main Test Application End" );
+    (void) Type ( Logger ) :: instance().system ( "Engine Main Test Application End" );
 
     return 0;
 }
