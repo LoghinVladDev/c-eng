@@ -76,10 +76,11 @@ auto Self :: log (
     }
 
     auto formattedMessage = String :: f (
-            "[time = %s][level = %s][engine state = %s] : %s",
+            "[time = %s][level = %s][engine state = %s][thread = %#018x] : %s",
             Self :: currentTime(),
             :: toString ( logLevel ),
             :: toString ( __C_ENG_TYPE ( Engine ) :: instance().state() ),
+            Thread :: currentThreadID(),
             message.cStr()
     );
 

@@ -191,7 +191,25 @@ set (
 )
 
 set (
+        ENGINE_SCENE_ECM_COMPONENTS_TRANSFORM_SOURCES
+
+        src/engineRework/engine/scene/ECM/components/transform/Rotor.cpp
+        src/engineRework/engine/scene/ECM/components/transform/Rotor.hpp
+
+        src/engineRework/engine/scene/ECM/components/transform/Transform.cpp
+        src/engineRework/engine/scene/ECM/components/transform/Transform.hpp
+)
+
+set (
+        ENGINE_SCENE_ECM_COMPONENTS_SOURCES
+
+        ${ENGINE_SCENE_ECM_COMPONENTS_TRANSFORM_SOURCES}
+)
+
+set (
         ENGINE_SCENE_ECM_SOURCES
+
+        ${ENGINE_SCENE_ECM_COMPONENTS_SOURCES}
 
         src/engineRework/engine/scene/ECM/Component.cpp
         src/engineRework/engine/scene/ECM/Component.hpp

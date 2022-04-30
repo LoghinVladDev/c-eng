@@ -4,6 +4,7 @@
 
 #include "Component.hpp"
 #include <Logger.hpp>
+#include <scene/ECM/components/transform/Transform.hpp>
 
 using namespace engine;
 using namespace cds;
@@ -43,5 +44,11 @@ auto Self :: instantiate ( json :: standard :: JsonObject const & json ) noexcep
 }
 
 auto Self :: instantiate ( Type ( ComponentTypeFlag ) flag ) noexcept (false) -> UniquePointer < Self > {
+    switch ( flag ) {
+        case ComponentTypeFlagTransform:        return new Type ( Transform );
+        default:
+            break;
+    }
+
     throw Exception ( "Invalid Flag Value for Component Instantiation : 0x" + Long ( flag ).toString(16) ); // NOLINT(readability-magic-numbers)
 }

@@ -248,6 +248,8 @@ namespace engine {
         auto acquire () noexcept -> Nester *;
 
         auto clear () noexcept -> Self & override;
+
+        Destructor () noexcept;
     };
 
 }

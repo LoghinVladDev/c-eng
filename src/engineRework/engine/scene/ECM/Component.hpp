@@ -23,7 +23,7 @@ namespace engine {
 
         NoDiscard __CDS_cpplang_VirtualConstexpr virtual auto type () const noexcept -> Type ( ComponentTypeFlag ) = 0;
         virtual auto loadFrom ( cds :: json :: standard :: JsonObject const & ) noexcept -> Self & = 0;
-        auto dumpTo ( cds :: json :: standard :: JsonObject & ) noexcept -> Self &;
+        virtual auto dumpTo ( cds :: json :: standard :: JsonObject & ) noexcept -> Self & = 0;
         NoDiscard auto copy () const noexcept -> Self * override = 0;
         auto static instantiate ( cds :: json :: standard :: JsonObject const & ) noexcept (false) -> cds :: UniquePointer < Type ( Component ) >;
         auto static instantiate ( Type ( ComponentTypeFlag ) ) noexcept (false) -> cds :: UniquePointer < Type ( Component ) >;

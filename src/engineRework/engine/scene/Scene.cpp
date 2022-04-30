@@ -69,7 +69,7 @@ auto Self :: loadFrom ( json :: standard :: JsonObject const & json ) noexcept (
                 auto const & entityJson = entityObject.getJson();
 
                 try {
-                    (void) this->_rootEntities.pushBack ( this->loadEntity ( entityObject.getJson() ) );
+                    (void) this->_rootEntities.pushBack ( this->loadEntity ( entityJson ) );
                 } catch ( Exception const & ) {
                     log :: warn() << "Entity could not be added to scene";
                 }
@@ -134,6 +134,7 @@ auto Self :: loadEntity ( json :: standard :: JsonObject const & json ) noexcept
                     }
 
                 } catch ( KeyException const & ) {
+                    /* do nothing */
                 } catch ( TypeException const & ) {
                     log :: warn() << "Entity has a '" << Type ( Entity ) :: childrenKey << "' key, but it is not formatted properly ( expected array )";
                 }
@@ -223,7 +224,7 @@ auto Self :: start ( Path const & path ) noexcept -> Self & {
             .pScene = this->_scene.get()
     };
 
-    this->_thread = new Runnable ([this, path]{
+    this->_thread = new Runnable ([this]{
 
         while ( this->_threadKeepAlive ) {
 
@@ -385,16 +386,17 @@ auto Self :: loaderThreadLoadingSceneEntity () noexcept -> void {
 
                 this->setNextState ( LoaderThreadState :: LoadingSceneEntityChildren );
             } catch ( KeyException const & ) {
+                /* do nothing */
             } catch ( TypeException const & ) {
                 log :: warn() << "Entity has a '" << Type ( Entity ) :: childrenKey << "' key, but it is not formatted properly ( expected array )";
             }
 
-            List < UniquePointer < Type ( Entity ) > > & entityList = this->_loaderThreadControl.input.pScene->_rootEntities;
+            List < UniquePointer < Type ( Entity ) > > * pEntityList = & this->_loaderThreadControl.input.pScene->_rootEntities;
             if ( entityParent != nullptr ) {
-                entityList = entityParent->_children;
+                pEntityList = & entityParent->_children;
             }
 
-            (void) entityList.pushBack ( std :: move ( newEntity ) );
+            (void) pEntityList->pushBack ( std :: move ( newEntity ) );
 
         } catch ( Exception const & exception ) {
             log :: err() << "Failed to construct Entity : " << exception.toString();
@@ -414,7 +416,7 @@ auto Self :: validationStateCheckDuplicateName () noexcept -> void {
         return;
     }
 
-    auto const & entityJsonEntry    = this->_loaderThreadControl.data.queue.front();
+    auto const & entityJsonEntry    = entityJsonQueue.front();
     auto const & entityJson         = entityJsonEntry.getFirst().get();
 
     try {
@@ -428,7 +430,9 @@ auto Self :: validationStateCheckDuplicateName () noexcept -> void {
             this->_loaderThreadControl.validationData.passed = false;
         }
     } catch ( KeyException const & ) {
+        /* do nothing */
     } catch ( TypeException const & ) {
+        /* do nothing */
     }
 }
 
@@ -511,4 +515,8 @@ auto Self :: cancel () noexcept -> Self & {
 auto Self :: clear () noexcept -> Self & {
     (void) this->cancel();
     return * this;
+}
+
+Self :: Destructor () noexcept {
+    (void) this->Self :: clear();
 }
