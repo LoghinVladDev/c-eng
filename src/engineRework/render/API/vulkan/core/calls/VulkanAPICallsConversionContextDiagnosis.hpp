@@ -18,7 +18,7 @@
     .file       = __FILE__,                                                                 \
     .function   = __PRETTY_FUNCTION__,                                                      \
     .line       = __LINE__,                                                                 \
-    .pMessage   = (__VA_ARGS__).copy()                                                      \
+    .pMessage   = cds :: copy (__VA_ARGS__)                                                 \
 };
 
 #elif defined(__CDS_compiler_MinGW)

@@ -574,6 +574,7 @@ namespace engine {
             case SceneLoaderStateIdle:          return "Idle";
             case SceneLoaderStateLoading:       return "Loading";
             case SceneLoaderStateSceneReady:    return "SceneReady";
+            case SceneLoaderStateReadyError:    return "ReadyError";
         }
 
         return "Unknown";

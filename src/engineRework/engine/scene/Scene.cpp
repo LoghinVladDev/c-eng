@@ -206,82 +206,200 @@ auto Self :: start ( Path const & path ) noexcept -> Self & {
     this->_threadKeepAlive  = true;
     this->_scene            = new Type ( Scene );
 
+    this->setNextState ( LoaderThreadState :: Idle );
+    this->_loaderThreadControl.input    = {
+            .path   = path,
+            .pScene = this->_scene.get()
+    };
+
     this->_thread = new Runnable ([this, path]{
 
-        enum class ThreadState {
-            LoadingSceneBasics,
-
-        };
-
-        this->_state = SceneLoaderStateLoading;
-
-        try {
-            auto json = json :: loadJson ( path );
-
-            try {
-                this->_scene->name() = json.getString ( Nester :: sceneNameKey );
-            } catch ( KeyException const & keyException ) {
-                log :: warn() << "Key '" << Nester :: sceneNameKey << "' does not exist : " << keyException.toString();
-            } catch ( TypeException const & ) {
-                log :: warn() << "Invalid Type for key '" << Nester :: sceneNameKey << "'";
+        while ( this->_threadKeepAlive ) {
+            if ( this->_loaderThreadControl.function == nullptr ) {
+                this->setError ( "No State Function to Call in Loader Thread Runtime" );
             }
 
-            try {
-//                auto const & rootEntityArray = json.getArray ( Nester :: rootEntitiesKey );
-                Queue < Pair < Reference < json :: standard :: JsonObject const >, ForeignPointer < Type ( Entity ) > > > entitiesToParse;
-
-                auto const & currentlyParsing   = json.getArray ( Nester :: rootEntitiesKey );
-                auto currentlyAt                = currentlyParsing.begin();
-                bool parsingRoot                = true;
-
-                while ( this->_threadKeepAlive ) {
-
-                    if ( parsingRoot ) {
-                        if ( currentlyAt != currentlyParsing.end() ) {
-                            /// load entity & save children to parse
-
-                            try {
-                                auto const & rootEntityJson = (* currentlyAt).getJson();
-
-                            } catch ( TypeException const & typeException ) {
-                                log :: warn() << "Invalid Type for entity : " << typeException;
-                            }
-
-                            ++ currentlyAt;
-                        } else {
-                            parsingRoot = false;
-                        }
-                    }
-
-                    if ( ! entitiesToParse.empty() ) {
-                        /// parse children
-                    }
-                }
-
-            } catch ( KeyException const & keyException ) {
-                log :: warn() << "Key '" << Nester :: rootEntitiesKey << "' does not exist : " << keyException.toString();
-            } catch ( TypeException const & ) {
-                log :: warn() << "Invalid Type for key '" << Nester :: rootEntitiesKey << "'";
-            }
-
-//            while ( this->_threadKeepAlive ) {
-//
-//            }
-
-            this->_state = SceneLoaderStateSceneReady;
-
-        } catch ( Exception const & exception ) {
-            log :: err()
-                    << "Failed to load scene at '"
-                    << path.toString()
-                    << "', reason = "
-                    << exception.toString();
+            (this->*this->_loaderThreadControl.function)();
         }
-
-        this->_state = SceneLoaderStateIdle;
     });
 
+    this->_state = SceneLoaderStateLoading;
+    this->_thread->start();
+
     return * this;
+}
+
+auto Self :: loaderThreadIdle () noexcept -> void {
+
+    if ( this->_loaderThreadControl.input.pScene == nullptr ) {
+        this->setError ( "Failed to Load Scene due to input scene being null" );
+    }
+
+    this->setNextState ( LoaderThreadState :: LoadingJsonFile );
+}
+
+auto Self :: loaderThreadLoadingJsonFile () noexcept -> void {
+
+    try {
+        this->_loaderThreadControl.data.sceneJson = json :: loadJson ( this->_loaderThreadControl.input.path );
+        this->setNextState ( LoaderThreadState :: LoadingSceneProperties );
+    } catch ( Exception const & exception ) {
+
+        this->setError (
+                cds :: String :: f (
+                        "Failure to load scene at '%s', reason = %s",
+                        this->_loaderThreadControl.input.path.toString().cStr(),
+                        exception.toString().cStr()
+                )
+        );
+    }
+}
+
+auto Self :: loaderThreadLoadingSceneProperties () noexcept -> void {
+
+    try {
+        this->_loaderThreadControl.input.pScene->name() = this->_loaderThreadControl.data.sceneJson.getString ( Nester :: sceneNameKey );
+    } catch ( KeyException const & keyException ) {
+        log :: warn() << "Key '" << Nester :: sceneNameKey << "' does not exist : " << keyException.toString();
+    } catch ( TypeException const & ) {
+        log :: warn() << "Invalid Type for key '" << Nester :: sceneNameKey << "'";
+    }
+
+    this->setNextState ( LoaderThreadState :: LoadingSceneRootEntityArray );
+}
+
+auto Self :: loaderThreadLoadingSceneRootEntityArray () noexcept -> void {
+
+    try {
+        this->_loaderThreadControl.data.pCurrentChildrenArray   =
+                & ( this->_loaderThreadControl.data.sceneJson.getArray ( Nester :: rootEntitiesKey ) );
+
+        this->_loaderThreadControl.data.entityIterator          =
+                this->_loaderThreadControl.data.pCurrentChildrenArray->begin();
+
+        this->_loaderThreadControl.data.childrenParent          = nullptr;
+
+        this->setNextState ( LoaderThreadState :: LoadingSceneEntityChildren );
+        return;
+    } catch ( KeyException const & keyException ) {
+        log :: warn() << "Key '" << Nester :: rootEntitiesKey << "' does not exist : " << keyException.toString();
+    } catch ( TypeException const & ) {
+        log :: warn() << "Invalid Type for key '" << Nester :: rootEntitiesKey << "'";
+    }
+
+    this->setNextState ( LoaderThreadState :: Cleanup );
+}
+
+auto Self :: loaderThreadLoadingSceneEntityChildren () noexcept -> void {
+
+    if ( this->_loaderThreadControl.data.entityIterator == this->_loaderThreadControl.data.pCurrentChildrenArray->end() ) {
+        this->setNextState ( LoaderThreadState :: LoadingSceneEntity );
+        return;
+    }
+
+    try {
+        auto const & entityJson = this->_loaderThreadControl.data.entityIterator->getJson();
+
+        (void) this->_loaderThreadControl.data.queue.push ({
+                Reference ( entityJson ),
+                this->_loaderThreadControl.data.childrenParent
+        });
+
+    } catch ( TypeException const & ) {
+        log :: warn() << "Invalid Type for entity'" << Nester :: rootEntitiesKey << "'";
+    }
+
+    ++ this->_loaderThreadControl.data.entityIterator;
+}
+
+auto Self :: loaderThreadLoadingSceneEntity () noexcept -> void {
+
+    if ( this->_loaderThreadControl.data.queue.empty() ) {
+
+        this->setNextState ( LoaderThreadState :: Cleanup );
+        return;
+    }
+
+    auto entityJsonEntry        = this->_loaderThreadControl.data.queue.pop();
+    auto const & entityJson     = entityJsonEntry.getFirst().get();
+    auto const & entityParent   = entityJsonEntry.getSecond();
+
+    try {
+        auto const & entityType = entityJson.getString ( Type ( Entity ) :: typeKey );
+
+        try {
+            auto newEntity = Type ( Entity ) :: instantiateByClassName ( entityType );
+
+            try {
+                (void) newEntity->loadFrom ( entityJson );
+            } catch ( Exception const & ) {
+                log :: warn() << "Failed to load Entity properties";
+            }
+
+            (void) this->_loaderThreadControl.input.pScene->_entities.pushBack ( newEntity );
+
+            try {
+                this->_loaderThreadControl.data.pCurrentChildrenArray   =
+                        & ( entityJson.getArray( Type ( Entity ) :: childrenKey ) );
+
+                this->_loaderThreadControl.data.entityIterator          =
+                        this->_loaderThreadControl.data.pCurrentChildrenArray->begin();
+
+                this->_loaderThreadControl.data.childrenParent          = newEntity.get();
+
+                this->setNextState ( LoaderThreadState :: LoadingSceneEntityChildren );
+            } catch ( KeyException const & ) {
+            } catch ( TypeException const & ) {
+                log :: warn() << "Entity has a '" << Type ( Entity ) :: childrenKey << "' key, but it is not formatted properly ( expected array )";
+            }
+
+            if ( entityParent == nullptr ) {
+                (void) this->_loaderThreadControl.input.pScene->_rootEntities.pushBack ( std :: move ( newEntity ) );
+            } else {
+                (void) entityParent->_children.pushBack ( std :: move ( newEntity ) );
+            }
+
+        } catch ( Exception const & exception ) {
+            log :: err() << "Failed to construct Entity : " << exception.toString();
+        }
+    } catch ( KeyException const & ) {
+        log :: err() << "Key '" << Type ( Entity ) :: typeKey << "' does not exist, and cannot construct entity because of it";
+    } catch ( TypeException const & ) {
+        log :: err() << "Object marked as Entity Type is not String, cannot construct entity because of it";
+    }
+}
+
+auto Self :: loaderThreadError () noexcept -> void {
+
+    log :: err()
+            << "Loader Thread encountered an error in state '"
+            << Self :: stateToString ( this->_loaderThreadControl.data.errorState )
+            << "', reason = "
+            << this->_loaderThreadControl.data.errorReason;
+
+    this->_loaderThreadControl.data.errorReason.clear();
+    this->_loaderThreadControl.data.errorState  = LoaderThreadState :: Error;
+
+    this->_state            = SceneLoaderStateReadyError;
+
+    this->setNextState ( LoaderThreadState :: Cleanup );
+}
+
+auto Self :: loaderThreadCleanup () noexcept -> void {
+
+    this->_loaderThreadControl.data.sceneJson.clear();
+    this->_loaderThreadControl.data.queue.clear();
+    this->_loaderThreadControl.input.pScene                 = nullptr;
+    this->_loaderThreadControl.data.pCurrentChildrenArray   = nullptr;
+    this->_loaderThreadControl.data.childrenParent          = nullptr;
+
+    this->_threadKeepAlive  = false;
+
+    if ( this->_state != SceneLoaderStateReadyError ) {
+        this->_state = SceneLoaderStateSceneReady;
+    }
+
+    this->setNextState ( LoaderThreadState :: Done );
 }
 
 auto Self :: acquire () noexcept -> Nester * {

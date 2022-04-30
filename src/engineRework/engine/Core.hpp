@@ -369,6 +369,7 @@ namespace engine {
         Field ( Idle,       0 ),
         Field ( Loading,    1 ),
         Field ( SceneReady, 2 ),
+        Field ( ReadyError, 3 ),
     };
 
 #define C_ENG_MAP_END
