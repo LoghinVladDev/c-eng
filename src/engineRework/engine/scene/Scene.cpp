@@ -43,6 +43,11 @@ auto Self :: operator = ( Self && object ) noexcept -> Self & {
 }
 
 auto Self :: clear () noexcept -> Self & {
+
+    for ( auto & entity : this->_entities ) {
+        entity->_scene = nullptr;
+    }
+
     this->_rootEntities.clear();
     this->_entities.clear();
 
@@ -63,7 +68,7 @@ auto Self :: loadFrom ( json :: standard :: JsonObject const & json ) noexcept (
 
     try {
         auto const & rootEntityArray = json.getArray ( Self :: rootEntitiesKey );
-        for ( auto entityObject : rootEntityArray ) {
+        for ( auto const & entityObject : rootEntityArray ) {
 
             try {
                 auto const & entityJson = entityObject.getJson();
@@ -124,7 +129,7 @@ auto Self :: loadEntity ( json :: standard :: JsonObject const & json ) noexcept
                     for ( auto const & childObject : childrenArray ) {
 
                         try {
-                            (void) entity->addChild ( this->loadEntity ( childObject.getJson() ) );
+                            (void) entity->add ( this->loadEntity ( childObject.getJson() ) );
 
                         } catch ( TypeException const & ) {
                             log :: warn() << "Entity Child not formatted properly, it will not be added to Entity";

@@ -176,6 +176,22 @@ public:                                                                         
     }                                                                                           \
 private:
 
+#define __C_ENG_OBJECT_MAP_DEFINITIONS_NO_PREFIX_CLASS(_typename, _baseFormula)                           \
+                                                                                                \
+public:                                                                                         \
+    NoDiscard constexpr auto className () const noexcept -> cds :: StringLiteral override {     \
+        return __C_ENG_STRINGIFY ( _typename );                                        \
+    }                                                                                           \
+private:
+
+#define __C_ENG_OBJECT_MAP_DEFINITIONS_NO_PREFIX_NESTED_CLASS(_typename, _nester, _baseFormula)           \
+                                                                                                \
+public:                                                                                         \
+    NoDiscard constexpr auto className () const noexcept -> cds :: StringLiteral override {     \
+        return __C_ENG_STRINGIFY ( __C_ENG_OBJECT_MAP_DECLARATION_NESTED_CLASS_EXTRACT_NESTER_ ## _nester::_typename );                             \
+    }                                                                                           \
+private:
+
 
 #define __C_ENG_OBJECT_MAP_CLASS_CLASS(_typename, _baseFormula)                     __C_ENG_TYPE ( _typename )
 #define __C_ENG_OBJECT_MAP_DECLARATION_CLASS(_typename, _baseFormula)               class __C_ENG_OBJECT_MAP_CLASS_CLASS( _typename, _baseFormula ) __C_ENG_OBJECT_MAP_PARENT_DECLARATION_ ## _baseFormula
@@ -564,23 +580,24 @@ private:
 #define __C_ENG_OBJECT_MAP_TO_STRING_NESTED_CLASS(...)
 
 
-#define Class                                                                       __C_ENG_OBJECT_MAP_META_CALL(__C_ENG_OBJECT_MAP_DECLARATION_,     C_ENG_MAP_START)
-#define Struct                                                                      __C_ENG_OBJECT_MAP_META_CALL(__C_ENG_OBJECT_MAP_DECLARATION_,     C_ENG_MAP_START)
-#define Union                                                                       __C_ENG_OBJECT_MAP_META_CALL(__C_ENG_OBJECT_MAP_DECLARATION_,     C_ENG_MAP_START)
-#define Enum                                                                        __C_ENG_OBJECT_MAP_META_CALL(__C_ENG_OBJECT_MAP_DECLARATION_,     C_ENG_MAP_START)
-#define Constructor                                                                 __C_ENG_OBJECT_MAP_META_CALL(__C_ENG_OBJECT_MAP_CONSTRUCTOR_,     C_ENG_MAP_START)
-#define Destructor                                                                  __C_ENG_OBJECT_MAP_META_CALL(__C_ENG_OBJECT_MAP_DESTRUCTOR_,      C_ENG_MAP_START)
-#define Self                                                                        __C_ENG_OBJECT_MAP_META_CALL(__C_ENG_OBJECT_MAP_SELF_,            C_ENG_MAP_START)
-#define Parent                                                                      __C_ENG_OBJECT_MAP_META_CALL(__C_ENG_OBJECT_MAP_PARENT_,          C_ENG_MAP_START)
-#define Field                                                                       __C_ENG_OBJECT_MAP_META_CALL(__C_ENG_OBJECT_MAP_FIELD_,           C_ENG_MAP_START)
-#define Const                                                                       __C_ENG_OBJECT_MAP_META_CALL(__C_ENG_OBJECT_MAP_CONST_,           C_ENG_MAP_START)
-#define Nester                                                                      __C_ENG_OBJECT_MAP_META_CALL(__C_ENG_OBJECT_MAP_NESTER_,          C_ENG_MAP_START)
+#define Class                                                                       __C_ENG_OBJECT_MAP_META_CALL(__C_ENG_OBJECT_MAP_DECLARATION_,           C_ENG_MAP_START)
+#define Struct                                                                      __C_ENG_OBJECT_MAP_META_CALL(__C_ENG_OBJECT_MAP_DECLARATION_,           C_ENG_MAP_START)
+#define Union                                                                       __C_ENG_OBJECT_MAP_META_CALL(__C_ENG_OBJECT_MAP_DECLARATION_,           C_ENG_MAP_START)
+#define Enum                                                                        __C_ENG_OBJECT_MAP_META_CALL(__C_ENG_OBJECT_MAP_DECLARATION_,           C_ENG_MAP_START)
+#define Constructor                                                                 __C_ENG_OBJECT_MAP_META_CALL(__C_ENG_OBJECT_MAP_CONSTRUCTOR_,           C_ENG_MAP_START)
+#define Destructor                                                                  __C_ENG_OBJECT_MAP_META_CALL(__C_ENG_OBJECT_MAP_DESTRUCTOR_,            C_ENG_MAP_START)
+#define Self                                                                        __C_ENG_OBJECT_MAP_META_CALL(__C_ENG_OBJECT_MAP_SELF_,                  C_ENG_MAP_START)
+#define Parent                                                                      __C_ENG_OBJECT_MAP_META_CALL(__C_ENG_OBJECT_MAP_PARENT_,                C_ENG_MAP_START)
+#define Field                                                                       __C_ENG_OBJECT_MAP_META_CALL(__C_ENG_OBJECT_MAP_FIELD_,                 C_ENG_MAP_START)
+#define Const                                                                       __C_ENG_OBJECT_MAP_META_CALL(__C_ENG_OBJECT_MAP_CONST_,                 C_ENG_MAP_START)
+#define Nester                                                                      __C_ENG_OBJECT_MAP_META_CALL(__C_ENG_OBJECT_MAP_NESTER_,                C_ENG_MAP_START)
 #define Type                                                                        __C_ENG_TYPE
 #define NoDiscard                                                                   __C_ENG_NO_DISCARD
 #define MaybeUnused                                                                 __C_ENG_MAYBE_UNUSED
-#define __GenerateToString                                                          __C_ENG_OBJECT_MAP_META_CALL(__C_ENG_OBJECT_MAP_TO_STRING_,       C_ENG_MAP_START)
+#define __GenerateToString                                                          __C_ENG_OBJECT_MAP_META_CALL(__C_ENG_OBJECT_MAP_TO_STRING_,             C_ENG_MAP_START)
 
-#define ClassDefs                                                                   __C_ENG_OBJECT_MAP_META_CALL(__C_ENG_OBJECT_MAP_DEFINITIONS_,     C_ENG_MAP_START)
+#define ClassDefs                                                                   __C_ENG_OBJECT_MAP_META_CALL(__C_ENG_OBJECT_MAP_DEFINITIONS_,           C_ENG_MAP_START)
+#define ClassDefsNoPrefix                                                           __C_ENG_OBJECT_MAP_META_CALL(__C_ENG_OBJECT_MAP_DEFINITIONS_NO_PREFIX_, C_ENG_MAP_START)
 
 #elif defined(C_ENG_MAP_END) && defined(C_ENG_MAP_START)
 
@@ -588,6 +605,7 @@ __GenerateToString
 
 #undef __GenerateToString
 #undef ClassDefs
+#undef ClassDefsNoPrefix
 
 #undef __C_ENG_OBJECT_MAP_DEFINITIONS_CLASS
 #undef __C_ENG_OBJECT_MAP_DEFINITIONS_STRUCT
@@ -595,6 +613,13 @@ __GenerateToString
 #undef __C_ENG_OBJECT_MAP_DEFINITIONS_ENUM
 #undef __C_ENG_OBJECT_MAP_DEFINITIONS_HEADER
 #undef __C_ENG_OBJECT_MAP_DEFINITIONS_SOURCE
+
+#undef __C_ENG_OBJECT_MAP_DEFINITIONS_NO_PREFIX_CLASS
+#undef __C_ENG_OBJECT_MAP_DEFINITIONS_NO_PREFIX_STRUCT
+#undef __C_ENG_OBJECT_MAP_DEFINITIONS_NO_PREFIX_NESTED_CLASS
+#undef __C_ENG_OBJECT_MAP_DEFINITIONS_NO_PREFIX_ENUM
+#undef __C_ENG_OBJECT_MAP_DEFINITIONS_NO_PREFIX_HEADER
+#undef __C_ENG_OBJECT_MAP_DEFINITIONS_NO_PREFIX_SOURCE
 
 #undef __C_ENG_OBJECT_MAP_TO_STRING_CLASS
 #undef __C_ENG_OBJECT_MAP_TO_STRING_UNION

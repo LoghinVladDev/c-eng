@@ -18,16 +18,16 @@ namespace engine {
 
     __C_ENG_PRE_DECLARE_CLASS ( Scene );
     __C_ENG_PRE_DECLARE_CLASS ( Component );
+    __C_ENG_PRE_DECLARE_CLASS ( Transform );
 
     Class {
-        ClassDefs
-
         Const ( TYPE ( cds :: String ),     typeKey,        VALUE ( "type" ) )
         Const ( TYPE ( cds :: String ),     nameKey,        VALUE ( "name" ) )
         Const ( TYPE ( cds :: String ),     childrenKey,    VALUE ( "children" ) )
         Const ( TYPE ( cds :: String ),     componentsKey,  VALUE ( "components" ) )
 
-    private:
+        ClassDefsNoPrefix
+
         friend class Type ( Scene );
 
         template < typename K >
@@ -40,14 +40,18 @@ namespace engine {
         >;
 
         using OwnedEntities = cds :: Array < cds :: UniquePointer < Type ( Entity ) > >;
-        using ParentEntity  = cds :: ForeignPointer < Type ( Entity ) >;
-        using ParentScene   = cds :: ForeignPointer < Type ( Scene ) >;
+        using ParentEntity  = Type ( Entity ) *;
+        using ParentScene   = Type ( Scene ) *;
 
-        Field ( TYPE ( ParentEntity ),              parent,     DEFAULT_VALUE ( nullptr ),  GET_DEFAULT, SET_NONE )
-        Field ( TYPE ( ParentScene ),               scene,      DEFAULT_VALUE ( nullptr ),  GET_DEFAULT, SET_NONE )
+        using TransformType = Type ( Transform ) *;
+
+        Field ( PRIMITIVE_TYPE ( ParentEntity ),    parent,     DEFAULT_VALUE ( nullptr ),  GET_DEFAULT, SET_NONE )
+        Field ( PRIMITIVE_TYPE ( ParentScene ),     scene,      DEFAULT_VALUE ( nullptr ),  GET_DEFAULT, SET_NONE )
         Field ( TYPE ( OwnedEntities ),             children,   NO_INIT,                    GET_DEFAULT, SET_NONE )
         Field ( TYPE ( ComponentMap ),              components, NO_INIT,                    GET_NONE,    SET_NONE )
         Field ( TYPE ( cds :: String ),             name,       NO_INIT,                    GET_DEFAULT, SET_DEFAULT )
+
+        Field ( PRIMITIVE_TYPE ( TransformType ),   transform,  DEFAULT_VALUE ( nullptr ),  GET_DEFAULT, SET_NONE )
 
     public:
         Constructor () noexcept = default;
@@ -63,7 +67,11 @@ namespace engine {
 
         auto static instantiateByClassName ( cds :: String const & ) noexcept (false) -> cds :: UniquePointer < Type ( Entity ) >;
 
-        auto addChild ( cds :: UniquePointer < Type ( Entity ) > && ) noexcept -> Self &;
+        auto add ( Type ( Entity ) * ) noexcept -> Self &;
+        virtual auto add ( Type ( Component ) * ) noexcept -> Self &;
+
+        auto remove ( Type ( Entity ) * ) noexcept -> Self &;
+        virtual auto remove ( Type ( Component ) * ) noexcept -> Self &;
 
         auto clear () noexcept -> Self & override;
     };

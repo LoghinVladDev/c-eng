@@ -6,6 +6,8 @@
 #include <scene/Scene.hpp>
 #include <Logger.hpp>
 #include <scene/ECM/Component.hpp>
+#include <scene/ECM/components/transform/Transform.hpp>
+#include <scene/specializedObjects/gameObjects/GameObject.hpp>
 
 using namespace cds;
 using namespace engine;
@@ -13,26 +15,40 @@ using namespace engine;
 #define C_ENG_MAP_START CLASS ( Entity, ENGINE_PARENT ( EngineObject ) )
 #include <ObjectMapping.hpp>
 
-auto Self :: addChild ( UniquePointer < Type ( Entity ) > && entity ) noexcept -> Self & {
+auto Self :: add ( Type ( Entity ) * pEntity ) noexcept -> Self & {
 
-    this->_children.add ( std :: forward < UniquePointer < Type ( Entity ) > > ( entity ) );
-    entity->_parent = this;
+    pEntity->_parent = this;
+    this->_children.add ( pEntity );
 
     return * this;
 }
 
-Self :: Constructor ( Self const & entity ) noexcept :
-        _parent ( nullptr ) {
+auto Self :: remove ( Type ( Entity ) * pEntity ) noexcept -> Self & {
+
+    pEntity->_parent = nullptr;
+
+    for ( auto iterator = this->_children.begin(), end = this->_children.end(); iterator != end; ++ iterator ) {
+        if ( iterator->get() == pEntity ) {
+            (void) this->_children.remove ( iterator );
+            return * this;
+        }
+    }
+
+    return * this;
+}
+
+Self :: Constructor ( Self const & entity ) noexcept {
 
     for ( auto const & component : entity._components ) {
-        (void) this->_components.emplace ( component.first(), component.second()->copy() );
+        (void) this->Self :: add ( component.second()->copy() );
     }
 }
 
 Self :: Constructor ( Self && entity ) noexcept :
-        _parent ( std :: move ( entity._parent ) ),
+        _parent ( cds :: exchange ( entity._parent, nullptr ) ),
         _children ( std :: move ( entity._children ) ),
-        _components ( std :: move ( entity._components ) ) {
+        _components ( std :: move ( entity._components ) ),
+        _transform ( cds :: exchange ( entity._transform, nullptr ) ) {
 
 }
 
@@ -44,7 +60,7 @@ auto Self :: operator = ( Self const & entity ) noexcept -> Self & {
     (void) this->clear();
 
     for ( auto const & component : entity._components ) {
-        (void) this->_components.emplace ( component.first(), component.second()->copy() );
+        (void) this->add ( component.second()->copy() );
     }
 
     return * this;
@@ -57,9 +73,10 @@ auto Self :: operator = ( Self && entity ) noexcept -> Self & {
 
     (void) this->clear();
 
-    this->_parent       = std :: move ( entity._parent );
+    this->_parent       = cds :: exchange ( entity._parent, nullptr );
     this->_children     = std :: move ( entity._children );
     this->_components   = std :: move ( entity._components );
+    this->_transform    = cds :: exchange ( entity._transform, nullptr );
 
     return * this;
 }
@@ -81,6 +98,11 @@ auto Self :: clear () noexcept -> Self & { // NOLINT(misc-no-recursion)
         delete component.second();
     }
 
+    this->_children.clear();
+    this->_components.clear();
+
+    this->_transform = nullptr;
+
     return * this;
 }
 
@@ -91,8 +113,6 @@ auto Self :: loadFrom ( json :: standard :: JsonObject const & json ) noexcept -
 
     } catch ( KeyException const & ) {
         log :: info() << "Unnamed Entity in scene, assigning default name";
-
-        static int nameCounter = 1;
         this->name() = this->scene()->generateUnusedEntityName();
 
     } catch ( TypeException const & typeException ) {
@@ -107,12 +127,7 @@ auto Self :: loadFrom ( json :: standard :: JsonObject const & json ) noexcept -
                 auto const & componentJson = componentObject.getJson();
 
                 try {
-                    auto component = Type ( Component ) :: instantiate ( componentJson );
-
-                    (void) this->_components.emplace (
-                            reduceComponentTypeFlag ( component->type() ),
-                            component.release()
-                    );
+                    (void) this->add ( Type ( Component ) :: instantiate ( componentJson ).release() );
 
                 } catch ( Exception const & ) {
                     log :: warn() << "Component Could not be created from configuration, it will not be added to Entity";
@@ -124,6 +139,7 @@ auto Self :: loadFrom ( json :: standard :: JsonObject const & json ) noexcept -
         }
 
     } catch ( KeyException const & ) {
+        /* do nothing */
     } catch ( TypeException const & typeException ) {
         log :: warn() << "Key for components - '" << Self :: componentsKey << "' found, format not ok : " << typeException.toString();
     }
@@ -158,6 +174,48 @@ auto Self :: dumpTo ( json :: standard :: JsonObject & json ) noexcept -> Self c
     return * this;
 }
 
-auto Self :: instantiateByClassName ( cds :: String const & string ) noexcept (false) -> cds :: UniquePointer < Self > {
-    throw Exception ( "Unknown Entity Class Name '" + string + "'" );
+auto Self :: add ( Type ( Component ) * pComponent ) noexcept -> Self & {
+
+    if ( this->_transform == nullptr ) {
+        this->_transform = reinterpret_cast < Type ( Transform ) * > ( pComponent->cast < ComponentTypeFlagTransform > () );
+    }
+
+    (void) this->_components.emplace (
+            reduceComponentTypeFlag ( pComponent->type() ),
+            pComponent
+    );
+
+    return * this;
+}
+
+auto Self :: remove ( Type ( Component ) * pComponent ) noexcept -> Self & {
+
+    if ( pComponent->type() == ComponentTypeFlagTransform ) {
+        this->_transform = nullptr;
+    }
+
+    this->_components.remove ( reduceComponentTypeFlag ( pComponent->type() ) );
+    return * this;
+}
+
+template < typename T >
+static inline auto tryInstantiate ( Type ( Entity ) * & pEntity, String const & className ) noexcept -> bool {
+    pEntity = new T ();
+    if ( pEntity->className() == className ) {
+        return true;
+    }
+
+    delete pEntity;
+    return false;
+}
+
+auto Self :: instantiateByClassName ( String const & className ) noexcept (false) -> cds :: UniquePointer < Self > {
+
+    Self * pEntity = nullptr;
+
+    if ( tryInstantiate < Type ( GameObject ) > ( pEntity, className ) ) {
+        return pEntity;
+    }
+
+    throw Exception ( "Unknown Entity Class Name '" + className + "'" );
 }

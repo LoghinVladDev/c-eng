@@ -18,9 +18,9 @@ namespace engine {
     Class {
         ClassDefs
 
-    public:
         Const ( TYPE ( cds :: String ), typeKey,    VALUE ( "type" ) )
 
+    public:
         NoDiscard __CDS_cpplang_VirtualConstexpr virtual auto type () const noexcept -> Type ( ComponentTypeFlag ) = 0;
         virtual auto loadFrom ( cds :: json :: standard :: JsonObject const & ) noexcept -> Self & = 0;
         virtual auto dumpTo ( cds :: json :: standard :: JsonObject & ) noexcept -> Self & = 0;
@@ -28,6 +28,24 @@ namespace engine {
         auto static instantiate ( cds :: json :: standard :: JsonObject const & ) noexcept (false) -> cds :: UniquePointer < Type ( Component ) >;
         auto static instantiate ( Type ( ComponentTypeFlag ) ) noexcept (false) -> cds :: UniquePointer < Type ( Component ) >;
         auto clear () noexcept -> Self & override = 0;
+
+        template < Type ( ComponentTypeFlag ) flag >
+        NoDiscard constexpr auto cast () noexcept -> Self * {
+            if ( this->type() == flag ) {
+                return this;
+            }
+
+            return nullptr;
+        }
+
+        template < Type ( ComponentTypeFlag ) flag >
+        NoDiscard constexpr auto cast () const noexcept -> Self const * {
+            if ( this->type() == flag ) {
+                return this;
+            }
+
+            return nullptr;
+        }
     };
 
 }

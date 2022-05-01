@@ -256,8 +256,8 @@ auto Self :: logMonitorQueryResult () noexcept -> void {
         static auto gammaRampAsString = [](uint16 const * pRamp, uint32 size) noexcept {
             String rampAsStr = "";
 
-            for ( uint32 i = 0U; i < size; ++ i ) {
-                rampAsStr += String ( pRamp[i] ) + ", ";
+            for ( uint32 rampIndex = 0U; rampIndex < size; ++ rampIndex ) {
+                rampAsStr += String ( pRamp[rampIndex] ) + ", ";
             }
 
             return rampAsStr.removeSuffix(", ");

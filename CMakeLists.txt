@@ -218,9 +218,23 @@ set (
 )
 
 set (
+        ENGINE_SCENE_SPECIALIZED_OBJECTS_GAME_OBJECTS_SOURCES
+
+        src/engineRework/engine/scene/specializedObjects/gameObjects/GameObject.cpp
+        src/engineRework/engine/scene/specializedObjects/gameObjects/GameObject.hpp
+)
+
+set (
+        ENGINE_SCENE_SPECIALIZED_OBJECTS_SOURCES
+
+        ${ENGINE_SCENE_SPECIALIZED_OBJECTS_GAME_OBJECTS_SOURCES}
+)
+
+set (
         ENGINE_SCENE_SOURCES
 
         ${ENGINE_SCENE_ECM_SOURCES}
+        ${ENGINE_SCENE_SPECIALIZED_OBJECTS_SOURCES}
 
         src/engineRework/engine/scene/Scene.cpp
         src/engineRework/engine/scene/Scene.hpp
