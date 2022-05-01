@@ -283,12 +283,20 @@ set (
 )
 
 set (
+        UTILITY_THREAD_IDENTIFICATION_SOURCES
+
+        src/engineRework/utility/threadIdentification/ThreadIdentification.cpp
+        src/engineRework/utility/threadIdentification/ThreadIdentification.hpp
+)
+
+set (
         UTILITY_SOURCES
 
         ${UTILITY_LOGGER_SOURCES}
         ${UTILITY_FUNC_SOURCES}
         ${UTILITY_PREPROCESS_SOURCES}
         ${UTILITY_SETTINGS_SOURCES}
+        ${UTILITY_THREAD_IDENTIFICATION_SOURCES}
 )
 
 set (

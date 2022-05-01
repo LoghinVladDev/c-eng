@@ -6,6 +6,8 @@
 
 #include <CDS/Pointer>
 
+#include <threadIdentification/ThreadIdentification.hpp>
+
 #include <chrono>
 #include <filesystem>
 #include <fstream>
@@ -76,11 +78,11 @@ auto Self :: log (
     }
 
     auto formattedMessage = String :: f (
-            "[time = %s][level = %s][engine state = %s][thread = %#018x] : %s",
+            "[time = %s][level = %s][engine state = %s][thread = %s] : %s",
             Self :: currentTime(),
             :: toString ( logLevel ),
             :: toString ( __C_ENG_TYPE ( Engine ) :: instance().state() ),
-            Thread :: currentThreadID(),
+            getThreadIdentificationString ( Thread :: currentThreadID() ),
             message.cStr()
     );
 

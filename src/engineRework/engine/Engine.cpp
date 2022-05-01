@@ -12,6 +12,7 @@
 #include <Window.hpp>
 #include <RenderEngine.hpp>
 #include <VulkanRenderEngine.hpp>
+#include <threadIdentification/ThreadIdentification.hpp>
 
 #include <VulkanCore.hpp>
 #include <Allocator.hpp>
@@ -77,6 +78,8 @@ auto Self :: instance () noexcept -> Self & {
 }
 
 auto Self :: start () noexcept -> Self & {
+    engine :: storeThreadIdentificationString ( Thread :: currentThreadID(), engine :: engineThreadIdentificationString );
+
     (void) __C_ENG_TYPE ( Logger ) :: instance().debug(
             "Engine Created at 0x" +
             :: toString ( this ) + " and booting up" // NOLINT(clion-misra-cpp2008-5-2-9)

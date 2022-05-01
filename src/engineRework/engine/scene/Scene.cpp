@@ -8,6 +8,7 @@
 #include <CDS/Queue>
 #include <CDS/Thread>
 #include <CDS/Path>
+#include <threadIdentification/ThreadIdentification.hpp>
 
 using namespace cds;
 using namespace engine;
@@ -230,6 +231,8 @@ auto Self :: start ( Path const & path ) noexcept -> Self & {
     };
 
     this->_thread = new Runnable ([this]{
+
+        engine :: storeThreadIdentificationString ( Thread :: currentThreadID(), engine :: sceneLoaderThreadIdentificationString );
 
         while ( this->_threadKeepAlive ) {
 
