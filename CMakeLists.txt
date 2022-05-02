@@ -201,9 +201,50 @@ set (
 )
 
 set (
+        ENGINE_SCENE_ECM_COMPONENTS_EVENT_ADAPTER_COMPONENT_RAW_SOURCES
+
+        src/engineRework/engine/scene/ECM/components/eventAdapter/component/raw/RawControllerInputEntityEventAdapterComponent.cpp
+        src/engineRework/engine/scene/ECM/components/eventAdapter/component/raw/RawControllerInputEntityEventAdapterComponent.hpp
+
+        src/engineRework/engine/scene/ECM/components/eventAdapter/component/raw/RawKeyInputEntityEventAdapterComponent.cpp
+        src/engineRework/engine/scene/ECM/components/eventAdapter/component/raw/RawKeyInputEntityEventAdapterComponent.hpp
+
+        src/engineRework/engine/scene/ECM/components/eventAdapter/component/raw/RawMouseInputEntityEventAdapterComponent.cpp
+        src/engineRework/engine/scene/ECM/components/eventAdapter/component/raw/RawMouseInputEntityEventAdapterComponent.hpp
+)
+
+set (
+        ENGINE_SCENE_ECM_COMPONENTS_EVENT_ADAPTER_COMPONENT_SOURCES
+
+        ${ENGINE_SCENE_ECM_COMPONENTS_EVENT_ADAPTER_COMPONENT_RAW_SOURCES}
+
+        src/engineRework/engine/scene/ECM/components/eventAdapter/component/EntityEventAdapterControllerComponent.cpp
+        src/engineRework/engine/scene/ECM/components/eventAdapter/component/EntityEventAdapterControllerComponent.hpp
+
+        src/engineRework/engine/scene/ECM/components/eventAdapter/component/EntityEventAdapterMouseComponent.cpp
+        src/engineRework/engine/scene/ECM/components/eventAdapter/component/EntityEventAdapterMouseComponent.hpp
+
+        src/engineRework/engine/scene/ECM/components/eventAdapter/component/EntityEventAdapterKeyComponent.cpp
+        src/engineRework/engine/scene/ECM/components/eventAdapter/component/EntityEventAdapterKeyComponent.hpp
+)
+
+set (
+        ENGINE_SCENE_ECM_COMPONENTS_EVENT_ADAPTER_SOURCES
+
+        ${ENGINE_SCENE_ECM_COMPONENTS_EVENT_ADAPTER_COMPONENT_SOURCES}
+
+        src/engineRework/engine/scene/ECM/components/eventAdapter/EntityEventAdapter.cpp
+        src/engineRework/engine/scene/ECM/components/eventAdapter/EntityEventAdapter.hpp
+
+        src/engineRework/engine/scene/ECM/components/eventAdapter/EntityEventAdapterComponent.cpp
+        src/engineRework/engine/scene/ECM/components/eventAdapter/EntityEventAdapterComponent.hpp
+)
+
+set (
         ENGINE_SCENE_ECM_COMPONENTS_SOURCES
 
         ${ENGINE_SCENE_ECM_COMPONENTS_TRANSFORM_SOURCES}
+        ${ENGINE_SCENE_ECM_COMPONENTS_EVENT_ADAPTER_SOURCES}
 )
 
 set (

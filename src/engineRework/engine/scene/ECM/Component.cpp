@@ -5,6 +5,7 @@
 #include "Component.hpp"
 #include <Logger.hpp>
 #include <scene/ECM/components/transform/Transform.hpp>
+#include "src/engineRework/engine/scene/ECM/components/eventAdapter/EntityEventAdapter.hpp"
 
 using namespace engine;
 using namespace cds;
@@ -45,7 +46,8 @@ auto Self :: instantiate ( json :: standard :: JsonObject const & json ) noexcep
 
 auto Self :: instantiate ( Type ( ComponentTypeFlag ) flag ) noexcept (false) -> UniquePointer < Self > {
     switch ( flag ) {
-        case ComponentTypeFlagTransform:        return new Type ( Transform );
+        case ComponentTypeFlagTransform:            return new Type ( Transform );
+        case ComponentTypeFlagEntityEventAdapter:   return new Type ( EntityEventAdapter );
         default:
             break;
     }

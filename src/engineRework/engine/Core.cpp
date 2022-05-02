@@ -556,14 +556,45 @@ namespace engine {
     ) noexcept -> StringLiteral {
 
         switch ( flag ) {
-            case ComponentTypeFlagNone:         return "None";
-            case ComponentTypeFlagTransform:    return "Transform";
-            case ComponentTypeFlagMesh:         return "Mesh";
-            case ComponentTypeFlagMeshRenderer: return "MeshRenderer";
-            case ComponentTypeFlagCustom:       return "Custom";
+            case ComponentTypeFlagNone:                 return "None";
+            case ComponentTypeFlagTransform:            return "Transform";
+            case ComponentTypeFlagMesh:                 return "Mesh";
+            case ComponentTypeFlagMeshRenderer:         return "MeshRenderer";
+            case ComponentTypeFlagEntityEventAdapter:   return "EntityEventAdapter";
+            case ComponentTypeFlagCustom:               return "Custom";
         }
 
         return "Unknown";
+    }
+
+    auto toString (
+            Type ( EntityEventAdapterControllerComponentType ) type
+    ) noexcept -> StringLiteral {
+
+        switch ( type ) {
+            case EntityEventAdapterControllerComponentTypeCustom:       return "Custom";
+            case EntityEventAdapterControllerComponentTypeRawInput:     return "RawInput";
+        }
+    }
+
+    auto toString (
+            Type ( EntityEventAdapterKeyComponentType ) type
+    ) noexcept -> StringLiteral {
+
+        switch ( type ) {
+            case EntityEventAdapterKeyComponentTypeCustom:      return "Custom";
+            case EntityEventAdapterKeyComponentTypeRawInput:    return "RawInput";
+        }
+    }
+
+    auto toString (
+            Type ( EntityEventAdapterMouseComponentType ) type
+    ) noexcept -> StringLiteral {
+
+        switch ( type ) {
+            case EntityEventAdapterMouseComponentTypeCustom:    return "Custom";
+            case EntityEventAdapterMouseComponentTypeRawInput:  return "RawInput";
+        }
     }
 
     auto toString (
@@ -582,12 +613,34 @@ namespace engine {
 
     auto stringToComponentTypeFlag ( StringLiteral component ) noexcept -> Type ( ComponentTypeFlag ) {
 
-        if ( std :: strcmp ( component, "Transform" ) == 0 )    { return ComponentTypeFlagTransform; }
-        if ( std :: strcmp ( component, "Mesh" ) == 0 )         { return ComponentTypeFlagMesh; }
-        if ( std :: strcmp ( component, "MeshRenderer" ) == 0 ) { return ComponentTypeFlagMeshRenderer; }
-        if ( std :: strcmp ( component, "Custom" ) == 0 )       { return ComponentTypeFlagCustom; }
+        if ( std :: strcmp ( component, "Transform" ) == 0 )            { return ComponentTypeFlagTransform; }
+        if ( std :: strcmp ( component, "Mesh" ) == 0 )                 { return ComponentTypeFlagMesh; }
+        if ( std :: strcmp ( component, "MeshRenderer" ) == 0 )         { return ComponentTypeFlagMeshRenderer; }
+        if ( std :: strcmp ( component, "EntityEventAdapter" ) == 0 )   { return ComponentTypeFlagEntityEventAdapter; }
+        if ( std :: strcmp ( component, "Custom" ) == 0 )               { return ComponentTypeFlagCustom; }
 
         return ComponentTypeFlagCustom;
+    }
+
+    auto stringToEntityEventAdapterControllerComponentType ( StringLiteral type ) noexcept -> Type ( EntityEventAdapterControllerComponentType ) {
+
+        if ( std :: strcmp ( type, "RawInput" ) == 0 )    { return EntityEventAdapterControllerComponentTypeRawInput; }
+
+        return EntityEventAdapterControllerComponentTypeCustom;
+    }
+
+    auto stringToEntityEventAdapterKeyComponentType ( StringLiteral type ) noexcept -> Type ( EntityEventAdapterKeyComponentType ) {
+
+        if ( std :: strcmp ( type, "RawInput" ) == 0 )    { return EntityEventAdapterKeyComponentTypeRawInput; }
+
+        return EntityEventAdapterKeyComponentTypeCustom;
+    }
+
+    auto stringToEntityEventAdapterMouseComponentType ( StringLiteral type ) noexcept -> Type ( EntityEventAdapterMouseComponentType ) {
+
+        if ( std :: strcmp ( type, "RawInput" ) == 0 )    { return EntityEventAdapterMouseComponentTypeRawInput; }
+
+        return EntityEventAdapterMouseComponentTypeCustom;
     }
 
 }

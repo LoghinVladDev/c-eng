@@ -15,10 +15,47 @@
 #include <ObjectMapping.hpp>
 
 namespace engine {
+
+    __C_ENG_PRE_DECLARE_CLASS ( Transform );
+    __C_ENG_PRE_DECLARE_CLASS ( Mesh );
+    __C_ENG_PRE_DECLARE_CLASS ( MeshRenderer );
+    __C_ENG_PRE_DECLARE_CLASS ( EntityEventAdapter );
+
+    __C_ENG_PRE_DECLARE_CLASS ( Entity );
+
     Class {
+        friend class Type ( Entity );
+
         ClassDefs
 
         Const ( TYPE ( cds :: String ), typeKey,    VALUE ( "type" ) )
+
+        Field ( ENGINE_PRIMITIVE_TYPE ( Entity * ), entity, DEFAULT_VALUE ( nullptr ),  GET_DEFAULT, SET_NONE )
+
+        template < Type ( ComponentTypeFlag ) flag, typename = void >
+        struct ComponentTypeProperties {
+            using ComponentType = void;
+        };
+
+        template < >
+        struct ComponentTypeProperties < ComponentTypeFlagTransform > {
+            using ComponentType = Type ( Transform );
+        };
+
+        template < >
+        struct ComponentTypeProperties < ComponentTypeFlagMesh > {
+            using ComponentType = Type ( Mesh );
+        };
+
+        template < >
+        struct ComponentTypeProperties < ComponentTypeFlagMeshRenderer > {
+            using ComponentType = Type ( MeshRenderer );
+        };
+
+        template < >
+        struct ComponentTypeProperties < ComponentTypeFlagEntityEventAdapter > {
+            using ComponentType = Type ( EntityEventAdapter );
+        };
 
     public:
         NoDiscard __CDS_cpplang_VirtualConstexpr virtual auto type () const noexcept -> Type ( ComponentTypeFlag ) = 0;
@@ -30,21 +67,21 @@ namespace engine {
         auto clear () noexcept -> Self & override = 0;
 
         template < Type ( ComponentTypeFlag ) flag >
-        NoDiscard constexpr auto cast () noexcept -> Self * {
-            if ( this->type() == flag ) {
-                return this;
+        NoDiscard constexpr auto cast () noexcept -> typename ComponentTypeProperties < flag > :: ComponentType * {
+            if ( this->type() != flag ) {
+                return nullptr;
             }
 
-            return nullptr;
+            return reinterpret_cast < typename ComponentTypeProperties < flag > :: ComponentType * > ( this );
         }
 
         template < Type ( ComponentTypeFlag ) flag >
-        NoDiscard constexpr auto cast () const noexcept -> Self const * {
-            if ( this->type() == flag ) {
-                return this;
+        NoDiscard constexpr auto cast () const noexcept -> typename ComponentTypeProperties < flag > :: ComponentType const * {
+            if ( this->type() != flag ) {
+                return nullptr;
             }
 
-            return nullptr;
+            return reinterpret_cast < typename ComponentTypeProperties < flag > :: ComponentType const * > ( this );
         }
     };
 

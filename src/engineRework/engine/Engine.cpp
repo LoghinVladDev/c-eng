@@ -282,10 +282,12 @@ auto Self :: prepareNextScene () noexcept -> Self & {
 
     if ( this->_activeScene != nullptr ) {
         /// do this on another thread as well!!!
+        (void) this->_eventHandler.stopStreamingEventsTo ( this->_activeScene );
         (void) this->_activeScene->clear();
     }
 
     this->_activeScene = this->_sceneLoader.acquire();
+    (void) this->_eventHandler.startStreamingEventsTo ( this->_activeScene );
 
     /// transition until move should be introduced as well later
 

@@ -3,12 +3,19 @@
   "rootEntities": [
     {
       "type": "GameObject",
-      "name": "Object 1"
+      "name": "Object 1",
+      "components": [
+        {
+          "type": "EntityEventAdapter",
+          "keyEventAdapter": {
+            "type": "RawInput"
+          }
+        }
+      ]
     },
     {
       "type": "GameObject",
-      "name": "Object 2",
-      "components": []
+      "name": "Object 2"
     },
     {
       "type": "GameObject",

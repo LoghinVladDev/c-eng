@@ -352,11 +352,45 @@ namespace engine {
 #include <ObjectMapping.hpp>
 
     Enum {
-        Field ( None,           0x00000000U ),
-        Field ( Transform,      0x00000001U ),
-        Field ( Mesh,           0x00000002U ),
-        Field ( MeshRenderer,   0x00000004U ),
-        Field ( Custom,         0x80000000U ),
+        Field ( None,                   0x00000000U ),
+        Field ( Transform,              0x00000001U ),
+        Field ( Mesh,                   0x00000002U ),
+        Field ( MeshRenderer,           0x00000004U ),
+        Field ( EntityEventAdapter,     0x00000008U ),
+        Field ( Custom,                 0x80000000U ),
+    };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START ENUM ( EntityEventAdapterControllerComponentType, TYPE ( cds :: uint8 ) )
+#include <ObjectMapping.hpp>
+
+    Enum {
+        Field ( Custom,             0 ),
+        Field ( RawInput,           1 ),
+    };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START ENUM ( EntityEventAdapterKeyComponentType, TYPE ( cds :: uint8 ) )
+#include <ObjectMapping.hpp>
+
+    Enum {
+        Field ( Custom,             0 ),
+        Field ( RawInput,           1 ),
+    };
+
+#define C_ENG_MAP_END
+#include <ObjectMapping.hpp>
+
+#define C_ENG_MAP_START ENUM ( EntityEventAdapterMouseComponentType, TYPE ( cds :: uint8 ) )
+#include <ObjectMapping.hpp>
+
+    Enum {
+        Field ( Custom,             0 ),
+        Field ( RawInput,           1 ),
     };
 
 #define C_ENG_MAP_END
@@ -695,6 +729,21 @@ namespace engine {
     NoDiscard auto stringToComponentTypeFlag ( cds :: StringLiteral ) noexcept -> Type ( ComponentTypeFlag );
     NoDiscard inline auto stringToComponentTypeFlag ( cds :: String const & string ) noexcept -> Type ( ComponentTypeFlag ) {
         return stringToComponentTypeFlag ( string.cStr() );
+    }
+
+    NoDiscard auto stringToEntityEventAdapterControllerComponentType ( cds :: StringLiteral ) noexcept -> Type ( EntityEventAdapterControllerComponentType );
+    NoDiscard inline auto stringToEntityEventAdapterControllerComponentType ( cds :: String const & string ) noexcept -> Type ( EntityEventAdapterControllerComponentType ) {
+        return stringToEntityEventAdapterControllerComponentType ( string.cStr() );
+    }
+
+    NoDiscard auto stringToEntityEventAdapterKeyComponentType ( cds :: StringLiteral ) noexcept -> Type ( EntityEventAdapterKeyComponentType );
+    NoDiscard inline auto stringToEntityEventAdapterKeyComponentType ( cds :: String const & string ) noexcept -> Type ( EntityEventAdapterKeyComponentType ) {
+        return stringToEntityEventAdapterKeyComponentType ( string.cStr() );
+    }
+
+    NoDiscard auto stringToEntityEventAdapterMouseComponentType ( cds :: StringLiteral ) noexcept -> Type ( EntityEventAdapterMouseComponentType );
+    NoDiscard inline auto stringToEntityEventAdapterMouseComponentType ( cds :: String const & string ) noexcept -> Type ( EntityEventAdapterMouseComponentType ) {
+        return stringToEntityEventAdapterMouseComponentType ( string.cStr() );
     }
 
 #define C_ENG_MAP_END

@@ -56,6 +56,8 @@ auto Self :: loadFrom ( cds :: json :: standard :: JsonObject const & object ) n
 
 auto Self :: dumpTo ( json :: standard :: JsonObject & object ) noexcept -> Self & {
 
+    (void) this->Parent :: dumpTo ( object );
+
     object.put (
                     Self :: locationKey,
                     json :: standard :: JsonObject ()

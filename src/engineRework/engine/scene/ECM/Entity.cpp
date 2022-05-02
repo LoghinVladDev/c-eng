@@ -48,8 +48,12 @@ Self :: Constructor ( Self && entity ) noexcept :
         _parent ( cds :: exchange ( entity._parent, nullptr ) ),
         _children ( std :: move ( entity._children ) ),
         _components ( std :: move ( entity._components ) ),
-        _transform ( cds :: exchange ( entity._transform, nullptr ) ) {
+        _transform ( cds :: exchange ( entity._transform, nullptr ) ),
+        _eventAdapter ( cds :: exchange ( entity._eventAdapter, nullptr ) ) {
 
+    for ( auto & component : this->_components ) {
+        component.second()->_entity = this;
+    }
 }
 
 auto Self :: operator = ( Self const & entity ) noexcept -> Self & {
@@ -73,10 +77,15 @@ auto Self :: operator = ( Self && entity ) noexcept -> Self & {
 
     (void) this->clear();
 
-    this->_parent       = cds :: exchange ( entity._parent, nullptr );
-    this->_children     = std :: move ( entity._children );
-    this->_components   = std :: move ( entity._components );
-    this->_transform    = cds :: exchange ( entity._transform, nullptr );
+    this->_parent               = cds :: exchange ( entity._parent, nullptr );
+    this->_children             = std :: move ( entity._children );
+    this->_components           = std :: move ( entity._components );
+    this->_transform            = cds :: exchange ( entity._transform, nullptr );
+    this->_eventAdapter         = cds :: exchange ( entity._eventAdapter, nullptr );
+
+    for ( auto & component : this->_components ) {
+        component.second()->_entity = this;
+    }
 
     return * this;
 }
@@ -95,13 +104,15 @@ auto Self :: clear () noexcept -> Self & { // NOLINT(misc-no-recursion)
     }
 
     for ( auto const & component : this->_components ) {
+        component.second()->_entity = nullptr;
         delete component.second();
     }
 
     this->_children.clear();
     this->_components.clear();
 
-    this->_transform = nullptr;
+    this->_transform            = nullptr;
+    this->_eventAdapter         = nullptr;
 
     return * this;
 }
@@ -177,8 +188,14 @@ auto Self :: dumpTo ( json :: standard :: JsonObject & json ) noexcept -> Self c
 auto Self :: add ( Type ( Component ) * pComponent ) noexcept -> Self & {
 
     if ( this->_transform == nullptr ) {
-        this->_transform = reinterpret_cast < Type ( Transform ) * > ( pComponent->cast < ComponentTypeFlagTransform > () );
+        this->_transform = pComponent->cast < ComponentTypeFlagTransform > ();
     }
+
+    if ( this->_eventAdapter == nullptr ) {
+        this->_eventAdapter = pComponent->cast < ComponentTypeFlagEntityEventAdapter > ();
+    }
+
+    pComponent->_entity = this;
 
     (void) this->_components.emplace (
             reduceComponentTypeFlag ( pComponent->type() ),
@@ -193,6 +210,8 @@ auto Self :: remove ( Type ( Component ) * pComponent ) noexcept -> Self & {
     if ( pComponent->type() == ComponentTypeFlagTransform ) {
         this->_transform = nullptr;
     }
+
+    pComponent->_entity = nullptr;
 
     this->_components.remove ( reduceComponentTypeFlag ( pComponent->type() ) );
     return * this;
