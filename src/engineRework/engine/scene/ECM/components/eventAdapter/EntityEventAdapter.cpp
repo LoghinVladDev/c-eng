@@ -4,6 +4,9 @@
 
 #include "EntityEventAdapter.hpp"
 #include <Logger.hpp>
+#include <src/engineRework/engine/scene/ECM/components/eventAdapter/component/EntityEventAdapterMouseComponent.hpp>
+#include <src/engineRework/engine/scene/ECM/components/eventAdapter/component/EntityEventAdapterKeyComponent.hpp>
+#include <src/engineRework/engine/scene/ECM/components/eventAdapter/component/EntityEventAdapterControllerComponent.hpp>
 
 using namespace engine;
 using namespace cds;

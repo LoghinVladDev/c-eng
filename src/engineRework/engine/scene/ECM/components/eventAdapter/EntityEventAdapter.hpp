@@ -7,14 +7,15 @@
 
 #include <Preprocess.hpp>
 #include <scene/ECM/Component.hpp>
-#include <scene/ECM/components/eventAdapter/component/EntityEventAdapterControllerComponent.hpp>
-#include <scene/ECM/components/eventAdapter/component/EntityEventAdapterKeyComponent.hpp>
-#include <scene/ECM/components/eventAdapter/component/EntityEventAdapterMouseComponent.hpp>
 
 #define C_ENG_MAP_START CLASS ( EntityEventAdapter, ENGINE_PARENT ( Component ) )
 #include <ObjectMapping.hpp>
 
 namespace engine {
+
+    __C_ENG_PRE_DECLARE_CLASS ( EntityEventAdapterMouseComponent );
+    __C_ENG_PRE_DECLARE_CLASS ( EntityEventAdapterKeyComponent );
+    __C_ENG_PRE_DECLARE_CLASS ( EntityEventAdapterControllerComponent );
 
     Class {
         ClassDefs

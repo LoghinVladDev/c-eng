@@ -331,10 +331,46 @@ set (
 )
 
 set (
+        UTILITY_MESH_LOADER_DATA_SOURCES
+
+        src/engineRework/utility/meshLoader/data/Face.cpp
+        src/engineRework/utility/meshLoader/data/Face.hpp
+
+        src/engineRework/utility/meshLoader/data/Mesh.cpp
+        src/engineRework/utility/meshLoader/data/Mesh.hpp
+
+        src/engineRework/utility/meshLoader/data/Vertex.cpp
+        src/engineRework/utility/meshLoader/data/Vertex.hpp
+)
+
+set (
+        UTILITY_MESH_LOADER_MANAGER_SOURCES
+
+        src/engineRework/utility/meshLoader/manager/MeshLoaderManager.cpp
+        src/engineRework/utility/meshLoader/manager/MeshLoaderManager.hpp
+
+        src/engineRework/utility/meshLoader/manager/MeshLoaderThread.cpp
+        src/engineRework/utility/meshLoader/manager/MeshLoaderThread.hpp
+
+        src/engineRework/utility/meshLoader/manager/MeshLoaderTypes.hpp
+)
+
+set (
+        UTILITY_MESH_LOADER_SOURCES
+
+        ${UTILITY_MESH_LOADER_DATA_SOURCES}
+        ${UTILITY_MESH_LOADER_MANAGER_SOURCES}
+
+        src/engineRework/utility/meshLoader/MeshLoader.cpp
+        src/engineRework/utility/meshLoader/MeshLoader.hpp
+)
+
+set (
         UTILITY_SOURCES
 
         ${UTILITY_LOGGER_SOURCES}
         ${UTILITY_FUNC_SOURCES}
+        ${UTILITY_MESH_LOADER_SOURCES}
         ${UTILITY_PREPROCESS_SOURCES}
         ${UTILITY_SETTINGS_SOURCES}
         ${UTILITY_THREAD_IDENTIFICATION_SOURCES}
