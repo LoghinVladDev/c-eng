@@ -488,6 +488,12 @@ private:
 #define __C_ENG_OBJECT_MAP_FIELD_ENUM(_typename, _baseFormula)                      __C_ENG_OBJECT_MAP_FIELD_ENUM_GEN
 #define __C_ENG_OBJECT_MAP_TO_STRING_ENUM(_typename, _baseFormula)                  NoDiscard MaybeUnused auto toString ( Type ( _typename ) ) noexcept -> cds :: StringLiteral;
 
+#define __C_ENG_OBJECT_MAP_CLASS_ENUM_CLASS(_typename)                              __C_ENG_TYPE ( _typename )
+#define __C_ENG_OBJECT_MAP_BASE_NAME_ENUM_CLASS(_typename)                          _typename
+#define __C_ENG_OBJECT_MAP_DECLARATION_ENUM_CLASS(_typename)                        enum class __C_ENG_OBJECT_MAP_CLASS_ENUM_CLASS(_typename)
+#define __C_ENG_OBJECT_MAP_FIELD_ENUM_CLASS(_typename)                              __C_ENG_OBJECT_MAP_FIELD_ENUM_CLASS_GEN
+#define __C_ENG_OBJECT_MAP_TO_STRING_ENUM_CLASS(_typename)                          NoDiscard MaybeUnused auto toString ( Type ( _typename ) ) noexcept -> cds :: StringLiteral;
+
 
 #define __C_ENG_OBJECT_MAP_FIELD_CASTER_GENERATOR_ENUM(_typename, _baseFormula)     __C_ENG_OBJECT_MAP_CAST_ ## _baseFormula
 #define __C_ENG_OBJECT_MAP_CAST_NO_TYPE
@@ -497,6 +503,7 @@ private:
 #define __C_ENG_OBJECT_MAP_FIELD_ENUM_GEN(_name, _value)                            __C_ENG_OBJECT_MAP_META_CALL( __C_ENG_OBJECT_MAP_META_CALL ( __C_ENG_OBJECT_MAP_BASE_NAME_, C_ENG_MAP_START ), _name) = __C_ENG_OBJECT_MAP_FIELD_ENUM_CASTER (_value)
 #define __C_ENG_OBJECT_MAP_FIELD_ENUM_CASTER(_value)                                __C_ENG_OBJECT_MAP_META_CALL( __C_ENG_OBJECT_MAP_FIELD_CASTER_GENERATOR_, C_ENG_MAP_START )(_value)
 
+#define __C_ENG_OBJECT_MAP_FIELD_ENUM_CLASS_GEN(_name)                              _name
 
 
 #define __C_ENG_OBJECT_MAP_PARENT_CLASS_PARENT(_className)                          _className
@@ -914,6 +921,14 @@ __GenerateToString
 #undef __C_ENG_OBJECT_MAP_PARENT_UNION
 
 #undef __C_ENG_OBJECT_MAP_DEFINITIONS_NESTED_CLASS
+
+#undef __C_ENG_OBJECT_MAP_CLASS_ENUM_CLASS
+#undef __C_ENG_OBJECT_MAP_BASE_NAME_ENUM_CLASS
+#undef __C_ENG_OBJECT_MAP_DECLARATION_ENUM_CLASS
+#undef __C_ENG_OBJECT_MAP_FIELD_ENUM_CLASS
+#undef __C_ENG_OBJECT_MAP_TO_STRING_ENUM_CLASS
+
+#undef __C_ENG_OBJECT_MAP_FIELD_ENUM_CLASS_GEN
 
 
 #undef Class

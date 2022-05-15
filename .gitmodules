@@ -9,4 +9,7 @@
 	url = https://github.com/g-truc/glm
 [submodule "dependencies/stb"]
 	path = dependencies/stb
-	url = https://github.com/nothings/stb
+	url = https://github.com/nothings/stb
+[submodule "dependencies/meshLoader"]
+	path = dependencies/meshLoader
+	url = https://github.com/LoghinVladDev/meshLoader
