@@ -5,7 +5,8 @@
 #include "Component.hpp"
 #include <Logger.hpp>
 #include <scene/ECM/components/transform/Transform.hpp>
-#include "src/engineRework/engine/scene/ECM/components/eventAdapter/EntityEventAdapter.hpp"
+#include <scene/ECM/components/eventAdapter/EntityEventAdapter.hpp>
+#include <scene/ECM/components/mesh/Mesh.hpp>
 
 using namespace engine;
 using namespace cds;
@@ -48,6 +49,7 @@ auto Self :: instantiate ( Type ( ComponentTypeFlag ) flag ) noexcept (false) ->
     switch ( flag ) {
         case ComponentTypeFlagTransform:            return new Type ( Transform );
         case ComponentTypeFlagEntityEventAdapter:   return new Type ( EntityEventAdapter );
+        case ComponentTypeFlagMesh:                 return new Type ( Mesh );
         default:
             break;
     }

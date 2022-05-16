@@ -243,10 +243,18 @@ set (
 )
 
 set (
+        ENGINE_SCENE_ECM_COMPONENTS_MESH_SOURCES
+
+        src/engineRework/engine/scene/ECM/components/mesh/Mesh.cpp
+        src/engineRework/engine/scene/ECM/components/mesh/Mesh.hpp
+)
+
+set (
         ENGINE_SCENE_ECM_COMPONENTS_SOURCES
 
         ${ENGINE_SCENE_ECM_COMPONENTS_TRANSFORM_SOURCES}
         ${ENGINE_SCENE_ECM_COMPONENTS_EVENT_ADAPTER_SOURCES}
+        ${ENGINE_SCENE_ECM_COMPONENTS_MESH_SOURCES}
 )
 
 set (

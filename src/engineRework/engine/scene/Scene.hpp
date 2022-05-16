@@ -37,6 +37,7 @@ namespace engine {
         using NameMappedEntities    = cds :: HashMap < cds :: String, cds :: ForeignPointer < Type ( Entity ) > >;
         using Shaders               = cds :: Array < cds :: UniquePointer < Type ( Shader ) > >;
 
+
         Field ( TYPE ( IndirectEntities ),      entities,           NO_INIT, GET_DEFAULT, SET_NONE )
         Field ( TYPE ( DirectEntities ),        rootEntities,       NO_INIT, GET_DEFAULT, SET_NONE )
         Field ( TYPE ( NameMappedEntities ),    nameMappedEntities, NO_INIT, GET_DEFAULT, SET_NONE )
@@ -178,10 +179,12 @@ namespace engine {
         using SceneEntityParentQueueData    = cds :: ForeignPointer < Type ( Entity ) >;
         using SceneEntityQueueEntry         = cds :: Pair < SceneEntityQueueData, SceneEntityParentQueueData >;
         using SceneEntityQueue              = cds :: Queue < SceneEntityQueueEntry >;
+        using LateLoadComponents            = cds :: DoubleLinkedList < Type ( Component ) * >;
 
         struct LoaderThreadData {
             cds :: json :: standard :: JsonObject                       sceneJson;
             SceneEntityQueue                                            queue;
+            LateLoadComponents                                          lateLoadComponents;
 
             cds :: json :: standard :: JsonArray                const * pCurrentChildrenArray;
             cds :: json :: standard :: JsonArray :: ConstIterator       entityIterator;

@@ -8,7 +8,7 @@
 #include <Preprocess.hpp>
 #include <Core.hpp>
 #include <CDS/experimental/JSON>
-#include <CDS/pointer/UniquePointer>
+#include <CDS/smartPointers/UniquePointer>
 #include <scene/ECM/components/eventAdapter/EntityEventAdapterComponent.hpp>
 
 #define C_ENG_MAP_START CLASS ( EntityEventAdapterKeyComponent, ENGINE_PARENT ( EntityEventAdapterComponent ) )

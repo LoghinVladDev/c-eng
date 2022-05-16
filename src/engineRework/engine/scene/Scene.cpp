@@ -383,6 +383,10 @@ auto Self :: loaderThreadLoadingSceneEntity () noexcept -> void {
             (void) this->_loaderThreadControl.input.pScene->_entities.pushBack ( newEntity );
             (void) this->_loaderThreadControl.input.pScene->_nameMappedEntities.emplace ( newEntity->name(), newEntity );
 
+            for ( auto const & component : newEntity->_components ) {
+                (void) this->_loaderThreadControl.data.lateLoadComponents.pushBack ( component.second() );
+            }
+
             try {
                 this->_loaderThreadControl.data.pCurrentChildrenArray   =
                         & ( entityJson.getArray( Type ( Entity ) :: childrenKey ) );
@@ -464,6 +468,7 @@ auto Self :: loaderThreadCleanup () noexcept -> void {
 
     this->_loaderThreadControl.data.sceneJson.clear();
     this->_loaderThreadControl.data.queue.clear();
+    this->_loaderThreadControl.data.lateLoadComponents.clear();
     this->_loaderThreadControl.input.pScene                 = nullptr;
     this->_loaderThreadControl.data.pCurrentChildrenArray   = nullptr;
     this->_loaderThreadControl.data.childrenParent          = nullptr;

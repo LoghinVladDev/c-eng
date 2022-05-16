@@ -58,7 +58,7 @@ auto Self :: dumpTo ( json :: standard :: JsonObject & object ) noexcept -> Self
 
     (void) this->Parent :: dumpTo ( object );
 
-    object.put (
+    (void) object.put (
                     Self :: locationKey,
                     json :: standard :: JsonObject ()
                             .put ( Self :: locationXKey, this->_location.x )
@@ -95,7 +95,7 @@ auto Self :: copy () const noexcept -> Self * {
 }
 
 auto Self :: toString () const noexcept -> String {
-    return __C_ENG_STRINGIFY ( Type ( Transform ) ) +
+    return __C_ENG_STRINGIFY ( Type ( Transform ) ) + " "
             "{ location = "_s +
                     "( x = " + this->_location.x +
                     ", y = " + this->_location.y +

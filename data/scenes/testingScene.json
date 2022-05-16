@@ -26,6 +26,10 @@
         },
         {
           "type": "MeshRenderer"
+        },
+        {
+          "type": "Mesh",
+          "path": "../data/models/cow.obj"
         }
       ]
     },
