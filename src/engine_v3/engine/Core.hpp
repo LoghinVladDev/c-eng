@@ -2,16 +2,11 @@
 // Created by loghin on 20.12.2021.
 //
 
-#ifndef __C_ENG_CORE_HPP__
+#ifndef __C_ENG_STORAGETYPES_HPP__
 #define __C_ENG_CORE_HPP__
 
 #include <CDS/Types>
 #include <CDS/Object>
-#include <string>
-
-namespace cds {
-    class String;
-}
 
 namespace engine {
 
@@ -751,4 +746,4 @@ namespace engine {
 
 }
 
-#endif //__C_ENG_CORE_HPP__
+#endif //__C_ENG_STORAGE_HPP__

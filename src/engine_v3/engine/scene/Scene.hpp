@@ -33,7 +33,7 @@ namespace engine {
         auto loadEntity ( cds :: json :: standard :: JsonObject const & ) noexcept (false) -> cds :: UniquePointer < Type ( Entity ) >;
 
         using DirectEntities        = cds :: Array < cds :: UniquePointer < Type ( Entity ) > >;
-        using IndirectEntities      = cds :: DoubleLinkedList < cds :: ForeignPointer < Type ( Entity ) > >;
+        using IndirectEntities      = cds :: LinkedList < cds :: ForeignPointer < Type ( Entity ) > >;
         using NameMappedEntities    = cds :: HashMap < cds :: String, cds :: ForeignPointer < Type ( Entity ) > >;
         using Shaders               = cds :: Array < cds :: UniquePointer < Type ( Shader ) > >;
 
@@ -78,6 +78,8 @@ namespace engine {
 
 namespace engine {
 
+    __C_ENG_PRE_DECLARE_CLASS ( SceneComponentLoader );
+
     Class {
         ClassDefs
 
@@ -99,6 +101,8 @@ namespace engine {
         auto loaderThreadLoadingSceneRootEntityArray () noexcept -> void;
         auto loaderThreadLoadingSceneEntity () noexcept -> void;
         auto loaderThreadLoadingSceneEntityChildren () noexcept -> void;
+        auto loaderThreadLoadingSceneEntityComponents () noexcept -> void;
+        auto loaderThreadWaitingForComponentLoading () noexcept -> void;
         auto loaderThreadError () noexcept -> void;
         auto loaderThreadCleanup () noexcept -> void;
 
@@ -111,12 +115,16 @@ namespace engine {
             LoadingSceneRootEntityArray,
             LoadingSceneEntity,
             LoadingSceneEntityChildren,
+            LoadingSceneEntityComponents,
+            WaitingForComponentLoading,
             Error,
             Cleanup,
             Done,
 
             ValidationStateCheckDuplicateName,
         };
+
+        constexpr static auto startingState = LoaderThreadState :: Idle;
 
         constexpr static auto stateFunction ( LoaderThreadState state ) noexcept -> LoaderThreadStateFunction {
             switch ( state ) {
@@ -126,6 +134,8 @@ namespace engine {
                 case LoaderThreadState :: LoadingSceneRootEntityArray:          return & Self :: loaderThreadLoadingSceneRootEntityArray;
                 case LoaderThreadState :: LoadingSceneEntity:                   return & Self :: loaderThreadLoadingSceneEntity;
                 case LoaderThreadState :: LoadingSceneEntityChildren:           return & Self :: loaderThreadLoadingSceneEntityChildren;
+                case LoaderThreadState :: LoadingSceneEntityComponents:         return & Self :: loaderThreadLoadingSceneEntityComponents;
+                case LoaderThreadState :: WaitingForComponentLoading:           return & Self :: loaderThreadWaitingForComponentLoading;
                 case LoaderThreadState :: Error:                                return & Self :: loaderThreadError;
                 case LoaderThreadState :: Cleanup:                              return & Self :: loaderThreadCleanup;
                 case LoaderThreadState :: ValidationStateCheckDuplicateName:    return & Self :: validationStateCheckDuplicateName;
@@ -141,6 +151,8 @@ namespace engine {
                 case LoaderThreadState :: LoadingSceneRootEntityArray:          return "LoadingSceneRootEntityArray";
                 case LoaderThreadState :: LoadingSceneEntity:                   return "LoadingSceneEntity";
                 case LoaderThreadState :: LoadingSceneEntityChildren:           return "LoadingSceneEntityChildren";
+                case LoaderThreadState :: LoadingSceneEntityComponents:         return "LoadingSceneEntityComponents";
+                case LoaderThreadState :: WaitingForComponentLoading:           return "WaitingForComponentLoading";
                 case LoaderThreadState :: Error:                                return "Error";
                 case LoaderThreadState :: Cleanup:                              return "Cleanup";
                 case LoaderThreadState :: ValidationStateCheckDuplicateName:    return "ValidationStateCheckDuplicateName";
@@ -192,6 +204,8 @@ namespace engine {
 
             cds :: String                                               errorReason;
             LoaderThreadState                                           errorState;
+
+            Type ( SceneComponentLoader )                             * pLoader;
         };
 
 #ifndef NDEBUG
@@ -203,10 +217,12 @@ namespace engine {
             cds :: uint32       loadingSceneRootEntityArrayStateCount   = 0U;
             cds :: uint32       loadingSceneEntityStateCount            = 0U;
             cds :: uint32       loadingSceneEntityChildrenStateCount    = 0U;
+            cds :: uint32       loadingSceneEntityComponentsStateCount  = 0U;
             cds :: uint32       errorStateCount                         = 0U;
             cds :: uint32       cleanupStateCount                       = 0U;
             cds :: uint32       doneStateCount                          = 0U;
             cds :: uint32       validationStateCount                    = 0U;
+            cds :: uint32       otherStates                             = 0U;
         };
 
         inline auto stateCount ( LoaderThreadState state ) noexcept -> cds :: uint32 & {
@@ -217,29 +233,32 @@ namespace engine {
                 case LoaderThreadState :: LoadingSceneRootEntityArray:          return this->_loaderThreadControl.test.loadingSceneRootEntityArrayStateCount;
                 case LoaderThreadState :: LoadingSceneEntity:                   return this->_loaderThreadControl.test.loadingSceneEntityStateCount;
                 case LoaderThreadState :: LoadingSceneEntityChildren:           return this->_loaderThreadControl.test.loadingSceneEntityChildrenStateCount;
+                case LoaderThreadState :: LoadingSceneEntityComponents:         return this->_loaderThreadControl.test.loadingSceneEntityComponentsStateCount;
                 case LoaderThreadState :: Error:                                return this->_loaderThreadControl.test.errorStateCount;
                 case LoaderThreadState :: Cleanup:                              return this->_loaderThreadControl.test.cleanupStateCount;
                 case LoaderThreadState :: Done:                                 return this->_loaderThreadControl.test.doneStateCount;
                 case LoaderThreadState :: ValidationStateCheckDuplicateName:    return this->_loaderThreadControl.test.validationStateCount;
+
+                case LoaderThreadState :: WaitingForComponentLoading:           return this->_loaderThreadControl.test.otherStates;
             }
         }
 
 #endif
 
         struct LoaderThreadValidationData {
-            LoaderThreadState           state;
-            LoaderThreadStateFunction   function;
-            bool                        passed;
+            LoaderThreadState               state;
+            LoaderThreadStateFunction       function;
+            bool                            passed;
         };
 
         struct LoaderThreadControl {
-            LoaderThreadState           state;
-            LoaderThreadStateFunction   function;
-            LoaderThreadInput           input;
-            LoaderThreadData            data;
-            LoaderThreadValidationData  validationData;
+            LoaderThreadState               state;
+            LoaderThreadStateFunction       function;
+            LoaderThreadInput               input;
+            LoaderThreadData                data;
+            LoaderThreadValidationData      validationData;
 #ifndef NDEBUG
-            LoaderThreadTestingData     test;
+            LoaderThreadTestingData         test;
 #endif
         };
 

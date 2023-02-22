@@ -9,6 +9,7 @@
 #include <CDS/Thread>
 #include <CDS/Path>
 #include <threadIdentification/ThreadIdentification.hpp>
+#include <scene/loader/SceneComponentLoader.hpp>
 
 using namespace cds;
 using namespace engine;
@@ -224,7 +225,7 @@ auto Self :: start ( Path const & path ) noexcept -> Self & {
     this->_threadKeepAlive  = true;
     this->_scene            = new Type ( Scene );
 
-    this->setNextState ( LoaderThreadState :: Idle );
+    this->setNextState ( Self :: startingState );
     this->_loaderThreadControl.input    = {
             .path   = path,
             .pScene = this->_scene.get()
@@ -271,6 +272,8 @@ auto Self :: loaderThreadIdle () noexcept -> void {
     if ( this->_loaderThreadControl.input.pScene == nullptr ) {
         this->setError ( "Failed to Load Scene due to input scene being null" );
     }
+
+    this->_loaderThreadControl.data.pLoader = new Type ( SceneComponentLoader );
 
     this->setNextState ( LoaderThreadState :: LoadingJsonFile );
 }
@@ -330,8 +333,7 @@ auto Self :: loaderThreadLoadingSceneRootEntityArray () noexcept -> void {
 auto Self :: loaderThreadLoadingSceneEntityChildren () noexcept -> void {
 
     if ( this->_loaderThreadControl.data.entityIterator == this->_loaderThreadControl.data.pCurrentChildrenArray->end() ) {
-        this->setNextState ( LoaderThreadState :: LoadingSceneEntity );
-        this->setNextValidationState ( LoaderThreadState :: ValidationStateCheckDuplicateName );
+        this->setNextState ( LoaderThreadState :: LoadingSceneEntityComponents );
         return;
     }
 
@@ -354,7 +356,7 @@ auto Self :: loaderThreadLoadingSceneEntity () noexcept -> void {
 
     if ( this->_loaderThreadControl.data.queue.empty() ) {
 
-        this->setNextState ( LoaderThreadState :: Cleanup );
+        this->setNextState ( LoaderThreadState :: WaitingForComponentLoading );
         return;
     }
 
@@ -464,6 +466,21 @@ auto Self :: loaderThreadError () noexcept -> void {
     this->setNextState ( LoaderThreadState :: Cleanup );
 }
 
+auto Self :: loaderThreadLoadingSceneEntityComponents () noexcept -> void {
+
+    this->_loaderThreadControl.data.pLoader->update ( this->_loaderThreadControl.data.lateLoadComponents );
+
+    this->setNextState ( LoaderThreadState :: LoadingSceneEntity );
+    this->setNextValidationState ( LoaderThreadState :: ValidationStateCheckDuplicateName );
+}
+
+auto Self :: loaderThreadWaitingForComponentLoading () noexcept -> void {
+
+    if ( this->_loaderThreadControl.data.pLoader->done() ) {
+        this->setNextState ( LoaderThreadState :: Cleanup );
+    }
+}
+
 auto Self :: loaderThreadCleanup () noexcept -> void {
 
     this->_loaderThreadControl.data.sceneJson.clear();
@@ -472,6 +489,9 @@ auto Self :: loaderThreadCleanup () noexcept -> void {
     this->_loaderThreadControl.input.pScene                 = nullptr;
     this->_loaderThreadControl.data.pCurrentChildrenArray   = nullptr;
     this->_loaderThreadControl.data.childrenParent          = nullptr;
+
+    this->_loaderThreadControl.data.pLoader->clear();
+    delete exchange ( this->_loaderThreadControl.data.pLoader, nullptr );
 
 #ifndef NDEBUG
 
@@ -482,10 +502,12 @@ auto Self :: loaderThreadCleanup () noexcept -> void {
             .loadingSceneRootEntityArrayStateCount  = 0U,
             .loadingSceneEntityStateCount           = 0U,
             .loadingSceneEntityChildrenStateCount   = 0U,
+            .loadingSceneEntityComponentsStateCount = 0U,
             .errorStateCount                        = 0U,
             .cleanupStateCount                      = 0U,
             .doneStateCount                         = 0U,
-            .validationStateCount                   = 0U
+            .validationStateCount                   = 0U,
+            .otherStates                            = 0U
     };
 
 #endif

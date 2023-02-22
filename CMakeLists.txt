@@ -55,448 +55,6 @@ if (WIN32)
 endif()
 
 
-set (
-        ENGINE_EVENT_CONTROLLER_SOURCES
-
-        src/engineRework/engine/event/controller/ControllerEvent.cpp
-        src/engineRework/engine/event/controller/ControllerEvent.hpp
-
-        src/engineRework/engine/event/controller/ControllerAxisEvent.cpp
-        src/engineRework/engine/event/controller/ControllerAxisEvent.hpp
-
-        src/engineRework/engine/event/controller/ControllerButtonPressEvent.cpp
-        src/engineRework/engine/event/controller/ControllerButtonPressEvent.hpp
-
-        src/engineRework/engine/event/controller/ControllerButtonReleaseEvent.cpp
-        src/engineRework/engine/event/controller/ControllerButtonReleaseEvent.hpp
-
-        src/engineRework/engine/event/controller/ControllerConnectEvent.cpp
-        src/engineRework/engine/event/controller/ControllerConnectEvent.hpp
-
-        src/engineRework/engine/event/controller/ControllerDisconnectEvent.cpp
-        src/engineRework/engine/event/controller/ControllerDisconnectEvent.hpp
-
-        src/engineRework/engine/event/controller/ControllerHatEvent.cpp
-        src/engineRework/engine/event/controller/ControllerHatEvent.hpp
-)
-
-set (
-        ENGINE_EVENT_KEY_SOURCES
-
-        src/engineRework/engine/event/key/KeyEvent.cpp
-        src/engineRework/engine/event/key/KeyEvent.hpp
-
-        src/engineRework/engine/event/key/KeyPressEvent.cpp
-        src/engineRework/engine/event/key/KeyPressEvent.hpp
-
-        src/engineRework/engine/event/key/KeyReleaseEvent.cpp
-        src/engineRework/engine/event/key/KeyReleaseEvent.hpp
-)
-
-set (
-        ENGINE_EVENT_MOUSE_SOURCES
-
-        src/engineRework/engine/event/mouse/MouseEvent.cpp
-        src/engineRework/engine/event/mouse/MouseEvent.hpp
-
-        src/engineRework/engine/event/mouse/MouseMoveEvent.cpp
-        src/engineRework/engine/event/mouse/MouseMoveEvent.hpp
-
-        src/engineRework/engine/event/mouse/MouseEnterEvent.cpp
-        src/engineRework/engine/event/mouse/MouseEnterEvent.hpp
-
-        src/engineRework/engine/event/mouse/MouseLeaveEvent.cpp
-        src/engineRework/engine/event/mouse/MouseLeaveEvent.hpp
-
-        src/engineRework/engine/event/mouse/MouseScrollEvent.cpp
-        src/engineRework/engine/event/mouse/MouseScrollEvent.hpp
-
-        src/engineRework/engine/event/mouse/MousePressEvent.cpp
-        src/engineRework/engine/event/mouse/MousePressEvent.hpp
-
-        src/engineRework/engine/event/mouse/MouseReleaseEvent.cpp
-        src/engineRework/engine/event/mouse/MouseReleaseEvent.hpp
-)
-
-set (
-        ENGINE_EVENT_WINDOW_SOURCES
-
-        src/engineRework/engine/event/window/WindowEvent.cpp
-        src/engineRework/engine/event/window/WindowEvent.hpp
-
-        src/engineRework/engine/event/window/WindowCloseEvent.cpp
-        src/engineRework/engine/event/window/WindowCloseEvent.hpp
-
-        src/engineRework/engine/event/window/WindowContentScaleEvent.cpp
-        src/engineRework/engine/event/window/WindowContentScaleEvent.hpp
-
-        src/engineRework/engine/event/window/WindowFrameBufferResizeEvent.cpp
-        src/engineRework/engine/event/window/WindowFrameBufferResizeEvent.hpp
-
-        src/engineRework/engine/event/window/WindowGainFocusEvent.cpp
-        src/engineRework/engine/event/window/WindowGainFocusEvent.hpp
-
-        src/engineRework/engine/event/window/WindowLoseFocusEvent.cpp
-        src/engineRework/engine/event/window/WindowLoseFocusEvent.hpp
-
-        src/engineRework/engine/event/window/WindowMaximizeEvent.cpp
-        src/engineRework/engine/event/window/WindowMaximizeEvent.cpp
-
-        src/engineRework/engine/event/window/WindowMinimizeEvent.cpp
-        src/engineRework/engine/event/window/WindowMinimizeEvent.hpp
-
-        src/engineRework/engine/event/window/WindowMoveEvent.cpp
-        src/engineRework/engine/event/window/WindowMoveEvent.hpp
-
-        src/engineRework/engine/event/window/WindowRefreshRequestEvent.cpp
-        src/engineRework/engine/event/window/WindowRefreshRequestEvent.hpp
-
-        src/engineRework/engine/event/window/WindowRestoreEvent.cpp
-        src/engineRework/engine/event/window/WindowRestoreEvent.hpp
-
-        src/engineRework/engine/event/window/WindowResizeEvent.cpp
-        src/engineRework/engine/event/window/WindowResizeEvent.hpp
-)
-
-set (
-        ENGINE_EVENT_SOURCES
-
-        ${ENGINE_EVENT_CONTROLLER_SOURCES}
-        ${ENGINE_EVENT_KEY_SOURCES}
-        ${ENGINE_EVENT_MOUSE_SOURCES}
-        ${ENGINE_EVENT_WINDOW_SOURCES}
-
-        src/engineRework/engine/event/EventHandler.cpp
-        src/engineRework/engine/event/EventHandler.hpp
-
-        src/engineRework/engine/event/Event.hpp
-        src/engineRework/engine/event/Event.cpp
-)
-
-set (
-        ENGINE_INPUT_CONTROLLER_SOURCES
-
-        src/engineRework/engine/input/controller/Controller.cpp
-        src/engineRework/engine/input/controller/Controller.hpp
-
-        src/engineRework/engine/input/controller/Gamepad.cpp
-        src/engineRework/engine/input/controller/Gamepad.hpp
-
-        src/engineRework/engine/input/controller/Joystick.cpp
-        src/engineRework/engine/input/controller/Joystick.hpp
-)
-
-set (
-        ENGINE_INPUT_SOURCES
-
-        ${ENGINE_INPUT_CONTROLLER_SOURCES}
-)
-
-set (
-        ENGINE_SCENE_ECM_COMPONENTS_TRANSFORM_SOURCES
-
-        src/engineRework/engine/scene/ECM/components/transform/Rotor.cpp
-        src/engineRework/engine/scene/ECM/components/transform/Rotor.hpp
-
-        src/engineRework/engine/scene/ECM/components/transform/Transform.cpp
-        src/engineRework/engine/scene/ECM/components/transform/Transform.hpp
-)
-
-set (
-        ENGINE_SCENE_ECM_COMPONENTS_EVENT_ADAPTER_COMPONENT_RAW_SOURCES
-
-        src/engineRework/engine/scene/ECM/components/eventAdapter/component/raw/RawControllerInputEntityEventAdapterComponent.cpp
-        src/engineRework/engine/scene/ECM/components/eventAdapter/component/raw/RawControllerInputEntityEventAdapterComponent.hpp
-
-        src/engineRework/engine/scene/ECM/components/eventAdapter/component/raw/RawKeyInputEntityEventAdapterComponent.cpp
-        src/engineRework/engine/scene/ECM/components/eventAdapter/component/raw/RawKeyInputEntityEventAdapterComponent.hpp
-
-        src/engineRework/engine/scene/ECM/components/eventAdapter/component/raw/RawMouseInputEntityEventAdapterComponent.cpp
-        src/engineRework/engine/scene/ECM/components/eventAdapter/component/raw/RawMouseInputEntityEventAdapterComponent.hpp
-)
-
-set (
-        ENGINE_SCENE_ECM_COMPONENTS_EVENT_ADAPTER_COMPONENT_SOURCES
-
-        ${ENGINE_SCENE_ECM_COMPONENTS_EVENT_ADAPTER_COMPONENT_RAW_SOURCES}
-
-        src/engineRework/engine/scene/ECM/components/eventAdapter/component/EntityEventAdapterControllerComponent.cpp
-        src/engineRework/engine/scene/ECM/components/eventAdapter/component/EntityEventAdapterControllerComponent.hpp
-
-        src/engineRework/engine/scene/ECM/components/eventAdapter/component/EntityEventAdapterMouseComponent.cpp
-        src/engineRework/engine/scene/ECM/components/eventAdapter/component/EntityEventAdapterMouseComponent.hpp
-
-        src/engineRework/engine/scene/ECM/components/eventAdapter/component/EntityEventAdapterKeyComponent.cpp
-        src/engineRework/engine/scene/ECM/components/eventAdapter/component/EntityEventAdapterKeyComponent.hpp
-)
-
-set (
-        ENGINE_SCENE_ECM_COMPONENTS_EVENT_ADAPTER_SOURCES
-
-        ${ENGINE_SCENE_ECM_COMPONENTS_EVENT_ADAPTER_COMPONENT_SOURCES}
-
-        src/engineRework/engine/scene/ECM/components/eventAdapter/EntityEventAdapter.cpp
-        src/engineRework/engine/scene/ECM/components/eventAdapter/EntityEventAdapter.hpp
-
-        src/engineRework/engine/scene/ECM/components/eventAdapter/EntityEventAdapterComponent.cpp
-        src/engineRework/engine/scene/ECM/components/eventAdapter/EntityEventAdapterComponent.hpp
-)
-
-set (
-        ENGINE_SCENE_ECM_COMPONENTS_MESH_SOURCES
-
-        src/engineRework/engine/scene/ECM/components/mesh/Mesh.cpp
-        src/engineRework/engine/scene/ECM/components/mesh/Mesh.hpp
-)
-
-set (
-        ENGINE_SCENE_ECM_COMPONENTS_SOURCES
-
-        ${ENGINE_SCENE_ECM_COMPONENTS_TRANSFORM_SOURCES}
-        ${ENGINE_SCENE_ECM_COMPONENTS_EVENT_ADAPTER_SOURCES}
-        ${ENGINE_SCENE_ECM_COMPONENTS_MESH_SOURCES}
-)
-
-set (
-        ENGINE_SCENE_ECM_SOURCES
-
-        ${ENGINE_SCENE_ECM_COMPONENTS_SOURCES}
-
-        src/engineRework/engine/scene/ECM/Component.cpp
-        src/engineRework/engine/scene/ECM/Component.hpp
-        src/engineRework/engine/scene/ECM/Entity.cpp
-        src/engineRework/engine/scene/ECM/Entity.cpp
-)
-
-set (
-        ENGINE_SCENE_SPECIALIZED_OBJECTS_GAME_OBJECTS_SOURCES
-
-        src/engineRework/engine/scene/specializedObjects/gameObjects/GameObject.cpp
-        src/engineRework/engine/scene/specializedObjects/gameObjects/GameObject.hpp
-)
-
-set (
-        ENGINE_SCENE_SPECIALIZED_OBJECTS_SOURCES
-
-        ${ENGINE_SCENE_SPECIALIZED_OBJECTS_GAME_OBJECTS_SOURCES}
-)
-
-set (
-        ENGINE_SCENE_SOURCES
-
-        ${ENGINE_SCENE_ECM_SOURCES}
-        ${ENGINE_SCENE_SPECIALIZED_OBJECTS_SOURCES}
-
-        src/engineRework/engine/scene/Scene.cpp
-        src/engineRework/engine/scene/Scene.hpp
-)
-
-set (
-        ENGINE_SOURCES
-
-        ${ENGINE_EVENT_SOURCES}
-        ${ENGINE_INPUT_SOURCES}
-        ${ENGINE_SCENE_SOURCES}
-
-        src/engineRework/engine/Core.cpp
-        src/engineRework/engine/Core.hpp
-
-        src/engineRework/engine/Engine.cpp
-        src/engineRework/engine/Engine.hpp
-)
-
-set (
-        UTILITY_LOGGER_SOURCES
-
-        src/engineRework/utility/logger/Logger.cpp
-        src/engineRework/utility/logger/Logger.hpp
-)
-
-set (
-        UTILITY_PREPROCESS_SOURCES
-
-        src/engineRework/utility/preprocess/Naming.hpp
-        src/engineRework/utility/preprocess/Preprocess.hpp
-        src/engineRework/utility/preprocess/Compiler.hpp
-)
-
-set (
-        UTILITY_SETTINGS_SOURCES
-
-        src/engineRework/utility/settings/Settings.cpp
-        src/engineRework/utility/settings/Settings.hpp
-)
-
-set (
-        UTILITY_FUNC_SOURCES
-
-        src/engineRework/utility/func/Func.hpp
-)
-
-set (
-        UTILITY_THREAD_IDENTIFICATION_SOURCES
-
-        src/engineRework/utility/threadIdentification/ThreadIdentification.cpp
-        src/engineRework/utility/threadIdentification/ThreadIdentification.hpp
-)
-
-set (
-        UTILITY_SOURCES
-
-        ${UTILITY_LOGGER_SOURCES}
-        ${UTILITY_FUNC_SOURCES}
-        ${UTILITY_PREPROCESS_SOURCES}
-        ${UTILITY_SETTINGS_SOURCES}
-        ${UTILITY_THREAD_IDENTIFICATION_SOURCES}
-)
-
-set (
-        RENDER_WINDOW_SOURCES
-
-        src/engineRework/render/window/Window.cpp
-        src/engineRework/render/window/Window.hpp
-
-        src/engineRework/render/window/Monitor.cpp
-        src/engineRework/render/window/Monitor.hpp
-)
-
-set (
-        RENDER_API_VULKAN_CORE_SOURCES
-
-        src/engineRework/render/API/vulkan/core/VulkanCore.cpp
-        src/engineRework/render/API/vulkan/core/VulkanCore.hpp
-
-        src/engineRework/render/API/vulkan/core/calls/VulkanAPICalls.hpp
-        src/engineRework/render/API/vulkan/core/calls/VulkanAPICalls.cpp
-
-        src/engineRework/render/API/vulkan/core/calls/VulkanAPICallsConversion.cpp
-        src/engineRework/render/API/vulkan/core/calls/VulkanAPICallsConversion2.cpp
-        src/engineRework/render/API/vulkan/core/calls/VulkanAPICallsConversion.hpp
-
-        src/engineRework/render/API/vulkan/core/VulkanAPIExceptions.hpp
-
-        src/engineRework/render/API/vulkan/core/details/VulkanAPIDetails.hpp
-        src/engineRework/render/API/vulkan/core/details/VulkanAPIExtensionDetails.hpp
-        src/engineRework/render/API/vulkan/core/details/VulkanAPIKhronosExtensionDetails.hpp
-        src/engineRework/render/API/vulkan/core/details/VulkanAPIAMDExtensionDetails.hpp
-        src/engineRework/render/API/vulkan/core/details/VulkanAPINVidiaExtensionDetails.hpp
-        src/engineRework/render/API/vulkan/core/details/VulkanAPIGoogleExtensionDetails.hpp
-        src/engineRework/render/API/vulkan/core/details/VulkanAPIAppleExtensionDetails.hpp
-        src/engineRework/render/API/vulkan/core/details/VulkanAPIIntelExtensionDetails.hpp
-        src/engineRework/render/API/vulkan/core/details/VulkanAPIQualcommExtensionDetails.hpp
-        src/engineRework/render/API/vulkan/core/details/VulkanAPIARMExtensionDetails.hpp
-        src/engineRework/render/API/vulkan/core/details/VulkanAPIValveExtensionDetails.hpp
-        src/engineRework/render/API/vulkan/core/details/VulkanAPIHuaweiExtensionDetails.hpp
-        src/engineRework/render/API/vulkan/core/details/VulkanAPIBlackberryExtensionDetails.hpp
-)
-
-set (
-        RENDER_API_VULKAN_INSTANCE_DEVICE_QUEUE_SOURCES
-
-        src/engineRework/render/API/vulkan/instance/device/queue/Queue.cpp
-        src/engineRework/render/API/vulkan/instance/device/queue/Queue.hpp
-
-        src/engineRework/render/API/vulkan/instance/device/queue/QueueFamily.cpp
-        src/engineRework/render/API/vulkan/instance/device/queue/QueueFamily.hpp
-)
-
-set (
-        RENDER_API_VULKAN_INSTANCE_DEVICE_SOURCES
-
-        ${RENDER_API_VULKAN_INSTANCE_DEVICE_QUEUE_SOURCES}
-
-        src/engineRework/render/API/vulkan/instance/device/PhysicalDevice.cpp
-        src/engineRework/render/API/vulkan/instance/device/PhysicalDevice.hpp
-
-        src/engineRework/render/API/vulkan/instance/device/Device.cpp
-        src/engineRework/render/API/vulkan/instance/device/Device.hpp
-)
-
-set (
-        RENDER_API_VULKAN_INSTANCE_ALLOCATOR_SOURCES
-
-        src/engineRework/render/API/vulkan/instance/allocator/Allocator.cpp
-        src/engineRework/render/API/vulkan/instance/allocator/Allocator.hpp
-)
-
-set (
-        RENDER_API_VULKAN_INSTANCE_VALIDATION_SOURCES
-
-        src/engineRework/render/API/vulkan/instance/validation/LayerHandler.cpp
-        src/engineRework/render/API/vulkan/instance/validation/LayerHandler.hpp
-
-        src/engineRework/render/API/vulkan/instance/validation/ValidationCache.cpp
-        src/engineRework/render/API/vulkan/instance/validation/ValidationCache.hpp
-)
-
-set (
-        RENDER_API_VULKAN_INSTANCE_PRESENT_SWAP_SOURCES
-
-        src/engineRework/render/API/vulkan/instance/present/swap/SwapChain.cpp
-        src/engineRework/render/API/vulkan/instance/present/swap/SwapChain.hpp
-)
-
-set (
-        RENDER_API_VULKAN_INSTANCE_PRESENT_SOURCES
-
-        ${RENDER_API_VULKAN_INSTANCE_PRESENT_SWAP_SOURCES}
-
-        src/engineRework/render/API/vulkan/instance/present/SwapChainPresentHandler.cpp
-        src/engineRework/render/API/vulkan/instance/present/SwapChainPresentHandler.hpp
-
-        src/engineRework/render/API/vulkan/instance/present/PresentHandler.cpp
-        src/engineRework/render/API/vulkan/instance/present/PresentHandler.hpp
-)
-
-set (
-        RENDER_API_VULKAN_INSTANCE_SOURCES
-
-        ${RENDER_API_VULKAN_INSTANCE_ALLOCATOR_SOURCES}
-        ${RENDER_API_VULKAN_INSTANCE_VALIDATION_SOURCES}
-        ${RENDER_API_VULKAN_INSTANCE_DEVICE_SOURCES}
-        ${RENDER_API_VULKAN_INSTANCE_PRESENT_SOURCES}
-
-        src/engineRework/render/API/vulkan/instance/Instance.cpp
-        src/engineRework/render/API/vulkan/instance/Instance.hpp
-)
-
-set (
-        RENDER_API_VULKAN_SOURCES
-
-        ${RENDER_API_VULKAN_CORE_SOURCES}
-        ${RENDER_API_VULKAN_INSTANCE_SOURCES}
-
-        src/engineRework/render/API/vulkan/VulkanRenderEngine.cpp
-        src/engineRework/render/API/vulkan/VulkanRenderEngine.hpp
-)
-
-set (
-        RENDER_API_SOURCES
-
-        ${RENDER_API_VULKAN_SOURCES}
-
-        src/engineRework/render/API/RenderEngine.cpp
-        src/engineRework/render/API/RenderEngine.hpp
-        src/engineRework/render/API/RenderEngineTypes.hpp
-)
-
-set (
-        RENDER_SOURCES
-
-        ${RENDER_WINDOW_SOURCES}
-        ${RENDER_API_SOURCES}
-)
-
-set (
-        _SOURCES
-
-        ${ENGINE_SOURCES}
-        ${UTILITY_SOURCES}
-        ${RENDER_SOURCES}
-
-        src/engineRework/runnables/engineMainTestApplication.cpp
-)
-
 if(
         NOT $ENV{VULKAN_SDK} STREQUAL "" AND
         NOT $ENV{LD_LIBRARY_PATH} STREQUAL "" AND
@@ -508,19 +66,7 @@ if(
     message(-- LOCAL_VULKAN_PATH :   $ENV{VULKAN_SDK} )
     message(-- LOCAL_VULKAN_LIBS :   $ENV{LD_LIBRARY_PATH} )
 
-    add_executable (
-            engine_main_test_application
-
-            ${_SOURCES}
-    )
-
-    target_link_libraries (
-            engine_main_test_application
-
-            vulkan
-            glfw
-            ${GLFW_LIBRARIES}
-    )
+    set(VK_LD_ITEM vulkan)
 
 else()
 
@@ -530,60 +76,48 @@ else()
 
         message(-- VULKAN_PATH :   ${Vulkan_LIBRARY} )
 
-        add_executable (
-                engine_main_test_application
-
-                ${_SOURCES}
-        )
-
-        target_link_libraries (
-                engine_main_test_application
-
-                Vulkan::Vulkan
-                glfw
-                ${GLFW_LIBRARIES}
-                meshloader
-        )
+        set(VK_LD_ITEM Vulkan::Vulkan)
 
     endif()
 
 endif()
 
+set (
+        V4_BASE
+
+        src/engine_v4/base/Engine.cpp
+)
+
+set (
+        V4_BARE
+
+        ${V4_BASE}
+
+        src/engine_v4/variant/bare/BareEngineBareWindow.cpp
+)
+
+set(
+        WINDOW_SYSTEM_LD_ITEM glfw
+)
+
+add_executable (
+        v4_bare
+
+        ${V4_BARE}
+)
+
+target_link_libraries (
+        v4_bare
+
+        ${VK_LD_ITEM}
+        ${WINDOW_SYSTEM_LD_ITEM}
+        ${GLFW_LIBRARIES}
+)
+
 target_include_directories (
-        engine_main_test_application
+        v4_bare
 
         PRIVATE
 
-        src/engineRework
-
-        src/engineRework/engine
-
-        src/engineRework/engine/input
-        src/engineRework/engine/input/controller
-
-        src/engineRework/engine/event
-        src/engineRework/engine/event/key
-        src/engineRework/engine/event/mouse
-        src/engineRework/engine/event/window
-        src/engineRework/engine/event/controller
-
-        src/engineRework/utility
-        src/engineRework/utility/logger
-        src/engineRework/utility/preprocess
-        src/engineRework/utility/settings
-        src/engineRework/utility/func
-
-        src/engineRework/render
-        src/engineRework/render/window
-        src/engineRework/render/API
-        src/engineRework/render/API/vulkan
-        src/engineRework/render/API/vulkan/extension
-        src/engineRework/render/API/vulkan/core
-        src/engineRework/render/API/vulkan/instance
-        src/engineRework/render/API/vulkan/instance/validation
-        src/engineRework/render/API/vulkan/instance/present
-        src/engineRework/render/API/vulkan/instance/present/swap
-        src/engineRework/render/API/vulkan/instance/allocator
-        src/engineRework/render/API/vulkan/instance/device
-        src/engineRework/render/API/vulkan/instance/device/queue
+        src/engine_v4
 )
