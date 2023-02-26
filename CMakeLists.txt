@@ -83,15 +83,73 @@ else()
 endif()
 
 set (
+        V4_BASE_CORE
+
+        src/engine_v4/base/core/Object.cpp
+)
+
+set (
+        V4_BASE_IO_DISPLAY
+
+        src/engine_v4/base/io/display/Display.cpp
+        src/engine_v4/base/io/display/Surface.cpp
+        src/engine_v4/base/io/display/Window.cpp
+)
+
+set (
+        V4_BASE_IO_LOGGING
+
+        src/engine_v4/base/io/logging/Logger.cpp
+)
+
+set (
+        V4_BASE_IO
+
+        ${V4_BASE_IO_DISPLAY}
+        ${V4_BASE_IO_LOGGING}
+)
+
+set (
+        V4_BASE_STORAGE
+
+        src/engine_v4/base/storage/Storage.cpp
+)
+
+set (
         V4_BASE
 
+        ${V4_BASE_CORE}
+        ${V4_BASE_IO}
+        ${V4_BASE_STORAGE}
+
         src/engine_v4/base/Engine.cpp
+)
+
+set (
+        V4_IMPL_GLFW_IO_DISPLAY
+
+        src/engine_v4/impl/glfw/io/display/GlfwDisplay.cpp
+)
+
+set (
+        V4_IMPL_GLFW_IO
+
+        ${V4_IMPL_GLFW_IO_DISPLAY}
+)
+
+set (
+        V4_IMPL_GLFW
+
+        ${V4_IMPL_GLFW_IO}
+
+        src/engine_v4/impl/glfw/Glfw.cpp
 )
 
 set (
         V4_BARE
 
         ${V4_BASE}
+        ${V4_IMPL_GLFW}
 
         src/engine_v4/variant/bare/BareEngineBareWindow.cpp
 )

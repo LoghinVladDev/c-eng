@@ -9,6 +9,9 @@
 namespace engine::storage {
     using namespace cds;
 
+    Node :: Node (engine::Object const * pParent) noexcept : Object (pParent) {}
+
+
     auto Node :: getInt (StringView key) const noexcept (false) -> int {
         auto data = this->get (key);
 
@@ -105,6 +108,11 @@ namespace engine::storage {
         }
 
         return data.get <StringView>();
+    }
+
+
+    Storage :: Storage (engine::Object const * pParent) noexcept : Object(pParent) {
+
     }
 
 }

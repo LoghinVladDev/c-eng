@@ -5,12 +5,14 @@
 #ifndef __C_ENG_STORAGE_HPP__
 #define __C_ENG_STORAGE_HPP__
 
-#include <CDS/Object>
 #include <CDS/Union>
+
+#include <base/core/Core.hpp>
+#include <base/core/Object.hpp>
 
 namespace engine::storage {
 
-    class Node : public cds::Object {
+    class Node : public Object {
     public:
         using AnyOrNone = cds::Union <
                 int,
@@ -18,6 +20,12 @@ namespace engine::storage {
                 cds::StringView,
                 std::nullptr_t
         >;
+
+        explicit Node (Object const * pParent = nullptr) noexcept;
+        ~Node () noexcept override = default;
+        __CDS_NoDiscard __CDS_cpplang_ConstexprOverride auto className () const noexcept -> cds::StringView override {
+            return "Node";
+        }
 
         __CDS_NoDiscard auto getInt (cds::StringView key) const noexcept (false) -> int;
         __CDS_NoDiscard auto getFloat (cds::StringView key) const noexcept (false) -> float;
@@ -30,8 +38,15 @@ namespace engine::storage {
         virtual auto set (cds::StringView key, AnyOrNone data) noexcept -> void = 0;
     };
 
-    class Storage : public cds::Object {
+    class Storage : public Object {
     public:
+
+        explicit Storage (Object const * pParent = nullptr) noexcept;
+        ~Storage () noexcept override = default;
+        __CDS_NoDiscard __CDS_cpplang_ConstexprOverride auto className () const noexcept -> cds::StringView override {
+            return "Storage";
+        }
+
         __CDS_NoDiscard virtual auto getNode (cds::StringView key) noexcept -> Node & = 0;
         __CDS_NoDiscard virtual auto getNode (cds::StringView key) const noexcept -> Node const & = 0;
         virtual auto reset () noexcept -> void = 0;
