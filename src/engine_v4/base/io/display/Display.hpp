@@ -36,12 +36,13 @@ namespace engine::io {
             return "Display";
         }
 
-        __CDS_NoDiscard virtual auto name () const noexcept -> cds::Optional <cds::String>;
-        __CDS_NoDiscard virtual auto physicalSizeMm () const noexcept -> cds::Optional <engine::Size2D>;
+        __CDS_NoDiscard virtual auto name () const noexcept -> cds::StringView;
+        __CDS_NoDiscard virtual auto physicalSizeMm () const noexcept -> engine::Size2D;
         __CDS_NoDiscard virtual auto scale () const noexcept -> engine::Size2DF;
-        __CDS_NoDiscard virtual auto area () const noexcept -> engine::Rect2D = 0;
-        __CDS_NoDiscard virtual auto supportedVideoModes () const noexcept -> cds::Array <VideoModeProperties> const & = 0;
-        __CDS_NoDiscard virtual auto activeVideoMode () const noexcept -> VideoModeProperties const & = 0;
+        __CDS_NoDiscard virtual auto position () const noexcept -> engine::Point2D = 0;
+        __CDS_NoDiscard virtual auto workArea () const noexcept -> engine::Rect2D = 0;
+        __CDS_NoDiscard virtual auto supportedVideoModes () const noexcept -> cds::Array <VideoModeProperties> = 0;
+        __CDS_NoDiscard virtual auto activeVideoMode () const noexcept -> VideoModeProperties = 0;
     };
 
 
@@ -54,9 +55,9 @@ namespace engine::io {
             return "DisplayManager";
         }
 
-        virtual auto displays () noexcept -> cds::Array <cds::UniquePointer <Display>> const & = 0;
-        virtual auto primaryDisplay () noexcept -> cds::UniquePointer <Display> const & = 0;
-        virtual auto displaysUnder (Window * pWindow) noexcept -> cds::Array <Display *> = 0;
+        __CDS_NoDiscard virtual auto displays () const noexcept -> cds::Array <Display const *> = 0;
+        __CDS_NoDiscard virtual auto primaryDisplay () const noexcept -> Display const * = 0;
+        __CDS_NoDiscard virtual auto displaysUnder (Window const * pWindow) const noexcept -> cds::Array <Display const *> = 0;
     };
 
 }

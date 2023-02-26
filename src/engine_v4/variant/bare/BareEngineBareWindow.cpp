@@ -14,6 +14,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <filesystem>
 
 #include <chrono>
 #include <ctime>
@@ -235,11 +236,42 @@ auto main (
 
     signal (SIGTERM, & sigcbk);
 
+    if (!std::filesystem::exists("log")) {
+        std::filesystem::create_directory("log");
+    }
+
+    char timeBuffer [512U];
+    strcpy (timeBuffer, "./log/");
+    tm timeStruct;
+    auto time = std::chrono::system_clock::to_time_t (std::chrono::system_clock::now());
+
+#if defined(__CDS_Platform_Linux)
+    localtime_r ( & time, & timeStruct );
+#else
+    localtime_s ( & timeStruct, & time );
+#endif
+
+    (void) std::strftime (
+            timeBuffer + 6, 512U,
+            "%d-%m-%Y-%H:%M:%S",
+            & timeStruct
+    );
+
+    std::filesystem::create_directory(timeBuffer);
+
+    std :: ofstream outGlobal (std::string(timeBuffer) + "/all.log");
+    std :: ofstream outEngine (std::string(timeBuffer) + "/engine.log");
+    std :: ofstream outGlfw (std::string(timeBuffer) + "/glfw.log");
+
     BareLogger engineLogger ("Engine Logger");
     engineLogger.addOutput (std::cout);
+    engineLogger.addOutput (outGlobal);
+    engineLogger.addOutput (outEngine);
 
     BareLogger glfwLogger ("GLFW Logger");
     glfwLogger.addOutput (std::cout);
+    glfwLogger.addOutput (outGlobal);
+    glfwLogger.addOutput (outGlfw);
 
     engine::Engine engine;
     engine.setLogger (& engineLogger);
@@ -247,23 +279,28 @@ auto main (
 
     struct EngineImplData {
         cds::UniquePointer <engine::Glfw> pGlfw;
+        cds::UniquePointer <engine::storage::Storage> pBaseStorage;
     };
 
     return engine
-            .setBaseStorage (new BareStorage("./settings.json"))
-            .setPreInitHook ([&](auto * pEngine){
+            .setPreInitHook ([&](auto pEngine){
 
-                auto * pImplData    = new EngineImplData;
-                pImplData->pGlfw    = new Glfw();
-                pImplData->pGlfw->setLogger (& glfwLogger);
+                auto * pImplData        = new EngineImplData;
+                pImplData->pGlfw        = new Glfw(& glfwLogger);
+                pImplData->pBaseStorage = new BareStorage ("./settings.json");
+
+                pEngine->registerApi (pImplData->pGlfw);
 
                 pEngine->setUserData(static_cast <void *> (pImplData));
+                pEngine->setBaseStorage (pImplData->pBaseStorage);
             })
-            .setPostShutdownHook ([&](auto * pEngine) {
+            .setPostShutdownHook ([&](auto pEngine) {
 
                 auto * pImplData = static_cast <EngineImplData *> (pEngine->userData());
                 pImplData->pGlfw.reset();
-                std :: cout << "shutdown\n";
+                pImplData->pBaseStorage.reset();
+
+                delete pImplData;
             })
             .run (argumentCount, ppArguments);
 }

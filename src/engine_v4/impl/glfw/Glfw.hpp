@@ -5,14 +5,22 @@
 #ifndef __C_ENG_GLFW_HPP__
 #define __C_ENG_GLFW_HPP__
 
-#include <base/core/Object.hpp>
+#include <CDS/memory/UniquePointer>
 
-#include <impl/glfw/io/display/GlfwDisplay.hpp>
+#include <base/core/Object.hpp>
+#include <base/core/ApiImplementation.hpp>
+#include <base/io/display/Display.hpp>
 
 
 namespace engine {
 
-    class Glfw : public Object {
+    class Glfw : public Object, public ApiImplementation {
+    private:
+        cds::UniquePointer <io::DisplayManager> _pDisplayManager;
+        ApiInfo                                 _apiInfo {};
+
+        auto initLib () noexcept(false) -> void;
+
     public:
         explicit Glfw (Object const * pParent = nullptr) noexcept (false);
 
@@ -25,7 +33,10 @@ namespace engine {
             return "Glfw";
         }
 
-        __CDS_NoDiscard auto displayManager () noexcept -> io::GlfwDisplayManager *;
+        __CDS_NoDiscard auto apiInfo () const noexcept -> ApiInfo const & override;
+
+        __CDS_NoDiscard auto displayManager () noexcept -> io::DisplayManager *;
+        __CDS_NoDiscard auto displayManager () const noexcept -> io::DisplayManager const *;
     };
 
 }

@@ -46,8 +46,11 @@ namespace engine {
         }
 
 #if __C_ENG_LOGGING_ENABLED
+    protected:
+        explicit Object (io::Logger const * pLogger, Object const * pParent = nullptr) noexcept;
+
     private:
-        io::Logger const * _pLogger;
+        io::Logger const * _pLogger {nullptr};
 
     public:
         __CDS_NoDiscard auto logger () const noexcept -> io::Logger const *;

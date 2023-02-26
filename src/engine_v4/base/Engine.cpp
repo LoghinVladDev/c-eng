@@ -11,8 +11,8 @@ namespace engine {
     Engine :: Engine (engine::Object const * pParent) noexcept : Object (pParent) {}
 
 
-    auto Engine::setBaseStorage (UniquePointer <Storage> pStorage) noexcept -> Engine & {
-        this->_pBaseStorage = std::move (pStorage);
+    auto Engine::setBaseStorage (Storage * pStorage) noexcept -> Engine & {
+        this->_pBaseStorage = pStorage;
         return * this;
     }
 
@@ -126,5 +126,11 @@ namespace engine {
 
     auto Engine :: shutdownRequested () const noexcept -> bool {
         return this->_shutdownRequested;
+    }
+
+
+    auto Engine :: registerApi (ApiImplementation const * pApi) noexcept -> Engine & {
+        this->_apiInfoList.pushBack(pApi);
+        return * this;
     }
 }

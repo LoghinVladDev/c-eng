@@ -7,15 +7,29 @@
 
 namespace engine {
 
-    struct Point {
+    struct Point2D {
         int x;
         int y;
     };
 
 
-    struct PointF {
+    struct Point2DF {
         float x;
         float y;
+    };
+
+
+    struct Point3D {
+        int x;
+        int y;
+        int z;
+    };
+
+
+    struct Point3DF {
+        float x;
+        float y;
+        float z;
     };
 
 
@@ -27,7 +41,7 @@ namespace engine {
 
     struct Size2DF {
         float width;
-        float size;
+        float height;
     };
 
 
@@ -46,26 +60,51 @@ namespace engine {
 
 
     struct Rect2D {
-        Point   position;
+        Point2D position;
         Size2D  size;
     };
 
 
     struct Rect2DF {
-        PointF  position;
-        Size2DF size;
+        Point2DF    position;
+        Size2DF     size;
     };
 
 
     struct Rect3D {
-        Point   position;
+        Point3D position;
         Size3D  size;
     };
 
 
     struct Rect3DF {
-        PointF  position;
-        Size3DF size;
+        Point3DF    position;
+        Size3DF     size;
+    };
+
+
+    struct Version {
+        cds::uint32 variant;
+        cds::uint32 major;
+        cds::uint32 minor;
+        cds::uint32 patch;
+    };
+
+
+    enum class ApiProvenience {
+        Proprietary,
+        OpenSource,
+        ThirdParty
+    };
+
+
+    struct ApiInfo {
+        char    const * pApiName;
+        char    const * pApiPurpose;
+        char    const * pVendorInfo;
+        ApiProvenience  provenience;
+        cds::uint32     vendorId;
+        Version         version;
     };
 
 }

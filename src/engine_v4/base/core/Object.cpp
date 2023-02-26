@@ -26,6 +26,10 @@ auto engine::Object :: logger () const noexcept -> Logger const * {
 auto engine::Object :: setLogger (Logger const * pLogger) noexcept -> void {
     this->_pLogger = pLogger;
 }
+
+engine::Object::Object (Logger const * pLogger, Object const * pParent) noexcept : Object(pParent) {
+    this->_pLogger = pLogger;
+}
 #endif
 
 

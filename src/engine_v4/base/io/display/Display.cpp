@@ -14,18 +14,18 @@ namespace engine::io {
     Display :: Display (Object const * pParent) noexcept : Object (pParent) {}
 
 
-    auto Display :: name () const noexcept -> Optional <String> {
-        return {};
+    auto Display :: name () const noexcept -> StringView {
+        return "Undefined";
     }
 
 
-    auto Display :: physicalSizeMm () const noexcept -> Optional <Size2D> {
-        return {};
+    auto Display :: physicalSizeMm () const noexcept -> Size2D {
+        return {0U, 0U};
     }
 
 
     auto Display :: scale () const noexcept -> engine::Size2DF {
-        return {1.0f, 1.0f};
+        return {1.0F, 1.0F};
     }
 
 

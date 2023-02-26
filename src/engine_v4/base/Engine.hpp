@@ -6,9 +6,11 @@
 #define __C_ENG_ENGINE_HPP__
 
 #include <CDS/Function>
+#include <CDS/Array>
 #include <CDS/memory/UniquePointer>
 
 #include <base/core/Object.hpp>
+#include <base/core/ApiImplementation.hpp>
 #include <base/storage/Storage.hpp>
 
 namespace engine {
@@ -19,7 +21,7 @@ namespace engine {
         using CustomHook = cds::Function <auto (Engine *) -> void>;
 
     private:
-        cds::UniquePointer <storage::Storage>       _pBaseStorage       {nullptr};
+        storage::Storage                          * _pBaseStorage       {nullptr};
         void                                      * _pUserData          {nullptr};
 
         CustomHook                                  _customPreInitHook      {[](auto){}};
@@ -30,6 +32,8 @@ namespace engine {
         CustomHook                                  _customPostShutdownHook {[](auto){}};
 
         bool                                        _shutdownRequested      {false};
+
+        cds::Array <ApiImplementation const *>      _apiInfoList;
 
         auto handleInit () noexcept -> void;
         auto handleUpdate () noexcept -> void;
@@ -46,7 +50,7 @@ namespace engine {
         }
 
         auto setBaseStorage (
-                cds::UniquePointer <storage::Storage> pStorage
+                storage::Storage * pStorage
         ) noexcept -> Engine &;
 
         auto setUserData (void * pUserData) noexcept -> Engine &;
@@ -59,6 +63,8 @@ namespace engine {
         auto setPostShutdownHook (CustomHook hook) noexcept -> Engine &;
 
         auto requestShutdown () noexcept -> void;
+
+        auto registerApi (ApiImplementation const * pApi) noexcept -> Engine &;
 
         auto run (
                 int                  argumentCount,
