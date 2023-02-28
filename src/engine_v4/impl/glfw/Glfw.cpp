@@ -6,6 +6,7 @@
 #include <GLFW/glfw3.h>
 
 #include <impl/glfw/io/display/GlfwDisplay.hpp>
+#include <impl/glfw/io/display/GlfwWindow.hpp>
 
 namespace engine {
 
@@ -104,6 +105,7 @@ namespace engine {
 
         pGlfwInstance = this;
         glfwSetErrorCallback (& glfwErrorCallback);
+        glfwSetMonitorCallback (& glfwDisplayChangeDetectedCallback);
 
         sint32 vRuntimeMajor;
         sint32 vRuntimeMinor;
@@ -123,7 +125,8 @@ namespace engine {
                 }
         };
 
-        this->_pDisplayManager = new GlfwDisplayManager (this);
+        this->_pDisplayManager  = new GlfwDisplayManager (this);
+        this->_pWindowManager   = new GlfwWindowManager (this);
     }
 
 
@@ -140,12 +143,27 @@ namespace engine {
 
 
     auto Glfw :: displayManager () noexcept -> DisplayManager * {
-        return this->_pDisplayManager.get();
+        return this->_pDisplayManager;
     }
 
 
     auto Glfw :: displayManager () const noexcept -> DisplayManager const * {
-        return this->_pDisplayManager.get();
+        return this->_pDisplayManager;
+    }
+
+
+    auto Glfw :: windowManager () noexcept -> WindowManager * {
+        return this->_pWindowManager;
+    }
+
+
+    auto Glfw :: windowManager () const noexcept -> WindowManager const * {
+        return this->_pWindowManager;
+    }
+
+
+    auto Glfw :: pollEvents () noexcept -> void {
+        glfwPollEvents();
     }
 
 }

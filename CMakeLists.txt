@@ -129,6 +129,7 @@ set (
         V4_IMPL_GLFW_IO_DISPLAY
 
         src/engine_v4/impl/glfw/io/display/GlfwDisplay.cpp
+        src/engine_v4/impl/glfw/io/display/GlfwWindow.cpp
 )
 
 set (
@@ -164,6 +165,15 @@ add_executable (
         ${V4_BARE}
 )
 
+add_executable (
+        v4_test_source
+
+        ${V4_BASE}
+        ${V4_IMPL_GLFW}
+
+        src/engine_v4/variant/bare/testSource.cpp
+)
+
 target_link_libraries (
         v4_bare
 
@@ -174,6 +184,22 @@ target_link_libraries (
 
 target_include_directories (
         v4_bare
+
+        PRIVATE
+
+        src/engine_v4
+)
+
+target_link_libraries (
+        v4_test_source
+
+        ${VK_LD_ITEM}
+        ${WINDOW_SYSTEM_LD_ITEM}
+        ${GLFW_LIBRARIES}
+)
+
+target_include_directories (
+        v4_test_source
 
         PRIVATE
 

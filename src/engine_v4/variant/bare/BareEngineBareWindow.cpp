@@ -280,23 +280,36 @@ auto main (
     struct EngineImplData {
         cds::UniquePointer <engine::Glfw> pGlfw;
         cds::UniquePointer <engine::storage::Storage> pBaseStorage;
+        cds::UniquePointer <engine::io::Window> pWindow;
     };
 
     return engine
-            .setPreInitHook ([&](auto pEngine){
+            .setPreInitHook ([& glfwLogger](auto pEngine) {
 
                 auto * pImplData        = new EngineImplData;
                 pImplData->pGlfw        = new Glfw(& glfwLogger);
+                pImplData->pWindow      = pImplData->pGlfw->windowManager()->windowBuilder()
+                        ->build();
                 pImplData->pBaseStorage = new BareStorage ("./settings.json");
+
+                pImplData->pGlfw->windowManager()->setOnAllWindowsClosedCallback ([pEngine]{
+                    pEngine->requestShutdown();
+                });
 
                 pEngine->registerApi (pImplData->pGlfw);
 
                 pEngine->setUserData(static_cast <void *> (pImplData));
                 pEngine->setBaseStorage (pImplData->pBaseStorage);
             })
-            .setPostShutdownHook ([&](auto pEngine) {
+            .setPreUpdateHook ([](auto pEngine) {
 
                 auto * pImplData = static_cast <EngineImplData *> (pEngine->userData());
+                pImplData->pGlfw->pollEvents();
+            })
+            .setPostShutdownHook ([](auto pEngine) {
+
+                auto * pImplData = static_cast <EngineImplData *> (pEngine->userData());
+                pImplData->pWindow.reset();
                 pImplData->pGlfw.reset();
                 pImplData->pBaseStorage.reset();
 

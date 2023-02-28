@@ -162,6 +162,13 @@ namespace engine::io {
 
     auto GlfwDisplayManager :: addDisplay (GLFWmonitor * pDisplayHandle) noexcept -> void {
 
+        __C_ENG_OBJ_LOG(
+                Debug,
+                "Display with handle 0x"_s +
+                Long(reinterpret_cast<uint64>(pDisplayHandle)).toString(16) +
+                " connected"
+        );
+
         this->_displays.emplaceBack (new GlfwDisplay (pDisplayHandle, this));
         /* TODO - after GlfwWindow is available, logic of changing window display
          * if new primary display connected */
@@ -169,6 +176,13 @@ namespace engine::io {
 
 
     auto GlfwDisplayManager :: removeDisplay (GLFWmonitor * pDisplayHandle) noexcept -> void {
+
+        __C_ENG_OBJ_LOG(
+                Debug,
+                "Display with handle 0x"_s +
+                Long(reinterpret_cast<uint64>(pDisplayHandle)).toString(16) +
+                " disconnected"
+        );
 
         /* TODO - after GlfwWindow is available, logic of changing window from disconnected display */
         this->_displays.removeFirstThat ([&](auto & display){ return display->handle() == pDisplayHandle; });

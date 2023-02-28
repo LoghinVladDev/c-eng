@@ -6,8 +6,80 @@
 
 namespace engine::io {
 
-    Window::Window (Object const * pParent) noexcept : Object (pParent) {
+    using namespace cds;
 
+
+    Window :: Window (Object const * pParent) noexcept : Object (pParent) {}
+
+
+    Window :: ~Window () noexcept {
+
+        if (this->_pManager != nullptr) {
+            this->_pManager->removeWindow (this);
+        }
+    }
+
+
+    auto Window :: close () noexcept -> void {
+        this->_onCloseCallback (this);
+        if (this->_pManager != nullptr) {
+            this->_pManager->removeWindow(this);
+        }
+    }
+
+
+    auto Window :: setOnCloseCallback (cds::Function <void(Window const *)> callback) noexcept -> void {
+        this->_onCloseCallback = std::move (callback);
+    }
+
+
+    WindowManager :: WindowBuilder :: WindowBuilder (Object const * pParent) noexcept : Object (pParent) {}
+
+
+    auto WindowManager ::WindowBuilder :: build () const noexcept (false) -> Window * {
+        auto * pWindow = this->_build();
+        this->_pManager->addWindow (pWindow);
+        return pWindow;
+    }
+
+
+    WindowManager :: WindowManager (Object const * pParent) noexcept : Object (pParent) {}
+
+
+    WindowManager :: ~WindowManager () noexcept = default;
+
+
+    auto WindowManager :: addWindow (Window * pWindow) noexcept -> void {
+        this->_windows.emplaceBack (pWindow);
+        pWindow->_pManager = this;
+    }
+
+
+    auto WindowManager :: windowBuilder () noexcept -> UniquePointer <WindowBuilder> {
+        auto pBuilder = this->_windowBuilder (this);
+        pBuilder->_pManager = this;
+        return pBuilder;
+    }
+
+
+    auto WindowManager :: removeWindow (Window * pWindow) noexcept -> void {
+
+        for (auto iterator = this->_windows.begin(); iterator != this->_windows.end(); ++ iterator) {
+            if (iterator->get() == pWindow) {
+                iterator->release();
+                this->_windows.remove (iterator);
+                break;
+            }
+        }
+
+        if (this->_windows.empty()) {
+            this->_onAllClosedCallback();
+        }
+    }
+
+
+    auto WindowManager :: setOnAllWindowsClosedCallback (cds::Function <void(void)> callback) noexcept -> void {
+        this->_onAllClosedCallback = std::move (callback);
     }
 
 }
