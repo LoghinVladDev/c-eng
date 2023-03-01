@@ -292,6 +292,7 @@ auto main (
                         ->build();
                 pImplData->pBaseStorage = new BareStorage ("./settings.json");
 
+                /* event router class - static links - i.e. cds/collectionIntComm. */
                 pImplData->pGlfw->windowManager()->setOnAllWindowsClosedCallback ([pEngine]{
                     pEngine->requestShutdown();
                 });

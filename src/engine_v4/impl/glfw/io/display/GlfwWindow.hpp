@@ -19,6 +19,8 @@ namespace engine::io {
 
         explicit GlfwWindow (GLFWwindow * pWindow, Object const * pParent = nullptr) noexcept;
 
+        auto requestCloseCancellation () noexcept -> void override;
+
     public:
         ~GlfwWindow () noexcept override;
         __CDS_NoDiscard __CDS_cpplang_ConstexprOverride auto className () const noexcept -> cds::StringView override {

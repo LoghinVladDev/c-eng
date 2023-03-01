@@ -4,6 +4,8 @@
 
 #include "Window.hpp"
 
+#include <base/io/event/window/WindowCloseEvent.hpp>
+
 namespace engine::io {
 
     using namespace cds;
@@ -21,15 +23,17 @@ namespace engine::io {
 
 
     auto Window :: close () noexcept -> void {
-        this->_onCloseCallback (this);
-        if (this->_pManager != nullptr) {
-            this->_pManager->removeWindow(this);
+
+        WindowCloseEvent event (this);
+        this->closeEvent (& event);
+
+        if (event.isCloseCancelled()) {
+            this->requestCloseCancellation();
+        } else {
+            if ( this->_pManager != nullptr ) {
+                this->_pManager->removeWindow( this );
+            }
         }
-    }
-
-
-    auto Window :: setOnCloseCallback (cds::Function <void(Window const *)> callback) noexcept -> void {
-        this->_onCloseCallback = std::move (callback);
     }
 
 
@@ -80,6 +84,11 @@ namespace engine::io {
 
     auto WindowManager :: setOnAllWindowsClosedCallback (cds::Function <void(void)> callback) noexcept -> void {
         this->_onAllClosedCallback = std::move (callback);
+    }
+
+
+    auto Window :: closeEvent (WindowCloseEvent * pEvent) noexcept -> void {
+
     }
 
 }

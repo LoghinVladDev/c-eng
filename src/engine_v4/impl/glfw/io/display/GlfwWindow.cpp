@@ -23,6 +23,11 @@ namespace engine::io {
     }
 
 
+    auto GlfwWindow :: requestCloseCancellation () noexcept -> void {
+        glfwSetWindowShouldClose (this->_pHandle, GLFW_FALSE);
+    }
+
+
     auto GlfwWindow :: surface () const noexcept -> Surface const * {
         return nullptr;
     }

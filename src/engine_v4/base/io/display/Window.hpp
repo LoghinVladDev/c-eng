@@ -15,6 +15,8 @@
 
 namespace engine::io {
 
+    class WindowCloseEvent;
+
     class Monitor;
     class WindowManager;
 
@@ -26,10 +28,12 @@ namespace engine::io {
 
         WindowManager                         * _pManager           {nullptr};
 
-        cds::Function <void(Window const *)>    _onCloseCallback    {[](auto){}};
+    protected:
+        virtual auto closeEvent (WindowCloseEvent * pEvent) noexcept -> void;
+
+        virtual auto requestCloseCancellation () noexcept -> void = 0;
 
     public:
-
         enum class Mode {
             Windowed,
             Fullscreen,
@@ -62,8 +66,6 @@ namespace engine::io {
         __CDS_NoDiscard virtual auto surface () const noexcept -> Surface const * = 0;
 
         auto close () noexcept -> void;
-
-        auto setOnCloseCallback (cds::Function <void(Window const *)> callback) noexcept -> void;
     };
 
 
