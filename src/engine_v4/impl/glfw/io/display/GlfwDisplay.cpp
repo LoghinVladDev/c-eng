@@ -46,10 +46,10 @@ namespace engine::io {
     }
 
 
-    auto GlfwDisplay :: scale () const noexcept -> engine::Size2DF {
+    auto GlfwDisplay :: scale () const noexcept -> engine::Scale2DF {
         return {
-                .width  = this->_contentScaleX,
-                .height = this->_contentScaleY
+                .x  = this->_contentScaleX,
+                .y  = this->_contentScaleY
         };
     }
 

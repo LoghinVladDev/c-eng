@@ -103,10 +103,57 @@ set (
 )
 
 set (
+        V4_BASE_IO_EVENT_KEY
+
+        src/engine_v4/base/io/event/key/KeyEvent.cpp
+        src/engine_v4/base/io/event/key/KeyPressEvent.cpp
+        src/engine_v4/base/io/event/key/KeyReleaseEvent.cpp
+)
+
+set (
+        V4_BASE_IO_EVENT_MOUSE
+
+        src/engine_v4/base/io/event/mouse/MouseEvent.cpp
+        src/engine_v4/base/io/event/mouse/MousePressEvent.cpp
+        src/engine_v4/base/io/event/mouse/MouseReleaseEvent.cpp
+        src/engine_v4/base/io/event/mouse/MouseEnterEvent.cpp
+        src/engine_v4/base/io/event/mouse/MouseLeaveEvent.cpp
+        src/engine_v4/base/io/event/mouse/MouseMoveEvent.cpp
+        src/engine_v4/base/io/event/mouse/MouseScrollEvent.cpp
+)
+
+set (
+        V4_BASE_IO_EVENT_WINDOW
+
+        src/engine_v4/base/io/event/window/WindowEvent.cpp
+        src/engine_v4/base/io/event/window/WindowCloseEvent.cpp
+        src/engine_v4/base/io/event/window/WindowContentScaleEvent.cpp
+        src/engine_v4/base/io/event/window/WindowFrameBufferResizeEvent.cpp
+        src/engine_v4/base/io/event/window/WindowGainFocusEvent.cpp
+        src/engine_v4/base/io/event/window/WindowLoseFocusEvent.cpp
+        src/engine_v4/base/io/event/window/WindowMaximizeEvent.cpp
+        src/engine_v4/base/io/event/window/WindowMinimizeEvent.cpp
+        src/engine_v4/base/io/event/window/WindowMoveEvent.cpp
+        src/engine_v4/base/io/event/window/WindowResizeEvent.cpp
+        src/engine_v4/base/io/event/window/WindowRestoreEvent.cpp
+)
+
+set (
+        V4_BASE_IO_EVENT
+
+        ${V4_BASE_IO_EVENT_KEY}
+        ${V4_BASE_IO_EVENT_MOUSE}
+        ${V4_BASE_IO_EVENT_WINDOW}
+
+        src/engine_v4/base/io/event/Event.cpp
+)
+
+set (
         V4_BASE_IO
 
         ${V4_BASE_IO_DISPLAY}
         ${V4_BASE_IO_LOGGING}
+        ${V4_BASE_IO_EVENT}
 )
 
 set (

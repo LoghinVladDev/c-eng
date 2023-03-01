@@ -46,7 +46,7 @@ namespace engine::io {
 
         __CDS_NoDiscard auto name () const noexcept -> cds::StringView override;
         __CDS_NoDiscard auto physicalSizeMm () const noexcept -> engine::Size2D override;
-        __CDS_NoDiscard auto scale () const noexcept -> engine::Size2DF override;
+        __CDS_NoDiscard auto scale () const noexcept -> engine::Scale2DF override;
         __CDS_NoDiscard auto position () const noexcept -> engine::Point2D override;
         __CDS_NoDiscard auto workArea () const noexcept -> engine::Rect2D override;
         __CDS_NoDiscard auto supportedVideoModes () const noexcept -> cds::Array <VideoModeProperties> override;

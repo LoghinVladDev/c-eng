@@ -38,7 +38,7 @@ namespace engine::io {
 
         __CDS_NoDiscard virtual auto name () const noexcept -> cds::StringView;
         __CDS_NoDiscard virtual auto physicalSizeMm () const noexcept -> engine::Size2D;
-        __CDS_NoDiscard virtual auto scale () const noexcept -> engine::Size2DF;
+        __CDS_NoDiscard virtual auto scale () const noexcept -> engine::Scale2DF;
         __CDS_NoDiscard virtual auto position () const noexcept -> engine::Point2D = 0;
         __CDS_NoDiscard virtual auto workArea () const noexcept -> engine::Rect2D = 0;
         __CDS_NoDiscard virtual auto supportedVideoModes () const noexcept -> cds::Array <VideoModeProperties> = 0;

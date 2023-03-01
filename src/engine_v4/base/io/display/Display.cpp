@@ -24,7 +24,7 @@ namespace engine::io {
     }
 
 
-    auto Display :: scale () const noexcept -> engine::Size2DF {
+    auto Display :: scale () const noexcept -> engine::Scale2DF {
         return {1.0F, 1.0F};
     }
 
