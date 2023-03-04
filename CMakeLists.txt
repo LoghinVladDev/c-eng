@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.5)
 project(c-eng)
 
+set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 20)
 set(OpenGL_GL_PREFERENCE GLVND)
 
@@ -251,4 +252,52 @@ target_include_directories (
         PRIVATE
 
         src/engine_v4
+)
+
+set (
+        V5_GENERIC_CORE
+        src/engine_v5/generic/core/eng_alloc.c
+)
+
+set (
+        V5_GENERIC_ENGINE
+        src/engine_v5/generic/engine/engine.c
+)
+
+set (
+        V5_GENERIC
+        ${V5_GENERIC_CORE}
+        ${V5_GENERIC_ENGINE}
+)
+
+set (
+        V5_BARE
+        ${V5_GENERIC}
+        src/engine_v5/variant/bare/bare_eng_bare_window.c
+)
+
+add_executable (
+        v5_bare
+        ${V5_BARE}
+)
+
+target_include_directories (
+        v5_bare
+        PRIVATE
+
+        src/engine_v5/generic
+        src/engine_v5/generic/core
+        src/engine_v5/generic/engine
+
+        src/engine_v5
+        src/engine_v5/variant
+        src/engine_v5/variant/bare
+)
+
+target_link_libraries (
+        v5_bare
+
+        ${VK_LD_ITEM}
+        ${WINDOW_SYSTEM_LD_ITEM}
+        ${GLFW_LIBRARIES}
 )
