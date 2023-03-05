@@ -48,7 +48,7 @@ static void internalFree (
 }
 
 
-static T_AllocationCallbacks internalAllocationCallbacks = {
+static T_AllocationCallbacks const internalAllocationCallbacks = {
         .pUserData          = NULL,
         .pfnAllocation      = & internalAlloc,
         .pfnReallocation    = & internalRealloc,

@@ -6,10 +6,7 @@
 #define __C_ENG_ENGINE_H__
 
 #include <eng_types.h>
-
-#ifndef ENG_CNF_STARTING_INSTANCE_CAPACITY
-#define ENG_CNF_STARTING_INSTANCE_CAPACITY 8U
-#endif
+#include <stdbool.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -19,8 +16,12 @@ __ENG_DEFINE_HANDLE(ENG_TYPE(Engine));
 
 
 typedef void ( * ENG_TYPE(EngineMainHook) ) (
-    ENG_TYPE(Engine) engine
+    void              * pUserData,
+    ENG_TYPE(Engine)    engine
 );
+
+
+typedef ENG_TYPE(Flags) ENG_TYPE(EngineCreateFlags);
 
 
 typedef struct {
@@ -36,14 +37,17 @@ typedef struct {
 typedef struct {
     ENG_TYPE(StructureType)         structureType;
     void                    const * pNext;
+    ENG_TYPE(EngineCreateFlags)     flags;
     ENG_TYPE(EngineMainCallbacks)   mainCallbacks;
+    bool                            validationEnabled;
+    void                          * pUserData;
 } ENG_TYPE(EngineCreateInfo);
 
 
 extern ENG_TYPE(Result) ENG_SYM(CreateEngine) (
-        ENG_TYPE(Engine)                      * pEngine,
         ENG_TYPE(EngineCreateInfo)      const * pCreateInfo,
-        ENG_TYPE(AllocationCallbacks)   const * pAllocationCallbacks
+        ENG_TYPE(AllocationCallbacks)   const * pAllocationCallbacks,
+        ENG_TYPE(Engine)                      * pEngine
 );
 
 

@@ -35,6 +35,10 @@
 extern "C" {
 #endif
 
+
+typedef uint32_t ENG_TYPE(Flags);
+
+
 typedef enum {
     ENG_ENUM_VALUED_FIELD(RESULT_OK, 0),
     ENG_ENUM_VALUED_FIELD(RESULT_ERROR_UNKNOWN, -1),
@@ -43,13 +47,23 @@ typedef enum {
 
 
 typedef enum {
-    ENG_ENUM_VALUED_FIELD(STRUCTURE_TYPE_ENGINE_CREATE_INFO, 1)
+    ENG_ENUM_VALUED_FIELD(STRUCTURE_TYPE_ENGINE_CREATE_INFO,                0x00000001U),
+
+    ENG_ENUM_VALUED_FIELD(STRUCTURE_TYPE_VALIDATION_MESSAGE_CALLBACK_DATA,  0x00010000U),
+    ENG_ENUM_VALUED_FIELD(STRUCTURE_TYPE_VALIDATION_MESSENGER_CREATE_INFO,  0x00020000U),
 } ENG_TYPE(StructureType);
 
 
 typedef enum {
     ENG_ENUM_FIELD(SYSTEM_ALLOCATION_SCOPE_ENGINE)
 } ENG_TYPE(SystemAllocationScope);
+
+
+typedef enum {
+    ENG_ENUM_FIELD(API_PROVENIENCE_PROPRIETARY),
+    ENG_ENUM_FIELD(API_PROVENIENCE_OPEN_SOURCE),
+    ENG_ENUM_FIELD(API_PROVENIENCE_THIRD_PARTY)
+} ENG_TYPE(ApiProvenience);
 
 
 typedef void * ( * ENG_TYPE(AllocationFunction) ) (
@@ -93,6 +107,23 @@ typedef struct ENG_TYPE(GenericOutStructure_Tag) {
     ENG_TYPE(StructureType)                             structureType;
     struct ENG_TYPE(GenericOutStructure_Tag)          * pNext;
 } ENG_TYPE(GenericOutStructure);
+
+
+typedef struct {
+    uint32_t    variant;
+    uint32_t    major;
+    uint32_t    minor;
+    uint32_t    patch;
+} ENG_TYPE(Version);
+
+
+typedef struct {
+    char                        const * pApiName;
+    char                        const * pApiPurpose;
+    char                        const * pVendorInfo;
+    ENG_TYPE(ApiProvenience)            provenience;
+    ENG_TYPE(Version)                   version;
+} ENG_TYPE(ApiInfo);
 
 
 

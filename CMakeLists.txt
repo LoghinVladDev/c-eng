@@ -265,15 +265,21 @@ set (
 )
 
 set (
+        V5_GENERIC_VALIDATION
+        src/engine_v5/generic/validation/validation.c
+)
+
+set (
         V5_GENERIC
         ${V5_GENERIC_CORE}
         ${V5_GENERIC_ENGINE}
+        ${V5_GENERIC_VALIDATION}
 )
 
 set (
         V5_BARE
         ${V5_GENERIC}
-        src/engine_v5/variant/bare/bare_eng_bare_window.c
+        src/engine_v5/variant/bare/bare_eng_bare_window.cpp
 )
 
 add_executable (
@@ -288,6 +294,7 @@ target_include_directories (
         src/engine_v5/generic
         src/engine_v5/generic/core
         src/engine_v5/generic/engine
+        src/engine_v5/generic/validation
 
         src/engine_v5
         src/engine_v5/variant

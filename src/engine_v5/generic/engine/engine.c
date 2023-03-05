@@ -3,29 +3,17 @@
  */
 
 #include <engine.h>
-#include <eng_alloc.h>
+
 #include <eng_private_types.h>
+
+#include <validation.h>
+#include <validation_private.h>
+#include <validation_messenger_private.h>
+
+#include <eng_alloc.h>
+#include <eng_types.h>
+#include <engine_private.h>
 #include <stdbool.h>
-
-
-typedef ENG_TYPE(Engine)                T_Engine;
-typedef ENG_TYPE(EngineMainCallbacks)   T_EngineMainCallbacks;
-typedef ENG_TYPE(EngineCreateInfo)      T_EngineCreateInfo;
-
-
-#define createEngine            ENG_SYM(CreateEngine)
-#define destroyEngine           ENG_SYM(DestroyEngine)
-#define engineRun               ENG_SYM(EngineRun)
-#define engineRequestShutdown   ENG_SYM(EngineRequestShutdown)
-
-
-__ENG_HANDLE(ENG_TYPE(Engine)) {
-    T_EngineMainCallbacks   mainCallbacks;
-    bool                    shutdownRequested;
-};
-
-
-typedef __ENG_HANDLE(ENG_TYPE(Engine))  T_PrivateEngine;
 
 
 static inline T_Engine newEngine (
@@ -34,8 +22,8 @@ static inline T_Engine newEngine (
 
     T_Engine newEngine = pAllocationCallbacks->pfnAllocation (
             pAllocationCallbacks->pUserData,
-            sizeof (T_PrivateEngine),
-            _Alignof (T_PrivateEngine),
+            sizeof (S_PrivateEngine),
+            _Alignof (S_PrivateEngine),
             SYSTEM_ALLOCATION_SCOPE_ENGINE
     );
 
@@ -43,16 +31,18 @@ static inline T_Engine newEngine (
         return NULL;
     }
 
-    * newEngine = (T_PrivateEngine) {
-            .shutdownRequested = false,
-            .mainCallbacks = {
+    * newEngine = (S_PrivateEngine) {
+            .shutdownRequested  = false,
+            .mainCallbacks      = {
                     .pfnPreInit         = NULL,
                     .pfnPostInit        = NULL,
                     .pfnPreUpdate       = NULL,
                     .pfnPostUpdate      = NULL,
                     .pfnPreShutdown     = NULL,
                     .pfnPostShutdown    = NULL
-            }
+            },
+
+            .localValidationMessenger   = NULL
     };
 
     return newEngine;
@@ -71,19 +61,75 @@ static inline void freeEngine (
 }
 
 
-T_Result createEngine (
-        T_Engine                      * pEngine,
+static inline void validate_createEngine (
+        T_ValidationMessenger           messenger,
         T_EngineCreateInfo      const * pCreateInfo,
+        T_AllocationCallbacks   const * pAllocationCallbacks,
+        T_Engine                      * pEngine
+) {
+
+}
+
+
+static inline void validate_destroyEngine (
+        T_Engine                        engine,
         T_AllocationCallbacks   const * pAllocationCallbacks
 ) {
 
-    T_Engine engine = newEngine (__allocationCallbacks (pAllocationCallbacks));
+}
+
+
+T_Result createEngine (
+        T_EngineCreateInfo      const * pCreateInfo,
+        T_AllocationCallbacks   const * pAllocationCallbacks,
+        T_Engine                      * pEngine
+) {
+
+    T_AllocationCallbacks const * pAlloc = __allocationCallbacks(pAllocationCallbacks);
+    T_Engine engine = newEngine (pAlloc);
 
     if (engine == NULL) {
         return RESULT_ERROR_OUT_OF_MEMORY;
     }
 
-    engine->mainCallbacks = pCreateInfo->mainCallbacks;
+    T_GenericInStructure const * pNext = pCreateInfo->pNext;
+    while (pNext != NULL) {
+
+        switch (pNext->structureType) {
+            case STRUCTURE_TYPE_VALIDATION_MESSENGER_CREATE_INFO: {
+
+                if (! pCreateInfo->validationEnabled) {
+                    break;
+                }
+
+                engine->localValidationMessenger = __validation_createMessenger (
+                        (T_ValidationMessengerCreateInfo const *) pNext,
+                        pAlloc
+                );
+
+                if (engine->localValidationMessenger == NULL) {
+                    freeEngine (engine, pAlloc);
+                    return RESULT_ERROR_OUT_OF_MEMORY;
+                }
+
+                validate_createEngine (
+                        engine->localValidationMessenger,
+                        pCreateInfo, pAllocationCallbacks, pEngine
+                );
+
+                break;
+            }
+
+            default: {
+                break;
+            }
+        }
+
+        pNext = pNext->pNext;
+    }
+
+    engine->mainCallbacks   = pCreateInfo->mainCallbacks;
+    engine->pUserData       = pCreateInfo->pUserData;
 
     * pEngine = engine;
     return RESULT_OK;
@@ -95,7 +141,14 @@ void destroyEngine (
         T_AllocationCallbacks   const * pAllocationCallbacks
 ) {
 
-    freeEngine (engine, __allocationCallbacks(pAllocationCallbacks));
+    T_AllocationCallbacks const * pAlloc = __allocationCallbacks(pAllocationCallbacks);
+
+    if (engine->localValidationMessenger) {
+        validate_destroyEngine (engine, pAlloc);
+        __validation_destroyMessenger (engine->localValidationMessenger, pAlloc);
+    }
+
+    freeEngine (engine, pAlloc);
 }
 
 
@@ -128,36 +181,36 @@ T_Result engineRun (
 ) {
 
     if (engine->mainCallbacks.pfnPreInit != NULL) {
-        engine->mainCallbacks.pfnPreInit (engine);
+        engine->mainCallbacks.pfnPreInit (engine->pUserData, engine);
     }
 
     init (engine);
 
     if (engine->mainCallbacks.pfnPostInit != NULL) {
-        engine->mainCallbacks.pfnPostInit (engine);
+        engine->mainCallbacks.pfnPostInit (engine->pUserData, engine);
     }
 
     while (! engine->shutdownRequested) {
 
         if (engine->mainCallbacks.pfnPreUpdate != NULL) {
-            engine->mainCallbacks.pfnPreUpdate (engine);
+            engine->mainCallbacks.pfnPreUpdate (engine->pUserData, engine);
         }
 
         update (engine);
 
         if (engine->mainCallbacks.pfnPostUpdate != NULL) {
-            engine->mainCallbacks.pfnPostUpdate (engine);
+            engine->mainCallbacks.pfnPostUpdate (engine->pUserData, engine);
         }
     }
 
     if (engine->mainCallbacks.pfnPreShutdown != NULL) {
-        engine->mainCallbacks.pfnPreShutdown (engine);
+        engine->mainCallbacks.pfnPreShutdown (engine->pUserData, engine);
     }
 
     shutdown (engine);
 
     if (engine->mainCallbacks.pfnPostShutdown != NULL) {
-        engine->mainCallbacks.pfnPostShutdown (engine);
+        engine->mainCallbacks.pfnPostShutdown (engine->pUserData, engine);
     }
 
     return RESULT_OK;
