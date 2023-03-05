@@ -9,6 +9,7 @@
 #include <validation.h>
 #include <validation_private.h>
 #include <validation_messenger_private.h>
+#include <validation_issue_id.h>
 
 #include <eng_alloc.h>
 #include <eng_types.h>
@@ -42,7 +43,8 @@ static inline T_Engine newEngine (
                     .pfnPostShutdown    = NULL
             },
 
-            .localValidationMessenger   = NULL
+            .localValidationMessenger   = NULL,
+            .pTrackedResources          = NULL
     };
 
     return newEngine;
@@ -117,6 +119,19 @@ T_Result createEngine (
                         pCreateInfo, pAllocationCallbacks, pEngine
                 );
 
+                engine->pTrackedResources = pAlloc->pfnAllocation (
+                        pAlloc->pUserData,
+                        sizeof (S_EngineTrackedResources),
+                        _Alignof (S_EngineTrackedResources),
+                        SYSTEM_ALLOCATION_SCOPE_ENGINE
+                );
+
+                T_ARRAY_INIT(T_ValidationMessenger) (
+                        & engine->pTrackedResources->validationMessengers,
+                        0U,
+                        pAlloc
+                );
+
                 break;
             }
 
@@ -144,7 +159,13 @@ void destroyEngine (
     T_AllocationCallbacks const * pAlloc = __allocationCallbacks(pAllocationCallbacks);
 
     if (engine->localValidationMessenger) {
+
         validate_destroyEngine (engine, pAlloc);
+        pAlloc->pfnFree (
+                pAlloc->pUserData,
+                engine->pTrackedResources
+        );
+
         __validation_destroyMessenger (engine->localValidationMessenger, pAlloc);
     }
 

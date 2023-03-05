@@ -135,6 +135,48 @@ static inline void destroyAssociation (
 }
 
 
+static inline void engineTrackMessenger (
+        T_Engine                        engine,
+        T_ValidationMessenger           messenger,
+        T_AllocationCallbacks   const * pAllocationCallbacks
+) {
+
+    T_ARRAY(T_ValidationMessenger) * pMessengerArray =
+            & engine->pTrackedResources->validationMessengers;
+
+    T_ValidationMessenger * pNewMessenger = T_ARRAY_PUSH (T_ValidationMessenger) (
+            pMessengerArray,
+            pAllocationCallbacks
+    );
+
+    if (pNewMessenger != NULL) {
+        * pNewMessenger = messenger;
+    }
+}
+
+
+static inline void engineUntrackMessenger (
+        T_Engine                        engine,
+        T_ValidationMessenger           messenger,
+        T_AllocationCallbacks   const * pAllocationCallbacks
+) {
+
+    T_ARRAY(T_ValidationMessenger) * pMessengerArray =
+            & engine->pTrackedResources->validationMessengers;
+
+    for (uint32_t i = 0U; i < T_ARRAY_SIZE(T_ValidationMessenger) (pMessengerArray); ++ i) {
+        if (* T_ARRAY_GET(T_ValidationMessenger) (pMessengerArray, i) == messenger) {
+            T_ARRAY_REMOVE(T_ValidationMessenger) (pMessengerArray, i);
+            break;
+        }
+    }
+
+    if (T_ARRAY_EMPTY(T_ValidationMessenger) (pMessengerArray)) {
+        T_ARRAY_CLEAR(T_ValidationMessenger) (pMessengerArray, pAllocationCallbacks);
+    }
+}
+
+
 T_Result createValidationMessenger (
         T_Engine                                engine,
         T_ValidationMessengerCreateInfo const * pCreateInfo,
@@ -184,6 +226,10 @@ T_Result createValidationMessenger (
 
     * pMessenger = pAssociation->pMessengerHandles [pAssociation->messengerCount ++];
 
+    if (engine->localValidationMessenger != NULL) {
+        engineTrackMessenger (engine, * pMessenger, pAlloc);
+    }
+
     return RESULT_OK;
 }
 
@@ -195,6 +241,10 @@ void destroyValidationMessenger (
 
     T_AllocationCallbacks   const * pAlloc          = __allocationCallbacks (pAllocationCallbacks);
     S_ValidationEngineAssociation * pAssociation    = identifyAssociation (engine);
+
+    if (engine->localValidationMessenger != NULL) {
+        engineUntrackMessenger (engine, messenger, pAlloc);
+    }
 
     if (pAssociation == NULL) {
         return;

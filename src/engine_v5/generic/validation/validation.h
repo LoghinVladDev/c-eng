@@ -35,6 +35,21 @@ typedef enum {
 } ENG_TYPE(ValidationMessageTypeFlagBits);
 
 
+typedef enum {
+    ENG_ENUM_FIELD(VALIDATION_ISSUE_CATEGORY_PARAMETER_VALUES),
+    ENG_ENUM_FIELD(VALIDATION_ISSUE_CATEGORY_RESOURCE_MANAGEMENT)
+} ENG_TYPE(ValidationIssueCategory);
+
+
+typedef enum {
+    ENG_ENUM_FIELD(VALIDATION_ISSUE_GROUP_ENGINE),
+    ENG_ENUM_FIELD(VALIDATION_ISSUE_GROUP_VALIDATION_MESSENGER)
+} ENG_TYPE(ValidationIssueGroup);
+
+
+typedef uint16_t ENG_TYPE(ValidationIssueId);
+
+
 typedef ENG_TYPE(Flags) ENG_TYPE(ValidationMessageSeverityFlags);
 typedef ENG_TYPE(Flags) ENG_TYPE(ValidationMessageTypeFlags);
 typedef ENG_TYPE(Flags) ENG_TYPE(ValidationMessengerCreateFlags);
@@ -80,6 +95,22 @@ extern void ENG_SYM(DestroyValidationMessenger) (
         ENG_TYPE(Engine)                        engine,
         ENG_TYPE(ValidationMessenger)           validationMessenger,
         ENG_TYPE(AllocationCallbacks)   const * pAllocationCallbacks
+);
+
+
+extern void ENG_SYM(RaiseValidationIssue) (
+        ENG_TYPE(Engine)                        engine,
+        ENG_TYPE(ValidationIssueGroup)          group,
+        ENG_TYPE(ValidationIssueCategory)       category,
+        ENG_TYPE(ValidationIssueId)             identifier
+);
+
+
+extern void ENG_SYM(RaiseValidationIssueDirect) (
+        ENG_TYPE(ValidationMessenger)           messenger,
+        ENG_TYPE(ValidationIssueGroup)          group,
+        ENG_TYPE(ValidationIssueCategory)       category,
+        ENG_TYPE(ValidationIssueId)             identifier
 );
 
 #ifdef __cplusplus

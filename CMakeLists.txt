@@ -295,6 +295,7 @@ target_include_directories (
         src/engine_v5/generic/core
         src/engine_v5/generic/engine
         src/engine_v5/generic/validation
+        src/engine_v5/generic/util
 
         src/engine_v5
         src/engine_v5/variant

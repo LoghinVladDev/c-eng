@@ -10,6 +10,9 @@
 extern "C" {
 #endif
 
+#define ARRAY_TYPENAME T_ValidationMessenger
+#include <util_t_array.h>
+
 typedef ENG_TYPE(Engine)                T_Engine;
 typedef ENG_TYPE(EngineMainCallbacks)   T_EngineMainCallbacks;
 typedef ENG_TYPE(EngineCreateInfo)      T_EngineCreateInfo;
@@ -21,12 +24,17 @@ typedef ENG_TYPE(EngineCreateInfo)      T_EngineCreateInfo;
 #define engineRequestShutdown   ENG_SYM(EngineRequestShutdown)
 
 
+typedef struct {
+    T_ARRAY(T_ValidationMessenger)  validationMessengers;
+} S_EngineTrackedResources;
+
 
 __ENG_HANDLE(ENG_TYPE(Engine)) {
     T_EngineMainCallbacks               mainCallbacks;
     bool                                shutdownRequested;
     void                              * pUserData;
     T_ValidationMessenger               localValidationMessenger;
+    S_EngineTrackedResources          * pTrackedResources;
 };
 
 typedef __ENG_HANDLE(ENG_TYPE(Engine))  S_PrivateEngine;
