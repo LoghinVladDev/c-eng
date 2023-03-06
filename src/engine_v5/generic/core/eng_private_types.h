@@ -30,6 +30,8 @@ typedef ENG_TYPE(AllocationCallbacks)   T_AllocationCallbacks;
 typedef ENG_TYPE(GenericInStructure)    T_GenericInStructure;
 typedef ENG_TYPE(GenericOutStructure)   T_GenericOutStructure;
 typedef ENG_TYPE(Flags)                 T_Flags;
+typedef ENG_TYPE(ApiInfo)               T_ApiInfo;
+typedef ENG_TYPE(ApiProvenience)        T_ApiProvenience;
 
 #ifdef __cplusplus
 }

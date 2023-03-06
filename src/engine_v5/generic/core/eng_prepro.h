@@ -12,5 +12,8 @@
 #define __ENG_HANDLE(_t) struct __ENG_CONCAT(__ENG_CONCAT(__, _t), Private)
 #define __ENG_DEFINE_HANDLE(_t) typedef __ENG_HANDLE(_t) * _t
 
+#define __ENG_STRINGIFY2(_t) # _t
+#define __ENG_STRINGIFY(_t) __ENG_STRINGIFY2(_t)
+
 
 #endif /* __C_ENG_ENG_PREPRO_H__ */

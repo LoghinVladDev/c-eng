@@ -41,6 +41,8 @@ auto validationMessage (
     (void) messageTypeFlags;
     (void) pCallbackData;
 
+    fprintf(stdout, "test\n");
+
     return false;
 }
 
@@ -111,7 +113,7 @@ auto main (int argumentCount, char const * const * ppArguments) -> int {
         return 1;
     }
 
-    slDestroyValidationMessenger (engine, validationMessenger, nullptr);
+//    slDestroyValidationMessenger (engine, validationMessenger, nullptr);
     slDestroyEngine (engine, nullptr);
 
     return 0;

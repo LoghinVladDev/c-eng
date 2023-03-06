@@ -17,6 +17,20 @@
 #include <stdbool.h>
 
 
+static T_ApiInfo const globalApiInfo = {
+        .pApiName       = "PH Engine Name",
+        .pApiPurpose    = "PH Engine Purpose",
+        .pVendorInfo    = "PH Vendor Info",
+        .provenience    = SL_API_PROVENIENCE_PROPRIETARY,
+        .version        = {
+                .variant        = ENG_VERSION_VARIANT,
+                .major          = ENG_VERSION_MAJOR,
+                .minor          = ENG_VERSION_MINOR,
+                .patch          = ENG_VERSION_PATCH
+        }
+};
+
+
 static inline T_Engine newEngine (
         T_AllocationCallbacks   const * pAllocationCallbacks
 ) {
@@ -72,12 +86,27 @@ static inline void validate_createEngine (
 
 }
 
-
 static inline void validate_destroyEngine (
         T_Engine                        engine,
         T_AllocationCallbacks   const * pAllocationCallbacks
 ) {
 
+    (void) pAllocationCallbacks;
+
+    S_EngineTrackedResources        * pTrackedResources = engine->pTrackedResources;
+    T_ARRAY(T_ValidationMessenger)  * pMessengerArray   = & pTrackedResources->validationMessengers;
+
+    for (uint32_t i = 0U; i < T_ARRAY_SIZE(T_ValidationMessenger)(pMessengerArray); ++ i) {
+        raiseValidationIssueDirect (
+                engine,
+                engine->localValidationMessenger,
+                VALIDATION_ISSUE_GROUP_ENGINE,
+                VALIDATION_ISSUE_CATEGORY_RESOURCE_MANAGEMENT,
+                VALIDATION_ISSUE_ID_VALIDATION_MESSENGER_NOT_DESTROYED,
+                engine,
+                T_ARRAY_GET(T_ValidationMessenger)(pMessengerArray, i)
+        );
+    }
 }
 
 
@@ -93,6 +122,8 @@ T_Result createEngine (
     if (engine == NULL) {
         return RESULT_ERROR_OUT_OF_MEMORY;
     }
+
+    engine->apiInfo = globalApiInfo;
 
     T_GenericInStructure const * pNext = pCreateInfo->pNext;
     while (pNext != NULL) {
@@ -158,7 +189,7 @@ void destroyEngine (
 
     T_AllocationCallbacks const * pAlloc = __allocationCallbacks(pAllocationCallbacks);
 
-    if (engine->localValidationMessenger) {
+    if (engine->localValidationMessenger != NULL) {
 
         validate_destroyEngine (engine, pAlloc);
         pAlloc->pfnFree (
@@ -243,4 +274,16 @@ void engineRequestShutdown (
 ) {
 
     engine->shutdownRequested = true;
+}
+
+
+T_ApiInfo const * engineGetApiInfo (
+        T_Engine engine
+) {
+
+    if (engine == NULL) {
+        return & globalApiInfo;
+    }
+
+    return & engine->apiInfo;
 }

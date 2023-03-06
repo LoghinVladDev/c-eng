@@ -102,15 +102,20 @@ extern void ENG_SYM(RaiseValidationIssue) (
         ENG_TYPE(Engine)                        engine,
         ENG_TYPE(ValidationIssueGroup)          group,
         ENG_TYPE(ValidationIssueCategory)       category,
-        ENG_TYPE(ValidationIssueId)             identifier
+        ENG_TYPE(ValidationIssueId)             identifier,
+        void                            const * pSignaller,
+        void                            const * pCauseData
 );
 
 
 extern void ENG_SYM(RaiseValidationIssueDirect) (
+        ENG_TYPE(Engine)                        engine,
         ENG_TYPE(ValidationMessenger)           messenger,
         ENG_TYPE(ValidationIssueGroup)          group,
         ENG_TYPE(ValidationIssueCategory)       category,
-        ENG_TYPE(ValidationIssueId)             identifier
+        ENG_TYPE(ValidationIssueId)             identifier,
+        void                            const * pSignaller,
+        void                            const * pCauseData
 );
 
 #ifdef __cplusplus

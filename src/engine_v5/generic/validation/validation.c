@@ -10,6 +10,10 @@
 #include <eng_alloc.h>
 #include <string.h>
 
+#include <stdio.h>
+
+#include "issues/validation_issues.h"
+
 
 typedef struct {
     T_Engine                engine;
@@ -266,5 +270,90 @@ void destroyValidationMessenger (
 
     if (pAssociation->messengerCount == 0U) {
         destroyAssociation (pAssociation, pAlloc);
+    }
+}
+
+
+void raiseValidationIssueDirect (
+        ENG_TYPE(Engine)                    engine,
+        T_ValidationMessenger               messenger,
+        T_ValidationIssueGroup              group,
+        T_ValidationIssueCategory           category,
+        T_ValidationIssueId                 identifier,
+        void                        const * pSignaller,
+        void                        const * pCauseData
+) {
+
+    T_ValidationMessageTypeFlags        typeFlags =
+            VALIDATION_MESSAGE_TYPE_VALIDATION_BIT;
+    T_ValidationMessageSeverityFlagBits severity =
+            VALIDATION_MESSAGE_SEVERITY_WARNING_BIT;
+
+    char                                messageBuffer [VALIDATION_MESSENGER_MESSAGE_BUFFER_LENGTH];
+    T_ValidationMessageCallbackData     callbackData = {
+            .structureType      = STRUCTURE_TYPE_VALIDATION_MESSAGE_CALLBACK_DATA,
+            .pNext              = NULL,
+            .pSourceApiInfo     = engineGetApiInfo(engine),
+            .messageId          = 0U,
+            .pMessage           = & messageBuffer [0U]
+    };
+
+    if (group >= validationIssueSet.groupCount) {
+        callbackData.messageId  = VALIDATION_ISSUE_FULL_ID(VALIDATION_ISSUE_ID_INVALID_GROUP, 0U, 0U);
+        snprintf (
+                messageBuffer,
+                VALIDATION_MESSENGER_MESSAGE_BUFFER_LENGTH,
+                "[Internal] Requested Validation Issue Group (%d) does not exist\n",
+                group
+        );
+
+    } else if (category >= validationIssueSet.pGroups [group].categoryCount) {
+        callbackData.messageId  = VALIDATION_ISSUE_FULL_ID(group, VALIDATION_ISSUE_ID_INVALID_CATEGORY, 0U);
+        snprintf (
+                messageBuffer,
+                VALIDATION_MESSENGER_MESSAGE_BUFFER_LENGTH,
+                "[Internal] Requested Validation Issue Category (%d) for requested Group (%d) does not exist\n",
+                category,
+                group
+        );
+
+    } else if (identifier >= validationIssueSet.pGroups [group].pCategories [category].issueCount) {
+        callbackData.messageId  = VALIDATION_ISSUE_FULL_ID(group, category, VALIDATION_ISSUE_ID_INVALID_ID);
+        snprintf (
+                messageBuffer,
+                VALIDATION_MESSENGER_MESSAGE_BUFFER_LENGTH,
+                "[Internal] Requested Validation Issue Id (%d) for requested Category (%d) and Group (%d) does not exist\n",
+                identifier,
+                category,
+                group
+        );
+
+    } else {
+
+        S_ValidationIssue const * pIssue =
+                & validationIssueSet.pGroups[ group ].pCategories[ category ].pIssues[ identifier ];
+
+        typeFlags   = pIssue->typeFlags;
+        severity    = pIssue->severity;
+        (void) pIssue->composer (
+                pIssue,
+                & messageBuffer [0U],
+                VALIDATION_MESSENGER_MESSAGE_BUFFER_LENGTH,
+                pSignaller,
+                pCauseData
+        );
+    }
+
+    if (
+            (messenger->typeFlags & typeFlags) != 0U &&
+            (messenger->severityFlags & severity) == severity
+    ) {
+
+        (void) messenger->callback (
+                messenger->pUserData,
+                severity,
+                typeFlags,
+                & callbackData
+        );
     }
 }

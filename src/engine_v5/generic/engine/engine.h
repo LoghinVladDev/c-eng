@@ -12,6 +12,13 @@
 extern "C" {
 #endif
 
+
+#define ENG_VERSION_VARIANT 0U
+#define ENG_VERSION_MAJOR   0U
+#define ENG_VERSION_MINOR   2U
+#define ENG_VERSION_PATCH   96U
+
+
 __ENG_DEFINE_HANDLE(ENG_TYPE(Engine));
 
 
@@ -63,6 +70,11 @@ extern ENG_TYPE(Result) ENG_SYM(EngineRun) (
 
 
 extern void ENG_SYM(EngineRequestShutdown) (
+        ENG_TYPE(Engine)    engine
+);
+
+
+extern ENG_TYPE(ApiInfo) const * ENG_SYM(EngineGetApiInfo) (
         ENG_TYPE(Engine)    engine
 );
 
