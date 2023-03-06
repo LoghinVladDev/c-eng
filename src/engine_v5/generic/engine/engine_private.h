@@ -11,7 +11,7 @@ extern "C" {
 #endif
 
 #define ARRAY_TYPENAME T_ValidationMessenger
-#include <util_t_array.h>
+#include <templates/util_t_array.h>
 
 typedef ENG_TYPE(Engine)                T_Engine;
 typedef ENG_TYPE(EngineMainCallbacks)   T_EngineMainCallbacks;

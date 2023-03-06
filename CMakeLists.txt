@@ -260,6 +260,11 @@ set (
 )
 
 set (
+        V5_GENERIC_HL_CORE
+        src/engine_v5/generic/hl_core/Object.cpp
+)
+
+set (
         V5_GENERIC_ENGINE
         src/engine_v5/generic/engine/engine.c
 )
@@ -270,15 +275,44 @@ set (
 )
 
 set (
+        V5_GENERIC_UTIL_HL_LOGGING
+        src/engine_v5/generic/util/hl_logging/Logger.cpp
+)
+
+set (
+        V5_GENERIC_UTIL
+        ${V5_GENERIC_UTIL_HL_LOGGING}
+)
+
+set (
         V5_GENERIC
         ${V5_GENERIC_CORE}
         ${V5_GENERIC_ENGINE}
         ${V5_GENERIC_VALIDATION}
+        ${V5_GENERIC_UTIL}
+
+        ${V5_GENERIC_HL_CORE}
+)
+
+set (
+        V5_VARIANT_UTIL_HL_LOGGING
+        src/engine_v5/variant/util/hl_logging/BasicLogger.cpp
+)
+
+set (
+        V5_VARIANT_UTIL
+        ${V5_VARIANT_UTIL_HL_LOGGING}
+)
+
+set (
+        V5_VARIANT
+        ${V5_VARIANT_UTIL}
 )
 
 set (
         V5_BARE
         ${V5_GENERIC}
+        ${V5_VARIANT}
         src/engine_v5/variant/bare/bare_eng_bare_window.cpp
 )
 
