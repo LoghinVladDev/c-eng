@@ -164,7 +164,7 @@ static inline void T_ARRAY_REMOVE(_type) (  \
     (void) memmove (                        \
             pArray->pData [index],          \
             pArray->pData [index + 1U],     \
-            pArray->size - index - 1U       \
+            pArray->size -- - index - 1U    \
     );                                      \
 }
 

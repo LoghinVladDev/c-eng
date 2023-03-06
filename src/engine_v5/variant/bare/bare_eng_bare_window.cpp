@@ -196,7 +196,7 @@ auto main (int argumentCount, char const * const * ppArguments) -> int {
         return 1;
     }
 
-//    slDestroyValidationMessenger (engine, validationMessenger, nullptr);
+    slDestroyValidationMessenger (gEngine, validationMessenger, nullptr);
     slDestroyEngine (gEngine, nullptr);
 
     return 0;
