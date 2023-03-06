@@ -81,6 +81,26 @@ namespace engine::io {
                 long long int           lineNumber,
                 engine::Object  const * pObject
         ) const noexcept -> void;
+
+        auto critical (cds::StringView message) const noexcept -> void {
+            return this->log (Critical, message);
+        }
+
+        auto error (cds::StringView message) const noexcept -> void {
+            return this->log (Error, message);
+        }
+
+        auto warning (cds::StringView message) const noexcept -> void {
+            return this->log (Warning, message);
+        }
+
+        auto info (cds::StringView message) const noexcept -> void {
+            return this->log (Info, message);
+        }
+
+        auto debug (cds::StringView message) const noexcept -> void {
+            return this->log (Debug, message);
+        }
     };
 
 }

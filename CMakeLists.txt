@@ -313,7 +313,9 @@ set (
         V5_BARE
         ${V5_GENERIC}
         ${V5_VARIANT}
+
         src/engine_v5/variant/bare/bare_eng_bare_window.cpp
+        src/engine_v5/variant/bare/glfw_callbacks.cpp
 )
 
 add_executable (

@@ -10,9 +10,12 @@
 #include <filesystem>
 #include <fstream>
 #include <iostream>
+#include "glfw_callbacks.h"
+
 
 struct UserData {
-
+    engine::io::Logger * pGlfwLogger;
+    GLFWwindow         * pMainWindow;
 };
 
 static SLEngine gEngine;
@@ -21,16 +24,74 @@ auto sigCbk (int sigv) -> void {
     slEngineRequestShutdown(gEngine);
 }
 
+engine::io::Logger * pGlfwErrorLogger = nullptr;
+auto glfwErrorCallback (int code, char const * pDescription) noexcept -> void {
+
+    auto glfwCodeToString = [] (int code) noexcept -> char const * {
+
+        switch ( code ) {
+            case GLFW_NOT_INITIALIZED:      return "GLFW_NOT_INITIALIZED";
+            case GLFW_NO_CURRENT_CONTEXT:   return "GLFW_NO_CURRENT_CONTEXT";
+            case GLFW_INVALID_ENUM:         return "GLFW_INVALID_ENUM";
+            case GLFW_INVALID_VALUE:        return "GLFW_INVALID_VALUE";
+            case GLFW_OUT_OF_MEMORY:        return "GLFW_OUT_OF_MEMORY";
+            case GLFW_API_UNAVAILABLE:      return "GLFW_API_UNAVAILABLE";
+            case GLFW_VERSION_UNAVAILABLE:  return "GLFW_VERSION_UNAVAILABLE";
+            case GLFW_PLATFORM_ERROR:       return "GLFW_PLATFORM_ERROR";
+            case GLFW_FORMAT_UNAVAILABLE:   return "GLFW_FORMAT_UNAVAILABLE";
+            default:                        return "";
+        }
+    };
+
+    pGlfwErrorLogger->error (cds::String::f ("Glfw Error : %s, %s", glfwCodeToString(code), pDescription));
+}
+
 auto preInit (void * pUserData, SLEngine lEngine) noexcept -> void {
     auto * pData = (UserData *) pUserData;
+
+    if (GLFW_FALSE == glfwInit()) {
+        pData->pGlfwLogger->error("Glfw Failed to initialize");
+        slEngineRequestShutdown (lEngine);
+        return;
+    }
+
+    glfwSetErrorCallback (& glfwErrorCallback);
+    pGlfwErrorLogger = pData->pGlfwLogger;
+    glfwSetJoystickCallback (& joystickConnectionCallback);
+    glfwSetMonitorCallback (& monitorConnectionCallback);
+
+    pData->pMainWindow = glfwCreateWindow (1280U, 720U, "PH Title Screen", nullptr, nullptr);
+    glfwSetWindowUserPointer (pData->pMainWindow, lEngine);
+
+    glfwSetCharCallback (pData->pMainWindow, & windowCharCallback);
+    glfwSetDropCallback (pData->pMainWindow, & windowDropCallback);
+    glfwSetKeyCallback (pData->pMainWindow, & windowKeyCallback);
+    glfwSetScrollCallback (pData->pMainWindow, & windowScrollCallback);
+    glfwSetCharModsCallback (pData->pMainWindow, & windowCharModsCallback);
+    glfwSetCursorEnterCallback (pData->pMainWindow, & windowMouseEnterCallback);
+    glfwSetCursorPosCallback (pData->pMainWindow, & windowMouseMoveCallback);
+    glfwSetFramebufferSizeCallback (pData->pMainWindow, & windowSurfaceResizeCallback);
+    glfwSetMouseButtonCallback (pData->pMainWindow, & windowMouseButtonCallback);
+    glfwSetWindowCloseCallback (pData->pMainWindow, & windowCloseCallback);
+    glfwSetWindowFocusCallback (pData->pMainWindow, & windowFocusCallback);
+    glfwSetWindowIconifyCallback (pData->pMainWindow, & windowIconifyCallback);
+    glfwSetWindowMaximizeCallback (pData->pMainWindow, & windowMaximizeCallback);
+    glfwSetWindowPosCallback (pData->pMainWindow, & windowMoveCallback);
+    glfwSetWindowRefreshCallback (pData->pMainWindow, & windowRefreshCallback);
+    glfwSetWindowSizeCallback (pData->pMainWindow, & windowResizeCallback);
+    glfwSetWindowContentScaleCallback (pData->pMainWindow, & windowContentScaleCallback);
 }
 
 auto preUpdate (void * pUserData, SLEngine lEngine) noexcept -> void {
     auto * pData = (UserData *) pUserData;
+    glfwPollEvents();
 }
 
 auto postShutdown (void * pUserData, SLEngine lEngine) noexcept -> void {
     auto * pData = (UserData *) pUserData;
+
+    glfwDestroyWindow (pData->pMainWindow);
+    glfwTerminate();
 }
 
 static engine::io::Logger::Level const logLevelMap (SLValidationMessageSeverityFlagBits severity) {
@@ -141,7 +202,8 @@ auto main (int argumentCount, char const * const * ppArguments) -> int {
     SLValidationMessenger validationMessenger;
 
     UserData userData = {
-
+            .pGlfwLogger = & glfwLogger,
+            .pMainWindow = nullptr
     };
 
     SLValidationMessengerCreateInfo validationMessengerCreateInfo = {
