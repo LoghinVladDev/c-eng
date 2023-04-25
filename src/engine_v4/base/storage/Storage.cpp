@@ -15,7 +15,7 @@ namespace engine::storage {
     auto Node :: getInt (StringView key) const noexcept (false) -> int {
         auto data = this->get (key);
 
-        if (data.is <nullptr_t>()) {
+        if (data.is <std::nullptr_t>()) {
             throw KeyException (key);
         }
 
@@ -33,7 +33,7 @@ namespace engine::storage {
     auto Node :: getFloat (StringView key) const noexcept (false) -> float {
         auto data = this->get (key);
 
-        if (data.is <nullptr_t>()) {
+        if (data.is <std::nullptr_t>()) {
             throw KeyException (key);
         }
 
@@ -51,7 +51,7 @@ namespace engine::storage {
     auto Node :: getString (StringView key) const noexcept (false) -> StringView {
         auto data = this->get (key);
 
-        if (data.is <nullptr_t>()) {
+        if (data.is <std::nullptr_t>()) {
             throw KeyException (key);
         }
 
@@ -69,7 +69,7 @@ namespace engine::storage {
     auto Node :: getIntOrDefault (StringView key, int defaultValue) const noexcept -> int {
         auto data = this->get (key);
 
-        if (data.is <nullptr_t>()) {
+        if (data.is <std::nullptr_t>()) {
             return defaultValue;
         }
 
@@ -84,7 +84,7 @@ namespace engine::storage {
     auto Node :: getFloatOrDefault (StringView key, float defaultValue) const noexcept -> float {
         auto data = this->get (key);
 
-        if (data.is <nullptr_t>()) {
+        if (data.is <std::nullptr_t>()) {
             return defaultValue;
         }
 
@@ -99,7 +99,7 @@ namespace engine::storage {
     auto Node :: getStringOrDefault (StringView key, StringView defaultValue) const noexcept -> StringView {
         auto data = this->get (key);
 
-        if (data.is <nullptr_t>()) {
+        if (data.is <std::nullptr_t>()) {
             return defaultValue;
         }
 
