@@ -85,15 +85,56 @@ endif()
 
 set (CMAKE_EXPORT_COMPILE_COMMANDS 1)
 
+set(
+        C_ENG_SRC_BASE_LOGGING
+        src/engine_v6/src/base/logging/Logger.cpp
+        src/engine_v6/src/base/logging/Logger.hpp
+)
+
+set(
+        C_ENG_SRC_BASE
+        ${C_ENG_SRC_BASE_LOGGING}
+)
+
+set(
+        C_ENG_SRC_VARIANT_STANDALONE
+        src/engine_v6/src/variant_standalone/TargetStandalone.cpp
+        src/engine_v6/src/variant_standalone/TargetConfig.hpp
+        src/engine_v6/test/base/LoggerEnabled/TargetConfig.hpp
+)
+
 add_executable(
         standalone
 
-        src/engine_v6/variant/TargetStandalone.cpp
-        src/engine_v6/base/logging/Logger.cpp)
-
-target_include_directories (
-        standalone PRIVATE
-        src/engine_v6/base
-        src/engine_v6/impl
-        src/engine_v6/variant
+        ${C_ENG_SRC_BASE}
+        ${C_ENG_SRC_VARIANT_STANDALONE}
 )
+
+target_include_directories(
+        standalone PRIVATE
+        src/engine_v6/src/base
+        src/engine_v6/src/impl
+        src/engine_v6/src/variant_standalone
+)
+
+enable_testing()
+function(c_eng_test path name)
+    add_executable(
+            TestBinary.${name}
+            ${C_ENG_SRC_BASE}
+            src/engine_v6/test/Test.hpp
+            src/engine_v6/test/${path}/${name}/Test.cpp
+    )
+    target_include_directories(
+            TestBinary.${name} PRIVATE
+            src/engine_v6/src/base
+            src/engine_v6/src/impl
+            src/engine_v6/test
+            src/engine_v6/test/${path}/${name}
+    )
+    add_test(NAME Test.${name} COMMAND $<TARGET_FILE:TestBinary.${name}>)
+endfunction()
+
+c_eng_test(base LoggerEnabled)
+c_eng_test(base LoggerDisabled)
+

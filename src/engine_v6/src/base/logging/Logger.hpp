@@ -7,23 +7,7 @@
 
 namespace engine {
     namespace meta {
-        template <bool = config::value <config::ParameterType::LoggingEnabled>>
-        class LoggerBase {
-        public:
-            explicit LoggerBase (std::ostream & out) noexcept {(void) out;}
-
-            template <typename T>
-            auto operator << (T && logged) noexcept -> LoggerBase & {
-                (void) logged;
-                return * this;
-            }
-
-        protected:
-            auto startLogItem () noexcept -> void {}
-        };
-
-        template <>
-        class LoggerBase <true> {
+        class LoggerBaseCommon {
         public:
             enum class Option {
                 None    = 0x00000000,
@@ -34,24 +18,51 @@ namespace engine {
                 Debug   = 0x00000008,
                 Info    = 0x00000010
             };
+        };
 
+        template <bool = config::value <config::ParameterType::LoggingEnabled>>
+        class LoggerBase : public LoggerBaseCommon {
+        public:
+            explicit LoggerBase (std::ostream & out) noexcept {(void) out;}
+
+            template <typename T>
+            auto operator << (T && logged) noexcept -> LoggerBase & {
+                (void) logged;
+                return * this;
+            }
+
+        protected:
+            constexpr auto startLogItem () noexcept -> void {}
+        };
+
+        template <>
+        class LoggerBase <true> : public LoggerBaseCommon {
+        public:
             explicit LoggerBase (std::ostream & out) noexcept : baseOut (out) {}
 
             template <typename T>
             auto operator << (T && logged) noexcept -> LoggerBase & {
 
                 auto started = isSet (Option::Start);
-                set (IfOption <T> :: then (std::forward <T> (logged)));
+                set (ifOptionThen (std::forward <T> (logged)));
                 if (! started && isSet (Option::Start)) {
                     addHeader();
                 }
 
-                baseOut << std::forward <T> (logged);
+                baseOut << ifOptionProcess(std::forward <T> (logged));
                 return * this;
             }
 
         protected:
-            auto startLogItem () noexcept -> void;
+            constexpr auto startLogItem () noexcept -> void {
+                if (isSet (Option::Start)) {
+                    baseOut << "\033[1;0m" << std::dec << std::endl;
+                    clearFlags();
+                }
+
+                flags &= ~levelMask;
+                set(Option::Info);
+            }
 
         private:
             std::ostream & baseOut;
@@ -95,27 +106,34 @@ namespace engine {
             constexpr auto clearFlags () noexcept -> void { flags = defaultFlags; }
 
             template <typename T>
-            struct IfOption {
-                constexpr static auto then (T && obj) noexcept -> Option {
-                    (void) obj;
-                    return Option::Start;
-                }
-            };
+            constexpr static auto ifOptionThen (T && obj) noexcept -> Option {
+                (void) obj;
+                return Option::Start;
+            }
 
-            template <>
-            struct IfOption <Option> {
-                constexpr static auto then (Option option) noexcept -> Option {
-                    return option;
-                }
-            };
+            constexpr static auto ifOptionThen (Option option) noexcept -> Option {
+                return option;
+            }
 
-            template <>
-            struct IfOption <decltype (std::hex)> {
-                constexpr static auto then (decltype(std::hex) unused) noexcept -> Option {
-                    (void) unused;
-                    return Option::None;
-                }
-            };
+            constexpr static auto ifOptionThen (decltype(std::hex) unused) noexcept -> Option {
+                (void) unused;
+                return Option::None;
+            }
+
+            template <typename T>
+            constexpr static auto ifOptionProcess (T && obj) noexcept -> T {
+                return std::forward <T> (obj);
+            }
+
+            constexpr static auto ifOptionProcess (Option option) noexcept -> cds::StringLiteral {
+                return "";
+            }
+
+            inline static auto ifOptionProcess (std::source_location sourceLocation) noexcept -> std::string {
+                return std::string(sourceLocation.file_name()) + ":" +
+                        std::to_string(sourceLocation.line()) + ":" +
+                        std::to_string(sourceLocation.column());
+            }
         };
     }
 
@@ -124,7 +142,16 @@ namespace engine {
         using Base = meta::LoggerBase <>;
         using Base::LoggerBase;
 
-        auto endl () noexcept -> Logger & {
+        using meta::LoggerBase <>::Option::Error;
+        using meta::LoggerBase <>::Option::Warning;
+        using meta::LoggerBase <>::Option::Debug;
+        using meta::LoggerBase <>::Option::Info;
+
+        constexpr inline static auto here (std::source_location const & location = std::source_location::current()) noexcept -> std::source_location {
+            return location;
+        }
+
+        constexpr auto endl () noexcept -> Logger & {
             Base::startLogItem();
             return * this;
         }
@@ -153,6 +180,17 @@ namespace engine {
 
         template <typename T, LoggingObjectType, bool = config::value <config::ParameterType::LoggingEnabled>>
         struct LoggingObjectBase {
+            [[nodiscard]] constexpr auto logger () const noexcept -> Logger & {
+                return LoggingObjectDisabledContainer <false> :: inlineEmptyLogger;
+            }
+
+            constexpr auto setLogger (Logger * pNewLogger) noexcept -> void {
+                (void) pNewLogger;
+            }
+        };
+
+        template <typename T>
+        struct LoggingObjectBase <T, LoggingObjectType::Indirect, false> {
             [[nodiscard]] constexpr auto logger () const noexcept -> Logger & {
                 return LoggingObjectDisabledContainer <false> :: inlineEmptyLogger;
             }

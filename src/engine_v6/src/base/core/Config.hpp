@@ -15,3 +15,5 @@ namespace engine::config {
     constexpr static bool const value = Parameter <configValue> :: value;
 
 }
+
+#include "TargetConfig.hpp"

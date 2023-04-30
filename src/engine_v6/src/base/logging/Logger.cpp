@@ -14,6 +14,8 @@ namespace engine::meta {
     using config::ParameterType;
     using std::string;
 
+    bool get () {return value<ParameterType::LoggingEnabled>;}
+
     template <bool = value <ParameterType::LoggingEnabled>>
     struct InlineLoggerOutBufferContainer {
 
@@ -40,13 +42,6 @@ namespace engine::meta {
 
     }
 
-    auto LoggerBase<true>::startLogItem () noexcept -> void {
-        if (isSet (Option::Start)) {
-            baseOut << std::dec << std::endl;
-            clearFlags();
-        }
-    }
-
     namespace {
         auto timestamp () noexcept {
             int const timeBufferSize = 512U;
@@ -57,7 +52,8 @@ namespace engine::meta {
             auto * timeInfo = std::localtime (& asTimeT);
 
             string asString (timeBufferSize, '\0');
-            (void) std::strftime (asString.data(), timeBufferSize, "%d-%m-%Y-%H:%M:%S", timeInfo);
+            asString.resize(std::strftime (asString.data(), timeBufferSize, "%d-%m-%Y", timeInfo));
+            asString.resize(asString.length());
 
             return asString;
         }
@@ -65,11 +61,24 @@ namespace engine::meta {
 
     auto LoggerBase<true>::addHeader () noexcept -> void {
 
+        auto colorHeader = [option=static_cast<Option>(flags & levelMask)]{
+            switch (option) {
+                default:
+                case Option::None:
+                case Option::Start:     return "";
+                case Option::Error:     return "\033[1;31m";
+                case Option::Warning:   return "\033[1;33m";
+                case Option::Debug:     return "\033[1;36m";
+                case Option::Info:      return "\033[1;37m";
+            }
+        };
+
         baseOut <<
+                colorHeader() <<
                 "[time = " << timestamp() << "]"
                 "[logger = " << "testLoggerReplace" << "]"
                 "[level = " << levelAsStr () << "]"
                 "[thread = 0x" << std::hex << cds::Thread::currentThreadID() << "]"
-                " -> ";
+                " -> " << std::dec;
     }
 }
