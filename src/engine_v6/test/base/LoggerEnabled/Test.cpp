@@ -2,7 +2,6 @@
 // Created by loghin on 30/04/23.
 //
 
-#include "core/Config.hpp"
 #include "Test.hpp"
 #include "logging/Logger.hpp"
 #include <chrono>
@@ -11,25 +10,29 @@
 #include <CDS/threading/Thread>
 #include <source_location>
 
-auto date() noexcept {
-    int const timeBufferSize = 512U;
-    using sys_clock = std::chrono::system_clock;
+namespace {
+    using engine::Logger;
 
-    auto timePoint = sys_clock::now();
-    auto asTimeT = sys_clock::to_time_t(timePoint);
-    auto * timeInfo = std::localtime (& asTimeT);
+    auto date() noexcept {
+        int const timeBufferSize = 512U;
+        using sys_clock = std::chrono::system_clock;
 
-    std::string asString (timeBufferSize, '\0');
-    asString.resize(std::strftime (asString.data(), timeBufferSize, "%d-%m-%Y", timeInfo));
+        auto timePoint = sys_clock::now();
+        auto asTimeT = sys_clock::to_time_t(timePoint);
+        auto * timeInfo = std::localtime (& asTimeT);
 
-    return asString;
+        std::string asString (timeBufferSize, '\0');
+        asString.resize(std::strftime (asString.data(), timeBufferSize, "%d-%m-%Y", timeInfo));
+
+        return asString;
+    }
 }
 
 TEST(LoggerEnabled, basicOut) {
     std::stringstream outbuf;
-    engine::Logger logger(outbuf);
+    auto logger = Logger::getLogger(outbuf);
 
-    logger << "basic string output, followed by numeric: " << 123 << std::hex << 15 << std::dec << 24;
+    logger() << "basic string output, followed by numeric: " << 123 << std::hex << 15 << std::dec << 24;
     ASSERT_TRUE(outbuf.str().contains(date()));
     ASSERT_TRUE(outbuf.str().contains("level = Info"));
     ASSERT_TRUE(outbuf.str().contains(("thread = 0x" + cds::Long(
@@ -39,48 +42,48 @@ TEST(LoggerEnabled, basicOut) {
 
 TEST(LoggerEnabled, levelSwitch) {
     std::stringstream outbuf;
-    engine::Logger logger(outbuf);
+    auto logger = Logger::getLogger(outbuf);
 
     std::stringstream().swap(outbuf);
-    logger.endl() << 12345678;
+    logger() << 12345678;
     ASSERT_TRUE(outbuf.str().contains("Info"));
     ASSERT_TRUE(outbuf.str().contains("12345678"));
     ASSERT_FALSE(outbuf.str().contains("Warning"));
 
     std::stringstream().swap(outbuf);
-    logger.endl() << engine::Logger::Warning << 12345678;
+    logger() << engine::Logger::Warning << 12345678;
     ASSERT_TRUE(outbuf.str().contains("Warning"));
     ASSERT_TRUE(outbuf.str().contains("12345678"));
     ASSERT_FALSE(outbuf.str().contains("Info"));
 
     std::stringstream().swap(outbuf);
-    logger.endl() << engine::Logger::Error << 12345678;
+    logger() << engine::Logger::Error << 12345678;
     ASSERT_TRUE(outbuf.str().contains("Error"));
     ASSERT_TRUE(outbuf.str().contains("12345678"));
     ASSERT_FALSE(outbuf.str().contains("Info"));
 
     std::stringstream().swap(outbuf);
-    logger.endl() << engine::Logger::Debug << 12345678;
+    logger() << engine::Logger::Debug << 12345678;
     ASSERT_TRUE(outbuf.str().contains("Debug"));
     ASSERT_TRUE(outbuf.str().contains("12345678"));
     ASSERT_FALSE(outbuf.str().contains("Info"));
 
     std::stringstream().swap(outbuf);
-    logger.endl() << engine::Logger::Warning;
+    logger() << engine::Logger::Warning;
     ASSERT_FALSE(outbuf.str().contains("Warning"));
     ASSERT_FALSE(outbuf.str().contains("12345678"));
-    logger.endl() << 12345678;
+    logger() << 12345678;
     ASSERT_FALSE(outbuf.str().contains("Warning"));
     ASSERT_TRUE(outbuf.str().contains("Info"));
     ASSERT_TRUE(outbuf.str().contains("12345678"));
 
     std::stringstream().swap(outbuf);
-    logger.endl() << engine::Logger::Warning << "23456789";
+    logger() << engine::Logger::Warning << "23456789";
     ASSERT_TRUE(outbuf.str().contains("Warning"));
     ASSERT_FALSE(outbuf.str().contains("12345678"));
     ASSERT_TRUE(outbuf.str().contains("23456789"));
     std::stringstream().swap(outbuf);
-    logger.endl() << 12345678;
+    logger() << 12345678;
     ASSERT_FALSE(outbuf.str().contains("Warning"));
     ASSERT_TRUE(outbuf.str().contains("Info"));
     ASSERT_TRUE(outbuf.str().contains("12345678"));
@@ -88,20 +91,20 @@ TEST(LoggerEnabled, levelSwitch) {
 
 TEST(LoggerEnabled, colorSwitch) {
     std::stringstream outbuf;
-    engine::Logger logger(outbuf);
+    auto logger = Logger::getLogger(outbuf);
 
     std::stringstream().swap(outbuf);
-    logger.endl() << engine::Logger::Warning << 1234;
+    logger() << engine::Logger::Warning << 1234;
     ASSERT_TRUE(outbuf.str().contains("\033[1;33m"));
-    logger.endl() << 1234;
+    logger() << 1234;
     ASSERT_TRUE(outbuf.str().contains("\033[1;0m"));
 }
 
 TEST(LoggerEnabled, sourceLocation) {
     std::stringstream outbuf;
-    engine::Logger logger(outbuf);
+    auto logger = Logger::getLogger(outbuf);
 
-    logger.endl() << engine::Logger::here(); auto loc = std::source_location::current();
+    logger() << engine::Logger::here(); auto loc = std::source_location::current();
     ASSERT_TRUE(outbuf.str().contains(std::string() + loc.file_name() + ":" + std::to_string(loc.line())));
 }
 

@@ -135,6 +135,8 @@ function(c_eng_test path name)
     add_test(NAME Test.${name} COMMAND $<TARGET_FILE:TestBinary.${name}>)
 endfunction()
 
-c_eng_test(base LoggerEnabled)
 c_eng_test(base LoggerDisabled)
+c_eng_test(base LoggerDisabled.Naming)
+c_eng_test(base LoggerEnabled)
+c_eng_test(base LoggerEnabled.Naming)
 

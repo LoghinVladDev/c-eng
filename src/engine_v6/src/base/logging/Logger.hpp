@@ -1,7 +1,9 @@
 #pragma once
 
 #include <CDS/meta/TypeTraits>
+#include <CDS/Object>
 #include <core/Config.hpp>
+#include <core/Object.hpp>
 #include <source_location>
 #include <ostream>
 
@@ -23,8 +25,6 @@ namespace engine {
         template <bool = config::value <config::ParameterType::LoggingEnabled>>
         class LoggerBase : public LoggerBaseCommon {
         public:
-            explicit LoggerBase (std::ostream & out) noexcept {(void) out;}
-
             template <typename T>
             auto operator << (T && logged) noexcept -> LoggerBase & {
                 (void) logged;
@@ -32,14 +32,25 @@ namespace engine {
             }
 
         protected:
+            LoggerBase (cds::String const& name, std::ostream & out) noexcept {
+                (void) out;
+                (void) name;
+            }
+
             constexpr auto startLogItem () noexcept -> void {}
+
+            constexpr auto setOutput(std::ostream& out) noexcept -> void {
+                (void) out;
+            }
+
+            [[nodiscard]] constexpr auto name() const noexcept -> cds::StringView {
+                return "";
+            }
         };
 
         template <>
         class LoggerBase <true> : public LoggerBaseCommon {
         public:
-            explicit LoggerBase (std::ostream & out) noexcept : baseOut (out) {}
-
             template <typename T>
             auto operator << (T && logged) noexcept -> LoggerBase & {
 
@@ -49,14 +60,22 @@ namespace engine {
                     addHeader();
                 }
 
-                baseOut << ifOptionProcess(std::forward <T> (logged));
+                (*pBaseOut) << ifOptionProcess(std::forward <T> (logged));
                 return * this;
             }
 
         protected:
+            LoggerBase (cds::String name, std::ostream & out) noexcept :
+                    pBaseOut (&out),
+                    loggerName(std::move(name)) {}
+
+            [[nodiscard]] constexpr auto name() const noexcept -> cds::StringView {
+                return this->loggerName;
+            }
+
             constexpr auto startLogItem () noexcept -> void {
                 if (isSet (Option::Start)) {
-                    baseOut << "\033[1;0m" << std::dec << std::endl;
+                    (*pBaseOut) << "\033[1;0m" << std::dec << std::endl;
                     clearFlags();
                 }
 
@@ -64,8 +83,13 @@ namespace engine {
                 set(Option::Info);
             }
 
+            constexpr auto setOutput(std::ostream& out) noexcept -> void {
+                pBaseOut = &out;
+            }
+
         private:
-            std::ostream & baseOut;
+            std::ostream * pBaseOut;
+            cds::String loggerName;
             cds::uint32 flags = defaultFlags;
 
             constexpr static cds::uint32 const levelMask =
@@ -126,6 +150,7 @@ namespace engine {
             }
 
             constexpr static auto ifOptionProcess (Option option) noexcept -> cds::StringLiteral {
+                (void) option;
                 return "";
             }
 
@@ -135,115 +160,52 @@ namespace engine {
                         std::to_string(sourceLocation.column());
             }
         };
+
+        class Logger : public meta::LoggerBase <> {
+        public:
+            using Base = meta::LoggerBase <>;
+            using Base::LoggerBase;
+
+            using meta::LoggerBase <>::Option::Error;
+            using meta::LoggerBase <>::Option::Warning;
+            using meta::LoggerBase <>::Option::Debug;
+            using meta::LoggerBase <>::Option::Info;
+
+            using meta::LoggerBase <>::name;
+            using meta::LoggerBase <>::setOutput;
+
+            constexpr auto endl () noexcept -> Logger & {
+                Base::startLogItem();
+                return * this;
+            }
+        };
     }
 
-    class Logger : public meta::LoggerBase <> {
+    class Logger : protected meta::Logger {
     public:
-        using Base = meta::LoggerBase <>;
-        using Base::LoggerBase;
+        using meta::Logger::Info;
+        using meta::Logger::Warning;
+        using meta::Logger::Debug;
+        using meta::Logger::Error;
+        using meta::Logger::name;
+        using meta::Logger::setOutput;
 
-        using meta::LoggerBase <>::Option::Error;
-        using meta::LoggerBase <>::Option::Warning;
-        using meta::LoggerBase <>::Option::Debug;
-        using meta::LoggerBase <>::Option::Info;
+        constexpr auto operator () () noexcept -> meta::Logger& {
+            return this->endl();
+        }
 
-        constexpr inline static auto here (std::source_location const & location = std::source_location::current()) noexcept -> std::source_location {
+        constexpr static auto here (std::source_location const & location = std::source_location::current()) noexcept -> std::source_location {
             return location;
         }
 
-        constexpr auto endl () noexcept -> Logger & {
-            Base::startLogItem();
-            return * this;
-        }
+        static auto getLogger (cds::StringView name, std::ostream& out) noexcept -> Logger&;
+        static auto getLogger (cds::StringView name) noexcept -> Logger&;
+        static auto getLogger (std::ostream& out) noexcept -> Logger;
+        static auto getLogger () noexcept -> Logger;
+
+        static auto setDefaultLoggerOutput (std::ostream& out) noexcept -> void;
+
+    private:
+        using meta::Logger::Logger;
     };
-
-    namespace meta {
-
-        template <bool = config::value <config::ParameterType::LoggingEnabled>>
-        struct LoggingObjectDisabledContainer {};
-
-        template <>
-        struct LoggingObjectDisabledContainer <false> {
-            class InlineLogger : public Logger {
-            public:
-                InlineLogger () noexcept;
-            };
-
-            static inline InlineLogger inlineEmptyLogger;
-        };
-
-        enum class LoggingObjectType {
-            Direct,
-            Indirect,
-            Both
-        };
-
-        template <typename T, LoggingObjectType, bool = config::value <config::ParameterType::LoggingEnabled>>
-        struct LoggingObjectBase {
-            [[nodiscard]] constexpr auto logger () const noexcept -> Logger & {
-                return LoggingObjectDisabledContainer <false> :: inlineEmptyLogger;
-            }
-
-            constexpr auto setLogger (Logger * pNewLogger) noexcept -> void {
-                (void) pNewLogger;
-            }
-        };
-
-        template <typename T>
-        struct LoggingObjectBase <T, LoggingObjectType::Indirect, false> {
-            [[nodiscard]] constexpr auto logger () const noexcept -> Logger & {
-                return LoggingObjectDisabledContainer <false> :: inlineEmptyLogger;
-            }
-        };
-
-        class LoggerOwner {
-        public:
-            constexpr auto setLogger (Logger * pNewLogger) noexcept -> void {
-                pLogger = pNewLogger;
-            }
-
-        protected:
-            [[nodiscard]] constexpr auto getLogger () const noexcept -> Logger * {
-                return pLogger;
-            }
-
-        private:
-            Logger * pLogger = nullptr;
-        };
-
-        template <>
-        class LoggingObjectBase <void, LoggingObjectType::Direct, true> : public LoggerOwner {
-        public:
-            [[nodiscard]] constexpr auto logger () const noexcept -> Logger & {
-                return LoggerOwner::getLogger()->endl();
-            }
-        };
-
-        template <typename T>
-        class LoggingObjectBase <T, LoggingObjectType::Indirect, true> {
-        public:
-            [[nodiscard]] constexpr auto logger () const noexcept -> Logger & {
-                return static_cast <T const *> (this)->parent->logger().endl();
-            }
-        };
-
-        template <typename T>
-        class LoggingObjectBase <T, LoggingObjectType::Both, true> : public LoggerOwner {
-            [[nodiscard]] constexpr auto logger () const noexcept -> Logger & {
-                if (LoggerOwner::getLogger() != nullptr) {
-                    return * LoggerOwner::getLogger();
-                }
-
-                return static_cast <T const *> (this)->parent()->logger().endl();
-            }
-        };
-    }
-
-    class DirectLoggingObject : public meta::LoggingObjectBase <void, meta::LoggingObjectType::Direct> {};
-
-    template <typename T>
-    class IndirectLoggingObject : public meta::LoggingObjectBase <T, meta::LoggingObjectType::Indirect> {};
-
-    template <typename T>
-    class LoggingObject : public meta::LoggingObjectBase <T, meta::LoggingObjectType::Both> {};
 }

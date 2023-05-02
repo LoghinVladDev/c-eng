@@ -3,14 +3,18 @@
 #include <type_traits>
 
 namespace engine {
-    template <typename T>
     class Object {
-    protected:
-        constexpr Object (Object * pParent = nullptr) noexcept : pParent (pParent) {}
-
-        [[nodiscard]] constexpr auto parent () const noexcept -> Object const * {
+    public:
+        [[nodiscard]] constexpr auto parent() const noexcept -> Object const* {
             return pParent;
         }
+
+        [[nodiscard]] constexpr auto parent() noexcept -> Object* {
+            return pParent;
+        }
+
+    protected:
+        constexpr Object (Object * pParent = nullptr) noexcept : pParent (pParent) {}
 
     private:
         Object * pParent {nullptr};
