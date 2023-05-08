@@ -3,20 +3,20 @@
 #include <type_traits>
 
 namespace engine {
-    class Object {
-    public:
-        [[nodiscard]] constexpr auto parent() const noexcept -> Object const* {
-            return pParent;
-        }
+class Object {
+public:
+  [[nodiscard]] constexpr auto parent() const noexcept -> Object const* {
+    return pParent;
+  }
 
-        [[nodiscard]] constexpr auto parent() noexcept -> Object* {
-            return pParent;
-        }
+  [[nodiscard]] constexpr auto parent() noexcept -> Object* {
+    return pParent;
+  }
 
-    protected:
-        constexpr Object (Object * pParent = nullptr) noexcept : pParent (pParent) {}
+protected:
+  explicit constexpr Object (Object* pParent = nullptr) noexcept : pParent (pParent) {}
 
-    private:
-        Object * pParent {nullptr};
-    };
+private:
+  Object * pParent {nullptr};
+};
 }

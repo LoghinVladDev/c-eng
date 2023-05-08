@@ -3,8 +3,6 @@
 #include "core/Object.hpp"
 
 namespace engine {
-    class Engine : public Object {
-    public:
-        
-    };
+class Engine : public Object {
+};
 }

@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.5)
 project(c-eng)
 
 set(CMAKE_C_STANDARD 11)
-set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD 20)
 set(OpenGL_GL_PREFERENCE GLVND)
 
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
@@ -100,7 +100,6 @@ set(
         C_ENG_SRC_VARIANT_STANDALONE
         src/engine_v6/src/variant_standalone/TargetStandalone.cpp
         src/engine_v6/src/variant_standalone/TargetConfig.hpp
-        src/engine_v6/test/base/LoggerEnabled/TargetConfig.hpp
 )
 
 add_executable(
@@ -117,7 +116,9 @@ target_include_directories(
         src/engine_v6/src/variant_standalone
 )
 
+include(CTest)
 enable_testing()
+
 function(c_eng_test path name)
     add_executable(
             TestBinary.${name}
@@ -139,4 +140,5 @@ c_eng_test(base LoggerDisabled)
 c_eng_test(base LoggerDisabled.Naming)
 c_eng_test(base LoggerEnabled)
 c_eng_test(base LoggerEnabled.Naming)
+c_eng_test(base Object.Hierarchy)
 

@@ -2,14 +2,13 @@
 #include "logging/Logger.hpp"
 
 namespace {
-    using engine::Engine;
-    using engine::Logger;
+  using engine::Engine;
+  using engine::Logger;
 }
 
 auto main (int argc, char const * const * ppARgv) noexcept -> int {
 
-    Engine engine;
+  Engine const engine;
 
-
-    return 0;
+  return 0;
 }
