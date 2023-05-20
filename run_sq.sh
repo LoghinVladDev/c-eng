@@ -22,7 +22,7 @@ BW_GCOV="gcov"
 BW_GCOVR="gcovr"
 BW_LLVM_COV="$COMPILER_PATH_CLANG/llvm-cov"
 BW_LLVM_PROFDATA="$COMPILER_PATH_CLANG/llvm-profdata"
-SSCAN_TOKEN="sqp_5437b83fbbce119eaca835bd771b002bff6f562d"
+SSCAN_TOKEN="<enter_sq_token_here>"
 
 if [ -d "$BW_BUILD_DIR" ]; then
   rm -rf "$BW_BUILD_DIR"

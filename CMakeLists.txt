@@ -116,7 +116,6 @@ target_include_directories(
         src/engine_v6/src/variant_standalone
 )
 
-include(CTest)
 enable_testing()
 
 function(c_eng_test path name)
