@@ -7,6 +7,7 @@
 #include <source_location>
 #include <ostream>
 #include <format>
+#include <CDS/Array>
 
 namespace engine {
 namespace meta {
@@ -42,13 +43,20 @@ protected:
     //empty on purpose. Logging deactivated
   }
 
-  constexpr auto setOutput(std::ostream& out) noexcept -> void {
-    (void) out;
+  constexpr auto outputs() noexcept -> auto& {
+    return _emptyOutputs;
+  }
+
+  constexpr auto outputs() const noexcept -> auto const& {
+    return _emptyOutputs;
   }
 
   [[nodiscard]] constexpr auto name() const noexcept -> cds::StringView {
     return "";
   }
+
+private:
+  cds::Array <std::ostream*> _emptyOutputs;
 };
 
 template <>
@@ -63,13 +71,25 @@ public:
         addHeader();
     }
 
-    (*pBaseOut) << ifOptionProcess(std::forward <T> (logged));
+    for (auto* pOutput : _outputs) {
+      (*pOutput) << ifOptionProcess(std::forward<T>(logged));
+    }
     return * this;
   }
 
 protected:
-  LoggerBase (cds::String name, std::ostream & out) noexcept :
-      pBaseOut (&out),
+  template <typename Range>
+  LoggerBase (cds::String name, Range&& outputRange) noexcept :
+      _outputs (std::forward<Range>(outputRange)),
+      loggerName(std::move(name)) {}
+
+  template <typename RangeIt>
+  LoggerBase (cds::String name, RangeIt&& begin, RangeIt&& end) noexcept :
+      _outputs(std::forward<RangeIt>(begin), std::forward<RangeIt>(end)),
+      loggerName(std::move(name)) {}
+
+  LoggerBase (cds::String name, std::ostream& out) noexcept :
+      _outputs(1, &out),
       loggerName(std::move(name)) {}
 
   [[nodiscard]] constexpr auto name() const noexcept -> cds::StringView {
@@ -78,20 +98,26 @@ protected:
 
   constexpr auto startLogItem () noexcept -> void {
     if (isSet (Option::Start)) {
-        (*pBaseOut) << "\033[1;0m" << std::dec << std::endl;
-        clearFlags();
+      for (auto* pOutput : _outputs) {
+        (*pOutput) << "\033[1;0m" << std::dec << std::endl;
+      }
+      clearFlags();
     }
 
     flags &= ~levelMask;
     set(Option::Info);
   }
 
-  constexpr auto setOutput(std::ostream& out) noexcept -> void {
-    pBaseOut = &out;
+  constexpr auto outputs() noexcept-> auto& {
+    return _outputs;
+  }
+
+  constexpr auto outputs() const noexcept-> auto const& {
+    return _outputs;
   }
 
 private:
-  std::ostream * pBaseOut;
+  cds::Array<std::ostream*> _outputs;
   cds::String loggerName;
   cds::uint32 flags = defaultFlags;
 
@@ -173,14 +199,14 @@ public:
   using meta::LoggerBase <>::Option::Info;
 
   using meta::LoggerBase <>::name;
-  using meta::LoggerBase <>::setOutput;
+  using meta::LoggerBase <>::outputs;
 
   constexpr auto endl () noexcept -> Logger & {
     Base::startLogItem();
     return * this;
   }
 };
-}
+} // namespace meta
 
 class Logger : protected meta::Logger {
 public:
@@ -189,7 +215,7 @@ public:
   using meta::Logger::Debug;
   using meta::Logger::Error;
   using meta::Logger::name;
-  using meta::Logger::setOutput;
+  using meta::Logger::outputs;
 
   constexpr auto operator () () noexcept -> meta::Logger& {
     return this->endl();
@@ -198,6 +224,28 @@ public:
   constexpr static auto here (std::source_location const & location = std::source_location::current())
       noexcept -> std::source_location {
     return location;
+  }
+
+  template <typename...Outputs> requires (
+      sizeof...(Outputs) > 1 &&
+      cds::meta::All <cds::meta::Bind <cds::meta::IsConvertible, cds::meta::Ph<1>, std::ostream&>::Type, cds::meta::AddLValueReference<Outputs>...>::value
+  ) static auto getLogger (cds::StringView name, Outputs&... outputs) noexcept -> Logger& {
+    auto& logger = getLogger(name);
+    auto& loggerOutputs = logger.outputs();
+    loggerOutputs.clear();
+    loggerOutputs.insertAll(&outputs...);
+    return logger;
+  }
+
+  template <typename...Outputs> requires (
+      sizeof...(Outputs) > 1 &&
+      cds::meta::All <cds::meta::Bind <cds::meta::IsConvertible, cds::meta::Ph<1>, std::ostream&>::Type, cds::meta::AddLValueReference<Outputs>...>::value
+  ) static auto getLogger (Outputs&... outputs) noexcept -> Logger {
+    auto logger = getLogger();
+    auto& loggerOutputs = logger.outputs();
+    loggerOutputs.clear();
+    loggerOutputs.insertAll(&outputs...);
+    return logger;
   }
 
   static auto getLogger (cds::StringView name, std::ostream& out) noexcept -> Logger&;
@@ -210,4 +258,4 @@ public:
 private:
   using meta::Logger::Logger;
 };
-}
+} // namespace engine

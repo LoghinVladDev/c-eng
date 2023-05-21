@@ -119,11 +119,12 @@ target_include_directories(
 enable_testing()
 
 function(c_eng_test path name)
+    file(GLOB ${name}_src "src/engine_v6/test/${path}/${name}/*.cpp")
     add_executable(
             TestBinary.${name}
             ${C_ENG_SRC_BASE}
             src/engine_v6/test/Test.hpp
-            src/engine_v6/test/${path}/${name}/Test.cpp
+            ${${name}_src}
     )
     target_include_directories(
             TestBinary.${name} PRIVATE
@@ -137,7 +138,9 @@ endfunction()
 
 c_eng_test(base LoggerDisabled)
 c_eng_test(base LoggerDisabled.Naming)
+c_eng_test(base LoggerDisabled.MultiOut)
 c_eng_test(base LoggerEnabled)
 c_eng_test(base LoggerEnabled.Naming)
+c_eng_test(base LoggerEnabled.MultiOut)
 c_eng_test(base Object.Hierarchy)
 

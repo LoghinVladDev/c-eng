@@ -88,13 +88,19 @@ auto LoggerBase<true>::addHeader () noexcept -> void {
     }
   };
 
-  (*pBaseOut) <<
-      colorHeader() <<
-      "[time = " << timestamp() << "]"
-      "[logger = " << loggerName << "]"
-      "[level = " << levelAsStr () << "]"
-      "[thread = 0x" << std::hex << cds::Thread::currentThreadID() << "]"
-      " -> " << std::dec;
+  auto const lTimestamp = timestamp();
+  auto const lLevelAsStr = levelAsStr();
+  auto const lCurrentThreadId = cds::Thread::currentThreadID();
+
+  for (auto* pOutput : outputs()) {
+    (*pOutput) <<
+        colorHeader() <<
+        "[time = " << lTimestamp << "]"
+        "[logger = " << loggerName << "]"
+        "[level = " << lLevelAsStr << "]"
+        "[thread = 0x" << std::hex << lCurrentThreadId << "]"
+        " -> " << std::dec;
+  }
 }
 } // namespace meta
 
