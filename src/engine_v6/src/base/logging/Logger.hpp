@@ -8,22 +8,58 @@
 #include <ostream>
 #include <format>
 #include <CDS/Array>
+#include <lang/FlagEnum.hpp>
 
 namespace engine {
 namespace meta {
 class LoggerBaseCommon {
 public:
   enum class Option {
-      None    = 0x00000000,
-      Start   = 0x00000001,
+    None = 0x00000000,
+    Start = 0x00000001,
 
-      Error   = 0x00000002,
-      Warning = 0x00000004,
-      Debug   = 0x00000008,
-      Info    = 0x00000010
+    Error = 0x00000002,
+    Warning = 0x00000004,
+    Debug = 0x00000008,
+    Info = 0x00000010
   };
+
+  using OptionFlags = std::underlying_type_t<Option>;
 };
 
+template<>
+struct FlagEnum<LoggerBaseCommon::Option> : cds::meta::TrueType {
+  using FlagsType = LoggerBaseCommon::OptionFlags;
+};
+}
+
+class LoggerOutput : private meta::LoggerBaseCommon {
+public:
+  static constexpr auto const allowInfo    = meta::LoggerBaseCommon::Option::Info;
+  static constexpr auto const allowWarning = meta::LoggerBaseCommon::Option::Warning;
+  static constexpr auto const allowDebug   = meta::LoggerBaseCommon::Option::Debug;
+  static constexpr auto const allowError   = meta::LoggerBaseCommon::Option::Error;
+  static constexpr auto const allowAll     = allowInfo | allowWarning | allowDebug | allowError;
+
+  explicit(false) LoggerOutput(std::ostream& output, OptionFlags filterFlags = allowAll) noexcept :
+      pOutput(&output),
+      filter(filterFlags & mask) {}
+
+  constexpr auto output() noexcept -> std::ostream& {
+    return *pOutput;
+  }
+
+  constexpr auto allows(OptionFlags option) const noexcept -> bool {
+    return (filter & option & mask) != 0u;
+  }
+
+private:
+  std::ostream* pOutput;
+  OptionFlags filter;
+  static constexpr auto const mask = allowAll;
+};
+
+namespace meta {
 template <bool = config::value <config::ParameterType::LoggingEnabled>>
 class LoggerBase : public LoggerBaseCommon {
 public:
@@ -34,7 +70,7 @@ public:
   }
 
 protected:
-  LoggerBase (cds::String const& name, std::ostream & out) noexcept {
+  LoggerBase (cds::String const& name, LoggerOutput out) noexcept {
     (void) out;
     (void) name;
   }
@@ -56,7 +92,7 @@ protected:
   }
 
 private:
-  cds::Array <std::ostream*> _emptyOutputs;
+  cds::Array <LoggerOutput> _emptyOutputs;
 };
 
 template <>
@@ -71,8 +107,10 @@ public:
         addHeader();
     }
 
-    for (auto* pOutput : _outputs) {
-      (*pOutput) << ifOptionProcess(std::forward<T>(logged));
+    for (auto output : _outputs) {
+      if (output.allows(flags)) {
+        (output.output()) << ifOptionProcess(std::forward<T>(logged));
+      }
     }
     return * this;
   }
@@ -88,8 +126,8 @@ protected:
       _outputs(std::forward<RangeIt>(begin), std::forward<RangeIt>(end)),
       loggerName(std::move(name)) {}
 
-  LoggerBase (cds::String name, std::ostream& out) noexcept :
-      _outputs(1, &out),
+  LoggerBase (cds::String name, LoggerOutput output) noexcept :
+      _outputs(1, output),
       loggerName(std::move(name)) {}
 
   [[nodiscard]] constexpr auto name() const noexcept -> cds::StringView {
@@ -98,8 +136,8 @@ protected:
 
   constexpr auto startLogItem () noexcept -> void {
     if (isSet (Option::Start)) {
-      for (auto* pOutput : _outputs) {
-        (*pOutput) << "\033[1;0m" << std::dec << std::endl;
+      for (auto& output : _outputs) {
+        output.output() << "\033[1;0m" << std::dec << std::endl;
       }
       clearFlags();
     }
@@ -112,22 +150,22 @@ protected:
     return _outputs;
   }
 
-  constexpr auto outputs() const noexcept-> auto const& {
+  [[nodiscard]] constexpr auto outputs() const noexcept-> auto const& {
     return _outputs;
   }
 
 private:
-  cds::Array<std::ostream*> _outputs;
+  cds::Array<LoggerOutput> _outputs;
   cds::String loggerName;
-  cds::uint32 flags = defaultFlags;
+  OptionFlags flags = defaultFlags;
 
-  constexpr static cds::uint32 const levelMask =
-      static_cast <cds::uint32> (Option::Debug)   |
-      static_cast <cds::uint32> (Option::Warning) |
-      static_cast <cds::uint32> (Option::Error)   |
-      static_cast <cds::uint32> (Option::Info);
+  constexpr static auto const levelMask =
+      Option::Debug   |
+      Option::Warning |
+      Option::Error   |
+      Option::Info;
 
-  constexpr static cds::uint32 const defaultFlags = static_cast <cds::uint32> (Option::Info);
+  constexpr static OptionFlags const defaultFlags = static_cast<OptionFlags>(Option::Info);
 
   auto addHeader () noexcept -> void;
   [[nodiscard]] constexpr auto levelAsStr () const noexcept -> cds::StringLiteral {
@@ -143,15 +181,15 @@ private:
   }
 
   [[nodiscard]] constexpr auto isSet (Option option) const noexcept -> bool {
-    return (flags & static_cast <cds::uint32> (option)) != 0U;
+    return (flags & option) != 0U;
   }
 
   constexpr auto set (Option option) noexcept -> void {
-    if (auto const asFlag = static_cast <cds::uint32> (option); (levelMask & asFlag) != 0U) {
+    if ((levelMask & option) != 0U) {
       flags &= ~ levelMask;
     }
 
-    flags |= static_cast <cds::uint32> (option);
+    flags |= option;
   }
 
   constexpr auto clearFlags () noexcept -> void { flags = defaultFlags; }
@@ -228,29 +266,29 @@ public:
 
   template <typename...Outputs> requires (
       sizeof...(Outputs) > 1 &&
-      cds::meta::All <cds::meta::Bind <cds::meta::IsConvertible, cds::meta::Ph<1>, std::ostream&>::Type, cds::meta::AddLValueReference<Outputs>...>::value
-  ) static auto getLogger (cds::StringView name, Outputs&... outputs) noexcept -> Logger& {
+      cds::meta::All <cds::meta::Bind <cds::meta::IsConvertible, cds::meta::Ph<1>, LoggerOutput>::Type, Outputs...>::value
+  ) static auto getLogger (cds::StringView name, Outputs&&... outputs) noexcept -> Logger& {
     auto& logger = getLogger(name);
     auto& loggerOutputs = logger.outputs();
     loggerOutputs.clear();
-    loggerOutputs.insertAll(&outputs...);
+    loggerOutputs.insertAll(std::forward<Outputs>(outputs)...);
     return logger;
   }
 
   template <typename...Outputs> requires (
       sizeof...(Outputs) > 1 &&
-      cds::meta::All <cds::meta::Bind <cds::meta::IsConvertible, cds::meta::Ph<1>, std::ostream&>::Type, cds::meta::AddLValueReference<Outputs>...>::value
-  ) static auto getLogger (Outputs&... outputs) noexcept -> Logger {
+      cds::meta::All <cds::meta::Bind <cds::meta::IsConvertible, cds::meta::Ph<1>, LoggerOutput>::Type, Outputs...>::value
+  ) static auto getLogger (Outputs&&... outputs) noexcept -> Logger {
     auto logger = getLogger();
     auto& loggerOutputs = logger.outputs();
     loggerOutputs.clear();
-    loggerOutputs.insertAll(&outputs...);
+    loggerOutputs.insertAll(std::forward<Outputs>(outputs)...);
     return logger;
   }
 
-  static auto getLogger (cds::StringView name, std::ostream& out) noexcept -> Logger&;
+  static auto getLogger (cds::StringView name, LoggerOutput out) noexcept -> Logger&;
   static auto getLogger (cds::StringView name) noexcept -> Logger&;
-  static auto getLogger (std::ostream& out) noexcept -> Logger;
+  static auto getLogger (LoggerOutput out) noexcept -> Logger;
   static auto getLogger () noexcept -> Logger;
 
   static auto setDefaultLoggerOutput (std::ostream& out) noexcept -> void;

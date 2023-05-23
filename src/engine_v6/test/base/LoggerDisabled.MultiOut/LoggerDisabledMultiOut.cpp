@@ -94,10 +94,6 @@ TEST(LoggerDisabledMultiOut, levelSwitch) {
   std::stringstream().swap(outbuf1);
   std::stringstream().swap(outbuf2);
   logger() << engine::Logger::Warning;
-  ASSERT_FALSE(outbuf1.str().find(("Warning")) != std::string::npos);
-  ASSERT_FALSE(outbuf1.str().find(("12345678")) != std::string::npos);
-  ASSERT_FALSE(outbuf2.str().find(("Warning")) != std::string::npos);
-  ASSERT_FALSE(outbuf2.str().find(("12345678")) != std::string::npos);
   logger() << 12345678;
   ASSERT_FALSE(outbuf1.str().find(("Warning")) != std::string::npos);
   ASSERT_FALSE(outbuf1.str().find(("Info")) != std::string::npos);

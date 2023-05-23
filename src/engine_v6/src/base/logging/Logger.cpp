@@ -24,10 +24,11 @@ namespace {
 
     auto timePoint = sys_clock::now();
     auto asTimeT = sys_clock::to_time_t(timePoint);
-    auto * timeInfo = std::localtime (& asTimeT);
+    tm timeInfo;
+    localtime_r (& asTimeT, &timeInfo);
 
     string asString (timeBufferSize, '\0');
-    asString.resize(std::strftime (asString.data(), timeBufferSize, "%d-%m-%Y", timeInfo));
+    asString.resize(std::strftime (asString.data(), timeBufferSize, "%d-%m-%Y", &timeInfo));
     asString.resize(asString.length());
 
     return asString;
@@ -92,14 +93,16 @@ auto LoggerBase<true>::addHeader () noexcept -> void {
   auto const lLevelAsStr = levelAsStr();
   auto const lCurrentThreadId = cds::Thread::currentThreadID();
 
-  for (auto* pOutput : outputs()) {
-    (*pOutput) <<
-        colorHeader() <<
-        "[time = " << lTimestamp << "]"
-        "[logger = " << loggerName << "]"
-        "[level = " << lLevelAsStr << "]"
-        "[thread = 0x" << std::hex << lCurrentThreadId << "]"
-        " -> " << std::dec;
+  for (auto output : outputs()) {
+    if (output.allows(flags)) {
+      output.output() <<
+          colorHeader() <<
+          "[time = " << lTimestamp << "]"
+          "[logger = " << loggerName << "]"
+          "[level = " << lLevelAsStr << "]"
+          "[thread = 0x" << std::hex << lCurrentThreadId << "]"
+          " -> " << std::dec;
+    }
   }
 }
 } // namespace meta
@@ -108,18 +111,18 @@ namespace {
 LoggerContainer container;
 }
 
-auto Logger::getLogger(StringView name, std::ostream& out) noexcept -> Logger& {
-  static auto persistentDisabledLogger = Logger {"anonymous_logger", std::cout};
+auto Logger::getLogger(StringView name, LoggerOutput out) noexcept -> Logger& {
+  static auto persistentDisabledLogger = Logger {"anonymous_logger", {std::cout}};
   auto loggerHint = Logger {name, out};
   return container.getLoggerHint(std::move(loggerHint), persistentDisabledLogger);
 }
 
 auto Logger::getLogger(StringView name) noexcept -> Logger& {
-  return getLogger(name, container.defaultOut());
+  return getLogger(name, {container.defaultOut()});
 }
 
-auto Logger::getLogger(std::ostream& out) noexcept -> Logger {
-  return {"anonymous_logger", out};
+auto Logger::getLogger(LoggerOutput out) noexcept -> Logger {
+  return {"anonymous_logger", {out}};
 }
 
 auto Logger::getLogger() noexcept -> Logger {
