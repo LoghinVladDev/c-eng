@@ -11,10 +11,7 @@
 #include <CDS/threading/Thread>
 #include <source_location>
 #include "core/Object.hpp"
-
-namespace {
-using engine::Logger;
-}
+#include "../shared/LoggerShared.hpp"
 
 TEST(LoggerEnabledNaming, Anonymous) {
   std::stringstream outbuf1;
@@ -46,8 +43,8 @@ TEST(LoggerEnabledNamic, Named) {
   auto logger2 = Logger::getLogger("logger2", outbuf2);
   auto& logger3 = Logger::getLogger("logger1");
   auto logger4 = Logger::getLogger("logger1", outbuf3);
-  auto& logger5 = Logger::getLogger("test");
-  auto& logger6 = Logger::getLogger("test2", std::cout);
+  auto const& logger5 = Logger::getLogger("test");
+  auto const& logger6 = Logger::getLogger("test2", std::cout);
 
   ASSERT_NE(&logger1, &logger2);
   ASSERT_EQ(&logger1, &logger3);

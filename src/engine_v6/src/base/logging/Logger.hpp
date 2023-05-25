@@ -45,6 +45,10 @@ public:
       pOutput(&output),
       filter(filterFlags & mask) {}
 
+  explicit(false) LoggerOutput(std::ostream& output, Option filterLevel) noexcept :
+      pOutput(&output),
+      filter(static_cast<OptionFlags>(filterLevel) & mask) {}
+
   constexpr auto output() noexcept -> std::ostream& {
     return *pOutput;
   }
@@ -89,6 +93,11 @@ protected:
 
   [[nodiscard]] constexpr auto name() const noexcept -> cds::StringView {
     return "";
+  }
+
+  using Level = Option;
+  constexpr auto setDefaultLevel(Level level) noexcept -> void {
+    (void) level;
   }
 
 private:
@@ -143,7 +152,7 @@ protected:
     }
 
     flags &= ~levelMask;
-    set(Option::Info);
+    set(defaultLevel);
   }
 
   constexpr auto outputs() noexcept-> auto& {
@@ -154,18 +163,25 @@ protected:
     return _outputs;
   }
 
+  using Level = Option;
+  constexpr auto setDefaultLevel(Level level) noexcept -> void {
+    if ((level & levelMask) != 0u) {
+      defaultLevel = level;
+      flags = static_cast<OptionFlags>(defaultLevel);
+    }
+  }
+
 private:
   cds::Array<LoggerOutput> _outputs;
   cds::String loggerName;
-  OptionFlags flags = defaultFlags;
+  Option defaultLevel = Option::Info;
+  OptionFlags flags = static_cast<OptionFlags>(defaultLevel);
 
   constexpr static auto const levelMask =
       Option::Debug   |
       Option::Warning |
       Option::Error   |
       Option::Info;
-
-  constexpr static OptionFlags const defaultFlags = static_cast<OptionFlags>(Option::Info);
 
   auto addHeader () noexcept -> void;
   [[nodiscard]] constexpr auto levelAsStr () const noexcept -> cds::StringLiteral {
@@ -192,7 +208,7 @@ private:
     flags |= option;
   }
 
-  constexpr auto clearFlags () noexcept -> void { flags = defaultFlags; }
+  constexpr auto clearFlags () noexcept -> void { flags = static_cast<OptionFlags>(defaultLevel); }
 
   template <typename T>
   constexpr static auto ifOptionThen (T && obj) noexcept -> Option {
@@ -254,6 +270,7 @@ public:
   using meta::Logger::Error;
   using meta::Logger::name;
   using meta::Logger::outputs;
+  using meta::Logger::setDefaultLevel;
 
   constexpr auto operator () () noexcept -> meta::Logger& {
     return this->endl();

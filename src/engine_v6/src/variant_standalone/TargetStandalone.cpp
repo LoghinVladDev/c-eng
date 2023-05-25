@@ -9,6 +9,8 @@ namespace {
 auto main (int argc, char const * const * ppARgv) noexcept -> int {
 
   Engine const engine;
+  auto logger = Logger::getLogger();
+
 
   return 0;
 }

@@ -100,7 +100,7 @@ set(
         C_ENG_SRC_VARIANT_STANDALONE
         src/engine_v6/src/variant_standalone/TargetStandalone.cpp
         src/engine_v6/src/variant_standalone/TargetConfig.hpp
-)
+        src/engine_v6/test/base/shared/LoggerShared.hpp)
 
 add_executable(
         standalone
@@ -139,8 +139,10 @@ endfunction()
 c_eng_test(base LoggerDisabled)
 c_eng_test(base LoggerDisabled.Naming)
 c_eng_test(base LoggerDisabled.MultiOut)
+c_eng_test(base LoggerDisabled.Filter)
 c_eng_test(base LoggerEnabled)
 c_eng_test(base LoggerEnabled.Naming)
 c_eng_test(base LoggerEnabled.MultiOut)
+c_eng_test(base LoggerEnabled.Filter)
 c_eng_test(base Object.Hierarchy)
 

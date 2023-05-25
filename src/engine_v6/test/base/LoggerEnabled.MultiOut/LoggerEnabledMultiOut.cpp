@@ -8,25 +8,8 @@
 #include <string>
 #include <CDS/Long>
 #include <CDS/threading/Thread>
-#include <source_location>
+#include "../shared/LoggerShared.hpp"
 
-namespace {
-using engine::Logger;
-
-auto date() noexcept {
-  int const timeBufferSize = 512U;
-  using sys_clock = std::chrono::system_clock;
-
-  auto timePoint = sys_clock::now();
-  auto asTimeT = sys_clock::to_time_t(timePoint);
-  auto * timeInfo = std::localtime (& asTimeT);
-
-  std::string asString (timeBufferSize, '\0');
-  asString.resize(std::strftime (asString.data(), timeBufferSize, "%d-%m-%Y", timeInfo));
-
-  return asString;
-}
-}
 
 TEST(LoggerEnabledMultiOut, basic) {
   std::stringstream outbuf1;

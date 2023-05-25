@@ -8,36 +8,19 @@
 #include <string>
 #include <CDS/Long>
 #include <CDS/threading/Thread>
-#include <source_location>
+#include "../shared/LoggerShared.hpp"
 
-namespace {
-using engine::Logger;
-
-auto date() noexcept {
-  int const timeBufferSize = 512U;
-  using sys_clock = std::chrono::system_clock;
-
-  auto timePoint = sys_clock::now();
-  auto asTimeT = sys_clock::to_time_t(timePoint);
-  auto * timeInfo = std::localtime (& asTimeT);
-
-  std::string asString (timeBufferSize, '\0');
-  asString.resize(std::strftime (asString.data(), timeBufferSize, "%d-%m-%Y", timeInfo));
-
-  return asString;
-}
-}
 
 TEST(LoggerEnabled, basicOut) {
   std::stringstream outbuf;
   auto logger = Logger::getLogger(outbuf);
 
   logger() << "basic string output, followed by numeric: " << 123 << std::hex << 15 << std::dec << 24;
-  ASSERT_TRUE(outbuf.str().find(date()) != std::string::npos);
-  ASSERT_TRUE(outbuf.str().find(("level = Info")) != std::string::npos);
+  ASSERT_TRUE(outbuf.str().find(date()) != npos);
+  ASSERT_TRUE(outbuf.str().find(("level = Info")) != npos);
   ASSERT_TRUE(outbuf.str().find(("thread = 0x" + cds::Long(
-    static_cast<cds::sint64>(cds::Thread::currentThreadID())).toString(16)).cStr()) != std::string::npos);
-  ASSERT_TRUE(outbuf.str().find(("basic string output, followed by numeric: 123f24")) != std::string::npos);
+    static_cast<cds::sint64>(cds::Thread::currentThreadID())).toString(16)).cStr()) != npos);
+  ASSERT_TRUE(outbuf.str().find(("basic string output, followed by numeric: 123f24")) != npos);
 }
 
 TEST(LoggerEnabled, levelSwitch) {
@@ -46,47 +29,47 @@ TEST(LoggerEnabled, levelSwitch) {
 
   std::stringstream().swap(outbuf);
   logger() << 12345678;
-  ASSERT_TRUE(outbuf.str().find(("Info")) != std::string::npos);
-  ASSERT_TRUE(outbuf.str().find(("12345678")) != std::string::npos);
-  ASSERT_FALSE(outbuf.str().find(("Warning")) != std::string::npos);
+  ASSERT_TRUE(outbuf.str().find(("Info")) != npos);
+  ASSERT_TRUE(outbuf.str().find(("12345678")) != npos);
+  ASSERT_FALSE(outbuf.str().find(("Warning")) != npos);
 
   std::stringstream().swap(outbuf);
   logger() << engine::Logger::Warning << 12345678;
-  ASSERT_TRUE(outbuf.str().find(("Warning")) != std::string::npos);
-  ASSERT_TRUE(outbuf.str().find(("12345678")) != std::string::npos);
-  ASSERT_FALSE(outbuf.str().find(("Info")) != std::string::npos);
+  ASSERT_TRUE(outbuf.str().find(("Warning")) != npos);
+  ASSERT_TRUE(outbuf.str().find(("12345678")) != npos);
+  ASSERT_FALSE(outbuf.str().find(("Info")) != npos);
 
   std::stringstream().swap(outbuf);
   logger() << engine::Logger::Error << 12345678;
-  ASSERT_TRUE(outbuf.str().find(("Error")) != std::string::npos);
-  ASSERT_TRUE(outbuf.str().find(("12345678")) != std::string::npos);
-  ASSERT_FALSE(outbuf.str().find(("Info")) != std::string::npos);
+  ASSERT_TRUE(outbuf.str().find(("Error")) != npos);
+  ASSERT_TRUE(outbuf.str().find(("12345678")) != npos);
+  ASSERT_FALSE(outbuf.str().find(("Info")) != npos);
 
   std::stringstream().swap(outbuf);
   logger() << engine::Logger::Debug << 12345678;
-  ASSERT_TRUE(outbuf.str().find(("Debug")) != std::string::npos);
-  ASSERT_TRUE(outbuf.str().find(("12345678")) != std::string::npos);
-  ASSERT_FALSE(outbuf.str().find(("Info")) != std::string::npos);
+  ASSERT_TRUE(outbuf.str().find(("Debug")) != npos);
+  ASSERT_TRUE(outbuf.str().find(("12345678")) != npos);
+  ASSERT_FALSE(outbuf.str().find(("Info")) != npos);
 
   std::stringstream().swap(outbuf);
   logger() << engine::Logger::Warning;
-  ASSERT_FALSE(outbuf.str().find(("Warning")) != std::string::npos);
-  ASSERT_FALSE(outbuf.str().find(("12345678")) != std::string::npos);
+  ASSERT_FALSE(outbuf.str().find(("Warning")) != npos);
+  ASSERT_FALSE(outbuf.str().find(("12345678")) != npos);
   logger() << 12345678;
-  ASSERT_FALSE(outbuf.str().find(("Warning")) != std::string::npos);
-  ASSERT_TRUE(outbuf.str().find(("Info")) != std::string::npos);
-  ASSERT_TRUE(outbuf.str().find(("12345678")) != std::string::npos);
+  ASSERT_FALSE(outbuf.str().find(("Warning")) != npos);
+  ASSERT_TRUE(outbuf.str().find(("Info")) != npos);
+  ASSERT_TRUE(outbuf.str().find(("12345678")) != npos);
 
   std::stringstream().swap(outbuf);
   logger() << engine::Logger::Warning << "23456789";
-  ASSERT_TRUE(outbuf.str().find(("Warning")) != std::string::npos);
-  ASSERT_FALSE(outbuf.str().find(("12345678")) != std::string::npos);
-  ASSERT_TRUE(outbuf.str().find(("23456789")) != std::string::npos);
+  ASSERT_TRUE(outbuf.str().find(("Warning")) != npos);
+  ASSERT_FALSE(outbuf.str().find(("12345678")) != npos);
+  ASSERT_TRUE(outbuf.str().find(("23456789")) != npos);
   std::stringstream().swap(outbuf);
   logger() << 12345678;
-  ASSERT_FALSE(outbuf.str().find(("Warning")) != std::string::npos);
-  ASSERT_TRUE(outbuf.str().find(("Info")) != std::string::npos);
-  ASSERT_TRUE(outbuf.str().find(("12345678")) != std::string::npos);
+  ASSERT_FALSE(outbuf.str().find(("Warning")) != npos);
+  ASSERT_TRUE(outbuf.str().find(("Info")) != npos);
+  ASSERT_TRUE(outbuf.str().find(("12345678")) != npos);
 }
 
 TEST(LoggerEnabled, colorSwitch) {
@@ -95,9 +78,9 @@ TEST(LoggerEnabled, colorSwitch) {
 
   std::stringstream().swap(outbuf);
   logger() << engine::Logger::Warning << 1234;
-  ASSERT_TRUE(outbuf.str().find(("\033[1;33m")) != std::string::npos);
+  ASSERT_TRUE(outbuf.str().find(("\033[1;33m")) != npos);
   logger() << 1234;
-  ASSERT_TRUE(outbuf.str().find(("\033[1;0m")) != std::string::npos);
+  ASSERT_TRUE(outbuf.str().find(("\033[1;0m")) != npos);
 }
 
 TEST(LoggerEnabled, sourceLocation) {
@@ -107,7 +90,7 @@ TEST(LoggerEnabled, sourceLocation) {
   logger() << engine::Logger::here(); auto loc = std::source_location::current();
   ASSERT_TRUE(
     outbuf.str().find(std::string() + loc.file_name() + ":" + std::to_string(loc.line())) !=
-    std::string::npos
+    npos
   );
 }
 
@@ -121,6 +104,23 @@ TEST(LoggerEnabled, defaultOut) {
   Logger::setDefaultLoggerOutput(outbuf);
   auto strLogger = Logger::getLogger();
   strLogger() << "test";
-  ASSERT_TRUE(outbuf.str().find("test") != std::string::npos);
+  ASSERT_TRUE(outbuf.str().find("test") != npos);
 }
 
+TEST(LoggerEnabled, overlappingLevel) {
+  std::stringstream outbuf;
+  auto logger = Logger::getLogger(outbuf);
+  logger() << Logger::Warning << "test1" << Logger::Error << "test2";
+  ASSERT_TRUE(outbuf.str().find("\033[1;33m") != npos);
+  ASSERT_FALSE(outbuf.str().find("\033[1;31m") != npos);
+}
+
+TEST(LoggerEnabled, defaultLevel) {
+  std::stringstream outbuf;
+  auto logger = Logger::getLogger(outbuf);
+
+  logger.setDefaultLevel(Logger::Error);
+  logger() << "test";
+  ASSERT_TRUE(outbuf.str().find("Error") != npos);
+  ASSERT_TRUE(outbuf.str().find("\033[1;31m") != npos);
+}

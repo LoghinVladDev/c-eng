@@ -9,12 +9,8 @@
 #include <string>
 #include <CDS/Long>
 #include <CDS/threading/Thread>
-#include <source_location>
-#include "core/Object.hpp"
+#include "../shared/LoggerShared.hpp"
 
-namespace {
-using engine::Logger;
-}
 
 TEST(LoggerEnabledNaming, Anonymous) {
   std::stringstream outbuf1;
