@@ -13,7 +13,6 @@ public:
     return pParent;
   }
 
-protected:
   explicit constexpr Object (Object* pParent = nullptr) noexcept : pParent (pParent) {}
 
 private:

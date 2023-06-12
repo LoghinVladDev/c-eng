@@ -7,6 +7,7 @@
 #include <chrono>
 #include <CDS/threading/Thread>
 #include <CDS/TreeMap>
+#include <CDS/memory/UniquePointer>
 
 namespace {
   using std::stringstream;
@@ -50,7 +51,14 @@ public:
   }
 
   constexpr auto defaultOut() noexcept -> std::ostream& {
+    if (pDefaultOut == nullptr) {
+      setDefaultOut(std::cout);
+    }
     return *pDefaultOut;
+  }
+
+  ~LoggerContainer() noexcept {
+    std::cout << "wtf\n";
   }
 
 private:
@@ -108,17 +116,21 @@ auto LoggerBase<true>::addHeader () noexcept -> void {
 } // namespace meta
 
 namespace {
-LoggerContainer container;
+cds::UniquePointer <LoggerContainer <>> p;
+auto container() noexcept -> auto& {
+  if(!p) {p = new LoggerContainer;}
+  return *p;
+}
 }
 
 auto Logger::getLogger(StringView name, LoggerOutput out) noexcept -> Logger& {
   static auto persistentDisabledLogger = Logger {"anonymous_logger", {std::cout}};
   auto loggerHint = Logger {name, out};
-  return container.getLoggerHint(std::move(loggerHint), persistentDisabledLogger);
+  return container().getLoggerHint(std::move(loggerHint), persistentDisabledLogger);
 }
 
 auto Logger::getLogger(StringView name) noexcept -> Logger& {
-  return getLogger(name, {container.defaultOut()});
+  return getLogger(name, {container().defaultOut()});
 }
 
 auto Logger::getLogger(LoggerOutput out) noexcept -> Logger {
@@ -126,10 +138,10 @@ auto Logger::getLogger(LoggerOutput out) noexcept -> Logger {
 }
 
 auto Logger::getLogger() noexcept -> Logger {
-  return getLogger(container.defaultOut());
+  return getLogger(container().defaultOut());
 }
 
 auto Logger::setDefaultLoggerOutput(std::ostream& out) noexcept -> void {
-  container.setDefaultOut(out);
+  container().setDefaultOut(out);
 }
 } // namespace engine

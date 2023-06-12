@@ -9,6 +9,7 @@
 #include <CDS/Array>
 #include <CDS/String>
 #include <source_location>
+#include <CDS/exception/RuntimeException>
 
 #define TEST(instance, name) \
 namespace testing {          \
@@ -47,10 +48,10 @@ auto testing::TI ## instance ## name :: run() const noexcept(false) -> void
   ((left)<(right)) ? _noassert() : _assert("Expected " #left " < " #right)
 
 namespace testing {
-class TestAssert : public cds::Exception {
+class TestAssert : public cds::RuntimeException {
 public:
   TestAssert(cds::String const& reason, cds::String const& tName, std::source_location const& location) noexcept:
-      Exception (
+      RuntimeException (
           cds::String() + location.file_name() + ":" + location.line() + " Assertion failed in test " +
           tName + ": " + reason
       ) {
@@ -86,9 +87,9 @@ auto Test::start() const noexcept -> bool {
   bool status = true;
   try {
     run();
-    std::cout << "\033[1;32mTest " << _instance << " " << _name << " ran successfully\n";
+    std::cout << "\n\033[1;32mTest " << _instance << " " << _name << " ran successfully\n";
   } catch (TestAssert const & assert) {
-    std::cout << "\033[1;31mTest " << _instance << " " << _name << " failed\n";
+    std::cout << "\n\033[1;31mTest " << _instance << " " << _name << " failed\n";
     std::cout << "  " << assert.message() << '\n';
     status = false;
   }

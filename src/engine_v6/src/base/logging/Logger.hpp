@@ -167,7 +167,9 @@ protected:
   constexpr auto setDefaultLevel(Level level) noexcept -> void {
     if ((level & levelMask) != 0u) {
       defaultLevel = level;
-      flags = static_cast<OptionFlags>(defaultLevel);
+      flags =
+          (flags & (~levelMask)) |
+          static_cast<OptionFlags>(defaultLevel);
     }
   }
 

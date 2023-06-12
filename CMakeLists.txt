@@ -86,21 +86,17 @@ endif()
 set (CMAKE_EXPORT_COMPILE_COMMANDS 1)
 
 set(
-        C_ENG_SRC_BASE_LOGGING
-        src/engine_v6/src/base/logging/Logger.cpp
-        src/engine_v6/src/base/logging/Logger.hpp
-)
-
-set(
-        C_ENG_SRC_BASE
-        ${C_ENG_SRC_BASE_LOGGING}
-)
-
-set(
         C_ENG_SRC_VARIANT_STANDALONE
         src/engine_v6/src/variant_standalone/TargetStandalone.cpp
         src/engine_v6/src/variant_standalone/TargetConfig.hpp
         src/engine_v6/test/base/shared/LoggerShared.hpp)
+
+file(
+        GLOB
+        C_ENG_SRC_BASE
+        "src/engine_v6/src/base/**/*.cpp"
+        "src/engine_v6/src/base/*.cpp"
+)
 
 add_executable(
         standalone
@@ -136,6 +132,7 @@ function(c_eng_test path name)
     add_test(NAME Test.${name} COMMAND $<TARGET_FILE:TestBinary.${name}>)
 endfunction()
 
+c_eng_test(base Engine)
 c_eng_test(base LoggerDisabled)
 c_eng_test(base LoggerDisabled.Naming)
 c_eng_test(base LoggerDisabled.MultiOut)
