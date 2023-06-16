@@ -34,7 +34,7 @@ TEST(LoggerEnabledNaming, Anonymous) {
   ASSERT_TRUE(outbuf2.str().find(("other")) != std::string::npos);
 }
 
-TEST(LoggerEnabledNamic, Named) {
+TEST(LoggerEnabledNaming, Named) {
   std::stringstream outbuf1;
   std::stringstream outbuf2;
   std::stringstream outbuf3;
@@ -63,4 +63,9 @@ TEST(LoggerEnabledNamic, Named) {
   ASSERT_FALSE(outbuf2.str().find(("yet one more")) != std::string::npos);
   ASSERT_FALSE(outbuf2.str().find(("final test")) != std::string::npos);
   ASSERT_TRUE(outbuf3.str().empty());
+}
+
+TEST(LoggerEnabledNaming, Acq) {
+  auto const& logger = Logger::getLogger("testLog");
+  ASSERT_EQ(logger.name(), "testLog");
 }

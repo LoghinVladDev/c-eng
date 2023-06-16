@@ -133,3 +133,16 @@ TEST(LoggerEnabledMultiOut, isolation) {
   ASSERT_FALSE(outbuf2.str().find("test") != std::string::npos);
 }
 
+TEST(LoggerEnabledMultiOut, constOutputs) {
+  std::stringstream sb1;
+  std::stringstream sb2;
+  std::stringstream sb3;
+  Logger::getLogger("testLog").outputs() = {sb1, sb2};
+
+  auto const& l = Logger::getLogger("testLog");
+  ASSERT_EQ(l.outputs().size(), 2);
+  ASSERT_TRUE(l.outputs().any([&sb1](auto const& l){return &l.output() == &sb1;}));
+  ASSERT_TRUE(l.outputs().any([&sb2](auto const& l){return &l.output() == &sb2;}));
+  ASSERT_FALSE(l.outputs().any([&sb3](auto const& l){return &l.output() == &sb3;}));
+}
+

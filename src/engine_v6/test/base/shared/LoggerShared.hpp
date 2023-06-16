@@ -49,7 +49,7 @@ inline auto contains(stringstream const& sstream, string_view sv) noexcept {
   return sstream.str().find(sv) != npos;
 }
 
-inline auto contains(string const& str, string_view sv) noexcept {
+inline auto contains(std::string_view str, string_view sv) noexcept {
   return str.find(sv) != npos;
 }
 
@@ -58,36 +58,38 @@ inline auto empty(stringstream const& sstream) noexcept {
 }
 
 auto filterIndividual() {
+  using enum engine::meta::LoggerBaseCommon::Option;
   std::stringstream inf;
   std::stringstream wrn;
   std::stringstream err;
   std::stringstream dbg;
   auto logger = Logger::getLogger(
-      LoggerOutput{inf, Logger::Info}, LoggerOutput{wrn, Logger::Warning},
-      LoggerOutput{err, Logger::Error}, LoggerOutput{dbg, Logger::Debug}
+      LoggerOutput{inf, Info}, LoggerOutput{wrn, Warning},
+      LoggerOutput{err, Error}, LoggerOutput{dbg, Debug}
   );
 
-  logger() << Logger::Info << "test1";
-  logger() << Logger::Warning << "test2";
-  logger() << Logger::Error << "test3";
-  logger() << Logger::Debug << "test4";
+  logger() << Info << "test1";
+  logger() << Warning << "test2";
+  logger() << Error << "test3";
+  logger() << Debug << "test4";
   return std::make_tuple(inf.str(), wrn.str(), err.str(), dbg.str());
 }
 
 auto filterMixedOut() {
+  using enum engine::meta::LoggerBaseCommon::Option;
   std::stringstream infWrn;
   std::stringstream wrnErr;
   std::stringstream errDbg;
   auto logger = Logger::getLogger(
-      LoggerOutput{infWrn, Logger::Info | Logger::Warning},
-      LoggerOutput{wrnErr, Logger::Warning | Logger::Error},
-      LoggerOutput{errDbg, Logger::Error | Logger::Debug}
+      LoggerOutput{infWrn, Info | Warning},
+      LoggerOutput{wrnErr, Warning | Error},
+      LoggerOutput{errDbg, Error | Debug}
   );
 
-  logger() << Logger::Info << "test1";
-  logger() << Logger::Warning << "test2";
-  logger() << Logger::Error << "test3";
-  logger() << Logger::Debug << "test4";
+  logger() << Info << "test1";
+  logger() << Warning << "test2";
+  logger() << Error << "test3";
+  logger() << Debug << "test4";
   return std::make_tuple(infWrn.str(), wrnErr.str(), errDbg.str());
 }
 } // namespace logger_shared

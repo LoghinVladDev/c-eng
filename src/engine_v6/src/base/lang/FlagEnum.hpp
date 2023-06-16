@@ -92,6 +92,66 @@ constexpr auto operator ^= (typename FlagEnum<T>::FlagsType& left, T right) noex
   left ^= static_cast<Underlying>(right);
   return left;
 }
+
+template <typename T> requires (FlagEnum<T>::value)
+constexpr auto operator == (T left, typename FlagEnum<T>::FlagsType right) noexcept -> bool {
+  return static_cast<std::underlying_type_t<T>>(left) == right;
+}
+
+template <typename T> requires (FlagEnum<T>::value)
+constexpr auto operator == (typename FlagEnum<T>::FlagsType left, T right) noexcept -> bool {
+  return left == static_cast<std::underlying_type_t<T>>(right);
+}
+
+template <typename T> requires (FlagEnum<T>::value)
+constexpr auto operator != (T left, typename FlagEnum<T>::FlagsType right) noexcept -> bool {
+  return static_cast<std::underlying_type_t<T>>(left) != right;
+}
+
+template <typename T> requires (FlagEnum<T>::value)
+constexpr auto operator != (typename FlagEnum<T>::FlagsType left, T right) noexcept -> bool {
+  return left != static_cast<std::underlying_type_t<T>>(right);
+}
+
+template <typename T> requires (FlagEnum<T>::value)
+constexpr auto operator > (T left, typename FlagEnum<T>::FlagsType right) noexcept -> bool {
+  return static_cast<std::underlying_type_t<T>>(left) > right;
+}
+
+template <typename T> requires (FlagEnum<T>::value)
+constexpr auto operator > (typename FlagEnum<T>::FlagsType left, T right) noexcept -> bool {
+  return left > static_cast<std::underlying_type_t<T>>(right);
+}
+
+template <typename T> requires (FlagEnum<T>::value)
+constexpr auto operator < (T left, typename FlagEnum<T>::FlagsType right) noexcept -> bool {
+  return static_cast<std::underlying_type_t<T>>(left) < right;
+}
+
+template <typename T> requires (FlagEnum<T>::value)
+constexpr auto operator < (typename FlagEnum<T>::FlagsType left, T right) noexcept -> bool {
+  return left < static_cast<std::underlying_type_t<T>>(right);
+}
+
+template <typename T> requires (FlagEnum<T>::value)
+constexpr auto operator >= (T left, typename FlagEnum<T>::FlagsType right) noexcept -> bool {
+  return static_cast<std::underlying_type_t<T>>(left) >= right;
+}
+
+template <typename T> requires (FlagEnum<T>::value)
+constexpr auto operator >= (typename FlagEnum<T>::FlagsType left, T right) noexcept -> bool {
+  return left >= static_cast<std::underlying_type_t<T>>(right);
+}
+
+template <typename T> requires (FlagEnum<T>::value)
+constexpr auto operator <= (T left, typename FlagEnum<T>::FlagsType right) noexcept -> bool {
+  return static_cast<std::underlying_type_t<T>>(left) <= right;
+}
+
+template <typename T> requires (FlagEnum<T>::value)
+constexpr auto operator <= (typename FlagEnum<T>::FlagsType left, T right) noexcept -> bool {
+  return left <= static_cast<std::underlying_type_t<T>>(right);
+}
 }
 
 #endif //C_ENG_FLAGENUM_HPP

@@ -123,4 +123,29 @@ TEST(LoggerEnabled, defaultLevel) {
   logger() << "test";
   ASSERT_TRUE(outbuf.str().find("Error") != npos);
   ASSERT_TRUE(outbuf.str().find("\033[1;31m") != npos);
+
+  std::stringstream().swap(outbuf);
+  logger.setDefaultLevel(static_cast<decltype(Logger::Error)> (0x100));
+  logger() << "test";
+  ASSERT_TRUE(outbuf.str().find("Error") != npos);
+  ASSERT_TRUE(outbuf.str().find("\033[1;31m") != npos);
 }
+
+TEST(LoggerEnabled, endlining) {
+  stringstream outbuf;
+  auto logger = Logger::getLogger(outbuf);
+
+  logger() << Logger::Error << "test" << std::endl << Logger::Warning << "another";
+  ASSERT_FALSE(outbuf.str().empty());
+  ASSERT_TRUE(contains(outbuf, "Error"));
+  ASSERT_TRUE(contains(outbuf, "Warning"));
+  ASSERT_FALSE(contains(outbuf, "Info"));
+  ASSERT_TRUE(contains(outbuf, "\n"));
+  ASSERT_TRUE(contains(outbuf, "test"));
+  ASSERT_FALSE(contains(outbuf, "impossible"));
+  ASSERT_TRUE(contains(outbuf, "another"));
+  ASSERT_TRUE(contains(outbuf, "\033[1;31m"));
+  ASSERT_TRUE(contains(outbuf, "\033[1;33m"));
+  ASSERT_FALSE(contains(outbuf, "\033[1;34m"));
+}
+

@@ -7,6 +7,7 @@
 
 #include <CDS/memory/UniquePointer>
 #include <CDS/Array>
+#include <CDS/HashMap>
 #include <CDS/String>
 #include <source_location>
 #include <CDS/exception/RuntimeException>
@@ -18,17 +19,20 @@ public:                                                             \
   TI ## instance ## name () noexcept :                            \
           Test(#instance, #name) {                                \
                                                                   \
-      unit->emplaceBack(this);                                    \
+      _register(this, #instance, #name);                  \
   }                                                               \
                                                                   \
   auto run() const noexcept(false) -> void override;              \
-};                                                                  \
+};                           \
+                             \
                                                                     \
 TI ## instance ## name const instance ## TI ## instance ## name;    \
+                             \
 }                                                                       \
                                                                         \
                                                                         \
 auto testing::TI ## instance ## name :: run() const noexcept(false) -> void
+
 
 #define ASSERT_TRUE(expression) \
   (expression) ? _noassert() : _assert("Expected " #expression " true, got false instead")
@@ -68,6 +72,9 @@ public:
   virtual ~Test() noexcept = default;
   virtual auto run() const noexcept(false) -> void = 0;
   [[nodiscard]] auto start() const noexcept -> bool;
+  [[nodiscard]] constexpr auto name() const noexcept -> cds::StringView {
+    return _name;
+  }
 
 protected:
   [[noreturn]] auto _assert(cds::String const& reason, std::source_location const& location = std::source_location::current()) const noexcept(false) -> void {
@@ -83,7 +90,7 @@ private:
   cds::StringView _name;
 };
 
-auto Test::start() const noexcept -> bool {
+inline auto Test::start() const noexcept -> bool {
   bool status = true;
   try {
     run();
@@ -97,19 +104,7 @@ auto Test::start() const noexcept -> bool {
   return status;
 }
 
-auto const unit = cds::makeUnique <cds::Array <Test*>> ();
-}
-
-auto main () noexcept -> int {
-  using testing::unit;
-  for (auto& pTest: *unit) {
-    auto status = pTest->start();
-    if (! status) {
-      return 1;
-    }
-  }
-
-  return 0;
-}
+extern void _register(Test* test, char const* inst, char const* name);
+} // namespace testing
 
 #endif //C_ENG_TEST_HPP

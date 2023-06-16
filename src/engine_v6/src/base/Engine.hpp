@@ -2,7 +2,9 @@
 
 #include "core/Object.hpp"
 #include <CDS/Function>
+#include <CDS/memory/UniquePointer>
 #include <logging/Logger.hpp>
+#include <api/Api.hpp>
 
 namespace engine {
 class Engine : public Object {
@@ -21,16 +23,24 @@ public:
   auto exec(int argc, char const* const* argv) noexcept -> int;
 
   auto requestShutdown() noexcept -> Engine& {
-    logger() << "Shutdown Requested";
+    logger() << "Shutdown Requested" << std::endl;
     shutdownRequestStatus = true;
     return *this;
   }
 
   auto cancelShutdownRequest() noexcept -> Engine& {
-    logger() << "Cancelling Shutdown Request";
+    logger() << "Cancelling Shutdown Request" << std::endl;
     shutdownRequestStatus = false;
     return *this;
   }
+
+  template <typename ApiType>
+  auto registerApi () noexcept(false) -> Engine& {
+    apis.pushBack(cds::makeUnique<ApiType>(this));
+    return *this;
+  }
+
+  [[nodiscard]] auto apiList() const noexcept -> cds::Array <Api const*>;
 
 private:
   auto init() noexcept(false) -> void;
@@ -50,7 +60,8 @@ private:
   cds::Function <void(Engine&)> postShutdownHook = [](Engine const& engine){(void) engine;};
 
   bool shutdownRequestStatus {false};
+  cds::Array <cds::UniquePointer <Api>> apis;
 
-  static inline Logger& logger = Logger::getLogger(loggerName);
+  static inline auto& logger = Logger::getLogger(loggerName);
 };
 }

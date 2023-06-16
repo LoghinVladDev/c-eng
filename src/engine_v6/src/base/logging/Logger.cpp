@@ -57,10 +57,6 @@ public:
     return *pDefaultOut;
   }
 
-  ~LoggerContainer() noexcept {
-    std::cout << "wtf\n";
-  }
-
 private:
   std::ostream* pDefaultOut = &std::cout;
   TreeMap <StringView, Logger> loggers;
@@ -116,9 +112,12 @@ auto LoggerBase<true>::addHeader () noexcept -> void {
 } // namespace meta
 
 namespace {
-cds::UniquePointer <LoggerContainer <>> p;
 auto container() noexcept -> auto& {
-  if(!p) {p = new LoggerContainer;}
+  using Underlying = LoggerContainer<>;
+  static cds::UniquePointer <Underlying> p = nullptr;
+  if (!p) {
+    p = cds::makeUnique<Underlying>();
+  }
   return *p;
 }
 }

@@ -9,6 +9,9 @@ set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=address")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=undefined")
+
 if(MSVC)
     add_compile_options("$<$<CONFIG:RELEASE>:/O2>")
 else()
@@ -92,54 +95,126 @@ set(
         src/engine_v6/test/base/shared/LoggerShared.hpp)
 
 file(
-        GLOB
+        GLOB_RECURSE
         C_ENG_SRC_BASE
-        "src/engine_v6/src/base/**/*.cpp"
         "src/engine_v6/src/base/*.cpp"
 )
 
+file(
+        GLOB_RECURSE
+        C_ENG_SRC_API
+        "src/engine_v6/src/api/*.cpp"
+)
+
 add_executable(
-        standalone
+        Binary.Standalone
 
         ${C_ENG_SRC_BASE}
+        ${C_ENG_SRC_API}
         ${C_ENG_SRC_VARIANT_STANDALONE}
 )
 
 target_include_directories(
-        standalone PRIVATE
+        Binary.Standalone PRIVATE
         src/engine_v6/src/base
-        src/engine_v6/src/impl
+        src/engine_v6/src/api
         src/engine_v6/src/variant_standalone
+        src/engine_v6/src/api
+)
+
+target_link_libraries(
+        Binary.Standalone
+
+        glfw
+        ${VK_LD_ITEM}
+        ${GLFW_LIBRARIES}
+)
+
+add_library(
+        StaticLib.EngLoggerEnabled STATIC
+        ${C_ENG_SRC_BASE}
+        ${C_ENG_SRC_API}
+)
+
+target_include_directories(
+        StaticLib.EngLoggerEnabled PRIVATE
+        src/engine_v6/src/base
+        src/engine_v6/src/api
+        src/engine_v6/test/shared/LoggerEnabled
+)
+
+add_library(
+        StaticLib.EngLoggerDisabled STATIC
+        ${C_ENG_SRC_BASE}
+        ${C_ENG_SRC_API}
+)
+
+target_include_directories(
+        StaticLib.EngLoggerDisabled PRIVATE
+        src/engine_v6/src/base
+        src/engine_v6/src/api
+        src/engine_v6/test/shared/LoggerDisabled
 )
 
 enable_testing()
 
-function(c_eng_test path name)
+function(c_eng_test path name libs)
     file(GLOB ${name}_src "src/engine_v6/test/${path}/${name}/*.cpp")
     add_executable(
             TestBinary.${name}
-            ${C_ENG_SRC_BASE}
             src/engine_v6/test/Test.hpp
+            src/engine_v6/test/SingleTest.cpp
             ${${name}_src}
     )
     target_include_directories(
             TestBinary.${name} PRIVATE
             src/engine_v6/src/base
-            src/engine_v6/src/impl
+            src/engine_v6/src/api
+            src/engine_v6/src/api
             src/engine_v6/test
             src/engine_v6/test/${path}/${name}
     )
+    target_link_libraries(TestBinary.${name} ${libs})
     add_test(NAME Test.${name} COMMAND $<TARGET_FILE:TestBinary.${name}>)
 endfunction()
 
-c_eng_test(base Engine)
-c_eng_test(base LoggerDisabled)
-c_eng_test(base LoggerDisabled.Naming)
-c_eng_test(base LoggerDisabled.MultiOut)
-c_eng_test(base LoggerDisabled.Filter)
-c_eng_test(base LoggerEnabled)
-c_eng_test(base LoggerEnabled.Naming)
-c_eng_test(base LoggerEnabled.MultiOut)
-c_eng_test(base LoggerEnabled.Filter)
-c_eng_test(base Object.Hierarchy)
+add_library(TestStaticLib.GlfwErrorHandlingStub STATIC src/engine_v6/test/api/glfw/Api.Glfw.ErrorHandling/glfw_stub.c)
+target_include_directories(TestStaticLib.GlfwErrorHandlingStub PRIVATE dependencies/glfw/include)
 
+set(GLFW_L_ENA StaticLib.EngLoggerEnabled glfw)
+set(GLFW_L_DIS StaticLib.EngLoggerDisabled glfw)
+set(GLFW_STUB_L_ENA StaticLib.EngLoggerEnabled TestStaticLib.GlfwErrorHandlingStub)
+
+c_eng_test(base Engine "${GLFW_L_ENA}")
+c_eng_test(base LoggerDisabled "${GLFW_L_DIS}")
+c_eng_test(base LoggerDisabled.Naming "${GLFW_L_DIS}")
+c_eng_test(base LoggerDisabled.MultiOut "${GLFW_L_DIS}")
+c_eng_test(base LoggerDisabled.Filter "${GLFW_L_DIS}")
+c_eng_test(base LoggerEnabled "${GLFW_L_ENA}")
+c_eng_test(base LoggerEnabled.Naming "${GLFW_L_ENA}")
+c_eng_test(base LoggerEnabled.MultiOut "${GLFW_L_ENA}")
+c_eng_test(base LoggerEnabled.Filter "${GLFW_L_ENA}")
+c_eng_test(base Object.Hierarchy "${GLFW_L_ENA}")
+c_eng_test(base ResourceTracker "${GLFW_L_ENA}")
+c_eng_test(base FlagEnum "${GLFW_L_ENA}")
+
+c_eng_test(base Api "${GLFW_L_ENA}")
+c_eng_test(base Api.Component.TestApiComponents "${GLFW_L_ENA}")
+c_eng_test(base Api.Component.Audio "${GLFW_L_ENA}")
+c_eng_test(base Api.Component.Controller "${GLFW_L_ENA}")
+c_eng_test(base Api.Component.Keyboard "${GLFW_L_ENA}")
+c_eng_test(base Api.Component.Mouse "${GLFW_L_ENA}")
+c_eng_test(base Api.Component.Present "${GLFW_L_ENA}")
+c_eng_test(base Api.Component.Render "${GLFW_L_ENA}")
+c_eng_test(base Api.Component.System "${GLFW_L_ENA}")
+
+c_eng_test(utils TimeoutTest "")
+c_eng_test(utils CrashTest "")
+
+c_eng_test(api/glfw Api.Glfw "${GLFW_L_ENA}")
+c_eng_test(api/glfw Api.Glfw.ErrorHandling "${GLFW_STUB_L_ENA}")
+
+c_eng_test(api/unix Api.Unix "${GLFW_L_ENA}")
+c_eng_test(apI/unix Api.Unix.Component.System "${GLFW_L_ENA}")
+
+c_eng_test(variant Standalone "")

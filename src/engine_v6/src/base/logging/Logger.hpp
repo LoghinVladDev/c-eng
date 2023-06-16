@@ -53,7 +53,11 @@ public:
     return *pOutput;
   }
 
-  constexpr auto allows(OptionFlags option) const noexcept -> bool {
+  constexpr auto output() const noexcept -> std::ostream const& {
+    return *pOutput;
+  }
+
+  [[nodiscard]] constexpr auto allows(OptionFlags option) const noexcept -> bool {
     return (filter & option & mask) != 0u;
   }
 
@@ -71,6 +75,11 @@ public:
   auto operator << (T && logged) noexcept -> LoggerBase & {
     (void) logged;
     return * this;
+  }
+
+  auto operator << (decltype(std::endl<std::ostream::char_type, std::ostream::traits_type>) ignored) noexcept -> LoggerBase& {
+    (void) ignored;
+    return *this;
   }
 
 protected:
@@ -108,7 +117,7 @@ template <>
 class LoggerBase <true> : public LoggerBaseCommon {
 public:
   template <typename T>
-  auto operator << (T && logged) noexcept -> LoggerBase & {
+  auto operator << (T&& logged) noexcept -> LoggerBase& {
 
     auto started = isSet (Option::Start);
     set (ifOptionThen (std::forward <T> (logged)));
@@ -118,10 +127,16 @@ public:
 
     for (auto output : _outputs) {
       if (output.allows(flags)) {
-        (output.output()) << ifOptionProcess(std::forward<T>(logged));
+        ifOptionProcess(output.output(), std::forward<T>(logged));
       }
     }
     return * this;
+  }
+
+  auto operator << (decltype(std::endl<std::ostream::char_type, std::ostream::traits_type>) ignored) noexcept -> LoggerBase& {
+    (void) ignored;
+    startLogItem();
+    return *this;
   }
 
 protected:
@@ -228,19 +243,19 @@ private:
   }
 
   template <typename T>
-  constexpr static auto ifOptionProcess (T && obj) noexcept -> T {
-    return std::forward <T> (obj);
+  inline static auto ifOptionProcess (std::ostream& out, T && obj) noexcept {
+    out << std::forward<T>(obj);
   }
 
-  constexpr static auto ifOptionProcess (Option option) noexcept -> cds::StringLiteral {
+  constexpr static auto ifOptionProcess (std::ostream& out, Option option) noexcept {
+    (void) out;
     (void) option;
-    return "";
   }
 
-  inline static auto ifOptionProcess (std::source_location sourceLocation) noexcept -> std::string {
-    return std::string(sourceLocation.file_name()) + ":" +
-        std::to_string(sourceLocation.line()) + ":" +
-        std::to_string(sourceLocation.column());
+  inline static auto ifOptionProcess (std::ostream& out, std::source_location sourceLocation) noexcept {
+    out << sourceLocation.file_name() << ":"
+        << sourceLocation.line() << ":"
+        << sourceLocation.column();
   }
 };
 

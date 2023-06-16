@@ -13,7 +13,7 @@
 #include "core/Object.hpp"
 #include "../shared/LoggerShared.hpp"
 
-TEST(LoggerEnabledNaming, Anonymous) {
+TEST(LoggerDisabledNaming, Anonymous) {
   std::stringstream outbuf1;
   auto logger1 = Logger::getLogger(outbuf1);
   std::stringstream outbuf2;
@@ -35,7 +35,7 @@ TEST(LoggerEnabledNaming, Anonymous) {
   ASSERT_FALSE(outbuf2.str().find(("other")) != std::string::npos);
 }
 
-TEST(LoggerEnabledNamic, Named) {
+TEST(LoggerDisabledNaming, Named) {
   std::stringstream outbuf1;
   std::stringstream outbuf2;
   std::stringstream outbuf3;
@@ -67,4 +67,9 @@ TEST(LoggerEnabledNamic, Named) {
   ASSERT_FALSE(outbuf2.str().find(("another test")) != std::string::npos);
   ASSERT_FALSE(outbuf2.str().find(("yet one more")) != std::string::npos);
   ASSERT_FALSE(outbuf2.str().find(("final test")) != std::string::npos);
+}
+
+TEST(LoggerDisabledNaming, Acq) {
+  auto const& logger = Logger::getLogger("testLog");
+  ASSERT_TRUE(logger.name().empty());
 }

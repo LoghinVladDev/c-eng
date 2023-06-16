@@ -106,7 +106,7 @@ TEST(LoggerDisabled, compatFnSet) {
   Logger::setDefaultLoggerOutput(cout);
 }
 
-TEST(LoggerEnabled, overlappingLevel) {
+TEST(LoggerDisabled, overlappingLevel) {
   stringstream outbuf;
   auto logger = Logger::getLogger(outbuf);
   logger() << Logger::Warning << "test1" << Logger::Error << "test2";
@@ -115,7 +115,7 @@ TEST(LoggerEnabled, overlappingLevel) {
   ASSERT_TRUE(outbuf.str().empty());
 }
 
-TEST(LoggerEnabled, defaultLevel) {
+TEST(LoggerDisabled, defaultLevel) {
   stringstream outbuf;
   auto logger = Logger::getLogger(outbuf);
 
@@ -124,4 +124,26 @@ TEST(LoggerEnabled, defaultLevel) {
   ASSERT_TRUE(outbuf.str().empty());
   ASSERT_FALSE(outbuf.str().find("Error") != npos);
   ASSERT_FALSE(outbuf.str().find("\033[1;31m") != npos);
+
+  std::stringstream().swap(outbuf);
+  logger.setDefaultLevel(static_cast<decltype(Logger::Error)> (0x142512));
+  logger() << "test";
+  ASSERT_TRUE(outbuf.str().empty());
+  ASSERT_FALSE(outbuf.str().find("Error") != npos);
+  ASSERT_FALSE(outbuf.str().find("\033[1;31m") != npos);
+}
+
+TEST(LoggerDisabled, endlining) {
+  stringstream outbuf;
+  auto logger = Logger::getLogger(outbuf);
+
+  logger() << Logger::Error << "test" << std::endl << Logger::Warning << "another";
+  ASSERT_TRUE(outbuf.str().empty());
+  ASSERT_FALSE(contains(outbuf, "Error"));
+  ASSERT_FALSE(contains(outbuf, "Warning"));
+  ASSERT_FALSE(contains(outbuf, "\n"));
+  ASSERT_FALSE(contains(outbuf, "test"));
+  ASSERT_FALSE(contains(outbuf, "another"));
+  ASSERT_FALSE(contains(outbuf, "\033[1;31m"));
+  ASSERT_FALSE(contains(outbuf, "\033[1;33m"));
 }

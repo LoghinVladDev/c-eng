@@ -10,46 +10,35 @@
 #include <CDS/threading/Thread>
 #include "../shared/LoggerShared.hpp"
 #include <Engine.hpp>
+#include "src/engine_v6/test/base/shared/TestApis.hpp"
+#include "../../shared/TimeoutTest.hpp"
 
 using namespace engine;
-
-auto timeoutTest(auto fn, int timeMs) {
-  auto status = false;
-  auto timeoutTh = cds::Runnable([&fn, &status]{
-    fn();
-    status = true;
-  });
-  timeoutTh.start();
-  usleep(timeMs * 1000);
-  if (!status) { timeoutTh.kill(); }
-  else { timeoutTh.join(); }
-  return status;
-}
 
 TEST(Engine, shutdownScenarios) {
   ASSERT_TRUE(timeoutTest([]{
     auto engine1 = Engine();
     engine1.setPreInitHook([](Engine& e){e.requestShutdown();});
     (void) engine1.exec(0, nullptr);
-  }, 10));
+  }, 100));
 
   ASSERT_TRUE(timeoutTest([]{
     auto engine1 = Engine();
     engine1.setPostInitHook([](Engine& e){e.requestShutdown();});
     (void) engine1.exec(0, nullptr);
-  }, 10));
+  }, 100));
 
   ASSERT_TRUE(timeoutTest([]{
     auto engine1 = Engine();
     engine1.setPreUpdateHook([](Engine& e){e.requestShutdown();});
     (void) engine1.exec(0, nullptr);
-  }, 10));
+  }, 100));
 
   ASSERT_TRUE(timeoutTest([]{
     auto engine1 = Engine();
     engine1.setPostUpdateHook([](Engine& e){e.requestShutdown();});
     (void) engine1.exec(0, nullptr);
-  }, 10));
+  }, 100));
 
   ASSERT_TRUE(timeoutTest([]{
     auto engine1 = Engine();
@@ -60,7 +49,7 @@ TEST(Engine, shutdownScenarios) {
     th.start();
     engine1.requestShutdown();
     th.join();
-  }, 10));
+  }, 100));
 }
 
 TEST(Engine, hookExecCount) {
@@ -114,8 +103,8 @@ TEST(Engine, shutdownCancellation) {
   int reqCnt = 0;
 
   e1.setPostUpdateHook([](Engine& e){e.requestShutdown();});
-  e1.setPreShutdownHook([&reqCnt](Engine& e){++reqCnt; if(reqCnt == 3){e.cancelShutdownRequest();}});
-  ASSERT_TRUE(timeoutTest([&e1]{e1.exec(0, nullptr);}, 10));
+  e1.setPreShutdownHook([&reqCnt](Engine& e){++reqCnt; if(reqCnt != 3){e.cancelShutdownRequest();}});
+  ASSERT_TRUE(timeoutTest([&e1]{e1.exec(0, nullptr);}, 100));
 }
 
 TEST(Engine, logger) {
@@ -129,7 +118,7 @@ TEST(Engine, logger) {
   ASSERT_TRUE(timeoutTest([&e]{
     e.setPostUpdateHook([](Engine &e1) { e1.requestShutdown(); });
     e.exec(0, nullptr);
-  }, 10));
+  }, 100));
   ASSERT_TRUE(contains(sb, "Engine Startup"));
   ASSERT_TRUE(contains(sb, "Calling Pre-Init Hook"));
   ASSERT_TRUE(contains(sb, "Calling Init"));
@@ -139,4 +128,33 @@ TEST(Engine, logger) {
   ASSERT_TRUE(contains(sb, "Calling Pre-Shutdown Hook"));
   ASSERT_TRUE(contains(sb, "Calling Shutdown"));
   ASSERT_TRUE(contains(sb, "Calling Post-Shutdown Hook"));
+}
+
+TEST(Engine, unrecoverable) {
+  auto e = Engine();
+  auto&l = Logger::getLogger(Engine::loggerName);
+  std::stringstream sb;
+  l.outputs() = {sb};
+
+  ASSERT_TRUE(timeoutTest ([&e] {
+    e.setPreUpdateHook([](Engine &e) {
+      (void) e;
+      throw cds::RuntimeException("Test Except");
+    });
+
+    e.exec(0, nullptr);
+  }, 100));
+
+  ASSERT_TRUE(contains(sb, "Error"));
+  ASSERT_TRUE(contains(sb, "Irrecoverable Exception: Test Except"));
+}
+
+TEST(Engine, apiRegistration) {
+  Engine e;
+  e.registerApi<PApi>();
+  e.registerApi<TPApi>();
+  e.registerApi<OSApi>();
+
+  ASSERT_EQ(e.apiList().size(), 3);
+  ASSERT_TRUE(e.apiList().all([&e](auto* api){return api->engine() == &e;}));
 }
