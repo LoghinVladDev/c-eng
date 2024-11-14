@@ -1,5 +1,0 @@
-@startuml
-
-!includesub primitive/object.puml!OBJECT
-
-@enduml

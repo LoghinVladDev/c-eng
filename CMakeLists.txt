@@ -1,347 +1,68 @@
-cmake_minimum_required(VERSION 3.5)
-project(c-eng)
+cmake_minimum_required(VERSION 3.28)
+project(c-eng CXX)
 
-set(CMAKE_C_STANDARD 11)
-set(CMAKE_CXX_STANDARD 20)
-set(OpenGL_GL_PREFERENCE GLVND)
+set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_CXX_SCAN_FOR_MODULES ON)
 
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 
-if(MSVC)
-    add_compile_options("$<$<CONFIG:RELEASE>:/O2>")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=address")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=undefined")
+
+set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
+
+
+set(C_ENG_RENDER_API_LIBS "")
+
+
+find_package(Vulkan)
+if (Vulkan_FOUND)
+  message("-- [C_ENG] Vulkan located via CMake Package at '${Vulkan_LIBRARY}'")
 else()
-    add_compile_options("$<$<CONFIG:RELEASE>:-O3>")
-endif()
-
-set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
-
-add_subdirectory(dependencies/glfw)
-add_subdirectory(dependencies/glm)
-add_subdirectory(dependencies/meshLoader)
-
-include_directories(dependencies/glm)
-include_directories(dependencies/glfw/include)
-include_directories(dependencies/stb)
-include_directories(dependencies/cds/include)
-include_directories(dependencies/meshLoader/include)
-
-find_package(OpenGL REQUIRED)
-
-if(ASSIMP_FOUND)
-    include_directories(${ASSIMP_INCLUDE_DIR})
+  message("-- [C_ENG] Vulkan was not located via CMake Package. TODO: Custom Vulkan Path")
 endif()
 
 
-if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-    add_compile_options(-fprofile-instr-generate -fcoverage-mapping)
-    add_link_options(-fprofile-instr-generate)
-    #Uncomment in case of linker errors
-    #link_libraries(clang_rt.profile-x86_64)
-elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-    add_compile_options(--coverage)
-    #Uncomment in case of linker errors
-    #if(WIN32)
-        link_libraries(gcov)
-    #endif()
-endif ()
+# TODO: remove later
+# add_subdirectory(dependencies/cds)
 
-if (WIN32)
-    if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zc:preprocessor")
-    endif()
+if(NOT DEFINED C_ENG_USE_VULKAN)
+  set(C_ENG_USE_VULKAN ON)
 endif()
 
 
-if(
-        NOT $ENV{VULKAN_SDK} STREQUAL "" AND
-        NOT $ENV{LD_LIBRARY_PATH} STREQUAL "" AND
-        NOT $ENV{VK_LAYER_PATH} STREQUAL ""
-)
-
-    include_directories( $ENV{VULKAN_SDK}/include )
-
-    message(-- LOCAL_VULKAN_PATH :   $ENV{VULKAN_SDK} )
-    message(-- LOCAL_VULKAN_LIBS :   $ENV{LD_LIBRARY_PATH} )
-
-    set(VK_LD_ITEM vulkan)
-
-else()
-
-    find_package(Vulkan)
-    if(Vulkan_FOUND)
-        include_directories( ${Vulkan_INCLUDE_DIRS} )
-
-        message(-- VULKAN_PATH :   ${Vulkan_LIBRARY} )
-
-        set(VK_LD_ITEM Vulkan::Vulkan)
-
-    endif()
-
+if(NOT DEFINED C_ENG_USE_GLFW)
+  set(C_ENG_USE_GLFW ON)
 endif()
 
-set (
-        V4_BASE_CORE
+set(C_ENG_LIB_LIST c_eng_generic)
+if(C_ENG_USE_GLFW)
+  list(APPEND C_ENG_LIB_LIST c_eng_glfw)
+  add_subdirectory(dependencies/glfw)
+endif()
 
-        src/engine_v4/base/core/Object.cpp
-)
+if(C_ENG_USE_VULKAN)
+  list(APPEND C_ENG_LIB_LIST c_eng_vulkan)
+endif()
 
-set (
-        V4_BASE_IO_DISPLAY
+add_library(cds STATIC)
+target_sources(cds PUBLIC FILE_SET CXX_MODULES FILES src/generic/module/cds.cxxm)
+target_include_directories(cds PRIVATE dependencies/cds/include)
 
-        src/engine_v4/base/io/display/Display.cpp
-        src/engine_v4/base/io/display/Surface.cpp
-        src/engine_v4/base/io/display/Window.cpp
-)
+add_subdirectory(src)
 
-set (
-        V4_BASE_IO_LOGGING
+list(APPEND C_ENG_LIB_LIST cds)
+list(JOIN C_ENG_LIB_LIST " " C_ENG_LD)
 
-        src/engine_v4/base/io/logging/Logger.cpp
-)
+add_executable(generic_scene src/target/GenericScene.cpp)
 
-set (
-        V4_BASE_IO_EVENT_KEY
+foreach(LIB IN LISTS C_ENG_LIB_LIST)
+  target_link_libraries(generic_scene ${LIB})
+endforeach()
 
-        src/engine_v4/base/io/event/key/KeyEvent.cpp
-        src/engine_v4/base/io/event/key/KeyPressEvent.cpp
-        src/engine_v4/base/io/event/key/KeyReleaseEvent.cpp
-)
-
-set (
-        V4_BASE_IO_EVENT_MOUSE
-
-        src/engine_v4/base/io/event/mouse/MouseEvent.cpp
-        src/engine_v4/base/io/event/mouse/MousePressEvent.cpp
-        src/engine_v4/base/io/event/mouse/MouseReleaseEvent.cpp
-        src/engine_v4/base/io/event/mouse/MouseEnterEvent.cpp
-        src/engine_v4/base/io/event/mouse/MouseLeaveEvent.cpp
-        src/engine_v4/base/io/event/mouse/MouseMoveEvent.cpp
-        src/engine_v4/base/io/event/mouse/MouseScrollEvent.cpp
-)
-
-set (
-        V4_BASE_IO_EVENT_WINDOW
-
-        src/engine_v4/base/io/event/window/WindowEvent.cpp
-        src/engine_v4/base/io/event/window/WindowCloseEvent.cpp
-        src/engine_v4/base/io/event/window/WindowContentScaleEvent.cpp
-        src/engine_v4/base/io/event/window/WindowFrameBufferResizeEvent.cpp
-        src/engine_v4/base/io/event/window/WindowGainFocusEvent.cpp
-        src/engine_v4/base/io/event/window/WindowLoseFocusEvent.cpp
-        src/engine_v4/base/io/event/window/WindowMaximizeEvent.cpp
-        src/engine_v4/base/io/event/window/WindowMinimizeEvent.cpp
-        src/engine_v4/base/io/event/window/WindowMoveEvent.cpp
-        src/engine_v4/base/io/event/window/WindowResizeEvent.cpp
-        src/engine_v4/base/io/event/window/WindowRestoreEvent.cpp
-)
-
-set (
-        V4_BASE_IO_EVENT
-
-        ${V4_BASE_IO_EVENT_KEY}
-        ${V4_BASE_IO_EVENT_MOUSE}
-        ${V4_BASE_IO_EVENT_WINDOW}
-
-        src/engine_v4/base/io/event/Event.cpp
-)
-
-set (
-        V4_BASE_IO
-
-        ${V4_BASE_IO_DISPLAY}
-        ${V4_BASE_IO_LOGGING}
-        ${V4_BASE_IO_EVENT}
-)
-
-set (
-        V4_BASE_STORAGE
-
-        src/engine_v4/base/storage/Storage.cpp
-)
-
-set (
-        V4_BASE
-
-        ${V4_BASE_CORE}
-        ${V4_BASE_IO}
-        ${V4_BASE_STORAGE}
-
-        src/engine_v4/base/Engine.cpp
-)
-
-set (
-        V4_IMPL_GLFW_IO_DISPLAY
-
-        src/engine_v4/impl/glfw/io/display/GlfwDisplay.cpp
-        src/engine_v4/impl/glfw/io/display/GlfwWindow.cpp
-)
-
-set (
-        V4_IMPL_GLFW_IO
-
-        ${V4_IMPL_GLFW_IO_DISPLAY}
-)
-
-set (
-        V4_IMPL_GLFW
-
-        ${V4_IMPL_GLFW_IO}
-
-        src/engine_v4/impl/glfw/Glfw.cpp
-)
-
-set (
-        V4_BARE
-
-        ${V4_BASE}
-        ${V4_IMPL_GLFW}
-
-        src/engine_v4/variant/bare/BareEngineBareWindow.cpp
-)
-
-set(
-        WINDOW_SYSTEM_LD_ITEM glfw
-)
-
-add_executable (
-        v4_bare
-
-        ${V4_BARE}
-)
-
-add_executable (
-        v4_test_source
-
-        ${V4_BASE}
-        ${V4_IMPL_GLFW}
-
-        src/engine_v4/variant/bare/testSource.cpp
-)
-
-target_link_libraries (
-        v4_bare
-
-        ${VK_LD_ITEM}
-        ${WINDOW_SYSTEM_LD_ITEM}
-        ${GLFW_LIBRARIES}
-)
-
-target_include_directories (
-        v4_bare
-
-        PRIVATE
-
-        src/engine_v4
-)
-
-target_link_libraries (
-        v4_test_source
-
-        ${VK_LD_ITEM}
-        ${WINDOW_SYSTEM_LD_ITEM}
-        ${GLFW_LIBRARIES}
-)
-
-target_include_directories (
-        v4_test_source
-
-        PRIVATE
-
-        src/engine_v4
-)
-
-set (
-        V5_GENERIC_CORE
-        src/engine_v5/generic/core/eng_alloc.c
-)
-
-set (
-        V5_GENERIC_HL_CORE
-        src/engine_v5/generic/hl_core/Object.cpp
-)
-
-set (
-        V5_GENERIC_ENGINE
-        src/engine_v5/generic/engine/engine.c
-)
-
-set (
-        V5_GENERIC_VALIDATION
-        src/engine_v5/generic/validation/validation.c
-)
-
-set (
-        V5_GENERIC_UTIL_HL_LOGGING
-        src/engine_v5/generic/util/hl_logging/Logger.cpp
-)
-
-set (
-        V5_GENERIC_UTIL
-        ${V5_GENERIC_UTIL_HL_LOGGING}
-)
-
-set (
-        V5_GENERIC
-        ${V5_GENERIC_CORE}
-        ${V5_GENERIC_ENGINE}
-        ${V5_GENERIC_VALIDATION}
-        ${V5_GENERIC_UTIL}
-
-        ${V5_GENERIC_HL_CORE}
-)
-
-set (
-        V5_VARIANT_UTIL_HL_LOGGING
-        src/engine_v5/variant/util/hl_logging/BasicLogger.cpp
-)
-
-set (
-        V5_VARIANT_UTIL
-        ${V5_VARIANT_UTIL_HL_LOGGING}
-)
-
-set (
-        V5_VARIANT
-        ${V5_VARIANT_UTIL}
-)
-
-set (
-        V5_BARE
-        ${V5_GENERIC}
-        ${V5_VARIANT}
-
-        src/engine_v5/variant/bare/bare_eng_bare_window.cpp
-        src/engine_v5/variant/bare/glfw_callbacks.cpp
-)
-
-add_executable (
-        v5_bare
-        ${V5_BARE}
-)
-
-target_include_directories (
-        v5_bare
-        PRIVATE
-
-        src/engine_v5/generic
-        src/engine_v5/generic/core
-        src/engine_v5/generic/engine
-        src/engine_v5/generic/validation
-        src/engine_v5/generic/util
-
-        src/engine_v5
-        src/engine_v5/variant
-        src/engine_v5/variant/bare
-)
-
-target_link_libraries (
-        v5_bare
-
-        ${VK_LD_ITEM}
-        ${WINDOW_SYSTEM_LD_ITEM}
-        ${GLFW_LIBRARIES}
-)
+target_include_directories(generic_scene PRIVATE dependencies/cds/include)
+target_include_directories(generic_scene PRIVATE src)

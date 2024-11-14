@@ -1,0 +1,18 @@
+//
+// Created by loghin on 11/14/24.
+//
+module;
+#include <generic/api/Api.hpp>
+#include <generic/lang/Range.hpp>
+
+export module c_eng.generic;
+
+export namespace c_eng::generic {
+using detail::Api;
+using detail::ApiInfo;
+using detail::LicenceType;
+using detail::Version;
+using detail::filter;
+using detail::project;
+using detail::operator|;
+} // namespace c_eng::generic

@@ -1,0 +1,148 @@
+//
+// Created by loghin on 11/14/24.
+//
+module;
+#include "VulkanTypes.hpp"
+
+export module c_eng.api.vk;
+export import :layer;
+import :core;
+import c_eng.generic;
+import cds;
+
+using cds::StringView;
+using cds::U32;
+using cds::Optional;
+using cds::Union;
+using cds::Vector;
+
+using cds::ignore;
+using cds::nullopt;
+
+using cds::impl::xch;
+using cds::impl::mv;
+
+using cds::experimental::Expected;
+using cds::experimental::Unexpected;
+
+using vk::ApplicationInfo;
+using vk::LayerProperties;
+using vk::InstanceCreateInfo;
+using vk::InstanceHandle;
+using vk::Result;
+using vk::StructureType;
+using vk::createInstance;
+using vk::destroyInstance;
+using vk::enumerateInstanceLayerProperties;
+using vk::enumerateInstanceVersion;
+using vk::nullHandle;
+
+using c_eng::generic::Api;
+using c_eng::generic::ApiInfo;
+using c_eng::generic::LicenceType;
+using c_eng::generic::Version;
+using c_eng::generic::filter;
+using c_eng::generic::fromVersion;
+using c_eng::generic::project;
+using c_eng::generic::toVersion;
+using c_eng::generic::operator|;
+
+export namespace c_eng::api::vk {
+class Instance : public Api {
+public:
+  explicit Instance(InstanceHandle handle) noexcept : Api{{}}, _handle{handle} {}
+
+  Instance(Instance const&) = delete;
+  constexpr Instance(Instance&& instance) noexcept :
+      Api{mv(instance)}, _handle{xch(instance._handle, nullHandle)} {}
+
+  ~Instance() noexcept override {
+    destroyInstance(_handle, nullptr);
+  }
+
+  [[nodiscard]] auto info() const noexcept -> ApiInfo override {
+    using enum LicenceType;
+    return {
+        .name = "Vulkan",
+        .description = "Low-level, low-overhead cross-platform API and open standard for 3D graphics and computing",
+        .vendor = "Khronos Group",
+        .vendorId = nullopt,
+        .licenceType = Apache2_0
+    };
+  }
+
+  [[nodiscard]] auto compiledVersion() const noexcept -> Optional<Version> override {
+    return toVersion(::vk::compiledVersion);
+  }
+
+  [[nodiscard]] auto runtimeVersion() const noexcept -> Optional<Version> override {
+    ignore = this;
+    U32 runtimeVersion;
+    if (enumerateInstanceVersion(&runtimeVersion) != Result::VK_SUCCESS) {
+      return nullopt;
+    }
+    return toVersion(runtimeVersion);
+  }
+
+private:
+  InstanceHandle _handle;
+};
+
+struct ApplicationInfo {
+  Optional<StringView> applicationName;
+  Optional<Version> applicationVersion;
+  Optional<StringView> engineName;
+  Optional<Version> engineVersion;
+  Optional<Version> targetVulkanApiVersion;
+};
+
+auto createInstance(
+    Vector<char const*> layerNames,
+    Optional<ApplicationInfo> const& appInfo = {}
+) noexcept -> Expected<Instance, Result> {
+  ::vk::ApplicationInfo applicationInfo {
+    .sType = VK_STRUCTURE_TYPE_APPLICATION_INFO,
+    .pNext = nullptr,
+    .pApplicationName = appInfo.transform(&ApplicationInfo::applicationName)
+        .getOr(nullopt).getOr("").data(),
+    .applicationVersion = appInfo.transform(&ApplicationInfo::applicationVersion)
+        .getOr(nullopt).transform(&fromVersion).getOr(0),
+    .pEngineName = appInfo.transform(&ApplicationInfo::engineName).getOr(nullopt).getOr("").data(),
+    .engineVersion = appInfo.transform(&ApplicationInfo::engineVersion)
+        .getOr(nullopt).transform(&fromVersion).getOr(0),
+    .apiVersion = appInfo.transform(&ApplicationInfo::targetVulkanApiVersion)
+        .getOr(nullopt).transform(&fromVersion).getOr(VK_API_VERSION_1_3)
+  };
+
+  InstanceCreateInfo createInfo {
+      .sType = StructureType::VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO,
+      .pNext = nullptr,
+      .flags = 0u,
+      .pApplicationInfo = &applicationInfo,
+      .enabledLayerCount = static_cast<U32>(layerNames.size()),
+      .ppEnabledLayerNames = layerNames.data(),
+      .enabledExtensionCount = 0u,
+      .ppEnabledExtensionNames = nullptr
+  };
+
+  InstanceHandle handle = nullHandle;
+  if (auto result = createInstance(&createInfo, nullptr, &handle);
+      result != Result::VK_SUCCESS) {
+    return Unexpected{result};
+  }
+
+  return Instance{handle};
+}
+
+auto createInstance(
+    Vector<LayerProperties> const& properties,
+    Optional<ApplicationInfo> const& appInfo = {}
+) noexcept -> Expected<Instance, Result> {
+  return createInstance(
+      Vector<char const*>{properties | project([](auto const& prop) {
+          return static_cast<char const*>(prop.layerName);
+      })}, appInfo
+  );
+}
+} // namespace c_eng::api::vulkan
+

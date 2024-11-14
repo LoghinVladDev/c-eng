@@ -1,0 +1,45 @@
+set(C_ENG_GENERIC_SRC
+    ./generic/engine/Engine.cpp)
+
+add_library(c_eng_generic ${C_ENG_GENERIC_SRC})
+target_include_directories(c_eng_generic PUBLIC .)
+target_include_directories(c_eng_generic PRIVATE ../dependencies/cds/include)
+target_sources(c_eng_generic PUBLIC FILE_SET CXX_MODULES FILES generic/module/c_eng_generic.cxxm)
+
+if(DEFINED C_ENG_USE_GLFW AND C_ENG_USE_GLFW)
+  set(
+      C_ENG_GLFW_SRC
+      api/glfw/Glfw.cpp
+      api/glfw/GlfwDisplayWindow.cpp
+      api/glfw/GlfwEventPollingManager.cpp)
+
+  add_library(c_eng_glfw ${C_ENG_GLFW_SRC})
+  target_link_libraries(c_eng_glfw PRIVATE glfw)
+  target_include_directories(c_eng_glfw PUBLIC . api/glfw)
+  target_include_directories(c_eng_glfw PRIVATE ../dependencies/cds/include)
+  target_include_directories(c_eng_glfw PRIVATE ../dependencies/glfw/include)
+endif()
+
+if(DEFINED C_ENG_USE_VULKAN AND C_ENG_USE_VULKAN)
+  if(NOT $ENV{VULKAN_SDK} STREQUAL ""
+     AND NOT $ENV{LD_LIBRARY_PATH} STREQUAL ""
+     AND NOT $ENV{VK_LAYER_PATH} STREQUAL "")
+    message("-- [C_ENG] TODO: Custom Vulkan path")
+  elseif(Vulkan_FOUND)
+    set(C_ENG_VULKAN_INCLUDE_DIRS ${Vulkan_INCLUDE_DIRS})
+    set(C_ENG_VULKAN_LIB "Vulkan::Vulkan")
+  endif()
+
+  set(
+      C_ENG_VULKAN_SRC
+      api/vulkan/instance/VulkanLayer.cxxm
+      api/vulkan/instance/VulkanCore.cxxm
+      api/vulkan/instance/Vulkan.cxxm)
+
+  add_library(c_eng_vulkan SHARED)
+  target_include_directories(c_eng_vulkan PRIVATE ${C_ENG_VULKAN_INCLUDE_DIRS})
+  target_include_directories(c_eng_vulkan PRIVATE ../dependencies/cds/include)
+  target_include_directories(c_eng_vulkan PUBLIC . api/vulkan)
+  target_link_libraries(c_eng_vulkan PRIVATE ${C_ENG_VULKAN_LIB} cds c_eng_generic)
+  target_sources(c_eng_vulkan PUBLIC FILE_SET CXX_MODULES FILES ${C_ENG_VULKAN_SRC})
+endif()

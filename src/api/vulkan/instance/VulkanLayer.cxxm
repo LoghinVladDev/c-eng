@@ -1,0 +1,47 @@
+//
+// Created by loghin on 11/14/24.
+//
+
+export module c_eng.api.vk:layer;
+import :core;
+import c_eng.generic;
+import cds;
+
+using cds::StringView;
+using cds::U32;
+using cds::Vector;
+
+using cds::experimental::Expected;
+using cds::experimental::Unexpected;
+
+using vk::LayerProperties;
+using vk::Result;
+using vk::enumerateInstanceLayerProperties;
+
+using c_eng::generic::filter;
+using c_eng::generic::operator|;
+
+export namespace c_eng::api::vk {
+auto layerProperties() noexcept -> Expected<Vector<LayerProperties>, Result> {
+  Vector<LayerProperties> layerProperties;
+  U32 count = 0;
+  if (auto result = enumerateInstanceLayerProperties(&count, nullptr);
+      result != Result::VK_SUCCESS) {
+    return Unexpected{result};
+  }
+  layerProperties.resize(count);
+  if (auto result = enumerateInstanceLayerProperties(&count, layerProperties.data());
+      result != Result::VK_SUCCESS) {
+    return Unexpected{result};
+  }
+  return layerProperties;
+}
+
+auto layerProperties(Vector<StringView> requestedLayers) noexcept -> Expected<Vector<LayerProperties>, Result> {
+  return layerProperties().transform([&requestedLayers](auto&& layers) {
+    return Vector<LayerProperties>{mv(layers) | filter([&requestedLayers](auto const& properties) {
+      return requestedLayers.contains(static_cast<char const*>(properties.layerName));
+    })};
+  });
+}
+}

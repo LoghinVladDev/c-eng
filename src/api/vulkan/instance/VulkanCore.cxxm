@@ -1,0 +1,58 @@
+//
+// Created by loghin on 11/14/24.
+//
+module;
+#include <vulkan/vulkan.h>
+
+export module c_eng.api.vk:core;
+
+#ifdef VK_API_VERSION_1_3
+#define VK_API_CURRENT_VERSION VK_API_VERSION_1_3
+#elifdef VK_API_VERSION_1_2
+#define VK_API_CURRENT_VERSION VK_API_VERSION_1_2
+#elifdef VK_API_VERSION_1_1
+#define VK_API_CURRENT_VERSION VK_API_VERSION_1_1
+#elifdef VK_API_VERSION_1_0
+#define VK_API_CURRENT_VERSION VK_API_VERSION_1_0
+#else
+#error Unable to discern VK_API_CURRENT_VERSION
+#endif
+
+export namespace vk {
+using AllocationCallbacks = VkAllocationCallbacks;
+using ApplicationInfo = VkApplicationInfo;
+using LayerProperties = VkLayerProperties;
+using InstanceHandle = VkInstance;
+using InstanceCreateInfo = VkInstanceCreateInfo;
+using Result = VkResult;
+using StructureType = VkStructureType;
+
+constexpr auto nullHandle = VK_NULL_HANDLE;
+constexpr auto compiledVersion = VK_API_CURRENT_VERSION;
+
+inline auto createInstance(
+    InstanceCreateInfo const* pCreateInfo,
+    AllocationCallbacks const* pAllocator,
+    InstanceHandle* pInstance
+) noexcept -> Result {
+  return vkCreateInstance(pCreateInfo, pAllocator, pInstance);
+}
+
+inline auto destroyInstance(
+    InstanceHandle instance,
+    AllocationCallbacks const* pAllocator
+) noexcept -> void {
+  return vkDestroyInstance(instance, pAllocator);
+}
+
+inline auto enumerateInstanceLayerProperties(
+    uint32_t* pPropertyCount,
+    LayerProperties* pProperties
+) noexcept -> Result {
+  return vkEnumerateInstanceLayerProperties(pPropertyCount, pProperties);
+}
+
+inline auto enumerateInstanceVersion(uint32_t* pApiVersion) noexcept -> Result {
+  return vkEnumerateInstanceVersion(pApiVersion);
+}
+} // namespace vk
