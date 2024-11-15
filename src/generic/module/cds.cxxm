@@ -36,6 +36,7 @@ using cds::meta::IsTriviallyCopyAssignable;
 using cds::meta::IsTriviallyMoveAssignable;
 using cds::meta::IsTriviallyDestructible;
 using cds::meta::InvokeReturnOf;
+using cds::meta::RemoveRef;
 using cds::impl::fwd;
 using cds::impl::mv;
 
@@ -172,29 +173,29 @@ public:
         : E0{Unexpect{}, error()};
   }
 
-  template <typename F, typename U = InvokeReturnOf<F, T&>> [[nodiscard]] constexpr auto transform(F&& fn)&
+  template <typename F, typename U = RemoveRef<InvokeReturnOf<F, T&>>> [[nodiscard]] constexpr auto transform(F&& fn)&
       -> Expected<U, E> {
     return hasValue()
         ? Expected<U, E>{fn::invoke(fwd<F>(fn), value())}
         : Expected<U, E>{Unexpect{}, error()};
   }
 
-  template <typename F, typename U = InvokeReturnOf<F, T const&>> [[nodiscard]] constexpr auto transform(F&& fn) const&
-      -> Expected<U, E> {
+  template <typename F, typename U = RemoveRef<InvokeReturnOf<F, T const&>>>
+  [[nodiscard]] constexpr auto transform(F&& fn) const& -> Expected<U, E> {
     return hasValue()
         ? Expected<U, E>{fn::invoke(fwd<F>(fn), value())}
         : Expected<U, E>{Unexpect{}, error()};
   }
 
-  template <typename F, typename U = InvokeReturnOf<F, T&&>> [[nodiscard]] constexpr auto transform(F&& fn)&&
-      -> Expected<U, E> {
+  template <typename F, typename U = RemoveRef<InvokeReturnOf<F, T&&>>>
+  [[nodiscard]] constexpr auto transform(F&& fn)&& -> Expected<U, E> {
     return hasValue()
         ? Expected<U, E>{fn::invoke(fwd<F>(fn), mv(value()))}
         : Expected<U, E>{Unexpect{}, error()};
   }
 
-  template <typename F, typename U = InvokeReturnOf<F, T const&&>> [[nodiscard]] constexpr auto transform(F&& fn)
-      const&& -> Expected<U, E> {
+  template <typename F, typename U = RemoveRef<InvokeReturnOf<F, T const&&>>>
+  [[nodiscard]] constexpr auto transform(F&& fn) const&& -> Expected<U, E> {
     return hasValue()
         ? Expected<U, E>{fn::invoke(fwd<F>(fn), mv(value()))}
         : Expected<U, E>{Unexpect{}, error()};
@@ -216,29 +217,29 @@ public:
     return hasValue() ? mv(*this) : fn::invoke(fwd<F>(fn), error());
   }
 
-  template <typename F, typename G = InvokeReturnOf<F, E>> [[nodiscard]] constexpr auto transformError(F&& fn)&
-      -> Expected<T, G> {
+  template <typename F, typename G = RemoveRef<InvokeReturnOf<F, E>>>
+  [[nodiscard]] constexpr auto transformError(F&& fn)& -> Expected<T, G> {
     return hasValue()
         ? Expected<T, G>{value()}
         : Expected<T, G>{Unexpect{}, fn::invoke(fwd<F>(fn), error())};
   }
 
-  template <typename F, typename G = InvokeReturnOf<F, E>> [[nodiscard]] constexpr auto transformError(F&& fn) const&
-        -> Expected<T, G> {
+  template <typename F, typename G = RemoveRef<InvokeReturnOf<F, E>>>
+  [[nodiscard]] constexpr auto transformError(F&& fn) const& -> Expected<T, G> {
     return hasValue()
         ? Expected<T, G>{value()}
         : Expected<T, G>{Unexpect{}, fn::invoke(fwd<F>(fn), error())};
   }
 
-  template <typename F, typename G = InvokeReturnOf<F, E>> [[nodiscard]] constexpr auto transformError(F&& fn)&&
-      -> Expected<T, G> {
+  template <typename F, typename G = RemoveRef<InvokeReturnOf<F, E>>>
+  [[nodiscard]] constexpr auto transformError(F&& fn)&& -> Expected<T, G> {
     return hasValue()
         ? Expected<T, G>{mv(value())}
         : Expected<T, G>{Unexpect{}, fn::invoke(fwd<F>(fn), error())};
   }
 
-  template <typename F, typename G = InvokeReturnOf<F, E>> [[nodiscard]] constexpr auto transformError(F&& fn) const&&
-      -> Expected<T, G> {
+  template <typename F, typename G = RemoveRef<InvokeReturnOf<F, E>>>
+  [[nodiscard]] constexpr auto transformError(F&& fn) const&& -> Expected<T, G> {
     return hasValue()
         ? Expected<T, G>{mv(value())}
         : Expected<T, G>{Unexpect{}, fn::invoke(fwd<F>(fn), error())};

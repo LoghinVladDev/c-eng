@@ -21,14 +21,34 @@ export module c_eng.api.vk:core;
 export namespace vk {
 using AllocationCallbacks = VkAllocationCallbacks;
 using ApplicationInfo = VkApplicationInfo;
+using Bool32 = VkBool32;
+using ExtensionProperties = VkExtensionProperties;
 using LayerProperties = VkLayerProperties;
 using InstanceHandle = VkInstance;
 using InstanceCreateInfo = VkInstanceCreateInfo;
 using Result = VkResult;
 using StructureType = VkStructureType;
 
-constexpr auto nullHandle = VK_NULL_HANDLE;
-constexpr auto compiledVersion = VK_API_CURRENT_VERSION;
+using UnavailableType = void*;
+
+#ifdef VK_EXT_debug_utils
+using DebugUtilsMessageSeverityFlagBits = VkDebugUtilsMessageSeverityFlagBitsEXT;
+using DebugUtilsMessageTypeFlags = VkDebugUtilsMessageTypeFlagsEXT;
+using DebugUtilsMessageTypeFlagBits = VkDebugUtilsMessageTypeFlagBitsEXT;
+using DebugUtilsMessengerCallbackData = VkDebugUtilsMessengerCallbackDataEXT;
+
+using DebugUtilsMessengerCreateInfo = VkDebugUtilsMessengerCreateInfoEXT;
+using DebugUtilsMessengerHandle = VkDebugUtilsMessengerEXT;
+
+inline constexpr auto debugUtilsMessengerAvailable = true;
+#else
+using DebugUtilsMessengerCreateInfo = UnavailableType;
+using DebugUtilsMessengerHandle = UnavailableType;
+inline constexpr auto debugUtilsMessengerAvailable = false;
+#endif
+
+inline constexpr auto nullHandle = VK_NULL_HANDLE;
+inline constexpr auto compiledVersion = VK_API_CURRENT_VERSION;
 
 inline auto createInstance(
     InstanceCreateInfo const* pCreateInfo,

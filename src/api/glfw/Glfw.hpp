@@ -18,6 +18,7 @@
 
 namespace c_eng::api::detail {
 using cds::Optional;
+using cds::StringView;
 using cds::Tuple;
 using cds::Union;
 using cds::Vector;
@@ -118,6 +119,8 @@ public:
   [[nodiscard]] auto info() const noexcept -> ApiInfo override;
   [[nodiscard]] auto compiledVersion() const noexcept -> Optional<Version> override;
   [[nodiscard]] auto runtimeVersion() const noexcept -> Optional<Version> override;
+
+  [[nodiscard]] auto vulkanExtensions() const noexcept -> Vector<StringView>;
 };
 } // namespace c_eng::api::detail
 

@@ -32,8 +32,9 @@ if(DEFINED C_ENG_USE_VULKAN AND C_ENG_USE_VULKAN)
 
   set(
       C_ENG_VULKAN_SRC
+      api/vulkan/VulkanCore.cxxm
+      api/vulkan/debug/VulkanDebug.cxxm
       api/vulkan/instance/VulkanLayer.cxxm
-      api/vulkan/instance/VulkanCore.cxxm
       api/vulkan/instance/Vulkan.cxxm)
 
   add_library(c_eng_vulkan SHARED)

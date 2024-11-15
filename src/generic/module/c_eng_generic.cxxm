@@ -4,6 +4,7 @@
 module;
 #include <generic/api/Api.hpp>
 #include <generic/lang/Range.hpp>
+#include <generic/log/Logger.hpp>
 
 export module c_eng.generic;
 
@@ -12,6 +13,8 @@ using detail::Api;
 using detail::ApiInfo;
 using detail::LicenceType;
 using detail::Version;
+using detail::Logger;
+using detail::LoggerRef;
 using detail::filter;
 using detail::project;
 using detail::operator|;

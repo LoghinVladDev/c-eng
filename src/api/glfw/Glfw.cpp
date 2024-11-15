@@ -290,4 +290,16 @@ auto GlfwInstance::platform() const noexcept -> GlfwPlatform {
       unreachable();
   }
 }
+
+auto Glfw::vulkanExtensions() const noexcept -> Vector<StringView> {
+  ignore = this;
+  Vector<StringView> extensions;
+  U32 count;
+  ignore = glfwGetRequiredInstanceExtensions(&count);
+  extensions.reserve(count);
+  auto pExtensions = glfwGetRequiredInstanceExtensions(&count);
+  extensions.insert(extensions.end(), pExtensions, pExtensions + count);
+  return extensions;
+}
+
 } // namespace c_eng::api::detail

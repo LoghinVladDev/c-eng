@@ -5,15 +5,32 @@
 #pragma once
 
 #include "Types.hpp"
+#include <sstream>
 #include <cds/experimental/Format>
 #include <cds/meta/Compiler>
 
 namespace c_eng::generic::detail {
+using std::stringstream;
+using std::hex;
+
+using cds::U64;
+using cds::bitCast;
+
 using namespace cds::experimental::literals;
 using cds::meta::False;
 using cds::meta::RemoveCVRef;
 using cds::meta::True;
+using cds::impl::fwd;
 using cds::impl::unreachable;
+
+inline auto addressAsString(void const* addr) noexcept {
+  // TODO: cds/StringStream
+  // OR
+  // TODO: cds/experimental/Format provide formatting literals support for address formatting
+  stringstream oss;
+  oss << "0x" << hex << bitCast<U64>(addr);
+  return oss.str();
+}
 
 template <typename = void> struct ToString : False {};
 

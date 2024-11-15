@@ -5,14 +5,14 @@
 
 #include <cds/StringView>
 
+#include "api/vulkan/VulkanTypesToString.hpp"
+
 #include "generic/engine/Engine.hpp"
 #include "generic/log/Logger.hpp"
 
 #include "api/glfw/Glfw.hpp"
 
 #include <generic/lang/Range.hpp>
-
-#include <api/vulkan/instance/VulkanTypesToString.hpp>
 
 import c_eng.api.vk;
 import cds;
@@ -21,8 +21,6 @@ namespace {
 using cds::StringView;
 using cds::Vector;
 using cds::ignore;
-using cds::ignore;
-using namespace cds::experimental::literals;
 using cds::experimental::Expected;
 
 using c_eng::generic::Engine;
@@ -37,6 +35,7 @@ using c_eng::generic::flatten;
 using c_eng::generic::filter;
 using c_eng::generic::project;
 
+using c_eng::api::vk::ApplicationInfo;
 using c_eng::api::vk::createInstance;
 using c_eng::api::vk::layerProperties;
 } // namespace
@@ -55,10 +54,19 @@ auto main(int argc, char const* const* argv) noexcept -> int {
   }
 
   Glfw glfw{Vector{PlatformX11}, l};
+  auto requestedVulkanExtensions = glfw.vulkanExtensions();
+  requestedVulkanExtensions.emplaceBack("VK_EXT_debug_utils");
 
   auto vulkan = layerProperties({"VK_LAYER_KHRONOS_validation"})
-      .then([](auto const& layers) {
-        return createInstance(layers);
+      .then([&l, &requestedVulkanExtensions](auto const& layers) {
+        ApplicationInfo info {
+            .applicationName{"GenericScene"},
+            .applicationVersion{0, 0, 1, 0},
+            .engineName{"c_eng"},
+            .engineVersion{0, 0, 7, 0},
+            .targetVulkanApiVersion{0, 1, 3, 0}
+        };
+        return createInstance(l, layers, requestedVulkanExtensions, info);
       });
 
   //

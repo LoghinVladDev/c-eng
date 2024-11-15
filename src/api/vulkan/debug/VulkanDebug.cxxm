@@ -1,0 +1,108 @@
+//
+// Created by loghin on 11/14/24.
+//
+module;
+#include <cassert>
+#include <vulkan/vulkan_core.h>
+#include <api/vulkan/VulkanTypesToString.hpp>
+
+export module c_eng.api.vk:debug;
+import :core;
+import cds;
+import c_eng.generic;
+
+using cds::impl::unreachable;
+
+using vk::Bool32;
+using vk::DebugUtilsMessengerCreateInfo;
+using vk::DebugUtilsMessageSeverityFlagBits;
+using vk::DebugUtilsMessageTypeFlagBits;
+using vk::DebugUtilsMessageTypeFlags;
+using vk::DebugUtilsMessengerCallbackData;
+
+using c_eng::generic::Logger;
+using c_eng::generic::LoggerRef;
+using c_eng::generic::flagsToString;
+using c_eng::generic::detail::genericFlagsToString;
+
+using namespace cds::experimental::literals;
+
+auto smallSeverity(DebugUtilsMessageSeverityFlagBits severity) {
+  switch (severity) {
+    case VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT: return "Verbose";
+    case VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT:    return "Info";
+    case VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT: return "Warning";
+    case VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT:   return "Error";
+    default:
+      assert(false && "Unhandled DebugUtilsMessageSeverityFlagBits type");
+      unreachable();
+  }
+}
+
+auto smallTypeFlag(DebugUtilsMessageTypeFlagBits flag) {
+  switch (flag) {
+    case VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT: return "General";
+    case VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT:  return "Validation";
+    case VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT: return "Performance";
+#ifdef VK_EXT_device_address_binding_report
+    case VK_DEBUG_UTILS_MESSAGE_TYPE_DEVICE_ADDRESS_BINDING_BIT_EXT:  return "DeviceAddressBinding";
+#endif
+    default:
+      assert(false && "Unhandled DebugUtilsMessageTypeFlagBits type");
+      unreachable();
+  }
+}
+
+auto smallTypeFlags(DebugUtilsMessageTypeFlags flags) {
+  return genericFlagsToString<DebugUtilsMessageTypeFlagBits>(flags, &smallTypeFlag);
+}
+
+#ifdef VK_EXT_debug_utils
+auto debugMessengerCallback(
+    DebugUtilsMessageSeverityFlagBits severity,
+    DebugUtilsMessageTypeFlags types,
+    DebugUtilsMessengerCallbackData const* pCallbackData,
+    void* pUserData
+) noexcept -> Bool32 {
+  auto* logger = static_cast<Logger*>(pUserData);
+  assert(logger && "Invalid/Unset DebugMessenger pUserData");
+  auto ref = LoggerRef{*logger};
+  // TODO: cds/experimental/Format provide custom formatting literals support
+  // ref() << ref.invoke("[VulkanDebugMessenger][{}][{}] - {}"_f,
+  //     severity, flagsToString<DebugUtilsMessageTypeFlagBits>(types), *pCallbackData);
+
+  ref() << ref.invoke("[VkDebugMessenger][{}][{}] {}:{} -> {}"_f,
+                      smallSeverity(severity), smallTypeFlags(types),
+                      pCallbackData->pMessageIdName, pCallbackData->messageIdNumber,
+                      pCallbackData->pMessage);
+  return VK_FALSE;
+}
+#endif
+
+export namespace vk {
+#ifdef VK_EXT_debug_utils
+auto fillDebugMessengerCreateInfo(DebugUtilsMessengerCreateInfo* pCreateInfo, Logger& logger) noexcept {
+  *pCreateInfo = {
+      .sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT,
+      .pNext = nullptr,
+      .flags = 0u,
+      .messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT
+                         | VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT
+                         | VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT
+                         | VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT,
+      .messageType = VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT
+                     | VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT
+                     | VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT,
+      .pfnUserCallback = &debugMessengerCallback,
+      .pUserData = static_cast<void*>(&logger)
+  };
+  return pCreateInfo;
+}
+#else
+auto fillDebugMessengerCreateInfo(DebugUtilsMessengerCreateInfo* pCreateInfo, LoggerRef const& logger) noexcept {
+  ignore = pCreateInfo;
+  ignore = logger;
+  return nullptr;
+}
+#endif
+} // namespace vk

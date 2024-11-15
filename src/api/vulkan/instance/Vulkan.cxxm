@@ -3,10 +3,12 @@
 //
 module;
 #include "VulkanTypes.hpp"
+#include <iostream>
 
 export module c_eng.api.vk;
 export import :layer;
 import :core;
+import :debug;
 import c_eng.generic;
 import cds;
 
@@ -19,6 +21,8 @@ using cds::Vector;
 using cds::ignore;
 using cds::nullopt;
 
+using namespace cds::literals;
+
 using cds::impl::xch;
 using cds::impl::mv;
 
@@ -26,6 +30,7 @@ using cds::experimental::Expected;
 using cds::experimental::Unexpected;
 
 using vk::ApplicationInfo;
+using vk::DebugUtilsMessengerCreateInfo;
 using vk::LayerProperties;
 using vk::InstanceCreateInfo;
 using vk::InstanceHandle;
@@ -33,13 +38,16 @@ using vk::Result;
 using vk::StructureType;
 using vk::createInstance;
 using vk::destroyInstance;
+using vk::debugUtilsMessengerAvailable;
 using vk::enumerateInstanceLayerProperties;
 using vk::enumerateInstanceVersion;
+using vk::fillDebugMessengerCreateInfo;
 using vk::nullHandle;
 
 using c_eng::generic::Api;
 using c_eng::generic::ApiInfo;
 using c_eng::generic::LicenceType;
+using c_eng::generic::Logger;
 using c_eng::generic::Version;
 using c_eng::generic::filter;
 using c_eng::generic::fromVersion;
@@ -78,7 +86,7 @@ public:
   [[nodiscard]] auto runtimeVersion() const noexcept -> Optional<Version> override {
     ignore = this;
     U32 runtimeVersion;
-    if (enumerateInstanceVersion(&runtimeVersion) != Result::VK_SUCCESS) {
+    if (enumerateInstanceVersion(&runtimeVersion) != VK_SUCCESS) {
       return nullopt;
     }
     return toVersion(runtimeVersion);
@@ -97,7 +105,9 @@ struct ApplicationInfo {
 };
 
 auto createInstance(
+    Logger& logger,
     Vector<char const*> layerNames,
+    Vector<char const*> extensionNames,
     Optional<ApplicationInfo> const& appInfo = {}
 ) noexcept -> Expected<Instance, Result> {
   ::vk::ApplicationInfo applicationInfo {
@@ -114,20 +124,25 @@ auto createInstance(
         .getOr(nullopt).transform(&fromVersion).getOr(VK_API_VERSION_1_3)
   };
 
+  DebugUtilsMessengerCreateInfo messengerCreateInfo{};
+  auto pMessengerCreateInfo = extensionNames.contains("VK_EXT_debug_utils"_sv)
+      ? fillDebugMessengerCreateInfo(&messengerCreateInfo, logger)
+      : nullptr;
+
   InstanceCreateInfo createInfo {
-      .sType = StructureType::VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO,
-      .pNext = nullptr,
+      .sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO,
+      .pNext = pMessengerCreateInfo,
       .flags = 0u,
       .pApplicationInfo = &applicationInfo,
       .enabledLayerCount = static_cast<U32>(layerNames.size()),
       .ppEnabledLayerNames = layerNames.data(),
-      .enabledExtensionCount = 0u,
-      .ppEnabledExtensionNames = nullptr
+      .enabledExtensionCount = static_cast<U32>(extensionNames.size()),
+      .ppEnabledExtensionNames = extensionNames.data()
   };
 
   InstanceHandle handle = nullHandle;
   if (auto result = createInstance(&createInfo, nullptr, &handle);
-      result != Result::VK_SUCCESS) {
+      result != VK_SUCCESS) {
     return Unexpected{result};
   }
 
@@ -135,13 +150,18 @@ auto createInstance(
 }
 
 auto createInstance(
+    Logger& logger,
     Vector<LayerProperties> const& properties,
+    Vector<StringView> const& extensionNames,
     Optional<ApplicationInfo> const& appInfo = {}
 ) noexcept -> Expected<Instance, Result> {
   return createInstance(
+      logger,
       Vector<char const*>{properties | project([](auto const& prop) {
           return static_cast<char const*>(prop.layerName);
-      })}, appInfo
+      })},
+      Vector<char const*>{extensionNames | project(&StringView::data)},
+      appInfo
   );
 }
 } // namespace c_eng::api::vulkan
