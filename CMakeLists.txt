@@ -28,7 +28,7 @@ endif()
 
 
 # TODO: remove later
-# add_subdirectory(dependencies/cds)
+add_subdirectory(dependencies/cds)
 
 if(NOT DEFINED C_ENG_USE_VULKAN)
   set(C_ENG_USE_VULKAN ON)

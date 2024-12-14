@@ -9,7 +9,7 @@
 #include <atomic>
 #include <GLFW/glfw3.h>
 
-#include <cds/experimental/Format>
+#include <cds/Format>
 
 namespace c_eng::api::detail {
 namespace {
@@ -20,7 +20,6 @@ using std::atomic_fetch_add_explicit;
 using std::atomic_fetch_sub_explicit;
 
 using namespace cds::literals;
-using namespace cds::experimental::literals;
 
 using cds::StringView;
 using cds::U32;

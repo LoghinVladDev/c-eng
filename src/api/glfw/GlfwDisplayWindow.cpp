@@ -9,7 +9,7 @@
 #include "GlfwDisplay.hpp"
 #include "GlfwWindow.hpp"
 
-#include <cds/experimental/Format>
+#include <cds/Format>
 #include <cds/threading/Mutex>
 #include <GLFW/glfw3.h>
 
@@ -32,7 +32,7 @@ using cds::ignore;
 using cds::makeUnique;
 
 using cds::impl::xch;
-using namespace cds::experimental::literals;
+using namespace cds::literals;
 
 using generic::project;
 using generic::DisplayVideoMode;
@@ -416,15 +416,15 @@ using cds::U64;
 using cds::bitCast;
 using std::hex;
 using std::stringstream;
-using c_eng::generic::detail::addressAsString;
 using c_eng::api::detail::GlfwDisplay;
 
-template <> struct cds::experimental::impl::Formatter<GlfwDisplay> {
-  template <typename S> auto operator()(S& string, GlfwDisplay const& display) const noexcept -> void {
-    string += "Display{{handle={}, name='{}', currentVideoMode={}, physicalSize={}, "
-              "contentScale={}, position={}, availableArea={}}}"_f(
-        addressAsString(&display), display.name(), display.currentVideoMode(), display.physicalSize(),
-        display.contentScale(), display.position(), display.availableAreaRect()
-    );
+template <typename C> struct cds::Formatter<GlfwDisplay, C> {
+  template <typename Ctx> auto format(GlfwDisplay const& display, Ctx& ctx) const noexcept -> typename Ctx::Iterator {
+    auto&& onTop = cds::format(
+        "Display{{handle={}, name='{}', currentVideoMode={}, physicalSize={}, "
+        "contentScale={}, position={}, availableArea={}}}",
+        &display, display.name(), display.currentVideoMode(), display.physicalSize(),
+        display.contentScale(), display.position(), display.availableAreaRect());
+    return impl::copy(onTop.begin(), onTop.end(), ctx.out());
   }
 };

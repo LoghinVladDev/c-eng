@@ -17,13 +17,13 @@ using cds::String;
 using cds::Vector;
 using cds::U32;
 using cds::U64;
-using cds::bitCast;
 
 template <> struct ToString<VkLayerProperties> : True {
   auto operator()(VkLayerProperties const& properties) const noexcept {
-    return R"(VkLayerProperties{{name="{}", targetSpecVersion={}, revision={}, description="{}"}})"_f(
-      static_cast<char const*>(properties.layerName), toVersion(properties.specVersion),
-      properties.implementationVersion, static_cast<char const*>(properties.description)
+    return cds::format(
+        R"(VkLayerProperties{{name="{}", targetSpecVersion={}, revision={}, description="{}"}})",
+        static_cast<char const*>(properties.layerName), toVersion(properties.specVersion),
+        properties.implementationVersion, static_cast<char const*>(properties.description)
     );
   }
 };
@@ -174,11 +174,14 @@ template <> struct ToString<VkInstanceCreateInfo> : True {
         layerCount, layers,
         extensionCount, extensions
     ] = info;
-    return "VkInstanceCreateInfo{{"
-           "sType={}, next={}, flags={}, applicationInfo={}, enabledLayers={}, enabledExtensions={}"
-           "}}"_f(type, addressAsString(next), flags, addressAsString(applicationInfo),
-                  Vector<char const*>{layers, layers + layerCount},
-                  Vector<char const*>{extensions, extensions + extensionCount});
+    return cds::format(
+        "VkInstanceCreateInfo{{"
+        "sType={}, next={}, flags={}, applicationInfo={}, enabledLayers={}, enabledExtensions={}"
+        "}}",
+        type, next, flags, applicationInfo,
+        Vector<char const*>{layers, layers + layerCount},
+        Vector<char const*>{extensions, extensions + extensionCount}
+    );
   }
 };
 
@@ -217,19 +220,24 @@ template <> struct ToString<VkDebugUtilsMessageSeverityFlagBitsEXT> : True {
 template <> struct ToString<VkDebugUtilsLabelEXT> : True {
   auto operator()(VkDebugUtilsLabelEXT const& label) const noexcept {
     auto const& [type, next, name, color] = label;
-    return "VkDebugUtilsLabelEXT{{"
-           R"(sType={}, pNext={}, labelName="{}", color={})"
-           "}}"_f(label.sType, addressAsString(next), name, Vector<float>{cds::begin(color), cds::end(color)});
+    return cds::format(
+        "VkDebugUtilsLabelEXT{{"
+        R"(sType={}, pNext={}, labelName="{}", color={})"
+        "}}",
+        label.sType, next, name, Vector<float>{cds::begin(color), cds::end(color)}
+    );
   }
 };
 
 template <> struct ToString<VkDebugUtilsObjectNameInfoEXT> : True {
   auto operator()(VkDebugUtilsObjectNameInfoEXT const& nameInfo) const noexcept {
-    // TODO: cds/experimental/Format provide formatting literals support for number formatting(hex)
     auto const& [sType, next, oType, handle, name] = nameInfo;
-    return "VkDebugUtilsObjectNameInfoEXT{{"
-           R"(sType={}, pNext={}, objectType={}, objectHandle={}, objectName="{}")"
-           "}}"_f(sType, addressAsString(next), oType, addressAsString(bitCast<void const*>(handle)), name);
+    return cds::format(
+        "VkDebugUtilsObjectNameInfoEXT{{"
+        R"(sType={}, pNext={}, objectType={}, objectHandle={:#x}, objectName="{}")"
+        "}}",
+        sType, next, oType, handle, name
+    );
   }
 };
 
@@ -244,13 +252,16 @@ template <> struct ToString<VkDebugUtilsMessengerCallbackDataEXT> : True {
     ] = data;
 
     // TODO: cds/collection/ContiguousView instead of Vector creation
-    return "VkDebugUtilsMessengerCallbackDataEXT{{"
-           R"(sType={}, pNext={}, flags={}, messageIdName="{}", messageIdNumber={}, )"
-           R"(message="{}", queueLabels={}, cmdBufLabels={}, objects={})"
-           "}}"_f(type, addressAsString(next), flags, messageIdName, messageIdNumber, message,
-                  Vector<VkDebugUtilsLabelEXT>{queueLabels, queueLabels + queueLabelCount},
-                  Vector<VkDebugUtilsLabelEXT>{cmdBufLabels, cmdBufLabels + cmdBufLabelCount},
-                  Vector<VkDebugUtilsObjectNameInfoEXT>{objects, objects + objectCount});
+    return cds::format(
+        "VkDebugUtilsMessengerCallbackDataEXT{{"
+        R"(sType={}, pNext={}, flags={}, messageIdName="{}", messageIdNumber={}, )"
+        R"(message="{}", queueLabels={}, cmdBufLabels={}, objects={})"
+        "}}",
+        type, next, flags, messageIdName, messageIdNumber, message,
+        Vector<VkDebugUtilsLabelEXT>{queueLabels, queueLabels + queueLabelCount},
+        Vector<VkDebugUtilsLabelEXT>{cmdBufLabels, cmdBufLabels + cmdBufLabelCount},
+        Vector<VkDebugUtilsObjectNameInfoEXT>{objects, objects + objectCount}
+    );
   }
 };
 #endif

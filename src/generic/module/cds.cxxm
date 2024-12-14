@@ -2,14 +2,14 @@
 // Created by loghin on 11/14/24.
 //
 module;
+
+#include <cds/Format>
 #include <cds/Optional>
 #include <cds/String>
 #include <cds/StringView>
 #include <cds/Union>
 
 #include <cds/collection/Vector>
-
-#include <cds/experimental/Format>
 
 export module cds;
 
@@ -24,10 +24,6 @@ using cds::Vector;
 } // namespace cds
 
 export namespace cds::experimental {
-namespace impl {
-using impl::Formatter;
-} // namespace impl
-
 namespace impl {
 using cds::meta::And;
 using cds::meta::IsTriviallyCopyConstructible;

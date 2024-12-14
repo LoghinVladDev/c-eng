@@ -25,7 +25,7 @@ using c_eng::generic::LoggerRef;
 using c_eng::generic::flagsToString;
 using c_eng::generic::detail::genericFlagsToString;
 
-using namespace cds::experimental::literals;
+using namespace cds::literals;
 
 auto smallSeverity(DebugUtilsMessageSeverityFlagBits severity) {
   switch (severity) {

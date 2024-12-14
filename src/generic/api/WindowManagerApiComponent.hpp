@@ -5,7 +5,7 @@
 #pragma once
 
 #include <cds/String>
-#include <cds/experimental/Format>
+#include <cds/Format>
 #include <cds/memory/UniquePtr>
 
 #include <generic/Types.hpp>
@@ -19,7 +19,7 @@ using cds::Size;
 using cds::String;
 using cds::UniquePtr;
 
-using namespace cds::experimental::literals;
+using namespace cds::literals;
 
 class Display;
 
