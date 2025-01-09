@@ -6,7 +6,7 @@
 
 #include "VulkanTypes.hpp"
 #include <sstream>
-#include <cds/collection/Vector>
+#include <cds/collection/VectorView>
 #include <generic/TypesToString.hpp>
 
 namespace c_eng::generic::detail {
@@ -14,7 +14,7 @@ using std::hex;
 using std::stringstream;
 
 using cds::String;
-using cds::Vector;
+using cds::VectorView;
 using cds::U32;
 using cds::U64;
 
@@ -179,8 +179,8 @@ template <> struct ToString<VkInstanceCreateInfo> : True {
         "sType={}, next={}, flags={}, applicationInfo={}, enabledLayers={}, enabledExtensions={}"
         "}}",
         type, next, flags, applicationInfo,
-        Vector<char const*>{layers, layers + layerCount},
-        Vector<char const*>{extensions, extensions + extensionCount}
+        VectorView{layers, layers + layerCount},
+        VectorView{extensions, extensions + extensionCount}
     );
   }
 };
@@ -224,7 +224,7 @@ template <> struct ToString<VkDebugUtilsLabelEXT> : True {
         "VkDebugUtilsLabelEXT{{"
         R"(sType={}, pNext={}, labelName="{}", color={})"
         "}}",
-        label.sType, next, name, Vector<float>{cds::begin(color), cds::end(color)}
+        label.sType, next, name, VectorView{cds::begin(color), cds::end(color)}
     );
   }
 };
@@ -251,16 +251,15 @@ template <> struct ToString<VkDebugUtilsMessengerCallbackDataEXT> : True {
         objectCount, objects
     ] = data;
 
-    // TODO: cds/collection/ContiguousView instead of Vector creation
     return cds::format(
         "VkDebugUtilsMessengerCallbackDataEXT{{"
         R"(sType={}, pNext={}, flags={}, messageIdName="{}", messageIdNumber={}, )"
         R"(message="{}", queueLabels={}, cmdBufLabels={}, objects={})"
         "}}",
         type, next, flags, messageIdName, messageIdNumber, message,
-        Vector<VkDebugUtilsLabelEXT>{queueLabels, queueLabels + queueLabelCount},
-        Vector<VkDebugUtilsLabelEXT>{cmdBufLabels, cmdBufLabels + cmdBufLabelCount},
-        Vector<VkDebugUtilsObjectNameInfoEXT>{objects, objects + objectCount}
+        VectorView{queueLabels, queueLabels + queueLabelCount},
+        VectorView{cmdBufLabels, cmdBufLabels + cmdBufLabelCount},
+        VectorView{objects, objects + objectCount}
     );
   }
 };

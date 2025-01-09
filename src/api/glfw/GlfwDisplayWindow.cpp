@@ -17,6 +17,12 @@
 #include <generic/TypesToString.hpp>
 #include <generic/lang/Range.hpp>
 
+#include <platform/window/NativeWindowData.hpp>
+
+#define GLFW_EXPOSE_NATIVE_X11
+#define GLFW_EXPOSE_NATIVE_WAYLAND
+#include <GLFW/glfw3native.h>
+
 namespace c_eng::api::detail {
 namespace {
 using cds::Mutex;
@@ -44,6 +50,18 @@ using generic::ColorChannelsDepth;
 using generic::IncompatibleDisplayException;
 using generic::PersistentObjectCreatedEvent;
 using generic::PersistentObjectDestroyedEvent;
+
+using native::NativeWindowData;
+using native::NativeWindowInfoType;
+
+#ifdef WIN32
+using native::NativeWin32WindowData;
+#elifdef __linux
+using native::NativeX11WindowData;
+using native::NativeWaylandWindowData;
+#else
+#error Undefined native window system.
+#endif
 
 namespace fn = cds::functional;
 
@@ -265,12 +283,12 @@ private:
   GlfwDisplayManagerInstance* _instance {nullptr};
 };
 
-template <typename Fn> decltype(auto) synchronizedInstance(Fn&& fn, LoggerRef logger = {}) {
+template <typename Fn> decltype(auto) synchronizedInstance(Fn&& fn, LoggerRef logger = {}) noexcept {
   InstanceAccessor accessor{logger};
   return fn::invoke(fwd<Fn>(fn), accessor.instance());
 }
 
-auto dispEv(int glfwEvent) {
+auto dispEv(int glfwEvent) noexcept {
   switch (glfwEvent) {
     case GLFW_CONNECTED:
       return fn::memFn(&GlfwDisplayManagerInstance::connect);
@@ -306,6 +324,38 @@ public:
 
   [[nodiscard]] auto& manager() const noexcept {
     return _manager;
+  }
+
+  auto close() noexcept -> void override {
+    _manager.close(this);
+  }
+
+  auto acquireNativeWindowData(NativeWindowData* pNativeData) const noexcept -> bool override {
+    assert(_manager.instance() && pNativeData);
+    auto const currentPlatform = _manager.instance()->platform();
+#ifdef WIN32
+    auto pWin32NativeData = reinterpret_cast<NativeWin32WindowData*>(pNativeData);
+    pWin32NativeData->instanceHandle = GetModuleHandle(nullptr);
+    pWin32NativeData->windowHandle = glfwGetWin32Window(_handle);
+    return true;
+#elifdef __linux
+    if (auto pX11NativeData = reinterpret_cast<NativeX11WindowData*>(pNativeData);
+        pX11NativeData->type == NativeWindowInfoType::X11
+        && currentPlatform == GlfwPlatform::X11) {
+      pX11NativeData->display = glfwGetX11Display();
+      pX11NativeData->window = glfwGetX11Window(_handle);
+      return true;
+    }
+
+    if (auto pWaylandNativeData = reinterpret_cast<NativeWaylandWindowData*>(pNativeData);
+        pWaylandNativeData->type == NativeWindowInfoType::Wayland
+        && currentPlatform == GlfwPlatform::Wayland) {
+      pWaylandNativeData->display = glfwGetWaylandDisplay();
+      pWaylandNativeData->surface = glfwGetWaylandWindow(_handle);
+      return true;
+    }
+#endif
+    return false;
   }
 
 private:
@@ -408,6 +458,10 @@ auto GlfwWindowManager::close(Window* window) noexcept -> void {
   PersistentObjectDestroyedEvent event{window};
   notify(event);
   _windows.remove(_windows.findFirst(window));
+}
+
+auto GlfwWindowManager::instance() const noexcept -> GlfwInstance const* {
+  return _controller;
 }
 
 } // namespace c_eng::api::detail

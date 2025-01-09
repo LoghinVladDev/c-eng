@@ -1,0 +1,146 @@
+//
+// Created by loghin on 1/7/25.
+//
+module;
+#include <cassert>
+
+#include <platform/window/NativeWindowData.hpp>
+
+#include <vulkan/vulkan_core.h>
+
+#if defined(WIN32)
+#include <vulkan/vulkan_win32.h>
+#elif defined(__linux)
+#include <vulkan/vulkan_wayland.h>
+#include <vulkan/vulkan_xlib.h>
+#endif
+
+export module c_eng.api.vk:surface;
+import :core;
+import :instance;
+
+import cds;
+import c_eng.generic;
+
+using cds::experimental::Expected;
+using cds::experimental::Unexpected;
+using cds::impl::xch;
+
+using GenericWindow = c_eng::generic::Window;
+
+using c_eng::native::NativeWindowData;
+using enum c_eng::native::NativeWindowInfoType;
+#ifdef WIN32
+using c_eng::native::NativeWin32WindowData;
+#elifdef __linux
+using c_eng::native::NativeX11WindowData;
+using c_eng::native::NativeWaylandWindowData;
+#else
+#error Unhandled platform NativeWindowData.
+#endif
+
+using vk::InstanceHandle;
+using vk::Result;
+using vk::SurfaceHandle;
+using vk::destroySurface;
+using vk::nullHandle;
+
+auto createNativeSurface(
+    InstanceHandle instance,
+    GenericWindow const* window,
+    AllocationCallbacks const* pAllocator,
+    SurfaceHandle* pSurfaceHandle
+) noexcept -> Result {
+#if defined(WIN32)
+#if defined(VK_KHR_win32_surface)
+  NativeWin32WindowData win32WindowData {};
+  win32WindowData.type = Win32;
+  if (window->acquireNativeWindowData(reinterpret_cast<NativeWindowData*>(&win32WindowData))) {
+    VkWin32SurfaceCreateInfoKHR createInfo {
+      .sType = VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR,
+      .pNext = nullptr,
+      .flags = 0,
+      .hinstance = win32WindowData.instanceHandle,
+      .hwnd = win32WindowData.windowHandle
+  };
+    return vkCreateWin32SurfaceKHR(instance, &createInfo, pAllocator, pSurfaceHandle);
+  }
+#endif
+  assert(false && "Unhandled native surface call for win32");
+  return VK_ERROR_EXTENSION_NOT_PRESENT;
+#elif defined(__linux)
+#if defined(VK_KHR_wayland_surface)
+  NativeWaylandWindowData waylandWindowData {};
+  waylandWindowData.type = Wayland;
+  if (window->acquireNativeWindowData(reinterpret_cast<NativeWindowData*>(&waylandWindowData))) {
+    VkWaylandSurfaceCreateInfoKHR createInfo {
+        .sType = VK_STRUCTURE_TYPE_WAYLAND_SURFACE_CREATE_INFO_KHR,
+        .pNext = nullptr,
+        .flags = 0,
+        .display = waylandWindowData.display,
+        .surface = waylandWindowData.surface
+    };
+    return vkCreateWaylandSurfaceKHR(instance, &createInfo, pAllocator, pSurfaceHandle);
+  }
+#endif
+#if defined(VK_KHR_xlib_surface)
+  NativeX11WindowData x11WindowData {};
+  x11WindowData.type = X11;
+  if (window->acquireNativeWindowData(reinterpret_cast<NativeWindowData*>(&x11WindowData))) {
+    VkXlibSurfaceCreateInfoKHR createInfo {
+        .sType = VK_STRUCTURE_TYPE_XLIB_SURFACE_CREATE_INFO_KHR,
+        .pNext = nullptr,
+        .flags = 0,
+        .dpy = x11WindowData.display,
+        .window = x11WindowData.window
+    };
+    return vkCreateXlibSurfaceKHR(instance, &createInfo, pAllocator, pSurfaceHandle);
+  }
+#endif
+  assert(false && "Unhandled native surface call for linux");
+  return VK_ERROR_EXTENSION_NOT_PRESENT;
+#else
+#error Unhandled platform NativeWindowData.
+  return VK_ERROR_EXTENSION_NOT_PRESENT;
+#endif
+}
+
+export namespace c_eng::api::vk {
+class Surface {
+public:
+  explicit constexpr Surface(InstanceHandle instance, SurfaceHandle handle) noexcept :
+      _instance{xch(instance, nullHandle)},
+      _handle{xch(handle, nullHandle)} {}
+
+  constexpr Surface(Surface&& surface) noexcept :
+      _instance{xch(surface._instance, nullHandle)},
+      _handle{xch(surface._handle, nullHandle)} {}
+
+  ~Surface() noexcept {
+    if (_handle != nullHandle) {
+      destroySurface(_instance, _handle, nullptr);
+    }
+  }
+
+  [[nodiscard]] constexpr auto handle() const noexcept -> SurfaceHandle {
+    return _handle;
+  }
+
+private:
+  InstanceHandle _instance;
+  SurfaceHandle _handle;
+};
+
+auto createSurface(Instance const& instance, GenericWindow const* window) noexcept -> Expected<Surface, Result> {
+#ifndef VK_KHR_surface
+  return Unexpected{VK_ERROR_EXTENSION_NOT_PRESENT};
+#endif
+  auto instanceHandle = instance.handle();
+  SurfaceHandle surfaceHandle = nullHandle;
+  if (auto result = createNativeSurface(instanceHandle, window, nullptr, &surfaceHandle);
+      result != VK_SUCCESS) {
+    return Unexpected{result};
+  }
+  return Surface{instanceHandle, surfaceHandle};
+}
+} // namespace c_eng::api::vk

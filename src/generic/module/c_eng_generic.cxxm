@@ -3,6 +3,7 @@
 //
 module;
 #include <generic/api/Api.hpp>
+#include <generic/api/WindowManagerApiComponent.hpp>
 #include <generic/lang/Range.hpp>
 #include <generic/log/Logger.hpp>
 
@@ -15,7 +16,10 @@ using detail::LicenceType;
 using detail::Version;
 using detail::Logger;
 using detail::LoggerRef;
+using detail::Window;
 using detail::filter;
+using detail::forEach;
+using detail::indexedProject;
 using detail::project;
 using detail::operator|;
 } // namespace c_eng::generic

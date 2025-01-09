@@ -76,6 +76,58 @@ private:
   [[no_unique_address]] P _projector;
 };
 
+template <typename I, typename P> class IndexedProjectionIterator {
+public:
+  template <typename Iterator, typename Projector>
+  constexpr IndexedProjectionIterator(Iterator&& iterator, Projector&& projector) :
+      _iterator {fwd<Iterator>(iterator)}, _projector{fwd<Projector>(projector)}, _index{0u} {}
+
+  template <typename Iterator, typename Projector>
+  constexpr IndexedProjectionIterator(Iterator&& iterator, Projector&& projector, Size index) :
+      _iterator {fwd<Iterator>(iterator)}, _projector{fwd<Projector>(projector)}, _index{index} {}
+  constexpr IndexedProjectionIterator(IndexedProjectionIterator const&) noexcept = default;
+  constexpr IndexedProjectionIterator(IndexedProjectionIterator&&) noexcept = default;
+  constexpr auto operator=(IndexedProjectionIterator const&) noexcept -> IndexedProjectionIterator& = default;
+  constexpr auto operator=(IndexedProjectionIterator&&) noexcept -> IndexedProjectionIterator& = default;
+  constexpr ~IndexedProjectionIterator() noexcept = default;
+
+  constexpr auto operator++() -> IndexedProjectionIterator& {
+    ++_iterator;
+    ++_index;
+    return *this;
+  }
+
+  [[nodiscard]] constexpr auto base() const noexcept -> I const& {
+    return _iterator;
+  }
+
+  [[nodiscard]] constexpr auto operator+(Size offset) const noexcept {
+    return IndexedProjectionIterator{_iterator + offset, _projector, _index + offset};
+  }
+
+  [[nodiscard]] constexpr auto operator-(Size offset) const noexcept {
+    return IndexedProjectionIterator{_iterator - offset, _projector, _index + offset};
+  }
+
+  constexpr decltype(auto) operator*() const {
+    return fn::invoke(_projector, _index, *_iterator);
+  }
+
+  constexpr auto* operator->() const {
+    return &operator*();
+  }
+
+  template <typename OtherIt> constexpr auto operator==(IndexedProjectionIterator<OtherIt, P> const& iterator) const noexcept
+      -> bool {
+    return _iterator == iterator.base();
+  }
+
+private:
+  I _iterator;
+  [[no_unique_address]] P _projector;
+  Size _index;
+};
+
 template <typename I, typename S, typename P> class FilterIterator {
 public:
   template <typename Iterator, typename Sentinel, typename Predicate>
@@ -205,6 +257,7 @@ private:
 };
 
 template <typename I, typename P> ProjectionIterator(I&&, P&&) -> ProjectionIterator<I, P>;
+template <typename I, typename P> IndexedProjectionIterator(I&&, P&&) -> IndexedProjectionIterator<I, P>;
 template <typename I, typename S, typename P> FilterIterator(I&&, S&&, P&&) -> FilterIterator<I, S, P>;
 template <typename I, typename S> FlattenerIterator(I&&, S&&) -> FlattenerIterator<I, S>;
 
@@ -219,6 +272,24 @@ public:
 
   constexpr auto end() const noexcept {
     return ProjectionIterator{cds::end(_range), _projector};
+  }
+
+private:
+  Range const& _range;
+  [[no_unique_address]] Projector const _projector;
+};
+
+template <typename Range, typename Projector> class IndexedProjectionRange {
+public:
+  template <typename R, typename P> constexpr IndexedProjectionRange(R&& range, P&& proj) noexcept :
+      _range{fwd<R>(range)}, _projector{fwd<P>(proj)} {}
+
+  constexpr auto begin() const noexcept {
+    return IndexedProjectionIterator{cds::begin(_range), _projector};
+  }
+
+  constexpr auto end() const noexcept {
+    return IndexedProjectionIterator{cds::end(_range), _projector};
   }
 
 private:
@@ -263,11 +334,18 @@ private:
   Range const& _range;
 };
 
+template <typename R, typename P> IndexedProjectionRange(R const&, P&&) -> IndexedProjectionRange<R, P>;
 template <typename R, typename P> ProjectionRange(R const&, P&&) -> ProjectionRange<R, P>;
 template <typename R, typename P> FilterRange(R const&, P&&) -> FilterRange<R, P>;
 template <typename R> FlattenerRange(R const&) -> FlattenerRange<R>;
 
 struct RangeModifierTag {};
+
+template <typename P> struct IndexedProjector : RangeModifierTag {
+  template <typename P0> explicit IndexedProjector(P0&& proj) noexcept : _proj{fwd<P0>(proj)} {}
+  template <typename R> auto operator()(R const& range) const noexcept;
+  P _proj;
+};
 
 template <typename P> struct Projector : RangeModifierTag {
   template <typename P0> explicit Projector(P0&& proj) noexcept : _proj{fwd<P0>(proj)} {}
@@ -289,6 +367,20 @@ template <typename F> struct ForEach : RangeModifierTag {
   template <typename F0> explicit ForEach(F0&& func) noexcept : _func{fwd<F0>(func)} {}
   template <typename R> auto operator()(R const& range) const noexcept;
   F _func;
+};
+
+struct FindAny : RangeModifierTag {
+  template <typename R> auto operator()(R const& range) const noexcept;
+};
+
+struct IndexedProjectModifier : RangeModifierTag {
+  template <typename P> auto operator()(P&& projector) const noexcept {
+    return IndexedProjector<P&&>{fwd<P>(projector)};
+  }
+
+  template <typename R, typename P> auto operator()(R const& range, P&& projector) const noexcept {
+    return IndexedProjectionRange{range, fwd<P>(projector)};
+  }
 };
 
 struct ProjectModifier {
@@ -333,14 +425,34 @@ struct ForEachModifier {
   }
 };
 
+struct FindAnyModifier {
+  constexpr auto operator()() const noexcept {
+    return FindAny{};
+  }
+
+  template <typename R> auto operator()(R const& range) const noexcept
+      -> Optional<RemoveCVRef<decltype(*range.begin())>> {
+    for (auto const& e : range) {
+      return e;
+    }
+    return nullopt;
+  }
+};
+
 template <typename R, concepts::DerivedFrom<RangeModifierTag> Mod> auto operator|(R const& range, Mod&& modifier) {
   return modifier(range);
 }
 
-inline constexpr ProjectModifier project;
 inline constexpr FilterModifier filter;
 inline constexpr FlattenModifier flatten;
 inline constexpr ForEachModifier forEach;
+inline constexpr FindAnyModifier findAny;
+inline constexpr IndexedProjectModifier indexedProject;
+inline constexpr ProjectModifier project;
+
+template <typename P> template <typename R> auto IndexedProjector<P>::operator()(R const& range) const noexcept {
+  return indexedProject(range, fwd<P>(_proj));
+}
 
 template <typename P> template <typename R> auto Projector<P>::operator()(R const& range) const noexcept {
   return project(range, fwd<P>(_proj));
@@ -357,11 +469,17 @@ template <typename R> auto Flattener::operator()(R const& range) const noexcept 
 template <typename F> template <typename R> auto ForEach<F>::operator()(R const& range) const noexcept {
   return forEach(range, fwd<F>(_func));
 }
+
+template <typename R> auto FindAny::operator()(R const& range) const noexcept {
+  return findAny(range);
+}
 } // namespace c_eng::generic::detail
 
 namespace c_eng::generic {
 using detail::filter;
+using detail::findAny;
 using detail::flatten;
+using detail::indexedProject;
 using detail::project;
 using detail::forEach;
 using detail::FilterRange;

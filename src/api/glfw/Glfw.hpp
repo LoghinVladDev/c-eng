@@ -31,7 +31,6 @@ using generic::LoggerRef;
 enum class GlfwInitParameter {
   PlatformAuto,
   PlatformWin32,
-  PlatformCocoa,
   PlatformWayland,
   PlatformX11,
   PlatformNone,
@@ -41,7 +40,6 @@ enum class GlfwInitParameter {
 
 enum class GlfwPlatform {
   Win32,
-  Cocoa,
   Wayland,
   X11,
   None,

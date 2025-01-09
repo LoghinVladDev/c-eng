@@ -4,21 +4,29 @@
 module;
 #include <cassert>
 #include <vulkan/vulkan_core.h>
-#include <api/vulkan/VulkanTypesToString.hpp>
+#include <api/vulkan/core/VulkanTypesToString.hpp>
 
 export module c_eng.api.vk:debug;
 import :core;
 import cds;
 import c_eng.generic;
 
+using cds::experimental::Expected;
+using cds::experimental::Unexpected;
 using cds::impl::unreachable;
+using cds::impl::xch;
 
+using vk::AllocationCallbacks;
 using vk::Bool32;
 using vk::DebugUtilsMessengerCreateInfo;
 using vk::DebugUtilsMessageSeverityFlagBits;
 using vk::DebugUtilsMessageTypeFlagBits;
 using vk::DebugUtilsMessageTypeFlags;
 using vk::DebugUtilsMessengerCallbackData;
+using vk::DebugUtilsMessengerHandle;
+using vk::InstanceHandle;
+using vk::Result;
+using vk::nullHandle;
 
 using c_eng::generic::Logger;
 using c_eng::generic::LoggerRef;
@@ -26,6 +34,103 @@ using c_eng::generic::flagsToString;
 using c_eng::generic::detail::genericFlagsToString;
 
 using namespace cds::literals;
+
+#ifdef VK_EXT_debug_utils
+auto debugMessengerCallback(
+    DebugUtilsMessageSeverityFlagBits severity,
+    DebugUtilsMessageTypeFlags types,
+    DebugUtilsMessengerCallbackData const* pCallbackData,
+    void* pUserData
+) noexcept -> Bool32;
+
+thread_local inline PFN_vkCreateDebugUtilsMessengerEXT vkCreateDebugUtilsMessengerExtBinding {nullptr};
+thread_local inline PFN_vkDestroyDebugUtilsMessengerEXT vkDestroyDebugUtilsMessengerExtBinding {nullptr};
+#endif
+
+export namespace vk {
+#ifdef VK_EXT_debug_utils
+auto fillDebugMessengerCreateInfo(DebugUtilsMessengerCreateInfo* pCreateInfo, Logger& logger) noexcept {
+  *pCreateInfo = {
+      .sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT,
+      .pNext = nullptr,
+      .flags = 0u,
+      .messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT
+                         | VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT
+                         | VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT
+                         | VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT,
+      .messageType = VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT
+                     | VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT
+                     | VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT,
+      .pfnUserCallback = &debugMessengerCallback,
+      .pUserData = static_cast<void*>(&logger)
+  };
+  return pCreateInfo;
+}
+
+inline auto createDebugMessenger(
+  InstanceHandle instance,
+  DebugUtilsMessengerCreateInfo const* pCreateInfo,
+  AllocationCallbacks const* pAllocator,
+  DebugUtilsMessengerHandle* pHandle
+) noexcept -> Result {
+  if (!vkCreateDebugUtilsMessengerExtBinding) {
+    vkCreateDebugUtilsMessengerExtBinding = reinterpret_cast<PFN_vkCreateDebugUtilsMessengerEXT>(
+        vkGetInstanceProcAddr(instance, "vkCreateDebugUtilsMessengerEXT")
+    );
+    vkDestroyDebugUtilsMessengerExtBinding = reinterpret_cast<PFN_vkDestroyDebugUtilsMessengerEXT>(
+        vkGetInstanceProcAddr(instance, "vkDestroyDebugUtilsMessengerEXT")
+    );
+
+    if (!vkCreateDebugUtilsMessengerExtBinding || !vkDestroyDebugUtilsMessengerExtBinding) {
+      return VK_ERROR_EXTENSION_NOT_PRESENT;
+    }
+  }
+
+  return vkCreateDebugUtilsMessengerExtBinding(instance, pCreateInfo, pAllocator, pHandle);
+}
+
+inline auto destroyDebugMessenger(
+    InstanceHandle instance,
+    DebugUtilsMessengerHandle handle,
+    AllocationCallbacks const* pAllocator
+) noexcept -> void {
+  if (!vkDestroyDebugUtilsMessengerExtBinding) {
+    return;
+  }
+
+  return vkDestroyDebugUtilsMessengerExtBinding(instance, handle, pAllocator);
+}
+#else
+auto fillDebugMessengerCreateInfo(DebugUtilsMessengerCreateInfo* pCreateInfo, LoggerRef const& logger) noexcept {
+  ignore = pCreateInfo;
+  ignore = logger;
+  return nullptr;
+}
+
+inline auto createDebugMessenger(
+  InstanceHandle instance,
+  DebugUtilsMessengerCreateInfo const* pCreateInfo,
+  AllocationCallbacks const* pAllocator,
+  DebugUtilsMessengerHandle* pHandle
+) noexcept -> Result {
+  (void) instance;
+  (void) pCreateInfo;
+  (void) pAllocator;
+  (void) pHandle;
+  return VK_ERROR_EXTENSION_NOT_PRESENT;
+}
+
+inline auto destroyDebugMessenger(
+    InstanceHandle instance,
+    DebugUtilsMessengerHandle handle,
+    AllocationCallbacks const* pAllocator
+) noexcept -> void {
+  (void) instance;
+  (void) handle;
+  (void) pAllocator;
+}
+#endif
+} // namespace vk
 
 auto smallSeverity(DebugUtilsMessageSeverityFlagBits severity) {
   switch (severity) {
@@ -67,7 +172,7 @@ auto debugMessengerCallback(
   auto* logger = static_cast<Logger*>(pUserData);
   assert(logger && "Invalid/Unset DebugMessenger pUserData");
   auto ref = LoggerRef{*logger};
-  // TODO: cds/experimental/Format provide custom formatting literals support
+  // TODO: Implement formatter for DebugUtilsCallbackData?
   // ref() << ref.invoke("[VulkanDebugMessenger][{}][{}] - {}"_f,
   //     severity, flagsToString<DebugUtilsMessageTypeFlagBits>(types), *pCallbackData);
 
@@ -79,30 +184,30 @@ auto debugMessengerCallback(
 }
 #endif
 
-export namespace vk {
-#ifdef VK_EXT_debug_utils
-auto fillDebugMessengerCreateInfo(DebugUtilsMessengerCreateInfo* pCreateInfo, Logger& logger) noexcept {
-  *pCreateInfo = {
-      .sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT,
-      .pNext = nullptr,
-      .flags = 0u,
-      .messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT
-                         | VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT
-                         | VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT
-                         | VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT,
-      .messageType = VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT
-                     | VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT
-                     | VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT,
-      .pfnUserCallback = &debugMessengerCallback,
-      .pUserData = static_cast<void*>(&logger)
-  };
-  return pCreateInfo;
-}
-#else
-auto fillDebugMessengerCreateInfo(DebugUtilsMessengerCreateInfo* pCreateInfo, LoggerRef const& logger) noexcept {
-  ignore = pCreateInfo;
-  ignore = logger;
-  return nullptr;
-}
-#endif
-} // namespace vk
+using vk::destroyDebugMessenger;
+
+export namespace c_eng::api::vk {
+class Instance;
+
+class DebugMessenger {
+public:
+  constexpr DebugMessenger(InstanceHandle instanceHandle, DebugUtilsMessengerHandle handle) noexcept :
+      _instanceHandle{instanceHandle},
+      _handle{handle} {}
+
+  DebugMessenger(DebugMessenger const&) = delete;
+  constexpr DebugMessenger(DebugMessenger&& messenger) noexcept :
+      _instanceHandle{xch(messenger._instanceHandle, nullHandle)},
+      _handle{xch(messenger._handle, nullHandle)} {}
+
+  ~DebugMessenger() noexcept {
+    if (_handle) {
+      destroyDebugMessenger(_instanceHandle, _handle, nullptr);
+    }
+  }
+
+private:
+  InstanceHandle _instanceHandle;
+  DebugUtilsMessengerHandle _handle;
+};
+} // namespace c_eng::api::vk

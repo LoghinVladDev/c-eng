@@ -6,36 +6,38 @@
 #include "GlfwException.hpp"
 #include "generic/TypesToString.hpp"
 
-#include <atomic>
 #include <GLFW/glfw3.h>
 
 #include <cds/Format>
+#include <cds/threading/Atomic>
 
 namespace c_eng::api::detail {
 namespace {
-using enum std::memory_order;
-using std::atomic;
 using std::ostream;
-using std::atomic_fetch_add_explicit;
-using std::atomic_fetch_sub_explicit;
 
 using namespace cds::literals;
 
+using cds::Atomic;
 using cds::StringView;
 using cds::U32;
 using cds::ignore;
 using cds::nullopt;
 using cds::impl::unreachable;
+using enum cds::AtomicMemoryOrder;
 
 using enum generic::detail::LicenceType;
 
-atomic<unsigned> instanceUsers = 0;
+Atomic<unsigned> instanceUsers = 0;
 
-auto hintOf(GlfwInitParameter parameter) noexcept {
+auto constexpr vulkanSurfaceExtensionName = "VK_KHR_surface";
+auto constexpr vulkanSurfaceWin32ExtensionName = "VK_KHR_win32_surface";
+auto constexpr vulkanSurfaceWaylandExtensionName = "VK_KHR_wayland_surface";
+auto constexpr vulkanSurfaceXlibExtensionName = "VK_KHR_xlib_surface";
+
+auto hintOf(GlfwInitParameter const parameter) noexcept {
   switch (parameter) {
     case GlfwInitParameter::PlatformAuto:
     case GlfwInitParameter::PlatformWin32:
-    case GlfwInitParameter::PlatformCocoa:
     case GlfwInitParameter::PlatformWayland:
     case GlfwInitParameter::PlatformX11:
     case GlfwInitParameter::PlatformNone:
@@ -50,14 +52,12 @@ auto hintOf(GlfwInitParameter parameter) noexcept {
   }
 }
 
-auto valueOf(GlfwInitParameter parameter) noexcept {
+auto valueOf(GlfwInitParameter const parameter) noexcept {
   switch (parameter) {
     case GlfwInitParameter::PlatformAuto:
       return GLFW_ANY_PLATFORM;
     case GlfwInitParameter::PlatformWin32:
       return GLFW_PLATFORM_WIN32;
-    case GlfwInitParameter::PlatformCocoa:
-      return GLFW_PLATFORM_COCOA;
     case GlfwInitParameter::PlatformWayland:
       return GLFW_PLATFORM_WAYLAND;
     case GlfwInitParameter::PlatformX11:
@@ -74,10 +74,9 @@ auto valueOf(GlfwInitParameter parameter) noexcept {
   }
 }
 
-auto isSupported(GlfwInitParameter parameter) noexcept {
+auto isSupported(GlfwInitParameter const parameter) noexcept {
   switch (parameter) {
     case GlfwInitParameter::PlatformWin32:
-    case GlfwInitParameter::PlatformCocoa:
     case GlfwInitParameter::PlatformWayland:
     case GlfwInitParameter::PlatformX11:
       return glfwPlatformSupported(valueOf(parameter)) == GLFW_TRUE;
@@ -92,14 +91,12 @@ auto isSupported(GlfwInitParameter parameter) noexcept {
   }
 }
 
-auto asString(GlfwInitParameter parameter) noexcept {
+auto asString(GlfwInitParameter const parameter) noexcept {
   switch (parameter) {
     case GlfwInitParameter::PlatformAuto:
       return "GLFW_PLATFORM = GLFW_ANY_PLATFORM";
     case GlfwInitParameter::PlatformWin32:
       return "GLFW_PLATFORM = GLFW_PLATFORM_WIN32";
-    case GlfwInitParameter::PlatformCocoa:
-      return "GLFW_PLATFORM = GLFW_PLATFORM_COCOA";
     case GlfwInitParameter::PlatformWayland:
       return "GLFW_PLATFORM = GLFW_PLATFORM_WAYLAND";
     case GlfwInitParameter::PlatformX11:
@@ -116,7 +113,7 @@ auto asString(GlfwInitParameter parameter) noexcept {
   }
 }
 
-auto applyInitParameters(Vector<GlfwInitParameter> const& parameters, LoggerRef logger) noexcept(false) {
+auto applyInitParameters(Vector<GlfwInitParameter> const& parameters, LoggerRef const logger) noexcept(false) {
   for (auto const& param : parameters) {
     if (!isSupported(param)) {
       throw GlfwException("Unsupported parameter: "_s + asString(param));
@@ -156,7 +153,7 @@ auto error() noexcept -> Error {
   return {.kind = static_cast<ErrorKind>(code), .description = desc};
 }
 
-auto asString(ErrorKind kind) noexcept {
+auto asString(ErrorKind const kind) noexcept {
   using enum ErrorKind;
   switch (kind) {
     case None:
@@ -198,11 +195,22 @@ auto asString(ErrorKind kind) noexcept {
 auto errorAsString(Error const& error) noexcept -> String {
   return "{} -> {}"_f(asString(error.kind), error.description);
 }
+
+auto requiredVulkanSurfaceExtension(GlfwPlatform const platform) noexcept {
+  switch (platform) {
+    case GlfwPlatform::Win32:   return vulkanSurfaceWin32ExtensionName;
+    case GlfwPlatform::Wayland: return vulkanSurfaceWaylandExtensionName;
+    case GlfwPlatform::X11:     return vulkanSurfaceXlibExtensionName;
+    default:
+      assert(false && "Unhandled `requiredVulkanSurfaceExtension` platform case");
+      unreachable();
+  }
+}
 } // namespace
 
-GlfwInstance::GlfwInstance(Vector<GlfwInitParameter> const& parameters, LoggerRef logger) noexcept(false) :
+GlfwInstance::GlfwInstance(Vector<GlfwInitParameter> const& parameters, LoggerRef const logger) noexcept(false) :
     _logger{logger} {
-  if (atomic_fetch_add_explicit(&instanceUsers, 1u, acq_rel) != 0u) {
+  if (instanceUsers.fetchAdd(1u, AcqRel) != 0u) {
     _logger() << "GLFW already initialized, skipping initialization";
     return;
   }
@@ -220,7 +228,7 @@ GlfwInstance::GlfwInstance(Vector<GlfwInitParameter> const& parameters, LoggerRe
 }
 
 GlfwInstance::~GlfwInstance() noexcept {
-  if (atomic_fetch_sub_explicit(&instanceUsers, 1u, acq_rel) == 1u) {
+  if (instanceUsers.fetchSub(1u, AcqRel) == 1u) {
     glfwTerminate();
     _logger() << "GLFW terminated";
   }
@@ -276,8 +284,6 @@ auto GlfwInstance::platform() const noexcept -> GlfwPlatform {
   switch (glfwGetPlatform()) {
     case GLFW_PLATFORM_WIN32:
       return Win32;
-    case GLFW_PLATFORM_COCOA:
-      return Cocoa;
     case GLFW_PLATFORM_WAYLAND:
       return Wayland;
     case GLFW_PLATFORM_X11:
@@ -291,14 +297,6 @@ auto GlfwInstance::platform() const noexcept -> GlfwPlatform {
 }
 
 auto Glfw::vulkanExtensions() const noexcept -> Vector<StringView> {
-  ignore = this;
-  Vector<StringView> extensions;
-  U32 count;
-  ignore = glfwGetRequiredInstanceExtensions(&count);
-  extensions.reserve(count);
-  auto pExtensions = glfwGetRequiredInstanceExtensions(&count);
-  extensions.insert(extensions.end(), pExtensions, pExtensions + count);
-  return extensions;
+  return {vulkanSurfaceExtensionName, requiredVulkanSurfaceExtension(platform())};
 }
-
 } // namespace c_eng::api::detail

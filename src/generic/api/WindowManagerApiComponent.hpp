@@ -13,11 +13,17 @@
 
 #include "PersistentApiComponent.hpp"
 
+namespace c_eng::native {
+struct NativeWindowData;
+} // namespace c_eng::native
+
 namespace c_eng::generic::detail {
 using cds::RuntimeException;
 using cds::Size;
 using cds::String;
 using cds::UniquePtr;
+
+using native::NativeWindowData;
 
 using namespace cds::literals;
 
@@ -32,6 +38,8 @@ public:
 class Window : public PersistentApiObject {
 public:
   ~Window() noexcept override = default;
+  virtual auto close() noexcept -> void = 0;
+  virtual auto acquireNativeWindowData(NativeWindowData* pNativeData) const noexcept -> bool = 0;
 };
 
 class AbstractWindowBuilder {

@@ -1,0 +1,42 @@
+//
+// Created by loghin on 1/7/25.
+//
+export module c_eng.api.vk:renderer;
+import :core;
+import :instance;
+import :surface;
+import :physical_device;
+import c_eng.generic;
+
+import cds;
+
+using cds::experimental::Expected;
+using cds::impl::mv;
+
+using c_eng::generic::Window;
+
+using vk::Result;
+
+export namespace c_eng::api::vk {
+class Renderer {
+public:
+  constexpr Renderer(Surface&& surface, PhysicalDevice const& device) noexcept : _surface{mv(surface)} {
+    ignore = device;
+  }
+
+  constexpr Renderer(Renderer&& renderer) noexcept :
+      _surface{mv(renderer._surface)} {}
+
+private:
+  Surface _surface;
+};
+
+auto createRenderer(Instance const& instance, Window const* window, PhysicalDevice const& device) noexcept
+    -> Expected<Renderer, Result> {
+  return createSurface(instance, window).transform([&device](Surface&& surface) {
+    return Renderer{mv(surface), device};
+  });
+}
+} // namespace c_eng::api::vk
+
+

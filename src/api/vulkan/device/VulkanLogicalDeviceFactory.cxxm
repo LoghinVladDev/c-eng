@@ -1,0 +1,23 @@
+//
+// Created by loghin on 1/9/25.
+//
+
+export module c_eng.api.vk:logical_device_factory;
+import :queue;
+import cds;
+
+using cds::HashMap;
+using cds::Vector;
+
+export namespace c_eng::api::vk {
+class LogicalDeviceFactory {
+public:
+  auto addQueueFrom(QueueFamily const& family, float priority) noexcept -> LogicalDeviceFactory& {
+    // _plannedQueues.tryEmplace()
+    return *this;
+  }
+
+private:
+  // HashMap<QueueFamily const&, Vector<float>> _plannedQueues;
+};
+} // namespace c_eng::api::vk

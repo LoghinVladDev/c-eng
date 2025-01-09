@@ -56,6 +56,8 @@ public:
   [[nodiscard]] auto abstractWindowBuilder() noexcept -> UniquePtr<AbstractWindowBuilder> override;
   auto close(Window* window) noexcept -> void override;
 
+  [[nodiscard]] auto instance() const noexcept -> GlfwInstance const*;
+
 private:
   Vector<UniquePtr<Window>> _windows;
   GlfwController const* _controller;

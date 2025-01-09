@@ -32,10 +32,20 @@ if(DEFINED C_ENG_USE_VULKAN AND C_ENG_USE_VULKAN)
 
   set(
       C_ENG_VULKAN_SRC
-      api/vulkan/VulkanCore.cxxm
+      api/vulkan/Vulkan.cxxm
+      api/vulkan/core/VulkanCore.cxxm
       api/vulkan/debug/VulkanDebug.cxxm
+      api/vulkan/device/VulkanLogicalDevice.cxxm
+      api/vulkan/device/VulkanLogicalDeviceFactory.cxxm
+      api/vulkan/device/VulkanLogicalDeviceImpl.cxxm
+      api/vulkan/device/VulkanPhysicalDevice.cxxm
+      api/vulkan/device/VulkanPhysicalDeviceImpl.cxxm
+      api/vulkan/device/VulkanQueue.cxxm
+      api/vulkan/device/VulkanQueueImpl.cxxm
+      api/vulkan/instance/VulkanInstance.cxxm
       api/vulkan/instance/VulkanLayer.cxxm
-      api/vulkan/instance/Vulkan.cxxm)
+      api/vulkan/renderer/VulkanRenderer.cxxm
+      api/vulkan/wsi/VulkanSurface.cxxm)
 
   add_library(c_eng_vulkan SHARED)
   target_include_directories(c_eng_vulkan PRIVATE ${C_ENG_VULKAN_INCLUDE_DIRS})

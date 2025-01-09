@@ -1,0 +1,58 @@
+//
+// Created by loghin on 1/9/25.
+//
+export module c_eng.api.vk:queue;
+import :core;
+import :surface;
+
+import cds;
+
+using cds::U32;
+using cds::experimental::Expected;
+
+using vk::QueueFamilyProperties;
+using vk::QueueFlagBits;
+using vk::Result;
+
+export namespace c_eng::api::vk {
+class PhysicalDevice;
+
+class QueueFamily {
+public:
+  using Flag = QueueFlagBits;
+
+  constexpr QueueFamily(PhysicalDevice const& device, U32 index, QueueFamilyProperties const& properties) noexcept :
+      _device{device}, _index{index}, _properties{properties} {}
+
+  [[nodiscard]] constexpr auto const& device() const noexcept {
+    return _device;
+  }
+
+  [[nodiscard]] constexpr auto index() const noexcept {
+    return _index;
+  }
+
+  [[nodiscard]] constexpr auto const& properties() const noexcept {
+    return _properties;
+  }
+
+  [[nodiscard]] constexpr auto hasFlag(QueueFlagBits const flagBit) const noexcept {
+    return 0 != (properties().queueFlags & flagBit);
+  }
+
+  [[nodiscard]] constexpr auto supportsGraphics() const noexcept {
+    return hasFlag(VK_QUEUE_GRAPHICS_BIT);
+  }
+
+  [[nodiscard]] constexpr auto supportsTransfer() const noexcept {
+    return hasFlag(VK_QUEUE_TRANSFER_BIT);
+  }
+
+  [[nodiscard]] auto supportsPresentOn(Surface const& surface) const noexcept -> Expected<bool, Result>;
+
+private:
+  PhysicalDevice const& _device;
+  U32 _index;
+  QueueFamilyProperties _properties;
+};
+} // namespace c_eng::api::vk

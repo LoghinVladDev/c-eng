@@ -2,73 +2,72 @@
 // Created by loghin on 11/14/24.
 //
 module;
-#include "VulkanTypes.hpp"
-#include <iostream>
+#include <api/vulkan/core/VulkanTypesToString.hpp>
 
-export module c_eng.api.vk;
-export import :layer;
+export module c_eng.api.vk:instance;
 import :core;
 import :debug;
-import c_eng.generic;
 import cds;
+import c_eng.generic;
 
+using cds::Optional;
 using cds::StringView;
 using cds::U32;
-using cds::Optional;
-using cds::Union;
 using cds::Vector;
-
-using cds::ignore;
+using cds::makeOptional;
 using cds::nullopt;
+using cds::ignore;
 
-using namespace cds::literals;
-
-using cds::impl::xch;
 using cds::impl::mv;
-
-using cds::experimental::Expected;
-using cds::experimental::Unexpected;
-
-using vk::ApplicationInfo;
-using vk::DebugUtilsMessengerCreateInfo;
-using vk::LayerProperties;
-using vk::InstanceCreateInfo;
-using vk::InstanceHandle;
-using vk::Result;
-using vk::StructureType;
-using vk::createInstance;
-using vk::destroyInstance;
-using vk::debugUtilsMessengerAvailable;
-using vk::enumerateInstanceLayerProperties;
-using vk::enumerateInstanceVersion;
-using vk::fillDebugMessengerCreateInfo;
-using vk::nullHandle;
+using cds::impl::xch;
 
 using c_eng::generic::Api;
 using c_eng::generic::ApiInfo;
 using c_eng::generic::LicenceType;
-using c_eng::generic::Logger;
 using c_eng::generic::Version;
-using c_eng::generic::filter;
 using c_eng::generic::fromVersion;
-using c_eng::generic::project;
 using c_eng::generic::toVersion;
+using c_eng::generic::project;
 using c_eng::generic::operator|;
+
+using vk::DebugUtilsMessengerHandle;
+using vk::InstanceHandle;
+using vk::InstanceCreateInfo;
+using vk::LayerProperties;
+using vk::nullHandle;
+
+using vk::createDebugMessenger;
+using vk::createInstance;
+using vk::destroyInstance;
+using vk::enumerateInstanceVersion;
+using vk::fillDebugMessengerCreateInfo;
 
 export namespace c_eng::api::vk {
 class Instance : public Api {
 public:
-  explicit Instance(InstanceHandle handle) noexcept : Api{{}}, _handle{handle} {}
+  explicit Instance(InstanceHandle handle, Optional<DebugMessenger>&& messenger) noexcept
+      : Api{{}}, _handle{handle}, _debugMessenger{mv(messenger)} {}
+
+  explicit Instance(InstanceHandle handle) noexcept : Instance{handle, nullopt} {}
+
+  Instance(InstanceHandle handle, DebugUtilsMessengerHandle messengerHandle) noexcept :
+      Instance{handle, makeOptional<DebugMessenger>(handle, messengerHandle)} {}
 
   Instance(Instance const&) = delete;
   constexpr Instance(Instance&& instance) noexcept :
-      Api{mv(instance)}, _handle{xch(instance._handle, nullHandle)} {}
+      Api{mv(instance)},
+      _handle{xch(instance._handle, nullHandle)},
+      _debugMessenger{mv(instance._debugMessenger)} {}
 
   ~Instance() noexcept override {
-    destroyInstance(_handle, nullptr);
+    _debugMessenger.reset();
+    if (_handle != nullHandle) {
+      destroyInstance(_handle, nullptr);
+    }
   }
 
   [[nodiscard]] auto info() const noexcept -> ApiInfo override {
+    ignore = this;
     using enum LicenceType;
     return {
         .name = "Vulkan",
@@ -92,8 +91,13 @@ public:
     return toVersion(runtimeVersion);
   }
 
+  [[nodiscard]] constexpr auto handle() const noexcept -> InstanceHandle {
+    return _handle;
+  }
+
 private:
   InstanceHandle _handle;
+  Optional<DebugMessenger> _debugMessenger;
 };
 
 struct ApplicationInfo {
@@ -146,7 +150,17 @@ auto createInstance(
     return Unexpected{result};
   }
 
-  return Instance{handle};
+  DebugUtilsMessengerHandle messengerHandle = nullHandle;
+  if (pMessengerCreateInfo) {
+    if (auto result = createDebugMessenger(handle, pMessengerCreateInfo, nullptr, &messengerHandle);
+        result != VK_SUCCESS) {
+      return Unexpected{result};
+    }
+  }
+
+  return pMessengerCreateInfo
+      ? Instance{handle, messengerHandle}
+      : Instance{handle};
 }
 
 auto createInstance(
