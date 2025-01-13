@@ -1,0 +1,21 @@
+//
+// Created by loghin on 1/9/25.
+//
+export module c_eng.api.vk:logical_device_factory_impl;
+import :core;
+import :logical_device;
+import :logical_device_factory;
+import :physical_device;
+import cds;
+
+using cds::Vector;
+using cds::experimental::Expected;
+
+using vk::Result;
+
+namespace c_eng::api::vk {
+auto PresentingLogicalDeviceFactory::build(PhysicalDevice const& device) const noexcept
+    -> Expected<LogicalDevice, Result> {
+  return createLogicalDevice(device, plannedQueues(), _surface);
+}
+} // namespace c_eng::api::vk

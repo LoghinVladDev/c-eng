@@ -3,10 +3,10 @@
 //
 module;
 
-#include <cds/Format>
 #include <cds/Optional>
 #include <cds/String>
 #include <cds/StringView>
+#include <cds/Tuple>
 #include <cds/Union>
 
 #include <cds/collection/HashMap>
@@ -16,19 +16,29 @@ export module cds;
 
 export namespace cds {
 using cds::U32;
+using cds::Size;
 
 using cds::HashMap;
 using cds::Optional;
 using cds::String;
 using cds::StringView;
+using cds::Tuple;
 using cds::Union;
 using cds::Vector;
+
+using cds::makeTuple;
 } // namespace cds
 
 export namespace cds::impl {
 using cds::impl::fwd;
 using cds::impl::mv;
 using cds::impl::xch;
+
+using cds::impl::get;
+}
+
+export namespace cds::functional {
+using cds::functional::Hash;
 }
 
 export namespace cds::experimental {

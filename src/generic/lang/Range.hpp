@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include <cds/Format>
 #include <cds/Optional>
 #include <cds/Tuple>
 #include <cds/functional/Invoke>
@@ -474,6 +475,30 @@ template <typename R> auto FindAny::operator()(R const& range) const noexcept {
   return findAny(range);
 }
 } // namespace c_eng::generic::detail
+
+template <typename R, typename P, typename C> struct cds::Formatter<c_eng::generic::detail::ProjectionRange<R, P>, C> :
+    impl::fmt::RangeFormatter<
+        meta::RemoveCVRef<decltype(*meta::rvalue<c_eng::generic::detail::ProjectionRange<R, P>>().begin())>,
+        C
+    > {};
+
+template <typename R, typename P, typename C> struct cds::Formatter<c_eng::generic::detail::IndexedProjectionRange<R, P>, C> :
+    impl::fmt::RangeFormatter<
+        meta::RemoveCVRef<decltype(*meta::rvalue<c_eng::generic::detail::IndexedProjectionRange<R, P>>().begin())>,
+        C
+    > {};
+
+template <typename R, typename P, typename C> struct cds::Formatter<c_eng::generic::detail::FilterRange<R, P>, C> :
+    impl::fmt::RangeFormatter<
+        meta::RemoveCVRef<decltype(*meta::rvalue<c_eng::generic::detail::FilterRange<R, P>>().begin())>,
+        C
+    > {};
+
+template <typename R, typename C> struct cds::Formatter<c_eng::generic::detail::FlattenerRange<R>, C> :
+    impl::fmt::RangeFormatter<
+        meta::RemoveCVRef<decltype(*meta::rvalue<c_eng::generic::detail::FlattenerRange<R>>().begin())>,
+        C
+    > {};
 
 namespace c_eng::generic {
 using detail::filter;

@@ -33,7 +33,7 @@ auto PhysicalDevice::extensionProperties() const noexcept -> Expected<Vector<Ext
       ); result != VK_SUCCESS) {
     return Unexpected{result};
   }
-  extensionProperties.reserve(extensionCount);
+  extensionProperties.resize(extensionCount);
   if (auto result = enumeratePhysicalDeviceExtensionProperties(
           handle(), nullptr, &extensionCount, extensionProperties.data()
       ); result != VK_SUCCESS) {
@@ -58,7 +58,7 @@ auto PhysicalDevice::queueFamilies() const noexcept -> Vector<QueueFamily> {
   Vector<QueueFamilyProperties> properties;
   U32 propertyCount = 0;
   getPhysicalDeviceQueueFamilyProperties(handle(), &propertyCount, nullptr);
-  properties.reserve(propertyCount);
+  properties.resize(propertyCount);
   getPhysicalDeviceQueueFamilyProperties(handle(), &propertyCount, properties.data());
   return Vector<QueueFamily>{properties | indexedProject([this](U32 index, auto const& properties) {
     return QueueFamily{*this, index, properties};
@@ -73,7 +73,7 @@ auto PhysicalDevice::queueFamilies() const noexcept -> Vector<QueueFamily> {
     return Unexpected{result};
   }
 
-  deviceHandles.reserve(deviceCount);
+  deviceHandles.resize(deviceCount);
   if (auto result = enumeratePhysicalDevices(instance.handle(), &deviceCount, deviceHandles.data());
       result != VK_SUCCESS) {
     return Unexpected{result};

@@ -37,6 +37,7 @@ if(DEFINED C_ENG_USE_VULKAN AND C_ENG_USE_VULKAN)
       api/vulkan/debug/VulkanDebug.cxxm
       api/vulkan/device/VulkanLogicalDevice.cxxm
       api/vulkan/device/VulkanLogicalDeviceFactory.cxxm
+      api/vulkan/device/VulkanLogicalDeviceFactoryImpl.cxxm
       api/vulkan/device/VulkanLogicalDeviceImpl.cxxm
       api/vulkan/device/VulkanPhysicalDevice.cxxm
       api/vulkan/device/VulkanPhysicalDeviceImpl.cxxm

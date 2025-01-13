@@ -9,7 +9,9 @@ export import :instance;
 export import :physical_device;
 export import :queue;
 export import :renderer;
+export import :surface;
 
+import :logical_device_factory_impl;
 import :logical_device_impl;
 import :physical_device_impl;
 import :queue_impl;

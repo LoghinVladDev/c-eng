@@ -20,6 +20,7 @@ class PhysicalDevice;
 class QueueFamily {
 public:
   using Flag = QueueFlagBits;
+  using Properties = QueueFamilyProperties;
 
   constexpr QueueFamily(PhysicalDevice const& device, U32 index, QueueFamilyProperties const& properties) noexcept :
       _device{device}, _index{index}, _properties{properties} {}

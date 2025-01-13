@@ -24,6 +24,9 @@ export namespace vk {
 using AllocationCallbacks = VkAllocationCallbacks;
 using ApplicationInfo = VkApplicationInfo;
 using Bool32 = VkBool32;
+using DeviceCreateInfo = VkDeviceCreateInfo;
+using DeviceHandle = VkDevice;
+using DeviceQueueCreateInfo = VkDeviceQueueCreateInfo;
 using ExtensionProperties = VkExtensionProperties;
 using LayerProperties = VkLayerProperties;
 using InstanceHandle = VkInstance;
@@ -121,6 +124,22 @@ inline auto getPhysicalDeviceQueueFamilyProperties(
     QueueFamilyProperties* pQueueFamilyProperties
 ) noexcept -> void {
   return vkGetPhysicalDeviceQueueFamilyProperties(device, pQueueFamilyPropertyCount, pQueueFamilyProperties);
+}
+
+inline auto createDevice(
+    PhysicalDeviceHandle physicalDevice,
+    DeviceCreateInfo const* pCreateInfo,
+    AllocationCallbacks const* pAllocator,
+    DeviceHandle* pDevice
+) noexcept -> Result {
+  return vkCreateDevice(physicalDevice, pCreateInfo, pAllocator, pDevice);
+}
+
+inline auto destroyDevice(
+    DeviceHandle device,
+    AllocationCallbacks const* pAllocator
+) noexcept -> void {
+  vkDestroyDevice(device, pAllocator);
 }
 
 #ifdef VK_KHR_surface
