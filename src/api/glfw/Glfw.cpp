@@ -33,6 +33,7 @@ auto constexpr vulkanSurfaceExtensionName = "VK_KHR_surface";
 auto constexpr vulkanSurfaceWin32ExtensionName = "VK_KHR_win32_surface";
 auto constexpr vulkanSurfaceWaylandExtensionName = "VK_KHR_wayland_surface";
 auto constexpr vulkanSurfaceXlibExtensionName = "VK_KHR_xlib_surface";
+auto constexpr vulkanSurfaceCocoaExtensionName = "VK_MVK_macos_surface";
 
 auto hintOf(GlfwInitParameter const parameter) noexcept {
   switch (parameter) {
@@ -62,6 +63,8 @@ auto valueOf(GlfwInitParameter const parameter) noexcept {
       return GLFW_PLATFORM_WAYLAND;
     case GlfwInitParameter::PlatformX11:
       return GLFW_PLATFORM_X11;
+    case GlfwInitParameter::PlatformCocoa:
+      return GLFW_PLATFORM_COCOA;
     case GlfwInitParameter::PlatformNone:
       return GLFW_PLATFORM_NULL;
     case GlfwInitParameter::WaylandDisableLibDecor:
@@ -79,6 +82,7 @@ auto isSupported(GlfwInitParameter const parameter) noexcept {
     case GlfwInitParameter::PlatformWin32:
     case GlfwInitParameter::PlatformWayland:
     case GlfwInitParameter::PlatformX11:
+    case GlfwInitParameter::PlatformCocoa:
       return glfwPlatformSupported(valueOf(parameter)) == GLFW_TRUE;
     case GlfwInitParameter::PlatformAuto:
     case GlfwInitParameter::PlatformNone:
@@ -101,6 +105,8 @@ auto asString(GlfwInitParameter const parameter) noexcept {
       return "GLFW_PLATFORM = GLFW_PLATFORM_WAYLAND";
     case GlfwInitParameter::PlatformX11:
       return "GLFW_PLATFORM = GLFW_PLATFORM_X11";
+    case GlfwInitParameter::PlatformCocoa:
+      return "GLFW_PLATFORM = GLFW_PLATFORM_COCOA";
     case GlfwInitParameter::PlatformNone:
       return "GLFW_PLATFORM = GLFW_PLATFORM_NULL";
     case GlfwInitParameter::WaylandDisableLibDecor:
@@ -201,6 +207,7 @@ auto requiredVulkanSurfaceExtension(GlfwPlatform const platform) noexcept {
     case GlfwPlatform::Win32:   return vulkanSurfaceWin32ExtensionName;
     case GlfwPlatform::Wayland: return vulkanSurfaceWaylandExtensionName;
     case GlfwPlatform::X11:     return vulkanSurfaceXlibExtensionName;
+    case GlfwPlatform::Cocoa:   return vulkanSurfaceCocoaExtensionName;
     default:
       assert(false && "Unhandled `requiredVulkanSurfaceExtension` platform case");
       unreachable();
@@ -288,6 +295,8 @@ auto GlfwInstance::platform() const noexcept -> GlfwPlatform {
       return Wayland;
     case GLFW_PLATFORM_X11:
       return X11;
+    case GLFW_PLATFORM_COCOA:
+      return Cocoa;
     case GLFW_PLATFORM_NULL:
       return None;
     default:

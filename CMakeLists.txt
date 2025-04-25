@@ -1,10 +1,10 @@
-cmake_minimum_required(VERSION 3.28)
+cmake_minimum_required(VERSION 3.30)
 project(c-eng CXX)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
-set(CMAKE_CXX_SCAN_FOR_MODULES ON)
+#set(CMAKE_CXX_SCAN_FOR_MODULES ON)
 
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
@@ -22,6 +22,7 @@ set(C_ENG_RENDER_API_LIBS "")
 find_package(Vulkan)
 if (Vulkan_FOUND)
   message("-- [C_ENG] Vulkan located via CMake Package at '${Vulkan_LIBRARY}'")
+  message("-- [C_ENG] Vulkan include directories '${Vulkan_INCLUDE_DIRS}'")
 else()
   message("-- [C_ENG] Vulkan was not located via CMake Package. TODO: Custom Vulkan Path")
 endif()
@@ -49,13 +50,12 @@ if(C_ENG_USE_VULKAN)
   list(APPEND C_ENG_LIB_LIST c_eng_vulkan)
 endif()
 
-add_library(cds STATIC)
-target_sources(cds PUBLIC FILE_SET CXX_MODULES FILES src/generic/module/cds.cxxm)
-target_include_directories(cds PRIVATE dependencies/cds/include)
+#add_library(cds STATIC)
+#target_sources(cds PUBLIC FILE_SET CXX_MODULES FILES src/generic/module/cds.cxxm)
+#target_include_directories(cds PRIVATE dependencies/cds/include)
 
 add_subdirectory(src)
 
-list(APPEND C_ENG_LIB_LIST cds)
 list(JOIN C_ENG_LIB_LIST " " C_ENG_LD)
 
 add_executable(generic_scene src/target/GenericScene.cpp)

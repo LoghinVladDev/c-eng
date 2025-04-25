@@ -9,6 +9,7 @@
 #elifdef __linux
 #include <X11/Xlib.h>
 #include <wayland-client.h>
+#elifdef __APPLE__
 #else
 #error Undefined native window system.
 #endif
@@ -20,6 +21,8 @@ enum class NativeWindowInfoType {
 #elifdef __linux
   X11,
   Wayland,
+#elifdef __APPLE__
+  Cocoa,
 #else
 #error Undefined native window system.
 #endif
@@ -30,22 +33,24 @@ struct NativeWindowData {
 };
 
 #ifdef WIN32
-struct NativeWin32WindowData {
-  NativeWindowInfoType type;
+struct NativeWin32WindowData : NativeWindowData {
   HINSTANCE instanceHandle;
   HWND windowHandle;
 };
 #elifdef __linux
-struct NativeX11WindowData {
-  NativeWindowInfoType type;
+struct NativeX11WindowData : NativeWindowData {
   Display* display;
   Window window;
 };
 
-struct NativeWaylandWindowData {
-  NativeWindowInfoType type;
+struct NativeWaylandWindowData : NativeWindowData {
   wl_display* display;
   wl_surface* surface;
+};
+#elifdef __APPLE__
+struct NativeCocoaWindowData : NativeWindowData {
+  void* view;
+  void* window;
 };
 #else
 #error Undefined native window system.
@@ -53,7 +58,7 @@ struct NativeWaylandWindowData {
 } // namespace c_eng::native::detail
 
 namespace c_eng::native {
-struct NativeWindowData : detail::NativeWindowData {};
+using detail::NativeWindowData;
 using detail::NativeWindowInfoType;
 
 #ifdef WIN32
@@ -61,6 +66,8 @@ using detail::NativeWin32WindowData;
 #elifdef __linux
 using detail::NativeX11WindowData;
 using detail::NativeWaylandWindowData;
+#elifdef __APPLE__
+using detail::NativeCocoaWindowData;
 #else
 #error Undefined native window system.
 #endif

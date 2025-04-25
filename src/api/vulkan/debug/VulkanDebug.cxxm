@@ -4,7 +4,7 @@
 module;
 #include <cassert>
 #include <vulkan/vulkan_core.h>
-#include <api/vulkan/core/VulkanTypesToString.hpp>
+#include <api/vulkan/core/VulkanTypesToStringOld.hpp>
 
 export module c_eng.api.vk:debug;
 import :core;

@@ -19,8 +19,13 @@
 
 #include <platform/window/NativeWindowData.hpp>
 
+#ifdef __linux
 #define GLFW_EXPOSE_NATIVE_X11
 #define GLFW_EXPOSE_NATIVE_WAYLAND
+#elifdef __APPLE__
+#define GLFW_EXPOSE_NATIVE_COCOA
+#endif
+
 #include <GLFW/glfw3native.h>
 
 namespace c_eng::api::detail {
@@ -59,6 +64,8 @@ using native::NativeWin32WindowData;
 #elifdef __linux
 using native::NativeX11WindowData;
 using native::NativeWaylandWindowData;
+#elifdef __APPLE__
+using native::NativeCocoaWindowData;
 #else
 #error Undefined native window system.
 #endif
@@ -354,6 +361,12 @@ public:
       pWaylandNativeData->surface = glfwGetWaylandWindow(_handle);
       return true;
     }
+#elifdef __APPLE__
+    assert(currentPlatform == GlfwPlatform::Cocoa && pNativeData->type == NativeWindowInfoType::Cocoa);
+    auto const pCocoaWindowData = static_cast<NativeCocoaWindowData*>(pNativeData);
+    pCocoaWindowData->view = glfwGetCocoaView(_handle);
+    pCocoaWindowData->window = glfwGetCocoaWindow(_handle);
+    return true;
 #endif
     return false;
   }

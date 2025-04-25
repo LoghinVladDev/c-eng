@@ -29,6 +29,10 @@ namespace fn = cds::functional;
 
 class Logger;
 
+enum class LogLevel {
+  Critical, Error, Warning, Info, Debug,
+};
+
 class LoggerOutput {
 public:
   explicit LoggerOutput(ostream& out) : _out{out} {}
@@ -69,9 +73,10 @@ public:
 class Log {
 public:
   Log() noexcept = default;
-  explicit Log(Logger const& logger) noexcept : _printer{logger} {}
+  explicit Log(Logger const& logger, LogLevel const level) noexcept : _printer{logger}, _level{level} {}
 
   template <typename T> auto operator<<(T&& data) noexcept -> Log& {
+    // TODO: level
     _printer.visit([&data]<typename P>(P&& printer) {
       fwd<P>(printer).add(fwd<T>(data));
     });
@@ -80,10 +85,13 @@ public:
 
 private:
   Union<LogPrinter, InactiveLogPrinter> _printer {InPlaceIndex<1>{}};
+  LogLevel _level {LogLevel::Info};
 };
 
 class Logger {
 public:
+  using Level = LogLevel;
+
   Logger() noexcept = delete;
   inline explicit Logger(Vector<LoggerOutput> outputs) noexcept : _outputs{mv(outputs)} {}
 
@@ -99,9 +107,9 @@ public:
     return _outputs;
   }
 
-  inline auto operator()() const noexcept -> Log {
+  inline auto operator()(Level const level = Level::Info) const noexcept -> Log {
     if (enabled()) {
-      return Log{*this};
+      return Log{*this, level};
     } else {
       return Log{};
     }
@@ -115,14 +123,19 @@ private:
 
 class LoggerRef {
 public:
+  using Level = LogLevel;
+
   LoggerRef() = default;
   LoggerRef(LoggerRef const&) = default;
   LoggerRef(LoggerRef&&) = default;
   explicit(false) inline LoggerRef(Logger& logger) : _logger{&logger} {}
 
-  inline auto operator()() const noexcept -> Log {
+  auto operator=(LoggerRef const& logger) noexcept -> LoggerRef& = default;
+  auto operator=(LoggerRef&& logger) noexcept -> LoggerRef& = default;
+
+  inline auto operator()(Level const level = Level::Info) const noexcept -> Log {
     if (_logger) {
-      return (*_logger)();
+      return (*_logger)(level);
     }
     return Log{};
   }
@@ -147,6 +160,7 @@ inline LogPrinter::~LogPrinter() noexcept {
 } // namespace c_eng::generic::detail
 
 namespace c_eng::generic {
+using detail::LogLevel;
 using detail::Logger;
 using detail::LoggerOutput;
 using detail::LoggerRef;

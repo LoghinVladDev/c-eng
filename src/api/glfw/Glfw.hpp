@@ -33,6 +33,7 @@ enum class GlfwInitParameter {
   PlatformWin32,
   PlatformWayland,
   PlatformX11,
+  PlatformCocoa,
   PlatformNone,
   WaylandDisableLibDecor,
   X11DisableXcbVulkanSurface,
@@ -42,6 +43,7 @@ enum class GlfwPlatform {
   Win32,
   Wayland,
   X11,
+  Cocoa,
   None,
 };
 

@@ -2,7 +2,7 @@
 // Created by loghin on 11/14/24.
 //
 module;
-#include <api/vulkan/core/VulkanTypesToString.hpp>
+#include <api/vulkan/core/VulkanTypesToStringOld.hpp>
 
 export module c_eng.api.vk:instance;
 import :core;

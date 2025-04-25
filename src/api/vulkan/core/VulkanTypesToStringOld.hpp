@@ -18,6 +18,9 @@ using cds::VectorView;
 using cds::U32;
 using cds::U64;
 
+using vk::fromVersion;
+using vk::toVersion;
+
 template <> struct ToString<VkLayerProperties> : True {
   auto operator()(VkLayerProperties const& properties, auto const&) const noexcept {
     return cds::format(

@@ -13,6 +13,8 @@ module;
 #elif defined(__linux)
 #include <vulkan/vulkan_wayland.h>
 #include <vulkan/vulkan_xlib.h>
+#elif defined(__APPLE__)
+#include <vulkan/vulkan_macos.h>
 #endif
 
 export module c_eng.api.vk:surface;
@@ -28,13 +30,15 @@ using cds::impl::xch;
 
 using GenericWindow = c_eng::generic::Window;
 
-using c_eng::native::NativeWindowData;
+using c_eng::native::detail::NativeWindowData;
 using enum c_eng::native::NativeWindowInfoType;
 #ifdef WIN32
 using c_eng::native::NativeWin32WindowData;
 #elifdef __linux
 using c_eng::native::NativeX11WindowData;
 using c_eng::native::NativeWaylandWindowData;
+#elifdef __APPLE__
+using c_eng::native::NativeCocoaWindowData;
 #else
 #error Unhandled platform NativeWindowData.
 #endif
@@ -99,6 +103,17 @@ auto createNativeSurface(
 #endif
   assert(false && "Unhandled native surface call for linux");
   return VK_ERROR_EXTENSION_NOT_PRESENT;
+#elif defined(__APPLE__)
+#if defined(VK_MVK_macos_surface)
+  NativeCocoaWindowData cocoaWindowData {};
+  cocoaWindowData.type = Cocoa;
+  if (window->acquireNativeWindowData(static_cast<NativeWindowData*>(&cocoaWindowData))) {
+
+  }
+#else
+  assert(false && "Unhandled native surface call for macOS");
+  return VK_ERROR_EXTENSION_NOT_PRESENT;
+#endif
 #else
 #error Unhandled platform NativeWindowData.
   return VK_ERROR_EXTENSION_NOT_PRESENT;

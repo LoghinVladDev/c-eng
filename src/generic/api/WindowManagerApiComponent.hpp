@@ -13,7 +13,7 @@
 
 #include "PersistentApiComponent.hpp"
 
-namespace c_eng::native {
+namespace c_eng::native::detail {
 struct NativeWindowData;
 } // namespace c_eng::native
 
@@ -23,7 +23,7 @@ using cds::Size;
 using cds::String;
 using cds::UniquePtr;
 
-using native::NativeWindowData;
+using native::detail::NativeWindowData;
 
 using namespace cds::literals;
 
