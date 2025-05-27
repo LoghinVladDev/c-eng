@@ -41,7 +41,10 @@ if(DEFINED C_ENG_USE_VULKAN AND C_ENG_USE_VULKAN)
       api/vulkan/instance/VulkanInstance.cpp
       api/vulkan/instance/VulkanLayer.cpp
       api/vulkan/renderer/VulkanRenderer.cpp
-      api/vulkan/wsi/VulkanSurface.cpp)
+      api/vulkan/wsi/VulkanSurface.cpp
+      api/vulkan/core/VulkanHandles.hpp
+      api/vulkan/core/VulkanHandles.def
+      api/vulkan/core/VulkanExtensions.hpp)
 
 #  set(
 #      C_ENG_VULKAN_SRC

@@ -8,7 +8,7 @@
 #include <generic/Types.hpp>
 #include <vulkan/vulkan_core.h>
 
-namespace vk::detail {
+namespace c_eng::api::vk::detail {
 using cds::U32;
 using c_eng::generic::Version;
 
@@ -24,9 +24,9 @@ inline auto toVersion(U32 id) noexcept -> Version {
 inline auto fromVersion(Version const& version) noexcept -> U32 {
   return VK_MAKE_API_VERSION(version.variant, version.major, version.minor, version.patch);
 }
-} // namespace vk::detail
+} // namespace c_eng::api::vk::detail
 
-namespace vk {
+namespace c_eng::api::vk {
 using detail::fromVersion;
 using detail::toVersion;
 }

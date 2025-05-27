@@ -70,7 +70,7 @@ auto createLogicalDevice(
   auto const deviceFeatures = device.features();
 
   DeviceCreateInfo createInfo {
-      .sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO,
+      .sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO,
       .pNext = nullptr,
       .flags = 0u,
       .queueCreateInfoCount = static_cast<U32>(queueCreateInfos.size()),

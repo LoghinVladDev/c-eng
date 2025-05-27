@@ -1,13 +1,13 @@
 //
-// Created by vloghin on 19.04.2025.
+// Created by loghin on 19.04.2025.
 //
 
 #pragma once
 
 #include <cds/StringView>
 
-#ifdef VK_VERSION_1_0
 namespace vk {
+#ifdef VK_VERSION_1_0
 constexpr auto toString(VkResult const result) noexcept -> cds::StringView {
   switch (result) {
     case VK_SUCCESS: return "VK_SUCCESS";
@@ -119,8 +119,86 @@ constexpr auto toString(VkResult const result) noexcept -> cds::StringView {
 #endif
     default:
       assert(false && "Unhandled VkResult case");
-      return "<<Unhandled VkResult>>";
+      cds::impl::unreachable();
   }
 }
-} // namespace vk
+
+constexpr auto toString(VkSystemAllocationScope const scope) noexcept -> cds::StringView {
+  switch (scope) {
+    case VK_SYSTEM_ALLOCATION_SCOPE_COMMAND: return "VK_SYSTEM_ALLOCATION_SCOPE_COMMAND";
+    case VK_SYSTEM_ALLOCATION_SCOPE_OBJECT: return "VK_SYSTEM_ALLOCATION_SCOPE_OBJECT";
+    case VK_SYSTEM_ALLOCATION_SCOPE_CACHE: return "VK_SYSTEM_ALLOCATION_SCOPE_CACHE";
+    case VK_SYSTEM_ALLOCATION_SCOPE_DEVICE: return "VK_SYSTEM_ALLOCATION_SCOPE_DEVICE";
+    case VK_SYSTEM_ALLOCATION_SCOPE_INSTANCE: return "VK_SYSTEM_ALLOCATION_SCOPE_INSTANCE";
+    default:
+      assert(false && "Unhandled VkSystemAllocationScope case");
+      cds::impl::unreachable();
+  }
+}
+
+constexpr auto toString(VkInternalAllocationType const scope) noexcept -> cds::StringView {
+  switch (scope) {
+    case VK_INTERNAL_ALLOCATION_TYPE_EXECUTABLE: return "VK_INTERNAL_ALLOCATION_TYPE_EXECUTABLE";
+    default:
+      assert(false && "Unhandled VkInternalAllocationType case");
+      cds::impl::unreachable();
+  }
+}
 #endif // #ifdef VK_VERSION_1_0
+
+#ifdef VK_EXT_debug_utils
+constexpr auto toString(VkDebugUtilsMessageSeverityFlagBitsEXT const flag, bool const alternate = false) noexcept
+    -> cds::StringView {
+  if (alternate) {
+    switch (flag) {
+      case VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT: return "Verbose";
+      case VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT:    return "Info";
+      case VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT: return "Warning";
+      case VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT:   return "Error";
+      default:
+        assert(false && "Unhandled VkDebugUtilsMessageSeverityFlagBitsEXT case");
+        cds::impl::unreachable();
+    }
+  }
+
+  switch (flag) {
+    case VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT: return "VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT";
+    case VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT:    return "VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT";
+    case VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT: return "VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT";
+    case VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT:   return "VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT";
+    default:
+      assert(false && "Unhandled VkDebugUtilsMessageSeverityFlagBitsEXT case");
+      cds::impl::unreachable();
+  }
+}
+
+constexpr auto toString(VkDebugUtilsMessageTypeFlagBitsEXT const flag, bool const alternate = false) noexcept
+    -> cds::StringView {
+  if (alternate) {
+    switch (flag) {
+      case VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT: return "General";
+      case VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT: return "Validation";
+      case VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT: return "Performance";
+#ifdef VK_EXT_device_address_binding_report
+      case VK_DEBUG_UTILS_MESSAGE_TYPE_DEVICE_ADDRESS_BINDING_BIT_EXT: return "Device Address Binding";
+#endif
+      default:
+        assert(false && "Unhandled VkDebugUtilsMessageTypeFlagBitsEXT case");
+        cds::impl::unreachable();
+    }
+  }
+
+  switch (flag) {
+    case VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT: return "VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT";
+    case VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT: return "VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT";
+    case VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT: return "VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT";
+#ifdef VK_EXT_device_address_binding_report
+    case VK_DEBUG_UTILS_MESSAGE_TYPE_DEVICE_ADDRESS_BINDING_BIT_EXT: return "VK_DEBUG_UTILS_MESSAGE_TYPE_DEVICE_ADDRESS_BINDING_BIT_EXT";
+#endif
+    default:
+      assert(false && "Unhandled VkDebugUtilsMessageTypeFlagBitsEXT case");
+      cds::impl::unreachable();
+  }
+}
+#endif
+} // namespace vk

@@ -1,0 +1,7 @@
+C_ENG_VULKAN_HANDLE(Always, Base, vkGetInstanceProcAddr)
+C_ENG_VULKAN_HANDLE(Global, Base, vkEnumerateInstanceVersion)
+C_ENG_VULKAN_HANDLE(Global, Base, vkEnumerateInstanceLayerProperties)
+C_ENG_VULKAN_HANDLE(Global, Base, vkEnumerateInstanceExtensionProperties)
+C_ENG_VULKAN_HANDLE(Global, Base, vkCreateInstance)
+
+C_ENG_VULKAN_HANDLE(Instance, Base, vkDestroyInstance)

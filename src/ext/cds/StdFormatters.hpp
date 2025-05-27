@@ -1,5 +1,5 @@
 //
-// Created by vloghin on 19.04.2025.
+// Created by loghin on 19.04.2025.
 //
 
 #pragma once
@@ -18,7 +18,7 @@ template <typename C> struct cds::Formatter<std::source_location, C> {
   bool methodName {false};
   bool method {false};
 
-  template <typename Ctx> constexpr auto parse(Ctx& ctx) noexcept -> typename Ctx::Iterator {
+  template <typename Ctx> constexpr auto parse(Ctx& ctx) noexcept(false) -> typename Ctx::Iterator {
     auto it = ctx.begin();
     auto end = ctx.end();
 
@@ -72,17 +72,66 @@ template <typename C> struct cds::Formatter<std::source_location, C> {
     return it;
   }
 
-  template <typename Ctx> auto format(std::source_location const& loc, Ctx const& ctx) noexcept
+  template <typename Ctx> auto format(std::source_location const& loc, Ctx& ctx) noexcept
       -> typename Ctx::Iterator {
-    auto theFile = StringView{loc.file_name()};
-    auto the
+    auto thePath = StringView{loc.file_name()};
+    auto theMethod = StringView{loc.function_name()};
+    bool anythingBefore = false;
+    auto out = ctx.out();
 
     if (file) {
+      auto const theLastSlashPos = thePath.findLast('/');
+      auto theFile = thePath;
+      if (theLastSlashPos != StringView::npos) {
+        theFile = thePath.sub(theLastSlashPos + 1);
+      }
 
+      out = impl::copy(theFile.begin(), theFile.end(), out);
+      anythingBefore = true;
     }
 
-    loc.
-    auto const asStr = vk::toString(result);
-    return impl::copy(asStr.begin(), asStr.end(), ctx.out());
+    if (path) {
+      out = impl::copy(thePath.begin(), thePath.end(), out);
+      anythingBefore = true;
+    }
+
+    if (method || /* method name does not do anything yet */ methodName) {
+      if (anythingBefore) {
+        auto const theSep = StringView{" - "};
+        out = impl::copy(theSep.begin(), theSep.end(), out);
+      }
+
+      out = impl::copy(theMethod.begin(), theMethod.end(), out);
+    }
+
+    if (line) {
+      if (anythingBefore) {
+        auto const theSep = StringView{":"};
+        out = impl::copy(theSep.begin(), theSep.end(), out);
+      }
+
+      auto const theLine = loc.line();
+      using LineType = cds::meta::RemoveCVRef<decltype(theLine)>;
+      using LineFormatter = cds::Formatter<LineType, C>;
+      LineFormatter lineFormatter{};
+      auto newCtx = ctx.from(out);
+      out = lineFormatter.format(theLine, newCtx);
+    }
+
+    if (column) {
+      if (anythingBefore) {
+        auto const theSep = StringView{":"};
+        out = impl::copy(theSep.begin(), theSep.end(), out);
+      }
+
+      auto const theColumn = loc.column();
+      using ColumnType = cds::meta::RemoveCVRef<decltype(column)>;
+      using ColumnFormatter = cds::Formatter<ColumnType, C>;
+      ColumnFormatter columnFormatter{};
+      auto newCtx = ctx.from(out);
+      out = columnFormatter.format(theColumn, newCtx);
+    }
+
+    return out;
   }
 };

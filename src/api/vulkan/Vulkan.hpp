@@ -18,49 +18,63 @@ namespace c_eng::api::vk::detail {
 using cds::experimental::Expected;
 using cds::experimental::Unexpected;
 using cds::impl::mv;
+using cds::impl::xch;
 using cds::Vector;
 using cds::U32;
+
 using generic::LoggerRef;
 using generic::LogLevel;
 
 using namespace cds::literals;
 
+class VulkanBuilder;
+class InstanceBuilder;
+
+struct VulkanGlobalFnPtrs {
+  PFN_vkGetInstanceProcAddr vkGetInstanceProcAddr{&::vkGetInstanceProcAddr};
+  PFN_vkEnumerateInstanceVersion vkEnumerateInstanceVersion{nullptr};
+  PFN_vkEnumerateInstanceLayerProperties vkEnumerateInstanceLayerProperties{nullptr};
+  PFN_vkEnumerateInstanceExtensionProperties vkEnumerateInstanceExtensionProperties{nullptr};
+  PFN_vkCreateInstance vkCreateInstance{nullptr};
+};
+
 class Vulkan {
 public:
-  class Builder;
-  class InstanceBuilder;
-
   constexpr Vulkan(
       LoggerRef const logger,
-      PFN_vkGetInstanceProcAddr const pfnGetInstanceProcAddr,
-      PFN_vkEnumerateInstanceLayerProperties const pfnEnumerateInstanceLayerProperties,
+      VulkanGlobalFnPtrs const& pfns,
       VkAllocationCallbacks const* pAllocationCallbacks
   ) noexcept :
-      _pAllocationCallbacks{pAllocationCallbacks}, _pfnGetInstanceProcAddr{pfnGetInstanceProcAddr},
-      _pfnEnumerateInstanceLayerProperties{pfnEnumerateInstanceLayerProperties}, _logger{logger} {}
+      _pAllocationCallbacks{pAllocationCallbacks}, _pfns{pfns}, _logger{logger} {}
 
   constexpr ~Vulkan() noexcept = default;
 
-  [[nodiscard]] static constexpr auto builder() noexcept -> Builder;
-  [[nodiscard]] auto layerProperties() noexcept -> Expected<Vector<VkLayerProperties>, VkResult>;
+  [[nodiscard]] static constexpr auto builder() noexcept -> VulkanBuilder;
+  [[nodiscard]] auto layerProperties() const noexcept -> Expected<Vector<VkLayerProperties>, VkResult>;
+  [[nodiscard]] auto instanceBuilder() const noexcept -> InstanceBuilder;
+  [[nodiscard]] constexpr auto allocationCallbacks() const noexcept {
+    return _pAllocationCallbacks;
+  }
+
+  [[nodiscard]] constexpr auto functions() const noexcept -> VulkanGlobalFnPtrs const& {
+    return _pfns;
+  }
 
 private:
   VkAllocationCallbacks const* _pAllocationCallbacks {nullptr};
-  PFN_vkGetInstanceProcAddr _pfnGetInstanceProcAddr {nullptr};
-  PFN_vkEnumerateInstanceLayerProperties _pfnEnumerateInstanceLayerProperties {nullptr};
-
+  VulkanGlobalFnPtrs _pfns {};
   LoggerRef _logger {};
 };
 
-class Vulkan::Builder {
+class VulkanBuilder {
 public:
-  [[nodiscard]] auto withLogger(LoggerRef logger) noexcept -> Builder& {
+  [[nodiscard]] auto withLogger(LoggerRef logger) noexcept -> VulkanBuilder& {
     _logger = mv(logger);
     return *this;
   }
 
   [[nodiscard]] constexpr auto withAllocationCallbacks(VkAllocationCallbacks const* pAllocationCallbacks) noexcept
-      -> Builder& {
+      -> VulkanBuilder& {
     _pAllocationCallbacks = pAllocationCallbacks;
     return *this;
   }
@@ -72,20 +86,11 @@ private:
   LoggerRef _logger {};
 };
 
-constexpr auto Vulkan::builder() noexcept -> Builder {
+constexpr auto Vulkan::builder() noexcept -> VulkanBuilder {
   return {};
 }
-
-inline auto Vulkan::layerProperties() noexcept -> Expected<Vector<VkLayerProperties>, VkResult> {
-  U32 count = 0;
-  if (auto result = _pfnEnumerateInstanceLayerProperties(&count, nullptr);
-      result != VK_SUCCESS) {
-    _logger(LogLevel::Error) << _logger.invoke(
-        "[{}] Failed to query number of layer properties: {}"_f,
-        std::source_location::current(), result
-    );
-    return Unexpected{result};
-  }
-}
-
 } // namespace c_eng::api::vk::detail
+
+namespace c_eng::api::vk {
+using detail::Vulkan;
+} // namespace c_eng::api::vk

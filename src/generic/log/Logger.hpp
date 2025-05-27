@@ -133,6 +133,12 @@ public:
   auto operator=(LoggerRef const& logger) noexcept -> LoggerRef& = default;
   auto operator=(LoggerRef&& logger) noexcept -> LoggerRef& = default;
 
+  auto operator<=>(LoggerRef const&) const noexcept = default;
+
+  [[nodiscard]] auto get() const noexcept -> Logger* {
+    return _logger;
+  }
+
   inline auto operator()(Level const level = Level::Info) const noexcept -> Log {
     if (_logger) {
       return (*_logger)(level);
