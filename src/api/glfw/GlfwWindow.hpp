@@ -25,7 +25,7 @@ class GlfwController;
 class GlfwWindowManager : public WindowManagerApiComponent {
 public:
   class GlfwWindowBuilder : public AbstractWindowBuilder, public WindowBuilderDecorator<GlfwWindowBuilder> {
-    using Decorator = WindowBuilderDecorator<GlfwWindowBuilder>;
+    using Decorator = WindowBuilderDecorator;
 
   public:
     using Decorator::withX;

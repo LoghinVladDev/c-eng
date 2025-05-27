@@ -32,7 +32,6 @@ template <typename C> struct cds::Formatter<c_eng::generic::Version, C> {
   template <typename Ctx> auto format(c_eng::generic::Version const& version, Ctx& ctx) const noexcept -> typename Ctx::Iterator {
     Formatter<U32, C> u32Formatter;
 
-    // TODO: Without parse, this is UB. Investigate later.
     impl::fmt::FormatParseContext<C, impl::StringUtils<C, impl::StringTraits<C>>> pCtx{""};
     u32Formatter.parse(pCtx);
 

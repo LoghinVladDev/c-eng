@@ -17,6 +17,8 @@
 
 #include "api/glfw/Glfw.hpp"
 #include "api/vulkan/Vulkan.hpp"
+#include "api/vulkan/debug/VulkanDebug.hpp"
+#include "api/vulkan/device/VulkanPhysicalDevice.hpp"
 #include "api/vulkan/instance/VulkanInstance.hpp"
 
 #include <ext/cds/Expected.hpp>
@@ -52,6 +54,7 @@ using c_eng::generic::LoggerOutput;
 
 using c_eng::api::Glfw;
 using c_eng::api::vk::Vulkan;
+using c_eng::api::vk::Instance;
 using enum c_eng::api::GlfwInitParameter;
 
 using c_eng::generic::flatten;
@@ -204,7 +207,7 @@ auto main(int const argc, char const* const* argv) noexcept -> int {
       .pfnInternalFree = &localInternalFree,
   };
 
-  Glfw glfw{{}, l};
+  Glfw glfw{{PlatformX11}, l};
   auto requestedVulkanExtensions = glfw.vulkanExtensions();
   requestedVulkanExtensions.emplaceBack("VK_EXT_debug_utils");
 
@@ -220,53 +223,50 @@ auto main(int const argc, char const* const* argv) noexcept -> int {
     })};
   });
 
-  auto expectedVulkan = expectedVk.then([&expectedRequiredLayers, &l, &allocationCallbacks](auto const& vk) {
-    return expectedRequiredLayers.then([&](auto const& layers) {
-      return vk.instanceBuilder()
-          .withLogger(l)
-          .withVulkanLogger(l)
-          .withAllocationCallbacks(&allocationCallbacks)
-          .withApplicationName("GenericScene")
-          .withApplicationVersion({0, 0, 1, 0})
-          .withEngineName("c-eng")
-          .withEngineVersion({0, 0, 7, 1})
-          .withVulkanVersion({0, 1, 4, 0})
-          .build();
-    });
+  auto expectedVkInstance = expectedVk
+      .then([&expectedRequiredLayers, &l, &allocationCallbacks, &requestedVulkanExtensions](auto const& vk) {
+        return expectedRequiredLayers.then([&](auto const& layers) {
+          return vk.instanceBuilder()
+              .withLogger(l)
+              .withVulkanLogger(l)
+              .withAllocationCallbacks(&allocationCallbacks)
+              .withApplicationName("GenericScene")
+              .withApplicationVersion({0, 0, 1, 0})
+              .withEngineName("c-eng")
+              .withEngineVersion({0, 0, 7, 1})
+              .withVulkanVersion({0, 1, 4, 0})
+              .withExtensions(requestedVulkanExtensions)
+              .withLayers(layers | project([](auto const& layerProperties){return layerProperties.layerName;}))
+              .build();
+        });
+      });
+
+  auto expectedDebugMessenger = expectedVkInstance.then([&l](auto const& instance) {
+    return instance.debugMessengerBuilder().build(l);
   });
 
-  // auto expectedVulkan = layerProperties({"VK_LAYER_KHRONOS_validation"})
-  //     .then([&l, &requestedVulkanExtensions](auto const& layers) {
-  //       ApplicationInfo info {
-  //           .applicationName{"GenericScene"},
-  //           .applicationVersion{0, 0, 1, 0},
-  //           .engineName{"c_eng"},
-  //           .engineVersion{0, 0, 7, 0},
-  //           .targetVulkanApiVersion{0, 1, 3, 0}
-  //       };
-  //       return createInstance(l, layers, requestedVulkanExtensions, info);
-  //     });
-  //
-  // Vector<Api const*> apis {&glfw};
-  // if (expectedVulkan) {
-  //   apis.emplaceBack(&*expectedVulkan);
-  // }
-  //
-  // Engine e {mv(apis)};
-  //
-  // auto window = glfw.windowManager()
-  //     .windowBuilder()
-  //     .withSize(1920, 1080)
-  //     .windowed()
-  //     // .windowedFullscreen(glfw.displayManager().primaryDisplay())
-  //     .build();
-  //
-  // auto expectedOptionalDevice = expectedVulkan.then(physicalDevices).transform([](auto const& devices) {
-  //   return devices | filter([](auto const& device) {
-  //       return device.features().geometryShader
-  //           && device.properties().deviceType == PhysicalDevice::Type::VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU;
-  //     }) | findAny();
-  // });
+  Vector<Api const*> apis {&glfw};
+  if (expectedVkInstance) {
+    apis.emplaceBack(&*expectedVkInstance);
+  }
+
+  Engine e {mv(apis)};
+
+  auto window = glfw.windowManager()
+      .windowBuilder()
+      .withSize(1920, 1080)
+      .windowed()
+      // .windowedFullscreen(glfw.displayManager().primaryDisplay())
+      .build();
+
+  ignore = window;
+  auto expectedOptionalDevice = expectedVkInstance.then(&Instance::physicalDevices).transform([](auto const& devices) {
+    return devices | filter([](auto const& device) {
+      return device.features().geometryShader
+          && device.properties().deviceType == VkPhysicalDeviceType::VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU;
+    }) | findAny();
+  });
+
   //
   // auto expectedSurface = expectedVulkan.then([&window](auto const& instance) {
   //   return createSurface(instance, window);
@@ -335,5 +335,5 @@ auto main(int const argc, char const* const* argv) noexcept -> int {
   // //   });
   // // });
 
-  // return e.run();
+  return e.run();
 }

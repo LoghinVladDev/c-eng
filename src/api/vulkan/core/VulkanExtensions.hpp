@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include <cds/functional/Hash>
+
 namespace c_eng::api::vk::detail {
 enum class ExtensionOriginType {Base, EXT};
 
@@ -35,3 +37,9 @@ template <> struct ExtensionTraits<Extension::Base> {
 
 #undef C_ENG_VULKAN_EXTENSION
 } // namespace c_eng::api::vk::detail
+
+template <> struct cds::functional::Hash<c_eng::api::vk::detail::Extension> {
+  [[nodiscard]] constexpr auto operator()(c_eng::api::vk::detail::Extension extension) const noexcept {
+    return Hash<U64>{}(static_cast<U64>(extension));
+  }
+};

@@ -106,7 +106,6 @@ template <typename C> struct cds::Formatter<VkLayerProperties, C> {
     Formatter<c_eng::generic::Version> versionFormatter;
     Formatter<meta::RemoveCVRef<decltype(implVersion)>> implFormatter;
 
-    // TODO: Without parse, this is UB. Investigate later.
     impl::fmt::FormatParseContext<C, impl::StringUtils<C, impl::StringTraits<C>>> pCtx{""};
     implFormatter.parse(pCtx);
 

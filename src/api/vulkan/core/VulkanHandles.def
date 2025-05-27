@@ -5,3 +5,12 @@ C_ENG_VULKAN_HANDLE(Global, Base, vkEnumerateInstanceExtensionProperties)
 C_ENG_VULKAN_HANDLE(Global, Base, vkCreateInstance)
 
 C_ENG_VULKAN_HANDLE(Instance, Base, vkDestroyInstance)
+C_ENG_VULKAN_HANDLE(Instance, Base, vkEnumeratePhysicalDevices)
+C_ENG_VULKAN_HANDLE(Instance, Base, vkEnumerateDeviceExtensionProperties)
+C_ENG_VULKAN_HANDLE(Instance, Base, vkGetPhysicalDeviceProperties)
+C_ENG_VULKAN_HANDLE(Instance, Base, vkGetPhysicalDeviceFeatures)
+
+#ifdef VK_EXT_debug_utils
+C_ENG_VULKAN_HANDLE(Instance, EXT_debug_utils, vkCreateDebugUtilsMessengerEXT)
+C_ENG_VULKAN_HANDLE(Instance, EXT_debug_utils, vkDestroyDebugUtilsMessengerEXT)
+#endif
