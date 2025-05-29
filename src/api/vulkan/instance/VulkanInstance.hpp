@@ -6,11 +6,15 @@
 
 #include <cds/Optional>
 #include <cds/collection/Vector>
+#include <core/VulkanSubunits.hpp>
 #include <ext/cds/Expected.hpp>
 #include <generic/api/Api.hpp>
 #include <generic/lang/Concepts.hpp>
 #include <generic/log/Logger.hpp>
-#include <vulkan/vulkan_core.h>
+
+namespace c_eng::generic::detail {
+class Window;
+} // namespace c_eng::generic
 
 namespace c_eng::api::vk::detail {
 using cds::Optional;
@@ -27,65 +31,37 @@ using generic::Api;
 using generic::ApiInfo;
 using generic::LoggerRef;
 using generic::Version;
+using generic::detail::Window;
 
 using generic::concepts::IterableOf;
 
 class Vulkan;
 class InstanceBuilder;
 class DebugMessengerBuilder;
+class LogicalDeviceBuilder;
 class PhysicalDevice;
+class Surface;
 
-struct VulkanInstanceFnPtrs {
-  PFN_vkDestroyInstance vkDestroyInstance{nullptr};
-  PFN_vkEnumeratePhysicalDevices vkEnumeratePhysicalDevices{nullptr};
-  PFN_vkEnumerateDeviceExtensionProperties vkEnumerateDeviceExtensionProperties{nullptr};
-  PFN_vkGetPhysicalDeviceProperties vkGetPhysicalDeviceProperties{nullptr};
-  PFN_vkGetPhysicalDeviceFeatures vkGetPhysicalDeviceFeatures{nullptr};
+struct InstanceFnPtrs;
 
-#ifdef VK_EXT_debug_utils
-  PFN_vkCreateDebugUtilsMessengerEXT vkCreateDebugUtilsMessengerEXT{nullptr};
-  PFN_vkDestroyDebugUtilsMessengerEXT vkDestroyDebugUtilsMessengerEXT{nullptr};
-#endif
-};
-
-class Instance : public Api {
+class Instance :
+    public Api, public VulkanObject<SubObject<Vulkan>, WithAllocationCallbacks, WrapsVulkanHandle<VkInstance>> {
 public:
-  class Builder;
-
   Instance(
       Vulkan const& vulkan,
-      VkInstance handle,
-      VulkanInstanceFnPtrs const& fnPtrs,
-      VkAllocationCallbacks const* pAllocationCallbacks
+      VkAllocationCallbacks const* pAllocationCallbacks,
+      InstanceFnPtrs const* fnPtrs,
+      VkInstance handle
   ) noexcept :
-      Api{{}}, _vulkan{vulkan}, _handle{handle}, _pAllocationCallbacks{pAllocationCallbacks},
-      _pfns{fnPtrs} {}
+      Api{{}}, VulkanObject{vulkan, pAllocationCallbacks, handle}, _pfns{fnPtrs} {}
 
-  Instance(Instance const&) noexcept = delete;
+  Instance(Instance const&) = delete;
   Instance(Instance&& instance) noexcept :
       Api{mv(instance)},
-      _vulkan{instance._vulkan},
-      _handle{xch(instance._handle, VK_NULL_HANDLE)},
-      _pAllocationCallbacks{xch(instance._pAllocationCallbacks, nullptr)},
-      _pfns{instance._pfns} {}
+      VulkanObject{mv(instance)},
+      _pfns{xch(instance._pfns, nullptr)} {}
 
-  ~Instance() noexcept override {
-    assert(functions().vkDestroyInstance && "undefined behavior");
-    functions().vkDestroyInstance(_handle, _pAllocationCallbacks);
-  }
-
-  auto operator=(Instance const&) noexcept -> Instance& = delete;
-  auto operator=(Instance&& instance) noexcept -> Instance& {
-    if (this == &instance) {
-      return *this;
-    }
-
-    assert(&_vulkan == &instance._vulkan && "undefined behavior");
-    _handle = xch(instance._handle, VK_NULL_HANDLE);
-    _pAllocationCallbacks = xch(instance._pAllocationCallbacks, nullptr);
-    _pfns = instance._pfns;
-    return *this;
-  }
+  ~Instance() noexcept override;
 
   [[nodiscard]] static constexpr auto builder(Vulkan const& vulkan) noexcept -> InstanceBuilder;
 
@@ -93,32 +69,22 @@ public:
   [[nodiscard]] auto compiledVersion() const noexcept -> Optional<Version> override;
   [[nodiscard]] auto runtimeVersion() const noexcept -> Optional<Version> override;
 
-  [[nodiscard]] constexpr auto handle() const noexcept {
-    return _handle;
-  }
-
-  [[nodiscard]] constexpr auto vulkan() const noexcept -> Vulkan const& {
-    return _vulkan;
-  }
-
-  [[nodiscard]] constexpr auto functions() const noexcept -> VulkanInstanceFnPtrs const& {
-    return _pfns;
-  }
-
-  [[nodiscard]] constexpr auto allocationCallbacks() const noexcept {
-    return _pAllocationCallbacks;
+  [[nodiscard]] constexpr auto functions() const noexcept -> InstanceFnPtrs const& {
+    assert(_pfns && "undefined behavior");
+    return *_pfns;
   }
 
   [[nodiscard]] auto debugMessengerBuilder() const noexcept -> DebugMessengerBuilder;
+  [[nodiscard]] auto logicalDeviceBuilder() const noexcept -> LogicalDeviceBuilder;
 
   [[nodiscard]] auto physicalDevices() const noexcept -> Expected<Vector<PhysicalDevice>, VkResult>;
+  [[nodiscard]] auto createSurface(
+      Window const& window,
+      Optional<VkAllocationCallbacks const*> pAllocationCallbacks = nullopt
+  ) const noexcept -> Expected<Surface, VkResult>;
 
 private:
-  Vulkan const& _vulkan;
-  VkInstance _handle{VK_NULL_HANDLE};
-  VkAllocationCallbacks const* _pAllocationCallbacks{nullptr};
-
-  VulkanInstanceFnPtrs _pfns{};
+  InstanceFnPtrs const* _pfns{};
 };
 
 class InstanceBuilder {

@@ -5,9 +5,9 @@
 #pragma once
 
 #include <cds/meta/Semantics>
+#include <core/VulkanSubunits.hpp>
 #include <ext/cds/Expected.hpp>
 #include <generic/log/Logger.hpp>
-#include <vulkan/vulkan_core.h>
 
 namespace c_eng::api::vk::detail {
 using cds::Optional;
@@ -24,34 +24,13 @@ VK_DEFINE_HANDLE(VkDebugUtilsMessengerEXT)
 class Instance;
 class DebugMessengerBuilder;
 
-class DebugMessenger {
+class DebugMessenger :
+    public VulkanObject<SubObject<Instance>, WithAllocationCallbacks, WrapsVulkanHandle<VkDebugUtilsMessengerEXT>> {
 public:
-  constexpr DebugMessenger(
-      Instance const& instance,
-      VkDebugUtilsMessengerEXT handle,
-      VkAllocationCallbacks const* pAllocationCallbacks
-  ) noexcept : _instance{instance}, _handle{handle}, _pAllocationCallbacks{pAllocationCallbacks} {}
-
+  using VulkanObject::VulkanObject;
   ~DebugMessenger() noexcept;
 
   [[nodiscard]] static constexpr auto builder(Instance const& instance) noexcept -> DebugMessengerBuilder;
-
-  [[nodiscard]] constexpr auto const& instance() const noexcept {
-    return _instance;
-  }
-
-  [[nodiscard]] constexpr auto handle() const noexcept {
-    return _handle;
-  }
-
-  [[nodiscard]] constexpr auto allocationCallbacks() const noexcept {
-    return _pAllocationCallbacks;
-  }
-
-private:
-  Instance const& _instance;
-  VkDebugUtilsMessengerEXT _handle{VK_NULL_HANDLE};
-  VkAllocationCallbacks const* _pAllocationCallbacks{nullptr};
 };
 
 class DebugMessengerBuilder {

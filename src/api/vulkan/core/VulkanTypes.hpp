@@ -10,7 +10,7 @@
 
 namespace c_eng::api::vk::detail {
 using cds::U32;
-using c_eng::generic::Version;
+using generic::Version;
 
 inline auto toVersion(U32 id) noexcept -> Version {
   return {

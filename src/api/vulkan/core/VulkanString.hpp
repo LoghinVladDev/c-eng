@@ -144,6 +144,64 @@ constexpr auto toString(VkInternalAllocationType const scope) noexcept -> cds::S
       cds::impl::unreachable();
   }
 }
+
+constexpr auto toString(VkQueueFlagBits const flag, bool const alternate = false) noexcept -> cds::StringView {
+  if (alternate) {
+    switch (flag) {
+      case VK_QUEUE_GRAPHICS_BIT: return "Graphics";
+      case VK_QUEUE_COMPUTE_BIT: return "Compute";
+      case VK_QUEUE_TRANSFER_BIT: return "Transfer";
+      case VK_QUEUE_SPARSE_BINDING_BIT: return "Sparse Binding";
+
+#ifdef VK_VERSION_1_1
+      case VK_QUEUE_PROTECTED_BIT: return "Protected";
+#endif
+
+#ifdef VK_KHR_video_decode_queue
+      case VK_QUEUE_VIDEO_DECODE_BIT_KHR: return "Video Decode";
+#endif
+
+#ifdef VK_KHR_video_encode_queue
+      case VK_QUEUE_VIDEO_ENCODE_BIT_KHR: return "Video Encode";
+#endif
+
+#ifdef VK_NV_optical_flow
+      case VK_QUEUE_OPTICAL_FLOW_BIT_NV: return "Optical Flow";
+#endif
+
+      default:
+        assert(false && "Unhandled VkQueueFlagBits case");
+        cds::impl::unreachable();
+    }
+  }
+
+  switch (flag) {
+    case VK_QUEUE_GRAPHICS_BIT: return "VK_QUEUE_GRAPHICS_BIT";
+    case VK_QUEUE_COMPUTE_BIT: return "VK_QUEUE_COMPUTE_BIT";
+    case VK_QUEUE_TRANSFER_BIT: return "VK_QUEUE_TRANSFER_BIT";
+    case VK_QUEUE_SPARSE_BINDING_BIT: return "VK_QUEUE_SPARSE_BINDING_BIT";
+
+#ifdef VK_VERSION_1_1
+    case VK_QUEUE_PROTECTED_BIT: return "VK_QUEUE_PROTECTED_BIT";
+#endif
+
+#ifdef VK_KHR_video_decode_queue
+    case VK_QUEUE_VIDEO_DECODE_BIT_KHR: return "VK_QUEUE_VIDEO_DECODE_BIT_KHR";
+#endif
+
+#ifdef VK_KHR_video_encode_queue
+    case VK_QUEUE_VIDEO_ENCODE_BIT_KHR: return "VK_QUEUE_VIDEO_ENCODE_BIT_KHR";
+#endif
+
+#ifdef VK_NV_optical_flow
+    case VK_QUEUE_OPTICAL_FLOW_BIT_NV: return "VK_QUEUE_OPTICAL_FLOW_BIT_NV";
+#endif
+
+    default:
+      assert(false && "Unhandled VkQueueFlagBits case");
+      cds::impl::unreachable();
+  }
+}
 #endif // #ifdef VK_VERSION_1_0
 
 #ifdef VK_EXT_debug_utils

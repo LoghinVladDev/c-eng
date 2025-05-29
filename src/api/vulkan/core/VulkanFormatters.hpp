@@ -9,11 +9,7 @@
 #include "VulkanTypes.hpp"
 #include "generic/TypesFormatters.hpp"
 
-template <typename /* FlagBits */> struct VulkanFormattedFlags {
-  VkFlags flags;
-};
-
-template <typename C, typename F> struct cds::Formatter<VulkanFormattedFlags<F>, C> {
+struct AlternatePresentationFormatter {
   template <typename Ctx> constexpr auto parse(Ctx& ctx) noexcept(false) -> typename Ctx::Iterator {
     auto it = ctx.begin();
     auto end = ctx.end();
@@ -30,9 +26,17 @@ template <typename C, typename F> struct cds::Formatter<VulkanFormattedFlags<F>,
       return it;
     }
 
-    throw FormatException("Unexpected token in format string");
+    throw cds::FormatException("Unexpected token in format string");
   }
 
+  bool alternate {false};
+};
+
+template <typename /* FlagBits */> struct VulkanFormattedFlags {
+  VkFlags flags;
+};
+
+template <typename C, typename F> struct cds::Formatter<VulkanFormattedFlags<F>, C> : AlternatePresentationFormatter {
   template <typename Ctx> auto format(VulkanFormattedFlags<F> const wrappedFlags, Ctx& ctx) const noexcept
       -> typename Ctx::Iterator {
     auto const flags = wrappedFlags.flags;
@@ -62,8 +66,6 @@ template <typename C, typename F> struct cds::Formatter<VulkanFormattedFlags<F>,
     }
     return out;
   }
-
-  bool alternate {false};
 };
 
 #ifdef VK_VERSION_1_0
@@ -121,5 +123,65 @@ template <typename C> struct cds::Formatter<VkLayerProperties, C> {
     out = impl::copy(description.begin(), description.end(), out);
     return impl::copy(b4.begin(), b4.end(), out);
   }
+};
+
+template <typename C> struct cds::Formatter<VkExtent3D, C> {
+  template <typename Ctx> auto format(VkExtent3D const& extent, Ctx& ctx) const noexcept -> typename Ctx::Iterator {
+    auto out = ctx.out();
+
+    auto constexpr b0 = StringView{R"(VkExtent3D{width=)"};
+    auto constexpr b1 = StringView{R"(, height=)"};
+    auto constexpr b2 = StringView{R"(, depth=)"};
+    auto constexpr b3 = StringView{R"(})"};
+
+    out = impl::copy(b0.begin(), b0.end(), out);
+    auto ctx1 = ctx.from(out);
+    out = underlyingU32Formatter.format({extent.width}, ctx1);
+    out = impl::copy(b1.begin(), b1.end(), out);
+    auto ctx2 = ctx1.from(out);
+    out = underlyingU32Formatter.format(extent.height, ctx2);
+    out = impl::copy(b2.begin(), b2.end(), out);
+    auto ctx3 = ctx2.from(out);
+    out = underlyingU32Formatter.format(extent.depth, ctx3);
+    return impl::copy(b3.begin(), b3.end(), out);
+  }
+
+  Formatter<std::uint32_t> underlyingU32Formatter;
+};
+
+template <typename C> struct cds::Formatter<VkQueueFamilyProperties, C> : AlternatePresentationFormatter {
+  template <typename Ctx> constexpr auto parse(Ctx& in) noexcept(false) -> typename Ctx::Iterator {
+    auto it = AlternatePresentationFormatter::parse(in);
+    underlyingFormatter.alternate = alternate;
+    return it;
+  }
+
+  template <typename Ctx> auto format(VkQueueFamilyProperties const& properties, Ctx& ctx) const noexcept -> typename Ctx::Iterator {
+    auto out = ctx.out();
+
+    auto constexpr b0 = StringView{R"(VkQueueFamilyProperties{flags=)"};
+    auto constexpr b1 = StringView{R"(, count=)"};
+    auto constexpr b2 = StringView{R"(, timestampValidBits=)"};
+    auto constexpr b3 = StringView{R"(, transferGranularity"=)"};
+    auto constexpr b4 = StringView{R"(})"};
+
+    out = impl::copy(b0.begin(), b0.end(), out);
+    auto ctx1 = ctx.from(out);
+    out = underlyingFormatter.format({properties.queueFlags}, ctx1);
+    out = impl::copy(b1.begin(), b1.end(), out);
+    auto ctx2 = ctx1.from(out);
+    out = underlyingU32Formatter.format(properties.queueCount, ctx2);
+    out = impl::copy(b2.begin(), b2.end(), out);
+    auto ctx3 = ctx2.from(out);
+    out = underlyingU32Formatter.format(properties.timestampValidBits, ctx3);
+    out = impl::copy(b3.begin(), b3.end(), out);
+    auto ctx4 = ctx3.from(out);
+    out = underlyingExtent3DFormatter.format(properties.minImageTransferGranularity, ctx4);
+    return impl::copy(b4.begin(), b4.end(), out);
+  }
+
+  Formatter<VulkanFormattedFlags<VkQueueFlagBits>> underlyingFormatter;
+  Formatter<std::uint32_t> underlyingU32Formatter;
+  Formatter<VkExtent3D> underlyingExtent3DFormatter;
 };
 #endif

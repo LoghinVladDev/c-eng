@@ -32,37 +32,16 @@ if(DEFINED C_ENG_USE_VULKAN AND C_ENG_USE_VULKAN)
 
   set(C_ENG_VULKAN_SRC
       api/vulkan/Vulkan.cpp
-      api/vulkan/core/VulkanCore.cpp
       api/vulkan/debug/VulkanDebug.cpp
       api/vulkan/device/VulkanLogicalDevice.cpp
-      api/vulkan/device/VulkanLogicalDeviceFactory.cpp
       api/vulkan/device/VulkanPhysicalDevice.cpp
       api/vulkan/device/VulkanQueue.cpp
       api/vulkan/instance/VulkanInstance.cpp
-      api/vulkan/instance/VulkanLayer.cpp
-      api/vulkan/renderer/VulkanRenderer.cpp
       api/vulkan/wsi/VulkanSurface.cpp
       api/vulkan/core/VulkanHandles.hpp
       api/vulkan/core/VulkanHandles.def
-      api/vulkan/core/VulkanExtensions.hpp)
-
-#  set(
-#      C_ENG_VULKAN_SRC
-#      api/vulkan/Vulkan.cxxm
-#      api/vulkan/core/VulkanCore.cxxm
-#      api/vulkan/debug/VulkanDebug.cxxm
-#      api/vulkan/device/VulkanLogicalDevice.cxxm
-#      api/vulkan/device/VulkanLogicalDeviceFactory.cxxm
-#      api/vulkan/device/VulkanLogicalDeviceFactoryImpl.cxxm
-#      api/vulkan/device/VulkanLogicalDeviceImpl.cxxm
-#      api/vulkan/device/VulkanPhysicalDevice.cxxm
-#      api/vulkan/device/VulkanPhysicalDeviceImpl.cxxm
-#      api/vulkan/device/VulkanQueue.cxxm
-#      api/vulkan/device/VulkanQueueImpl.cxxm
-#      api/vulkan/instance/VulkanInstance.cxxm
-#      api/vulkan/instance/VulkanLayer.cxxm
-#      api/vulkan/renderer/VulkanRenderer.cxxm
-#      api/vulkan/wsi/VulkanSurface.cxxm)
+      api/vulkan/core/VulkanExtensions.hpp
+      api/vulkan/core/VulkanSubunits.hpp)
 
   add_library(c_eng_vulkan SHARED ${C_ENG_VULKAN_SRC})
   target_include_directories(c_eng_vulkan PRIVATE ${C_ENG_VULKAN_INCLUDE_DIRS})

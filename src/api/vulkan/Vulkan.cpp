@@ -3,6 +3,7 @@
 //
 
 #include "Vulkan.hpp"
+#include "Vulkan.hpp"
 #include "api/vulkan/core/VulkanHandles.hpp"
 #include "instance/VulkanInstance.hpp"
 
@@ -10,32 +11,32 @@ namespace c_eng::api::vk::detail {
 namespace {
 using cds::ignore;
 
-auto acquireGlobalFnPtrs(LoggerRef logger) noexcept -> Expected<VulkanGlobalFnPtrs, VkResult> {
+auto acquireGlobalFnPtrs(GlobalFnPtrs* globalFnPtrs, LoggerRef logger) noexcept -> Expected<GlobalFnPtrs*, VkResult> {
   ignore = logger;
-  VulkanGlobalFnPtrs globalFnPtrs{};
-  assert(globalFnPtrs.vkGetInstanceProcAddr && "undefined behavior");
+  auto const getInstanceProcAddr = globalFnPtrs->vkGetInstanceProcAddr;
+  assert(getInstanceProcAddr && "undefined behavior");
 
 #define C_ENG_VULKAN_HANDLE(_resolve, _origin, _name) C_ENG_LATE_JOIN(C_ENG_VULKAN_HANDLE_ ## _resolve, _origin, _name)
 #define C_ENG_LATE_JOIN(_a, _b, _c) _a(_b, _c)
 
-#define C_ENG_VULKAN_HANDLE_Global(_origin, _name)                                              \
-  globalFnPtrs._name = resolveGlobalHandle<PFN:: _name>();                                      \
-  if (globalFnPtrs._name == nullptr) {                                                          \
+#define C_ENG_VULKAN_HANDLE_ResolveGlobal(_origin, _name)                                       \
+  globalFnPtrs->_name = resolveGlobalHandle<PFN:: _name>(getInstanceProcAddr);                  \
+  if (globalFnPtrs->_name == nullptr) {                                                         \
     logger(LogLevel::Error) << logger.invoke("[{}] Error: Failed to acquire handle for '{}'"_f, \
         std::source_location::current(), HandleTraits<PFN::_name>::name);                       \
     return Unexpected{VK_ERROR_FEATURE_NOT_PRESENT};                                            \
   }
 
-#define C_ENG_VULKAN_HANDLE_Always(_origin, _name)
-#define C_ENG_VULKAN_HANDLE_Instance(_origin, _name)
-#define C_ENG_VULKAN_HANDLE_Device(_origin, _name)
+#define C_ENG_VULKAN_HANDLE_ResolveNone(_origin, _name)
+#define C_ENG_VULKAN_HANDLE_ResolveInstance(_origin, _name)
+#define C_ENG_VULKAN_HANDLE_ResolveDevice(_origin, _name)
 
 #include "api/vulkan/core/VulkanHandles.def"
 
-#undef C_ENG_VULKAN_HANDLE_Global
-#undef C_ENG_VULKAN_HANDLE_Always
-#undef C_ENG_VULKAN_HANDLE_Instance
-#undef C_ENG_VULKAN_HANDLE_Device
+#undef C_ENG_VULKAN_HANDLE_ResolveGlobal
+#undef C_ENG_VULKAN_HANDLE_ResolveNone
+#undef C_ENG_VULKAN_HANDLE_ResolveInstance
+#undef C_ENG_VULKAN_HANDLE_ResolveDevice
 
 #undef C_ENG_VULKAN_HANDLE
 #undef C_ENG_LATE_JOIN
@@ -43,6 +44,10 @@ auto acquireGlobalFnPtrs(LoggerRef logger) noexcept -> Expected<VulkanGlobalFnPt
   return globalFnPtrs;
 }
 } // namespace
+
+Vulkan::~Vulkan() noexcept {
+  delete _pfns;
+}
 
 auto Vulkan::layerProperties() const noexcept -> Expected<Vector<VkLayerProperties>, VkResult> {
   auto const& fns = functions();
@@ -74,7 +79,7 @@ auto Vulkan::layerProperties() const noexcept -> Expected<Vector<VkLayerProperti
 auto VulkanBuilder::build() noexcept -> Expected<Vulkan, VkResult> {
   auto const logger = xch(_logger, {});
   auto const pAllocationCallbacks = xch(_pAllocationCallbacks, nullptr);
-  return acquireGlobalFnPtrs(logger).transform([logger, pAllocationCallbacks](auto const& globalFnPtrs) {
+  return acquireGlobalFnPtrs(new GlobalFnPtrs{}, logger).transform([logger, pAllocationCallbacks](auto const* globalFnPtrs) {
     return Vulkan{logger, globalFnPtrs, pAllocationCallbacks};
   });
 }

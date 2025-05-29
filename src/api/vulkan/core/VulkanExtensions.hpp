@@ -7,7 +7,7 @@
 #include <cds/functional/Hash>
 
 namespace c_eng::api::vk::detail {
-enum class ExtensionOriginType {Base, EXT};
+enum class ExtensionOriginType {Base, EXT, KHR, MVK};
 
 template <ExtensionOriginType> struct OriginTraits {};
 

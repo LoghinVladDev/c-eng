@@ -30,24 +30,24 @@ using namespace cds::literals;
 class VulkanBuilder;
 class InstanceBuilder;
 
-struct VulkanGlobalFnPtrs {
-  PFN_vkGetInstanceProcAddr vkGetInstanceProcAddr{&::vkGetInstanceProcAddr};
-  PFN_vkEnumerateInstanceVersion vkEnumerateInstanceVersion{nullptr};
-  PFN_vkEnumerateInstanceLayerProperties vkEnumerateInstanceLayerProperties{nullptr};
-  PFN_vkEnumerateInstanceExtensionProperties vkEnumerateInstanceExtensionProperties{nullptr};
-  PFN_vkCreateInstance vkCreateInstance{nullptr};
-};
+struct GlobalFnPtrs;
 
 class Vulkan {
 public:
   constexpr Vulkan(
       LoggerRef const logger,
-      VulkanGlobalFnPtrs const& pfns,
+      GlobalFnPtrs const* pfns,
       VkAllocationCallbacks const* pAllocationCallbacks
   ) noexcept :
       _pAllocationCallbacks{pAllocationCallbacks}, _pfns{pfns}, _logger{logger} {}
 
-  constexpr ~Vulkan() noexcept = default;
+  Vulkan(Vulkan const&) = delete;
+  constexpr Vulkan(Vulkan&& vk) noexcept :
+      _pAllocationCallbacks{xch(vk._pAllocationCallbacks, nullptr)},
+      _pfns{xch(vk._pfns, nullptr)},
+      _logger{mv(vk._logger)} {}
+
+  ~Vulkan() noexcept;
 
   [[nodiscard]] static constexpr auto builder() noexcept -> VulkanBuilder;
   [[nodiscard]] auto layerProperties() const noexcept -> Expected<Vector<VkLayerProperties>, VkResult>;
@@ -56,13 +56,14 @@ public:
     return _pAllocationCallbacks;
   }
 
-  [[nodiscard]] constexpr auto functions() const noexcept -> VulkanGlobalFnPtrs const& {
-    return _pfns;
+  [[nodiscard]] constexpr auto functions() const noexcept -> GlobalFnPtrs const& {
+    assert(_pfns && "undefined behavior");
+    return *_pfns;
   }
 
 private:
   VkAllocationCallbacks const* _pAllocationCallbacks {nullptr};
-  VulkanGlobalFnPtrs _pfns {};
+  GlobalFnPtrs const* _pfns {nullptr};
   LoggerRef _logger {};
 };
 

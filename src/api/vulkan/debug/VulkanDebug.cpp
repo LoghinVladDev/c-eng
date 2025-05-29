@@ -45,7 +45,7 @@ auto debugMessengerCallback(
     }
   }();
 
-  ref(level) << ref.invoke("[VkDebugMessenger][{a} - {a}] {}:{} -> {}"_f,
+  ref(level) << ref.invoke("[VkDebugMessenger][{:a} - {:a}] {}:{} -> {}"_f,
                            VulkanFormattedFlags<VkDebugUtilsMessageSeverityFlagBitsEXT>(severity),
                            VulkanFormattedFlags<VkDebugUtilsMessageTypeFlagBitsEXT>(types),
                            pCallbackData->pMessageIdName, pCallbackData->messageIdNumber,
@@ -71,10 +71,11 @@ auto DebugMessengerBuilder::build(LoggerRef const logger) const noexcept -> Expe
   logger(LoggerRef::Level::Warning) << logger.invoke(
       "[{}] Cannot create debug messenger, no debug messenger headers found."_f, std::source_location::current()
   );
+  return Unexpected{VK_ERROR_EXTENSION_NOT_PRESENT};
 #else
 
   if (logger == LoggerRef{}) {
-    return {_instance, VK_NULL_HANDLE, nullptr};
+    return {_instance, nullptr, VK_NULL_HANDLE};
   }
 
   auto const fns = _instance.functions();
@@ -109,7 +110,7 @@ auto DebugMessengerBuilder::build(LoggerRef const logger) const noexcept -> Expe
       result != VK_SUCCESS) {
     return Unexpected{result};
   }
-  return {_instance, handle, allocationCallbacks};
+  return {_instance, allocationCallbacks, handle};
 #endif
 }
 } // c_eng::api::vk::detail

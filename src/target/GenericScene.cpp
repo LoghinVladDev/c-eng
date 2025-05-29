@@ -19,11 +19,16 @@
 #include "api/vulkan/Vulkan.hpp"
 #include "api/vulkan/debug/VulkanDebug.hpp"
 #include "api/vulkan/device/VulkanPhysicalDevice.hpp"
+#include "api/vulkan/device/VulkanLogicalDevice.hpp"
+#include "api/vulkan/device/VulkanQueue.hpp"
 #include "api/vulkan/instance/VulkanInstance.hpp"
+#include "api/vulkan/wsi/VulkanSurface.hpp"
 
 #include <ext/cds/Expected.hpp>
 #include <generic/lang/Range.hpp>
 
+#include "core/VulkanExtensions.hpp"
+#include "core/VulkanLayers.hpp"
 
 namespace {
 using cds::HashMap;
@@ -55,6 +60,10 @@ using c_eng::generic::LoggerOutput;
 using c_eng::api::Glfw;
 using c_eng::api::vk::Vulkan;
 using c_eng::api::vk::Instance;
+using c_eng::api::vk::QueueFamily;
+using c_eng::api::vk::LogicalDevice;
+using c_eng::api::vk::PhysicalDevice;
+using c_eng::api::vk::Surface;
 using enum c_eng::api::GlfwInitParameter;
 
 using c_eng::generic::flatten;
@@ -62,6 +71,11 @@ using c_eng::generic::filter;
 using c_eng::generic::forEach;
 using c_eng::generic::findAny;
 using c_eng::generic::project;
+
+using c_eng::api::vk::detail::Extension;
+using c_eng::api::vk::detail::ExtensionTraits;
+using c_eng::api::vk::detail::Layer;
+using c_eng::api::vk::detail::LayerTraits;
 
 // using c_eng::api::vk::ApplicationInfo;
 // using c_eng::api::vk::LogicalDevice;
@@ -82,7 +96,7 @@ struct MemBlock {
 struct MemSizeBlock {
   LoggerRef logger;
   bool loggingEnabled;
-  cds::HashMap<void*, MemBlock> memBlocks;
+  HashMap<void*, MemBlock> memBlocks;
   U64 totalUsage;
 
   ~MemSizeBlock() noexcept {
@@ -209,7 +223,7 @@ auto main(int const argc, char const* const* argv) noexcept -> int {
 
   Glfw glfw{{PlatformX11}, l};
   auto requestedVulkanExtensions = glfw.vulkanExtensions();
-  requestedVulkanExtensions.emplaceBack("VK_EXT_debug_utils");
+  requestedVulkanExtensions.emplaceBack(ExtensionTraits<Extension::EXT_debug_utils>::name);
 
   auto expectedVk = Vulkan::builder()
       .withLogger(l)
@@ -219,7 +233,8 @@ auto main(int const argc, char const* const* argv) noexcept -> int {
   auto expectedLayerProperties = expectedVk.then(&Vulkan::layerProperties);
   auto expectedRequiredLayers = mv(expectedLayerProperties).transform([](auto&& layers) {
     return Vector<VkLayerProperties>{mv(layers) | filter([](auto const& properties) {
-      return static_cast<char const*>(properties.layerName) == StringView{"VK_LAYER_KHRONOS_validation"};
+      return static_cast<char const*>(properties.layerName)
+          == StringView{LayerTraits<Layer::LAYER_KHRONOS_validation>::name};
     })};
   });
 
@@ -259,81 +274,82 @@ auto main(int const argc, char const* const* argv) noexcept -> int {
       // .windowedFullscreen(glfw.displayManager().primaryDisplay())
       .build();
 
-  ignore = window;
-  auto expectedOptionalDevice = expectedVkInstance.then(&Instance::physicalDevices).transform([](auto const& devices) {
-    return devices | filter([](auto const& device) {
-      return device.features().geometryShader
-          && device.properties().deviceType == VkPhysicalDeviceType::VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU;
-    }) | findAny();
+  auto expectedSurface = expectedVkInstance.then([window](auto const& instance) {
+    return instance.createSurface(*window);
   });
 
-  //
-  // auto expectedSurface = expectedVulkan.then([&window](auto const& instance) {
-  //   return createSurface(instance, window);
-  // });
-  //
-  // auto optionalExpectedLogicalDevice = expectedVulkan.then([&expectedSurface, &expectedOptionalDevice, &l](auto const& instance) {
-  //   return expectedSurface.then([&instance, &expectedOptionalDevice, &l](auto const& surface) {
-  //     return expectedOptionalDevice.then([&surface, &instance, &l](auto const& optionalDevice) {
-  //       return optionalDevice.then([&surface, &instance, &l](PhysicalDevice const& device)
-  //           -> Optional<Expected<LogicalDevice, VkResult>> {
-  //         auto&& queueFamilies = device.queueFamilies();
-  //         Vector<U32> remainingQueues {queueFamilies
-  //             | project(&QueueFamily::properties)
-  //             | project(&QueueFamily::Properties::queueCount)};
-  //         LoggerRef lr{l};
-  //         lr() << "Selected Device Queue Family Properties:";
-  //         queueFamilies
-  //             | project(&QueueFamily::properties)
-  //             | forEach([&lr](auto const& properties) {
-  //               lr() << lr.invoke("\t{:#}"_f, properties);
-  //             });
-  //
-  //         auto const queryQueuesFor = [&remainingQueues, &queueFamilies]<typename P>(P&& predicate) {
-  //           return (queueFamilies
-  //                 | filter(fwd<P>(predicate))
-  //                 | filter([&remainingQueues](auto const& family) { return remainingQueues[family.index()] > 0; })
-  //                 | project([](auto const& family) { return &family; })
-  //                 | findAny()).getOr(nullptr);
-  //         };
-  //
-  //         auto const graphicsFamily = queryQueuesFor(&QueueFamily::supportsGraphics);
-  //         if (!graphicsFamily) {
-  //           return nullopt;
-  //         }
-  //         --remainingQueues[graphicsFamily->index()];
-  //
-  //         auto const transferFamily = queryQueuesFor(&QueueFamily::supportsTransfer);
-  //         if (!transferFamily) {
-  //           return nullopt;
-  //         }
-  //         --remainingQueues[transferFamily->index()];
-  //
-  //         auto const presentFamily = queryQueuesFor([&surface](auto const& family) {
-  //           return family.supportsPresentOn(surface);
-  //         });
-  //         if (!presentFamily) {
-  //           return nullopt;
-  //         }
-  //
-  //         return LogicalDeviceFactory()
-  //             .addQueueFrom(*graphicsFamily, 1.0f)
-  //             .addQueueFrom(*transferFamily, 1.0f)
-  //             .addQueueFrom(*presentFamily, 1.0f)
-  //             .presentOn(surface)
-  //             .build(device);
-  //       });
-  //     });
-  //   });
-  // });
-  //
-  // // auto optionalExpectedRenderer = expectedVulkan.then([&window, &expectedOptionalDevice](auto const& instance) {
-  // //   return expectedOptionalDevice.then([&window, &instance](auto const& optionalDevice) {
-  // //     return optionalDevice.transform([&window, &instance](auto const& device) {
-  // //       return createRenderer(instance, window, device);
-  // //     });
-  // //   });
-  // // });
+  auto expectedDevice = expectedSurface.then([&expectedVkInstance](auto const& surface) {
+    return expectedVkInstance.then(&Instance::physicalDevices).transform([&surface](auto const& devices) {
+      auto optDevice = devices | filter([&surface](PhysicalDevice const& device) {
+        return device.features().geometryShader
+            && device.properties().deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU
+            && device.surfaceFormats(surface)
+            && device.surfacePresentModes(surface);
+      }) | findAny();
+
+      if (!optDevice) {
+        std::cerr << "No discrete GPU with present support";
+        std::terminate();
+      }
+
+      return *optDevice;
+    });
+  });
+
+  auto expectedLogicalDevice = expectedVkInstance.then([&expectedDevice, &expectedSurface, ref = LoggerRef{l}](Instance const& instance) {
+    return expectedDevice.then([&instance, &expectedSurface, ref](PhysicalDevice const& device) {
+      return expectedSurface.then([&instance, &device, ref](Surface const& surface)
+          -> Expected<LogicalDevice, VkResult> {
+        auto&& queueFamilies = device.queueFamilies();
+        Vector<U32> remainingQueues {queueFamilies
+            | project(&QueueFamily::properties)
+            | project(&VkQueueFamilyProperties::queueCount)};
+        ref() << "Selected Device Queue Family Properties:";
+        queueFamilies
+            | project(&QueueFamily::properties)
+            | forEach([ref](auto const& properties) {
+              ref() << ref.invoke("\t{:a}"_f, properties);
+            });
+
+        auto const queryQueuesFor = [&remainingQueues, &queueFamilies]<typename P>(P&& predicate) {
+          return (queueFamilies
+                | filter(fwd<P>(predicate))
+                | filter([&remainingQueues](auto const& family) { return remainingQueues[family.index()] > 0; })
+                | project([](auto const& family) { return &family; })
+                | findAny()).getOr(nullptr);
+        };
+
+        auto const graphicsFamily = queryQueuesFor(&QueueFamily::supportsGraphics);
+        if (!graphicsFamily) {
+          ref() << "Unable to find a queue family supporting graphics";
+          return Unexpected{VK_ERROR_UNKNOWN};
+        }
+        --remainingQueues[graphicsFamily->index()];
+
+        auto const transferFamily = queryQueuesFor(&QueueFamily::supportsTransfer);
+        if (!transferFamily) {
+          ref() << "Unable to find a queue family supporting transfer";
+          return Unexpected{VK_ERROR_UNKNOWN};
+        }
+        --remainingQueues[transferFamily->index()];
+
+        auto const presentFamily = queryQueuesFor([&surface](auto const& family) {
+          return family.supportsPresentOn(surface);
+        });
+        if (!presentFamily) {
+          ref() << "Unable to find a queue family supporting present to surface";
+          return Unexpected{VK_ERROR_UNKNOWN};
+        }
+
+        return instance.logicalDeviceBuilder()
+            .addQueueFrom(*graphicsFamily, 1.0f)
+            .addQueueFrom(*transferFamily, 1.0f)
+            .addQueueFrom(*presentFamily, 1.0f)
+            .withExtensions(Vector{ExtensionTraits<Extension::KHR_swapchain>::name})
+            .build(device);
+      });
+    });
+  });
 
   return e.run();
 }

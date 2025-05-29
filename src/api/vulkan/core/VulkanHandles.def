@@ -1,16 +1,44 @@
-C_ENG_VULKAN_HANDLE(Always, Base, vkGetInstanceProcAddr)
-C_ENG_VULKAN_HANDLE(Global, Base, vkEnumerateInstanceVersion)
-C_ENG_VULKAN_HANDLE(Global, Base, vkEnumerateInstanceLayerProperties)
-C_ENG_VULKAN_HANDLE(Global, Base, vkEnumerateInstanceExtensionProperties)
-C_ENG_VULKAN_HANDLE(Global, Base, vkCreateInstance)
+C_ENG_VULKAN_HANDLE(ResolveNone, Base, vkGetInstanceProcAddr)
+C_ENG_VULKAN_HANDLE(ResolveGlobal, Base, vkEnumerateInstanceVersion)
+C_ENG_VULKAN_HANDLE(ResolveGlobal, Base, vkEnumerateInstanceLayerProperties)
+C_ENG_VULKAN_HANDLE(ResolveGlobal, Base, vkEnumerateInstanceExtensionProperties)
+C_ENG_VULKAN_HANDLE(ResolveGlobal, Base, vkCreateInstance)
 
-C_ENG_VULKAN_HANDLE(Instance, Base, vkDestroyInstance)
-C_ENG_VULKAN_HANDLE(Instance, Base, vkEnumeratePhysicalDevices)
-C_ENG_VULKAN_HANDLE(Instance, Base, vkEnumerateDeviceExtensionProperties)
-C_ENG_VULKAN_HANDLE(Instance, Base, vkGetPhysicalDeviceProperties)
-C_ENG_VULKAN_HANDLE(Instance, Base, vkGetPhysicalDeviceFeatures)
+C_ENG_VULKAN_HANDLE(ResolveInstance, Base, vkDestroyInstance)
+C_ENG_VULKAN_HANDLE(ResolveInstance, Base, vkEnumeratePhysicalDevices)
+C_ENG_VULKAN_HANDLE(ResolveInstance, Base, vkEnumerateDeviceExtensionProperties)
+C_ENG_VULKAN_HANDLE(ResolveInstance, Base, vkGetPhysicalDeviceProperties)
+C_ENG_VULKAN_HANDLE(ResolveInstance, Base, vkGetPhysicalDeviceFeatures)
+C_ENG_VULKAN_HANDLE(ResolveInstance, Base, vkGetPhysicalDeviceQueueFamilyProperties)
+C_ENG_VULKAN_HANDLE(ResolveInstance, Base, vkCreateDevice)
+C_ENG_VULKAN_HANDLE(ResolveInstance, Base, vkDestroyDevice)
+C_ENG_VULKAN_HANDLE(ResolveInstance, Base, vkGetDeviceProcAddr)
 
 #ifdef VK_EXT_debug_utils
-C_ENG_VULKAN_HANDLE(Instance, EXT_debug_utils, vkCreateDebugUtilsMessengerEXT)
-C_ENG_VULKAN_HANDLE(Instance, EXT_debug_utils, vkDestroyDebugUtilsMessengerEXT)
+C_ENG_VULKAN_HANDLE(ResolveInstance, EXT_debug_utils, vkCreateDebugUtilsMessengerEXT)
+C_ENG_VULKAN_HANDLE(ResolveInstance, EXT_debug_utils, vkDestroyDebugUtilsMessengerEXT)
+#endif
+
+#ifdef VK_KHR_surface
+C_ENG_VULKAN_HANDLE(ResolveInstance, KHR_surface, vkDestroySurfaceKHR)
+C_ENG_VULKAN_HANDLE(ResolveInstance, KHR_surface, vkGetPhysicalDeviceSurfaceSupportKHR)
+C_ENG_VULKAN_HANDLE(ResolveInstance, KHR_surface, vkGetPhysicalDeviceSurfaceCapabilitiesKHR)
+C_ENG_VULKAN_HANDLE(ResolveInstance, KHR_surface, vkGetPhysicalDeviceSurfaceFormatsKHR)
+C_ENG_VULKAN_HANDLE(ResolveInstance, KHR_surface, vkGetPhysicalDeviceSurfacePresentModesKHR)
+#endif
+
+#ifdef VK_KHR_win32_surface
+C_ENG_VULKAN_HANDLE(ResolveInstance, KHR_win32_surface, vkCreateWin32SurfaceKHR)
+#endif
+
+#ifdef VK_KHR_wayland_surface
+C_ENG_VULKAN_HANDLE(ResolveInstance, KHR_wayland_surface, vkCreateWaylandSurfaceKHR)
+#endif
+
+#ifdef VK_KHR_xlib_surface
+C_ENG_VULKAN_HANDLE(ResolveInstance, KHR_xlib_surface, vkCreateXlibSurfaceKHR)
+#endif
+
+#ifdef VK_MVK_macos_surface
+C_ENG_VULKAN_HANDLE(Instance, MVK_macos_surface, kCreateMacOSSurfaceMVK)
 #endif

@@ -8,10 +8,13 @@
 
 #include "Vulkan.hpp"
 #include "api/vulkan/core/VulkanTypes.hpp"
-#include "api/vulkan/core/VulkanHandles.hpp"
 #include "api/vulkan/device/VulkanPhysicalDevice.hpp"
+#include "api/vulkan/device/VulkanLogicalDevice.hpp"
 #include "api/vulkan/debug/VulkanDebug.hpp"
+#include "api/vulkan/wsi/VulkanSurface.hpp"
 #include "generic/lang/Range.hpp"
+
+#include "api/vulkan/core/VulkanHandles.hpp"
 
 namespace c_eng::api::vk::detail {
 namespace {
@@ -25,16 +28,16 @@ using generic::Logger;
 using generic::project;
 
 template <IterableOf<StringView> ExtensionNames> auto acquireInstanceFnPtrs(
+    InstanceFnPtrs* instanceFnPtrs,
     Vulkan const& vulkan,
     LoggerRef logger,
     VkInstance instance,
     ExtensionNames&& extensions
-) noexcept -> Expected<VulkanInstanceFnPtrs, VkResult> {
+) noexcept -> Expected<InstanceFnPtrs*, VkResult> {
   ignore = logger;
   ignore = instance;
   ignore = extensions;
 
-  VulkanInstanceFnPtrs instanceFnPtrs{};
   auto const& getInstanceProcAddr = vulkan.functions().vkGetInstanceProcAddr;
   assert(getInstanceProcAddr && "undefined behavior");
   ignore = getInstanceProcAddr;
@@ -44,11 +47,11 @@ template <IterableOf<StringView> ExtensionNames> auto acquireInstanceFnPtrs(
 #define C_ENG_VULKAN_HANDLE(_resolve, _origin, _name) C_ENG_LATE_JOIN(C_ENG_VULKAN_HANDLE_ ## _resolve, _origin, _name)
 #define C_ENG_LATE_JOIN(_a, _b, _c) _a(_b, _c)
 
-#define C_ENG_VULKAN_HANDLE_Instance(_origin, _name) {                                                        \
+#define C_ENG_VULKAN_HANDLE_ResolveInstance(_origin, _name) {                                                 \
     auto constexpr fnHandle = PFN::_name;                                                                     \
     if constexpr (auto constexpr origin = HandleTraits<fnHandle>::origin; origin == Extension::Base) {        \
-      instanceFnPtrs._name = resolveInstanceHandle<fnHandle>(instance);                                       \
-      if (!instanceFnPtrs._name) {                                                                            \
+      instanceFnPtrs->_name = resolveInstanceHandle<fnHandle>(getInstanceProcAddr, instance);                 \
+      if (!instanceFnPtrs->_name) {                                                                           \
         logger(LogLevel::Error) << logger.invoke(                                                             \
             "[{}] Error: Failed to acquire instance function handle for '{}'"_f,                              \
             std::source_location::current(), HandleTraits<PFN::_name>::name);                                 \
@@ -65,8 +68,8 @@ template <IterableOf<StringView> ExtensionNames> auto acquireInstanceFnPtrs(
         }                                                                                                     \
       }                                                                                                       \
       if (it->value()) {                                                                                      \
-        instanceFnPtrs._name = resolveInstanceHandle<fnHandle>(instance);                                     \
-        if (!instanceFnPtrs._name) {                                                                          \
+        instanceFnPtrs->_name = resolveInstanceHandle<fnHandle>(getInstanceProcAddr, instance);               \
+        if (!instanceFnPtrs->_name) {                                                                         \
           logger(LogLevel::Error) << logger.invoke(                                                           \
               "[{}] Error: Failed to acquire extension-dependent ('{}') instance function handle for '{}'"_f, \
               std::source_location::current(), extName, HandleTraits<PFN::_name>::name);                      \
@@ -76,16 +79,16 @@ template <IterableOf<StringView> ExtensionNames> auto acquireInstanceFnPtrs(
     }                                                                                                         \
   }
 
-#define C_ENG_VULKAN_HANDLE_Always(_origin, _name)
-#define C_ENG_VULKAN_HANDLE_Global(_origin, _name)
-#define C_ENG_VULKAN_HANDLE_Device(_origin, _name)
+#define C_ENG_VULKAN_HANDLE_ResolveNone(_origin, _name)
+#define C_ENG_VULKAN_HANDLE_ResolveGlobal(_origin, _name)
+#define C_ENG_VULKAN_HANDLE_ResolveDevice(_origin, _name)
 
 #include "api/vulkan/core/VulkanHandles.def"
 
-#undef C_ENG_VULKAN_HANDLE_Global
-#undef C_ENG_VULKAN_HANDLE_Always
-#undef C_ENG_VULKAN_HANDLE_Instance
-#undef C_ENG_VULKAN_HANDLE_Device
+#undef C_ENG_VULKAN_HANDLE_ResolveGlobal
+#undef C_ENG_VULKAN_HANDLE_ResolveNone
+#undef C_ENG_VULKAN_HANDLE_ResolveInstance
+#undef C_ENG_VULKAN_HANDLE_ResolveDevice
 
 #undef C_ENG_VULKAN_HANDLE
 #undef C_ENG_LATE_JOIN
@@ -115,7 +118,7 @@ auto debugMessengerCallbackFromCreateInstance(
     }
   }();
 
-  ref(level) << ref.invoke("[vkCreateInstance][{a} - {a}] {}:{} -> {}"_f,
+  ref(level) << ref.invoke("[vkCreateInstance][{:a} - {:a}] {}:{} -> {}"_f,
                            VulkanFormattedFlags<VkDebugUtilsMessageSeverityFlagBitsEXT>(severity),
                            VulkanFormattedFlags<VkDebugUtilsMessageTypeFlagBitsEXT>(types),
                            pCallbackData->pMessageIdName, pCallbackData->messageIdNumber,
@@ -124,6 +127,12 @@ auto debugMessengerCallbackFromCreateInstance(
 }
 #endif
 } // namespace
+
+Instance::~Instance() noexcept {
+  assert(functions().vkDestroyInstance && "undefined behavior");
+  functions().vkDestroyInstance(handle(), allocationCallbacks());
+  delete _pfns;
+}
 
 auto Instance::info() const noexcept -> ApiInfo {
   ignore = this;
@@ -154,7 +163,7 @@ auto Instance::compiledVersion() const noexcept -> Optional<Version> {
 }
 
 auto Instance::runtimeVersion() const noexcept -> Optional<Version> {
-  auto const& fns = _vulkan.functions();
+  auto const& fns = vulkan().functions();
   assert(fns.vkEnumerateInstanceVersion && "undefined behavior");
 
   std::uint32_t runtimeVersion;
@@ -241,16 +250,20 @@ auto InstanceBuilder::build() const noexcept -> Expected<Instance, VkResult> {
     return Unexpected{result};
   }
 
-  auto expectedInstanceFnPtrs = acquireInstanceFnPtrs(_vulkan, logger, instanceHandle, _extensions);
+  auto const pInstanceHandles = new InstanceFnPtrs{};
+  auto const expectedInstanceFnPtrs =
+      acquireInstanceFnPtrs(pInstanceHandles, _vulkan, logger, instanceHandle, _extensions);
   if (!expectedInstanceFnPtrs) {
-    if (auto const backupVkDestroyInstance = resolveInstanceHandle<PFN::vkDestroyInstance>(instanceHandle)) {
+    if (auto const backupVkDestroyInstance = resolveInstanceHandle<PFN::vkDestroyInstance>(
+        _vulkan.functions().vkGetInstanceProcAddr, instanceHandle)) {
+      delete pInstanceHandles;
       backupVkDestroyInstance(instanceHandle, pAllocationCallbacks);
     }
     return Unexpected{expectedInstanceFnPtrs.error()};
   }
 
   auto const& instanceFnPtrs = *expectedInstanceFnPtrs;
-  return Instance{_vulkan, instanceHandle, instanceFnPtrs, pAllocationCallbacks};
+  return {_vulkan, pAllocationCallbacks, instanceFnPtrs, instanceHandle};
 }
 
 auto Instance::debugMessengerBuilder() const noexcept -> DebugMessengerBuilder {
@@ -277,4 +290,14 @@ auto Instance::physicalDevices() const noexcept -> Expected<Vector<PhysicalDevic
 
   return deviceHandles | project([this](auto handle){return PhysicalDevice{*this, handle};});
 }
+
+auto Instance::createSurface(Window const& window, Optional<VkAllocationCallbacks const*> pAllocationCallbacks)
+    const noexcept -> Expected<Surface, VkResult> {
+  return Surface::createSurface(*this, window, pAllocationCallbacks);
+}
+
+auto Instance::logicalDeviceBuilder() const noexcept -> LogicalDeviceBuilder {
+  return LogicalDeviceBuilder{*this};
+}
+
 } // namespace c_eng::api::vk::detail

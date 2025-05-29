@@ -5,19 +5,24 @@
 #pragma once
 
 #include <cds/collection/Vector>
+#include <core/VulkanSubunits.hpp>
 #include <ext/cds/Expected.hpp>
-#include <vulkan/vulkan_core.h>
 
 namespace c_eng::api::vk::detail {
 using cds::experimental::Expected;
 using cds::Vector;
 
 class Instance;
+class QueueFamily;
+class Surface;
 
-class PhysicalDevice {
+#ifndef VK_KHR_surface
+struct VkSurfaceCapabilitiesKHR{};
+#endif
+
+class PhysicalDevice : public VulkanObject<SubObject<Instance>, WrapsVulkanHandle<VkPhysicalDevice>> {
 public:
-  constexpr PhysicalDevice(Instance const& instance, VkPhysicalDevice handle) noexcept :
-      _instance{instance}, _handle{handle} {}
+  using VulkanObject::VulkanObject;
 
   PhysicalDevice(PhysicalDevice const&) = default;
   ~PhysicalDevice() = default;
@@ -25,17 +30,16 @@ public:
   [[nodiscard]] auto extensionProperties() const noexcept -> Expected<Vector<VkExtensionProperties>, VkResult>;
   [[nodiscard]] auto properties() const noexcept -> VkPhysicalDeviceProperties;
   [[nodiscard]] auto features() const noexcept -> VkPhysicalDeviceFeatures;
+  [[nodiscard]] auto queueFamilies() const noexcept -> Vector<QueueFamily>;
 
-  [[nodiscard]] constexpr auto handle() const noexcept {
-    return _handle;
-  }
+  [[nodiscard]] auto surfaceCapabilities(Surface const& surface) const noexcept
+      -> Expected<VkSurfaceCapabilitiesKHR, VkResult>;
 
-  [[nodiscard]] constexpr auto const& instance() const noexcept {
-    return _instance;
-  }
-private:
-  Instance const& _instance;
-  VkPhysicalDevice _handle{VK_NULL_HANDLE};
+  [[nodiscard]] auto surfaceFormats(Surface const& surface) const noexcept
+      -> Expected<Vector<VkSurfaceFormatKHR>, VkResult>;
+
+  [[nodiscard]] auto surfacePresentModes(Surface const& surface) const noexcept
+      -> Expected<Vector<VkPresentModeKHR>, VkResult>;
 };
 } // namespace c_eng::api::vk::detail
 
