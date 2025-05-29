@@ -7,6 +7,7 @@
 #include <cds/collection/Vector>
 #include <core/VulkanSubunits.hpp>
 #include <ext/cds/Expected.hpp>
+#include "VulkanPhysicalDeviceExtendedFeatures.hpp"
 
 namespace c_eng::api::vk::detail {
 using cds::experimental::Expected;
@@ -40,6 +41,16 @@ public:
 
   [[nodiscard]] auto surfacePresentModes(Surface const& surface) const noexcept
       -> Expected<Vector<VkPresentModeKHR>, VkResult>;
+
+#if defined(VK_VERSION_1_1)
+  auto getFeatures(VkPhysicalDeviceFeatures2& features) const noexcept -> void;
+
+  template <typename... Features> [[nodiscard]] auto features() const noexcept {
+    PhysicalDeviceExtendedFeatures<Features...> features;
+    getFeatures(static_cast<VkPhysicalDeviceFeatures2&>(features));
+    return features;
+  }
+#endif
 };
 } // namespace c_eng::api::vk::detail
 

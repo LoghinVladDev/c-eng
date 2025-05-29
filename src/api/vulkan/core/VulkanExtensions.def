@@ -1,4 +1,6 @@
 C_ENG_VULKAN_EXTENSION(EXT, debug_utils)
+C_ENG_VULKAN_EXTENSION(EXT, layer_settings)
+C_ENG_VULKAN_EXTENSION(EXT, validation_features)
 C_ENG_VULKAN_EXTENSION(KHR, surface)
 C_ENG_VULKAN_EXTENSION(KHR, win32_surface)
 C_ENG_VULKAN_EXTENSION(KHR, wayland_surface)

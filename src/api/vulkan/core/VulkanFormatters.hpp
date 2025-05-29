@@ -185,3 +185,12 @@ template <typename C> struct cds::Formatter<VkQueueFamilyProperties, C> : Altern
   Formatter<VkExtent3D> underlyingExtent3DFormatter;
 };
 #endif
+
+#ifdef VK_EXT_validation_features
+template <typename C> struct cds::Formatter<VkValidationFeatureEnableEXT, C> : AlternatePresentationFormatter {
+  template <typename Ctx> auto format(VkValidationFeatureEnableEXT const feature, Ctx& ctx) const noexcept -> typename Ctx::Iterator {
+    auto const asStr = vk::toString(feature, alternate);
+    return impl::copy(asStr.begin(), asStr.end(), ctx.out());
+  }
+};
+#endif

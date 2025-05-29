@@ -259,4 +259,33 @@ constexpr auto toString(VkDebugUtilsMessageTypeFlagBitsEXT const flag, bool cons
   }
 }
 #endif
+
+#ifdef VK_EXT_validation_features
+constexpr auto toString(VkValidationFeatureEnableEXT const feature, bool const alternate = false) noexcept
+    -> cds::StringView {
+  if (alternate) {
+    switch (feature) {
+      case VK_VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_EXT: return "GPU Assisted Validation";
+      case VK_VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_RESERVE_BINDING_SLOT_EXT: return "Reserve descriptor set for GPU Assisted Validation";
+      case VK_VALIDATION_FEATURE_ENABLE_BEST_PRACTICES_EXT: return "Best Practices";
+      case VK_VALIDATION_FEATURE_ENABLE_DEBUG_PRINTF_EXT: return "debugPrintfEXT in shaders";
+      case VK_VALIDATION_FEATURE_ENABLE_SYNCHRONIZATION_VALIDATION_EXT: return "Validation of synchronization operations";
+      default:
+        assert(false && "Unhandled VkValidationFeaturesEXT case");
+        cds::impl::unreachable();
+    }
+  }
+
+  switch (feature) {
+    case VK_VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_EXT: return "VK_VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_EXT";
+    case VK_VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_RESERVE_BINDING_SLOT_EXT: return "VK_VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_RESERVE_BINDING_SLOT_EXT";
+    case VK_VALIDATION_FEATURE_ENABLE_BEST_PRACTICES_EXT: return "VK_VALIDATION_FEATURE_ENABLE_BEST_PRACTICES_EXT";
+    case VK_VALIDATION_FEATURE_ENABLE_DEBUG_PRINTF_EXT: return "VK_VALIDATION_FEATURE_ENABLE_DEBUG_PRINTF_EXT";
+    case VK_VALIDATION_FEATURE_ENABLE_SYNCHRONIZATION_VALIDATION_EXT: return "VK_VALIDATION_FEATURE_ENABLE_SYNCHRONIZATION_VALIDATION_EXT";
+    default:
+      assert(false && "Unhandled VkValidationFeaturesEXT case");
+      cds::impl::unreachable();
+  }
+}
+#endif
 } // namespace vk

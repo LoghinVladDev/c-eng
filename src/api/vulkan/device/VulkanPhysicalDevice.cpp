@@ -160,4 +160,13 @@ auto PhysicalDevice::surfacePresentModes(Surface const& surface) const noexcept
   return modes;
 #endif
 }
+
+#ifdef VK_VERSION_1_1
+auto PhysicalDevice::getFeatures(VkPhysicalDeviceFeatures2& features) const noexcept -> void {
+  auto const& fns = instance().functions();
+  assert(fns.vkGetPhysicalDeviceFeatures2 && "undefined behavior");
+  fns.vkGetPhysicalDeviceFeatures2(handle(), &features);
+}
+
+#endif
 } // namespace c_eng::api::vk::detail

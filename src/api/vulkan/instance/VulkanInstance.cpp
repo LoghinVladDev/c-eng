@@ -246,10 +246,60 @@ auto InstanceBuilder::build() const noexcept -> Expected<Instance, VkResult> {
     }
   }
 
-  VectorView extraValidationFeatures{_extraValidationFeatures};
-  // for (auto const& layer : _layers) {
-  //   if (layer == LayerTraits<>)
-  // }
+#if defined(VK_EXT_layer_settings)
+  VkLayerSettingsCreateInfoEXT layerSettings{
+      .sType = VK_STRUCTURE_TYPE_LAYER_SETTINGS_CREATE_INFO_EXT,
+      .pNext = nullptr,
+      .settingCount = static_cast<std::uint32_t>(_layerSettings.size()),
+      .pSettings = _layerSettings.data(),
+  };
+
+  if (!layers && _layerSettings) {
+    logger(LogLevel::Warning) << logger.invoke(
+        "[{}] Attempting to set layer settings, but no layers have been provided"_f,
+        std::source_location::current()
+    );
+  }
+
+  if (_layerSettings) {
+    *lastInCreateInfoChain = &layerSettings;
+    lastInCreateInfoChain = &layerSettings.pNext;
+  }
+#else
+  if (_layerSettings) {
+    logger(LogLevel::Warning) << logger.invoke(
+        "[{}] Cannot set layer settings, missing extension '{}' headers."_f,
+        std::source_location::current(), ExtensionTraits<Extension::EXT_layer_settings>::name
+    );
+  }
+#endif
+
+#if defined(VK_EXT_validation_features)
+  VkValidationFeaturesEXT validationFeatures{
+      .sType = VK_STRUCTURE_TYPE_VALIDATION_FEATURES_EXT,
+      .pNext = nullptr,
+      .enabledValidationFeatureCount = static_cast<std::uint32_t>(_extraValidationFeatures.size()),
+      .pEnabledValidationFeatures = _extraValidationFeatures.data(),
+      .disabledValidationFeatureCount = 0u,
+      .pDisabledValidationFeatures = nullptr,
+  };
+#else
+  if (_extraValidationFeatures) {
+    logger(LogLevel::Warning) << logger.invoke(
+        "[{}] Cannot add extra validation features {}, missing extension '{}' headers."_f,
+        std::source_location::current(), _extraValidationFeatures,
+        ExtensionTraits<Extension::EXT_validation_features>::name);
+  }
+#endif
+
+  for (auto const& layer : _layers) {
+    if (layer == LayerTraits<Layer::LAYER_KHRONOS_validation>::name && _extraValidationFeatures) {
+#if defined(VK_EXT_validation_features)
+      *lastInCreateInfoChain = &validationFeatures;
+      lastInCreateInfoChain = &validationFeatures.pNext;
+#endif
+    }
+  }
 
   VkInstance instanceHandle = VK_NULL_HANDLE;
   if (auto result = fns.vkCreateInstance(&createInfo, pAllocationCallbacks, &instanceHandle);

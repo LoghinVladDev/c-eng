@@ -97,7 +97,8 @@ struct MemSizeBlock {
   LoggerRef logger;
   bool loggingEnabled;
   HashMap<void*, MemBlock> memBlocks;
-  U64 totalUsage;
+  U64 totalUsage{0u};
+  bool logAlloc{false};
 
   ~MemSizeBlock() noexcept {
     if (loggingEnabled && !memBlocks.empty()) {
@@ -118,7 +119,9 @@ auto localAlloc(
   auto mem = malloc(size);
   if (auto const memBlock = static_cast<MemSizeBlock*>(pUserData); memBlock && memBlock->loggingEnabled) {
     auto const logger = memBlock->logger;
-    logger() << logger.invoke("Vulkan allocated at {} {} bytes aligned at {} bytes in '{}'"_f, mem, size, alignment, scope);
+    if (memBlock->logAlloc) {
+      logger() << logger.invoke("Vulkan allocated at {} {} bytes aligned at {} bytes in '{}'"_f, mem, size, alignment, scope);
+    }
     memBlock->memBlocks.emplace(mem, size, alignment, scope);
     memBlock->totalUsage += size;
   }
@@ -139,13 +142,17 @@ auto localRealloc(
     if (auto const it = memBlock->memBlocks.find(pOriginal); it == memBlock->memBlocks.end()) {
       logger(Logger::Level::Warning) << logger.invoke("Vulkan requested reallocation of {}, which was never allocated"_f, pOriginal);
     } else if (auto const& [pMem, block] = *it; pMem != mem) {
-      logger() << logger.invoke("Vulkan reallocated from {} of {} bytes to {} of {} bytes, aligned at {} bytes in '{}'"_f, pOriginal, block.size, mem, size, alignment, scope);
+      if (memBlock->logAlloc) {
+        logger() << logger.invoke("Vulkan reallocated from {} of {} bytes to {} of {} bytes, aligned at {} bytes in '{}'"_f, pOriginal, block.size, mem, size, alignment, scope);
+      }
       memBlock->totalUsage -= it->value().size;
       memBlock->memBlocks.remove(it);
       memBlock->totalUsage +=
           get<0>(memBlock->memBlocks.emplace(mem, size, alignment, scope))->value().size;
     } else {
-      logger() << logger.invoke("Vulkan reallocated at {} from {} bytes to {} bytes, aligned at {} bytes in '{}'"_f, pOriginal, block.size, size, alignment, scope);
+      if (memBlock->logAlloc) {
+        logger() << logger.invoke("Vulkan reallocated at {} from {} bytes to {} bytes, aligned at {} bytes in '{}'"_f, pOriginal, block.size, size, alignment, scope);
+      }
       memBlock->totalUsage -= it->value().size;
       it->value() = {size, alignment, scope};
       memBlock->totalUsage += it->value().size;
@@ -239,8 +246,17 @@ auto main(int const argc, char const* const* argv) noexcept -> int {
   });
 
   auto expectedVkInstance = expectedVk
-      .then([&expectedRequiredLayers, &l, &allocationCallbacks, &requestedVulkanExtensions](auto const& vk) {
+      .then([&expectedRequiredLayers, &l, &allocationCallbacks, &requestedVulkanExtensions](Vulkan const& vk) {
         return expectedRequiredLayers.then([&](auto const& layers) {
+          VkBool32 disableRayQuerySetting = VK_FALSE;
+          VkLayerSettingEXT disableRayQuery{
+              .pLayerName = LayerTraits<Layer::LAYER_KHRONOS_validation>::name,
+              .pSettingName = "gpuav_validate_ray_query",
+              .type = VK_LAYER_SETTING_TYPE_BOOL32_EXT,
+              .valueCount = 1u,
+              .pValues = &disableRayQuerySetting
+          };
+
           return vk.instanceBuilder()
               .withLogger(l)
               .withVulkanLogger(l)
@@ -251,7 +267,14 @@ auto main(int const argc, char const* const* argv) noexcept -> int {
               .withEngineVersion({0, 0, 7, 1})
               .withVulkanVersion({0, 1, 4, 0})
               .withExtensions(requestedVulkanExtensions)
-              .withLayers(layers | project([](auto const& layerProperties){return layerProperties.layerName;}))
+              .withLayerSettings(Vector{disableRayQuery})
+              .withExtraValidationFeatures(Vector{
+                  VK_VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_EXT,
+                  VK_VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_RESERVE_BINDING_SLOT_EXT,
+                  VK_VALIDATION_FEATURE_ENABLE_BEST_PRACTICES_EXT,
+                  VK_VALIDATION_FEATURE_ENABLE_DEBUG_PRINTF_EXT,
+                  VK_VALIDATION_FEATURE_ENABLE_SYNCHRONIZATION_VALIDATION_EXT,
+              }).withLayers(layers | project([](auto const& layerProperties){return layerProperties.layerName;}))
               .build();
         });
       });
@@ -296,9 +319,25 @@ auto main(int const argc, char const* const* argv) noexcept -> int {
     });
   });
 
-  auto expectedLogicalDevice = expectedVkInstance.then([&expectedDevice, &expectedSurface, ref = LoggerRef{l}](Instance const& instance) {
-    return expectedDevice.then([&instance, &expectedSurface, ref](PhysicalDevice const& device) {
-      return expectedSurface.then([&instance, &device, ref](Surface const& surface)
+  // From GPU assisted validation suggestions
+  auto extraFeatureSuggestions = expectedDevice.transform([](PhysicalDevice const& device) {
+    auto features = device.features<
+        VkPhysicalDeviceTimelineSemaphoreFeatures,
+        VkPhysicalDeviceVulkanMemoryModelFeatures,
+        VkPhysicalDeviceBufferDeviceAddressFeatures,
+        VkPhysicalDevice8BitStorageFeatures,
+        VkPhysicalDeviceRayQueryFeaturesKHR,
+        VkPhysicalDeviceRayTracingValidationFeaturesNV
+    >();
+
+    get<VkPhysicalDeviceRayQueryFeaturesKHR>(features).rayQuery = VK_FALSE;
+    get<VkPhysicalDeviceRayTracingValidationFeaturesNV>(features).rayTracingValidation = VK_FALSE;
+    return features;
+  });
+
+  auto expectedLogicalDevice = expectedVkInstance.then([&expectedDevice, &expectedSurface, ref = LoggerRef{l}, &extraFeatureSuggestions](Instance const& instance) {
+    return expectedDevice.then([&instance, &expectedSurface, ref, &extraFeatureSuggestions](PhysicalDevice const& device) {
+      return expectedSurface.then([&instance, &device, ref, &extraFeatureSuggestions](Surface const& surface)
           -> Expected<LogicalDevice, VkResult> {
         auto&& queueFamilies = device.queueFamilies();
         Vector<U32> remainingQueues {queueFamilies
@@ -341,12 +380,19 @@ auto main(int const argc, char const* const* argv) noexcept -> int {
           return Unexpected{VK_ERROR_UNKNOWN};
         }
 
-        return instance.logicalDeviceBuilder()
+        auto builder = instance.logicalDeviceBuilder();
+
+        builder
             .addQueueFrom(*graphicsFamily, 1.0f)
             .addQueueFrom(*transferFamily, 1.0f)
             .addQueueFrom(*presentFamily, 1.0f)
-            .withExtensions(Vector{ExtensionTraits<Extension::KHR_swapchain>::name})
-            .build(device);
+            .withExtensions(Vector{ExtensionTraits<Extension::KHR_swapchain>::name});
+
+        if (extraFeatureSuggestions) {
+          builder.withFeatures(static_cast<VkPhysicalDeviceFeatures2 const&>(*extraFeatureSuggestions));
+        }
+
+        return builder.build(device);
       });
     });
   });

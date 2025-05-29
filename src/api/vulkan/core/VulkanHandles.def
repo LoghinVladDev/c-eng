@@ -14,6 +14,10 @@ C_ENG_VULKAN_HANDLE(ResolveInstance, Base, vkCreateDevice)
 C_ENG_VULKAN_HANDLE(ResolveInstance, Base, vkDestroyDevice)
 C_ENG_VULKAN_HANDLE(ResolveInstance, Base, vkGetDeviceProcAddr)
 
+#ifdef VK_VERSION_1_1
+C_ENG_VULKAN_HANDLE(ResolveInstance, Base, vkGetPhysicalDeviceFeatures2)
+#endif
+
 #ifdef VK_EXT_debug_utils
 C_ENG_VULKAN_HANDLE(ResolveInstance, EXT_debug_utils, vkCreateDebugUtilsMessengerEXT)
 C_ENG_VULKAN_HANDLE(ResolveInstance, EXT_debug_utils, vkDestroyDebugUtilsMessengerEXT)

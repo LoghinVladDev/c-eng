@@ -147,7 +147,7 @@ auto LogicalDeviceBuilder::build(PhysicalDevice const& device) const noexcept
 
   auto const features = device.features();
 
-  VkDeviceCreateInfo const createInfo {
+  VkDeviceCreateInfo createInfo {
       .sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO,
       .pNext = nullptr,
       .flags = 0u,
@@ -159,6 +159,13 @@ auto LogicalDeviceBuilder::build(PhysicalDevice const& device) const noexcept
       .ppEnabledExtensionNames = extensions.data(),
       .pEnabledFeatures = &features,
   };
+
+#if defined(VK_VERSION_1_1)
+  if (_features2) {
+    createInfo.pNext = &*_features2;
+    createInfo.pEnabledFeatures = nullptr;
+  }
+#endif
 
   VkDevice handle{VK_NULL_HANDLE};
   if (auto const result = fns.vkCreateDevice(device.handle(), &createInfo, allocationCallbacks, &handle);

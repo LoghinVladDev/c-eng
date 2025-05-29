@@ -45,7 +45,11 @@ class Surface;
 struct InstanceFnPtrs;
 
 #ifndef VK_EXT_validation_features
-enum VkValidationFeaturesEXT {};
+enum VkValidationFeatureEnableEXT {};
+#endif
+
+#ifndef VK_EXT_layer_settings
+struct VkLayerSettingEXT {};
 #endif
 
 class Instance :
@@ -147,9 +151,15 @@ public:
     return *this;
   }
 
-  template <IterableOf<VkValidationFeaturesEXT> Features>
+  template <IterableOf<VkValidationFeatureEnableEXT> Features>
   auto& withExtraValidationFeatures(Features&& features) noexcept {
-    _extensions = fwd<Features>(features);
+    _extraValidationFeatures = fwd<Features>(features);
+    return *this;
+  }
+
+  template <IterableOf<VkLayerSettingEXT> Settings>
+  auto& withLayerSettings(Settings&& settings) noexcept {
+    _layerSettings = fwd<Settings>(settings);
     return *this;
   }
 
@@ -163,7 +173,8 @@ private:
   Vector<String> _layers{};
   Vector<String> _extensions{};
 
-  Vector<VkValidationFeaturesEXT> _extraValidationFeatures{};
+  Vector<VkValidationFeatureEnableEXT> _extraValidationFeatures{};
+  Vector<VkLayerSettingEXT> _layerSettings{};
 
   String _applicationName{"Unnamed Application"};
   String _engineName{"Unnamed Engine"};

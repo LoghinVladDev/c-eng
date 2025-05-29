@@ -90,6 +90,13 @@ public:
     return *this;
   }
 
+#if defined(VK_VERSION_1_1)
+  auto& withFeatures(VkPhysicalDeviceFeatures2 const& features) noexcept {
+    _features2 = features;
+    return *this;
+  }
+#endif
+
   [[nodiscard]] auto build(PhysicalDevice const& device) const noexcept -> Expected<LogicalDevice, VkResult>;
 
 private:
@@ -100,6 +107,10 @@ private:
   Vector<String> _layers;
 
   HashMap<QueueFamily const*, Vector<float>> _plannedQueues;
+
+#if defined(VK_VERSION_1_1)
+  Optional<VkPhysicalDeviceFeatures2> _features2{nullopt};
+#endif
 };
 
 constexpr auto LogicalDevice::builder(Instance const& instance) noexcept -> LogicalDeviceBuilder {
