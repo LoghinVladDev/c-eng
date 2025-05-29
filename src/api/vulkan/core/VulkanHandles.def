@@ -40,5 +40,10 @@ C_ENG_VULKAN_HANDLE(ResolveInstance, KHR_xlib_surface, vkCreateXlibSurfaceKHR)
 #endif
 
 #ifdef VK_MVK_macos_surface
-C_ENG_VULKAN_HANDLE(Instance, MVK_macos_surface, kCreateMacOSSurfaceMVK)
+C_ENG_VULKAN_HANDLE(ResolveInstance, MVK_macos_surface, vkCreateMacOSSurfaceMVK)
+#endif
+
+#ifdef VK_KHR_swapchain
+C_ENG_VULKAN_HANDLE(ResolveDevice, KHR_swapchain, vkCreateSwapchainKHR)
+C_ENG_VULKAN_HANDLE(ResolveDevice, KHR_swapchain, vkDestroySwapchainKHR)
 #endif

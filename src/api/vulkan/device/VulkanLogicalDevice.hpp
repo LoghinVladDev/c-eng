@@ -18,6 +18,7 @@ class Instance;
 class QueueFamily;
 class Surface;
 class LogicalDeviceBuilder;
+class SwapChainBuilder;
 
 using cds::Optional;
 using cds::HashMap;
@@ -34,14 +35,15 @@ using generic::concepts::IterableOf;
 struct DeviceFnPtrs;
 
 class LogicalDevice :
-    public VulkanObject<SubObject<Instance>, WithAllocationCallbacks, WrapsVulkanHandle<VkDevice>> {
+    public VulkanObject<SubObject<Instance, PhysicalDevice>, WithAllocationCallbacks, WrapsVulkanHandle<VkDevice>> {
 public:
   constexpr LogicalDevice(
       Instance const& instance,
+      PhysicalDevice const& device,
       VkAllocationCallbacks const* pAllocationCallbacks,
       DeviceFnPtrs const* fnPtrs,
       VkDevice handle
-  ) noexcept : VulkanObject{instance, pAllocationCallbacks, handle}, _pfns{fnPtrs} {}
+  ) noexcept : VulkanObject{instance, device, pAllocationCallbacks, handle}, _pfns{fnPtrs} {}
 
   LogicalDevice(LogicalDevice const&) = delete;
   LogicalDevice(LogicalDevice&& device) noexcept :
@@ -56,6 +58,8 @@ public:
     assert(_pfns && "undefined behavior");
     return *_pfns;
   }
+
+  [[nodiscard]] auto swapChainBuilder() const noexcept -> SwapChainBuilder;
 
 private:
   DeviceFnPtrs const* _pfns;

@@ -5,6 +5,7 @@
 #include "VulkanInstance.hpp"
 
 #include <cds/collection/HashMap>
+#include <cds/collection/VectorView>
 
 #include "Vulkan.hpp"
 #include "api/vulkan/core/VulkanTypes.hpp"
@@ -19,6 +20,7 @@
 namespace c_eng::api::vk::detail {
 namespace {
 using cds::HashMap;
+using cds::VectorView;
 using cds::ignore;
 using cds::nullopt;
 using cds::impl::unreachable;
@@ -243,6 +245,11 @@ auto InstanceBuilder::build() const noexcept -> Expected<Instance, VkResult> {
       }
     }
   }
+
+  VectorView extraValidationFeatures{_extraValidationFeatures};
+  // for (auto const& layer : _layers) {
+  //   if (layer == LayerTraits<>)
+  // }
 
   VkInstance instanceHandle = VK_NULL_HANDLE;
   if (auto result = fns.vkCreateInstance(&createInfo, pAllocationCallbacks, &instanceHandle);

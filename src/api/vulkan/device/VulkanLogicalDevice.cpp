@@ -4,11 +4,15 @@
 
 #include "VulkanLogicalDevice.hpp"
 #include <algorithm>
+#include <source_location>
+#include <cds/Format>
 #include <cds/Tuple>
 #include <device/VulkanPhysicalDevice.hpp>
 #include <device/VulkanQueue.hpp>
+#include <ext/cds/StdFormatters.hpp>
 #include <generic/lang/Range.hpp>
 #include <instance/VulkanInstance.hpp>
+#include <wsi/VulkanSwapChain.hpp>
 
 #include <core/VulkanHandles.hpp>
 
@@ -18,9 +22,12 @@ using cds::Tuple;
 using cds::U32;
 using cds::experimental::Unexpected;
 using cds::ignore;
+using namespace cds::literals;
 
 using generic::project;
 using generic::forEach;
+using generic::LoggerRef;
+using generic::LogLevel;
 
 template <IterableOf<StringView> ExtensionNames> auto acquireDeviceFnPtrs(
     DeviceFnPtrs* deviceFnPtrs,
@@ -169,6 +176,10 @@ auto LogicalDeviceBuilder::build(PhysicalDevice const& device) const noexcept
   }
 
   auto const& deviceFnPtrs = *expectedInstanceFnPtrs;
-  return {_instance, allocationCallbacks, deviceFnPtrs, handle};
+  return {_instance, device, allocationCallbacks, deviceFnPtrs, handle};
+}
+
+auto LogicalDevice::swapChainBuilder() const noexcept -> SwapChainBuilder {
+  return SwapChainBuilder(*this);
 }
 } // namespace c_eng::api::vk::detail

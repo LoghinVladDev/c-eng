@@ -44,6 +44,10 @@ class Surface;
 
 struct InstanceFnPtrs;
 
+#ifndef VK_EXT_validation_features
+enum VkValidationFeaturesEXT {};
+#endif
+
 class Instance :
     public Api, public VulkanObject<SubObject<Vulkan>, WithAllocationCallbacks, WrapsVulkanHandle<VkInstance>> {
 public:
@@ -143,6 +147,12 @@ public:
     return *this;
   }
 
+  template <IterableOf<VkValidationFeaturesEXT> Features>
+  auto& withExtraValidationFeatures(Features&& features) noexcept {
+    _extensions = fwd<Features>(features);
+    return *this;
+  }
+
   [[nodiscard]] auto build() const noexcept -> Expected<Instance, VkResult>;
 
 private:
@@ -152,6 +162,8 @@ private:
 
   Vector<String> _layers{};
   Vector<String> _extensions{};
+
+  Vector<VkValidationFeaturesEXT> _extraValidationFeatures{};
 
   String _applicationName{"Unnamed Application"};
   String _engineName{"Unnamed Engine"};

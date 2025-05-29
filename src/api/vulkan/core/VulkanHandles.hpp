@@ -4,6 +4,7 @@
 
 #pragma once
 #include "VulkanExtensions.hpp"
+#include "VulkanLayers.hpp"
 
 #if defined(WIN32)
 #include <windef.h>

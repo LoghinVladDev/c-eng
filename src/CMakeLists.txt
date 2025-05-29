@@ -38,10 +38,7 @@ if(DEFINED C_ENG_USE_VULKAN AND C_ENG_USE_VULKAN)
       api/vulkan/device/VulkanQueue.cpp
       api/vulkan/instance/VulkanInstance.cpp
       api/vulkan/wsi/VulkanSurface.cpp
-      api/vulkan/core/VulkanHandles.hpp
-      api/vulkan/core/VulkanHandles.def
-      api/vulkan/core/VulkanExtensions.hpp
-      api/vulkan/core/VulkanSubunits.hpp)
+      api/vulkan/wsi/VulkanSwapChain.cpp)
 
   add_library(c_eng_vulkan SHARED ${C_ENG_VULKAN_SRC})
   target_include_directories(c_eng_vulkan PRIVATE ${C_ENG_VULKAN_INCLUDE_DIRS})

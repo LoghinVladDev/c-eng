@@ -9,6 +9,7 @@
 namespace c_eng::api::vk::detail {
 class Vulkan;
 class Instance;
+class LogicalDevice;
 class PhysicalDevice;
 
 class VulkanSubObject {
@@ -45,21 +46,21 @@ private:
   Instance const& _instance;
 };
 
-class PhysicalDeviceSubObject {
+template <typename Device> class DeviceSubObject {
 public:
-  explicit constexpr PhysicalDeviceSubObject(PhysicalDevice const& device) noexcept : _device{device} {}
-  PhysicalDeviceSubObject(PhysicalDeviceSubObject const&) = default;
-  PhysicalDeviceSubObject(PhysicalDeviceSubObject&&) = default;
+  explicit constexpr DeviceSubObject(Device const& device) noexcept : _device{device} {}
+  DeviceSubObject(DeviceSubObject const&) = default;
+  DeviceSubObject(DeviceSubObject&&) = default;
 
   [[nodiscard]] constexpr auto const& device() const noexcept {
     return _device;
   }
 
 protected:
-  ~PhysicalDeviceSubObject() = default;
+  ~DeviceSubObject() = default;
 
 private:
-  PhysicalDevice const& _device;
+  Device const& _device;
 };
 
 class WithAllocationCallbacks {
@@ -98,7 +99,7 @@ private:
 };
 
 template <typename...> class VulkanObject;
-template <typename> struct SubObject;
+template <typename...> struct SubObject;
 
 template <> struct SubObject<Vulkan> {
   using Type = VulkanSubObject;
@@ -109,12 +110,26 @@ template <> struct SubObject<Instance> {
 };
 
 template <> struct SubObject<PhysicalDevice> {
-  using Type = PhysicalDeviceSubObject;
+  using Type = DeviceSubObject<PhysicalDevice>;
 };
 
-template <typename Obj> class VulkanObject<SubObject<Obj>> : public SubObject<Obj>::Type {
+template <> struct SubObject<LogicalDevice> {
+  using Type = DeviceSubObject<LogicalDevice>;
+};
+
+template <typename... SuperObjects> struct SubObject {
+  class Type : public SubObject<SuperObjects>::Type... {
+  public:
+    explicit constexpr Type(SuperObjects const&... objects) noexcept :
+        SubObject<SuperObjects>::Type{objects}... {}
+  protected:
+    ~Type() = default;
+  };
+};
+
+template <typename... Obj> class VulkanObject<SubObject<Obj...>> : public SubObject<Obj...>::Type {
 public:
-  explicit constexpr VulkanObject(Obj const& object) noexcept : SubObject<Obj>::Type{object} {}
+  explicit constexpr VulkanObject(Obj const&... objects) noexcept : SubObject<Obj...>::Type{objects...} {}
   VulkanObject(VulkanObject const&) = default;
   VulkanObject(VulkanObject&&) = default;
 
@@ -122,11 +137,12 @@ protected:
   ~VulkanObject() = default;
 };
 
-template <typename Obj, typename VkHandle> class VulkanObject<SubObject<Obj>, WrapsVulkanHandle<VkHandle>> :
-    public SubObject<Obj>::Type, public WrapsVulkanHandle<VkHandle> {
+template <typename... Obj, typename VkHandle> class VulkanObject<SubObject<Obj...>, WrapsVulkanHandle<VkHandle>> :
+    public SubObject<Obj...>::Type, public WrapsVulkanHandle<VkHandle> {
 public:
-  constexpr VulkanObject(Obj const& object, VkHandle handle) noexcept :
-      SubObject<Obj>::Type{object}, WrapsVulkanHandle<VkHandle>{handle} {}
+  explicit constexpr VulkanObject(Obj const&... objects, VkHandle handle) noexcept :
+      SubObject<Obj...>::Type{objects...}, WrapsVulkanHandle<VkHandle>{handle} {}
+
   VulkanObject(VulkanObject const&) = default;
   VulkanObject(VulkanObject&&) = default;
 
@@ -134,16 +150,19 @@ protected:
   ~VulkanObject() = default;
 };
 
-template <typename Obj, typename VkHandle>
-class VulkanObject<SubObject<Obj>, WithAllocationCallbacks, WrapsVulkanHandle<VkHandle>> :
-    public SubObject<Obj>::Type, public WithAllocationCallbacks, public WrapsVulkanHandle<VkHandle> {
+template <typename... Obj, typename VkHandle>
+class VulkanObject<SubObject<Obj...>, WithAllocationCallbacks, WrapsVulkanHandle<VkHandle>> :
+    public SubObject<Obj...>::Type, public WithAllocationCallbacks, public WrapsVulkanHandle<VkHandle> {
 public:
   constexpr VulkanObject(
-      Obj const& object,
+      Obj const&... objects,
       VkAllocationCallbacks const* pAllocationCallbacks,
       VkHandle handle
   ) noexcept :
-      SubObject<Obj>::Type{object}, WithAllocationCallbacks{pAllocationCallbacks}, WrapsVulkanHandle<VkHandle>{handle} {}
+      SubObject<Obj...>::Type{objects...},
+      WithAllocationCallbacks{pAllocationCallbacks},
+      WrapsVulkanHandle<VkHandle>{handle} {}
+
   VulkanObject(VulkanObject const&) = default;
   VulkanObject(VulkanObject&&) = default;
 
