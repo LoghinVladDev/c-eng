@@ -12,6 +12,8 @@
 
 // #include "api/vulkan/core/VulkanTypesToString.hpp"
 
+#include <variant>
+
 #include "generic/engine/Engine.hpp"
 #include "generic/log/Logger.hpp"
 
