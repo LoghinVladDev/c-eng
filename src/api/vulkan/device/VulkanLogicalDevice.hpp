@@ -106,7 +106,7 @@ private:
   Vector<String> _extensions;
   Vector<String> _layers;
 
-  HashMap<QueueFamily const*, Vector<float>> _plannedQueues;
+  HashMap<QueueFamily const*, Vector<float>> _plannedQueues{};
 
 #if defined(VK_VERSION_1_1)
   Optional<VkPhysicalDeviceFeatures2> _features2{nullopt};

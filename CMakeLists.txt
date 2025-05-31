@@ -60,6 +60,10 @@ list(JOIN C_ENG_LIB_LIST " " C_ENG_LD)
 
 add_executable(generic_scene src/target/GenericScene.cpp)
 
+if (WIN32 AND C_ENG_USE_VULKAN)
+  target_include_directories(generic_scene PRIVATE ${Vulkan_INCLUDE_DIRS})
+endif()
+
 foreach(LIB IN LISTS C_ENG_LIB_LIST)
   target_link_libraries(generic_scene ${LIB})
 endforeach()

@@ -30,7 +30,7 @@ public:
   using VulkanObject::VulkanObject;
   ~DebugMessenger() noexcept;
 
-  [[nodiscard]] static constexpr auto builder(Instance const& instance) noexcept -> DebugMessengerBuilder;
+  [[nodiscard]] static auto builder(Instance const& instance) noexcept -> DebugMessengerBuilder;
 };
 
 class DebugMessengerBuilder {
@@ -46,7 +46,7 @@ private:
   LoggerRef _logger{};
 };
 
-constexpr auto DebugMessenger::builder(Instance const& instance) noexcept -> DebugMessengerBuilder {
+inline auto DebugMessenger::builder(Instance const& instance) noexcept -> DebugMessengerBuilder {
   return DebugMessengerBuilder{instance};
 }
 } // namespace c_eng::api::vk::detail

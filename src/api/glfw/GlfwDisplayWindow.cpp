@@ -4,6 +4,12 @@
 
 #include <Glfw.hpp>
 
+#if defined(WIN32)
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#undef WIN32_LEAN_AND_MEAN
+#endif
+
 #include <sstream>
 
 #include "GlfwDisplay.hpp"
@@ -19,10 +25,12 @@
 
 #include <platform/window/NativeWindowData.hpp>
 
-#ifdef __linux
+#if defined(WIN32)
+#define GLFW_EXPOSE_NATIVE_WIN32
+#elif defined(__linux)
 #define GLFW_EXPOSE_NATIVE_X11
 #define GLFW_EXPOSE_NATIVE_WAYLAND
-#elifdef __APPLE__
+#elif defined(__APPLE__)
 #define GLFW_EXPOSE_NATIVE_COCOA
 #endif
 
@@ -59,12 +67,12 @@ using generic::PersistentObjectDestroyedEvent;
 using native::NativeWindowData;
 using native::NativeWindowInfoType;
 
-#ifdef WIN32
+#if defined(WIN32)
 using native::NativeWin32WindowData;
-#elifdef __linux
+#elif defined(__linux)
 using native::NativeX11WindowData;
 using native::NativeWaylandWindowData;
-#elifdef __APPLE__
+#elif defined(__APPLE__)
 using native::NativeCocoaWindowData;
 #else
 #error Undefined native window system.
@@ -340,12 +348,12 @@ public:
   auto acquireNativeWindowData(NativeWindowData* pNativeData) const noexcept -> bool override {
     assert(_manager.instance() && pNativeData);
     auto const currentPlatform = _manager.instance()->platform();
-#ifdef WIN32
+#if defined(WIN32)
     auto pWin32NativeData = reinterpret_cast<NativeWin32WindowData*>(pNativeData);
     pWin32NativeData->instanceHandle = GetModuleHandle(nullptr);
     pWin32NativeData->windowHandle = glfwGetWin32Window(_handle);
     return true;
-#elifdef __linux
+#elif defined(__linux)
     if (auto pX11NativeData = reinterpret_cast<NativeX11WindowData*>(pNativeData);
         pX11NativeData->type == NativeWindowInfoType::X11
         && currentPlatform == GlfwPlatform::X11) {
@@ -361,7 +369,7 @@ public:
       pWaylandNativeData->surface = glfwGetWaylandWindow(_handle);
       return true;
     }
-#elifdef __APPLE__
+#elif defined(__APPLE__)
     assert(currentPlatform == GlfwPlatform::Cocoa && pNativeData->type == NativeWindowInfoType::Cocoa);
     auto const pCocoaWindowData = static_cast<NativeCocoaWindowData*>(pNativeData);
     pCocoaWindowData->view = glfwGetCocoaView(_handle);

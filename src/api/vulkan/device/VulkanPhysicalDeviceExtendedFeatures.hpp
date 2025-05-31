@@ -37,6 +37,19 @@ struct PhysicalDeviceExtendedFeatureIndex<index, Feature, CurrentFeature, Featur
       : Next::featureIndex;
 };
 
+template <typename LastFeature> constexpr auto linkFeatures(auto& features) noexcept {
+  auto& lastFeature = get<LastFeature>(features);
+  lastFeature.pNext = nullptr;
+}
+
+template <typename Feature, typename NextFeature, typename... RemainingFeatures>
+constexpr auto linkFeatures(auto& features) noexcept {
+  auto& feature = get<Feature>(features);
+  auto& nextFeature = get<NextFeature>(features);
+  feature.pNext = &nextFeature;
+  linkFeatures<NextFeature, RemainingFeatures...>(features);
+}
+
 template <typename... Features> struct PhysicalDeviceExtendedFeatures {
   constexpr PhysicalDeviceExtendedFeatures() {
     link();
@@ -62,7 +75,7 @@ template <typename... Features> struct PhysicalDeviceExtendedFeatures {
   }
 
   constexpr auto link() noexcept {
-    link<VkPhysicalDeviceFeatures2, Features...>(*this);
+    linkFeatures<VkPhysicalDeviceFeatures2, Features...>(*this);
   }
 
   [[nodiscard]] explicit constexpr operator VkPhysicalDeviceFeatures2&() noexcept {
@@ -103,19 +116,6 @@ template <
     -> T const& {
   static_assert(!IsSame<T, void>::value, "Invalid use of 'get'. Must provide a structure present in the requested structures");
   return get<I::featureIndex>(features._features);
-}
-
-template <typename LastFeature> constexpr auto link(auto& features) noexcept {
-  auto& lastFeature = get<LastFeature>(features);
-  lastFeature.pNext = nullptr;
-}
-
-template <typename Feature, typename NextFeature, typename... RemainingFeatures>
-constexpr auto link(auto& features) noexcept {
-  auto& feature = get<Feature>(features);
-  auto& nextFeature = get<NextFeature>(features);
-  feature.pNext = &nextFeature;
-  link<NextFeature, RemainingFeatures...>(features);
 }
 } // namespace c_eng::api::vk::detail
 #endif

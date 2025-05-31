@@ -63,8 +63,8 @@ public:
     return fn::invoke(_projector, *_iterator);
   }
 
-  constexpr auto* operator->() const {
-    return &operator*();
+  constexpr auto operator->() const {
+    return &fn::invoke(_projector, *_iterator);
   }
 
   template <typename OtherIt> constexpr auto operator==(ProjectionIterator<OtherIt, P> const& iterator) const noexcept
@@ -115,7 +115,7 @@ public:
   }
 
   constexpr auto* operator->() const {
-    return &operator*();
+    return &fn::invoke(_projector, _index, *_iterator);
   }
 
   template <typename OtherIt> constexpr auto operator==(IndexedProjectionIterator<OtherIt, P> const& iterator) const noexcept
@@ -158,7 +158,7 @@ public:
   }
 
   constexpr auto* operator->() const {
-    return &operator*();
+    return &*_it;
   }
 
   constexpr auto operator==(Sentinel) const noexcept -> bool {
@@ -236,7 +236,7 @@ public:
   }
 
   constexpr auto* operator->() const {
-    return &operator*();
+    return &*get<0>(*_subIt);
   }
 
   constexpr auto operator==(Sentinel) const noexcept -> bool {

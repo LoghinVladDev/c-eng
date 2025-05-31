@@ -204,6 +204,7 @@ auto localInternalFree(
 } // namespace
 
 auto main(int const argc, char const* const* argv) noexcept -> int {
+  cds::meta::IsAssignable<cds::impl::TupleNode<1,cds::iterator::ForwardAddressIterator<c_eng::generic::detail::ApiComponent *const >>,cds::impl::TupleNode<1,cds::iterator::ForwardAddressIterator<c_eng::generic::detail::ApiComponent *const >> &&,void>::value;
   auto disableLogPresent = false;
   for (unsigned idx = 1; idx < argc; ++idx) {
     if (StringView{argv[idx]} == "-dl") {

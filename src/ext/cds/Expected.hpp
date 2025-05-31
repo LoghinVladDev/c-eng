@@ -19,6 +19,8 @@ using meta::Conditional;
 using meta::EnableIf;
 using meta::False;
 using meta::IsBaseOf;
+using meta::IsCopyConstructible;
+using meta::IsMoveConstructible;
 using meta::IsTriviallyCopyConstructible;
 using meta::IsTriviallyMoveConstructible;
 using meta::IsTriviallyCopyAssignable;
@@ -62,8 +64,12 @@ public:
   template <typename... Args> explicit(false) constexpr Expected(Args&&... args) noexcept :
       Union<T, E>{InPlaceIndex<0>{}, fwd<Args>(args)...} {}
 
+  template <typename T0 = T, typename = EnableIf<IsCopyConstructible<T0>>>
   constexpr Expected(Expected const& expected) noexcept : Union<T, E>{expected} {}
+
+  template <typename T0 = T, typename = EnableIf<IsMoveConstructible<T0>>>
   constexpr Expected(Expected&& expected) noexcept : Union<T, E>{mv(expected)} {}
+
   ~Expected() = default;
 
   [[nodiscard]] constexpr auto hasValue() const noexcept -> bool {

@@ -73,7 +73,7 @@ public:
 class Log {
 public:
   Log() noexcept = default;
-  explicit Log(Logger const& logger, LogLevel const level) noexcept : _printer{logger}, _level{level} {}
+  explicit Log(Logger const& logger, LogLevel const level) noexcept : _printer{InPlaceIndex<0>{}, logger}, _level{level} {}
 
   template <typename T> auto operator<<(T&& data) noexcept -> Log& {
     // TODO: level
@@ -84,7 +84,7 @@ public:
   }
 
 private:
-  Union<LogPrinter, InactiveLogPrinter> _printer {InPlaceIndex<1>{}};
+  Union<LogPrinter, InactiveLogPrinter> _printer {InPlaceIndex<1>{}, InactiveLogPrinter{}};
   LogLevel _level {LogLevel::Info};
 };
 

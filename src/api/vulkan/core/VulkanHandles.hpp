@@ -7,7 +7,9 @@
 #include "VulkanLayers.hpp"
 
 #if defined(WIN32)
-#include <windef.h>
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#undef WIN32_LEAN_AND_MEAN
 #include <vulkan/vulkan_win32.h>
 #elif defined(__linux)
 #include <X11/Xlib.h>
