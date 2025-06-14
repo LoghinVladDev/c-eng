@@ -15,6 +15,7 @@
 
 namespace c_eng::api::vk::detail {
 class Instance;
+class Queue;
 class QueueFamily;
 class Surface;
 class LogicalDeviceBuilder;
@@ -24,6 +25,7 @@ using cds::Optional;
 using cds::HashMap;
 using cds::String;
 using cds::StringView;
+using cds::U32;
 using cds::Vector;
 using cds::experimental::Expected;
 using cds::impl::mv;
@@ -34,16 +36,27 @@ using generic::concepts::IterableOf;
 
 struct DeviceFnPtrs;
 
+struct QueueDefinitionRange {
+  QueueFamily const* pFamily;
+  U32 offset;
+  U32 length;
+  float priority;
+};
+
 class LogicalDevice :
     public VulkanObject<SubObject<Instance, PhysicalDevice>, WithAllocationCallbacks, WrapsVulkanHandle<VkDevice>> {
+
 public:
   constexpr LogicalDevice(
       Instance const& instance,
       PhysicalDevice const& device,
       VkAllocationCallbacks const* pAllocationCallbacks,
+      VkDevice handle,
       DeviceFnPtrs const* fnPtrs,
-      VkDevice handle
-  ) noexcept : VulkanObject{instance, device, pAllocationCallbacks, handle}, _pfns{fnPtrs} {}
+      Vector<QueueDefinitionRange>&& ranges
+  ) noexcept :
+      VulkanObject{instance, device, pAllocationCallbacks, handle}, _pfns{fnPtrs},
+      _queueDefinitionRanges{mv(ranges)} {}
 
   LogicalDevice(LogicalDevice const&) = delete;
   LogicalDevice(LogicalDevice&& device) noexcept :
@@ -61,8 +74,11 @@ public:
 
   [[nodiscard]] auto swapChainBuilder() const noexcept -> SwapChainBuilder;
 
+  [[nodiscard]] auto queues() const noexcept -> HashMap<QueueFamily, Vector<Queue>>;
+
 private:
-  DeviceFnPtrs const* _pfns;
+  DeviceFnPtrs const* _pfns{nullptr};
+  Vector<QueueDefinitionRange> _queueDefinitionRanges{};
 };
 
 class LogicalDeviceBuilder {

@@ -26,7 +26,7 @@ using cds::Tuple;
 using cds::Union;
 using cds::Vector;
 
-using cds::makeTuple;
+using cds::tupleOf;
 } // namespace cds
 
 export namespace cds::impl {

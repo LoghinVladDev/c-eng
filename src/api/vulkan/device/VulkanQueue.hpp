@@ -11,45 +11,25 @@ namespace c_eng::api::vk::detail {
 using cds::U32;
 using cds::experimental::Expected;
 
-class PhysicalDevice;
-class Surface;
+class LogicalDevice;
+class QueueFamily;
 
-class QueueFamily : public VulkanObject<SubObject<PhysicalDevice>> {
+class Queue : public VulkanObject<SubObject<LogicalDevice, QueueFamily>, WrapsVulkanHandle<VkQueue>> {
 public:
-  constexpr QueueFamily(
-      PhysicalDevice const& device,
-      U32 const index,
-      VkQueueFamilyProperties const& properties
-  ) noexcept : VulkanObject{device}, _index{index}, _properties{properties} {}
+  constexpr Queue(LogicalDevice const& device, QueueFamily const& family, VkQueue queue, float priority) noexcept :
+      VulkanObject{device, family, queue}, _priority{priority} {}
 
-  [[nodiscard]] constexpr auto index() const noexcept {
-    return _index;
+  ~Queue() = default;
+
+  [[nodiscard]] constexpr auto priority() const noexcept {
+    return _priority;
   }
-
-  [[nodiscard]] constexpr auto const& properties() const noexcept {
-    return _properties;
-  }
-
-  [[nodiscard]] constexpr auto hasFlag(VkQueueFlagBits const flagBit) const noexcept {
-    return 0 != (properties().queueFlags & flagBit);
-  }
-
-  [[nodiscard]] constexpr auto supportsGraphics() const noexcept {
-    return hasFlag(VK_QUEUE_GRAPHICS_BIT);
-  }
-
-  [[nodiscard]] constexpr auto supportsTransfer() const noexcept {
-    return hasFlag(VK_QUEUE_TRANSFER_BIT);
-  }
-
-  [[nodiscard]] auto supportsPresentOn(Surface const& surface) const noexcept -> Expected<bool, VkResult>;
 
 private:
-  U32 _index {0u};
-  VkQueueFamilyProperties _properties{};
+  float _priority{0.0f};
 };
 } // namespace c_eng::api::vk::detail
 
 namespace c_eng::api::vk {
-using detail::QueueFamily;
+using detail::Queue;
 } // namespace c_eng::api::vk

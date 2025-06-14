@@ -7,7 +7,9 @@
 #include <source_location>
 #include <cds/Format>
 #include <cds/Tuple>
+#include <cds/collection/VectorView>
 #include <device/VulkanPhysicalDevice.hpp>
+#include <device/VulkanQueueFamily.hpp>
 #include <device/VulkanQueue.hpp>
 #include <ext/cds/StdFormatters.hpp>
 #include <generic/lang/Range.hpp>
@@ -16,10 +18,24 @@
 
 #include <core/VulkanHandles.hpp>
 
+template <> struct cds::functional::Hash<c_eng::api::vk::QueueFamily> {
+  [[nodiscard]] auto operator()(c_eng::api::vk::QueueFamily const& family) const noexcept -> Size {
+    return family.index();
+  }
+};
+
+template <> struct cds::functional::Equal<c_eng::api::vk::QueueFamily> {
+  [[nodiscard]] auto operator()(c_eng::api::vk::QueueFamily const& lhs, c_eng::api::vk::QueueFamily const& rhs)
+      const noexcept -> Size {
+    return lhs.index() == rhs.index();
+  }
+};
+
 namespace c_eng::api::vk::detail {
 namespace {
 using cds::Tuple;
 using cds::U32;
+using cds::VectorView;
 using cds::experimental::Unexpected;
 using cds::ignore;
 using namespace cds::literals;
@@ -183,10 +199,51 @@ auto LogicalDeviceBuilder::build(PhysicalDevice const& device) const noexcept
   }
 
   auto const& deviceFnPtrs = *expectedInstanceFnPtrs;
-  return {_instance, device, allocationCallbacks, deviceFnPtrs, handle};
+
+  Vector<QueueDefinitionRange> queueDefinitionRanges;
+  queueDefinitionRanges.reserve(queueFamilyConfig.size());
+  for (auto const& [pFamily, priorities] : _plannedQueues) {
+    if (!priorities) {
+      continue;
+    }
+
+    U32 currentOffset = 0;
+    U32 currentLength = 1;
+    auto currentPriority = priorities.front();
+    for (auto const priority : VectorView{priorities.begin() + 1, priorities.end()}) {
+      if (currentPriority == priority) {
+        ++currentLength;
+        continue;
+      }
+
+      queueDefinitionRanges.emplaceBack(pFamily, currentOffset, currentLength, currentPriority);
+      currentPriority = priority;
+      currentOffset = currentOffset + currentLength;
+      currentLength = 1;
+    }
+
+    if (currentOffset == 0) {
+      queueDefinitionRanges.emplaceBack(pFamily, currentOffset, currentLength, currentPriority);
+    }
+  }
+
+  return {_instance, device, allocationCallbacks, handle, deviceFnPtrs, mv(queueDefinitionRanges)};
 }
 
 auto LogicalDevice::swapChainBuilder() const noexcept -> SwapChainBuilder {
   return SwapChainBuilder(*this);
+}
+
+auto LogicalDevice::queues() const noexcept -> HashMap<QueueFamily, Vector<Queue>> {
+  HashMap<QueueFamily, Vector<Queue>> queues;
+  for (auto const& [pFamily, offset, length, priority]: _queueDefinitionRanges) {
+    assert(pFamily && "undefined behavior");
+    for (auto idx = offset; idx < length; ++idx) {
+      VkQueue queueHandle;
+      vkGetDeviceQueue(handle(), pFamily->index(), idx, &queueHandle);
+      queues[*pFamily].emplaceBack(*this, *pFamily, queueHandle, priority);
+    }
+  }
+  return queues;
 }
 } // namespace c_eng::api::vk::detail

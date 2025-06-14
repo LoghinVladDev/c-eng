@@ -23,7 +23,11 @@
 #include "api/vulkan/device/VulkanPhysicalDevice.hpp"
 #include "api/vulkan/device/VulkanLogicalDevice.hpp"
 #include "api/vulkan/device/VulkanQueue.hpp"
+#include "api/vulkan/device/VulkanQueueFamily.hpp"
+#include "api/vulkan/memory/VulkanImage.hpp"
+#include "api/vulkan/memory/VulkanImageView.hpp"
 #include "api/vulkan/instance/VulkanInstance.hpp"
+#include "api/vulkan/wsi/VulkanSwapChain.hpp"
 #include "api/vulkan/wsi/VulkanSurface.hpp"
 
 #include <ext/cds/Expected.hpp>
@@ -61,11 +65,14 @@ using c_eng::generic::LoggerOutput;
 
 using c_eng::api::Glfw;
 using c_eng::api::vk::Vulkan;
+using c_eng::api::vk::Image;
+using c_eng::api::vk::ImageView;
 using c_eng::api::vk::Instance;
 using c_eng::api::vk::QueueFamily;
 using c_eng::api::vk::LogicalDevice;
 using c_eng::api::vk::PhysicalDevice;
 using c_eng::api::vk::Surface;
+using c_eng::api::vk::SwapChain;
 using enum c_eng::api::GlfwInitParameter;
 
 using c_eng::generic::flatten;
@@ -204,7 +211,6 @@ auto localInternalFree(
 } // namespace
 
 auto main(int const argc, char const* const* argv) noexcept -> int {
-  cds::meta::IsAssignable<cds::impl::TupleNode<1,cds::iterator::ForwardAddressIterator<c_eng::generic::detail::ApiComponent *const >>,cds::impl::TupleNode<1,cds::iterator::ForwardAddressIterator<c_eng::generic::detail::ApiComponent *const >> &&,void>::value;
   auto disableLogPresent = false;
   for (unsigned idx = 1; idx < argc; ++idx) {
     if (StringView{argv[idx]} == "-dl") {
@@ -397,6 +403,45 @@ auto main(int const argc, char const* const* argv) noexcept -> int {
 
         return builder.build(device);
       });
+    });
+  });
+
+  auto const expectedQueues = expectedLogicalDevice.transform(&LogicalDevice::queues);
+  auto const expectedSwapChainFamilies = expectedQueues.then([&expectedSurface](auto const& queues) {
+    return expectedSurface.transform([&queues](auto const& surface) {
+      Vector<QueueFamily> families;
+      for (auto const& [family, _] : queues) {
+        if (family.supportsGraphics() && family.supportsPresentOn(surface)) {
+          families.emplaceBack(family);
+        }
+      }
+      return families;
+    });
+  });
+
+  auto const expectedSwapChain = expectedLogicalDevice.then([&expectedSurface, &expectedSwapChainFamilies](auto const& device) {
+    return expectedSurface.then([&device, &expectedSwapChainFamilies](auto const& surface) {
+      return expectedSwapChainFamilies.then([&device, &surface](auto const& swapChainFamilies) {
+        return SwapChain::builder(device)
+            .withImagesAccessedBy(swapChainFamilies)
+            .build(surface);
+      });
+    });
+  });
+
+  auto const expectedSwapChainImages = expectedSwapChain.then(&SwapChain::images);
+  auto const expectedSwapChainImageViews = expectedLogicalDevice.then([&expectedSwapChainImages](auto const& device) {
+    return expectedSwapChainImages.then([&device](auto const& images) -> Expected<Vector<ImageView>, VkResult> {
+      Vector<ImageView> imageViews;
+      for (auto const& image : images) {
+        if (auto expectedView = ImageView::builder(device).build(image)) {
+          auto&& view = *mv(expectedView);
+          imageViews.pushBack(mv(view));
+        } else {
+          return Unexpected{expectedView.error()};
+        }
+      }
+      return imageViews;
     });
   });
 

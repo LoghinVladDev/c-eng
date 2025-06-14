@@ -8,59 +8,77 @@
 
 namespace c_eng::api::vk::detail {
 class Vulkan;
+class Image;
 class Instance;
 class LogicalDevice;
 class PhysicalDevice;
+class QueueFamily;
 
-class VulkanSubObject {
+template <typename O> class GenericSub {
 public:
-  explicit constexpr VulkanSubObject(Vulkan const& vulkan) noexcept : _vulkan{vulkan} {}
-  VulkanSubObject(VulkanSubObject const&) = default;
-  VulkanSubObject(VulkanSubObject&&) = default;
+  explicit constexpr GenericSub(O const& obj) noexcept : _data{obj} {}
+  GenericSub(GenericSub const&) = default;
+  GenericSub(GenericSub&&) = default;
 
+protected:
+  ~GenericSub() = default;
+
+  [[nodiscard]] constexpr auto const& data() const noexcept {
+    return _data;
+  }
+
+private:
+  O const& _data;
+};
+
+template <typename...> class SubObject;
+
+template <> class SubObject<Vulkan> : public GenericSub<Vulkan> {
+public:
+  using GenericSub::GenericSub;
   [[nodiscard]] constexpr auto const& vulkan() const noexcept {
-    return _vulkan;
+    return data();
   }
-
-protected:
-  ~VulkanSubObject() = default;
-
-private:
-  Vulkan const& _vulkan;
 };
 
-class InstanceSubObject {
+template <> class SubObject<Instance> : public GenericSub<Instance> {
 public:
-  explicit constexpr InstanceSubObject(Instance const& instance) noexcept : _instance{instance} {}
-  InstanceSubObject(InstanceSubObject const&) = default;
-  InstanceSubObject(InstanceSubObject&&) = default;
-
+  using GenericSub::GenericSub;
   [[nodiscard]] constexpr auto const& instance() const noexcept {
-    return _instance;
+    return data();
   }
-
-protected:
-  ~InstanceSubObject() = default;
-
-private:
-  Instance const& _instance;
 };
 
-template <typename Device> class DeviceSubObject {
+template <> class SubObject<PhysicalDevice> : public GenericSub<PhysicalDevice> {
 public:
-  explicit constexpr DeviceSubObject(Device const& device) noexcept : _device{device} {}
-  DeviceSubObject(DeviceSubObject const&) = default;
-  DeviceSubObject(DeviceSubObject&&) = default;
-
+  using GenericSub::GenericSub;
   [[nodiscard]] constexpr auto const& device() const noexcept {
-    return _device;
+    return data();
   }
+};
 
-protected:
-  ~DeviceSubObject() = default;
+template <> class SubObject<LogicalDevice> : public GenericSub<LogicalDevice> {
+public:
+  using GenericSub::GenericSub;
+  [[nodiscard]] constexpr auto const& device() const noexcept {
+    return data();
+  }
+};
 
-private:
-  Device const& _device;
+template <> class SubObject<QueueFamily> : public GenericSub<QueueFamily> {
+public:
+  using GenericSub::GenericSub;
+  [[nodiscard]] constexpr auto const& family() const noexcept {
+    return data();
+  }
+};
+
+template <> class SubObject<Image> : public GenericSub<Image> {
+public:
+  using GenericSub::GenericSub;
+  [[nodiscard]] constexpr auto const& image() const noexcept {
+    return data();
+  }
 };
 
 class WithAllocationCallbacks {
@@ -99,37 +117,18 @@ private:
 };
 
 template <typename...> class VulkanObject;
-template <typename...> struct SubObject;
 
-template <> struct SubObject<Vulkan> {
-  using Type = VulkanSubObject;
-};
-
-template <> struct SubObject<Instance> {
-  using Type = InstanceSubObject;
-};
-
-template <> struct SubObject<PhysicalDevice> {
-  using Type = DeviceSubObject<PhysicalDevice>;
-};
-
-template <> struct SubObject<LogicalDevice> {
-  using Type = DeviceSubObject<LogicalDevice>;
-};
-
-template <typename... SuperObjects> struct SubObject {
-  class Type : public SubObject<SuperObjects>::Type... {
-  public:
-    explicit constexpr Type(SuperObjects const&... objects) noexcept :
-        SubObject<SuperObjects>::Type{objects}... {}
-  protected:
-    ~Type() = default;
-  };
-};
-
-template <typename... Obj> class VulkanObject<SubObject<Obj...>> : public SubObject<Obj...>::Type {
+template <typename... SuperObjects> class SubObject : public SubObject<SuperObjects>... {
 public:
-  explicit constexpr VulkanObject(Obj const&... objects) noexcept : SubObject<Obj...>::Type{objects...} {}
+  explicit constexpr SubObject(SuperObjects const&... objects) noexcept : SubObject<SuperObjects>{objects}... {}
+
+protected:
+  ~SubObject() noexcept = default;
+};
+
+template <typename... Obj> class VulkanObject<SubObject<Obj...>> : public SubObject<Obj...> {
+public:
+  explicit constexpr VulkanObject(Obj const&... objects) noexcept : SubObject<Obj...>{objects...} {}
   VulkanObject(VulkanObject const&) = default;
   VulkanObject(VulkanObject&&) = default;
 
@@ -138,10 +137,10 @@ protected:
 };
 
 template <typename... Obj, typename VkHandle> class VulkanObject<SubObject<Obj...>, WrapsVulkanHandle<VkHandle>> :
-    public SubObject<Obj...>::Type, public WrapsVulkanHandle<VkHandle> {
+    public SubObject<Obj...>, public WrapsVulkanHandle<VkHandle> {
 public:
   explicit constexpr VulkanObject(Obj const&... objects, VkHandle handle) noexcept :
-      SubObject<Obj...>::Type{objects...}, WrapsVulkanHandle<VkHandle>{handle} {}
+      SubObject<Obj...>{objects...}, WrapsVulkanHandle<VkHandle>{handle} {}
 
   VulkanObject(VulkanObject const&) = default;
   VulkanObject(VulkanObject&&) = default;
@@ -152,14 +151,14 @@ protected:
 
 template <typename... Obj, typename VkHandle>
 class VulkanObject<SubObject<Obj...>, WithAllocationCallbacks, WrapsVulkanHandle<VkHandle>> :
-    public SubObject<Obj...>::Type, public WithAllocationCallbacks, public WrapsVulkanHandle<VkHandle> {
+    public SubObject<Obj...>, public WithAllocationCallbacks, public WrapsVulkanHandle<VkHandle> {
 public:
   constexpr VulkanObject(
       Obj const&... objects,
       VkAllocationCallbacks const* pAllocationCallbacks,
       VkHandle handle
   ) noexcept :
-      SubObject<Obj...>::Type{objects...},
+      SubObject<Obj...>{objects...},
       WithAllocationCallbacks{pAllocationCallbacks},
       WrapsVulkanHandle<VkHandle>{handle} {}
 

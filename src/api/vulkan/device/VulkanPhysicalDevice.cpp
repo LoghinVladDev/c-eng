@@ -3,7 +3,7 @@
 //
 
 #include "VulkanPhysicalDevice.hpp"
-#include <device/VulkanQueue.hpp>
+#include <device/VulkanQueueFamily.hpp>
 #include <instance/VulkanInstance.hpp>
 #include <wsi/VulkanSurface.hpp>
 #include "generic/lang/Range.hpp"

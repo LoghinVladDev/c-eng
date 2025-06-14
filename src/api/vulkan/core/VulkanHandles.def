@@ -14,6 +14,10 @@ C_ENG_VULKAN_HANDLE(ResolveInstance, Base, vkCreateDevice)
 C_ENG_VULKAN_HANDLE(ResolveInstance, Base, vkDestroyDevice)
 C_ENG_VULKAN_HANDLE(ResolveInstance, Base, vkGetDeviceProcAddr)
 
+C_ENG_VULKAN_HANDLE(ResolveDevice, Base, vkGetDeviceQueue)
+C_ENG_VULKAN_HANDLE(ResolveDevice, Base, vkCreateImageView)
+C_ENG_VULKAN_HANDLE(ResolveDevice, Base, vkDestroyImageView)
+
 #ifdef VK_VERSION_1_1
 C_ENG_VULKAN_HANDLE(ResolveInstance, Base, vkGetPhysicalDeviceFeatures2)
 #endif
@@ -50,4 +54,5 @@ C_ENG_VULKAN_HANDLE(ResolveInstance, MVK_macos_surface, vkCreateMacOSSurfaceMVK)
 #ifdef VK_KHR_swapchain
 C_ENG_VULKAN_HANDLE(ResolveDevice, KHR_swapchain, vkCreateSwapchainKHR)
 C_ENG_VULKAN_HANDLE(ResolveDevice, KHR_swapchain, vkDestroySwapchainKHR)
+C_ENG_VULKAN_HANDLE(ResolveDevice, KHR_swapchain, vkGetSwapchainImagesKHR)
 #endif

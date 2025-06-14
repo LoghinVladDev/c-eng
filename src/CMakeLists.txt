@@ -36,7 +36,10 @@ if(DEFINED C_ENG_USE_VULKAN AND C_ENG_USE_VULKAN)
       api/vulkan/device/VulkanLogicalDevice.cpp
       api/vulkan/device/VulkanPhysicalDevice.cpp
       api/vulkan/device/VulkanQueue.cpp
+      api/vulkan/device/VulkanQueueFamily.cpp
       api/vulkan/instance/VulkanInstance.cpp
+      api/vulkan/memory/VulkanImage.cpp
+      api/vulkan/memory/VulkanImageView.cpp
       api/vulkan/wsi/VulkanSurface.cpp
       api/vulkan/wsi/VulkanSwapChain.cpp)
 
