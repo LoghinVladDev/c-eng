@@ -18,7 +18,7 @@ ImageView::~ImageView() noexcept {
   device().functions().vkDestroyImageView(device().handle(), handle(), allocationCallbacks());
 }
 
-auto ImageViewBuilder::build(Image const& image) noexcept -> Expected<ImageView, VkResult> {
+auto ImageViewBuilder::build(Image const& image, VkFormat format) noexcept -> Expected<ImageView, VkResult> {
   auto const& fns = _device.functions();
   assert(fns.vkCreateImageView && fns.vkDestroyImageView && "undefined behavior");
 
@@ -30,6 +30,7 @@ auto ImageViewBuilder::build(Image const& image) noexcept -> Expected<ImageView,
       .flags = 0u,
       .image = image.handle(),
       .viewType = VK_IMAGE_VIEW_TYPE_2D,
+      .format = format,
       .components = {
           .r = VK_COMPONENT_SWIZZLE_IDENTITY,
           .g = VK_COMPONENT_SWIZZLE_IDENTITY,
@@ -51,5 +52,9 @@ auto ImageViewBuilder::build(Image const& image) noexcept -> Expected<ImageView,
     return Unexpected{result};
   }
   return {_device, image, allocationCallbacks, handle};
+}
+
+auto ImageViewBuilder::build(FormattedImage const& image) noexcept -> Expected<ImageView, VkResult> {
+  return build(image, image.format());
 }
 } // namespace c_eng::api::vk::detail

@@ -28,6 +28,7 @@ using generic::detail::Window;
 class Surface : public VulkanObject<SubObject<Instance>, WithAllocationCallbacks, WrapsVulkanHandle<VkSurfaceKHR>> {
 public:
   using VulkanObject::VulkanObject;
+  Surface(Surface&&) = default;
   ~Surface() noexcept;
 
   [[nodiscard]] static auto createSurface(

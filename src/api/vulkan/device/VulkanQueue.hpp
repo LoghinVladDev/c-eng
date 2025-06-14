@@ -19,6 +19,7 @@ public:
   constexpr Queue(LogicalDevice const& device, QueueFamily const& family, VkQueue queue, float priority) noexcept :
       VulkanObject{device, family, queue}, _priority{priority} {}
 
+  Queue(Queue const&) = default;
   ~Queue() = default;
 
   [[nodiscard]] constexpr auto priority() const noexcept {

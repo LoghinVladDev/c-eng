@@ -15,7 +15,7 @@ class LogicalDevice;
 class SwapChainBuilder;
 class Surface;
 class QueueFamily;
-class Image;
+class FormattedImage;
 
 using cds::Optional;
 using cds::U32;
@@ -38,12 +38,26 @@ enum class VkPresentModeKHR{};
 class SwapChain :
     public VulkanObject<SubObject<LogicalDevice>, WithAllocationCallbacks, WrapsVulkanHandle<VkSwapchainKHR>> {
 public:
-  using VulkanObject::VulkanObject;
+  constexpr SwapChain(
+      LogicalDevice const& device,
+      VkAllocationCallbacks const* allocationCallbacks,
+      VkSwapchainKHR handle,
+      VkFormat imageFormat
+  ) noexcept : VulkanObject{device, allocationCallbacks, handle}, _imageFormat{imageFormat} {}
+
+  SwapChain(SwapChain&&) = default;
   ~SwapChain() noexcept;
 
   [[nodiscard]] static constexpr auto builder(LogicalDevice const& device) noexcept -> SwapChainBuilder;
 
-  [[nodiscard]] auto images() const noexcept -> Expected<Vector<Image>, VkResult>;
+  [[nodiscard]] auto images() const noexcept -> Expected<Vector<FormattedImage>, VkResult>;
+
+  [[nodiscard]] constexpr auto imageFormat() const noexcept {
+    return _imageFormat;
+  }
+
+private:
+  VkFormat _imageFormat;
 };
 
 class SwapChainBuilder {

@@ -26,6 +26,7 @@ public:
   using VulkanObject::VulkanObject;
 
   PhysicalDevice(PhysicalDevice const&) = default;
+  PhysicalDevice(PhysicalDevice&&) = default;
   ~PhysicalDevice() = default;
 
   [[nodiscard]] auto extensionProperties() const noexcept -> Expected<Vector<VkExtensionProperties>, VkResult>;

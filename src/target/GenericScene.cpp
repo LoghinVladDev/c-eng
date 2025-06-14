@@ -435,8 +435,7 @@ auto main(int const argc, char const* const* argv) noexcept -> int {
       Vector<ImageView> imageViews;
       for (auto const& image : images) {
         if (auto expectedView = ImageView::builder(device).build(image)) {
-          auto&& view = *mv(expectedView);
-          imageViews.pushBack(mv(view));
+          imageViews.pushBack(*mv(expectedView));
         } else {
           return Unexpected{expectedView.error()};
         }

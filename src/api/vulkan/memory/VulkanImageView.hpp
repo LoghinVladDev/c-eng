@@ -9,6 +9,7 @@
 #include <ext/cds/Expected.hpp>
 
 namespace c_eng::api::vk::detail {
+class FormattedImage;
 class Image;
 class ImageViewBuilder;
 class LogicalDevice;
@@ -21,6 +22,7 @@ class ImageView :
     public VulkanObject<SubObject<LogicalDevice, Image>, WithAllocationCallbacks, WrapsVulkanHandle<VkImageView>> {
 public:
   using VulkanObject::VulkanObject;
+  ImageView(ImageView&&) = default;
   ~ImageView() noexcept;
 
   [[nodiscard]] constexpr static auto builder(LogicalDevice const& device) noexcept -> ImageViewBuilder;
@@ -35,7 +37,8 @@ public:
     return *this;
   }
 
-  [[nodiscard]] auto build(Image const& image) noexcept -> Expected<ImageView, VkResult>;
+  [[nodiscard]] auto build(Image const& image, VkFormat format) noexcept -> Expected<ImageView, VkResult>;
+  [[nodiscard]] auto build(FormattedImage const& image) noexcept -> Expected<ImageView, VkResult>;
 
 private:
   LogicalDevice const& _device;

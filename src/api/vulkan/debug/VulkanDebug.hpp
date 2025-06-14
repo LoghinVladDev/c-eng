@@ -28,6 +28,7 @@ class DebugMessenger :
     public VulkanObject<SubObject<Instance>, WithAllocationCallbacks, WrapsVulkanHandle<VkDebugUtilsMessengerEXT>> {
 public:
   using VulkanObject::VulkanObject;
+  DebugMessenger(DebugMessenger&&) = default;
   ~DebugMessenger() noexcept;
 
   [[nodiscard]] static auto builder(Instance const& instance) noexcept -> DebugMessengerBuilder;

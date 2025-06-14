@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include <cds/meta/Semantics>
 #include <vulkan/vulkan_core.h>
 
 namespace c_eng::api::vk::detail {
@@ -13,6 +14,8 @@ class Instance;
 class LogicalDevice;
 class PhysicalDevice;
 class QueueFamily;
+
+using cds::xch;
 
 template <typename O> class GenericSub {
 public:
@@ -103,7 +106,8 @@ template <typename VkHandle> class WrapsVulkanHandle {
 public:
   explicit constexpr WrapsVulkanHandle(VkHandle handle) : _handle {handle} {}
   WrapsVulkanHandle(WrapsVulkanHandle const&) = default;
-  WrapsVulkanHandle(WrapsVulkanHandle&&) = default;
+  constexpr WrapsVulkanHandle(WrapsVulkanHandle&& wrapper) noexcept :
+      _handle{xch(wrapper._handle, VK_NULL_HANDLE)} {}
 
   [[nodiscard]] constexpr auto handle() const noexcept {
     return _handle;
@@ -121,6 +125,8 @@ template <typename...> class VulkanObject;
 template <typename... SuperObjects> class SubObject : public SubObject<SuperObjects>... {
 public:
   explicit constexpr SubObject(SuperObjects const&... objects) noexcept : SubObject<SuperObjects>{objects}... {}
+  SubObject(SubObject const&) = default;
+  SubObject(SubObject&&) = default;
 
 protected:
   ~SubObject() noexcept = default;

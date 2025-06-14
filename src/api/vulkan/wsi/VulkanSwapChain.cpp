@@ -164,12 +164,12 @@ auto SwapChainBuilder::build(Surface const& surface) const noexcept -> Expected<
       return Unexpected{result};
     }
 
-    return {_device, allocationCallbacks, handle};
+    return {_device, allocationCallbacks, handle, format.format};
   });
 #endif
 }
 
-auto SwapChain::images() const noexcept -> Expected<Vector<Image>, VkResult> {
+auto SwapChain::images() const noexcept -> Expected<Vector<FormattedImage>, VkResult> {
 #ifndef VK_KHR_swapchain
   return Unexpected{VK_ERROR_EXTENSION_NOT_PRESENT};
 #else
@@ -189,7 +189,9 @@ auto SwapChain::images() const noexcept -> Expected<Vector<Image>, VkResult> {
     return Unexpected{result};
   }
 
-  return Vector<Image>{imageHandles | project([this](auto const handle) { return Image{device(), handle}; })};
+  return Vector<FormattedImage>{imageHandles | project([this](auto const handle) {
+    return FormattedImage{device(), handle, imageFormat()};
+  })};
 #endif
 }
 
