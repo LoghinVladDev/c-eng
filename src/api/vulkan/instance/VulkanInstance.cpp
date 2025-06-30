@@ -193,10 +193,21 @@ auto InstanceBuilder::build() const noexcept -> Expected<Instance, VkResult> {
 
   Vector<char const*> layers{_layers | project([](auto const& s) {return s.data();})};
   Vector<char const*> extensions{_extensions | project([](auto const& s) {return s.data();})};
+
+  VkFlags flags = 0u;
+  if (_extensions.contains(ExtensionTraits<Extension::KHR_portability_enumeration>::name)) {
+    flags |= VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR;
+  } else {
+#if CDS_ATTR(apple)
+    extensions.emplaceBack(ExtensionTraits<Extension::KHR_portability_enumeration>::name);
+    flags |= VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR;
+#endif
+  }
+
   VkInstanceCreateInfo createInfo {
       .sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO,
       .pNext = nullptr,
-      .flags = 0u,
+      .flags = flags,
       .pApplicationInfo = &applicationInfo,
       .enabledLayerCount = static_cast<std::uint32_t>(layers.size()),
       .ppEnabledLayerNames = layers.data(),
