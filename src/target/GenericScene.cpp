@@ -336,6 +336,7 @@ auto main(int const argc, char const* const* argv) noexcept -> int {
   // From GPU assisted validation suggestions
   auto extraFeatureSuggestions = expectedDevice.transform([](PhysicalDevice const& device) {
     auto features = device.features<
+        VkPhysicalDeviceVulkan11Features,
         VkPhysicalDeviceTimelineSemaphoreFeatures,
         VkPhysicalDeviceVulkanMemoryModelFeatures,
         VkPhysicalDeviceBufferDeviceAddressFeatures,
@@ -344,69 +345,74 @@ auto main(int const argc, char const* const* argv) noexcept -> int {
         VkPhysicalDeviceRayTracingValidationFeaturesNV
     >();
 
+    // required by slang -> SPIR_V for SV_vertexId
+    get<VkPhysicalDeviceVulkan11Features>(features).shaderDrawParameters = VK_TRUE;
     get<VkPhysicalDeviceRayQueryFeaturesKHR>(features).rayQuery = VK_FALSE;
     get<VkPhysicalDeviceRayTracingValidationFeaturesNV>(features).rayTracingValidation = VK_FALSE;
     return features;
   });
 
-  auto expectedLogicalDevice = expectedVkInstance.then([&expectedDevice, &expectedSurface, ref = LoggerRef{l}, &extraFeatureSuggestions](Instance const& instance) {
-    return expectedDevice.then([&instance, &expectedSurface, ref, &extraFeatureSuggestions](PhysicalDevice const& device) {
-      return expectedSurface.then([&instance, &device, ref, &extraFeatureSuggestions](Surface const& surface)
-          -> Expected<LogicalDevice, VkResult> {
-        auto&& queueFamilies = device.queueFamilies();
-        Vector<U32> remainingQueues {queueFamilies
-            | project(&QueueFamily::properties)
-            | project(&VkQueueFamilyProperties::queueCount)};
-        ref() << "Selected Device Queue Family Properties:";
-        queueFamilies
-            | project(&QueueFamily::properties)
-            | forEach([ref](auto const& properties) {
-              ref() << ref.invoke("\t{:a}"_f, properties);
-            });
+  auto&& expectedQueueFamilies = expectedDevice.transform(&PhysicalDevice::queueFamilies);
 
-        auto const queryQueuesFor = [&remainingQueues, &queueFamilies]<typename P>(P&& predicate) {
-          return (queueFamilies
-                | filter(fwd<P>(predicate))
-                | filter([&remainingQueues](auto const& family) { return remainingQueues[family.index()] > 0; })
-                | project([](auto const& family) { return &family; })
-                | findAny()).getOr(nullptr);
-        };
+  auto expectedLogicalDevice = expectedVkInstance.then([&expectedDevice, &expectedSurface, ref = LoggerRef{l}, &extraFeatureSuggestions, &expectedQueueFamilies](Instance const& instance) {
+    return expectedDevice.then([&instance, &expectedSurface, ref, &extraFeatureSuggestions, &expectedQueueFamilies](PhysicalDevice const& device) {
+      return expectedSurface.then([&instance, &device, ref, &extraFeatureSuggestions, &expectedQueueFamilies](Surface const& surface) {
+        return expectedQueueFamilies.then([&instance, &device, ref, &extraFeatureSuggestions, &surface](auto const& queueFamilies)
+            -> Expected<LogicalDevice, VkResult>{
+          Vector<U32> remainingQueues {queueFamilies
+              | project(&QueueFamily::properties)
+              | project(&VkQueueFamilyProperties::queueCount)};
+          ref() << "Selected Device Queue Family Properties:";
+          queueFamilies
+              | project(&QueueFamily::properties)
+              | forEach([ref](auto const& properties) {
+                ref() << ref.invoke("\t{:a}"_f, properties);
+          });
 
-        auto const graphicsFamily = queryQueuesFor(&QueueFamily::supportsGraphics);
-        if (!graphicsFamily) {
-          ref() << "Unable to find a queue family supporting graphics";
-          return Unexpected{VK_ERROR_UNKNOWN};
-        }
-        --remainingQueues[graphicsFamily->index()];
+          auto const queryQueuesFor = [&remainingQueues, &queueFamilies]<typename P>(P&& predicate) {
+            return (queueFamilies
+                  | filter(fwd<P>(predicate))
+                  | filter([&remainingQueues](auto const& family) { return remainingQueues[family.index()] > 0; })
+                  | project([](auto const& family) { return &family; })
+                  | findAny()).getOr(nullptr);
+          };
 
-        auto const transferFamily = queryQueuesFor(&QueueFamily::supportsTransfer);
-        if (!transferFamily) {
-          ref() << "Unable to find a queue family supporting transfer";
-          return Unexpected{VK_ERROR_UNKNOWN};
-        }
-        --remainingQueues[transferFamily->index()];
+          auto const graphicsFamily = queryQueuesFor(&QueueFamily::supportsGraphics);
+          if (!graphicsFamily) {
+            ref() << "Unable to find a queue family supporting graphics";
+            return Unexpected{VK_ERROR_UNKNOWN};
+          }
+          --remainingQueues[graphicsFamily->index()];
 
-        auto const presentFamily = queryQueuesFor([&surface](auto const& family) {
-          return family.supportsPresentOn(surface);
+          auto const transferFamily = queryQueuesFor(&QueueFamily::supportsTransfer);
+          if (!transferFamily) {
+            ref() << "Unable to find a queue family supporting transfer";
+            return Unexpected{VK_ERROR_UNKNOWN};
+          }
+          --remainingQueues[transferFamily->index()];
+
+          auto const presentFamily = queryQueuesFor([&surface](auto const& family) {
+            return family.supportsPresentOn(surface);
+          });
+          if (!presentFamily) {
+            ref() << "Unable to find a queue family supporting present to surface";
+            return Unexpected{VK_ERROR_UNKNOWN};
+          }
+
+          auto builder = instance.logicalDeviceBuilder();
+
+          builder
+              .addQueueFrom(*graphicsFamily, 1.0f)
+              .addQueueFrom(*transferFamily, 1.0f)
+              .addQueueFrom(*presentFamily, 1.0f)
+              .withExtensions(Vector{ExtensionTraits<Extension::KHR_swapchain>::name});
+
+          if (extraFeatureSuggestions) {
+            builder.withFeatures(static_cast<VkPhysicalDeviceFeatures2 const&>(*extraFeatureSuggestions));
+          }
+
+          return builder.build(device);
         });
-        if (!presentFamily) {
-          ref() << "Unable to find a queue family supporting present to surface";
-          return Unexpected{VK_ERROR_UNKNOWN};
-        }
-
-        auto builder = instance.logicalDeviceBuilder();
-
-        builder
-            .addQueueFrom(*graphicsFamily, 1.0f)
-            .addQueueFrom(*transferFamily, 1.0f)
-            .addQueueFrom(*presentFamily, 1.0f)
-            .withExtensions(Vector{ExtensionTraits<Extension::KHR_swapchain>::name});
-
-        if (extraFeatureSuggestions) {
-          builder.withFeatures(static_cast<VkPhysicalDeviceFeatures2 const&>(*extraFeatureSuggestions));
-        }
-
-        return builder.build(device);
       });
     });
   });
@@ -470,6 +476,14 @@ auto main(int const argc, char const* const* argv) noexcept -> int {
     return device.instance().functions().vkGetDeviceProcAddr(device.handle(), "vkDestroyShaderModule");
   }).valueOr(nullptr));
 
+  auto pfn_vkCreatePipeline = reinterpret_cast<PFN_vkCreateGraphicsPipelines> (expectedLogicalDevice.transform([](LogicalDevice const& device) {
+      return device.instance().functions().vkGetDeviceProcAddr(device.handle(), "PFN_vkCreateGraphicsPipelines");
+  }).valueOr(nullptr));
+
+  auto pfn_vkDestroyPipeline = reinterpret_cast<PFN_vkDestroyPipeline> (expectedLogicalDevice.transform([](LogicalDevice const& device) {
+      return device.instance().functions().vkGetDeviceProcAddr(device.handle(), "vkDestroyPipeline");
+  }).valueOr(nullptr));
+
   using cds::impl::xch;
   struct ShModule {
     ShModule(VkShaderModule mod, VkDevice dev, PFN_vkDestroyShaderModule des) : mod{mod}, dev{dev}, destroy{des} {}
@@ -487,17 +501,18 @@ auto main(int const argc, char const* const* argv) noexcept -> int {
   };
   struct ShPipeline
       {
-    ShPipeline(VkPipeline pipeline, VkDevice dev) : pipeline{pipeline}, dev{dev} {}
-    ShPipeline(ShPipeline&& mod) : pipeline{xch(mod.pipeline, nullptr)}, dev{xch(mod.dev, nullptr)} {}
+    ShPipeline(VkPipeline pipeline, VkDevice dev, PFN_vkDestroyPipeline destroy) : pipeline{pipeline}, dev{dev}, destroy{destroy} {}
+    ShPipeline(ShPipeline&& mod) : pipeline{xch(mod.pipeline, nullptr)}, dev{xch(mod.dev, nullptr)}, destroy{mod.destroy} {}
 
     ~ShPipeline() {
-      if (dev && pipeline) {
-        vkDestroyPipeline(dev, pipeline, nullptr);
+      if (dev && pipeline && destroy) {
+        destroy(dev, pipeline, nullptr);
       }
     }
 
     VkPipeline pipeline;
     VkDevice dev;
+    PFN_vkDestroyPipeline destroy;
   };
 
   auto createShaderModule = [&expectedLogicalDevice, &pfn_vkDestroyShaderModule, &pfn_vkCreateShaderModule](Vector<char> const& code) {
@@ -518,7 +533,7 @@ auto main(int const argc, char const* const* argv) noexcept -> int {
     });
   };
 
-  auto createPipeline = [](
+  auto createPipeline = [&pfn_vkCreatePipeline, &pfn_vkDestroyPipeline](
       ShModule const& module,
       SwapChain const& swapChain,
       LogicalDevice const& device
@@ -672,7 +687,7 @@ auto main(int const argc, char const* const* argv) noexcept -> int {
     };
 
     VkPipeline pipeline;
-    if (auto const result = vkCreateGraphicsPipelines(
+    if (auto const result = pfn_vkCreatePipeline(
         device.handle(),
         VK_NULL_HANDLE,
         1u,
@@ -682,7 +697,7 @@ auto main(int const argc, char const* const* argv) noexcept -> int {
         ); result != VkResult::VK_SUCCESS) {
       return Unexpected{result};
     }
-    return {pipeline, device.handle()};
+    return {pipeline, device.handle(), pfn_vkDestroyPipeline};
   };
 
   auto triangleByteCode = readFile("../triangle.spv");

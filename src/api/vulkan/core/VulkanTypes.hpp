@@ -36,7 +36,10 @@ template <typename T, VkStructureType type> struct VulkanTypeTraitsInstance {
 
 #ifdef VK_VERSION_1_1
 template <> struct VulkanTypeTraits<VkPhysicalDeviceFeatures2> :
-    VulkanTypeTraitsInstance<VkPhysicalDeviceFeatures2, VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2> {};
+    VulkanTypeTraitsInstance<VkPhysicalDeviceFeatures2, VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2>{};
+
+template <> struct VulkanTypeTraits<VkPhysicalDeviceVulkan11Features> :
+    VulkanTypeTraitsInstance<VkPhysicalDeviceVulkan11Features, VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_FEATURES>{};
 #endif
 
 #ifdef VK_VERSION_1_2
