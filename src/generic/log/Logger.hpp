@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include <ostream>
+
 #include <cds/String>
 #include <cds/Union>
 

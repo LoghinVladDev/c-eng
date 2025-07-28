@@ -4,6 +4,7 @@
 
 #include <cstdlib>
 #include <iostream>
+#include <fstream>
 #include <filesystem>
 
 #include <cds/Format>
@@ -35,6 +36,8 @@
 
 #include "core/VulkanExtensions.hpp"
 #include "core/VulkanLayers.hpp"
+
+#include "api/vulkan/core/VulkanHandles.hpp"
 
 namespace {
 using cds::HashMap;
@@ -211,6 +214,8 @@ auto localInternalFree(
 } // namespace
 
 auto main(int const argc, char const* const* argv) noexcept -> int {
+  std::ios::sync_with_stdio(false);
+
   auto disableLogPresent = false;
   for (unsigned idx = 1; idx < argc; ++idx) {
     if (StringView{argv[idx]} == "-dl") {
@@ -443,6 +448,245 @@ auto main(int const argc, char const* const* argv) noexcept -> int {
       return imageViews;
     });
   });
+
+
+  auto readFile = [](StringView name) -> Expected<Vector<char>, VkResult> {
+    std::ifstream file(name.data(), std::ios::ate | std::ios::binary);
+    if (!file.is_open()) {
+      return Unexpected{VkResult::VK_ERROR_NOT_PERMITTED};
+    }
+
+    Vector<char> buffer(file.tellg());
+    file.seekg(0, std::ios::beg);
+    file.read(buffer.data(), static_cast<std::streamsize>(buffer.size()));
+    return buffer;
+  };
+
+  auto pfn_vkCreateShaderModule = reinterpret_cast<PFN_vkCreateShaderModule> (expectedLogicalDevice.transform([](LogicalDevice const& device) {
+    return device.instance().functions().vkGetDeviceProcAddr(device.handle(), "vkCreateShaderModule");
+  }).valueOr(nullptr));
+
+  auto pfn_vkDestroyShaderModule = reinterpret_cast<PFN_vkDestroyShaderModule> (expectedLogicalDevice.transform([](LogicalDevice const& device) {
+    return device.instance().functions().vkGetDeviceProcAddr(device.handle(), "vkDestroyShaderModule");
+  }).valueOr(nullptr));
+
+  using cds::impl::xch;
+  struct ShModule {
+    ShModule(VkShaderModule mod, VkDevice dev, PFN_vkDestroyShaderModule des) : mod{mod}, dev{dev}, destroy{des} {}
+    ShModule(ShModule&& mod) : mod{xch(mod.mod, nullptr)}, dev{xch(mod.dev, nullptr)}, destroy{mod.destroy} {}
+
+    ~ShModule() {
+      if (dev && mod) {
+        destroy(dev, mod, nullptr);
+      }
+    }
+
+    VkShaderModule mod;
+    VkDevice dev;
+    PFN_vkDestroyShaderModule destroy;
+  };
+  struct ShPipeline
+      {
+    ShPipeline(VkPipeline pipeline, VkDevice dev) : pipeline{pipeline}, dev{dev} {}
+    ShPipeline(ShPipeline&& mod) : pipeline{xch(mod.pipeline, nullptr)}, dev{xch(mod.dev, nullptr)} {}
+
+    ~ShPipeline() {
+      if (dev && pipeline) {
+        vkDestroyPipeline(dev, pipeline, nullptr);
+      }
+    }
+
+    VkPipeline pipeline;
+    VkDevice dev;
+  };
+
+  auto createShaderModule = [&expectedLogicalDevice, &pfn_vkDestroyShaderModule, &pfn_vkCreateShaderModule](Vector<char> const& code) {
+    return expectedLogicalDevice.then([&code, &pfn_vkDestroyShaderModule, &pfn_vkCreateShaderModule](LogicalDevice const& device) -> Expected<ShModule, VkResult> {
+      auto moduleCreateInfo = VkShaderModuleCreateInfo {
+          .sType = VkStructureType::VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO,
+          .pNext = nullptr,
+          .codeSize = code.size() * sizeof(char),
+          .pCode = reinterpret_cast<std::uint32_t const*>(code.data())
+      };
+
+      VkShaderModule module;
+      if (auto const result = pfn_vkCreateShaderModule(device.handle(), &moduleCreateInfo, nullptr, &module);
+          result != VkResult::VK_SUCCESS) {
+        return Unexpected{result};
+      }
+      return {module, device.handle(), pfn_vkDestroyShaderModule};
+    });
+  };
+
+  auto createPipeline = [](
+      ShModule const& module,
+      SwapChain const& swapChain,
+      LogicalDevice const& device
+  ) -> Expected<ShPipeline, VkResult> {
+    VkPipelineShaderStageCreateInfo stages[] = {
+        {
+            .sType = VkStructureType::VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO,
+            .pNext = nullptr,
+            .flags = 0u,
+            .stage = VkShaderStageFlagBits::VK_SHADER_STAGE_VERTEX_BIT,
+            .module = module.mod,
+            .pName = "vertexShader",
+        },
+        {
+            .sType = VkStructureType::VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO,
+            .pNext = nullptr,
+            .flags = 0u,
+            .stage = VkShaderStageFlagBits::VK_SHADER_STAGE_FRAGMENT_BIT,
+            .module = module.mod,
+            .pName = "fragmentShader",
+        },
+    };
+
+    VkDynamicState dynamicStates[] = {
+        VkDynamicState::VK_DYNAMIC_STATE_VIEWPORT,
+        VkDynamicState::VK_DYNAMIC_STATE_SCISSOR,
+    };
+
+    VkPipelineDynamicStateCreateInfo dynamicStateInfo {
+        .sType = VkStructureType::VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO,
+        .pNext = nullptr,
+        .flags = 0u,
+        .dynamicStateCount = 2u,
+        .pDynamicStates = dynamicStates,
+    };
+
+    VkPipelineVertexInputStateCreateInfo vertexInputInfo {
+        .sType = VkStructureType::VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO,
+        .pNext = nullptr,
+        .flags = 0u,
+        .vertexBindingDescriptionCount = 0u,
+        .pVertexBindingDescriptions = nullptr,
+        .vertexAttributeDescriptionCount = 0u,
+        .pVertexAttributeDescriptions = nullptr,
+    };
+
+    VkPipelineInputAssemblyStateCreateInfo inputAssemblyInfo {
+        .sType = VkStructureType::VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO,
+        .pNext = nullptr,
+        .flags = 0u,
+        .topology = VkPrimitiveTopology::VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST,
+        .primitiveRestartEnable = VK_FALSE,
+    };
+
+    VkViewport viewport{};
+    VkRect2D scissor{};
+    VkPipelineViewportStateCreateInfo viewportStateInfo {
+        .sType = VkStructureType::VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO,
+        .pNext = nullptr,
+        .flags = 0u,
+        .viewportCount = 1u,
+        .pViewports = &viewport,
+        .scissorCount = 1u,
+        .pScissors = &scissor,
+    };
+
+    VkPipelineRasterizationStateCreateInfo rasterizationInfo {
+        .sType = VkStructureType::VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO,
+        .pNext = nullptr,
+        .flags = 0u,
+        .depthClampEnable = VK_FALSE,
+        .rasterizerDiscardEnable = VK_FALSE,
+        .polygonMode = VkPolygonMode::VK_POLYGON_MODE_FILL,
+        .cullMode = VkCullModeFlagBits::VK_CULL_MODE_BACK_BIT,
+        .frontFace = VkFrontFace::VK_FRONT_FACE_CLOCKWISE,
+        .depthBiasEnable = VK_FALSE,
+        .depthBiasConstantFactor = 0.0f,
+        .depthBiasClamp = 0.0f,
+        .depthBiasSlopeFactor = 1.0f,
+        .lineWidth = 1.0f,
+    };
+
+    VkPipelineMultisampleStateCreateInfo multisampleInfo {
+        .sType = VkStructureType::VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO,
+        .pNext = nullptr,
+        .flags = 0u,
+        .rasterizationSamples = VkSampleCountFlagBits::VK_SAMPLE_COUNT_1_BIT,
+        .sampleShadingEnable = VK_FALSE,
+        .minSampleShading = 0.0f,
+        .pSampleMask = nullptr,
+        .alphaToCoverageEnable = VK_FALSE,
+        .alphaToOneEnable = VK_FALSE,
+    };
+
+    VkPipelineColorBlendAttachmentState colorBlendAttachment {
+        .blendEnable = VK_FALSE,
+        .srcColorBlendFactor = VkBlendFactor::VK_BLEND_FACTOR_ZERO,
+        .dstColorBlendFactor = VkBlendFactor::VK_BLEND_FACTOR_ZERO,
+        .colorBlendOp = VkBlendOp::VK_BLEND_OP_MIN,
+        .srcAlphaBlendFactor = VkBlendFactor::VK_BLEND_FACTOR_ZERO,
+        .dstAlphaBlendFactor = VkBlendFactor::VK_BLEND_FACTOR_ZERO,
+        .alphaBlendOp = VkBlendOp::VK_BLEND_OP_MIN,
+        .colorWriteMask = VkColorComponentFlagBits::VK_COLOR_COMPONENT_R_BIT
+            | VkColorComponentFlagBits::VK_COLOR_COMPONENT_G_BIT
+            | VkColorComponentFlagBits::VK_COLOR_COMPONENT_B_BIT
+            | VkColorComponentFlagBits::VK_COLOR_COMPONENT_A_BIT,
+    };
+
+    VkPipelineColorBlendStateCreateInfo colorBlendInfo {
+        .sType = VkStructureType::VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO,
+        .pNext = nullptr,
+        .flags = 0u,
+        .logicOpEnable = VK_FALSE,
+        .logicOp = VkLogicOp::VK_LOGIC_OP_COPY,
+        .attachmentCount = 1u,
+        .pAttachments = &colorBlendAttachment,
+        .blendConstants = {0.0f, 0.0f, 0.0f, 0.0f},
+    };
+
+    auto const swapChainImageFormat = swapChain.imageFormat();
+    VkPipelineRenderingCreateInfo renderingInfo {
+        .sType = VkStructureType::VK_STRUCTURE_TYPE_PIPELINE_RENDERING_CREATE_INFO,
+        .pNext = nullptr,
+        .viewMask = 0u,
+        .colorAttachmentCount = 1u,
+        .pColorAttachmentFormats = &swapChainImageFormat,
+        .depthAttachmentFormat = VkFormat::VK_FORMAT_UNDEFINED,
+        .stencilAttachmentFormat = VkFormat::VK_FORMAT_UNDEFINED,
+    };
+
+    VkGraphicsPipelineCreateInfo createInfo {
+        .sType = VkStructureType::VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO,
+        .pNext = &renderingInfo,
+        .flags = 0u,
+        .stageCount = 2u,
+        .pStages = stages,
+        .pVertexInputState = &vertexInputInfo,
+        .pInputAssemblyState = &inputAssemblyInfo,
+        .pTessellationState = nullptr,
+        .pViewportState = &viewportStateInfo,
+        .pRasterizationState = &rasterizationInfo,
+        .pMultisampleState = &multisampleInfo,
+        .pDepthStencilState = nullptr,
+        .pColorBlendState = &colorBlendInfo,
+        .pDynamicState = &dynamicStateInfo,
+        .layout = VK_NULL_HANDLE,
+        .renderPass = VK_NULL_HANDLE,
+        .subpass = 0u,
+        .basePipelineHandle = VK_NULL_HANDLE,
+        .basePipelineIndex = -1,
+    };
+
+    VkPipeline pipeline;
+    if (auto const result = vkCreateGraphicsPipelines(
+        device.handle(),
+        VK_NULL_HANDLE,
+        1u,
+        &createInfo,
+        nullptr,
+        &pipeline
+        ); result != VkResult::VK_SUCCESS) {
+      return Unexpected{result};
+    }
+    return {pipeline, device.handle()};
+  };
+
+  auto triangleByteCode = readFile("../triangle.spv");
+  auto triangleShaderModule = triangleByteCode.then(createShaderModule);
 
   return e.run();
 }

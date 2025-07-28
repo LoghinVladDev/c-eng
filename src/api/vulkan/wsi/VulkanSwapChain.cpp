@@ -42,7 +42,7 @@ auto SwapChainBuilder::build(Surface const& surface) const noexcept -> Expected<
   auto const expectedFormats = _device.device().surfaceFormats(surface);
   auto const expectedPresentModes = _device.device().surfacePresentModes(surface);
 
-  auto const format = expectedFormats.then([this](auto const& formats)
+  auto const expectedFormat = expectedFormats.then([this](auto const& formats)
       -> Expected<VkSurfaceFormatKHR, VkResult> {
     if (_surfaceFormat) {
       if (!formats.contains(*_surfaceFormat)) {
@@ -61,7 +61,7 @@ auto SwapChainBuilder::build(Surface const& surface) const noexcept -> Expected<
         : formats.front();
   });
 
-  auto const presentMode = expectedPresentModes.then([this](auto const& modes)
+  auto const expectedPresentMode = expectedPresentModes.then([this](auto const& modes)
       -> Expected<VkPresentModeKHR, VkResult> {
     if (_presentMode) {
       if (!modes.contains(*_presentMode)) {
@@ -81,7 +81,7 @@ auto SwapChainBuilder::build(Surface const& surface) const noexcept -> Expected<
     return modes.front();
   });
 
-  auto extent = expectedCapabilities.transform([this](auto const& capabilities) {
+  auto const expectedExtent = expectedCapabilities.transform([this](auto const& capabilities) {
     if (capabilities.currentExtent.width != cds::limits::u32Max) {
       return capabilities.currentExtent;
     }
@@ -96,7 +96,7 @@ auto SwapChainBuilder::build(Surface const& surface) const noexcept -> Expected<
     };
   });
 
-  return cds_ex::tie(format, presentMode, extent, expectedCapabilities).then([this, &surface](auto const& values)
+  return cds_ex::tie(expectedFormat, expectedPresentMode, expectedExtent, expectedCapabilities).then([this, &surface](auto const& values)
       -> Expected<SwapChain, VkResult> {
     auto const& [format, presentMode, extent, capabilities] = values;
     auto const& fns = _device.functions();

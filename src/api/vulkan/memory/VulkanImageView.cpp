@@ -15,7 +15,9 @@ using cds::experimental::Unexpected;
 
 ImageView::~ImageView() noexcept {
   assert(device().functions().vkDestroyImageView && "undefined behavior");
-  device().functions().vkDestroyImageView(device().handle(), handle(), allocationCallbacks());
+  if (handle()) {
+    device().functions().vkDestroyImageView(device().handle(), handle(), allocationCallbacks());
+  }
 }
 
 auto ImageViewBuilder::build(Image const& image, VkFormat format) noexcept -> Expected<ImageView, VkResult> {
