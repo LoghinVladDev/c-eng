@@ -4,13 +4,13 @@
 
 #pragma once
 
+#include <cds/Expected>
 #include <cds/Optional>
 #include <cds/String>
 #include <cds/StringView>
 #include <cds/collection/HashMap>
 #include <cds/collection/Vector>
 #include <core/VulkanSubunits.hpp>
-#include <ext/cds/Expected.hpp>
 #include <generic/lang/Concepts.hpp>
 
 namespace c_eng::api::vk::detail {
@@ -21,13 +21,13 @@ class Surface;
 class LogicalDeviceBuilder;
 class SwapChainBuilder;
 
-using cds::Optional;
+using cds::Expected;
 using cds::HashMap;
+using cds::Optional;
 using cds::String;
 using cds::StringView;
 using cds::U32;
 using cds::Vector;
-using cds::experimental::Expected;
 using cds::impl::mv;
 using cds::impl::xch;
 using cds::nullopt;

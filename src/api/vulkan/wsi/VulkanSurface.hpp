@@ -4,9 +4,9 @@
 
 #pragma once
 
+#include <cds/Expected>
 #include <cds/Optional>
 #include <core/VulkanSubunits.hpp>
-#include <ext/cds/Expected.hpp>
 
 #ifndef VK_KHR_surface
 VK_DEFINE_HANDLE(VkSurfaceKHR)
@@ -19,8 +19,8 @@ class Window;
 namespace c_eng::api::vk::detail {
 class Instance;
 
+using cds::Expected;
 using cds::Optional;
-using cds::experimental::Expected;
 using cds::nullopt;
 
 using generic::detail::Window;

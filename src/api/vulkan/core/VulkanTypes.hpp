@@ -64,6 +64,13 @@ template <> struct VulkanTypeTraits<VkPhysicalDevice8BitStorageFeatures> : Vulka
 > {};
 #endif
 
+#ifdef VK_VERSION_1_3
+template <> struct VulkanTypeTraits<VkPhysicalDeviceVulkan13Features> : VulkanTypeTraitsInstance<
+    VkPhysicalDeviceVulkan13Features,
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_3_FEATURES
+> {};
+#endif
+
 #ifdef VK_KHR_ray_query
 template <> struct VulkanTypeTraits<VkPhysicalDeviceRayQueryFeaturesKHR> : VulkanTypeTraitsInstance<
     VkPhysicalDeviceRayQueryFeaturesKHR,

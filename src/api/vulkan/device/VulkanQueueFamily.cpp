@@ -12,7 +12,7 @@
 
 namespace c_eng::api::vk::detail {
 namespace {
-using cds::experimental::Unexpected;
+using cds::Unexpected;
 } // namespace
 
 auto QueueFamily::supportsPresentOn(Surface const& surface) const noexcept -> Expected<bool, VkResult> {

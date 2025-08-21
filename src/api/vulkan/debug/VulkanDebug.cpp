@@ -15,7 +15,7 @@
 namespace c_eng::api::vk::detail {
 namespace {
 using namespace cds::literals;
-using cds::experimental::Unexpected;
+using cds::Unexpected;
 using cds::impl::unreachable;
 
 using generic::Logger;

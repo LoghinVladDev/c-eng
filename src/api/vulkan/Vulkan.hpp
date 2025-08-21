@@ -5,9 +5,9 @@
 #pragma once
 
 #include <source_location>
+#include <cds/Expected>
 #include <cds/Format>
 #include <cds/collection/Vector>
-#include <ext/cds/Expected.hpp>
 #include <ext/cds/StdFormatters.hpp>
 #include <generic/log/Logger.hpp>
 #include <vulkan/vulkan_core.h>
@@ -15,12 +15,11 @@
 #include <api/vulkan/core/VulkanFormatters.hpp>
 
 namespace c_eng::api::vk::detail {
-using cds::experimental::Expected;
-using cds::experimental::Unexpected;
-using cds::impl::mv;
-using cds::impl::xch;
+using cds::Expected;
 using cds::Vector;
 using cds::U32;
+using cds::impl::mv;
+using cds::impl::xch;
 
 using generic::LoggerRef;
 using generic::LogLevel;

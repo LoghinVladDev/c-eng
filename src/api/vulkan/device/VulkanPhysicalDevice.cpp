@@ -13,7 +13,7 @@
 namespace c_eng::api::vk::detail {
 namespace {
 using cds::U32;
-using cds::experimental::Unexpected;
+using cds::Unexpected;
 using generic::indexedProject;
 } // namespace
 

@@ -4,10 +4,10 @@
 
 #pragma once
 
+#include <cds/Expected>
 #include <cds/Optional>
 #include <cds/collection/Vector>
 #include <core/VulkanSubunits.hpp>
-#include <ext/cds/Expected.hpp>
 #include <generic/lang/Concepts.hpp>
 
 namespace c_eng::api::vk::detail {
@@ -17,10 +17,10 @@ class Surface;
 class QueueFamily;
 class FormattedImage;
 
+using cds::Expected;
 using cds::Optional;
 using cds::U32;
 using cds::Vector;
-using cds::experimental::Expected;
 using cds::nullopt;
 using cds::impl::forEach;
 using cds::begin;

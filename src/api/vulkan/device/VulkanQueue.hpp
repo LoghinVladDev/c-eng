@@ -5,11 +5,9 @@
 #pragma once
 
 #include <core/VulkanSubunits.hpp>
-#include <ext/cds/Expected.hpp>
 
 namespace c_eng::api::vk::detail {
 using cds::U32;
-using cds::experimental::Expected;
 
 class LogicalDevice;
 class QueueFamily;

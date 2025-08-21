@@ -4,13 +4,13 @@
 
 #pragma once
 
+#include <cds/Expected>
 #include <cds/collection/Vector>
 #include <core/VulkanSubunits.hpp>
-#include <ext/cds/Expected.hpp>
 #include "VulkanPhysicalDeviceExtendedFeatures.hpp"
 
 namespace c_eng::api::vk::detail {
-using cds::experimental::Expected;
+using cds::Expected;
 using cds::Vector;
 
 class Instance;

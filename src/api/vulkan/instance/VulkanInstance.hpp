@@ -4,10 +4,10 @@
 
 #pragma once
 
+#include <cds/Expected>
 #include <cds/Optional>
 #include <cds/collection/Vector>
 #include <core/VulkanSubunits.hpp>
-#include <ext/cds/Expected.hpp>
 #include <generic/api/Api.hpp>
 #include <generic/lang/Concepts.hpp>
 #include <generic/log/Logger.hpp>
@@ -21,7 +21,7 @@ using cds::Optional;
 using cds::String;
 using cds::StringView;
 using cds::Vector;
-using cds::experimental::Expected;
+using cds::Expected;
 using cds::impl::fwd;
 using cds::impl::xch;
 using cds::impl::mv;

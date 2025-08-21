@@ -19,9 +19,8 @@ constexpr auto operator==(VkSurfaceFormatKHR const& lhs, VkSurfaceFormatKHR cons
 
 namespace c_eng::api::vk::detail {
 namespace {
+using cds::Unexpected;
 using cds::clamp;
-using cds::experimental::Unexpected;
-namespace cds_ex = cds::experimental;
 
 using generic::project;
 } // namespace
@@ -96,7 +95,7 @@ auto SwapChainBuilder::build(Surface const& surface) const noexcept -> Expected<
     };
   });
 
-  return cds_ex::tie(expectedFormat, expectedPresentMode, expectedExtent, expectedCapabilities).then([this, &surface](auto const& values)
+  return cds::tie(expectedFormat, expectedPresentMode, expectedExtent, expectedCapabilities).then([this, &surface](auto const& values)
       -> Expected<SwapChain, VkResult> {
     auto const& [format, presentMode, extent, capabilities] = values;
     auto const& fns = _device.functions();

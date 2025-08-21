@@ -4,14 +4,14 @@
 
 #pragma once
 
+#include <cds/Expected>
 #include <cds/meta/Semantics>
 #include <core/VulkanSubunits.hpp>
-#include <ext/cds/Expected.hpp>
 #include <generic/log/Logger.hpp>
 
 namespace c_eng::api::vk::detail {
+using cds::Expected;
 using cds::Optional;
-using cds::experimental::Expected;
 using cds::impl::xch;
 using cds::nullopt;
 

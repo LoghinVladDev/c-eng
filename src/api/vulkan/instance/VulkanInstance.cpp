@@ -20,6 +20,7 @@
 namespace c_eng::api::vk::detail {
 namespace {
 using cds::HashMap;
+using cds::Unexpected;
 using cds::VectorView;
 using cds::ignore;
 using cds::nullopt;

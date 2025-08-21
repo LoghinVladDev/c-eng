@@ -3,12 +3,12 @@
 //
 
 #include "Vulkan.hpp"
-#include "Vulkan.hpp"
 #include "api/vulkan/core/VulkanHandles.hpp"
 #include "instance/VulkanInstance.hpp"
 
 namespace c_eng::api::vk::detail {
 namespace {
+using cds::Unexpected;
 using cds::ignore;
 
 auto acquireGlobalFnPtrs(GlobalFnPtrs* globalFnPtrs, LoggerRef logger) noexcept -> Expected<GlobalFnPtrs*, VkResult> {

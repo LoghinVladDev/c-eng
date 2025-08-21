@@ -4,9 +4,9 @@
 
 #pragma once
 
+#include <cds/Expected>
 #include <cds/Optional>
 #include <core/VulkanSubunits.hpp>
-#include <ext/cds/Expected.hpp>
 
 namespace c_eng::api::vk::detail {
 class FormattedImage;
@@ -14,8 +14,8 @@ class Image;
 class ImageViewBuilder;
 class LogicalDevice;
 
+using cds::Expected;
 using cds::Optional;
-using cds::experimental::Expected;
 using cds::nullopt;
 
 class ImageView :

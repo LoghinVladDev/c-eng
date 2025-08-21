@@ -4,13 +4,14 @@
 
 #include "VulkanImageView.hpp"
 
-#include <core/VulkanHandles.hpp>
 #include <device/VulkanLogicalDevice.hpp>
 #include <memory/VulkanImage.hpp>
 
+#include <core/VulkanHandles.hpp>
+
 namespace c_eng::api::vk::detail {
 namespace {
-using cds::experimental::Unexpected;
+using cds::Unexpected;
 } // namespace
 
 ImageView::~ImageView() noexcept {

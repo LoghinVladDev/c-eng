@@ -12,7 +12,7 @@
 
 namespace c_eng::api::vk::detail {
 namespace {
-using cds::experimental::Unexpected;
+using cds::Unexpected;
 } // namespace
 
 Surface::~Surface() noexcept {

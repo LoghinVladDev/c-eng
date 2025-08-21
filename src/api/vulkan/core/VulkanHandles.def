@@ -17,6 +17,12 @@ C_ENG_VULKAN_HANDLE(ResolveInstance, Base, vkGetDeviceProcAddr)
 C_ENG_VULKAN_HANDLE(ResolveDevice, Base, vkGetDeviceQueue)
 C_ENG_VULKAN_HANDLE(ResolveDevice, Base, vkCreateImageView)
 C_ENG_VULKAN_HANDLE(ResolveDevice, Base, vkDestroyImageView)
+C_ENG_VULKAN_HANDLE(ResolveDevice, Base, vkCreateShaderModule)
+C_ENG_VULKAN_HANDLE(ResolveDevice, Base, vkDestroyShaderModule)
+C_ENG_VULKAN_HANDLE(ResolveDevice, Base, vkCreateGraphicsPipelines)
+C_ENG_VULKAN_HANDLE(ResolveDevice, Base, vkDestroyPipeline)
+C_ENG_VULKAN_HANDLE(ResolveDevice, Base, vkCreatePipelineLayout)
+C_ENG_VULKAN_HANDLE(ResolveDevice, Base, vkDestroyPipelineLayout)
 
 #ifdef VK_VERSION_1_1
 C_ENG_VULKAN_HANDLE(ResolveInstance, Base, vkGetPhysicalDeviceFeatures2)
