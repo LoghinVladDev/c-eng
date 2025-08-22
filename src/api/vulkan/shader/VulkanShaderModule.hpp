@@ -34,8 +34,13 @@ class ShaderModuleBuilder {
 public:
   explicit constexpr ShaderModuleBuilder(LogicalDevice const& device) noexcept : _device{device} {}
 
-  auto buildFromPrecompiledShaderAt(Path const& path) const noexcept -> Expected<ShaderModule, VkResult>;
-  auto buildFromByteCode(VectorView<char> code) const noexcept -> Expected<ShaderModule, VkResult>;
+  auto& withAllocationCallbacks(VkAllocationCallbacks const* pAllocationCallbacks) noexcept {
+    _allocationCallbacks = pAllocationCallbacks;
+    return *this;
+  }
+
+  [[nodiscard]] auto buildFromPrecompiledShaderAt(Path const& path) const noexcept -> Expected<ShaderModule, VkResult>;
+  [[nodiscard]] auto buildFromByteCode(VectorView<char> code) const noexcept -> Expected<ShaderModule, VkResult>;
 
 private:
   LogicalDevice const& _device;

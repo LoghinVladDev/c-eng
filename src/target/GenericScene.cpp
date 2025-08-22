@@ -27,6 +27,8 @@
 #include "api/vulkan/memory/VulkanImage.hpp"
 #include "api/vulkan/memory/VulkanImageView.hpp"
 #include "api/vulkan/instance/VulkanInstance.hpp"
+#include "api/vulkan/renderer/VulkanPipeline.hpp"
+#include "api/vulkan/renderer/VulkanPipelineLayout.hpp"
 #include "api/vulkan/shader/VulkanShaderModule.hpp"
 #include "api/vulkan/wsi/VulkanSwapChain.hpp"
 #include "api/vulkan/wsi/VulkanSurface.hpp"
@@ -72,6 +74,10 @@ using c_eng::api::vk::Instance;
 using c_eng::api::vk::QueueFamily;
 using c_eng::api::vk::LogicalDevice;
 using c_eng::api::vk::PhysicalDevice;
+using c_eng::api::vk::Pipeline;
+using c_eng::api::vk::PipelineBuilder;
+using c_eng::api::vk::PipelineLayout;
+using c_eng::api::vk::PipelineLayoutBuilder;
 using c_eng::api::vk::Surface;
 using c_eng::api::vk::ShaderModule;
 using c_eng::api::vk::SwapChain;
@@ -438,249 +444,29 @@ auto main(int const argc, char const* const* argv) noexcept -> int {
         return imageViews;
       });
 
-  auto pfn_vkCreatePipeline = reinterpret_cast<PFN_vkCreateGraphicsPipelines> (expectedLogicalDevice.transform([](LogicalDevice const& device) {
-      return device.instance().functions().vkGetDeviceProcAddr(device.handle(), "vkCreateGraphicsPipelines");
-  }).valueOr(nullptr));
-
-  auto pfn_vkDestroyPipeline = reinterpret_cast<PFN_vkDestroyPipeline> (expectedLogicalDevice.transform([](LogicalDevice const& device) {
-      return device.instance().functions().vkGetDeviceProcAddr(device.handle(), "vkDestroyPipeline");
-  }).valueOr(nullptr));
-
-  auto pfn_vkCreatePipelineLayout = reinterpret_cast<PFN_vkCreatePipelineLayout> (expectedLogicalDevice.transform([](LogicalDevice const& device) {
-      return device.instance().functions().vkGetDeviceProcAddr(device.handle(), "vkCreatePipelineLayout");
-  }).valueOr(nullptr));
-
-  auto pfn_vkDestroyPipelineLayout = reinterpret_cast<PFN_vkDestroyPipelineLayout> (expectedLogicalDevice.transform([](LogicalDevice const& device) {
-      return device.instance().functions().vkGetDeviceProcAddr(device.handle(), "vkDestroyPipelineLayout");
-  }).valueOr(nullptr));
-
-  using cds::impl::xch;
-  struct ShPipeline
-      {
-    ShPipeline(VkPipeline pipeline, VkDevice dev, PFN_vkDestroyPipeline destroy) : pipeline{pipeline}, dev{dev}, destroy{destroy} {}
-    ShPipeline(ShPipeline&& mod) : pipeline{xch(mod.pipeline, nullptr)}, dev{xch(mod.dev, nullptr)}, destroy{mod.destroy} {}
-
-    ~ShPipeline() {
-      if (dev && pipeline && destroy) {
-        destroy(dev, pipeline, nullptr);
-      }
-    }
-
-    VkPipeline pipeline;
-    VkDevice dev;
-    PFN_vkDestroyPipeline destroy;
-  };
-  struct ShPipelineLayout
-      {
-    ShPipelineLayout(VkPipelineLayout layout, VkDevice dev, PFN_vkDestroyPipelineLayout destroy) : layout{layout}, dev{dev}, destroy{destroy} {}
-    ShPipelineLayout(ShPipelineLayout&& mod) : layout{xch(mod.layout, nullptr)}, dev{xch(mod.dev, nullptr)}, destroy{mod.destroy} {}
-
-    ~ShPipelineLayout() {
-      if (dev && layout && destroy) {
-        destroy(dev, layout, nullptr);
-      }
-    }
-
-    VkPipelineLayout layout;
-    VkDevice dev;
-    PFN_vkDestroyPipelineLayout destroy;
-  };
-
   auto triangleShaderModule = expectedLogicalDevice.transform(&ShaderModule::builder).then([](auto const& builder) {
     return builder.buildFromPrecompiledShaderAt("../triangle.spv");
   });
 
-  auto layout = expectedLogicalDevice.then([&pfn_vkCreatePipelineLayout, &pfn_vkDestroyPipelineLayout](LogicalDevice const& device) -> Expected<ShPipelineLayout, VkResult> {
-    VkPipelineLayoutCreateInfo pipelineLayoutInfo {
-        .sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO,
-        .pNext = nullptr,
-        .flags = 0u,
-        .setLayoutCount = 0u,
-        .pSetLayouts = nullptr,
-        .pushConstantRangeCount = 0u,
-        .pPushConstantRanges = nullptr,
-    };
+  auto layout = expectedLogicalDevice
+      .transform(&PipelineLayout::builder)
+      .then(&PipelineLayoutBuilder::build);
 
-    VkPipelineLayout layout;
-
-    if (auto const result = pfn_vkCreatePipelineLayout(device.handle(), &pipelineLayoutInfo, nullptr, &layout);
-        result != VkResult::VK_SUCCESS) {
-      return Unexpected{result};
-    }
-
-    return {layout, device.handle(), pfn_vkDestroyPipelineLayout};
+  auto pipeline = cds::tie(expectedLogicalDevice, triangleShaderModule, expectedSwapChain, layout).appliedThen([](
+      LogicalDevice const& device,
+      ShaderModule const& shaderModule,
+      SwapChain const& swapChain,
+      PipelineLayout const& layout
+  ) {
+    return Pipeline::builder(device)
+        .withShader(shaderModule, VkShaderStageFlagBits::VK_SHADER_STAGE_VERTEX_BIT, "vertexShader")
+        .withShader(shaderModule, VkShaderStageFlagBits::VK_SHADER_STAGE_FRAGMENT_BIT, "fragmentShader")
+        .withPipelineLayout(layout)
+        .renderOn(swapChain)
+        .withDynamicStates({VkDynamicState::VK_DYNAMIC_STATE_VIEWPORT, VkDynamicState::VK_DYNAMIC_STATE_SCISSOR})
+        .build();
   });
 
-  auto createPipeline = [&pfn_vkCreatePipeline, &pfn_vkDestroyPipeline](
-      ShaderModule const& module,
-      SwapChain const& swapChain,
-      LogicalDevice const& device,
-      ShPipelineLayout const& layout
-  ) -> Expected<ShPipeline, VkResult> {
-    VkPipelineShaderStageCreateInfo stages[] = {
-        {
-            .sType = VkStructureType::VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO,
-            .pNext = nullptr,
-            .flags = 0u,
-            .stage = VkShaderStageFlagBits::VK_SHADER_STAGE_VERTEX_BIT,
-            .module = module.handle(),
-            .pName = "vertexShader",
-        },
-        {
-            .sType = VkStructureType::VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO,
-            .pNext = nullptr,
-            .flags = 0u,
-            .stage = VkShaderStageFlagBits::VK_SHADER_STAGE_FRAGMENT_BIT,
-            .module = module.handle(),
-            .pName = "fragmentShader",
-        },
-    };
-
-    VkDynamicState dynamicStates[] = {
-        VkDynamicState::VK_DYNAMIC_STATE_VIEWPORT,
-        VkDynamicState::VK_DYNAMIC_STATE_SCISSOR,
-    };
-
-    VkPipelineDynamicStateCreateInfo dynamicStateInfo {
-        .sType = VkStructureType::VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO,
-        .pNext = nullptr,
-        .flags = 0u,
-        .dynamicStateCount = 2u,
-        .pDynamicStates = dynamicStates,
-    };
-
-    VkPipelineVertexInputStateCreateInfo vertexInputInfo {
-        .sType = VkStructureType::VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO,
-        .pNext = nullptr,
-        .flags = 0u,
-        .vertexBindingDescriptionCount = 0u,
-        .pVertexBindingDescriptions = nullptr,
-        .vertexAttributeDescriptionCount = 0u,
-        .pVertexAttributeDescriptions = nullptr,
-    };
-
-    VkPipelineInputAssemblyStateCreateInfo inputAssemblyInfo {
-        .sType = VkStructureType::VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO,
-        .pNext = nullptr,
-        .flags = 0u,
-        .topology = VkPrimitiveTopology::VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST,
-        .primitiveRestartEnable = VK_FALSE,
-    };
-
-    VkViewport viewport{};
-    VkRect2D scissor{};
-    VkPipelineViewportStateCreateInfo viewportStateInfo {
-        .sType = VkStructureType::VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO,
-        .pNext = nullptr,
-        .flags = 0u,
-        .viewportCount = 1u,
-        .pViewports = &viewport,
-        .scissorCount = 1u,
-        .pScissors = &scissor,
-    };
-
-    VkPipelineRasterizationStateCreateInfo rasterizationInfo {
-        .sType = VkStructureType::VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO,
-        .pNext = nullptr,
-        .flags = 0u,
-        .depthClampEnable = VK_FALSE,
-        .rasterizerDiscardEnable = VK_FALSE,
-        .polygonMode = VkPolygonMode::VK_POLYGON_MODE_FILL,
-        .cullMode = VkCullModeFlagBits::VK_CULL_MODE_BACK_BIT,
-        .frontFace = VkFrontFace::VK_FRONT_FACE_CLOCKWISE,
-        .depthBiasEnable = VK_FALSE,
-        .depthBiasConstantFactor = 0.0f,
-        .depthBiasClamp = 0.0f,
-        .depthBiasSlopeFactor = 1.0f,
-        .lineWidth = 1.0f,
-    };
-
-    VkPipelineMultisampleStateCreateInfo multisampleInfo {
-        .sType = VkStructureType::VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO,
-        .pNext = nullptr,
-        .flags = 0u,
-        .rasterizationSamples = VkSampleCountFlagBits::VK_SAMPLE_COUNT_1_BIT,
-        .sampleShadingEnable = VK_FALSE,
-        .minSampleShading = 0.0f,
-        .pSampleMask = nullptr,
-        .alphaToCoverageEnable = VK_FALSE,
-        .alphaToOneEnable = VK_FALSE,
-    };
-
-    VkPipelineColorBlendAttachmentState colorBlendAttachment {
-        .blendEnable = VK_FALSE,
-        .srcColorBlendFactor = VkBlendFactor::VK_BLEND_FACTOR_ZERO,
-        .dstColorBlendFactor = VkBlendFactor::VK_BLEND_FACTOR_ZERO,
-        .colorBlendOp = VkBlendOp::VK_BLEND_OP_MIN,
-        .srcAlphaBlendFactor = VkBlendFactor::VK_BLEND_FACTOR_ZERO,
-        .dstAlphaBlendFactor = VkBlendFactor::VK_BLEND_FACTOR_ZERO,
-        .alphaBlendOp = VkBlendOp::VK_BLEND_OP_MIN,
-        .colorWriteMask = VkColorComponentFlagBits::VK_COLOR_COMPONENT_R_BIT
-            | VkColorComponentFlagBits::VK_COLOR_COMPONENT_G_BIT
-            | VkColorComponentFlagBits::VK_COLOR_COMPONENT_B_BIT
-            | VkColorComponentFlagBits::VK_COLOR_COMPONENT_A_BIT,
-    };
-
-    VkPipelineColorBlendStateCreateInfo colorBlendInfo {
-        .sType = VkStructureType::VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO,
-        .pNext = nullptr,
-        .flags = 0u,
-        .logicOpEnable = VK_FALSE,
-        .logicOp = VkLogicOp::VK_LOGIC_OP_COPY,
-        .attachmentCount = 1u,
-        .pAttachments = &colorBlendAttachment,
-        .blendConstants = {0.0f, 0.0f, 0.0f, 0.0f},
-    };
-
-    auto const swapChainImageFormat = swapChain.imageFormat();
-    VkPipelineRenderingCreateInfo renderingInfo {
-        .sType = VkStructureType::VK_STRUCTURE_TYPE_PIPELINE_RENDERING_CREATE_INFO,
-        .pNext = nullptr,
-        .viewMask = 0u,
-        .colorAttachmentCount = 1u,
-        .pColorAttachmentFormats = &swapChainImageFormat,
-        .depthAttachmentFormat = VkFormat::VK_FORMAT_UNDEFINED,
-        .stencilAttachmentFormat = VkFormat::VK_FORMAT_UNDEFINED,
-    };
-
-    VkGraphicsPipelineCreateInfo const createInfo {
-        .sType = VkStructureType::VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO,
-        .pNext = &renderingInfo,
-        .flags = 0u,
-        .stageCount = 2u,
-        .pStages = stages,
-        .pVertexInputState = &vertexInputInfo,
-        .pInputAssemblyState = &inputAssemblyInfo,
-        .pTessellationState = nullptr,
-        .pViewportState = &viewportStateInfo,
-        .pRasterizationState = &rasterizationInfo,
-        .pMultisampleState = &multisampleInfo,
-        .pDepthStencilState = nullptr,
-        .pColorBlendState = &colorBlendInfo,
-        .pDynamicState = &dynamicStateInfo,
-        .layout = layout.layout,
-        .renderPass = VK_NULL_HANDLE,
-        .subpass = 0u,
-        .basePipelineHandle = VK_NULL_HANDLE,
-        .basePipelineIndex = -1,
-    };
-
-    VkPipeline pipeline;
-    if (auto const result = pfn_vkCreatePipeline(
-        device.handle(),
-        VK_NULL_HANDLE,
-        1u,
-        &createInfo,
-        nullptr,
-        &pipeline
-        ); result != VkResult::VK_SUCCESS) {
-      return Unexpected{result};
-    }
-    return {pipeline, device.handle(), pfn_vkDestroyPipeline};
-  };
-
-  auto pipeline = cds::tie(triangleShaderModule, expectedSwapChain, expectedLogicalDevice, layout)
-      .appliedThen(createPipeline);
 
 //  auto commandPool =
 
