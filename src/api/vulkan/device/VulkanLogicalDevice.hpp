@@ -10,10 +10,12 @@
 #include <cds/StringView>
 #include <cds/collection/HashMap>
 #include <cds/collection/Vector>
+#include <cds/collection/VectorView>
 #include <core/VulkanSubunits.hpp>
 #include <generic/lang/Concepts.hpp>
 
 namespace c_eng::api::vk::detail {
+class Fence;
 class Instance;
 class Queue;
 class QueueFamily;
@@ -28,6 +30,8 @@ using cds::String;
 using cds::StringView;
 using cds::U32;
 using cds::Vector;
+using cds::VectorView;
+using cds::Size;
 using cds::impl::mv;
 using cds::impl::xch;
 using cds::nullopt;
@@ -75,6 +79,10 @@ public:
   [[nodiscard]] auto swapChainBuilder() const noexcept -> SwapChainBuilder;
 
   [[nodiscard]] auto queues() const noexcept -> HashMap<QueueFamily, Vector<Queue>>;
+
+  [[nodiscard]] auto resetFences(VectorView<VkFence> fences) const noexcept -> VkResult;
+  [[nodiscard]] auto waitForAllFences(Size timeout, VectorView<VkFence> fences) const noexcept -> VkResult;
+  [[nodiscard]] auto waitIdle() const noexcept -> VkResult;
 
 private:
   DeviceFnPtrs const* _pfns{nullptr};

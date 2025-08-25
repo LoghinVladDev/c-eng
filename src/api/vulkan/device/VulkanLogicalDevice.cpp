@@ -14,6 +14,7 @@
 #include <ext/cds/StdFormatters.hpp>
 #include <generic/lang/Range.hpp>
 #include <instance/VulkanInstance.hpp>
+#include <sync/VulkanFence.hpp>
 #include <wsi/VulkanSwapChain.hpp>
 
 #include <core/VulkanHandles.hpp>
@@ -245,5 +246,26 @@ auto LogicalDevice::queues() const noexcept -> HashMap<QueueFamily, Vector<Queue
     }
   }
   return queues;
+}
+
+auto LogicalDevice::resetFences(VectorView<VkFence> fences) const noexcept -> VkResult {
+  assert(functions().vkResetFences && "undefined behavior");
+  return functions().vkResetFences(handle(), static_cast<std::uint32_t>(fences.size()), fences.data());
+}
+
+auto LogicalDevice::waitForAllFences(Size timeout, VectorView<VkFence> fences) const noexcept -> VkResult {
+  assert(functions().vkWaitForFences && "undefined behavior");
+  return functions().vkWaitForFences(
+      handle(),
+      static_cast<std::uint32_t>(fences.size()),
+      fences.data(),
+      VK_TRUE,
+      static_cast<std::uint64_t>(timeout)
+  );
+}
+
+auto LogicalDevice::waitIdle() const noexcept -> VkResult {
+  assert(functions().vkDeviceWaitIdle && "undefined behavior");
+  return functions().vkDeviceWaitIdle(handle());
 }
 } // namespace c_eng::api::vk::detail

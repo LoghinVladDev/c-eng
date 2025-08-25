@@ -20,10 +20,13 @@ template <typename T, typename E> concept IterableOf = requires(T const& obj) {
   obj.end();
   { *obj.begin() } -> ConvertibleTo<E>;
 };
+
+template <typename T> concept Integer = cds::meta::Or<cds::meta::IsSigned<T>, cds::meta::IsUnsigned<T>>::value;
 } // namespace c_eng::generic::detail
 
 namespace c_eng::generic::concepts {
 using detail::DerivedFrom;
 using detail::BaseOf;
 using detail::IterableOf;
+using detail::Integer;
 } // namespace c_eng::generic

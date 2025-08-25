@@ -3,6 +3,7 @@
 //
 
 #include "Engine.hpp"
+
 #include <generic/lang/Range.hpp>
 #include <generic/lang/Semantic.hpp>
 
@@ -34,10 +35,13 @@ auto Engine::notify(PersistentObjectDestroyedEvent& event) noexcept -> void {
   _persistentComponents.remove(_persistentComponents.findFirst(event.object()));
 }
 
-auto Engine::run() noexcept -> int {
+auto Engine::run(FunctionRef<Expected<void, int>()> onUpdate) noexcept -> int {
   while (!_persistentComponents.empty()) {
     for (auto* component : _pollingComponents) {
       component->poll();
+      if (auto const result = onUpdate(); !result) {
+        return result.error();
+      }
     }
   }
 

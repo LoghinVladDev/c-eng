@@ -9,6 +9,8 @@
 #include <device/VulkanQueueFamily.hpp>
 #include <generic/lang/Range.hpp>
 #include <memory/VulkanImage.hpp>
+#include <sync/VulkanFence.hpp>
+#include <sync/VulkanSemaphore.hpp>
 #include <wsi/VulkanSurface.hpp>
 
 #include "core/VulkanHandles.hpp"
@@ -23,6 +25,28 @@ using cds::Unexpected;
 using cds::clamp;
 
 using generic::project;
+
+inline auto acquireImage(SwapChain const& swapChain, Size timeout, Semaphore const* pSemaphore, Fence const* pFence)
+    noexcept -> Expected<Size, VkResult> {
+#ifndef VK_KHR_swapchain
+  return Unexpected{VK_ERROR_EXTENSION_NOT_PRESENT};
+#else
+  assert(swapChain.device().functions().vkAcquireNextImageKHR && "undefined behavior");
+  std::uint32_t index;
+  if (auto const result = swapChain.device().functions().vkAcquireNextImageKHR(
+      swapChain.device().handle(),
+      swapChain.handle(),
+      static_cast<std::uint64_t>(timeout),
+      pSemaphore ? pSemaphore->handle() : VK_NULL_HANDLE,
+      pFence ? pFence->handle() : VK_NULL_HANDLE,
+      &index
+  ); result != VkResult::VK_SUCCESS) {
+    return Unexpected{result};
+  }
+
+  return static_cast<Size>(index);
+#endif
+}
 } // namespace
 
 SwapChain::~SwapChain() noexcept {
@@ -163,7 +187,7 @@ auto SwapChainBuilder::build(Surface const& surface) const noexcept -> Expected<
       return Unexpected{result};
     }
 
-    return {_device, allocationCallbacks, handle, format.format};
+    return {_device, allocationCallbacks, handle, format.format, extent};
   });
 #endif
 }
@@ -189,9 +213,23 @@ auto SwapChain::images() const noexcept -> Expected<Vector<FormattedImage>, VkRe
   }
 
   return Vector<FormattedImage>{imageHandles | project([this](auto const handle) {
-    return FormattedImage{device(), handle, imageFormat()};
+    return FormattedImage{device(), handle, imageFormat(), imageExtent()};
   })};
 #endif
 }
 
+auto SwapChain::acquireNextImageIndex(Size timeout, Semaphore const& semaphore) const noexcept
+    -> Expected<Size, VkResult> {
+  return acquireImage(*this, timeout, &semaphore, nullptr);
+}
+
+auto SwapChain::acquireNextImageIndex(Size timeout, Fence const& fence) const noexcept
+    -> Expected<Size, VkResult> {
+  return acquireImage(*this, timeout, nullptr, &fence);
+}
+
+auto SwapChain::acquireNextImageIndex(Size timeout, Semaphore const& semaphore, Fence const& fence) const noexcept
+    -> Expected<Size, VkResult> {
+  return acquireImage(*this, timeout, &semaphore, &fence);
+}
 } // namespace c_eng::api::vk::detail

@@ -40,9 +40,13 @@ if(DEFINED C_ENG_USE_VULKAN AND C_ENG_USE_VULKAN)
       api/vulkan/instance/VulkanInstance.cpp
       api/vulkan/memory/VulkanImage.cpp
       api/vulkan/memory/VulkanImageView.cpp
+      api/vulkan/renderer/command/VulkanCommandPool.cpp
+      api/vulkan/renderer/command/VulkanCommandBuffer.cpp
       api/vulkan/renderer/VulkanPipelineLayout.cpp
       api/vulkan/renderer/VulkanPipeline.cpp
       api/vulkan/shader/VulkanShaderModule.cpp
+      api/vulkan/sync/VulkanFence.cpp
+      api/vulkan/sync/VulkanSemaphore.cpp
       api/vulkan/wsi/VulkanSurface.cpp
       api/vulkan/wsi/VulkanSwapChain.cpp)
 

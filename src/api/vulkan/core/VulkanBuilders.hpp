@@ -50,18 +50,22 @@ public:
       VulkanObjectBuilderSpec<B, Objects>{objects}... {}
 };
 
+class CommandPool;
 class LogicalDevice;
 
-template <typename B> class VulkanObjectBuilderSpec<B, LogicalDevice> {
+template <typename B> class VulkanObjectBuilderSpec<B, LogicalDevice> : public SubObject<LogicalDevice> {
 public:
-  explicit constexpr VulkanObjectBuilderSpec(LogicalDevice const& device) noexcept : _device{device} {}
+  using SubObject::SubObject;
 
 protected:
-  [[nodiscard]] auto const& device() const noexcept {
-    return _device;
-  }
+  using SubObject::device;
+};
 
-private:
-  LogicalDevice const& _device;
+template <typename B> class VulkanObjectBuilderSpec<B, CommandPool> : public SubObject<CommandPool> {
+public:
+  using SubObject::SubObject;
+
+protected:
+  using SubObject::pool;
 };
 } // namespace detail

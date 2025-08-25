@@ -23,9 +23,35 @@ C_ENG_VULKAN_HANDLE(ResolveDevice, Base, vkCreateGraphicsPipelines)
 C_ENG_VULKAN_HANDLE(ResolveDevice, Base, vkDestroyPipeline)
 C_ENG_VULKAN_HANDLE(ResolveDevice, Base, vkCreatePipelineLayout)
 C_ENG_VULKAN_HANDLE(ResolveDevice, Base, vkDestroyPipelineLayout)
+C_ENG_VULKAN_HANDLE(ResolveDevice, Base, vkCreateCommandPool)
+C_ENG_VULKAN_HANDLE(ResolveDevice, Base, vkDestroyCommandPool)
+C_ENG_VULKAN_HANDLE(ResolveDevice, Base, vkAllocateCommandBuffers)
+C_ENG_VULKAN_HANDLE(ResolveDevice, Base, vkDeviceWaitIdle)
+
+C_ENG_VULKAN_HANDLE(ResolveDevice, Base, vkFreeCommandBuffers)
+C_ENG_VULKAN_HANDLE(ResolveDevice, Base, vkBeginCommandBuffer)
+C_ENG_VULKAN_HANDLE(ResolveDevice, Base, vkEndCommandBuffer)
+C_ENG_VULKAN_HANDLE(ResolveDevice, Base, vkCmdBeginRendering)
+C_ENG_VULKAN_HANDLE(ResolveDevice, Base, vkCmdBindPipeline)
+C_ENG_VULKAN_HANDLE(ResolveDevice, Base, vkCmdSetViewport)
+C_ENG_VULKAN_HANDLE(ResolveDevice, Base, vkCmdSetScissor)
+C_ENG_VULKAN_HANDLE(ResolveDevice, Base, vkCmdDraw)
+C_ENG_VULKAN_HANDLE(ResolveDevice, Base, vkCmdEndRendering)
+C_ENG_VULKAN_HANDLE(ResolveDevice, Base, vkQueueSubmit)
+
+C_ENG_VULKAN_HANDLE(ResolveDevice, Base, vkCreateSemaphore)
+C_ENG_VULKAN_HANDLE(ResolveDevice, Base, vkCreateFence)
+C_ENG_VULKAN_HANDLE(ResolveDevice, Base, vkDestroySemaphore)
+C_ENG_VULKAN_HANDLE(ResolveDevice, Base, vkDestroyFence)
+C_ENG_VULKAN_HANDLE(ResolveDevice, Base, vkResetFences)
+C_ENG_VULKAN_HANDLE(ResolveDevice, Base, vkWaitForFences)
 
 #ifdef VK_VERSION_1_1
 C_ENG_VULKAN_HANDLE(ResolveInstance, Base, vkGetPhysicalDeviceFeatures2)
+#endif
+
+#ifdef VK_VERSION_1_3
+C_ENG_VULKAN_HANDLE(ResolveDevice, Base, vkCmdPipelineBarrier2)
 #endif
 
 #ifdef VK_EXT_debug_utils
@@ -61,4 +87,6 @@ C_ENG_VULKAN_HANDLE(ResolveInstance, MVK_macos_surface, vkCreateMacOSSurfaceMVK)
 C_ENG_VULKAN_HANDLE(ResolveDevice, KHR_swapchain, vkCreateSwapchainKHR)
 C_ENG_VULKAN_HANDLE(ResolveDevice, KHR_swapchain, vkDestroySwapchainKHR)
 C_ENG_VULKAN_HANDLE(ResolveDevice, KHR_swapchain, vkGetSwapchainImagesKHR)
+C_ENG_VULKAN_HANDLE(ResolveDevice, KHR_swapchain, vkAcquireNextImageKHR)
+C_ENG_VULKAN_HANDLE(ResolveDevice, KHR_swapchain, vkQueuePresentKHR)
 #endif

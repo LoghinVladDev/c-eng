@@ -9,6 +9,7 @@
 
 namespace c_eng::api::vk::detail {
 class Vulkan;
+class CommandPool;
 class Image;
 class Instance;
 class LogicalDevice;
@@ -19,19 +20,21 @@ using cds::xch;
 
 template <typename O> class GenericSub {
 public:
-  explicit constexpr GenericSub(O const& obj) noexcept : _data{obj} {}
+  explicit constexpr GenericSub(O const& obj) noexcept : _data{&obj} {}
   GenericSub(GenericSub const&) = default;
   GenericSub(GenericSub&&) = default;
+  auto operator=(GenericSub const&) -> GenericSub& = default;
+  auto operator=(GenericSub&&) -> GenericSub& = default;
 
 protected:
   ~GenericSub() = default;
 
   [[nodiscard]] constexpr auto const& data() const noexcept {
-    return _data;
+    return *_data;
   }
 
 private:
-  O const& _data;
+  O const* _data;
 };
 
 template <typename...> class SubObject;
@@ -39,6 +42,7 @@ template <typename...> class SubObject;
 template <> class SubObject<Vulkan> : public GenericSub<Vulkan> {
 public:
   using GenericSub::GenericSub;
+  using GenericSub::operator=;
   [[nodiscard]] constexpr auto const& vulkan() const noexcept {
     return data();
   }
@@ -47,6 +51,7 @@ public:
 template <> class SubObject<Instance> : public GenericSub<Instance> {
 public:
   using GenericSub::GenericSub;
+  using GenericSub::operator=;
   [[nodiscard]] constexpr auto const& instance() const noexcept {
     return data();
   }
@@ -55,6 +60,7 @@ public:
 template <> class SubObject<PhysicalDevice> : public GenericSub<PhysicalDevice> {
 public:
   using GenericSub::GenericSub;
+  using GenericSub::operator=;
   [[nodiscard]] constexpr auto const& device() const noexcept {
     return data();
   }
@@ -63,6 +69,7 @@ public:
 template <> class SubObject<LogicalDevice> : public GenericSub<LogicalDevice> {
 public:
   using GenericSub::GenericSub;
+  using GenericSub::operator=;
   [[nodiscard]] constexpr auto const& device() const noexcept {
     return data();
   }
@@ -71,6 +78,7 @@ public:
 template <> class SubObject<QueueFamily> : public GenericSub<QueueFamily> {
 public:
   using GenericSub::GenericSub;
+  using GenericSub::operator=;
   [[nodiscard]] constexpr auto const& family() const noexcept {
     return data();
   }
@@ -79,7 +87,17 @@ public:
 template <> class SubObject<Image> : public GenericSub<Image> {
 public:
   using GenericSub::GenericSub;
+  using GenericSub::operator=;
   [[nodiscard]] constexpr auto const& image() const noexcept {
+    return data();
+  }
+};
+
+template <> class SubObject<CommandPool> : public GenericSub<CommandPool> {
+public:
+  using GenericSub::GenericSub;
+  using GenericSub::operator=;
+  [[nodiscard]] constexpr auto const& pool() const noexcept {
     return data();
   }
 };
@@ -108,6 +126,15 @@ public:
   WrapsVulkanHandle(WrapsVulkanHandle const&) = default;
   constexpr WrapsVulkanHandle(WrapsVulkanHandle&& wrapper) noexcept :
       _handle{xch(wrapper._handle, VK_NULL_HANDLE)} {}
+  auto operator=(WrapsVulkanHandle const&) -> WrapsVulkanHandle& = default;
+  constexpr auto operator=(WrapsVulkanHandle&& obj) noexcept -> WrapsVulkanHandle& {
+    if (this == &obj) {
+      return *this;
+    }
+
+    _handle = xch(obj._handle, VK_NULL_HANDLE);
+    return *this;
+  }
 
   [[nodiscard]] constexpr auto handle() const noexcept {
     return _handle;
@@ -150,6 +177,8 @@ public:
 
   VulkanObject(VulkanObject const&) = default;
   VulkanObject(VulkanObject&&) = default;
+  auto operator=(VulkanObject const&) -> VulkanObject& = default;
+  auto operator=(VulkanObject&&) -> VulkanObject& = default;
 
 protected:
   ~VulkanObject() = default;
@@ -170,6 +199,8 @@ public:
 
   VulkanObject(VulkanObject const&) = default;
   VulkanObject(VulkanObject&&) = default;
+  auto operator=(VulkanObject const&) -> VulkanObject& = default;
+  auto operator=(VulkanObject&&) -> VulkanObject& = default;
 
 protected:
   ~VulkanObject() = default;

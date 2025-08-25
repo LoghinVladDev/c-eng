@@ -16,10 +16,10 @@ public:
 
 class FormattedImage : public Image {
 public:
-  constexpr FormattedImage(LogicalDevice const& device, VkImage handle, VkFormat format) noexcept :
-      Image{device, handle}, _format{format} {}
-  constexpr FormattedImage(Image const& image, VkFormat format) noexcept :
-      Image{image}, _format{format} {}
+  constexpr FormattedImage(LogicalDevice const& device, VkImage handle, VkFormat format, VkExtent2D extent) noexcept :
+      Image{device, handle}, _format{format}, _extent{extent} {}
+  constexpr FormattedImage(Image const& image, VkFormat format, VkExtent2D extent) noexcept :
+      Image{image}, _format{format}, _extent{extent} {}
 
   FormattedImage(FormattedImage const&) = default;
   FormattedImage(FormattedImage&&) = default;
@@ -28,8 +28,13 @@ public:
     return _format;
   }
 
+  [[nodiscard]] constexpr auto extent() const noexcept {
+    return _extent;
+  }
+
 private:
   VkFormat _format{VK_FORMAT_UNDEFINED};
+  VkExtent2D _extent{0u, 0u};
 };
 } // namespace c_eng::api::vk::detail
 

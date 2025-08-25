@@ -11,6 +11,7 @@
 #include <cds/Format>
 #include <cds/StringView>
 #include <cds/collection/HashMap>
+#include <cds/collection/VectorView>
 
 // #include "api/vulkan/core/VulkanTypesToString.hpp"
 
@@ -27,9 +28,13 @@
 #include "api/vulkan/memory/VulkanImage.hpp"
 #include "api/vulkan/memory/VulkanImageView.hpp"
 #include "api/vulkan/instance/VulkanInstance.hpp"
+#include "api/vulkan/renderer/command/VulkanCommandBuffer.hpp"
+#include "api/vulkan/renderer/command/VulkanCommandPool.hpp"
 #include "api/vulkan/renderer/VulkanPipeline.hpp"
 #include "api/vulkan/renderer/VulkanPipelineLayout.hpp"
 #include "api/vulkan/shader/VulkanShaderModule.hpp"
+#include "api/vulkan/sync/VulkanSemaphore.hpp"
+#include "api/vulkan/sync/VulkanFence.hpp"
 #include "api/vulkan/wsi/VulkanSwapChain.hpp"
 #include "api/vulkan/wsi/VulkanSurface.hpp"
 
@@ -50,6 +55,7 @@ using cds::U64;
 using cds::Unexpected;
 using cds::Union;
 using cds::Vector;
+using cds::VectorView;
 using cds::ignore;
 using cds::nullopt;
 
@@ -67,10 +73,16 @@ using c_eng::generic::LoggerRef;
 using c_eng::generic::LoggerOutput;
 
 using c_eng::api::Glfw;
+using c_eng::api::vk::CommandBufferRef;
+using c_eng::api::vk::CommandRecorder;
+using c_eng::api::vk::CommandPool;
+using c_eng::api::vk::Fence;
+using c_eng::api::vk::FenceBuilder;
 using c_eng::api::vk::Vulkan;
 using c_eng::api::vk::Image;
 using c_eng::api::vk::ImageView;
 using c_eng::api::vk::Instance;
+using c_eng::api::vk::Queue;
 using c_eng::api::vk::QueueFamily;
 using c_eng::api::vk::LogicalDevice;
 using c_eng::api::vk::PhysicalDevice;
@@ -78,6 +90,8 @@ using c_eng::api::vk::Pipeline;
 using c_eng::api::vk::PipelineBuilder;
 using c_eng::api::vk::PipelineLayout;
 using c_eng::api::vk::PipelineLayoutBuilder;
+using c_eng::api::vk::Semaphore;
+using c_eng::api::vk::SemaphoreBuilder;
 using c_eng::api::vk::Surface;
 using c_eng::api::vk::ShaderModule;
 using c_eng::api::vk::SwapChain;
@@ -467,8 +481,201 @@ auto main(int const argc, char const* const* argv) noexcept -> int {
         .build();
   });
 
+  auto commandPool = cds::tie(expectedLogicalDevice).appliedThen(
+      [](LogicalDevice const& device)
+          -> Expected<CommandPool, VkResult> {
+        for (auto const& [family, queues] : device.queues()) {
+          if (family.supportsGraphics()) {
+            return CommandPool::builder(device).build(family);
+          }
+        }
 
-//  auto commandPool =
+        return Unexpected{VkResult::VK_ERROR_NOT_PERMITTED};
+      });
 
-  return e.run();
+  auto commandBuffers = commandPool.transform(&CommandPool::allocator).then([](auto const& allocator) {
+    return allocator.allocatePrimary(1);
+  });
+
+  auto commandBuffer = commandBuffers.transform([](auto const& buffers) {
+    return buffers[0];
+  });
+
+  auto drawImage = cds::tie(commandBuffer, expectedSwapChainImageViews, expectedSwapChain, pipeline).appliedTransform(
+      [](auto buffer, auto const& imageViews, auto const& swapChain, auto const& pipeline) {
+        return [buffer, &imageViews, &swapChain, &pipeline](cds::Size imageIndex) {
+          return buffer.record([&imageViews, imageIndex, &swapChain, &pipeline](CommandRecorder& recorder) {
+            recorder.transitionImageLayout(
+                imageViews[imageIndex].image(),
+                VkImageLayout::VK_IMAGE_LAYOUT_UNDEFINED,
+                VkImageLayout::VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
+                0u,
+                VK_ACCESS_2_COLOR_ATTACHMENT_WRITE_BIT,
+                VK_PIPELINE_STAGE_2_TOP_OF_PIPE_BIT,
+                VK_PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT
+            );
+
+            auto const attachmentInfo = VkRenderingAttachmentInfo{
+                .sType = VkStructureType::VK_STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO,
+                .pNext = nullptr,
+                .imageView = imageViews[imageIndex].handle(),
+                .imageLayout = VkImageLayout::VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
+                .resolveMode = VkResolveModeFlagBits::VK_RESOLVE_MODE_NONE,
+                .resolveImageView = VK_NULL_HANDLE,
+                .resolveImageLayout = VkImageLayout::VK_IMAGE_LAYOUT_UNDEFINED,
+                .loadOp = VkAttachmentLoadOp::VK_ATTACHMENT_LOAD_OP_CLEAR,
+                .storeOp = VkAttachmentStoreOp::VK_ATTACHMENT_STORE_OP_STORE,
+                .clearValue = {.color = {.float32 = {0.0f, 0.0f, 0.0f, 1.0f}}},
+            };
+
+            auto const swapChainExtent = swapChain.imageExtent();
+            recorder.beginRendering({
+                .sType = VkStructureType::VK_STRUCTURE_TYPE_RENDERING_INFO,
+                .pNext = nullptr,
+                .flags = 0u,
+                .renderArea = {
+                    .offset = {0u, 0u},
+                    .extent = swapChainExtent
+                },
+                .layerCount = 1u,
+                .viewMask = 0u,
+                .colorAttachmentCount = 1u,
+                .pColorAttachments = &attachmentInfo,
+                .pDepthAttachment = nullptr,
+                .pStencilAttachment = nullptr,
+            });
+
+            recorder.bindPipeline(pipeline);
+            recorder.setViewport(VkViewport{
+                .x = 0.0f,
+                .y = 0.0f,
+                .width = static_cast<float>(swapChainExtent.width),
+                .height = static_cast<float>(swapChainExtent.height),
+                .minDepth = 0.0f,
+                .maxDepth = 1.0f,
+            });
+            recorder.setScissor(VkRect2D{
+                .offset = {
+                    .x = 0,
+                    .y = 0,
+                },
+                .extent = swapChainExtent,
+            });
+            recorder.draw(3, 1, 0, 0);
+            recorder.endRendering();
+            recorder.transitionImageLayout(
+                imageViews[imageIndex].image(),
+                VkImageLayout::VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
+                VkImageLayout::VK_IMAGE_LAYOUT_PRESENT_SRC_KHR,
+                VK_ACCESS_2_COLOR_ATTACHMENT_WRITE_BIT,
+                0u,
+                VK_PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT,
+                VK_PIPELINE_STAGE_2_BOTTOM_OF_PIPE_BIT
+            );
+          });
+        };
+      });
+
+  auto presentComplete = expectedLogicalDevice.transform(&Semaphore::builder).then(&SemaphoreBuilder::build);
+  auto renderFinished = expectedLogicalDevice.transform(&Semaphore::builder).then(&SemaphoreBuilder::build);
+  auto drawFence = expectedLogicalDevice.transform(&Fence::builder).transform(&FenceBuilder::signalled).then(&FenceBuilder::build);
+  auto graphicsQueue = cds::tie(expectedLogicalDevice, commandPool).appliedThen(
+      [](LogicalDevice const& device, CommandPool const& buffer) -> Expected<Queue, VkResult> {
+        for (auto const& [family, queues] : device.queues()) {
+          if (family.index() == buffer.family().index() && queues) {
+            return queues[0];
+          }
+        }
+
+        return Unexpected{VkResult::VK_ERROR_OUT_OF_DEVICE_MEMORY};
+      });
+  auto presentQueue = cds::tie(expectedLogicalDevice, expectedSurface).appliedThen(
+      [](auto const& device, auto const& surface) -> Expected<Queue, VkResult> {
+        for (auto const& [family, queues] : device.queues()) {
+          if (family.supportsPresentOn(surface) && queues) {
+            return queues[0];
+          }
+        }
+
+        return Unexpected{VkResult::VK_ERROR_OUT_OF_DEVICE_MEMORY};
+      });
+
+  auto preLoopWrapper = cds::tie(
+      commandBuffer,
+      drawImage,
+      expectedSwapChain,
+      presentComplete,
+      renderFinished,
+      drawFence,
+      graphicsQueue,
+      presentQueue
+  ).appliedTransform([&e](
+      CommandBufferRef buffer,
+      auto const& drawImage,
+      SwapChain const& swapChain,
+      Semaphore const& presentComplete,
+      Semaphore const& renderFinished,
+      Fence const& drawFence,
+      Queue const& graphicsQueue,
+      Queue const& presentQueue
+  ) {
+    return e.run([&swapChain, &presentComplete, &drawImage, &drawFence, buffer, &graphicsQueue, &renderFinished, &presentQueue] -> Expected<void, int> {
+      auto expectedIndex = swapChain.acquireNextImageIndex(cds::limits::u64Max, presentComplete);
+      if (!expectedIndex) {
+        return Unexpected{1};
+      }
+
+      std::uint32_t const index = *expectedIndex;
+      if (!drawImage(index)) {
+        return Unexpected{2};
+      }
+
+      if (drawFence.reset() != VkResult::VK_SUCCESS) {
+        return Unexpected{3};
+      }
+
+      VkCommandBuffer bufHnd = buffer.handle();
+      VkSemaphore presentCompleteSemaphore = presentComplete.handle();
+      VkSemaphore renderFinishedSemaphore = renderFinished.handle();
+      VkPipelineStageFlags waitDstMask = VkPipelineStageFlagBits::VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+      VkSubmitInfo submitInfo{
+          .sType = VkStructureType::VK_STRUCTURE_TYPE_SUBMIT_INFO,
+          .pNext = nullptr,
+          .waitSemaphoreCount = 1u,
+          .pWaitSemaphores = &presentCompleteSemaphore,
+          .pWaitDstStageMask = &waitDstMask,
+          .commandBufferCount = 1u,
+          .pCommandBuffers = &bufHnd,
+          .signalSemaphoreCount = 1u,
+          .pSignalSemaphores = &renderFinishedSemaphore
+      };
+      if (graphicsQueue.submit(VectorView{&submitInfo, &submitInfo + 1}, drawFence) != VkResult::VK_SUCCESS) {
+        return Unexpected{4};
+      }
+
+      while (VkResult::VK_TIMEOUT == drawFence.wait()) {}
+
+      VkSwapchainKHR swapchainHandle = swapChain.handle();
+      VkPresentInfoKHR const presentInfo{
+          .sType = VkStructureType::VK_STRUCTURE_TYPE_PRESENT_INFO_KHR,
+          .pNext = nullptr,
+          .waitSemaphoreCount = 1u,
+          .pWaitSemaphores = &renderFinishedSemaphore,
+          .swapchainCount = 1u,
+          .pSwapchains = &swapchainHandle,
+          .pImageIndices = &index,
+          .pResults = nullptr
+      };
+
+      if (VkResult::VK_SUCCESS != presentQueue.present(presentInfo)) {
+        return Unexpected{5};
+      }
+
+      return {};
+    });
+  });
+
+  auto res = preLoopWrapper.valueOr(1);
+  cds::ignore = expectedLogicalDevice.transform(&LogicalDevice::waitIdle);
+  return res;
 }

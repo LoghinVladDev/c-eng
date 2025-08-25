@@ -11,16 +11,19 @@
 #include <generic/lang/Concepts.hpp>
 
 namespace c_eng::api::vk::detail {
+class Fence;
 class LogicalDevice;
 class SwapChainBuilder;
 class Surface;
 class QueueFamily;
+class Semaphore;
 class FormattedImage;
 
 using cds::Expected;
 using cds::Optional;
 using cds::U32;
 using cds::Vector;
+using cds::Size;
 using cds::nullopt;
 using cds::impl::forEach;
 using cds::begin;
@@ -42,8 +45,12 @@ public:
       LogicalDevice const& device,
       VkAllocationCallbacks const* allocationCallbacks,
       VkSwapchainKHR handle,
-      VkFormat imageFormat
-  ) noexcept : VulkanObject{device, allocationCallbacks, handle}, _imageFormat{imageFormat} {}
+      VkFormat imageFormat,
+      VkExtent2D imageExtent
+  ) noexcept :
+      VulkanObject{device, allocationCallbacks, handle},
+      _imageFormat{imageFormat},
+      _imageExtent{imageExtent} {}
 
   SwapChain(SwapChain&&) = default;
   ~SwapChain() noexcept;
@@ -56,8 +63,20 @@ public:
     return _imageFormat;
   }
 
+  [[nodiscard]] constexpr auto imageExtent() const noexcept {
+    return _imageExtent;
+  }
+
+  [[nodiscard]] auto acquireNextImageIndex(Size timeout, Semaphore const& semaphore) const noexcept
+      -> Expected<Size, VkResult>;
+  [[nodiscard]] auto acquireNextImageIndex(Size timeout, Fence const& fence) const noexcept
+      -> Expected<Size, VkResult>;
+  [[nodiscard]] auto acquireNextImageIndex(Size timeout, Semaphore const& semaphore, Fence const& fence) const noexcept
+      -> Expected<Size, VkResult>;
+
 private:
   VkFormat _imageFormat;
+  VkExtent2D _imageExtent;
 };
 
 class SwapChainBuilder {
